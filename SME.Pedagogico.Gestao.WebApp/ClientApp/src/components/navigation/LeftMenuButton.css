@@ -1,0 +1,22 @@
+﻿#left-menu-button {
+    position: absolute;
+    top: 69px;
+    left: 265px;
+    width: 0;
+    height: 0;
+    border-top: 0px solid transparent;
+    border-left: 50px solid #10A3FB;
+    border-bottom: 50px solid transparent;
+    z-index: 5;
+    opacity: 0.2;
+}
+
+    #left-menu-button:hover {
+        opacity: 1;
+    }
+
+#left-menu-button-icon {
+    position: absolute;
+    top: 6px;
+    left: -40px;
+}

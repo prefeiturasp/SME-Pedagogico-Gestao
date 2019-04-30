@@ -1,0 +1,16 @@
+﻿#dashboard-content {
+    position: absolute;
+    top: 69px;
+    right: 0;
+    height: calc(100vh - 69px);
+    height: -o-calc(100vh - 69px); /* opera */
+    height: -webkit-calc(100vh - 69px); /* google, safari */
+    height: -moz-calc(100vh - 69px); /* firefox */
+    width: calc(100vw - 265px);
+    background-color: #F5F6F8;
+    max-height: 100vh;
+    /*max-width: 100vw;*/
+    overflow: hidden;
+    overflow-y: auto;
+    z-index: 0;
+}

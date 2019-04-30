@@ -1,0 +1,58 @@
+﻿#left-menu {
+    max-height: calc(100vh - 69px);
+    max-height: -o-calc(100vh - 69px); /* opera */
+    max-height: -webkit-calc(100vh - 69px); /* google, safari */
+    max-height: -moz-calc(100vh - 69px); /* firefox */
+}
+
+#left-menu-content {
+    position: relative;
+    top: 69px;
+    width: 265px;
+    background: linear-gradient(0deg, #1BA9DD 0%, #0E6194 100%);
+    box-shadow: 6px 0px 18px rgba(0, 0, 0, 0.15);
+    height: -webkit-fill-available !important;
+    max-height: -webkit-fill-available !important;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.open-left-menu {
+    background: #0D679A;
+}
+
+.left-menu-item {
+}
+
+.left-menu-item-icon {
+    color: #92D6FF;
+}
+
+.left-menu-item-name {
+    color: white;
+}
+
+.left-menu-item-selected {
+    color: #FFD500;
+}
+
+
+
+#user-info {
+    font-size: 11px;
+}
+
+#user-info-avatar {
+    width: 50px;
+    height: 50px;
+    background: white;
+}
+
+#user-info-username {
+    border: 1px solid #92D6FF;
+    border-radius: 22px;
+}
+
+#user-info-profile {
+    color: #92D6FF;
+}
