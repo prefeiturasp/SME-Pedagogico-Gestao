@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { actionCreators } from '../../store/LeftMenu';
 import { bindActionCreators } from 'redux';
 import Card from '../containers/Card';
+import Calendar from '../calendar/Calendar';
 
 class Home extends Component {
     componentDidMount() {
@@ -11,13 +12,9 @@ class Home extends Component {
 
     render() {
         return (
-            <div className="row">
-                <Card className="col-5 mr-2">
-                    Home
-                </Card>
-
+            <div id="home-container" className="row">
                 <Card className="col">
-                    Home
+                    <Calendar />
                 </Card>
             </div>
         );
