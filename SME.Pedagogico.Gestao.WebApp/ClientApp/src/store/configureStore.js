@@ -3,6 +3,7 @@ import createSagaMiddleware from 'redux-saga';
 import * as User from './User';
 import UserSaga from '../sagas/User';
 import * as LeftMenu from './LeftMenu';
+import * as Calendar from './Calendar';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web and AsyncStorage for react-native
 import logger from 'redux-logger';
@@ -14,6 +15,7 @@ export default function configureStore(history, initialState) {
         //counter: Counter.reducer,
         user: User.reducer,
         leftMenu: LeftMenu.reducer,
+        calendar: Calendar.reducer,
     };
 
     const reduxSaga = createSagaMiddleware();
