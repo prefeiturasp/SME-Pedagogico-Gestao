@@ -1,6 +1,7 @@
 ﻿export const types = {
     OPEN_MONTH_REQUEST: "OPEN_MONTH_REQUEST",
     TOGGLE_FULLMONTH_REQUEST: "TOGGLE_FULLMONTH_REQUEST",
+    SELECT_DAY_REQUEST: "SELECT_DAY_REQUEST",
 }
 const initialState = {
     months: {
@@ -88,11 +89,13 @@ const initialState = {
             chevronColor: "#C4C4C4",
             isOpen: false,
         },
-    }
+    },
+    selectedDay: undefined,
 };
 
 export const actionCreators = {
     toggleMonth: (month) => ({ type: types.TOGGLE_FULLMONTH_REQUEST, month }),
+    selectDay: (day) => ({ type: types.SELECT_DAY_REQUEST, day }),
 };
 
 export const reducer = (state, action) => {
@@ -112,6 +115,16 @@ export const reducer = (state, action) => {
                 ...state,
                 months: months
             });
+        case types.SELECT_DAY_REQUEST:
+            var selectedDay = action.day;
+
+            if (state.selectedDay === selectedDay)
+                selectedDay = undefined;
+
+            return ({
+                ...state,
+                selectedDay: selectedDay
+            })
         default:
             return (state);
     }

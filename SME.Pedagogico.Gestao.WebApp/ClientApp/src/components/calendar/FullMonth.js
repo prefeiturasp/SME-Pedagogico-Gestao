@@ -2,8 +2,10 @@
 import { connect } from 'react-redux';
 import { actionCreators } from '../../store/Calendar';
 import { bindActionCreators } from 'redux';
-import { Spring, Transition } from 'react-spring/renderprops';
+import { Transition } from 'react-spring/renderprops';
 import { animated } from 'react-spring';
+import Week from './Week';
+import FullDay from './FullDay';
 
 const WeekDayLabel = (props) => {
     return (
@@ -13,32 +15,49 @@ const WeekDayLabel = (props) => {
     );
 }
 
-const WeekDay = (props) => {
-    var { style, className, ...rest } = props;
-
-    if (style === undefined)
-        style = { height: 61 };
-
-    if (className !== undefined)
-        className = className + " col border border-left-0";
-    else
-        className = "col border border-left-0";
-
-    return (
-        <div className={className} style={style} {...rest}>
-
-        </div>
-    );
-}
-
 class FullMonth extends Component {
+    constructor() {
+        super();
+
+        this.months = {};
+        this.lastUsed = -1;
+    }
+
     render() {
         var months = this.props.months.split(",");
+        var month = -1;
+        var weeks = [];
         var isOpen = false;
 
         for (var i = 0; i < months.length; i++)
-            if (this.props.calendar.months[months[i]].isOpen)
+            if (this.props.calendar.months[months[i]].isOpen) {
                 isOpen = true;
+                month += Number(months[i]);
+            }
+
+        if (month >= 0 && this.months[month] === undefined) {
+            var currentDate = new Date();
+            var date = new Date(currentDate.getFullYear(), month, 1);
+            date.setDate(date.getDate() - date.getDay() - 1);
+
+            for (var j = 0; j < 6; j++) {
+                var week = [];
+
+                for (var k = 0; k < 7; k++)
+                    week.push(new Date(date.setDate(date.getDate() + 1)));
+
+                weeks.push(week);
+            }
+
+            this.months[month] = weeks;
+        }
+
+        if (month === -1)
+            weeks = this.months[this.lastUsed];
+        else {
+            weeks = this.months[month];
+            this.lastUsed = month;
+        }
 
         return (
             <Transition
@@ -51,7 +70,7 @@ class FullMonth extends Component {
                 enter={{
                     display: 'block',
                     height: 'auto',
-                    maxHeight: '500px',
+                    //maxHeight: 433,
                     overflow: 'hidden',
                 }}
                 leave={{
@@ -70,51 +89,18 @@ class FullMonth extends Component {
                             <WeekDayLabel name="Sexta" />
                             <WeekDayLabel name="Sábado" />
                         </div>
-                        <div className="w-100 d-flex">
-                            <WeekDay className="" />
-                            <WeekDay className="" />
-                            <WeekDay className="" />
-                            <WeekDay className="" />
-                            <WeekDay className="" />
-                            <WeekDay className="" />
-                            <WeekDay className="border-right-0" />
-                        </div>
-                        <div className="w-100 d-flex">
-                            <WeekDay className="border-top-0" />
-                            <WeekDay className="border-top-0" />
-                            <WeekDay className="border-top-0" />
-                            <WeekDay className="border-top-0" />
-                            <WeekDay className="border-top-0" />
-                            <WeekDay className="border-top-0" />
-                            <WeekDay className="border-top-0 border-right-0" />
-                        </div>
-                        <div className="w-100 d-flex">
-                            <WeekDay className="border-top-0" />
-                            <WeekDay className="border-top-0" />
-                            <WeekDay className="border-top-0" />
-                            <WeekDay className="border-top-0" />
-                            <WeekDay className="border-top-0" />
-                            <WeekDay className="border-top-0" />
-                            <WeekDay className="border-top-0 border-right-0" />
-                        </div>
-                        <div className="w-100 d-flex">
-                            <WeekDay className="border-top-0" />
-                            <WeekDay className="border-top-0" />
-                            <WeekDay className="border-top-0" />
-                            <WeekDay className="border-top-0" />
-                            <WeekDay className="border-top-0" />
-                            <WeekDay className="border-top-0" />
-                            <WeekDay className="border-top-0 border-right-0" />
-                        </div>
-                        <div className="w-100 d-flex pb-4">
-                            <WeekDay className="border-top-0" />
-                            <WeekDay className="border-top-0" />
-                            <WeekDay className="border-top-0" />
-                            <WeekDay className="border-top-0" />
-                            <WeekDay className="border-top-0" />
-                            <WeekDay className="border-top-0" />
-                            <WeekDay className="border-top-0 border-right-0" />
-                        </div>
+                        <Week firstWeek={true} days={weeks[0]} currentMonth={this.lastUsed} />
+                        <FullDay days={weeks[0]} />
+                        <Week days={weeks[1]} currentMonth={this.lastUsed} />
+                        <FullDay days={weeks[1]} />
+                        <Week days={weeks[2]} currentMonth={this.lastUsed} />
+                        <FullDay days={weeks[2]} />
+                        <Week days={weeks[3]} currentMonth={this.lastUsed} />
+                        <FullDay days={weeks[3]} />
+                        <Week days={weeks[4]} currentMonth={this.lastUsed} />
+                        <FullDay days={weeks[4]} />
+                        <Week className="pb-4" days={weeks[5]} currentMonth={this.lastUsed} />
+                        <FullDay days={weeks[5]} />
                     </animated.div>
                 )}
             </Transition>
