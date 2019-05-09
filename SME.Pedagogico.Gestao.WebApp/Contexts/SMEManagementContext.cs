@@ -1,24 +1,25 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SME.Pedagogico.Gestao.Models.Authentication
+namespace SME.Pedagogico.Gestao.WebApp.Contexts
 {
-    public class User : Base.Abstracts.NamedTable
+    public class SMEManagementContext : DbContext
     {
         #region ==================== ATTRIBUTES ====================
-        public string Password { get; set; } = null;
-
-        public virtual Entity.Profile Profile { get; set; }
-        public virtual List<UserRole> Roles { get; set; }
-        public virtual LoggedUser LoginStatus { get; set; }
+        public DbSet<Gestao.Models.Authentication.LoggedUser> LoggedUsers { get; set; }
+        public DbSet<Gestao.Models.Authentication.User> Users { get; set; }
         #endregion ==================== ATTRIBUTES ====================
 
 
 
         #region ==================== CONSTRUCTORS ====================
+        public SMEManagementContext(DbContextOptions<SMEManagementContext> options)
+            : base(options)
+        { }
         #endregion ==================== CONSTRUCTORS ====================
 
 

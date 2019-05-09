@@ -36,7 +36,7 @@ function* UserSaga({ credential }) {
 }
 
 function authenticateUser(credential) {
-    return (fetch("/api/Auth/Login", {
+    return (fetch("/api/Auth/LoginIdentity", {
         method: "post",
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credential)

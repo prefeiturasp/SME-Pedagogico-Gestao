@@ -7,7 +7,7 @@ export default class Calendar extends Component {
         return (
             <div className="px-3 pt-3 pb-5">
                 <div className="col-2 px-0 pb-4">
-                    <input type="text" className="form-control form-control-sm" />
+                    <input type="text" className="form-control form-control-sm" value={this.props.name} readOnly style={{ backgroundColor: "rgba(0,0,0,0)" }} />
                 </div>
 
                 <div className="d-flex">

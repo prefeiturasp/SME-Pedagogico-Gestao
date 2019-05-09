@@ -5,6 +5,14 @@ import { bindActionCreators } from 'redux';
 import { Transition } from 'react-spring/renderprops';
 import { animated } from 'react-spring';
 
+const NoEvent = () => {
+    return (
+        <div className="d-flex w-100 h-100 justify-content-center d-flex align-items-center" style={{ fontSize: 25, color: "#A4A4A4" }}>
+            Sem evento
+        </div>
+    );
+}
+
 class FullDay extends Component {
     render() {
         var isOpen = false;
@@ -33,9 +41,7 @@ class FullDay extends Component {
                 }}>
                 {toggle => toggle && (props =>
                     <animated.div className="border-bottom" style={props}>
-                        <div className="d-flex w-100 h-100 justify-content-center d-flex align-items-center" style={{ fontSize: 25, color: "#A4A4A4" }}>
-                            Sem nenhum evento
-                        </div>
+                        <NoEvent />
                     </animated.div>
                 )}
             </Transition>

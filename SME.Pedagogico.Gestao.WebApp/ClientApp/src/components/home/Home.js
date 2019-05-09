@@ -14,7 +14,7 @@ class Home extends Component {
         return (
             <div id="home-container" className="row">
                 <Card className="col">
-                    <Calendar />
+                    <Calendar name="Calendário Escolar de 2019" />
                 </Card>
             </div>
         );
