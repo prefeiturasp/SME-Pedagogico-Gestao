@@ -3,12 +3,14 @@
     SET_USER: "SET_USER",
     UNAUTHORIZED: "UNAUTHORIZED",
     LOGOUT_REQUEST: "LOGOUT_REQUEST",
+    LOGOUT_USER: "LOGOUT_USER",
 }
 const initialState = {
     name: null,
     username: null,
     email: null,
     token: null,
+    session: null,
     refreshToken: null,
     lastAuthentication: null,
     roles: null,
@@ -19,7 +21,7 @@ const initialState = {
 export const actionCreators = {
     login: (credential) => ({ type: types.LOGIN_REQUEST, credential }),
     setUser: (user) => ({ type: types.SET_USER, user }),
-    logout: () => ({ type: types.LOGOUT_REQUEST })
+    logout: (credential) => ({ type: types.LOGOUT_REQUEST, credential })
 };
 
 export const reducer = (state, action) => {
@@ -37,7 +39,7 @@ export const reducer = (state, action) => {
                 ...state,
                 isUnauthorized: true,
             });
-        case types.LOGOUT_REQUEST:
+        case types.LOGOUT_USER:
             return ({
                 ...state,
                 ...initialState

@@ -127,11 +127,21 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// <returns>Token gerado à partir das informações do usuário.</returns>
         private string CreateToken(ClientUserModel user)
         {
+            return (CreateToken(user.Username));
+        }
+
+        /// <summary>
+        /// Método para gerar o token de acesso.
+        /// </summary>
+        /// <param name="username">Nome do usuário</param>
+        /// <returns>Token gerado à partir das informações do usuário.</returns>
+        private string CreateToken(string username)
+        {
             // Adicionar Claims para restringir o acesso dos usuários a determinados conteudos
             Claim[] claims = new Claim[]
             {
                 //new Claim(JwtRegisteredClaimNames.Sub, user.Name),
-                new Claim("username", user.Username),
+                new Claim("username", username),
                 //new Claim(JwtRegisteredClaimNames.Email, user.email),
                 //new Claim(JwtRegisteredClaimNames.Birthdate, user.birthdate.ToString("yyyy-MM-dd")),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
@@ -147,40 +157,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 signingCredentials: creds);
 
             return (new JwtSecurityTokenHandler().WriteToken(token));
-        }
-
-        /// <summary>
-        /// Método para gerar um refresh token para revalidar acesso do usuário sem a necessidade de um novo login.
-        /// </summary>
-        /// <returns>Refresh token para revalidação do usuário</returns>
-        private string CreateRefreshToken()
-        {
-            byte[] randomNumber = new byte[32];
-
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(randomNumber);
-                string refreshToken = Convert.ToBase64String(randomNumber);
-
-                // Descomentar a linha abaixo para retirar do token os caracteres indesejados
-                //refreshToken = CleanString(refreshToken, new string[] { "+", "=", "/" });
-
-                return (refreshToken);
-            }
-        }
-
-        /// <summary>
-        /// Método para limpar a string removendo caracteres indesejados
-        /// </summary>
-        /// <param name="originalString">String original a ser retirado os caracteres</param>
-        /// <param name="parameters">Vetor de caracteres a serem removidas</param>
-        /// <returns>String sem os caracteres contidos no vetor 'parameters'</returns>
-        private string CleanString(string originalString, string[] parameters)
-        {
-            foreach (string character in parameters)
-                originalString = originalString.Replace(character, string.Empty);
-
-            return (originalString);
         }
 
         /// <summary>
@@ -249,55 +225,27 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
         #region -------------------- PUBLIC --------------------
         /// <summary>
-        /// Método para efetuar o login do usuário utilizando o sistema http://identity.sme.prefeitura.sp.gov.br para validar o usuário e receber um token JWT.
+        /// Método para efetuar o login do usuário utilizando o sistema do Novo SGP para validar o usuário e receber credencial de acesso.
         /// </summary>
         /// <param name="credential">Objeto que contém informações da credencial do usuário, neste caso específico é necessário o atributo username e password</param>
-        /// <returns>Token e RefreshToken gerado à partir das informações do usuário encontrado, caso não seja encontrado nenhum usuário correspondente à credencial, o método retorna usuário não autorizado.</returns>
+        /// <returns>Token, Sessão e RefreshToken gerado à partir das informações do usuário encontrado, caso não seja encontrado nenhum usuário correspondente à credencial, o método retorna usuário não autorizado.</returns>
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult<string>> LoginJWT([FromBody]CredentialModel credential)
+        public async Task<ActionResult<string>> Login([FromBody]CredentialModel credential)
         {
-            ClientUserModel user = await Authenticate(credential); // Faz a autenticação do usuário
-
-            // Caso seja encontrado algum usuário com a combinação username e password
-            if (user != null)
+            if (Data.Business.Authentication.ValidateUser(credential.Username, credential.Password))
             {
-                string newToken = CreateToken(user); // Cria o token de acesso
-                string newRefreshToken = CreateRefreshToken(); // Cria o refresh token
+                string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
+                string refreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
 
-                // Verifica se o usuário existe dentro dos usuários logados
-                LoggedUser loggedUser =
-                    (from current in _db.LoggedUsers.Include(".User")
-                     where current.User.Name == user.Username
-                     select current).FirstOrDefault();
+                await Data.Business.Authentication.LoginUser(credential.Username, session, refreshToken); // Loga o usuário no sistema
 
-                if (loggedUser == null) // Se o usuário não existir, registrar login
+                return (Ok(new
                 {
-                    Gestao.Models.Authentication.User searchUser =
-                        (from current in _db.Users
-                         where current.Name == user.Username
-                         select current).FirstOrDefault();
-
-                    loggedUser = new LoggedUser()
-                    {
-                        User = searchUser,
-                        RefreshToken = newRefreshToken,
-                        LastAccess = DateTime.Now,
-                        ExpiresAt = DateTime.Now.AddMinutes(30)
-                    };
-
-                    await _db.LoggedUsers.AddAsync(loggedUser);
-                }
-                else // Caso contrário, atualiza as informações
-                {
-                    loggedUser.RefreshToken = newRefreshToken;
-                    loggedUser.LastAccess = DateTime.Now;
-                    loggedUser.ExpiresAt = DateTime.Now.AddMinutes(30);
-                }
-
-                await _db.SaveChangesAsync(); // Salva as informações na tabela correspondente (LoggedUsers)
-
-                return (Ok(new SMETokenModel { Token = newToken, RefreshToken = newRefreshToken }));
+                    Token = CreateToken(credential.Username),
+                    Session = session,
+                    RefreshToken = refreshToken
+                }));
             }
 
             return (Unauthorized());
@@ -312,36 +260,43 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> RefreshLoginJWT([FromBody]CredentialModel credential)
         {
-            // Faz a pesquisa no banco de dados (smeCoreDB/LoggedUsers) se o usuário está listado como logado e possui o mesmo refresh token
-            LoggedUser loggedUser =
-                (from current in _db.LoggedUsers.Include(".User")
-                 where current.User.Name == credential.Username
-                 && current.RefreshToken == credential.RefreshToken
-                 select current).FirstOrDefault();
+            // Faz a pesquisa no banco de dados (smeManagementDB/LoggedUsers) se o usuário está listado como logado possuindo a mesma sessão e o mesmo refresh token
+            LoggedUser loggedUser = await Data.Business.Authentication.GetLoggedUser(credential.Username, credential.Session, credential.RefreshToken);
 
-            // Caso seja encontrado algum usuário com a combinação username e refreshToken, verifica se o refresh token ainda é valido
+            // Caso seja encontrado algum usuário com a combinação de username, sessão e refreshToken, verifica se o refresh token ainda é valido
             if (loggedUser != null)
                 if ((loggedUser.ExpiresAt - DateTime.Now).Minutes > 0)
                 {
-                    ClientUserModel user = new ClientUserModel() { Username = credential.Username };//await GetUser(credential.Username); // Busca o usuário pelo username
-                    string newToken = CreateToken(user); // Cria o token de acesso
-                    string newRefreshToken = CreateRefreshToken(); // Cria o refresh token
+                    string newSession = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
+                    string newRefreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
 
-                    loggedUser.RefreshToken = newRefreshToken;
-                    loggedUser.LastAccess = DateTime.Now;
-                    loggedUser.ExpiresAt = DateTime.Now.AddMinutes(30); // Define o tempo de validade do refresh token
+                    await Data.Business.Authentication.LoginUser(credential.Username, newSession, newRefreshToken); // Salva as informações na tabela correspondente (LoggedUsers)
 
-                    await _db.SaveChangesAsync(); // Salva as informações na tabela correspondente (LoggedUsers)
-
-                    return (Ok(new { token = newToken, refreshToken = newRefreshToken }));
+                    return (Ok(new
+                    {
+                        Token = CreateToken(credential.Username),
+                        Session = newSession,
+                        RefreshToken = newRefreshToken
+                    }));
                 }
                 else // Caso não seja válido, remove o usuário da lista de usuários logados
                 {
-                    _db.Remove(loggedUser); // Remove o usuário
-                    await _db.SaveChangesAsync(); // Salva as informações na tabela correspondente (LoggedUsers)
+                    await Data.Business.Authentication.LogoutUser(credential.Username, credential.Session); // Desloga o usuário
                 }
 
             return (Unauthorized());
+        }
+
+        /// <summary>
+        /// Método para deslogar o usuário.
+        /// </summary>
+        /// <param name="credential">Objeto que contém informações da credencial do usuário, neste caso específico é necessário o atributo username e session</param>
+        /// <returns>Retorna verdadeiro caso o usuário estiver logado com as credenciais especificadas, caso contrário retorna falso.</returns>
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<ActionResult<string>> Logout([FromBody]CredentialModel credential)
+        {
+            return (Ok(await Data.Business.Authentication.LogoutUser(credential.Username, credential.Session)));
         }
 
         /// <summary>
@@ -353,16 +308,39 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> LoginIdentity([FromBody]CredentialModel credential)
         {
-            // Executa o método de autenticação
-            ClientUserModel user = await Authenticate(credential);
-            user.SMEToken = new SMETokenModel();
-            user.SMEToken.Token = CreateToken(user); // Cria o token de acesso
-            user.SMEToken.RefreshToken = CreateRefreshToken(); // Cria o refresh token
+            if (!Data.Business.Authentication.ValidateUser(credential.Username, credential.Password))
+            {
+                // Executa o método de autenticação pelo CoreSSO.Identity (sistema legado)
+                ClientUserModel user = await Authenticate(credential);
 
-            if (user == null)
-                return (Unauthorized());
+                if (user != null)
+                {
+                    user.SMEToken = new SMETokenModel();
+                    user.SMEToken.Token = CreateToken(user); // Cria o token de acesso
+                    user.SMEToken.Session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
+                    user.SMEToken.RefreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
+                    await Data.Business.Authentication.RegisterUser(credential.Username, credential.Password); // Cadastra o usuário dentro do banco PostgreSQL (Novo SGP)
+                    await Data.Business.Authentication.LoginUser(credential.Username, user.SMEToken.Session, user.SMEToken.RefreshToken); // Loga o usuário no sistema
+
+                    return (Ok(user));
+                }
+            }
             else
-                return (Ok(user));
+            {
+                string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
+                string refreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
+
+                await Data.Business.Authentication.LoginUser(credential.Username, session, refreshToken); // Loga o usuário no sistema
+
+                return (Ok(new
+                {
+                    Token = CreateToken(credential.Username),
+                    Session = session,
+                    RefreshToken = refreshToken
+                }));
+            }
+
+            return (Unauthorized());
         }
 
         /// <summary>

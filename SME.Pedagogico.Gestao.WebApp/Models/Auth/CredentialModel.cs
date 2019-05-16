@@ -10,6 +10,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Models.Auth
     {
         public string Username { get; set; }
         public string Password { get; set; }
+        public string Session { get; set; }
         public string RefreshToken { get; set; }
     }
 }

@@ -10,7 +10,7 @@ using SME.Pedagogico.Gestao.Data.Contexts;
 namespace SME.Pedagogico.Gestao.Data.Migrations
 {
     [DbContext(typeof(SMEManagementContext))]
-    [Migration("20190509131900_m1")]
+    [Migration("20190510150225_m1")]
     partial class m1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -106,6 +106,8 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
 
                     b.Property<string>("RefreshToken");
 
+                    b.Property<string>("Session");
+
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
@@ -195,6 +197,8 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Description");
 
                     b.Property<string>("Name");
 

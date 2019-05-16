@@ -25,7 +25,8 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -150,6 +151,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                 {
                     Id = table.Column<string>(nullable: false),
                     RefreshToken = table.Column<string>(nullable: true),
+                    Session = table.Column<string>(nullable: true),
                     LastAccess = table.Column<DateTime>(nullable: false),
                     ExpiresAt = table.Column<DateTime>(nullable: false),
                     UserId = table.Column<string>(nullable: true)

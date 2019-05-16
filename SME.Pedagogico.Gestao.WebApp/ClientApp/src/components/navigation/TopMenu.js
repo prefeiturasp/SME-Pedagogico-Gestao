@@ -7,6 +7,16 @@ import { bindActionCreators } from 'redux';
 import Breadcrumb from './Breadcrumb';
 
 class TopMenu extends Component {
+    constructor() {
+        super();
+
+        this.logout = this.logout.bind(this);
+    }
+
+    logout() {
+        this.props.logout({ username: this.props.user.username, session: this.props.user.session });
+    }
+
     render() {
         return (
             <div id="top-menu" className="fixed-top d-flex w-auto">
@@ -28,7 +38,7 @@ class TopMenu extends Component {
 
                     <div className="d-flex">
                         <small className="d-flex align-items-center font-weight-light text-muted">Sair</small>
-                        <div className="btn btn-outline-light rounded-circle d-flex justify-content-center align-items-center ml-2 mr-3 top-menu-button" onClick={this.props.logout}>
+                        <div className="btn btn-outline-light rounded-circle d-flex justify-content-center align-items-center ml-2 mr-3 top-menu-button" onClick={this.logout}>
                             <i className="fas fa-power-off top-menu-button-icon"></i>
                         </div>
                     </div>
@@ -39,6 +49,6 @@ class TopMenu extends Component {
 }
 
 export default connect(
-    state => state.user,
+    state => ({ user: state.user }),
     dispatch => bindActionCreators(actionCreators, dispatch)
 )(TopMenu);

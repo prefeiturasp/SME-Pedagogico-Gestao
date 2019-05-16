@@ -61,6 +61,24 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
         {
             optionsBuilder.UseNpgsql(connectionString);
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Seed para os roles.
+            Models.Authentication.Role[] roles =
+            {
+                new Models.Authentication.Role() { Name = "Admin" },
+                new Models.Authentication.Role() { Name = "Diretor" },
+                new Models.Authentication.Role() { Name = "Supervisor" },
+                new Models.Authentication.Role() { Name = "Diretor" },
+                new Models.Authentication.Role() { Name = "Secretario(a)" },
+                new Models.Authentication.Role() { Name = "Auxiliar" },
+                new Models.Authentication.Role() { Name = "Professor" },
+                new Models.Authentication.Role() { Name = "Responsavel" },
+                new Models.Authentication.Role() { Name = "Aluno" }
+            };
+            modelBuilder.Entity<Models.Authentication.Role>().HasData(roles);
+        }
         #endregion ==================== METHODS ====================
     }
 }

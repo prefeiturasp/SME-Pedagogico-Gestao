@@ -104,6 +104,8 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
 
                     b.Property<string>("RefreshToken");
 
+                    b.Property<string>("Session");
+
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
@@ -193,6 +195,8 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Description");
 
                     b.Property<string>("Name");
 

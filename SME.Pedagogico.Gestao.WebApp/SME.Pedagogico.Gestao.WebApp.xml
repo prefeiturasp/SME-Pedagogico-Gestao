@@ -25,19 +25,12 @@
             <param name="user">Objeto contendo informações do usuário</param>
             <returns>Token gerado à partir das informações do usuário.</returns>
         </member>
-        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.AuthController.CreateRefreshToken">
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.AuthController.CreateToken(System.String)">
             <summary>
-            Método para gerar um refresh token para revalidar acesso do usuário sem a necessidade de um novo login.
+            Método para gerar o token de acesso.
             </summary>
-            <returns>Refresh token para revalidação do usuário</returns>
-        </member>
-        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.AuthController.CleanString(System.String,System.String[])">
-            <summary>
-            Método para limpar a string removendo caracteres indesejados
-            </summary>
-            <param name="originalString">String original a ser retirado os caracteres</param>
-            <param name="parameters">Vetor de caracteres a serem removidas</param>
-            <returns>String sem os caracteres contidos no vetor 'parameters'</returns>
+            <param name="username">Nome do usuário</param>
+            <returns>Token gerado à partir das informações do usuário.</returns>
         </member>
         <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.AuthController.GetUser(System.String)">
             <summary>
@@ -54,12 +47,12 @@
             <param name="name">Nome do atributo desejado</param>
             <returns>Valor (value) do atributo desejado</returns>
         </member>
-        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.AuthController.LoginJWT(SME.Pedagogico.Gestao.WebApp.Models.Auth.CredentialModel)">
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.AuthController.Login(SME.Pedagogico.Gestao.WebApp.Models.Auth.CredentialModel)">
             <summary>
-            Método para efetuar o login do usuário utilizando o sistema http://identity.sme.prefeitura.sp.gov.br para validar o usuário e receber um token JWT.
+            Método para efetuar o login do usuário utilizando o sistema do Novo SGP para validar o usuário e receber credencial de acesso.
             </summary>
             <param name="credential">Objeto que contém informações da credencial do usuário, neste caso específico é necessário o atributo username e password</param>
-            <returns>Token e RefreshToken gerado à partir das informações do usuário encontrado, caso não seja encontrado nenhum usuário correspondente à credencial, o método retorna usuário não autorizado.</returns>
+            <returns>Token, Sessão e RefreshToken gerado à partir das informações do usuário encontrado, caso não seja encontrado nenhum usuário correspondente à credencial, o método retorna usuário não autorizado.</returns>
         </member>
         <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.AuthController.RefreshLoginJWT(SME.Pedagogico.Gestao.WebApp.Models.Auth.CredentialModel)">
             <summary>
@@ -67,6 +60,13 @@
             </summary>
             <param name="credential">Objeto que contém informações da credencial do usuário, neste caso específico é necessário o atributo username e refreshToken</param>
             <returns>Token e RefreshToken gerado à partir do RefreshToken utilizado, caso o RefreshToken não seja válido, o método retorna usuário não autorizado.</returns>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.AuthController.Logout(SME.Pedagogico.Gestao.WebApp.Models.Auth.CredentialModel)">
+            <summary>
+            Método para deslogar o usuário.
+            </summary>
+            <param name="credential">Objeto que contém informações da credencial do usuário, neste caso específico é necessário o atributo username e session</param>
+            <returns>Retorna verdadeiro caso o usuário estiver logado com as credenciais especificadas, caso contrário retorna falso.</returns>
         </member>
         <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.AuthController.LoginIdentity(SME.Pedagogico.Gestao.WebApp.Models.Auth.CredentialModel)">
             <summary>
