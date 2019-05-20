@@ -15,5 +15,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Models.Auth
         public IdentityModel Identity { get; set; }
         public IEnumerable<Cookie> Cookies { get; set; }
         public SMETokenModel SMEToken { get; set; }
+        public List<UserRoleModel> Roles { get; set; } = new List<UserRoleModel>();
     }
 }

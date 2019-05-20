@@ -1,7 +1,7 @@
 ﻿
 
 export const types = {
-    FREQUENCY_EFFECT: "FREQUENCY_EFFECT",
+    FREQUENCY_EFFECT_REQUEST: "FREQUENCY_EFFECT_REQUEST",
     RESPONSE_FREQUENCY: "RESPONSE_FREQUENCY",
     GET_STUDENTS: "GET_STUDENTS",
 }
@@ -9,7 +9,7 @@ export const types = {
 
  export const actionCreators = {
      getStudents: () => ({ type: types.GET_STUDENTS }),
-     frequencyeffect: (eff) => ({ type: types.FREQUENCY_EFFECT, eff })
+     frequencyeffect: (eff) => ({ type: types.FREQUENCY_EFFECT_REQUEST, eff })
 };
 
 const initialState = {
@@ -25,9 +25,6 @@ export const reducer = (state, action) => {
     state = state || initialState;
 
     switch (action.type) {
-        case types.FREQUENCY_EFFECT:
-            return ({ ...state, effectFrequency: action.eff });
-
         case types.GET_STUDENTS:
             var students = [
                 {

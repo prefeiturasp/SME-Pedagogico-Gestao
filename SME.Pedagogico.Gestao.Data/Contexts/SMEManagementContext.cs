@@ -64,8 +64,8 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Seed para os roles.
-            Models.Authentication.Role[] roles =
+            // Seed para os perfis
+            Models.Authentication.Role[] roles = new Models.Authentication.Role[]
             {
                 new Models.Authentication.Role() { Name = "Admin" },
                 new Models.Authentication.Role() { Name = "Diretor" },
@@ -78,6 +78,50 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
                 new Models.Authentication.Role() { Name = "Aluno" }
             };
             modelBuilder.Entity<Models.Authentication.Role>().HasData(roles);
+
+            // Seed para os niveis de acesso
+            Models.Authentication.AccessLevel[] accessLevels = new Models.Authentication.AccessLevel[]
+            {
+                new Models.Authentication.AccessLevel() { Description = "Desenvolvedor", Value = "0" },
+                new Models.Authentication.AccessLevel() { Description = "COTIC", Value = "1" },
+                new Models.Authentication.AccessLevel() { Description = "SME", Value = "2" },
+                new Models.Authentication.AccessLevel() { Description = "COPED", Value = "3" },
+                new Models.Authentication.AccessLevel() { Description = "DIEFEM", Value = "4" },
+                new Models.Authentication.AccessLevel() { Description = "DIEI", Value = "5" },
+                new Models.Authentication.AccessLevel() { Description = "DIEJA", Value = "6" },
+                new Models.Authentication.AccessLevel() { Description = "DIEE", Value = "7" },
+                new Models.Authentication.AccessLevel() { Description = "NTA", Value = "8" },
+                new Models.Authentication.AccessLevel() { Description = "NTC", Value = "9" },
+                new Models.Authentication.AccessLevel() { Description = "NTC-NAAPA", Value = "10" },
+                new Models.Authentication.AccessLevel() { Description = "DIEE-Conveniado", Value = "11" },
+                new Models.Authentication.AccessLevel() { Description = "COPED Básico", Value = "12" },
+                new Models.Authentication.AccessLevel() { Description = "Regional", Value = "13" },
+                new Models.Authentication.AccessLevel() { Description = "Técnico", Value = "14" },
+                new Models.Authentication.AccessLevel() { Description = "Supervisor DRE", Value = "15" },
+                new Models.Authentication.AccessLevel() { Description = "DIPED", Value = "16" },
+                new Models.Authentication.AccessLevel() { Description = "NAAPA", Value = "17" },
+                new Models.Authentication.AccessLevel() { Description = "CEFAI", Value = "18" },
+                new Models.Authentication.AccessLevel() { Description = "PAAI", Value = "19" },
+                new Models.Authentication.AccessLevel() { Description = "DIPED DRE", Value = "20" },
+                new Models.Authentication.AccessLevel() { Description = "Adm DRE", Value = "21" },
+                new Models.Authentication.AccessLevel() { Description = "Básico DRE", Value = "22" },
+                new Models.Authentication.AccessLevel() { Description = "Básico Escola", Value = "23" },
+                new Models.Authentication.AccessLevel() { Description = "Infantil", Value = "24" },
+                new Models.Authentication.AccessLevel() { Description = "UE Parceira", Value = "25" },
+                new Models.Authentication.AccessLevel() { Description = "AD", Value = "26" },
+                new Models.Authentication.AccessLevel() { Description = "CP", Value = "27" },
+                new Models.Authentication.AccessLevel() { Description = "Secretário Escola", Value = "28" },
+                new Models.Authentication.AccessLevel() { Description = "COTIC", Value = "29" },
+                new Models.Authentication.AccessLevel() { Description = "UE", Value = "30" },
+                new Models.Authentication.AccessLevel() { Description = "CJ E Volante (PEI, ADI)", Value = "31" },
+                new Models.Authentication.AccessLevel() { Description = "Fund. e Inf.", Value = "32" },
+                new Models.Authentication.AccessLevel() { Description = "POA", Value = "33" },
+                new Models.Authentication.AccessLevel() { Description = "PAP", Value = "34" },
+                new Models.Authentication.AccessLevel() { Description = "AEE", Value = "35" },
+                new Models.Authentication.AccessLevel() { Description = "Readaptado", Value = "33" },
+                new Models.Authentication.AccessLevel() { Description = "ATE", Value = "34" },
+            };
+            modelBuilder.Entity<Models.Authentication.AccessLevel>().HasData(accessLevels);
         }
         #endregion ==================== METHODS ====================
     }

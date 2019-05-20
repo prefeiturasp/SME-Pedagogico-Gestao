@@ -47,6 +47,13 @@
             <param name="name">Nome do atributo desejado</param>
             <returns>Valor (value) do atributo desejado</returns>
         </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.AuthController.GetUserRoles(System.String)">
+            <summary>
+            Método para retornar as funções/cargos/perfis do usuário pelo 'username'
+            </summary>
+            <param name="username">Nome de usuário a ser pesquisado</param>
+            <returns>Retorna uma lista de UserRoleModel</returns>
+        </member>
         <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.AuthController.Login(SME.Pedagogico.Gestao.WebApp.Models.Auth.CredentialModel)">
             <summary>
             Método para efetuar o login do usuário utilizando o sistema do Novo SGP para validar o usuário e receber credencial de acesso.

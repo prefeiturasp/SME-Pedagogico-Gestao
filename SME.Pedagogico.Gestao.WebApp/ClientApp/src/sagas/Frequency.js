@@ -2,14 +2,15 @@ import { takeLatest, call, put } from "redux-saga/effects";
 import * as Frequency from '../store/Frequency';
 
 export default function* () {
-    yield takeLatest(Frequency.types.EFFECT_FREQUENCY, UserSaga);
+    yield takeLatest(Frequency.types.FREQUENCY_EFFECT_REQUEST, FrequencySaga);
 }
 
-function* UserSaga({ efetiveFrequency }) {
+function* FrequencySaga({ efetiveFrequency }) {
     try {
-        const data = yield call(effectFrequency, efetiveFrequency);
+        //const data = yield call(effectFrequency, efetiveFrequency);
 
-        yield put({ type: Frequency.types.RESPONSE_FREQUENCY, data });
+        //yield put({ type: Frequency.types.RESPONSE_FREQUENCY, data });
+        yield put({ type: Frequency.types.RESPONSE_FREQUENCY });
       
     }
     catch (error) {

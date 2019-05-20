@@ -68,7 +68,15 @@ class Login extends Component {
                                     <div className="py-3"></div>
 
                                     <div className="float-right">
-                                        <button type="submit" className="btn btn-warning text-white">Entrar</button>
+                                        {this.props.user.onAuthenticationRequest === false ?
+                                            <button type="submit" className="btn btn-warning text-white">Entrar</button>
+                                            :
+                                            <button type="submit" className="btn btn-warning" style={{ width: 68.38 }}>
+                                                <div className="spinner-border spinner-border-sm text-white" role="status">
+                                                    <span className="sr-only">Carregando...</span>
+                                                </div>
+                                            </button>
+                                        }
                                     </div>
                                 </form>
                             </div>

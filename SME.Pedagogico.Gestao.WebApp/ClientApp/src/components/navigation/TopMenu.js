@@ -30,7 +30,7 @@ class TopMenu extends Component {
                     <Breadcrumb id="breadcrumb-top-menu" className="d-flex flex-fill ml-4" />
 
                     <div className="d-flex">
-                        <small className="d-flex align-items-center font-weight-light text-muted">Professor</small>
+                        <small className="d-flex align-items-center font-weight-light text-muted">{this.props.user.activeRole.roleName}</small>
                         <div className="btn btn-outline-light rounded-circle d-flex justify-content-center align-items-center ml-2 mr-3 top-menu-button">
                             <i className="fas fa-chalkboard-teacher  top-menu-button-icon"></i>
                         </div>

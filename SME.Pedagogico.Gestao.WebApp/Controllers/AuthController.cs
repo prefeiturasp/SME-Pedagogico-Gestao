@@ -221,6 +221,27 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
             return (data);
         }
+
+        /// <summary>
+        /// Método para retornar as funções/cargos/perfis do usuário pelo 'username'
+        /// </summary>
+        /// <param name="username">Nome de usuário a ser pesquisado</param>
+        /// <returns>Retorna uma lista de UserRoleModel</returns>
+        private async Task<List<UserRoleModel>> GetUserRoles(string username)
+        {
+            List<UserRoleModel> userRoles =
+                (from current in await Data.Business.Authentication.GetUserRoles(username)
+                 select new UserRoleModel()
+                 {
+                     RoleId = current.RoleId,
+                     RoleName = current.Role.Name,
+                     AccessLevelId = current.AccessLevelId,
+                     AccessLevel = current.AccessLevel.Value,
+                     Description = current.AccessLevel.Description
+                 }).ToList();
+
+            return (userRoles);
+        }
         #endregion -------------------- PRIVATE --------------------
 
         #region -------------------- PUBLIC --------------------
@@ -244,8 +265,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 {
                     Token = CreateToken(credential.Username),
                     Session = session,
-                    RefreshToken = refreshToken
-                }));
+                    RefreshToken = refreshToken,
+                    Roles = await GetUserRoles(credential.Username)
+            }));
             }
 
             return (Unauthorized());
@@ -321,6 +343,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     user.SMEToken.RefreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
                     await Data.Business.Authentication.RegisterUser(credential.Username, credential.Password); // Cadastra o usuário dentro do banco PostgreSQL (Novo SGP)
                     await Data.Business.Authentication.LoginUser(credential.Username, user.SMEToken.Session, user.SMEToken.RefreshToken); // Loga o usuário no sistema
+                    user.Roles = await GetUserRoles(credential.Username);
 
                     return (Ok(user));
                 }
@@ -336,7 +359,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 {
                     Token = CreateToken(credential.Username),
                     Session = session,
-                    RefreshToken = refreshToken
+                    RefreshToken = refreshToken,
+                    Roles = await GetUserRoles(credential.Username)
                 }));
             }
 

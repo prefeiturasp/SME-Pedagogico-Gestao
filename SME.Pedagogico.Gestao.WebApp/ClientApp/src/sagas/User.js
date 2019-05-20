@@ -10,12 +10,13 @@ export default function* () {
 
 function* LoginUserSaga({ credential }) {
     try {
+        yield put({ type: User.types.ON_AUTHENTICATION_REQUEST });
         const data = yield call(authenticateUser, credential);
 
         if (data.status === 401)
             yield put({ type: User.types.UNAUTHORIZED });
         else {
-            const user = {
+            var user = {
                 name: "",
                 username: credential.username,
                 email: "",
@@ -24,17 +25,19 @@ function* LoginUserSaga({ credential }) {
                 refreshToken: data.refreshToken,
                 isAuthenticated: true,
                 lastAuthentication: new Date(),
-                //TODO: Pegar valores do perfil do usuário
-                roles: [
-                    "Admin",
-                    "Supervisor"
-                ]
+                roles: data.roles,
+                activeRole: null,
             };
 
+            if (data.roles.length > 0)
+                user.activeRole = data.roles[0];
+
+            yield put({ type: User.types.FINISH_AUTHENTICATION_REQUEST });
             yield put({ type: User.types.SET_USER, user });
         }
     }
     catch (error) {
+        yield put({ type: User.types.FINISH_AUTHENTICATION_REQUEST });
         yield put({ type: "API_CALL_ERROR" });
     }
 }
