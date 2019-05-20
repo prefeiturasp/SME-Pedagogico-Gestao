@@ -1,6 +1,5 @@
 ﻿import React, { Component } from 'react';
 
-
 export default class LegendsRightWrong extends Component {
     render() {
         return (
@@ -8,7 +7,6 @@ export default class LegendsRightWrong extends Component {
                 <div className="d-flex flex-column align-items-end">
                     <div className="accordion md-accordion" id="accordionEx1" role="tablist" aria-multiselectable="true">
                         <div className="card">
-
 
                             <div className="card-header-sondagem" role="tab" id="headingTwo1">
                                 <div className="collapsed" data-toggle="collapse" data-parent="#accordionEx1" href="#collapseTwo1"
@@ -38,7 +36,6 @@ export default class LegendsRightWrong extends Component {
                             </div>
 
                         </div>
-
 
                     </div>
                 </div>

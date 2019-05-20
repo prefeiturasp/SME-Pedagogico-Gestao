@@ -1,15 +1,12 @@
-﻿
-
-export const types = {
+﻿export const types = {
     FREQUENCY_EFFECT_REQUEST: "FREQUENCY_EFFECT_REQUEST",
     RESPONSE_FREQUENCY: "RESPONSE_FREQUENCY",
     GET_STUDENTS: "GET_STUDENTS",
 }
 
-
- export const actionCreators = {
-     getStudents: () => ({ type: types.GET_STUDENTS }),
-     frequencyeffect: (eff) => ({ type: types.FREQUENCY_EFFECT_REQUEST, eff })
+export const actionCreators = {
+    getStudents: () => ({ type: types.GET_STUDENTS }),
+    frequencyeffect: (eff) => ({ type: types.FREQUENCY_EFFECT_REQUEST, eff })
 };
 
 const initialState = {
@@ -19,7 +16,6 @@ const initialState = {
         checked: false,
     }
 };
-
 
 export const reducer = (state, action) => {
     state = state || initialState;
@@ -387,7 +383,7 @@ export const reducer = (state, action) => {
                     "possuiDeficiencia": false,
                     "qtdFaltas": 0
                 },
-        
+
                 {
                     "codigoAluno": 3531703,
                     "nomeAluno": "JOSE DANIEL FERREIRA DA SILVA GOMES",
@@ -407,5 +403,4 @@ export const reducer = (state, action) => {
         default:
             return (state);
     }
-
 }

@@ -11,7 +11,6 @@ function* FrequencySaga({ efetiveFrequency }) {
 
         //yield put({ type: Frequency.types.RESPONSE_FREQUENCY, data });
         yield put({ type: Frequency.types.RESPONSE_FREQUENCY });
-      
     }
     catch (error) {
         yield put({ type: "API_CALL_ERROR" });

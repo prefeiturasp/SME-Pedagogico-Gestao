@@ -16,7 +16,6 @@ export default class PollSelectRightWrong extends Component {
     getColor(value) {
         var defaultColor = "custom-select custom-select-sm ";
 
-
         if (value !== undefined && (value === "A" || value === "E" || value === "NR")) {
             return (defaultColor + this.props.columnColor);
         } else {
@@ -28,7 +27,6 @@ export default class PollSelectRightWrong extends Component {
         this.props.updatePollStudent(this.props.sequence, "math", this.props.name, event.target.value);
     }
 
-    
     render() {
         return (
 

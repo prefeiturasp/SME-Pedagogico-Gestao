@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+using System;
 
 namespace SME.Pedagogico.Gestao.Data.Migrations
 {
@@ -237,44 +237,44 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                 columns: new[] { "Id", "Description", "Value" },
                 values: new object[,]
                 {
-                    { "51847417-a0e0-4a5d-918d-4628cdc6f03a", "Desenvolvedor", "0" },
-                    { "46a7aa47-c904-434b-8383-83517476daf7", "Adm DRE", "21" },
-                    { "709bbbd5-d0f7-42d2-9d3e-1a915416834b", "Básico DRE", "22" },
-                    { "83a4de5e-01ef-4a3f-ad57-0992415a2230", "Infantil", "24" },
-                    { "f3bcb5d9-9ffc-4f9c-92c5-8ae3b054817e", "UE Parceira", "25" },
-                    { "6a8b1f22-ab6b-4fa9-8f03-5611a7335d53", "AD", "26" },
-                    { "16195402-0627-4e33-9a7b-2ea1a5a54392", "CP", "27" },
-                    { "11cbed50-1f1c-43b6-82da-e34c04900b8d", "Secretário Escola", "28" },
-                    { "0e0e5704-bac8-4881-ad2b-d83fea251baa", "DIPED DRE", "20" },
-                    { "a87433b8-7771-43af-89aa-2b68aebfb853", "COTIC", "29" },
-                    { "6939cf4d-aea0-4f94-b413-c0666e0be7e8", "CJ E Volante (PEI, ADI)", "31" },
-                    { "0c673b2d-974d-4d2e-b1fa-45c9f0d13551", "Fund. e Inf.", "32" },
-                    { "0bf8f34a-8ad2-4965-8aba-2641d66ba38c", "POA", "33" },
-                    { "f45862f4-4527-4df9-a578-aee5ae8f15a3", "PAP", "34" },
-                    { "c89193a3-0cca-44a4-bc71-b1308f4e3179", "AEE", "35" },
-                    { "ba96524a-f456-4460-8cc3-5271fcd13168", "Readaptado", "33" },
-                    { "dc088cd7-e418-4c96-bf6f-1e5f4ec28291", "ATE", "34" },
-                    { "7ae09eb2-43a7-4af3-952a-1ea506fe71d3", "UE", "30" },
-                    { "2cfee8fa-dc82-4b34-96d1-842397ddb9c7", "PAAI", "19" },
-                    { "ad57030e-a589-4208-8bfa-83627114ac05", "Básico Escola", "23" },
-                    { "101872c4-6391-4376-938d-5ab3166cb11b", "NAAPA", "17" },
-                    { "8a2775fb-a1bc-4f68-8776-3b5d2afad56c", "COTIC", "1" },
-                    { "bc8d1f53-5888-45b9-9171-ee9bfa671de8", "SME", "2" },
-                    { "3a27ded1-30d0-4131-9a2f-399ca11c4f5c", "COPED", "3" },
-                    { "d97f7c3a-527c-4e49-8355-5bed006d8b88", "DIEFEM", "4" },
-                    { "10072826-5399-469f-af46-a16b4f35f1a2", "CEFAI", "18" },
-                    { "ae65435b-aa1d-44cc-92f1-5f9a32260208", "DIEJA", "6" },
-                    { "c851fa70-ff06-48ea-ac0a-1f1aa7189808", "DIEE", "7" },
-                    { "93f26e54-8568-4634-95b3-0945c1e51ee5", "NTA", "8" },
-                    { "bb8c9de4-892b-45e2-9599-901770bd1874", "DIEI", "5" },
-                    { "9fe95916-8706-4a28-b0b8-3b324d0365a7", "NTC-NAAPA", "10" },
-                    { "31f676ed-4719-4c73-abc4-ac3f37c5003c", "DIEE-Conveniado", "11" },
-                    { "64c9c2ca-8631-403c-b8a4-21f45c90d6c8", "COPED Básico", "12" },
-                    { "556eb493-223d-4711-ab60-5cf949a7b5cd", "Regional", "13" },
-                    { "d20b19b7-7525-40bb-aae1-f6a2796519f2", "Técnico", "14" },
-                    { "7adae218-5d27-4b2b-9aaa-e9ac6e3eb7f1", "Supervisor DRE", "15" },
-                    { "b3f7ee02-2025-40c8-9d94-8f5d9b0b8ede", "DIPED", "16" },
-                    { "62b5bb0e-080a-42a0-821e-75e757113669", "NTC", "9" }
+                    { "ef76b295-c3ee-488e-99c7-48931c641e16", "Desenvolvedor", "0" },
+                    { "6a8027a8-b5cc-4db5-b9ca-4166a0fb0862", "Adm DRE", "21" },
+                    { "c20ae596-858d-4187-a0a1-6cfec18f499f", "Básico DRE", "22" },
+                    { "57393d2f-64ba-49b7-8b7c-8e48d8841d5a", "Infantil", "24" },
+                    { "151ecf2d-05c1-4c53-b044-6cd8032209e6", "UE Parceira", "25" },
+                    { "4e81202d-03e9-49dc-b32e-409271fa7cf5", "AD", "26" },
+                    { "1620a652-48a7-46c4-81ee-0b02f4696f9e", "CP", "27" },
+                    { "56c72f2e-c17d-470f-a355-47f24e017872", "Secretário Escola", "28" },
+                    { "5b2e4668-12d9-4344-86f0-9badba1d9fb0", "DIPED DRE", "20" },
+                    { "48650492-1ff3-401c-a69c-bac10adb227c", "COTIC", "29" },
+                    { "80ba85c3-2d51-4bf3-9de2-290f140f7103", "CJ E Volante (PEI, ADI)", "31" },
+                    { "42ccf8f6-47c9-4a8e-98c3-4767cb00967a", "Fund. e Inf.", "32" },
+                    { "767c06f0-9847-4358-bd10-bd4b2b1ad118", "POA", "33" },
+                    { "bc56eb95-437c-478c-b748-e159cc9db646", "PAP", "34" },
+                    { "3376f838-e4e8-4bdc-a371-7ba50e5f2bf3", "AEE", "35" },
+                    { "d4d49e02-49d3-4dda-9ddc-d3bb984ae68d", "Readaptado", "36" },
+                    { "6be0fe30-8be3-4434-856b-2768f955f968", "ATE", "37" },
+                    { "de749335-8120-432f-82df-04f83783fa3b", "UE", "30" },
+                    { "870cfba9-a19c-4afb-9f95-f7ac4742d07a", "PAAI", "19" },
+                    { "4ad2aecd-01c1-4aa8-ab59-c6ef9f0add74", "Básico Escola", "23" },
+                    { "0a89e0bd-cd67-4c34-b45b-5cefc6e58971", "NAAPA", "17" },
+                    { "77d791c5-f86d-45d7-af0a-cb996c77f692", "COTIC", "1" },
+                    { "925bcb7e-7fd6-4cdf-9b2f-9f23deb837ea", "SME", "2" },
+                    { "5c520ef1-5f6f-43c7-b61f-4a361fa8b33f", "COPED", "3" },
+                    { "c664dfaa-3f7a-4ebe-bf4d-9c40840ac4d0", "DIEFEM", "4" },
+                    { "ab00fb83-6ad1-47b7-ac54-cb1afea9f558", "CEFAI", "18" },
+                    { "f6b67754-88f5-4908-b62f-66234b314b34", "DIEJA", "6" },
+                    { "ad6366f8-0eea-4ed7-83ba-8c69a27bdc2c", "DIEE", "7" },
+                    { "d47ac0d5-9202-47fc-985f-773b765723d1", "NTA", "8" },
+                    { "6f8597bc-df26-401c-a411-5d368a600ed0", "DIEI", "5" },
+                    { "5d3d83b4-91d0-4cce-8434-dff59ee57afc", "NTC-NAAPA", "10" },
+                    { "8c040b83-3420-4e91-ba69-31746a870279", "DIEE-Conveniado", "11" },
+                    { "9f3848a7-8edc-4dbe-9333-8e1781b95b8f", "COPED Básico", "12" },
+                    { "0e920ec1-6701-4ac2-9258-f486eda17623", "Regional", "13" },
+                    { "6234ab73-522f-42b5-8833-1ef07286b0be", "Técnico", "14" },
+                    { "0b82c94c-29ba-4300-aeed-b2fb9f311de4", "Supervisor DRE", "15" },
+                    { "41783fe9-7ab3-4f4f-8d59-a10966e73b6a", "DIPED", "16" },
+                    { "2ef96d4c-56ff-48d3-a685-de99c88d1eb0", "NTC", "9" }
                 });
 
             migrationBuilder.InsertData(
@@ -282,15 +282,15 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { "a8856347-f9be-437e-8a57-09358b6f9467", "Professor" },
-                    { "638b7305-8f20-446e-91dd-6b8a826ee1d7", "Auxiliar" },
-                    { "6ced5dc6-1d54-4e62-8d6a-1acec0a4051b", "Secretario(a)" },
-                    { "15a0e83c-6a72-4e90-b065-78f3c4620097", "Admin" },
-                    { "2347af68-756c-4bca-9e49-c9a506c9c9cb", "Supervisor" },
-                    { "2e54c13a-cf62-480e-a148-5cd64a032501", "Diretor" },
-                    { "02de0f62-e45a-4c2e-a28b-97eb414db9bb", "Responsavel" },
-                    { "9130abda-0f4a-4adc-a556-81ac17d68dd2", "Diretor" },
-                    { "5b2f1c50-f241-4b3a-acf6-f276e37c9b0f", "Aluno" }
+                    { "09006115-2282-42d9-99b3-6384083ab92c", "Professor" },
+                    { "370af61b-3167-40ff-ace5-203beeb21c61", "Auxiliar" },
+                    { "a0f1e0c9-9200-48eb-a939-0be4c661ac25", "Secretario(a)" },
+                    { "caba3853-fd8c-41e5-bb0c-782a562c48b6", "Admin" },
+                    { "a01b604f-b160-42ff-ac23-87ca1b08a7f8", "Supervisor" },
+                    { "a1c6e605-a927-438b-9960-66f5f25e79b8", "Diretor" },
+                    { "65c0cf20-6d47-43fa-84df-d83d408679e3", "Responsavel" },
+                    { "a3c4415b-33e9-4de0-9786-c28074fb8543", "Diretor" },
+                    { "b3e6f9c3-d018-4a62-a014-f315536be3a7", "Aluno" }
                 });
 
             migrationBuilder.CreateIndex(

@@ -35,7 +35,6 @@ export default class StudentPollMathAlfabetizacaoCard extends Component {
             all_col[k].style.display = "table-cell";
         }
         document.getElementById(element + "_head").style.display = "table-cell";
-
     }
     hideShowOrdem(event) {
         this.setState({
@@ -79,7 +78,7 @@ export default class StudentPollMathAlfabetizacaoCard extends Component {
                         </div>
                     </div>
                 </div>
-             <table className="table table-sm table-bordered table-hover table-sondagem-matematica" style={{ overflow: "hidden", overflowX: "auto" }}>
+                <table className="table table-sm table-bordered table-hover table-sondagem-matematica" style={{ overflow: "hidden", overflowX: "auto" }}>
                     <thead>
                         <tr>
                             <th rowSpan="2" className="align-middle border text-color-purple"><div className="ml-2"><small>Sondagem - Alfabetização</small></div></th>

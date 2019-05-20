@@ -66,8 +66,6 @@ export default class Poll extends Component {
 
                     "t7b2": "N",
                     "t7b4": "N",
-
-
                 },
                 "math":
                 {
@@ -110,10 +108,8 @@ export default class Poll extends Component {
                     "t8r2": "E",
                     "t8i4": "E",
                     "t8r4": "E"
-
                 },
             },
-
         };
         students.push(student);
         student = {
@@ -154,8 +150,6 @@ export default class Poll extends Component {
 
                     "t7b2": "S",
                     "t7b4": "N",
-
-
                 },
                 "math":
                 {
@@ -198,10 +192,8 @@ export default class Poll extends Component {
                     "t8r2": "E",
                     "t8i4": "E",
                     "t8r4": "E"
-
                 },
             },
-
         };
         students.push(student);
 
@@ -213,7 +205,6 @@ export default class Poll extends Component {
 
         for (var i = 0; i < pollStudents.length; i++) {
             if (pollStudents[i].sequence === sequence) {
-
                 if (subjectName === "portuguese") {
                     switch (propertyName) {
                         case "t1e":
@@ -402,7 +393,6 @@ export default class Poll extends Component {
                     }
                     break;
                 }
-
             }
         }
 
@@ -421,7 +411,6 @@ export default class Poll extends Component {
         if (this.state.sondagemType === "PT") {
             document.getElementsByName("portugues-tab").className = "btn btn-outline-primary btn-sm btn-planning active";
             document.getElementsByName("matematica-tab").className = "btn btn-outline-primary btn-sm btn-planning";
-
         } else {
             document.getElementsByName("portugues-tab").className = "btn btn-outline-primary btn-sm btn-planning";
             document.getElementsByName("matematica-tab").className = "btn btn-outline-primary btn-sm btn-planning active";
@@ -466,7 +455,6 @@ export default class Poll extends Component {
                 break;
             default:
                 componentRender = <StudentPollMathAlfabetizacaoCard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
-
         }
         return (
             <Card id="classRecord-poll">
@@ -489,10 +477,7 @@ export default class Poll extends Component {
                     </li>
                 </ul>
 
-
                 {componentRender}{/*renderiza o componente de sondagem correspondente*/}
-
-
 
             </Card>
         );

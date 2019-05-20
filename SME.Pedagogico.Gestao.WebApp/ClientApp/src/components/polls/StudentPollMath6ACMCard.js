@@ -26,14 +26,14 @@ export default class StudentPollMath6ACMCard extends Component {
         for (var i = 0; i < all_col.length; i++) { //esconde as colunas
             all_col[i].style.display = "none";
         }
-        
+
         for (var j = 0; j < columnFiltered.length; j++) {
             document.getElementById(columnFiltered[j] + "_head").style.display = "none";//esconde head
             document.getElementById(columnFiltered[j] + "_table").style.display = "none";//esconde table com as tabelas com as informações
             document.getElementById(columnFiltered[j] + "_col").style.display = "none";
         }
-        
-        all_col = document.getElementsByClassName("text-center border poll-select-container " + element+"_col");
+
+        all_col = document.getElementsByClassName("text-center border poll-select-container " + element + "_col");
         for (var k = 0; k < all_col.length; k++) {//exibe as colunas respostas
             all_col[k].style.display = "table-cell";
         }
@@ -56,7 +56,7 @@ export default class StudentPollMath6ACMCard extends Component {
             <div>
                 <div id="wrapper">
                     <LegendsRightWrong />
-                    
+
                     <div>
                         <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="First group">
                             <button type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-single">Alfabetização</button>
@@ -84,9 +84,9 @@ export default class StudentPollMath6ACMCard extends Component {
                             <button type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-right border-left-0 active">6º ano - CM</button>
                         </div>
                     </div>
-                    
+
                 </div>
-            <table className="table table-sm table-bordered table-hover table-sondagem-matematica" style={{ overflow: "hidden", overflowX: "auto" }}>
+                <table className="table table-sm table-bordered table-hover table-sondagem-matematica" style={{ overflow: "hidden", overflowX: "auto" }}>
                     <thead>
                         <tr>
                             <th rowSpan="5" className="align-middle border text-color-purple "><div className="ml-2"><small>Sondagem - 6º ano <b>Campo Multiplicativo</b></small></div></th>

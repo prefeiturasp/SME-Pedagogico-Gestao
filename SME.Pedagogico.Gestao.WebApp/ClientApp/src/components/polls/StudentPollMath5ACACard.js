@@ -25,7 +25,7 @@ export default class StudentPollMath5ACACard extends Component {
         for (var i = 0; i < all_col.length; i++) { //esconde as colunas
             all_col[i].style.display = "none";
         }
-        
+
         for (var j = 0; j < columnFiltered.length; j++) {
             document.getElementById(columnFiltered[j] + "_head").style.display = "none";//esconde head
             document.getElementById(columnFiltered[j] + "_table").style.display = "none";//esconde table com as tabelas com as informações

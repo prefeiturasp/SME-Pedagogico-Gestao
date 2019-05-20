@@ -10,7 +10,6 @@ export default class StudentPollMath2ACard extends Component {
         this.state = {
             selectedClass: "custom-select custom-select-sm poll-select",
             selectedOrdem: "ordem1"
-
         };
         this.hideShowOrdem = this.hideShowOrdem.bind(this);
         this.showOneHideAll = this.showOneHideAll.bind(this);
@@ -26,7 +25,7 @@ export default class StudentPollMath2ACard extends Component {
         for (var i = 0; i < all_col.length; i++) { //esconde as colunas
             all_col[i].style.display = "none";
         }
-        
+
         for (var j = 0; j < columnFiltered.length; j++) {
             document.getElementById(columnFiltered[j] + "_head").style.display = "none";//esconde head
             document.getElementById(columnFiltered[j] + "_table").style.display = "none";//esconde table com as tabelas com as informações
@@ -36,8 +35,8 @@ export default class StudentPollMath2ACard extends Component {
                 document.getElementById(columnFiltered[j] + "_table2").style.display = "none";
             }
         }
-        
-        all_col = document.getElementsByClassName("text-center border poll-select-container " + element+"_col");
+
+        all_col = document.getElementsByClassName("text-center border poll-select-container " + element + "_col");
         for (var k = 0; k < all_col.length; k++) {//exibe as colunas respostas
             all_col[k].style.display = "table-cell";
         }
@@ -91,9 +90,9 @@ export default class StudentPollMath2ACard extends Component {
                             <button type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-right border-left-0">6º ano - CM</button>
                         </div>
                     </div>
-                    
+
                 </div>
-            <table className="table table-sm table-bordered table-hover table-sondagem-matematica" style={{ overflow: "hidden", overflowX: "auto" }}>
+                <table className="table table-sm table-bordered table-hover table-sondagem-matematica" style={{ overflow: "hidden", overflowX: "auto" }}>
                     <thead>
                         <tr>
                             <th rowSpan="5" className="align-middle border text-color-purple "><div className="ml-2"><small>Sondagem - 2º ano</small></div></th>

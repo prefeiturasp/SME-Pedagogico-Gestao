@@ -8,10 +8,7 @@ export default class CheckInline extends Component {
         this.state = {
             checkFrequency: false
         }
-    
     }
-
- 
 
     render() {
         const codigoaluno = this.props.codigoaluno;
@@ -41,4 +38,3 @@ export default class CheckInline extends Component {
         )
     }
 }
-
