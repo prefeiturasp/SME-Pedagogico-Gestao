@@ -1,6 +1,7 @@
 ﻿import React, { Component } from 'react';
 import StudentPollMathAlfabetizacao from '../polls/StudentPollMathAlfabetizacao'
 import LegendsYesNo from '../polls/component/LegendsYesNo'
+import SondagemClassSelected from './component/SondagemClassSelected';
 //Sondagem Matmática Alfabetização
 //Falta o componente receber a lista de alunos
 export default class StudentPollMathAlfabetizacaoCard extends Component {
@@ -14,6 +15,10 @@ export default class StudentPollMathAlfabetizacaoCard extends Component {
         this.hideShowOrdem = this.hideShowOrdem.bind(this);
         this.showOneHideAll = this.showOneHideAll.bind(this);
     }
+    componentDidMount() {
+        this.showOneHideAll(this.state.selectedOrdem);
+    }
+
     componentDidUpdate() {
         this.showOneHideAll(this.state.selectedOrdem);
     }
@@ -45,51 +50,24 @@ export default class StudentPollMathAlfabetizacaoCard extends Component {
     }
     render() {
         const pStyle = {
-            color: 'gray'
+            color: '#DADADA'
         };
         return (
             <div>
                 <div id="wrapper">
-                    <LegendsYesNo />
-                    <div>
-                        <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="First group">
-                            <button type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-single active">Alfabetização</button>
-                        </div>
-                        <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="Second group">
-                            <button type="button" className="btn btn-outline-primary btn-sm btn-matematica  btn-single">1º ano</button>
-                        </div>
-                        <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="Third group">
-                            <button type="button" className="btn btn-outline-primary btn-sm btn-matematica  btn-single">2º ano</button>
-                        </div>
-                        <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="Fourth group">
-                            <button type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-left border-right-0">3º ano - CA</button>
-                            <button type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-right border-left-0">3º ano - CM</button>
-                        </div>
-                        <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="Fifth group">
-                            <button type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-left border-right-0">4º ano - CA</button>
-                            <button type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-right border-left-0">4º ano - CM</button>
-                        </div>
-                        <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="Sixth group">
-                            <button type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-left border-right-0">5º ano - CA</button>
-                            <button type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-right border-left-0">5º ano - CM</button>
-                        </div>
-                        <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="Seventh group">
-                            <button type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-left border-right-0">6º ano - CA</button>
-                            <button type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-right border-left-0">6º ano - CM</button>
-                        </div>
-                    </div>
+                    <SondagemClassSelected />
                 </div>
-             <table className="table table-sm table-bordered table-hover table-sondagem-matematica" style={{ overflow: "hidden", overflowX: "auto" }}>
+                <table className="table table-sm table-bordered table-hover table-sondagem-matematica" style={{ overflow: "hidden", overflowX: "auto" }}>
                     <thead>
                         <tr>
-                            <th rowSpan="2" className="align-middle border text-color-purple"><div className="ml-2"><small>Sondagem - Alfabetização</small></div></th>
-                            <th colSpan="2" id="familiares_col_head" className="text-center border text-color-purple "><span style={pStyle}>&#60;</span><small className="p-4">Familiares ou frequentes</small><span value="opacos_col" onClick={this.hideShowOrdem}>&#62;</span></th>
-                            <th colSpan="2" id="opacos_col_head" className="text-center border text-color-purple "><span value="familiares_col" onClick={this.hideShowOrdem}>&#60;</span><small className="p-4">Opacos</small><span value="transparentes_col" onClick={this.hideShowOrdem}>&#62;</span></th>
-                            <th colSpan="2" id="transparentes_col_head" className="text-center border text-color-purple "><span value="opacos_col" onClick={this.hideShowOrdem}>&#60;</span><small className="p-4">Transparentes</small><span value="zero_col" onClick={this.hideShowOrdem}>&#62;</span></th>
-                            <th colSpan="2" id="zero_col_head" className="text-center border text-color-purple "><span value="transparentes_col" onClick={this.hideShowOrdem}>&#60;</span><small className="p-4">Terminam em zero</small><span value="algarismos_col" onClick={this.hideShowOrdem}>&#62;</span></th>
-                            <th colSpan="2" id="algarismos_col_head" className="text-center border text-color-purple "><span value="zero_col" onClick={this.hideShowOrdem}>&#60;</span><small className="p-4">Algarismos iguais</small><span value="processo_col" onClick={this.hideShowOrdem}>&#62;</span></th>
-                            <th colSpan="2" id="processo_col_head" className="text-center border text-color-purple "><span value="algarismos_col" onClick={this.hideShowOrdem}>&#60;</span><small className="p-4">Processo de generalização</small><span value="zeros_col" onClick={this.hideShowOrdem}>&#62;</span></th>
-                            <th colSpan="2" id="zeros_col_head" className="text-center border text-color-purple "><span value="processo_col" onClick={this.hideShowOrdem}>&#60;</span><small className="p-4">Zeros intercalados</small><span style={pStyle}>&#62;</span></th>
+                            <th rowSpan="2" className="align-middle border text-color-purple"><div className="ml-2">Sondagem - Alfabetização</div></th>
+                            <th colSpan="2" id="familiares_col_head" className="text-center border text-color-purple "><span style={pStyle}>&#60;</span><b className="p-4">Familiares ou frequentes</b><span value="opacos_col" onClick={this.hideShowOrdem} className="testcursor">&#62;</span></th>
+                            <th colSpan="2" id="opacos_col_head" className="text-center border text-color-purple "><span value="familiares_col" onClick={this.hideShowOrdem} className="testcursor">&#60;</span><b className="p-4">Opacos</b><span value="transparentes_col" onClick={this.hideShowOrdem} className="testcursor">&#62;</span></th>
+                            <th colSpan="2" id="transparentes_col_head" className="text-center border text-color-purple "><span value="opacos_col" onClick={this.hideShowOrdem} className="testcursor">&#60;</span><b className="p-4">Transparentes</b><span value="zero_col" onClick={this.hideShowOrdem} className="testcursor">&#62;</span></th>
+                            <th colSpan="2" id="zero_col_head" className="text-center border text-color-purple "><span value="transparentes_col" onClick={this.hideShowOrdem} className="testcursor">&#60;</span><b className="p-4">Terminam em zero</b><span value="algarismos_col" onClick={this.hideShowOrdem} className="testcursor">&#62;</span></th>
+                            <th colSpan="2" id="algarismos_col_head" className="text-center border text-color-purple "><span value="zero_col" onClick={this.hideShowOrdem} className="testcursor">&#60;</span><b className="p-4">Algarismos iguais</b><span value="processo_col" onClick={this.hideShowOrdem} className="testcursor">&#62;</span></th>
+                            <th colSpan="2" id="processo_col_head" className="text-center border text-color-purple "><span value="algarismos_col" onClick={this.hideShowOrdem} className="testcursor">&#60;</span><b className="p-4">Processo de generalização</b><span value="zeros_col" onClick={this.hideShowOrdem} className="testcursor">&#62;</span></th>
+                            <th colSpan="2" id="zeros_col_head" className="text-center border text-color-purple "><span value="processo_col" onClick={this.hideShowOrdem} className="testcursor">&#60;</span><b className="p-4">Zeros intercalados</b><span style={pStyle}>&#62;</span></th>
                         </tr>
                         <tr>
                             <th className="text-center border poll-select-container familiares_col"><small className="text-muted">2ºB</small></th>
@@ -117,6 +95,7 @@ export default class StudentPollMathAlfabetizacaoCard extends Component {
 
                     </tbody>
                 </table>
+                <LegendsYesNo />
             </div>
         );
     }

@@ -1,4 +1,10 @@
-﻿.text-color-purple {
+﻿.btn.btn-save.text-white {
+    background-color: #F39200;
+}
+.testcursor{
+    cursor:pointer;
+}
+.text-color-purple {
     color: #7C4DFF;
 }
 th.align-middle.border.text-color-purple {

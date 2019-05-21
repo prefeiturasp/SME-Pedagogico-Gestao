@@ -1,6 +1,7 @@
 ﻿import React, { Component } from 'react';
 import StudentPollMath5A6ACM from '../polls/StudentPollMath5A6ACM'
 import LegendsRightWrong from '../polls/component/LegendsRightWrong'
+import SondagemClassSelected from '../polls/component/SondagemClassSelected'
 
 //Sondagem Matmática 6 Ano CM
 //Falta o componente receber a lista de alunos
@@ -14,6 +15,9 @@ export default class StudentPollMath6ACMCard extends Component {
         };
         this.hideShowOrdem = this.hideShowOrdem.bind(this);
         this.showOneHideAll = this.showOneHideAll.bind(this);
+    }
+    componentDidMount() {
+        this.showOneHideAll(this.state.selectedOrdem);
     }
     componentDidUpdate() {
         this.showOneHideAll(this.state.selectedOrdem);
@@ -50,50 +54,21 @@ export default class StudentPollMath6ACMCard extends Component {
     }
     render() {
         const pStyle = {
-            color: 'gray'
+            color: '#DADADA'
         }
         return (
             <div>
                 <div id="wrapper">
-                    <LegendsRightWrong />
-                    
-                    <div>
-                        <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="First group">
-                            <button type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-single">Alfabetização</button>
-                        </div>
-                        <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="Second group">
-                            <button type="button" className="btn btn-outline-primary btn-sm btn-matematica  btn-single">1º ano</button>
-                        </div>
-                        <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="Third group">
-                            <button type="button" className="btn btn-outline-primary btn-sm btn-matematica  btn-single">2º ano</button>
-                        </div>
-                        <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="Fourth group">
-                            <button type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-left border-right-0">3º ano - CA</button>
-                            <button type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-right border-left-0">3º ano - CM</button>
-                        </div>
-                        <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="Fifth group">
-                            <button type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-left border-right-0">4º ano - CA</button>
-                            <button type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-right border-left-0">4º ano - CM</button>
-                        </div>
-                        <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="Sixth group">
-                            <button type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-left border-right-0">5º ano - CA</button>
-                            <button type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-right border-left-0">5º ano - CM</button>
-                        </div>
-                        <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="Seventh group">
-                            <button type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-left border-right-0">6º ano - CA</button>
-                            <button type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-right border-left-0 active">6º ano - CM</button>
-                        </div>
-                    </div>
-                    
+                    <SondagemClassSelected />
                 </div>
             <table className="table table-sm table-bordered table-hover table-sondagem-matematica" style={{ overflow: "hidden", overflowX: "auto" }}>
                     <thead>
                         <tr>
-                            <th rowSpan="5" className="align-middle border text-color-purple "><div className="ml-2"><small>Sondagem - 6º ano <b>Campo Multiplicativo</b></small></div></th>
-                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem5_head"><span style={pStyle}>&#60;</span><small className="p-4">Ordem 5 - ideia: COMBINATÓRIA</small><span value="ordem6" onClick={this.hideShowOrdem}>&#62;</span></th>
-                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem6_head"><span value="ordem5" onClick={this.hideShowOrdem}>&#60;</span><small className="p-4">Ordem 6 - ideia: CONFIGURAÇÃO REGULAR</small><span value="ordem7" onClick={this.hideShowOrdem}>&#62;</span></th>
-                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem7_head"><span value="ordem6" onClick={this.hideShowOrdem}>&#60;</span><small className="p-4">Ordem 7 - ideia: PROPORCIONALIDADE</small><span value="ordem8" onClick={this.hideShowOrdem}>&#62;</span></th>
-                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem8_head"><span value="ordem7" onClick={this.hideShowOrdem}>&#60;</span><small className="p-4">Ordem 8 - ideia: MULTIPLICAÇÃO COMPARATIVA</small><span style={pStyle}>&#62;</span></th>
+                            <th rowSpan="5" className="align-middle border text-color-purple "><div className="ml-2">Sondagem - 6º ano <b>Campo Multiplicativo</b></div></th>
+                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem5_head"><span style={pStyle}>&#60;</span><b className="p-4">Ordem 5 - ideia: COMBINATÓRIA</b><span value="ordem6" onClick={this.hideShowOrdem} className="testcursor">&#62;</span></th>
+                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem6_head"><span value="ordem5" onClick={this.hideShowOrdem} className="testcursor">&#60;</span><b className="p-4">Ordem 6 - ideia: CONFIGURAÇÃO REGULAR</b><span value="ordem7" onClick={this.hideShowOrdem} className="testcursor">&#62;</span></th>
+                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem7_head"><span value="ordem6" onClick={this.hideShowOrdem} className="testcursor">&#60;</span><b className="p-4">Ordem 7 - ideia: PROPORCIONALIDADE</b><span value="ordem8" onClick={this.hideShowOrdem} className="testcursor">&#62;</span></th>
+                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem8_head"><span value="ordem7" onClick={this.hideShowOrdem} className="testcursor">&#60;</span><b className="p-4">Ordem 8 - ideia: MULTIPLICAÇÃO COMPARATIVA</b><span style={pStyle}>&#62;</span></th>
                         </tr>
                         <tr>
                             <th colSpan="8" className="text-center border text-color-purple" id="ordem5_col"><small>Problemas 2º e 4º Bimestre</small></th>
@@ -230,14 +205,14 @@ export default class StudentPollMath6ACMCard extends Component {
                             </th>
                         </tr>
                         <tr>
-                            <th colSpan="4" className="text-center border poll-select-container"><small className="text-muted">2ºB</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container"><small className="text-muted">4ºB</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container"><small className="text-muted">2ºB</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container"><small className="text-muted">4ºB</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container"><small className="text-muted">2ºB</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container"><small className="text-muted">4ºB</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container"><small className="text-muted">2ºB</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container"><small className="text-muted">4ºB</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem5_col"><small className="text-muted">2ºB</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem5_col"><small className="text-muted">4ºB</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem6_col"><small className="text-muted">2ºB</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem6_col"><small className="text-muted">4ºB</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem7_col"><small className="text-muted">2ºB</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem7_col"><small className="text-muted">4ºB</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem8_col"><small className="text-muted">2ºB</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem8_col"><small className="text-muted">4ºB</small></th>
                         </tr>
                         <tr>
                             <th colSpan="2" className="text-center border poll-select-container ordem5_col"><small className="text-muted">Ideia</small></th>
@@ -267,6 +242,7 @@ export default class StudentPollMath6ACMCard extends Component {
 
                     </tbody>
                 </table>
+                <LegendsRightWrong />
             </div>
         );
     }
