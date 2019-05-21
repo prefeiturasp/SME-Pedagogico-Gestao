@@ -19,12 +19,13 @@ export default class App extends Component {
         return (
             <Switch>
                 <UnauthenticatedRoute path="/Login" exact component={Login} />
-                <AuthenticatedDashboardRoute path="/" exact component={Home} />
-                <AuthenticatedDashboardRoute path="/RegistroDeClasse/PlanoDeAula" exact component={ClassPlan} />
-                <AuthenticatedDashboardRoute path="/RegistroDeClasse/PlanoAnual" exact component={AnnualPlan} />
-                <AuthenticatedDashboardRoute path="/RegistroDeClasse/PlanoDeCiclo" exact component={CyclePlan} />
-                <AuthenticatedDashboardRoute path="/RegistroDeClasse/Sondagem" exact component={Poll} />
-                <AuthenticatedDashboardRoute path="/RegistroDeClasse/Documentos" exact component={Documents} />
+                {/*<AuthenticatedDashboardRoute path="/" exact component={Home} />
+                    <AuthenticatedDashboardRoute path="/RegistroDeClasse/PlanoDeAula" exact component={ClassPlan} />
+                    <AuthenticatedDashboardRoute path="/RegistroDeClasse/PlanoAnual" exact component={AnnualPlan} />
+                    <AuthenticatedDashboardRoute path="/RegistroDeClasse/PlanoDeCiclo" exact component={CyclePlan} />
+                    <AuthenticatedDashboardRoute path="/RegistroDeClasse/Sondagem" exact component={Poll} />
+                    <AuthenticatedDashboardRoute path="/RegistroDeClasse/Documentos" exact component={Documents} />*/}
+                <AuthenticatedDashboardRoute path="/" exact component={Poll} />
                 <Route component={NotFound} />
             </Switch>
         );
