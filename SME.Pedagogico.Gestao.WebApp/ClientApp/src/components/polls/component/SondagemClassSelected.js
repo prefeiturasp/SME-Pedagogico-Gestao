@@ -5,27 +5,31 @@ export default class SondagemClassSelected extends Component {
         super(props);
 
         this.state = {
+            sondagemType: "3A",
         };
         
     }
     
     render() {
         var sondagemType,buttonRender;
-        sondagemType = "1A";
+        sondagemType = this.state.sondagemType;
         switch (sondagemType) {
             case "1A":
                 buttonRender =  <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="Second group">
-                                    <button id="1A" type="button" className="btn btn-outline-primary btn-sm btn-matematica  btn-single">1º ano</button>
+                                    <button id="1A" type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-left border-right-0">1º ano - Números</button>
+                                    <button id="1CA" type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-right border-left-0">1º ano - CM</button>
                                 </div>;
                 break;
             case "2A":
                 buttonRender =  <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="Third group">
-                                    <button id="2A" type="button" className="btn btn-outline-primary btn-sm btn-matematica  btn-single">2º ano</button>
+                                    <button id="2A" type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-left border-right-0">2º ano - Números</button>
+                                    <button id="2ACA" type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-right border-left-0">2º ano - CA</button>
                                 </div>;
                 break;
             case "3A":
-                buttonRender =  <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="Fourth group">
-                                    <button id="3CA" type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-left border-right-0">3º ano - CA</button>
+                buttonRender = <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="Fourth group">
+                                    <button id="3A" type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-left border-right-0">3º ano - Números</button>
+                                    <button id="3CA" type="button" className="btn btn-outline-primary btn-sm btn-matematica border-left-0 border-right-0">3º ano - CA</button>
                                     <button id="3CM" type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-right border-left-0">3º ano - CM</button>
                                 </div>;
                 break;

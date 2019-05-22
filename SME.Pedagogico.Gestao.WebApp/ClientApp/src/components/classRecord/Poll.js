@@ -23,7 +23,7 @@ export default class Poll extends Component {
         this.state = {
             pollStudents: [],
             navSelected: "", 
-            sondagemType: "",//Retirar o default depois//PT,MT,1A,2A,3ACA,3ACM,4ACA,4ACM,5ACA,5ACM,6ACA,6ACM
+            sondagemType: "6ACM",//Retirar o default depois//PT,MT,1A,2A,3ACA,3ACM,4ACA,4ACM,5ACA,5ACM,6ACA,6ACM
         }
 
         this.updatePollStudent = this.updatePollStudent.bind(this);

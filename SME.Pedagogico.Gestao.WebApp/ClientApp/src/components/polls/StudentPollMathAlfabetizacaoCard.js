@@ -10,7 +10,8 @@ export default class StudentPollMathAlfabetizacaoCard extends Component {
 
         this.state = {
             selectedClass: "custom-select custom-select-sm poll-select",
-            selectedOrdem: "familiares_col"
+            selectedOrdem: "familiares_col",
+            class:"1º ano" //1º/2º
         };
         this.hideShowOrdem = this.hideShowOrdem.bind(this);
         this.showOneHideAll = this.showOneHideAll.bind(this);
@@ -60,7 +61,7 @@ export default class StudentPollMathAlfabetizacaoCard extends Component {
                 <table className="table table-sm table-bordered table-hover table-sondagem-matematica" style={{ overflow: "hidden", overflowX: "auto" }}>
                     <thead>
                         <tr>
-                            <th rowSpan="2" className="align-middle border text-color-purple"><div className="ml-2">Sondagem - Alfabetização</div></th>
+                            <th rowSpan="2" className="align-middle border text-color-purple"><div className="ml-2">Sondagem - {this.state.class} números</div></th>
                             <th colSpan="2" id="familiares_col_head" className="text-center border text-color-purple "><span style={pStyle}>&#60;</span><b className="p-4">Familiares ou frequentes</b><span value="opacos_col" onClick={this.hideShowOrdem} className="testcursor">&#62;</span></th>
                             <th colSpan="2" id="opacos_col_head" className="text-center border text-color-purple "><span value="familiares_col" onClick={this.hideShowOrdem} className="testcursor">&#60;</span><b className="p-4">Opacos</b><span value="transparentes_col" onClick={this.hideShowOrdem} className="testcursor">&#62;</span></th>
                             <th colSpan="2" id="transparentes_col_head" className="text-center border text-color-purple "><span value="opacos_col" onClick={this.hideShowOrdem} className="testcursor">&#60;</span><b className="p-4">Transparentes</b><span value="zero_col" onClick={this.hideShowOrdem} className="testcursor">&#62;</span></th>
@@ -70,20 +71,20 @@ export default class StudentPollMathAlfabetizacaoCard extends Component {
                             <th colSpan="2" id="zeros_col_head" className="text-center border text-color-purple "><span value="processo_col" onClick={this.hideShowOrdem} className="testcursor">&#60;</span><b className="p-4">Zeros intercalados</b><span style={pStyle}>&#62;</span></th>
                         </tr>
                         <tr>
-                            <th className="text-center border poll-select-container familiares_col"><small className="text-muted">2ºB</small></th>
-                            <th className="text-center border poll-select-container familiares_col"><small className="text-muted">4ºB</small></th>
-                            <th className="text-center border poll-select-container opacos_col"><small className="text-muted">2ºB</small></th>
-                            <th className="text-center border poll-select-container opacos_col"><small className="text-muted">4ºB</small></th>
-                            <th className="text-center border poll-select-container transparentes_col"><small className="text-muted">2ºB</small></th>
-                            <th className="text-center border poll-select-container transparentes_col"><small className="text-muted">4ºB</small></th>
-                            <th className="text-center border poll-select-container zero_col"><small className="text-muted">2ºB</small></th>
-                            <th className="text-center border poll-select-container zero_col"><small className="text-muted">4ºB</small></th>
-                            <th className="text-center border poll-select-container algarismos_col"><small className="text-muted">2ºB</small></th>
-                            <th className="text-center border poll-select-container algarismos_col"><small className="text-muted">4ºB</small></th>
-                            <th className="text-center border poll-select-container processo_col"><small className="text-muted">2ºB</small></th>
-                            <th className="text-center border poll-select-container processo_col"><small className="text-muted">4ºB</small></th>
-                            <th className="text-center border poll-select-container zeros_col"><small className="text-muted">2ºB</small></th>
-                            <th className="text-center border poll-select-container zeros_col"><small className="text-muted">4ºB</small></th>
+                            <th className="text-center border poll-select-container familiares_col"><small className="text-muted">1ºS</small></th>
+                            <th className="text-center border poll-select-container familiares_col"><small className="text-muted">2ºS</small></th>
+                            <th className="text-center border poll-select-container opacos_col"><small className="text-muted">1ºS</small></th>
+                            <th className="text-center border poll-select-container opacos_col"><small className="text-muted">2ºS</small></th>
+                            <th className="text-center border poll-select-container transparentes_col"><small className="text-muted">1ºS</small></th>
+                            <th className="text-center border poll-select-container transparentes_col"><small className="text-muted">2ºS</small></th>
+                            <th className="text-center border poll-select-container zero_col"><small className="text-muted">1ºS</small></th>
+                            <th className="text-center border poll-select-container zero_col"><small className="text-muted">2ºS</small></th>
+                            <th className="text-center border poll-select-container algarismos_col"><small className="text-muted">1ºS</small></th>
+                            <th className="text-center border poll-select-container algarismos_col"><small className="text-muted">2ºS</small></th>
+                            <th className="text-center border poll-select-container processo_col"><small className="text-muted">1ºS</small></th>
+                            <th className="text-center border poll-select-container processo_col"><small className="text-muted">2ºS</small></th>
+                            <th className="text-center border poll-select-container zeros_col"><small className="text-muted">1ºS</small></th>
+                            <th className="text-center border poll-select-container zeros_col"><small className="text-muted">2ºS</small></th>
                         </tr>
                     </thead>
 

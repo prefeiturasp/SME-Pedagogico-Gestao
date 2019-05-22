@@ -64,15 +64,15 @@ export default class StudentPollMath1ACard extends Component {
                 <table className="table table-sm table-bordered table-hover table-sondagem-matematica" style={{ overflow: "hidden", overflowX: "auto" }}>
                     <thead>
                         <tr>
-                            <th rowSpan="5" className="align-middle border text-color-purple "><div className="ml-2">Sondagem - 1º ano</div></th>
+                            <th rowSpan="5" className="align-middle border text-color-purple "><div className="ml-2">Sondagem - 1º ano aditivo</div></th>
                             <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem1_head"><small>PROBLEMAS DE COMPOSIÇÃO</small></th>
                             <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem2_head"><small>PROBLEMAS DE COMPOSIÇÃO</small></th>
                             <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem3_head"><small>PROBLEMAS DE COMPOSIÇÃO</small></th>
                         </tr>
                         <tr>
-                            <th colSpan="8" className="text-center border text-color-purple" id="ordem1_col"><span style={pStyle}>&#60;</span><b className="p-4">Ordem 1 - Problemas 2º e 4º Bimestre</b><span value="ordem2" onClick={this.hideShowOrdem} className="testcursor">&#62;</span></th>
-                            <th colSpan="8" className="text-center border text-color-purple" id="ordem2_col"><span value="ordem1" onClick={this.hideShowOrdem} className="testcursor">&#60;</span><b className="p-4">Ordem 2 - Problemas 2º e 4º Bimestre</b><span value="ordem3" onClick={this.hideShowOrdem} className="testcursor">&#62;</span></th>
-                            <th colSpan="8" className="text-center border text-color-purple" id="ordem3_col"><span value="ordem2" onClick={this.hideShowOrdem} className="testcursor">&#60;</span><b className="p-4">Ordem 3 - Problemas 2º e 4º Bimestre</b><span style={pStyle}>&#62;</span></th>
+                            <th colSpan="8" className="text-center border text-color-purple" id="ordem1_col"><span style={pStyle}>&#60;</span><b className="p-4">Ordem 1 - Problemas 1º e 2º Semestres</b><span value="ordem2" onClick={this.hideShowOrdem} className="testcursor">&#62;</span></th>
+                            <th colSpan="8" className="text-center border text-color-purple" id="ordem2_col"><span value="ordem1" onClick={this.hideShowOrdem} className="testcursor">&#60;</span><b className="p-4">Ordem 2 - Problemas 1º e 2º Semestres</b><span value="ordem3" onClick={this.hideShowOrdem} className="testcursor">&#62;</span></th>
+                            <th colSpan="8" className="text-center border text-color-purple" id="ordem3_col"><span value="ordem2" onClick={this.hideShowOrdem} className="testcursor">&#60;</span><b className="p-4">Ordem 3 - Problemas 1º e 2º Semestres</b><span style={pStyle}>&#62;</span></th>
                         </tr>
                         <tr>
                             <th colSpan="8" id="ordem1_table">
@@ -155,12 +155,12 @@ export default class StudentPollMath1ACard extends Component {
                             </th>
                         </tr>
                         <tr>
-                            <th colSpan="4" className="text-center border poll-select-container ordem1_col"><small className="text-muted">2ºB</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container ordem1_col"><small className="text-muted">4ºB</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container ordem2_col"><small className="text-muted">2ºB</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container ordem2_col"><small className="text-muted">4ºB</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container ordem3_col"><small className="text-muted">2ºB</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container ordem3_col"><small className="text-muted">4ºB</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem1_col"><small className="text-muted">1ºS</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem1_col"><small className="text-muted">2ºS</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem2_col"><small className="text-muted">1ºS</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem2_col"><small className="text-muted">2ºS</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem3_col"><small className="text-muted">1ºS</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem3_col"><small className="text-muted">2ºS</small></th>
                         </tr>
                         <tr>
                             <th colSpan="2" className="text-center border poll-select-container ordem1_col"><small className="text-muted">Ideia</small></th>
