@@ -22,15 +22,16 @@ class TopMenu extends Component {
             <div id="top-menu" className="fixed-top d-flex w-auto">
                 <div id="logo-content-top-menu" className="d-flex justify-content-center align-items-center clickable">
                     <Link to="/">
-                        <img id="logo-top-menu" src="./img/LogoSGP_mobile.svg" alt="Logo SGP" />
+                        <img id="logo-top-menu" src="./img/RegistreSME_V3.png" alt="Logo" />
                     </Link>
                 </div>
 
                 <div id="top-menu-bar" className="d-flex flex-fill align-items-center">
-                    <Breadcrumb id="breadcrumb-top-menu" className="d-flex flex-fill ml-4" />
+                    {/*<Breadcrumb id="breadcrumb-top-menu" className="d-flex flex-fill ml-4" />*/}
+                    <div className="d-flex flex-fill ml-4"></div>
 
                     <div className="d-flex">
-                        <small className="d-flex align-items-center font-weight-light text-muted">Professor</small>
+                        <small className="d-flex align-items-center font-weight-light text-muted">{this.props.user.activeRole.roleName}</small>
                         <div className="btn btn-outline-light rounded-circle d-flex justify-content-center align-items-center ml-2 mr-3 top-menu-button">
                             <i className="fas fa-chalkboard-teacher  top-menu-button-icon"></i>
                         </div>

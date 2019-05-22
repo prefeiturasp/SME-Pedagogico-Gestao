@@ -10,7 +10,7 @@ export default class StudentPollMath1ACard extends Component {
 
         this.state = {
             selectedClass: "custom-select custom-select-sm poll-select",
-            selectedOrdem:"ordem1"
+            selectedOrdem: "ordem1"
         };
         this.hideShowOrdem = this.hideShowOrdem.bind(this);
         this.showOneHideAll = this.showOneHideAll.bind(this);
@@ -29,14 +29,14 @@ export default class StudentPollMath1ACard extends Component {
         for (var i = 0; i < all_col.length; i++) { //esconde as colunas
             all_col[i].style.display = "none";
         }
-        
+
         for (var j = 0; j < columnFiltered.length; j++) {
             document.getElementById(columnFiltered[j] + "_head").style.display = "none";//esconde head
             document.getElementById(columnFiltered[j] + "_table").style.display = "none";//esconde table com as tabelas com as informações
             document.getElementById(columnFiltered[j] + "_col").style.display = "none";
         }
 
-        all_col = document.getElementsByClassName("text-center border poll-select-container " + element+"_col");
+        all_col = document.getElementsByClassName("text-center border poll-select-container " + element + "_col");
         for (var k = 0; k < all_col.length; k++) {//exibe as colunas respostas
             all_col[k].style.display = "table-cell";
         }
@@ -44,7 +44,6 @@ export default class StudentPollMath1ACard extends Component {
         document.getElementById(element + "_head").style.display = "table-cell";//exibe a head
         document.getElementById(element + "_col").style.display = "table-cell";//exibe a coluna da ordem
         document.getElementById(element + "_table").style.display = "table-cell";//exibe table com as tabelas com as informações
-
     }
     hideShowOrdem(event) {
         this.setState({

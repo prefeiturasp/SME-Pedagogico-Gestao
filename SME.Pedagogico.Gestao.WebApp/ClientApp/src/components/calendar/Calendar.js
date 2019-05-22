@@ -17,7 +17,7 @@ export default class Calendar extends Component {
                     <Month month="4" />
                 </div>
 
-                <FullMonth months="1,2,3,4"/>
+                <FullMonth months="1,2,3,4" />
 
                 <div className="d-flex">
                     <Month month="5" />

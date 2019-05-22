@@ -41,7 +41,6 @@ export default class StudentPollMathAlfabetizacaoCard extends Component {
             all_col[k].style.display = "table-cell";
         }
         document.getElementById(element + "_head").style.display = "table-cell";
-
     }
     hideShowOrdem(event) {
         this.setState({

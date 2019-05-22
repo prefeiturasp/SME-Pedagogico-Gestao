@@ -16,7 +16,6 @@ export default class PollSelectWrite extends Component {
     getColor(value) {
         var defaultColor = "custom-select custom-select-sm ";
 
-
         if (value !== undefined && (value === "PS" || value === "SSV" || value === "SCV" || value === "SA" || value === "A")) {
             return (defaultColor + this.props.columnColor);
         } else {
@@ -28,7 +27,6 @@ export default class PollSelectWrite extends Component {
         this.props.updatePollStudent(this.props.sequence, this.props.subjectName, this.props.name, event.target.value);
     }
 
-    
     render() {
         return (
 

@@ -7,14 +7,16 @@
 .text-color-purple {
     color: #7C4DFF;
 }
+
 th.align-middle.border.text-color-purple {
     width: 250px !important;
 }
-.col-fixed{
-    width:300px;
+
+.col-fixed {
+    width: 300px;
 }
-.column-fixed{
-    
+
+.column-fixed {
 }
 
 .d-flex.flex-column.align-items-end.flexsondagem {
@@ -24,14 +26,17 @@ th.align-middle.border.text-color-purple {
 .d-flex.line {
     border-bottom: 1px solid #DEDEDE;
 }
+
 .p-2.p-2sondagem {
     width: 330px;
 }
+
 .card-header-sondagem {
     margin-bottom: 0;
     background-color: rgba(0,0,0,.03);
     border-bottom: 1px solid rgba(0,0,0,.125);
 }
+
 .btn-planning {
     margin: 10px;
 }
@@ -41,46 +46,46 @@ th.align-middle.border.text-color-purple {
     color: #8458FF;
 }
 
-.btn.btn-outline-primary.btn-sm.btn-planning:hover {
-    background-color: #8458FF;
-    border-color: #8458FF;
-    color: white;
-}
+    .btn.btn-outline-primary.btn-sm.btn-planning:hover {
+        background-color: #8458FF;
+        border-color: #8458FF;
+        color: white;
+    }
 
-.btn.btn-outline-primary.btn-sm.btn-planning.active {
-    background-color: #8458FF;
-    border-color: #8458FF;
-    color: white;
-}
+    .btn.btn-outline-primary.btn-sm.btn-planning.active {
+        background-color: #8458FF;
+        border-color: #8458FF;
+        color: white;
+    }
 
 .btn.btn-outline-primary.btn-sm.btn-matematica {
     color: #8458FF;
     border-color: #8458FF;
 }
 
-.btn.btn-outline-primary.btn-sm.btn-matematica:hover {
-    color: white;
-    background: #8458FF;
-    border-color: #8458FF;
-}
+    .btn.btn-outline-primary.btn-sm.btn-matematica:hover {
+        color: white;
+        background: #8458FF;
+        border-color: #8458FF;
+    }
 
-.btn.btn-outline-primary.btn-sm.btn-matematica.active {
-    color: white;
-    background: #8458FF;
-    border-color: #8458FF;
-}
+    .btn.btn-outline-primary.btn-sm.btn-matematica.active {
+        color: white;
+        background: #8458FF;
+        border-color: #8458FF;
+    }
 
-.btn.btn-outline-primary.btn-sm.btn-matematica.btn-single {
-    border-radius: 24px;
-}
+    .btn.btn-outline-primary.btn-sm.btn-matematica.btn-single {
+        border-radius: 24px;
+    }
 
-.btn.btn-outline-primary.btn-sm.btn-matematica.btn-double-left {
-    border-radius: 24px 0px 0px 24px;
-}
+    .btn.btn-outline-primary.btn-sm.btn-matematica.btn-double-left {
+        border-radius: 24px 0px 0px 24px;
+    }
 
-.btn.btn-outline-primary.btn-sm.btn-matematica.btn-double-right {
-    border-radius: 0px 24px 24px 0px;
-}
+    .btn.btn-outline-primary.btn-sm.btn-matematica.btn-double-right {
+        border-radius: 0px 24px 24px 0px;
+    }
 
 .text-center.border.text-color-purple.sondagemmatematicath {
     width: 50px;
@@ -90,9 +95,9 @@ th.align-middle.border.text-color-purple {
     margin-top: 20px;
 }
 
-.table.table-sm.table-bordered.table-hover.table-sondagem-matematica thead th {
-    width: 40px;
-}
+    .table.table-sm.table-bordered.table-hover.table-sondagem-matematica thead th {
+        width: 40px;
+    }
 
 .text-center.border.sondagem-matematica-title {
     color: white;
@@ -121,13 +126,13 @@ th.align-middle.border.text-color-purple {
     font-size: 11px;
 }
 
-.table.table-bordered.table-sondagem th {
-    border: 2px solid white;
-}
+    .table.table-bordered.table-sondagem th {
+        border: 2px solid white;
+    }
 
-.table.table-bordered.table-sondagem td {
-    border: 2px solid white;
-}
+    .table.table-bordered.table-sondagem td {
+        border: 2px solid white;
+    }
 
 th.align-middle.border.text-color-purple {
     width: 33% !important;

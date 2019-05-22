@@ -16,7 +16,6 @@ export default class PollSelectReadWriteLevel extends Component {
     getColor(value) {
         var defaultColor = "custom-select custom-select-sm ";
 
-
         if (value !== undefined && (value === "1" || value === "2" || value === "3" || value === "4")) {
             return (defaultColor + this.props.columnColor);
         } else {
@@ -28,7 +27,6 @@ export default class PollSelectReadWriteLevel extends Component {
         this.props.updatePollStudent(this.props.sequence, this.props.subjectName, this.props.name, event.target.value);
     }
 
-    
     render() {
         return (
 

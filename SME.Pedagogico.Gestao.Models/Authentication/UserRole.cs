@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SME.Pedagogico.Gestao.Models.Authentication
+﻿namespace SME.Pedagogico.Gestao.Models.Authentication
 {
     public class UserRole : Base.Abstracts.Table
     {
         #region ==================== ATTRIBUTES ====================
+
         public string AccessLevelId { get; set; }
         public virtual AccessLevel AccessLevel { get; set; }
 
@@ -17,16 +12,7 @@ namespace SME.Pedagogico.Gestao.Models.Authentication
 
         public string UserId { get; set; }
         public virtual User User { get; set; }
+
         #endregion ==================== ATTRIBUTES ====================
-
-
-
-        #region ==================== CONSTRUCTORS ====================
-        #endregion ==================== CONSTRUCTORS ====================
-
-
-
-        #region ==================== METHODS ====================
-        #endregion ==================== METHODS ====================
     }
 }

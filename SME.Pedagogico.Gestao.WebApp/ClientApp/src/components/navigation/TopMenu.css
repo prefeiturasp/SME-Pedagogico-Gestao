@@ -5,19 +5,17 @@
 
 #logo-content-top-menu {
     width: 265px;
-    background-color: #FBFBFC;
+    background-color: #626263;
 }
 
 #logo-top-menu {
-    width: 132px;
-    height: 46px;
+    width: 177px;
+    height: 31px;
 }
 
 #top-menu-bar {
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
 }
-
-
 
 .top-menu-button {
     width: 40px;
