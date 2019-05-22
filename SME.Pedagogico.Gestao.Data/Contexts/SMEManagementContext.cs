@@ -124,6 +124,16 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
                 new Models.Authentication.AccessLevel() { Description = "ATE", Value = "37" },
             };
             modelBuilder.Entity<Models.Authentication.AccessLevel>().HasData(accessLevels);
+
+            Models.Academic.PollType[] pollTypes = new Models.Academic.PollType[]
+            {
+                new Models.Academic.PollType() { PollTypeDescription = "Sondagem de Português"},
+                new Models.Academic.PollType() { PollTypeDescription = "Sondagem de Matemática"},
+                new  Models.Academic.PollType() { PollTypeDescription = "Sondagem de Alfabetização de Matemática"}
+            };
+
+            modelBuilder.Entity<Models.Academic.PollType>().HasData(pollTypes);
+
         }
 
         #endregion ==================== METHODS ====================
