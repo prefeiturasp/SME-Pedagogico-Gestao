@@ -20,25 +20,24 @@ export default class StudentPollPortugueseCard extends Component {
     }
 
     showOneHideAll(element) {
-        var allColumnToHide = ["1bim_col", "2bim_col", "3bim_col","4bim_col"]
+        var allColumnToHide = ["1bim_col", "2bim_col", "3bim_col", "4bim_col"]
         var columnFiltered = allColumnToHide.filter((item) => item !== element)
-        
+
         var all_col = document.getElementsByClassName("text-center border poll-select-container ");
         for (var i = 0; i < all_col.length; i++) {
             all_col[i].style.display = "none";
         }
 
         for (var j = 0; j < columnFiltered.length; j++) {
-            document.getElementById(columnFiltered[j]+ "_head").style.display = "none";
+            document.getElementById(columnFiltered[j] + "_head").style.display = "none";
         }
-                                                    
+
         all_col = document.getElementsByClassName("text-center border poll-select-container " + element);
         for (var k = 0; k < all_col.length; k++) {
             all_col[k].style.display = "table-cell";
         }
-        
-        document.getElementById(element + "_head").style.display = "table-cell";
 
+        document.getElementById(element + "_head").style.display = "table-cell";
     }
     hideShowOrdem(event) {
         this.setState({
@@ -58,10 +57,10 @@ export default class StudentPollPortugueseCard extends Component {
                         <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="First group">
                             <button type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-single active">Português</button>
                         </div>
-                        
+
                     </div>
                 </div>
-             <table className="table table-sm table-bordered table-hover table-sondagem-matematica" style={{ overflow: "hidden", overflowX: "auto" }}>
+                <table className="table table-sm table-bordered table-hover table-sondagem-matematica" style={{ overflow: "hidden", overflowX: "auto" }}>
                     <thead>
                         <tr>
                             <th rowSpan="2" className="align-middle border text-color-purple"><div className="ml-2"><small><b>Sondagem</b></small></div></th>

@@ -8,7 +8,6 @@ export default class StudentPollMath4ACM extends Component {
         this.state = {
             selectedClass: "custom-select custom-select-sm poll-select"
         };
-        
     }
 
     render() {
@@ -24,31 +23,31 @@ export default class StudentPollMath4ACM extends Component {
                     <PollSelectRightWrong sequence={this.props.student.sequence} name="t5r2" value={this.props.student.pollresults.math.t5r2} updatePollStudent={this.props.updatePollStudent} columnColor="bg-lila" />
                 </th>
                 <th colSpan="2" className="text-center border poll-select-container ordem5_col">
-                    <PollSelectRightWrong sequence={this.props.student.sequence} name="t5i4" value={this.props.student.pollresults.math.t5i4} updatePollStudent={this.props.updatePollStudent} columnColor="bg-bluescale"/>
+                    <PollSelectRightWrong sequence={this.props.student.sequence} name="t5i4" value={this.props.student.pollresults.math.t5i4} updatePollStudent={this.props.updatePollStudent} columnColor="bg-bluescale" />
                 </th>
                 <th colSpan="2" className="text-center border poll-select-container ordem5_col">
                     <PollSelectRightWrong sequence={this.props.student.sequence} name="t5r4" value={this.props.student.pollresults.math.t5r4} updatePollStudent={this.props.updatePollStudent} columnColor="bg-lila" />
                 </th>
                 <th colSpan="2" className="text-center border poll-select-container ordem6_col">
-                    <PollSelectRightWrong sequence={this.props.student.sequence} name="t6i2" value={this.props.student.pollresults.math.t6i2} updatePollStudent={this.props.updatePollStudent} columnColor="bg-bluescale"/>
+                    <PollSelectRightWrong sequence={this.props.student.sequence} name="t6i2" value={this.props.student.pollresults.math.t6i2} updatePollStudent={this.props.updatePollStudent} columnColor="bg-bluescale" />
                 </th>
                 <th colSpan="2" className="text-center border poll-select-container ordem6_col">
                     <PollSelectRightWrong sequence={this.props.student.sequence} name="t6r2" value={this.props.student.pollresults.math.t6r2} updatePollStudent={this.props.updatePollStudent} columnColor="bg-lila" />
                 </th>
                 <th colSpan="2" className="text-center border poll-select-container ordem6_col">
-                    <PollSelectRightWrong sequence={this.props.student.sequence} name="t6i4" value={this.props.student.pollresults.math.t6i4} updatePollStudent={this.props.updatePollStudent} columnColor="bg-bluescale"/>
+                    <PollSelectRightWrong sequence={this.props.student.sequence} name="t6i4" value={this.props.student.pollresults.math.t6i4} updatePollStudent={this.props.updatePollStudent} columnColor="bg-bluescale" />
                 </th>
                 <th colSpan="2" className="text-center border poll-select-container ordem6_col">
                     <PollSelectRightWrong sequence={this.props.student.sequence} name="t6r4" value={this.props.student.pollresults.math.t6r4} updatePollStudent={this.props.updatePollStudent} columnColor="bg-lila" />
                 </th>
                 <th colSpan="2" className="text-center border poll-select-container ordem7_col">
-                    <PollSelectRightWrong sequence={this.props.student.sequence} name="t7i2" value={this.props.student.pollresults.math.t7i2} updatePollStudent={this.props.updatePollStudent} columnColor="bg-bluescale"/>
+                    <PollSelectRightWrong sequence={this.props.student.sequence} name="t7i2" value={this.props.student.pollresults.math.t7i2} updatePollStudent={this.props.updatePollStudent} columnColor="bg-bluescale" />
                 </th>
                 <th colSpan="2" className="text-center border poll-select-container ordem7_col">
                     <PollSelectRightWrong sequence={this.props.student.sequence} name="t7r2" value={this.props.student.pollresults.math.t7r2} updatePollStudent={this.props.updatePollStudent} columnColor="bg-lila" />
                 </th>
                 <th colSpan="2" className="text-center border poll-select-container ordem7_col">
-                    <PollSelectRightWrong sequence={this.props.student.sequence} name="t7i4" value={this.props.student.pollresults.math.t7i4} updatePollStudent={this.props.updatePollStudent} columnColor="bg-bluescale"/>
+                    <PollSelectRightWrong sequence={this.props.student.sequence} name="t7i4" value={this.props.student.pollresults.math.t7i4} updatePollStudent={this.props.updatePollStudent} columnColor="bg-bluescale" />
                 </th>
                 <th colSpan="2" className="text-center border poll-select-container ordem7_col">
                     <PollSelectRightWrong sequence={this.props.student.sequence} name="t7r4" value={this.props.student.pollresults.math.t7r4} updatePollStudent={this.props.updatePollStudent} columnColor="bg-lila" />

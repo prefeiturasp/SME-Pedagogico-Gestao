@@ -1,5 +1,4 @@
-﻿
-.custom-control-label::before,
+﻿.custom-control-label::before,
 .custom-control-label::after {
     top: auto;
     width: 1.4rem;
@@ -10,9 +9,11 @@
 .custom-control-label {
     position: relative;
 }
+
 .divStyle {
     width: 83%
 }
+
 .divStyle2 {
     width: 75%
 }
@@ -21,7 +22,6 @@
     background-color: #eeeeee;
     border-radius: 10px !important;
 }
-
 
 .progress {
     background-color: #ffffff;
@@ -34,8 +34,6 @@
     margin-bottom: .45rem;
     margin-right: 3rem;
 }
-
-
 
 .text-color-purple {
     color: #7C4DFF !important;

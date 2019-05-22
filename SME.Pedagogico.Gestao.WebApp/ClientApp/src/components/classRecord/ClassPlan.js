@@ -11,9 +11,7 @@ import { EditorState } from 'draft-js';
 import StudentFrequency from './StudentFrequency';
 import StudentFrequencyInformation from './StudentFrequencyInformation';
 
-
 class ClassPlan extends Component {
-
     constructor() {
         super();
         this.students = [];
@@ -43,12 +41,9 @@ class ClassPlan extends Component {
 
             return (0);
         });
-
     }
 
-
     checkboxChange(event) {
-
         var bool = event.target.checked;
 
         if (event.target.attributes.id.value == 'CheckFrequency') {
@@ -78,7 +73,6 @@ class ClassPlan extends Component {
     }
 
     testClick() {
-
         const eff = {
             students: this.students,
             checked: this.props.frequencyState.effectFrequency.checked
@@ -100,7 +94,6 @@ class ClassPlan extends Component {
     }
 
     disabledCheck(event) {
-
         var bool = event.target.checked;
 
         this.setState({
@@ -108,9 +101,7 @@ class ClassPlan extends Component {
         })
     }
 
-
     render() {
-
         return (
 
             <Card id="classRecord-classPlan">
@@ -200,7 +191,6 @@ class ClassPlan extends Component {
                 </div>
 
             </Card>
-
 
         );
     }

@@ -1,6 +1,7 @@
 ﻿import React, { Component } from 'react';
 import './Poll.css'
 import Card from '../containers/Card';
+import PollFilter from './PollFilter';
 
 import StudentPollMathAlfabetizacaoCard from '../polls/StudentPollMathAlfabetizacaoCard'
 import StudentPollMath1ACard from '../polls/StudentPollMath1ACard'
@@ -26,6 +27,7 @@ export default class Poll extends Component {
         this.updatePollStudent = this.updatePollStudent.bind(this);
         this.savePollStudent = this.savePollStudent.bind(this);
     }
+
     componentDidMount() {
         var students = [];
         var student = {
@@ -66,8 +68,6 @@ export default class Poll extends Component {
 
                     "t7b2": "N",
                     "t7b4": "N",
-
-
                 },
                 "math":
                 {
@@ -110,10 +110,8 @@ export default class Poll extends Component {
                     "t8r2": "E",
                     "t8i4": "E",
                     "t8r4": "E"
-
                 },
             },
-
         };
         students.push(student);
         student = {
@@ -154,8 +152,6 @@ export default class Poll extends Component {
 
                     "t7b2": "S",
                     "t7b4": "N",
-
-
                 },
                 "math":
                 {
@@ -198,10 +194,8 @@ export default class Poll extends Component {
                     "t8r2": "E",
                     "t8i4": "E",
                     "t8r4": "E"
-
                 },
             },
-
         };
         students.push(student);
 
@@ -213,7 +207,6 @@ export default class Poll extends Component {
 
         for (var i = 0; i < pollStudents.length; i++) {
             if (pollStudents[i].sequence === sequence) {
-
                 if (subjectName === "portuguese") {
                     switch (propertyName) {
                         case "t1e":
@@ -402,7 +395,6 @@ export default class Poll extends Component {
                     }
                     break;
                 }
-
             }
         }
 
@@ -421,7 +413,6 @@ export default class Poll extends Component {
         if (this.state.sondagemType === "PT") {
             document.getElementsByName("portugues-tab").className = "btn btn-outline-primary btn-sm btn-planning active";
             document.getElementsByName("matematica-tab").className = "btn btn-outline-primary btn-sm btn-planning";
-
         } else {
             document.getElementsByName("portugues-tab").className = "btn btn-outline-primary btn-sm btn-planning";
             document.getElementsByName("matematica-tab").className = "btn btn-outline-primary btn-sm btn-planning active";
@@ -466,35 +457,37 @@ export default class Poll extends Component {
                 break;
             default:
                 componentRender = <StudentPollMathAlfabetizacaoCard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
-
         }
         return (
-            <Card id="classRecord-poll">
-                <nav className="container-tabpanel navbar"><div className="form-inline">
-                    <button className="btn btn-outline-primary btn-sm">EF-1C - EMF - MARIA APARECIDA DO NASCIMENTO</button></div>
-                    <ul className="nav navbar-nav ml-auto">
+            <div>
+                <Card className="mb-3">
+                    <PollFilter />
+                </Card>
+
+                <Card id="classRecord-poll">
+                    <nav className="container-tabpanel navbar"><div className="form-inline">
+                        <button className="btn btn-outline-primary btn-sm">EF-1C - EMF - MARIA APARECIDA DO NASCIMENTO</button></div>
+                        <ul className="nav navbar-nav ml-auto">
+                            <li className="nav-item">
+                                <div className="form-inline">
+                                    <button className="btn btn-warning text-white" disabled="">Salvar</button></div>
+                            </li>
+                        </ul>
+                    </nav>
+                    <hr className="horizontal-rule bg-azul-ux" />
+                    <ul className="nav" id="myTab" role="tablist">
                         <li className="nav-item">
-                            <div className="form-inline">
-                                <button className="btn btn-warning text-white" disabled="">Salvar</button></div>
+                            <a className="btn btn-outline-primary btn-sm btn-planning active" id="portugues-tab" data-toggle="tab" href="#portugues" role="tab" aria-controls="portuguesPoll" aria-selected="true">Portugu&ecirc;s</a>
+                        </li>
+                        <li className="nav-item">
+                            <a className="btn btn-outline-primary btn-sm btn-planning" id="matematica-tab" data-toggle="tab" href="#matematica" role="tab" aria-controls="matematicaPoll" aria-selected="false">Matem&aacute;tica</a>
                         </li>
                     </ul>
-                </nav>
-                <hr className="horizontal-rule bg-azul-ux" />
-                <ul className="nav" id="myTab" role="tablist">
-                    <li className="nav-item">
-                        <a className="btn btn-outline-primary btn-sm btn-planning active" id="portugues-tab" data-toggle="tab" href="#portugues" role="tab" aria-controls="portuguesPoll" aria-selected="true">Portugu&ecirc;s</a>
-                    </li>
-                    <li className="nav-item">
-                        <a className="btn btn-outline-primary btn-sm btn-planning" id="matematica-tab" data-toggle="tab" href="#matematica" role="tab" aria-controls="matematicaPoll" aria-selected="false">Matem&aacute;tica</a>
-                    </li>
-                </ul>
 
+                    {componentRender}{/*renderiza o componente de sondagem correspondente*/}
 
-                {componentRender}{/*renderiza o componente de sondagem correspondente*/}
-
-
-
-            </Card>
+                </Card>
+            </div>
         );
     }
 }
