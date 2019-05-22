@@ -3,9 +3,11 @@ import createSagaMiddleware from 'redux-saga';
 import * as User from './User';
 import UserSaga from '../sagas/User';
 import FrequencySaga from '../sagas/Frequency';
+import ClassRoomStudentsSaga from '../sagas/ClassRoomStudents';
 import * as LeftMenu from './LeftMenu';
 import * as Calendar from './Calendar';
 import * as Frequency from './Frequency';
+import * as ClassRoomStudents from './ClassRoomStudents';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web and AsyncStorage for react-native
 import logger from 'redux-logger';
@@ -19,6 +21,7 @@ export default function configureStore(history, initialState) {
         leftMenu: LeftMenu.reducer,
         calendar: Calendar.reducer,
         frequency: Frequency.reducer,
+        classRoomStudents: ClassRoomStudents.reducer,
     };
 
     const reduxSaga = createSagaMiddleware();
@@ -62,6 +65,7 @@ export default function configureStore(history, initialState) {
 
     reduxSaga.run(UserSaga);
     reduxSaga.run(FrequencySaga);
+    reduxSaga.run(ClassRoomStudentsSaga);
 
     return ({ store, persistor });
 }

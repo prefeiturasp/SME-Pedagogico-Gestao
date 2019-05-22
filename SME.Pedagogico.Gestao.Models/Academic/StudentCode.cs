@@ -15,9 +15,7 @@ namespace SME.Pedagogico.Gestao.Models.Academic
         public string StudentId { get; set; }
         public virtual Student Student { get; set; }
         #endregion ==================== ATTRIBUTES ====================
-
-
-
+               
         #region ==================== CONSTRUCTORS ====================
         #endregion ==================== CONSTRUCTORS ====================
 
