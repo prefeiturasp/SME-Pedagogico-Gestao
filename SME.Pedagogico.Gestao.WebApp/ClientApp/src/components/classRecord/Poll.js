@@ -21,7 +21,7 @@ export default class Poll extends Component {
         super(props);
         this.state = {
             pollStudents: [],
-            sondagemType: "6ACM",//PT,MT,1A,2A,3ACA,3ACM,4ACA,4ACM,5ACA,5ACM,6ACA,6ACM
+            sondagemType: "PT",//PT,MT,1A,2A,3ACA,3ACM,4ACA,4ACM,5ACA,5ACM,6ACA,6ACM
         }
 
         this.updatePollStudent = this.updatePollStudent.bind(this);

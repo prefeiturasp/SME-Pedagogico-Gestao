@@ -8,7 +8,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Contexts
 
         public DbSet<Gestao.Models.Authentication.LoggedUser> LoggedUsers { get; set; }
         public DbSet<Gestao.Models.Authentication.User> Users { get; set; }
-
+        public DbSet<Gestao.Models.Academic.PortuguesePoll> PortuguesePolls { get; set; }
         #endregion ==================== ATTRIBUTES ====================
 
         #region ==================== CONSTRUCTORS ====================
