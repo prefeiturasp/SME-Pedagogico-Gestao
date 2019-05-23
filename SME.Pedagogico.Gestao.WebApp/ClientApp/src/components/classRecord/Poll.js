@@ -1,6 +1,12 @@
 ﻿import React, { Component } from 'react';
 import './Poll.css'
 import Card from '../containers/Card';
+import PollFilter from './PollFilter';
+
+import { ClassEnum } from '../polls/component/ClassHelper'
+import { connect } from 'react-redux';
+import { actionCreators as actionCreatorsClassRoom } from '../../store/ClassRoomStudents';
+import { bindActionCreators } from 'redux';
 
 import StudentPollMathAlfabetizacaoCard from '../polls/StudentPollMathAlfabetizacaoCard'
 import StudentPollMath1ACard from '../polls/StudentPollMath1ACard'
@@ -17,13 +23,13 @@ import StudentPollPortugueseCard from '../polls/StudentPollPortugueseCard'
 
 import SondagemClassSelected from '../polls/component/SondagemClassSelected'
 
-export default class Poll extends Component {
+class Poll extends Component {
     constructor(props) {
         super(props);
         this.state = {
             pollStudents: [],
             navSelected: "", 
-            sondagemType: "6ACM",//Retirar o default depois//PT,MT,1A,2A,3ACA,3ACM,4ACA,4ACM,5ACA,5ACM,6ACA,6ACM
+            sondagemType: ClassEnum.ClassEmpty,//Retirar o default depois//PT,MT,1A,2A,3ACA,3ACM,4ACA,4ACM,5ACA,5ACM,6ACA,6ACM
         }
 
         this.updatePollStudent = this.updatePollStudent.bind(this);
@@ -36,7 +42,8 @@ export default class Poll extends Component {
         this.openMathPoll = this.openMathPoll.bind(this);
 
     }
-    componentDidUpdate() {
+    componentDidUpdate() {//ver em ClassPlan o método ClassRoomClick
+        
         if (this.state.navSelected === "portugues-tab" && document.getElementById("portugues-tab") !== null && document.getElementById("matematica-tab") !== null) {
             document.getElementById("portugues-tab").className = "btn btn-outline-primary btn-sm btn-planning active";
             document.getElementById("matematica-tab").className = "btn btn-outline-primary btn-sm btn-planning";
@@ -47,6 +54,15 @@ export default class Poll extends Component {
     }
 
     componentDidMount() {
+        var test = {
+            EolCode: "12345",
+            Schoolyear: 2019
+
+        };
+        this.props.classRoomStudents.get_classroom_students(test);
+        
+        var list = this.props.classRoomStudentsState.classRoom;
+
         var students = [];
         var student = {
             "name": "Eduarda dos Santos Costa",
@@ -446,15 +462,24 @@ export default class Poll extends Component {
         this.toggleButton(element.currentTarget.id);
         //aqui vai ter que mudar de acordo com o ano que entrar...
         this.setState({
-            sondagemType: "PT",
+            sondagemType: ClassEnum.ClassPT,
         });
+        var test = {
+            EolCode: "12345",
+            Schoolyear: 2019
+
+        };
+        this.props.classRoomStudents.get_classroom_students(test);
+        debugger;
+        var list = this.props.classRoomStudentsState.classRoom;
+        //debugger;
         //alert("Poll Portugues");
     }
     
     openMathPoll(element) {
         this.toggleButton(element.currentTarget.id);
         this.setState({
-            sondagemType: "2A",
+            sondagemType: ClassEnum.Class2A,
         });
         //alert("Poll Matematica");
     }
@@ -478,40 +503,40 @@ export default class Poll extends Component {
 
 
         switch (sondagemType) {
-            case "1A":
+            case ClassEnum.Class1A:
                 componentRender = <StudentPollMath1ACard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
                 break;
-            case "2A":
+            case ClassEnum.Class2A:
                 componentRender = <StudentPollMath2ACard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
                 break;
-            case "3ACA":
+            case ClassEnum.Class3ACA:
                 componentRender = <StudentPollMath3ACACard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
                 break;
-            case "3ACM":
+            case ClassEnum.Class3ACM:
                 componentRender = <StudentPollMath3ACMCard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
                 break;
-            case "4ACA":
+            case ClassEnum.Class4ACA:
                 componentRender = <StudentPollMath4ACACard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
                 break;
-            case "4ACM":
+            case ClassEnum.Class4ACM:
                 componentRender = <StudentPollMath4ACMCard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
                 break;
-            case "5ACA":
+            case ClassEnum.Class5ACA:
                 componentRender = <StudentPollMath5ACACard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
                 break;
-            case "5ACM":
+            case ClassEnum.Class5ACM:
                 componentRender = <StudentPollMath5ACMCard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
                 break;
-            case "6ACA":
+            case ClassEnum.Class6ACA:
                 componentRender = <StudentPollMath6ACACard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
                 break;
-            case "6ACM":
+            case ClassEnum.Class6ACM:
                 componentRender = <StudentPollMath6ACMCard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
                 break;
-            case "PT":
+            case ClassEnum.ClassPT:
                 componentRender = <StudentPollPortugueseCard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
                 break;
-            case "MT":
+            case ClassEnum.ClassMT:
                 componentRender = <StudentPollMathAlfabetizacaoCard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
                 break;
             default:
@@ -519,33 +544,50 @@ export default class Poll extends Component {
 
         }
         return (
-            <Card id="classRecord-poll">
-                <SondagemClassSelected />
-                <nav className="container-tabpanel navbar"><div className="form-inline">
-                    <button className="btn btn-outline-primary btn-sm">EF-1C - EMF - MARIA APARECIDA DO NASCIMENTO</button></div>
-                    <ul className="nav navbar-nav ml-auto">
+            <>
+                <Card className="mb-3">
+                    <PollFilter />
+                </Card> 
+                <Card id="classRecord-poll">
+                    <SondagemClassSelected />
+                    <nav className="container-tabpanel navbar"><div className="form-inline">
+                        <button className="btn btn-outline-primary btn-sm">EF-1C - EMF - MARIA APARECIDA DO NASCIMENTO</button></div>
+                        <ul className="nav navbar-nav ml-auto">
+                            <li className="nav-item">
+                                <div className="form-inline">
+                                    <button className="btn btn-save text-white" disabled="">Salvar</button></div>
+                            </li>
+                        </ul>
+                    </nav>
+                    <hr className="horizontal-rule bg-azul-ux" />
+                    <ul className="nav" role="tablist">
                         <li className="nav-item">
-                            <div className="form-inline">
-                                <button className="btn btn-save text-white" disabled="">Salvar</button></div>
+                            <button className="btn btn-outline-primary btn-sm btn-planning" id="portugues-tab" onClick={this.openPortuguesePoll}>Língua Portuguesa</button>
+                        </li>
+                        <li className="nav-item">
+                            <button className="btn btn-outline-primary btn-sm btn-planning" id="matematica-tab" onClick={this.openMathPoll}>Matem&aacute;tica</button>
                         </li>
                     </ul>
-                </nav>
-                <hr className="horizontal-rule bg-azul-ux" />
-                <ul className="nav" role="tablist">
-                    <li className="nav-item">
-                        <button className="btn btn-outline-primary btn-sm btn-planning" id="portugues-tab" onClick={this.openPortuguesePoll}>Língua Portuguesa</button>
-                    </li>
-                    <li className="nav-item">
-                        <button className="btn btn-outline-primary btn-sm btn-planning" id="matematica-tab" onClick={this.openMathPoll}>Matem&aacute;tica</button>
-                    </li>
-                </ul>
 
 
-                {componentRender}{/*renderiza o componente de sondagem correspondente*/}
+                    {componentRender}{/*renderiza o componente de sondagem correspondente*/}
 
 
 
-            </Card>
+                </Card>
+            </>
         );
     }
 }
+export default connect(
+    state => (
+        {
+            classRoomStudentsState: state.classRoomStudents
+        }
+    ),
+    dispatch => (
+        {
+            classRoomStudents: bindActionCreators(actionCreatorsClassRoom, dispatch)
+        }
+    )
+)(Poll);

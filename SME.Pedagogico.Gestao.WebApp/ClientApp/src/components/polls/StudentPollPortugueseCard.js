@@ -62,15 +62,15 @@ export default class StudentPollPortugueseCard extends Component {
         };
 
         if (this.state.isClass3A) { //se true é portugues 1A e 2A do contrário é a variante 3A
-            componentLegendRender = <LegendsReadWrite />;
-            rendererStudentPollPortuguese = this.props.students.map(student => (
-                <StudentPollPortuguese key={student.sequence} student={student} updatePollStudent={this.props.updatePollStudent} />
-            ));
-        } else {
             componentLegendRender = <LegendsReadWrite3A />
             rendererStudentPollPortuguese = this.props.students.map(student => (
                 <StudentPollPortuguese3A key={student.sequence} student={student} updatePollStudent={this.props.updatePollStudent} />
             ));
+        } else {
+            componentLegendRender = <LegendsReadWrite />;
+            rendererStudentPollPortuguese = this.props.students.map(student => (
+                <StudentPollPortuguese key={student.sequence} student={student} updatePollStudent={this.props.updatePollStudent} />
+            ));    
         }
 
         return (
