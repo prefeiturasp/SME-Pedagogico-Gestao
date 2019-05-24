@@ -27,3 +27,15 @@
 .top-menu-button-icon > i {
     color: #C0C0C0;
 }
+
+.top-navigation-button {
+    cursor: pointer;
+}
+
+    .top-navigation-button:hover {
+        background-color: #EEEEEE;
+    }
+
+    .top-navigation-button > a {
+        text-decoration: none;
+    }
