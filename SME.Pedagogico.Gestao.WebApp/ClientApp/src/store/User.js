@@ -4,6 +4,8 @@
     UNAUTHORIZED: "UNAUTHORIZED",
     LOGOUT_REQUEST: "LOGOUT_REQUEST",
     LOGOUT_USER: "LOGOUT_USER",
+    ON_AUTHENTICATION_REQUEST: "ON_AUTHENTICATION_REQUEST",
+    FINISH_AUTHENTICATION_REQUEST: "FINISH_AUTHENTICATION_REQUEST",
 }
 const initialState = {
     name: null,
@@ -16,6 +18,8 @@ const initialState = {
     roles: null,
     isAuthenticated: false,
     isUnauthorized: false,
+    activeRole: null,
+    onAuthenticationRequest: false,
 };
 
 export const actionCreators = {
@@ -43,6 +47,16 @@ export const reducer = (state, action) => {
             return ({
                 ...state,
                 ...initialState
+            });
+        case types.ON_AUTHENTICATION_REQUEST:
+            return ({
+                ...state,
+                onAuthenticationRequest: true,
+            });
+        case types.FINISH_AUTHENTICATION_REQUEST:
+            return ({
+                ...state,
+                onAuthenticationRequest: false,
             });
         default:
             return (state);

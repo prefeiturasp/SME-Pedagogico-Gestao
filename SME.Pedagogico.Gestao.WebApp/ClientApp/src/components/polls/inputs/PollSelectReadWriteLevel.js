@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import './Common.css';
 
-export default class PollSelectRead extends Component {
+export default class PollSelectReadWriteLevel extends Component {
     constructor(props) {
         super(props);
 
@@ -16,7 +16,6 @@ export default class PollSelectRead extends Component {
     getColor(value) {
         var defaultColor = "custom-select custom-select-sm ";
 
-
         if (value !== undefined && (value === "1" || value === "2" || value === "3" || value === "4")) {
             return (defaultColor + this.props.columnColor);
         } else {
@@ -28,17 +27,16 @@ export default class PollSelectRead extends Component {
         this.props.updatePollStudent(this.props.sequence, this.props.subjectName, this.props.name, event.target.value);
     }
 
-    
     render() {
         return (
 
             <div>
                 <select id={"pollItem-" + this.props.name + "-" + this.props.sequence} value={this.props.value} className={this.getColor(this.props.value)} onChange={this.onOptionChange}>
                     <option defaultValue hidden className="text-muted" value=""></option>
-                    <option className={"custom-select custom-select-sm text-white" + this.props.columnColor} value="1">Nível 1</option>
-                    <option className={"custom-select custom-select-sm text-white" + this.props.columnColor} value="2">Nível 2</option>
-                    <option className={"custom-select custom-select-sm text-white" + this.props.columnColor} value="3">Nível 3</option>
-                    <option className={"custom-select custom-select-sm text-white" + this.props.columnColor} value="4">Nível 4</option>
+                    <option className={"custom-select custom-select-sm text-white " + this.props.columnColor} value="1">Nível 1</option>
+                    <option className={"custom-select custom-select-sm text-white " + this.props.columnColor} value="2">Nível 2</option>
+                    <option className={"custom-select custom-select-sm text-white " + this.props.columnColor} value="3">Nível 3</option>
+                    <option className={"custom-select custom-select-sm text-white " + this.props.columnColor} value="4">Nível 4</option>
                 </select>
             </div>
 

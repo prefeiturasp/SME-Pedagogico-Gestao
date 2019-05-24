@@ -4,15 +4,14 @@ import Card from '../containers/Card';
 import { connect } from 'react-redux';
 import { actionCreators as actionCreatorsFrequency } from '../../store/Frequency';
 import { actionCreators as actionCreatorsUser } from '../../store/User';
+import { actionCreators as actionCreatorsClassRoom } from '../../store/ClassRoomStudents';
 import { bindActionCreators } from 'redux';
 import { RichTextBox } from '../inputs/RichTextBox';
 import { EditorState } from 'draft-js';
 import StudentFrequency from './StudentFrequency';
 import StudentFrequencyInformation from './StudentFrequencyInformation';
 
-
 class ClassPlan extends Component {
-
     constructor() {
         super();
         this.students = [];
@@ -27,6 +26,7 @@ class ClassPlan extends Component {
         this.checkboxChange = this.checkboxChange.bind(this);
         this.testClick = this.testClick.bind(this);
         this.disabledCheck = this.disabledCheck.bind(this);
+        this.ClassRoomClick = this.ClassRoomClick.bind(this);
     }
 
     componentDidMount() {
@@ -41,12 +41,9 @@ class ClassPlan extends Component {
 
             return (0);
         });
-
     }
 
-
     checkboxChange(event) {
-
         var bool = event.target.checked;
 
         if (event.target.attributes.id.value == 'CheckFrequency') {
@@ -76,7 +73,6 @@ class ClassPlan extends Component {
     }
 
     testClick() {
-
         const eff = {
             students: this.students,
             checked: this.props.frequencyState.effectFrequency.checked
@@ -85,8 +81,19 @@ class ClassPlan extends Component {
         this.props.frequency.frequencyeffect(eff);
     }
 
-    disabledCheck(event) {
+    ClassRoomClick() {
+        var test = {
+            EolCode: "12345",
+            Schoolyear: 2019
 
+        };
+        this.props.classRoomStudents.get_classroom_students(test);
+        var list = this.props.classRoomStudentsState.classRoom;
+        //debugger;
+
+    }
+
+    disabledCheck(event) {
         var bool = event.target.checked;
 
         this.setState({
@@ -94,12 +101,18 @@ class ClassPlan extends Component {
         })
     }
 
-
     render() {
-
         return (
 
             <Card id="classRecord-classPlan">
+
+                <div id="classRoom">
+                    <button onClick={this.ClassRoomClick}>Click aqui meu jovem!</button>
+                    <div> </div>
+
+                </div>
+
+
                 <div id="frequency">
                     <div className="btn buttom">
                         <button className="btn btn-warning text-white" id="btnSalvar" onClick={this.testClick}>Salvar</button>
@@ -179,7 +192,6 @@ class ClassPlan extends Component {
 
             </Card>
 
-
         );
     }
 }
@@ -187,13 +199,15 @@ export default connect(
     state => (
         {
             frequencyState: state.frequency,
-            user: state.user
+            user: state.user,
+            classRoomStudentsState: state.classRoomStudents
         }
     ),
     dispatch => (
         {
             frequency: bindActionCreators(actionCreatorsFrequency, dispatch),
-            user: bindActionCreators(actionCreatorsUser, dispatch)
+            user: bindActionCreators(actionCreatorsUser, dispatch),
+            classRoomStudents: bindActionCreators(actionCreatorsClassRoom, dispatch)
         }
     )
 )(ClassPlan);

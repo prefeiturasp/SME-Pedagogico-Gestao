@@ -37,7 +37,7 @@ class Dashboard extends Component {
         return (
             <div id="dashboard-component" className="vh-100">
                 <TopMenu />
-                <LeftMenu />
+                {/*<LeftMenu />*/}
 
                 <Spring
                     from={{

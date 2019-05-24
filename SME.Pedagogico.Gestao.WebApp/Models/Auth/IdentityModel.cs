@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SME.Pedagogico.Gestao.WebApp.Models.Auth
+﻿namespace SME.Pedagogico.Gestao.WebApp.Models.Auth
 {
     public class IdentityModel
     {

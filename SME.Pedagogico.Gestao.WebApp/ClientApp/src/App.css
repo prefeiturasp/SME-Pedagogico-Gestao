@@ -6,3 +6,31 @@
     cursor: pointer;
     z-index: 1;
 }
+
+.sc-blue {
+    background-color: #1E90FF;
+}
+
+.sc-gray {
+    background-color: #EEEEEE;
+}
+
+.sc-text-blue {
+    color: #1E90FF;
+}
+
+.sc-text-purple {
+    color: #7C4DFF;
+}
+
+.sc-text-size-0 {
+    font-size: 12px;
+}
+
+.sc-text-size-1 {
+    font-size: 14px;
+}
+
+.sc-text-size-2 {
+    font-size: 16px;
+}

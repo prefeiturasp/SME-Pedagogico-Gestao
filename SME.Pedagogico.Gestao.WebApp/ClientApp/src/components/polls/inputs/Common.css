@@ -1,9 +1,7 @@
-﻿
-.bg-bluescale {
+﻿.bg-bluescale {
     font-size: 0.7em;
     color: white;
     background-color: #0077BE;
-    
 }
 
 .bg-lila {
@@ -11,4 +9,8 @@
     color: white;
     background-color: #9C96F6;
     
+}
+
+.custom-select{
+    width:auto !important;
 }

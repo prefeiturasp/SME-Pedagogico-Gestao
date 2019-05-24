@@ -1,4 +1,11 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using SME.Pedagogico.Gestao.Models.Authentication;
+using SME.Pedagogico.Gestao.WebApp.Contexts;
+using SME.Pedagogico.Gestao.WebApp.Models.Auth;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
@@ -6,19 +13,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-using SME.Pedagogico.Gestao.Models.Authentication;
-using SME.Pedagogico.Gestao.WebApp.Contexts;
-using SME.Pedagogico.Gestao.WebApp.Models.Auth;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
@@ -29,13 +25,14 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
     public class AuthController : ControllerBase
     {
         #region ==================== ATTRIBUTES ====================
+
         private IConfiguration _config; // Objeto para recuperar informações de configuração do arquivo appsettings.json
         private readonly SMEManagementContext _db; // Objeto context referente ao banco smeCoreDB
+
         #endregion ==================== ATTRIBUTES ====================
 
-
-
         #region ==================== CONSTRUCTORS ====================
+
         /// <summary>
         /// Construtor padrão para o AuthController, faz injeção de dependências de IConfiguration e SMEManagementContext.
         /// </summary>
@@ -46,12 +43,13 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             _config = config;
             _db = db;
         }
+
         #endregion ==================== CONSTRUCTORS ====================
 
-
-
         #region ==================== METHODS ====================
+
         #region -------------------- PRIVATE --------------------
+
         /// <summary>
         /// Método para validar as credenciais de login do usuário.
         /// </summary>
@@ -221,9 +219,32 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
             return (data);
         }
+
+        /// <summary>
+        /// Método para retornar as funções/cargos/perfis do usuário pelo 'username'
+        /// </summary>
+        /// <param name="username">Nome de usuário a ser pesquisado</param>
+        /// <returns>Retorna uma lista de UserRoleModel</returns>
+        private async Task<List<UserRoleModel>> GetUserRoles(string username)
+        {
+            List<UserRoleModel> userRoles =
+                (from current in await Data.Business.Authentication.GetUserRoles(username)
+                 select new UserRoleModel()
+                 {
+                     RoleId = current.RoleId,
+                     RoleName = current.Role.Name,
+                     AccessLevelId = current.AccessLevelId,
+                     AccessLevel = current.AccessLevel.Value,
+                     Description = current.AccessLevel.Description
+                 }).ToList();
+
+            return (userRoles);
+        }
+
         #endregion -------------------- PRIVATE --------------------
 
         #region -------------------- PUBLIC --------------------
+
         /// <summary>
         /// Método para efetuar o login do usuário utilizando o sistema do Novo SGP para validar o usuário e receber credencial de acesso.
         /// </summary>
@@ -244,7 +265,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 {
                     Token = CreateToken(credential.Username),
                     Session = session,
-                    RefreshToken = refreshToken
+                    RefreshToken = refreshToken,
+                    Roles = await GetUserRoles(credential.Username)
                 }));
             }
 
@@ -321,6 +343,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     user.SMEToken.RefreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
                     await Data.Business.Authentication.RegisterUser(credential.Username, credential.Password); // Cadastra o usuário dentro do banco PostgreSQL (Novo SGP)
                     await Data.Business.Authentication.LoginUser(credential.Username, user.SMEToken.Session, user.SMEToken.RefreshToken); // Loga o usuário no sistema
+                    user.Roles = await GetUserRoles(credential.Username);
 
                     return (Ok(user));
                 }
@@ -336,7 +359,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 {
                     Token = CreateToken(credential.Username),
                     Session = session,
-                    RefreshToken = refreshToken
+                    RefreshToken = refreshToken,
+                    Roles = await GetUserRoles(credential.Username)
                 }));
             }
 
@@ -371,7 +395,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     return (Ok());
             }
         }
+
         #endregion -------------------- PUBLIC --------------------
+
         #endregion ==================== METHODS ====================
     }
 }
