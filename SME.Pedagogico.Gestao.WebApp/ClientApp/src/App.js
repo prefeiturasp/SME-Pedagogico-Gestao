@@ -9,6 +9,7 @@ import ClassPlan from './components/classRecord/ClassPlan';
 import AnnualPlan from './components/classRecord/AnnualPlan';
 import CyclePlan from './components/classRecord/CyclePlan';
 import Poll from './components/classRecord/Poll';
+import PollReport from './components/reports/PollReport';
 import Documents from './components/classRecord/Documents';
 import NotFound from './components/navigation/NotFound';
 
@@ -26,6 +27,7 @@ export default class App extends Component {
                     <AuthenticatedDashboardRoute path="/RegistroDeClasse/Sondagem" exact component={Poll} />
                     <AuthenticatedDashboardRoute path="/RegistroDeClasse/Documentos" exact component={Documents} />*/}
                 <AuthenticatedDashboardRoute path="/" exact component={Poll} />
+                <AuthenticatedDashboardRoute path="/Relatorios/Sondagem" exact component={PollReport} />
                 <Route component={NotFound} />
             </Switch>
         );
