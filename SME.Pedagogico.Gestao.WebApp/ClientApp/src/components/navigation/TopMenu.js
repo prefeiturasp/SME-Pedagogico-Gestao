@@ -30,6 +30,20 @@ class TopMenu extends Component {
                     {/*<Breadcrumb id="breadcrumb-top-menu" className="d-flex flex-fill ml-4" />*/}
                     <div className="d-flex flex-fill ml-4"></div>
 
+                    <div className="d-flex h-100">
+                        <div className="border-left top-navigation-button">
+                            <Link className="d-flex align-items-center h-100 w-100" to="/">
+                                <small className="mx-3 font-weight-light text-muted">Sondagem</small>
+                            </Link>
+                        </div>
+
+                        <div className="mr-3 border border-top-0 border-bottom-0 top-navigation-button">
+                            <Link className="d-flex align-items-center h-100 w-100" to="/Relatorios/Sondagem">
+                                <small className="mx-3 font-weight-light text-muted">Relat&oacute;rios</small>
+                            </Link>
+                        </div>
+                    </div>
+
                     <div className="d-flex">
                         <small className="d-flex align-items-center font-weight-light text-muted">{this.props.user.activeRole.roleName}</small>
                         <div className="btn btn-outline-light rounded-circle d-flex justify-content-center align-items-center ml-2 mr-3 top-menu-button">

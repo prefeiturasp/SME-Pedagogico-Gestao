@@ -5,7 +5,7 @@ import PollFilter from './PollFilter';
 
 import { ClassRoomEnum } from '../polls/component/ClassRoomHelper'
 import { connect } from 'react-redux';
-import { actionCreators as actionCreatorsClassRoom } from '../../store/ClassRoomStudents';
+import { actionCreators as actionCreatorsPoll } from '../../store/Poll';
 import { bindActionCreators } from 'redux';
 
 import StudentPollMathAlfabetizacaoCard from '../polls/StudentPollMathAlfabetizacaoCard'
@@ -21,14 +21,13 @@ import StudentPollMath6ACACard from '../polls/StudentPollMath6ACACard'
 import StudentPollMath6ACMCard from '../polls/StudentPollMath6ACMCard'
 import StudentPollPortugueseCard from '../polls/StudentPollPortugueseCard'
 
-import SondagemClassSelected from '../polls/component/SondagemClassSelected'
-
 class Poll extends Component {
     constructor(props) {
         super(props);
         this.state = {
             pollStudents: [],
-            navSelected: "", 
+            navSelected: "",
+            didAnswerPoll: false, //usar para perguntar para salvar sondagem
             sondagemType: ClassRoomEnum.ClassEmpty,//Retirar o default depois//PT,MT,1A,2A,3ACA,3ACM,4ACA,4ACM,5ACA,5ACM,6ACA,6ACM
         }
 
@@ -54,227 +53,38 @@ class Poll extends Component {
     }
 
     componentDidMount() {
-        var test = {
-            EolCode: "12345",
-            Schoolyear: 2019
-
-        };
-        this.props.classRoomStudents.get_classroom_students(test);
-        
-        var list = this.props.classRoomStudentsState.classRoom;
-
-        var students = [];
-        var student = {
-            "name": "Eduarda dos Santos Costa",
-            "sequence": 1,
-            "pollresults":
-            {
-                "portuguese":
-                {
-                    "t1e": "",
-                    "t1l": "",
-                    "t2e": "SSV",
-                    "t2l": "2",
-                    "t3e": "SCV",
-                    "t3l": "3",
-                    "t4e": "A",
-                    "t4l": "4",
-                },
-                "mathalfabetizacao":
-                {
-                    "t1b2": "N",
-                    "t1b4": "N",
-
-                    "t2b2": "S",
-                    "t2b4": "S",
-
-                    "t3b2": "S",
-                    "t3b4": "N",
-
-                    "t4b2": "N",
-                    "t4b4": "N",
-
-                    "t5b2": "N",
-                    "t5b4": "S",
-
-                    "t6b2": "S",
-                    "t6b4": "N",
-
-                    "t7b2": "N",
-                    "t7b4": "N",
-
-
-                },
-                "math":
-                {
-                    "t1i2": "A",
-                    "t1r2": "",
-                    "t1i4": "E",
-                    "t1r4": "NR",
-
-                    "t2i2": "",
-                    "t2r2": "NR",
-                    "t2i4": "A",
-                    "t2r4": "E",
-
-                    "t3i2": "A",
-                    "t3r2": "A",
-                    "t3i4": "A",
-                    "t3r4": "A",
-
-                    "t4i2": "",
-                    "t4r2": "",
-                    "t4i4": "",
-                    "t4r4": "",
-
-                    "t5i2": "A",
-                    "t5r2": "E",
-                    "t5i4": "NR",
-                    "t5r4": "",
-
-                    "t6i2": "",
-                    "t6r2": "E",
-                    "t6i4": "NR",
-                    "t6r4": "A",
-
-                    "t7i2": "NR",
-                    "t7r2": "",
-                    "t7i4": "",
-                    "t7r4": "",
-
-                    "t8i2": "E",
-                    "t8r2": "E",
-                    "t8i4": "E",
-                    "t8r4": "E"
-
-                },
-            },
-
-        };
-        students.push(student);
-        student = {
-            "name": "José Santos Costa",
-            "sequence": 2,
-            "pollresults":
-            {
-                "portuguese":
-                {
-                    "t1e": "PS",
-                    "t1l": "4",
-                    "t2e": "SSV",
-                    "t2l": "3",
-                    "t3e": "A",
-                    "t3l": "2",
-                    "t4e": "",
-                    "t4l": "",
-                },
-                "mathalfabetizacao":
-                {
-                    "t1b2": "N",
-                    "t1b4": "S",
-
-                    "t2b2": "S",
-                    "t2b4": "N",
-
-                    "t3b2": "",
-                    "t3b4": "",
-
-                    "t4b2": "N",
-                    "t4b4": "N",
-
-                    "t5b2": "S",
-                    "t5b4": "S",
-
-                    "t6b2": "S",
-                    "t6b4": "N",
-
-                    "t7b2": "S",
-                    "t7b4": "N",
-
-
-                },
-                "math":
-                {
-                    "t1i2": "A",
-                    "t1r2": "",
-                    "t1i4": "E",
-                    "t1r4": "NR",
-
-                    "t2i2": "",
-                    "t2r2": "NR",
-                    "t2i4": "A",
-                    "t2r4": "E",
-
-                    "t3i2": "A",
-                    "t3r2": "A",
-                    "t3i4": "A",
-                    "t3r4": "A",
-
-                    "t4i2": "",
-                    "t4r2": "",
-                    "t4i4": "",
-                    "t4r4": "",
-
-                    "t5i2": "A",
-                    "t5r2": "E",
-                    "t5i4": "NR",
-                    "t5r4": "",
-
-                    "t6i2": "",
-                    "t6r2": "E",
-                    "t6i4": "NR",
-                    "t6r4": "A",
-
-                    "t7i2": "NR",
-                    "t7r2": "",
-                    "t7i4": "",
-                    "t7r4": "",
-
-                    "t8i2": "E",
-                    "t8r2": "E",
-                    "t8i4": "E",
-                    "t8r4": "E"
-
-                },
-            },
-
-        };
-        students.push(student);
-
-        this.setState({ pollStudents: students });
+     
     }
     
     updatePollStudent(sequence, subjectName, propertyName, value) {
         var pollStudents = this.state.pollStudents;
-
         for (var i = 0; i < pollStudents.length; i++) {
-            if (pollStudents[i].sequence === sequence) {
-
+            if (pollStudents[i].studentCodeEol === sequence) {
                 if (subjectName === "portuguese") {
                     switch (propertyName) {
                         case "t1e":
-                            pollStudents[i].pollresults.portuguese.t1e = value;
+                            pollStudents[i].t1e = value;
                             break;
                         case "t1l":
-                            pollStudents[i].pollresults.portuguese.t1l = value;
+                            pollStudents[i].t1l = value;
                             break;
                         case "t2e":
-                            pollStudents[i].pollresults.portuguese.t2e = value;
+                            pollStudents[i].t2e = value;
                             break;
                         case "t2l":
-                            pollStudents[i].pollresults.portuguese.t2l = value;
+                            pollStudents[i].t2l = value;
                             break;
                         case "t3e":
-                            pollStudents[i].pollresults.portuguese.t3e = value;
+                            pollStudents[i].t3e = value;
                             break;
                         case "t3l":
-                            pollStudents[i].pollresults.portuguese.t3l = value;
+                            pollStudents[i].t3l = value;
                             break;
                         case "t4e":
-                            pollStudents[i].pollresults.portuguese.t4e = value;
+                            pollStudents[i].t4e = value;
                             break;
                         case "t4l":
-                            pollStudents[i].pollresults.portuguese.t4l = value;
+                            pollStudents[i].t4l = value;
                             break;
                         default:
                             break;
@@ -441,8 +251,10 @@ class Poll extends Component {
 
             }
         }
-
+        
         this.setState({ pollStudents: pollStudents });
+        debugger;
+        this.props.poll.students = pollStudents;
     }
 
     savePollStudent() {
@@ -469,17 +281,16 @@ class Poll extends Component {
             Schoolyear: 2019
 
         };
-        this.props.classRoomStudents.get_classroom_students(test);
-        debugger;
-        var list = this.props.classRoomStudentsState.classRoom;
-        //debugger;
-        //alert("Poll Portugues");
+        
+        this.props.pollMethods.get_poll_portuguese_students(test);
+        this.props.pollMethods.set_poll_info(ClassRoomEnum.ClassPT, "", "1"); //passar pollSelected, pollTypeSelected, pollYear
+        this.setState({ pollStudents: this.props.poll.students });
     }
     
     openMathPoll(element) {
         this.toggleButton(element.currentTarget.id);
         this.setState({
-            sondagemType: ClassRoomEnum.Class2A,
+            sondagemType: ClassRoomEnum.ClassMT,
         });
         //alert("Poll Matematica");
     }
@@ -495,12 +306,6 @@ class Poll extends Component {
     render() {
         var componentRender;
         var sondagemType = this.state.sondagemType;
-
-        var element = document.getElementById("1");
-        if (element!==undefined && element !== null) {
-            element.className = "btn btn-outline-primary btn-sm btn-matematica btn-single active";
-        }
-
 
         switch (sondagemType) {
             case ClassRoomEnum.Class1A:
@@ -549,13 +354,12 @@ class Poll extends Component {
                     <PollFilter />
                 </Card> 
                 <Card id="classRecord-poll">
-                    <SondagemClassSelected />
                     <nav className="container-tabpanel navbar"><div className="form-inline">
-                        <button className="btn btn-outline-primary btn-sm">EF-1C - EMF - MARIA APARECIDA DO NASCIMENTO</button></div>
+                        <button className="btn btn-outline-primary btn-sm">[Em desenvolvimento]EF-1C - EMF - MARIA APARECIDA DO NASCIMENTO</button></div>
                         <ul className="nav navbar-nav ml-auto">
                             <li className="nav-item">
                                 <div className="form-inline">
-                                    <button className="btn btn-save text-white" disabled="">Salvar</button></div>
+                                    <button className="btn btn-save text-white" onClick={this.savePollStudent} disabled="">Salvar</button></div>
                             </li>
                         </ul>
                     </nav>
@@ -582,12 +386,12 @@ class Poll extends Component {
 export default connect(
     state => (
         {
-            classRoomStudentsState: state.classRoomStudents
+            poll: state.poll
         }
     ),
     dispatch => (
         {
-            classRoomStudents: bindActionCreators(actionCreatorsClassRoom, dispatch)
+            pollMethods: bindActionCreators(actionCreatorsPoll, dispatch)
         }
     )
 )(Poll);
