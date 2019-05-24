@@ -10,10 +10,11 @@ export default class Card extends Component {
             className = className.concat(" card px-2 py-2");
 
         if (style === undefined)
-            style = { boxShadow: "0px 6px 18px rgba(0, 0, 0, 0.06)", border: "none" };
+            style = { boxShadow: "0px 6px 18px rgba(0, 0, 0, 0.06)", border: "none", overflow: "hidden" };
         else {
             style["boxShadow"] = "0px 6px 18px rgba(0, 0, 0, 0.06)";
             style["border"] = "none";
+            style["overflow"] = "hidden";
         }
 
         return (
