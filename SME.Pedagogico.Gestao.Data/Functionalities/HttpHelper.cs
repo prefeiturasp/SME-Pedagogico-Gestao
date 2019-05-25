@@ -23,11 +23,21 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
 
             using (var client = new HttpClient())
             {
-                AddHeaders(token, client);
-                HttpResponseMessage response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
-                response.EnsureSuccessStatusCode();
-                var data = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<T>(data);
+                try
+                {
+                    AddHeaders(token, client);
+                    HttpResponseMessage response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+                    response.EnsureSuccessStatusCode();
+                    var data = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<T>(data);
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+
+              
             }
 
         }

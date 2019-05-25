@@ -1,4 +1,6 @@
-﻿using SME.Pedagogico.Gestao.Data.DataTransfer;
+﻿using Microsoft.Extensions.Configuration;
+using SME.Pedagogico.Gestao.Data.DataTransfer;
+using SME.Pedagogico.Gestao.Data.Functionalities;
 using SME.Pedagogico.Gestao.Models.Academic;
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
 {
     public class PollPortuguese
     {
+        private string _token;
+        public PollPortuguese(IConfiguration config)
+        {
+            var createToken = new CreateToken(config);
+            _token = createToken.CreateTokenProvisorio();
+        }
 
         public async void InsertPollPortuguese(List<StudentPollPortuguese> ListStudentsModel)
         {
@@ -81,6 +89,11 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     // tratar se ppor um acaso retornar uma lista vazia 
                     var studentsClassRoom = new Data.Business.ClassRoom();
                     var listStudentsClassRoom = studentsClassRoom.MockListaChamada();
+
+                    if (listStudentsClassRoom == null)
+                    {
+                        return null;
+                    }
 
                     if (listStudentsClassRoom != null)
                     {

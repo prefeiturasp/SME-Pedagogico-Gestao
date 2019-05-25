@@ -20,6 +20,7 @@ import StudentPollMath5ACMCard from '../polls/StudentPollMath5ACMCard'
 import StudentPollMath6ACACard from '../polls/StudentPollMath6ACACard'
 import StudentPollMath6ACMCard from '../polls/StudentPollMath6ACMCard'
 import StudentPollPortugueseCard from '../polls/StudentPollPortugueseCard'
+import { debounce } from 'redux-saga/effects';
 
 class Poll extends Component {
     constructor(props) {
@@ -57,6 +58,7 @@ class Poll extends Component {
     }
     
     updatePollStudent(sequence, subjectName, propertyName, value) {
+        debugger;
         var pollStudents = this.state.pollStudents;
         for (var i = 0; i < pollStudents.length; i++) {
             if (pollStudents[i].studentCodeEol === sequence) {
@@ -252,9 +254,9 @@ class Poll extends Component {
             }
         }
         
-        this.setState({ pollStudents: pollStudents });
+       // this.setState({ pollStudents: pollStudents });
         debugger;
-        this.props.poll.students = pollStudents;
+       // this.props.poll.students = pollStudents;
     }
 
     savePollStudent() {
