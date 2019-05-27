@@ -1,7 +1,9 @@
 ﻿export const types = {
     SET_POLL_INFO:"SET_POLL_INFO",
     GET_POLL_PORTUGUESE_STUDENTS: "GET_POLL_PORTUGUESE_STUDENTS",
-    SET_POLL_PORTUGUESE_STUDENTS: "SET_POLL_PORTUGUESE_STUDENTS",
+    UPDATE_POLL_STUDENTS: "UPDATE_POLL_STUDENTS",
+    SAVE_POLL_PORTUGUESE: "SAVE_POLL_PORTUGUESE",
+
 
 }
 
@@ -15,11 +17,12 @@ const initialState = {
 
 export const actionCreators = {
     get_poll_portuguese_students: (classRoom) => ({ type: types.GET_POLL_PORTUGUESE_STUDENTS, classRoom }),
-    set_poll_info: (pollSelected, pollTypeSelected, pollYear) => ({ type: types.SET_POLL_INFO, pollSelected, pollTypeSelected, pollYear })
-
+    set_poll_info: (pollSelected, pollTypeSelected, pollYear) => ({ type: types.SET_POLL_INFO, pollSelected, pollTypeSelected, pollYear }),
+    update_poll_students: (pollstudents) => ({ type: types.UPDATE_POLL_STUDENTS, pollstudents }),
+    save_poll_student: (pollstudents) => ({type:types.SAVE_POLL_PORTUGUESE,pollstudents}),
 }
 
-export const reducer = (state, action, pollSelected, pollTypeSelected, pollYear) => {
+export const reducer = (state, action, pollSelected, pollTypeSelected, pollYear, pollstudents) => {
     state = state || initialState;
     switch (action.type) {
         case types.GET_POLL_PORTUGUESE_STUDENTS:
@@ -67,6 +70,9 @@ export const reducer = (state, action, pollSelected, pollTypeSelected, pollYear)
             });
         case types.SET_POLL_INFO:
             return ({ ...state, pollSelected: action.pollSelected, pollTypeSelected: action.pollTypeSelected, pollYear:action.pollYear });
+        case types.UPDATE_POLL_STUDENTS:
+            return ({...state, students:action.pollstudents
+            });
         default:
             return (state);
     }
