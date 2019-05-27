@@ -40,6 +40,7 @@ class Poll extends Component {
         this.openMathSubPoll = this.openMathSubPoll.bind(this);
         this.openMathPoll = this.openMathPoll.bind(this);
 
+        this.props.pollMethods.set_poll_info(null, null, null);
     }
     componentDidUpdate() {//ver em ClassPlan o método ClassRoomClick
         
@@ -253,13 +254,24 @@ class Poll extends Component {
         }
         
         this.setState({ pollStudents: pollStudents });
-        debugger;
-        this.props.poll.students = pollStudents;
+        this.props.pollMethods.update_poll_students(pollStudents);
+        //this.props.poll.students = pollStudents;
     }
 
     savePollStudent() {
+        if (this.props.poll.pollSelected !== null) {
+            if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
+                var response = this.props.pollMethods.save_poll_student(this.props.poll.students);
+                debugger;
+                alert(this.props.poll.pollSelected + response);
+            } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMT) {
+                alert(this.props.poll.pollSelected);
+            } 
+        } else {
+            alert(this.props.poll.pollSelected);
+        }
         console.log(this.props);
-        alert(this.props);
+        
     }
 
     toggleButton(elementSeleted) {
