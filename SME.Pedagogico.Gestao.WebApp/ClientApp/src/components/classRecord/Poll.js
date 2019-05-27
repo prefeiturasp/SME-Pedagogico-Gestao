@@ -20,7 +20,6 @@ import StudentPollMath5ACMCard from '../polls/StudentPollMath5ACMCard'
 import StudentPollMath6ACACard from '../polls/StudentPollMath6ACACard'
 import StudentPollMath6ACMCard from '../polls/StudentPollMath6ACMCard'
 import StudentPollPortugueseCard from '../polls/StudentPollPortugueseCard'
-import { debounce } from 'redux-saga/effects';
 
 class Poll extends Component {
     constructor(props) {
@@ -41,6 +40,7 @@ class Poll extends Component {
         this.openMathSubPoll = this.openMathSubPoll.bind(this);
         this.openMathPoll = this.openMathPoll.bind(this);
 
+        this.props.pollMethods.set_poll_info(null, null, null);
     }
     componentDidUpdate() {//ver em ClassPlan o método ClassRoomClick
         
@@ -58,7 +58,6 @@ class Poll extends Component {
     }
     
     updatePollStudent(sequence, subjectName, propertyName, value) {
-        debugger;
         var pollStudents = this.state.pollStudents;
         for (var i = 0; i < pollStudents.length; i++) {
             if (pollStudents[i].studentCodeEol === sequence) {
@@ -254,14 +253,25 @@ class Poll extends Component {
             }
         }
         
-       // this.setState({ pollStudents: pollStudents });
-        debugger;
-       // this.props.poll.students = pollStudents;
+        this.setState({ pollStudents: pollStudents });
+        this.props.pollMethods.update_poll_students(pollStudents);
+        //this.props.poll.students = pollStudents;
     }
 
     savePollStudent() {
+        if (this.props.poll.pollSelected !== null) {
+            if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
+                var response = this.props.pollMethods.save_poll_student(this.props.poll.students);
+                debugger;
+                alert(this.props.poll.pollSelected + response);
+            } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMT) {
+                alert(this.props.poll.pollSelected);
+            } 
+        } else {
+            alert(this.props.poll.pollSelected);
+        }
         console.log(this.props);
-        alert(this.props);
+        
     }
 
     toggleButton(elementSeleted) {

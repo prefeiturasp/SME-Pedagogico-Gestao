@@ -4,7 +4,7 @@ import * as Poll from '../store/Poll';
 export default function* () {
     yield all([
       //  takeLatest(Poll.types.GET_POLL_PORTUGUESE_STUDENTS, GetStudents),
-
+        takeLatest(Poll.types.SAVE_POLL_PORTUGUESE, SavePollPortuguese),
     ]);
 }
 
@@ -35,3 +35,14 @@ function getStudentsPollPortugueseRequestApi(classRoom) {
    
     //return lStudants;
 }
+
+function* SavePollPortuguese({ students }) {
+    debugger;
+    //return (yield fetch("/api/", {
+    //            method: "post",
+    //            headers: { 'Content-Type': 'application/json' },
+    //            body: JSON.stringify(students)
+    //        }).then(response => response.json())
+    //);
+    return (yield true);
+} 
