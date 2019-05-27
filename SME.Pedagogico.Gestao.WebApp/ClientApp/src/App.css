@@ -11,8 +11,20 @@
     background-color: #1E90FF;
 }
 
+.sc-darkblue {
+    background-color: #0077BE;
+}
+
 .sc-gray {
     background-color: #EEEEEE;
+}
+
+.sc-darkgray {
+    background-color: #ADADAE;
+}
+
+.sc-lightpurple {
+    background-color: #9C96F6;
 }
 
 .sc-text-blue {

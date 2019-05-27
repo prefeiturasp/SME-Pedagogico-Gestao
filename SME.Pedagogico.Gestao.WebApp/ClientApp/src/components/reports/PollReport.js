@@ -4,9 +4,44 @@ import PollFilter from '../classRecord/PollFilter';
 import PollReportFilter from './PollReportFilter';
 import PollReportBreadcrumb from './PollReportBreadcrumb';
 import PollReportPortugueseGrid from './PollReportPortugueseGrid';
-import PollReportChart from './PollReportChart';
+import PollReportMathGrid from './PollReportMathGrid';
+import PollReportPortugueseChart from './PollReportPortugueseChart';
+import PollReportMathChart from './PollReportMathChart';
+import { connect } from 'react-redux';
+import { actionCreators } from '../../store/PollReport';
+import { bindActionCreators } from 'redux';
 
-export default class PollReport extends Component {
+class PollReport extends Component {
+    constructor() {
+        super();
+
+        this.classroomReport = true;
+        this.portChartData = [
+            { name: "PS", value: 60 },
+            { name: "SSV", value: 30 },
+            { name: "SCV", value: 45 },
+            { name: "SA", value: 23 },
+            { name: "A", value: 50 },
+        ];
+        this.mathChartData = [
+            {
+                name: "ORDEM 1",
+                idea: [60, 13, 30],
+                result: [25, 30, 45]
+            },
+            {
+                name: "ORDEM 2",
+                idea: [20, 40, 30],
+                result: [10, 15, 5]
+            },
+            {
+                name: "ORDEM 3",
+                idea: [60, 13, 30],
+                result: [60, 30, 45]
+            },
+        ];
+    }
+
     render() {
         return (
             <div>
@@ -27,16 +62,41 @@ export default class PollReport extends Component {
                             </div>
                         </div>
 
-                        <PollReportBreadcrumb className="mt-4" name="Planilha" />
+                        {this.props.pollReport.showReport === true && 
+                            <div>
+                                <PollReportBreadcrumb className="mt-4" name="Planilha" />
 
-                        <PollReportPortugueseGrid className="mt-3" classroomReport={false} />
+                                {this.props.pollReport.selectedFilter.discipline === "Língua Portuguesa" ?
+                                    <PollReportPortugueseGrid className="mt-3" classroomReport={this.classroomReport} />
+                                    :
+                                    <PollReportMathGrid className="mt-3" classroomReport={this.classroomReport} />
+                                }
 
-                        <PollReportBreadcrumb className="mt-5" name="Gráfico" />
+                                <PollReportBreadcrumb className="mt-5" name="Gráfico" />
 
-                        <PollReportChart />
+                                {this.props.pollReport.selectedFilter.discipline === "Língua Portuguesa" ?
+                                    <PollReportPortugueseChart data={this.portChartData} />
+                                    :
+                                    <div className="mt-4">
+                                        {this.mathChartData.map(item => {
+                                            var chartId = item.name.replace(" ", "").toLowerCase();
+
+                                            return (
+                                                <PollReportMathChart key={chartId} chartIds={[(chartId + "idea"), (chartId + "result")]} data={item} />
+                                            );
+                                        })}
+                                    </div>
+                                }
+                            </div>
+                        }
                     </div>
                 </Card>
             </div>
         );
     }
 }
+
+export default connect(
+    state => ({ pollReport: state.pollReport }),
+    dispatch => bindActionCreators(actionCreators, dispatch)
+)(PollReport);
