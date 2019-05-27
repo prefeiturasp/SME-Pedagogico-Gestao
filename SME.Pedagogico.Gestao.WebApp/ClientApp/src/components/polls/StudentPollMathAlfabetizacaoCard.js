@@ -11,7 +11,7 @@ export default class StudentPollMathAlfabetizacaoCard extends Component {
         this.state = {
             selectedClass: "custom-select custom-select-sm poll-select",
             selectedOrdem: "familiares_col",
-            class:"1º ano" //1º/2º
+            class:"1º ano" //1º/2º setar o ano do aluno
         };
         this.hideShowOrdem = this.hideShowOrdem.bind(this);
         this.showOneHideAll = this.showOneHideAll.bind(this);
@@ -88,11 +88,9 @@ export default class StudentPollMathAlfabetizacaoCard extends Component {
                     </thead>
 
                     <tbody>
-
-                        {this.props.students.map(student => (
-                            <StudentPollMathAlfabetizacao key={student.sequence} student={student} updatePollStudent={this.props.updatePollStudent} />
-                        ))}
-
+                        {this.props.students.map(student =>
+                            <StudentPollMathAlfabetizacao key={student.sequenceNumber} student={student} updatePollStudent={this.props.updatePollStudent} />
+                        )}
                     </tbody>
                 </table>
                 <LegendsYesNo />
