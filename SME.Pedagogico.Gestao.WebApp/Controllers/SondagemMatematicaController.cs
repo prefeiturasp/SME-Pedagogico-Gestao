@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.Contexts;
 using SME.Pedagogico.Gestao.Data.DTO;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
@@ -15,6 +17,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         #region ==================== ATTRIBUTES ====================
 
         private readonly SMEManagementContext _db;
+        public readonly IConfiguration _config;
 
         #endregion
 
@@ -24,9 +27,11 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// Construtor padrão para o SondagemMatematicaController, faz injeção de dependências SMEManagementContext.
         /// </summary>
         /// <param name="db">Depêndencia de dataContext (SMEManagementContext)</param>
-        public SondagemMatematicaController(SMEManagementContext db)
+        public SondagemMatematicaController(SMEManagementContext db, 
+                                            IConfiguration config)
         {
             _db = db;
+            _config = config;
         }
 
         #endregion
@@ -44,9 +49,19 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// <param name="dadosSondagem">Objeto que contém informações da sondagem de matemática</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<string>> SondagemMatematicaOrdem([FromBody]SondagemMatematicaOrdemDTO dadosSondagem)
+        public async Task<ActionResult> GravaSondagemCM([FromBody]List<SondagemMatematicaOrdemDTO> dadosSondagem)
         {
-            return default;
+            try
+            {
+                var businessSondagemMatematica = new Data.Business.SondagemMatematica(_config);
+                await businessSondagemMatematica.InsertPollCM(dadosSondagem);
+
+                return (Ok());
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
         }
 
         #endregion
