@@ -22,30 +22,30 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
 
 
-        [HttpGet]
-        public async Task<ActionResult> EscolasPorDre(string codigoDRE)
-        {
-            try
-            {
-                //Necessário para gerar o Token temporariamente
-                 var filterBusiness = new Filters(_config);
+        //[HttpGet]
+        //public async Task<ActionResult> EscolasPorDre(string codigoDRE)
+        //{
+        //    try
+        //    {
+        //        //Necessário para gerar o Token temporariamente
+        //         var filterBusiness = new Filters(_config);
 
-                var listSchools = filterBusiness.GetSchools(codigoDRE);
+        //        var listSchools = filterBusiness.GetSchools(codigoDRE);
 
-                if (listSchools != null)
-                {
-                    return (Ok(listSchools));
-                }
-                else
-                {
-                    return (NoContent());
-                }
+        //        if (listSchools != null)
+        //        {
+        //            return (Ok(listSchools));
+        //        }
+        //        else
+        //        {
+        //            return (NoContent());
+        //        }
 
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex);
-            }
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, ex);
+        //    }
+        //}
     }
 }
