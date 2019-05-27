@@ -44,7 +44,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         #region -------------------- PUBLIC --------------------
 
         /// <summary>
-        /// Método para fazer a sondagem de matemática por ordem.
+        /// Método para fazer a sondagem de matemática de CM.
         /// </summary>
         /// <param name="dadosSondagem">Objeto que contém informações da sondagem de matemática</param>
         /// <returns></returns>
@@ -54,7 +54,49 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             try
             {
                 var businessSondagemMatematica = new Data.Business.SondagemMatematica(_config);
-                await businessSondagemMatematica.InsertPollCM(dadosSondagem);
+                await businessSondagemMatematica.InsertPoolCM(dadosSondagem);
+
+                return (Ok());
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
+
+        /// <summary>
+        /// Método para fazer a sondagem de matemática de CA.
+        /// </summary>
+        /// <param name="dadosSondagem">Objeto que contém informações da sondagem de matemática</param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> GravaSondagemCA([FromBody]List<SondagemMatematicaOrdemDTO> dadosSondagem)
+        {
+            try
+            {
+                var businessSondagemMatematica = new Data.Business.SondagemMatematica(_config);
+                await businessSondagemMatematica.InsertPoolCA(dadosSondagem);
+
+                return (Ok());
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
+
+        /// <summary>
+        /// Método para fazer a sondagem de matemática de Números.
+        /// </summary>
+        /// <param name="dadosSondagem">Objeto que contém informações da sondagem de matemática</param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> GravaSondagemNumeros([FromBody]List<SondagemMatematicaNumerosDTO> dadosSondagem)
+        {
+            try
+            {
+                var businessSondagemMatematica = new Data.Business.SondagemMatematica(_config);
+                await businessSondagemMatematica.InsertPoolNumeros(dadosSondagem);
 
                 return (Ok());
             }

@@ -4,6 +4,9 @@ namespace SME.Pedagogico.Gestao.Models.Academic
 {
     public class Semester : ValuedTable
     {
-        
+        public Semester() : base()
+        {
+
+        }
     }
 }
