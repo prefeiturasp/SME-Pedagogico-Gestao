@@ -2,6 +2,15 @@
 
 export default class PollReportPortugueseChart extends Component {
     componentDidMount() {
+        var labels = [];
+        var values = [];
+
+        for (var i = 0; i < this.props.data.length; i++) {
+            labels.push(this.props.data[i].name);
+            values.push(this.props.data[i].value);
+        }
+
+
         var echarts = require('echarts');
 
         // initialize echarts instance with prepared DOM
@@ -10,7 +19,7 @@ export default class PollReportPortugueseChart extends Component {
         myChart.setOption({
             tooltip: {},
             xAxis: {
-                data: ['PS', 'SSV', 'SCV', 'SA', 'A']
+                data: labels
             },
             yAxis: {},
             series: [{
@@ -18,27 +27,10 @@ export default class PollReportPortugueseChart extends Component {
                 type: 'bar',
                 itemStyle: {
                     normal: {
-                        color: new echarts.graphic.LinearGradient(
-                            0, 0, 0, 1,
-                            [
-                                { offset: 0, color: '#83bff6' },
-                                { offset: 0.5, color: '#188df0' },
-                                { offset: 1, color: '#188df0' }
-                            ]
-                        )
+                        color: '#0077BE'
                     },
-                    emphasis: {
-                        color: new echarts.graphic.LinearGradient(
-                            0, 0, 0, 1,
-                            [
-                                { offset: 0, color: '#2378f7' },
-                                { offset: 0.7, color: '#2378f7' },
-                                { offset: 1, color: '#83bff6' }
-                            ]
-                        )
-                    }
                 },
-                data: [60, 30, 45, 23, 10]
+                data: values
             }]
         });
     }

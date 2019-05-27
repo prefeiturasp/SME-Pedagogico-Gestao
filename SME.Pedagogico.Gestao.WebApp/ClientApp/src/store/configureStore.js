@@ -10,6 +10,7 @@ import * as Calendar from './Calendar';
 import * as Frequency from './Frequency';
 import * as ClassRoomStudents from './ClassRoomStudents';
 import * as Poll from './Poll';
+import * as PollReport from './PollReport';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web and AsyncStorage for react-native
 import logger from 'redux-logger';
@@ -25,6 +26,7 @@ export default function configureStore(history, initialState) {
         frequency: Frequency.reducer,
         classRoomStudents: ClassRoomStudents.reducer,
         poll: Poll.reducer,
+        pollReport: PollReport.reducer,
     };
 
     const reduxSaga = createSagaMiddleware();

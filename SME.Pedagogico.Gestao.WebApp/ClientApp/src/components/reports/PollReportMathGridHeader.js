@@ -2,14 +2,14 @@
 
 const ClassReportColumnName = (props) => {
     const { number } = props;
-    var className = "col sc-darkgray border-left border-white";
+    var className = "col sc-gray border-left border-white";
 
     if (number === 1)
-        var className = "col sc-darkgray";
+        var className = "col sc-gray";
 
     return (
         <div className={className}>
-            <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center text-white">ORDEM {number}</div>
+            <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center font-weight-bold">ORDEM {number}</div>
         </div>
     );
 }
