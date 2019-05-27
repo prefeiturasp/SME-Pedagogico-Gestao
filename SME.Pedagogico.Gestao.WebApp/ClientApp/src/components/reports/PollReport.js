@@ -4,9 +4,18 @@ import PollFilter from '../classRecord/PollFilter';
 import PollReportFilter from './PollReportFilter';
 import PollReportBreadcrumb from './PollReportBreadcrumb';
 import PollReportPortugueseGrid from './PollReportPortugueseGrid';
-import PollReportChart from './PollReportChart';
+import PollReportMathGrid from './PollReportMathGrid';
+import PollReportPortugueseChart from './PollReportPortugueseChart';
+import PollReportMathChart from './PollReportMathChart';
 
 export default class PollReport extends Component {
+    constructor() {
+        super();
+
+        this.pollReportType = "portuguese";
+        this.classroomReport = false;
+    }
+
     render() {
         return (
             <div>
@@ -29,11 +38,19 @@ export default class PollReport extends Component {
 
                         <PollReportBreadcrumb className="mt-4" name="Planilha" />
 
-                        <PollReportPortugueseGrid className="mt-3" classroomReport={false} />
+                        {this.pollReportType === "portuguese" ?
+                            <PollReportPortugueseGrid className="mt-3" classroomReport={this.classroomReport} />
+                            :
+                            <PollReportMathGrid className="mt-3" classroomReport={this.classroomReport} />
+                        }
 
                         <PollReportBreadcrumb className="mt-5" name="Gráfico" />
 
-                        <PollReportChart />
+                        {this.pollReportType === "portuguese" ?
+                            <PollReportPortugueseChart />
+                            :
+                            <PollReportPortugueseChart />
+                        }
                     </div>
                 </Card>
             </div>

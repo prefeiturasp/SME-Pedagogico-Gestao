@@ -1,15 +1,7 @@
 ﻿import React, { Component } from 'react';
 
-export default class PollReportChart extends Component {
+export default class PollReportPortugueseChart extends Component {
     componentDidMount() {
-        //// include ECharts main module
-        //var echarts = require('echarts/lib/echarts');
-        //// include bar chart
-        //require('echarts/lib/chart/bar');
-        //// include tooltip and title component
-        //require('echarts/lib/component/tooltip');
-        ////require('echarts/lib/component/title');
-
         var echarts = require('echarts');
 
         // initialize echarts instance with prepared DOM
