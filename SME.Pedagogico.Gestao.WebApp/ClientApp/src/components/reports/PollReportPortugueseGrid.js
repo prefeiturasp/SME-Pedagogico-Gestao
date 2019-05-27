@@ -39,7 +39,7 @@ const PollReportGridItem = (props) => {
                 <div className="col-5">
                     <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-light">{props.studentName}</div>
                 </div>
-                <div className="col-6 sc-blue border-right border-white">
+                <div className="col-6 sc-darkblue border-right border-white">
                     <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center text-white font-weight-light">{props.studentValue}</div>
                 </div>
             </div>
@@ -50,10 +50,10 @@ const PollReportGridItem = (props) => {
                 <div className="col">
                     <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-light">{props.optionName}</div>
                 </div>
-                <div className="col-7 sc-blue border-right border-white">
+                <div className="col-7 sc-darkblue border-right border-white">
                     <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center text-white font-weight-light">{props.studentQuantity} Alunos</div>
                 </div>
-                <div className="col-1 sc-blue border-right border-white">
+                <div className="col-1 sc-darkblue border-right border-white">
                     <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center text-white font-weight-light">{props.studentPercentage}%</div>
                 </div>
             </div>
@@ -117,7 +117,7 @@ export default class PollReportPortugueseGrid extends Component {
                 <PollReportGridHeader classroomReport={this.props.classroomReport} />
 
                 {reportItems.map(item =>
-                    <PollReportGridItem key={item.optionName} {...item} classroomReport={this.props.classroomReport} />
+                    <PollReportGridItem {...item} classroomReport={this.props.classroomReport} />
                 )}
 
                 {this.props.classroomReport === false &&

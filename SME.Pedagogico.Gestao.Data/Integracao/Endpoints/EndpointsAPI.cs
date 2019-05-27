@@ -18,6 +18,9 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
 
         //professores/{codigoRF}/escolas/{codigoUE}/anos_letivos/{anoLetivo}
         public string BuscaTurmasDeProfessores { get; set; } = "professores/{0}/escolas/{1}/anos_letivos/{2}";
+    } // Turmas por escola 
+      // Escolas por DRE 
+      // Alunos da turma
         
         //perfis/servidores/{codigoRF}/cargos
         public string BuscaCargosdeServidor { get; internal set; } = "perfis/servidores/{0}/cargos";

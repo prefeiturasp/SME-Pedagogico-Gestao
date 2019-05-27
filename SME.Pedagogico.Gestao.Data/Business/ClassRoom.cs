@@ -12,34 +12,34 @@ namespace SME.Pedagogico.Gestao.Data.Business
             var ListStudantClassRoom = new List<StudentClassRoom>();
 
 
-            var studant = new StudentClassRoom();
+            var student = new StudentClassRoom();
 
-            studant.codigoAluno = 5848422;
-            studant.nomeAluno = "SAMILLE AIALA DE JESUS SANTOS";
-            studant.dataNascimento = DateTime.ParseExact("11/09/2011", "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            studant.nomeSocialAluno = null;
-            studant.codigoSituacaoMatricula = 1;
-            studant.situacaoMatricula = "Ativo";
-            studant.numeroAlunoChamada = 21;
-            studant.dataSituacao = DateTime.ParseExact("17/04/2019", "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            studant.possuiDeficiencia = false;
+            student.codigoAluno = "5848422";
+            student.nomeAluno = "SAMILLE AIALA DE JESUS SANTOS";
+            student.dataNascimento = DateTime.ParseExact("11/09/2011", "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            student.nomeSocialAluno = null;
+            student.codigoSituacaoMatricula = 1;
+            student.situacaoMatricula = "Ativo";
+            student.numeroAlunoChamada = "21";
+            student.dataSituacao = DateTime.ParseExact("17/04/2019", "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            student.possuiDeficiencia = false;
 
             var studant2 = new StudentClassRoom()
             {
-                codigoAluno = 6003306,
+                codigoAluno = "6003306",
                 nomeAluno = "NATASHA MIRELLY DA COSTA SOUSA",
                 dataNascimento = DateTime.ParseExact("19/03/2012", "dd/MM/yyyy", CultureInfo.InvariantCulture),
                 nomeSocialAluno = null,
                 codigoSituacaoMatricula = 1,
                 situacaoMatricula = "Ativo",
                 dataSituacao = DateTime.ParseExact("17/04/2019", "dd/MM/yyyy", CultureInfo.InvariantCulture),
-                numeroAlunoChamada = 19 ,
+                numeroAlunoChamada = "19",
                 possuiDeficiencia = false,
             };
-         
+
             var studant4 = new StudentClassRoom()
             {
-                codigoAluno = 5882737,
+                codigoAluno = "5882737",
                 nomeAluno = "BEATRIZ FERREIRA LUCAS DAVELLI",
                 dataNascimento = DateTime.ParseExact("19/01/2012", "dd/MM/yyyy", CultureInfo.InvariantCulture),
                 nomeSocialAluno = null,
@@ -47,11 +47,11 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 situacaoMatricula = "Ativo",
                 dataSituacao = DateTime.ParseExact("17/04/2019", "dd/MM/yyyy", CultureInfo.InvariantCulture),
                 possuiDeficiencia = false,
-                numeroAlunoChamada = 4,
+                numeroAlunoChamada = "4",
             };
             var studant5 = new StudentClassRoom()
             {
-                codigoAluno = 5959226,
+                codigoAluno = "5959226",
                 nomeAluno = "MARIANA GALIEGO ALVES",
                 dataNascimento = DateTime.ParseExact("19/12/2011", "dd/MM/yyyy", CultureInfo.InvariantCulture),
                 nomeSocialAluno = null,
@@ -59,14 +59,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 situacaoMatricula = "Ativo",
                 dataSituacao = DateTime.ParseExact("17/04/2019", "dd/MM/yyyy", CultureInfo.InvariantCulture),
                 possuiDeficiencia = false,
-                numeroAlunoChamada = 14
+                numeroAlunoChamada = "14"
             };
 
-            ListStudantClassRoom.Add(studant);
+            ListStudantClassRoom.Add(student);
             ListStudantClassRoom.Add(studant2);
             ListStudantClassRoom.Add(studant4);
             ListStudantClassRoom.Add(studant5);
- 
+
 
             return ListStudantClassRoom;
         }
@@ -82,14 +82,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
     public class StudentClassRoom
     {
-        public int codigoAluno { get; set; }
+        public string codigoAluno { get; set; }
         public string nomeAluno { get; set; }
         public string nomeSocialAluno { get; set; }
         public DateTime dataNascimento { get; set; }
         public int codigoSituacaoMatricula { get; set; }
         public string situacaoMatricula { get; set; }
         public DateTime dataSituacao { get; set; }
-        public int numeroAlunoChamada { get; set; }
+        public string numeroAlunoChamada { get; set; }
         public bool possuiDeficiencia { get; set; }
         //public string NomeFrequencia { get; set; }
         //public bool AlunoRecemMatriculado { get; set; }

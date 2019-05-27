@@ -1,4 +1,8 @@
 ﻿import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { actionCreators as actionCreatorsPoll } from '../../store/Poll';
+import { bindActionCreators } from 'redux';
+
 import StudentPollPortuguese from '../polls/StudentPollPortuguese'
 import StudentPollPortuguese3A from '../polls/StudentPollPortuguese3A'
 import LegendsReadWrite from '../polls/component/LegendsReadWrite'
@@ -8,14 +12,13 @@ import LegendsReadWrite3A from '../polls/component/LegendsReadWrite3A'
 //Falta o componente receber a lista de alunos
 //preparado ajuste para alterar informações de input e legendas se
 //  é do 3A de portugues
-export default class StudentPollPortugueseCard extends Component {
+class StudentPollPortugueseCard extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             selectedClass: "custom-select custom-select-sm poll-select",
             selectedOrdem: "1bim_col",
-            isClass3A: true,
         };
         this.hideShowOrdem = this.hideShowOrdem.bind(this);
         this.showOneHideAll = this.showOneHideAll.bind(this);
@@ -61,15 +64,15 @@ export default class StudentPollPortugueseCard extends Component {
             color: '#DADADA'
         };
 
-        if (this.state.isClass3A) { //se true é portugues 1A e 2A do contrário é a variante 3A
+        if (this.props.poll.pollYear === "3") {
             componentLegendRender = <LegendsReadWrite3A />
             rendererStudentPollPortuguese = this.props.students.map(student => (
-                <StudentPollPortuguese3A key={student.sequence} student={student} updatePollStudent={this.props.updatePollStudent} />
+                <StudentPollPortuguese3A key={student.sequenceNumber} student={student} updatePollStudent={this.props.updatePollStudent} />
             ));
         } else {
             componentLegendRender = <LegendsReadWrite />;
             rendererStudentPollPortuguese = this.props.students.map(student => (
-                <StudentPollPortuguese key={student.sequence} student={student} updatePollStudent={this.props.updatePollStudent} />
+                <StudentPollPortuguese key={student.sequenceNumber} student={student} updatePollStudent={this.props.updatePollStudent} />
             ));    
         }
 
@@ -103,7 +106,7 @@ export default class StudentPollPortugueseCard extends Component {
 
                     </tbody>
                 </table>
-
+                
                 {componentLegendRender}
                     
                 
@@ -111,3 +114,15 @@ export default class StudentPollPortugueseCard extends Component {
         );
     }
 }
+export default connect(
+    state => (
+        {
+            poll: state.poll
+        }
+    ),
+    dispatch => (
+        {
+            pollMethods: bindActionCreators(actionCreatorsPoll, dispatch)
+        }
+    )
+)(StudentPollPortugueseCard);
