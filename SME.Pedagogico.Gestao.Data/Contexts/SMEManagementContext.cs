@@ -14,6 +14,7 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
         public DbSet<Models.Academic.StudentCode> StudentCodes { get; set; }
         public DbSet<Models.Academic.Teacher> Teachers { get; set; }
         public DbSet<Models.Academic.TeacherCode> TeacherCodes { get; set; }
+        public DbSet<Models.Academic.Semester> Semesters { get; set; }
 
         #endregion ---------- Academic ----------
 
@@ -133,6 +134,13 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
             };
 
             modelBuilder.Entity<Models.Academic.PollType>().HasData(pollTypes);
+
+            Models.Academic.Semester[] semesters = new Models.Academic.Semester[]
+            {
+                new Models.Academic.Semester() { Value = "1"},
+                new Models.Academic.Semester() { Value = "2"},
+            };
+            modelBuilder.Entity<Models.Academic.Semester>().HasData(semesters);
 
         }
 

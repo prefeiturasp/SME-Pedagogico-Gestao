@@ -41,8 +41,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// <summary>
         /// Método para fazer a sondagem de matemática por ordem.
         /// </summary>
-        /// <param name="credential">Objeto que contém informações da credencial do usuário, neste caso específico é necessário o atributo username e password</param>
-        /// <returns>Token, Sessão e RefreshToken gerado à partir das informações do usuário encontrado, caso não seja encontrado nenhum usuário correspondente à credencial, o método retorna usuário não autorizado.</returns>
+        /// <param name="dadosSondagem">Objeto que contém informações da sondagem de matemática</param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<string>> SondagemMatematicaOrdem([FromBody]SondagemMatematicaOrdemDTO dadosSondagem)
         {
