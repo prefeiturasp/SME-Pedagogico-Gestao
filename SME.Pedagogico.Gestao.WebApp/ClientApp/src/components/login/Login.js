@@ -43,7 +43,7 @@ class Login extends Component {
         return (
             <div id="login-component" className="vw-100 vh-100" style={{ overflow: "hidden", backgroundColor: "rgba(0,0,0,0.7)" }}>
                 <div className="h-100 d-flex flex-column justify-content-center align-items-center">
-                    <div class="py-4"><img id="logo-login" src="./img/RegistreSME_V3.svg" alt="Logo" /></div>
+                    <div className="py-4"><img id="logo-login" src="./img/RegistreSME_V3.svg" alt="Logo" /></div>
 
                     <div className="card shadow">
                         <div className="card-body">
@@ -85,7 +85,7 @@ class Login extends Component {
                         </div>
                     </div>
 
-                    <div class="py-5"><img id="logo-prefeitura-login" src="./img/logo_prefeitura_white.svg" alt="Logo Prefeitura" /></div>
+                    <div className="py-5"><img id="logo-prefeitura-login" src="./img/logo_prefeitura_white.svg" alt="Logo Prefeitura" /></div>
                 </div>
             </div>
         );

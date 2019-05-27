@@ -17,11 +17,11 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
             this.endpointsAPI = endpointsAPI;
         }
 
-        public async Task<List<CargosDTO>> GetCargos(string token)
+        public async Task<List<CargoDTO>> GetCargos(string token)
         {
             var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.BuscaCargos);
 
-            return await HttpHelper.GetAsync<List<CargosDTO>>(token, string.Format(url));
+            return await HttpHelper.GetAsync<List<CargoDTO>>(token, string.Format(url));
         }
 
     }

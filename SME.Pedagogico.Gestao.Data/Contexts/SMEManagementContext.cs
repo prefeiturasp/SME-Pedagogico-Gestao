@@ -14,6 +14,7 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
         public DbSet<Models.Academic.StudentCode> StudentCodes { get; set; }
         public DbSet<Models.Academic.Teacher> Teachers { get; set; }
         public DbSet<Models.Academic.TeacherCode> TeacherCodes { get; set; }
+        public DbSet<Models.Academic.PortuguesePoll> PortuguesePolls { get; set; }
         public DbSet<Models.Academic.Semester> Semesters { get; set; }
 
         #endregion ---------- Academic ----------
