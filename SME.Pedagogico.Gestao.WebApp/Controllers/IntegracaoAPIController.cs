@@ -146,15 +146,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpGet("funcionario/{codigoCargo}")]
         public async Task<IActionResult> TesteFuncionario(string codigoCargo, [FromBody]CredentialModel credential)
         {
-            ClientUserModel user = await Authenticate(credential);
-
-            if (user != null)
-            {
-                user.SMEToken = new SMETokenModel();
-                user.SMEToken.Token = CreateToken(user); // Cria o token de acesso
-            }
-
-            string token = user.SMEToken.Token.ToString();
+            string token = await ObtemTokenAsync(credential);
 
             var endpoint = new EndpointsAPI();
 
@@ -164,6 +156,146 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
 
+
+
+
+
+
+        /// <summary>
+        ///                    METODOS  ESCOLA 
+        /// <returns></returns>
+         
+
+        [HttpGet("escolas/{codigoEol}")]
+        public async Task<IActionResult> TesteGetEscolasPor(string codigoEol, [FromBody]CredentialModel credential)
+        {
+            string token = await ObtemTokenAsync(credential);
+
+            var endpoint = new EndpointsAPI();
+
+            var escolaAPI = new EscolasAPI(endpoint);
+
+            return Ok(await escolaAPI.GetEscolasPor(codigoEol, token));
+        }
+
+        [HttpGet("escolas/{codigoEolEscola}/professores/{anoLetivo}")]
+        public async Task<IActionResult> TesteGetProfessores(string codigoEolEscola, int anoLetivo, [FromBody]CredentialModel credential)
+        {
+            string token = await ObtemTokenAsync(credential);
+
+            var endpoint = new EndpointsAPI();
+
+            var escolaAPI = new EscolasAPI(endpoint);
+
+            return Ok(await escolaAPI.GetProfessores(codigoEolEscola, anoLetivo, token));
+        }
+
+        [HttpGet("escolas/modalidades_ensino")]
+        public async Task<IActionResult> TesteGetModalidadesEnsino([FromBody]CredentialModel credential)
+        {
+            string token = await ObtemTokenAsync(credential);
+
+            var endpoint = new EndpointsAPI();
+
+            var escolaAPI = new EscolasAPI(endpoint);
+
+            return Ok(await escolaAPI.GetModalidadesEnsino(token));
+        }
+
+        [HttpGet("escolas/tipos_unidade_educacao")]
+        public async Task<IActionResult> TesteGetTiposUE([FromBody]CredentialModel credential)
+        {
+            string token = await ObtemTokenAsync(credential);
+
+            var endpoint = new EndpointsAPI();
+
+            var escolaAPI = new EscolasAPI(endpoint);
+
+            return Ok(await escolaAPI.GetTiposUE(token));
+        }
+
+        [HttpGet("escolas/{codigoUE}/salas/{tipoSala}/anos_letivos/{anoLetivo}")]
+        public async Task<IActionResult> TesteGetTurmasDoTipoSala(int codigoUE, string tipoSala, string anoLetivo, [FromBody]CredentialModel credential)
+        {
+            string token = await ObtemTokenAsync(credential);
+
+            var endpoint = new EndpointsAPI();
+
+            var escolaAPI = new EscolasAPI(endpoint);
+
+            return Ok(await escolaAPI.GetTurmasDoTipoSala(codigoUE, tipoSala, anoLetivo, token));
+        }
+
+        [HttpGet("escolas/{codigoUE}/funcionarios")]
+        public async Task<IActionResult> TesteGetFuncionarios(string codigoUE, [FromBody]CredentialModel credential)
+        {
+            string token = await ObtemTokenAsync(credential);
+
+            var endpoint = new EndpointsAPI();
+
+            var escolaAPI = new EscolasAPI(endpoint);
+
+            return Ok(await escolaAPI.GetFuncionarios(codigoUE, token));
+        }
+
+        [HttpGet("escolas/{codigoUE}/funcionarios/cargos/{codigoCargo}")]
+        public async Task<IActionResult> TesteGetFuncionariosPorCargo(string codigoCargo, string codigoUE, [FromBody]CredentialModel credential)
+        {
+            //Este método depende uma correção feita na API, aguardar deploy
+            string token = await ObtemTokenAsync(credential);
+
+            var endpoint = new EndpointsAPI();
+
+            var escolaAPI = new EscolasAPI(endpoint);
+
+            return Ok(await escolaAPI.GetFuncionariosPorCargo(codigoCargo, codigoUE, token));
+        }
+
+        [HttpGet("escolas/{codigoEscolaEol}/subprefeituras")]
+        public async Task<IActionResult> TesteGetSubprefeiturasPor(string codigoEscolaEol, [FromBody]CredentialModel credential)
+        {
+            string token = await ObtemTokenAsync(credential);
+
+            var endpoint = new EndpointsAPI();
+
+            var escolaAPI = new EscolasAPI(endpoint);
+
+            return Ok(await escolaAPI.GetSubprefeiturasPor(codigoEscolaEol, token));
+        }
+
+        [HttpGet("escolas/{codigoUE}/turmas/anos_letivos/{anoLetivo}")]
+        public async Task<IActionResult> TesteGetTurmasPorEscola(int codigoUE, string anoLetivo, [FromBody]CredentialModel credential)
+        {
+            string token = await ObtemTokenAsync(credential);
+
+            var endpoint = new EndpointsAPI();
+
+            var escolaAPI = new EscolasAPI(endpoint);
+
+            return Ok(await escolaAPI.GetTurmasPorEscola(codigoUE, anoLetivo, token));
+        }
+         
+
+        /// <summary>
+        ///              FIM    ****   METODOS  ESCOLA 
+        /// <returns></returns>
+
+
+             
+
+
+        private async Task<string> ObtemTokenAsync(CredentialModel credential)
+        {
+            ClientUserModel user = await Authenticate(credential);
+
+            if (user != null)
+            {
+                user.SMEToken = new SMETokenModel();
+                user.SMEToken.Token = CreateToken(user); // Cria o token de acesso
+            }
+
+            return user.SMEToken.Token.ToString();
+        }
 
         private async Task<ClientUserModel> Authenticate(CredentialModel credential)
         {
