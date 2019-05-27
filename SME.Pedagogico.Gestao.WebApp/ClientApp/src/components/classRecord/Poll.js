@@ -20,6 +20,7 @@ import StudentPollMath5ACMCard from '../polls/StudentPollMath5ACMCard'
 import StudentPollMath6ACACard from '../polls/StudentPollMath6ACACard'
 import StudentPollMath6ACMCard from '../polls/StudentPollMath6ACMCard'
 import StudentPollPortugueseCard from '../polls/StudentPollPortugueseCard'
+import { debounce } from 'redux-saga/effects';
 
 class Poll extends Component {
     constructor(props) {
@@ -260,10 +261,11 @@ class Poll extends Component {
     }
 
     savePollStudent() {
+        debugger;
         if (this.props.poll.pollSelected !== null) {
             if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
-                var response = this.props.pollMethods.save_poll_portuguese_student(this.props.poll.students);
-                debugger;
+                var response = this.props.pollMethods.save_poll_portuguese_student(this.state.pollStudents);
+              
                 alert(this.props.poll.pollSelected + response);
             } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMT) {
                 //if number
@@ -292,15 +294,21 @@ class Poll extends Component {
         this.setState({
             sondagemType: ClassRoomEnum.ClassPT,
         });
-        var test = {
-            EolCode: "12345",
-            Schoolyear: 2019
+        var classRoomMock = {
+            "dreCodeEol": "4",
+            "schoolCodeEol": "44",
+            "classroomCodeEol": "1992661",
+            "schoolYear": "2019",
+            "yearClassroom": "1"
+        } 
 
-        };
+        debugger;
 
         this.props.pollMethods.set_poll_info(ClassRoomEnum.ClassPT, "", "1"); //passar pollSelected, pollTypeSelected, pollYear
-        this.props.pollMethods.get_poll_portuguese_students(test);
-        this.setState({ pollStudents: this.props.poll.students });
+        this.props.pollMethods.get_poll_portuguese_students(classRoomMock);
+        this.setState({
+            pollStudents: this.props.poll.students,
+        });
     }
     
     openMathPoll(element) {

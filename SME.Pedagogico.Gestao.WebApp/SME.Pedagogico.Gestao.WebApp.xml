@@ -96,41 +96,5 @@
             <param name="config">Depêndencia de configurações</param>
             <param name="db">Depêndencia de dataContext (SMEManagementContext)</param>
         </member>
-        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.IntegracaoAPIController.Authenticate(SME.Pedagogico.Gestao.WebApp.Models.Auth.CredentialModel)">
-            <summary>
-            Método para validar as credenciais de login do usuário.
-            </summary>
-            <param name="credential">Objeto que contém informações da credencial do usuário</param>
-            <returns>Objeto contendo informações do usuário encontrado, caso não seja encontrado nenhum usuário com correspondente a credencial enviada o método retorna nulo.</returns>
-        </member>
-        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.IntegracaoAPIController.GetUser(System.String)">
-            <summary>
-            Método para encontrar um usuário pelo username. Não está implementado corretamente ainda.
-            </summary>
-            <param name="username">Nome de usuário a ser retornado</param>
-            <returns>Usuário com o username especificado.</returns>
-        </member>
-        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.IntegracaoAPIController.CreateToken(SME.Pedagogico.Gestao.WebApp.Models.Auth.ClientUserModel)">
-            <summary>
-            Método para gerar o token de acesso.
-            </summary>
-            <param name="user">Objeto contendo informações do usuário</param>
-            <returns>Token gerado à partir das informações do usuário.</returns>
-        </member>
-        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.IntegracaoAPIController.CreateToken(System.String)">
-            <summary>
-            Método para gerar o token de acesso.
-            </summary>
-            <param name="username">Nome do usuário</param>
-            <returns>Token gerado à partir das informações do usuário.</returns>
-        </member>
-        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.IntegracaoAPIController.ExtractDataByName(System.String,System.String)">
-            <summary>
-            Método para extrair atributos de uma página html (raw) pela propriedade 'name'. Só funciona se a propriedade 'name' estiver antes do 'value'.
-            </summary>
-            <param name="source">Fonte do html (raw)</param>
-            <param name="name">Nome do atributo desejado</param>
-            <returns>Valor (value) do atributo desejado</returns>
-        </member>
     </members>
 </doc>

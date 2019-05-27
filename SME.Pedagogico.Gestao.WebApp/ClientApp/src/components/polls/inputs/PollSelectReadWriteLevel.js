@@ -16,7 +16,7 @@ export default class PollSelectReadWriteLevel extends Component {
     getColor(value) {
         var defaultColor = "custom-select custom-select-sm ";
 
-        if (value !== undefined && (value === "1" || value === "2" || value === "3" || value === "4")) {
+        if (value !== undefined && (value === "Nivel1" || value === "Nivel2" || value === "Nivel3" || value === "Nivel4")) {
             return (defaultColor + this.props.columnColor);
         } else {
             return (defaultColor + "text-white");
