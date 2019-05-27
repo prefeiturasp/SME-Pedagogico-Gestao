@@ -22,6 +22,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using SME.Pedagogico.Gestao.Models.Authentication;
 using SME.Pedagogico.Gestao.WebApp.Contexts;
+using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
@@ -56,6 +57,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return Ok(await turmas.GetAlunosNaTurma(codigoTurma, anoLetivo, token));
         }
 
+
+
         [HttpGet("professores/{codigoRF}/escolas/{codigoUE}/turmas/anos_letivos/{anoLetivo}")]
         public async Task<IActionResult> TesteProfessores(string codigoRF, int codigoUE, string anoLetivo, [FromBody]CredentialModel credential)
         {
@@ -75,14 +78,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
 
-
-        [HttpPost("cargos")]
+        [HttpGet("cargos")]
         public async Task<IActionResult> TesteCargos([FromBody]CredentialModel credential)
         {
-
-           // var tokem = Data.Functionalities. (); 
-
-
             ClientUserModel user = await Authenticate(credential);
 
             if (user != null)
@@ -100,12 +98,73 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return Ok(await cargos.GetCargos(token));
         }
 
+        [HttpGet("servidores/{codigoRF}/cargos")]
+        public async Task<IActionResult> TesteCargosDeServidor(string codigoRF, [FromBody]CredentialModel credential)
+        {
+            ClientUserModel user = await Authenticate(credential);
 
-        /// <summary>
-        /// Método para validar as credenciais de login do usuário.
-        /// </summary>
-        /// <param name="credential">Objeto que contém informações da credencial do usuário</param>
-        /// <returns>Objeto contendo informações do usuário encontrado, caso não seja encontrado nenhum usuário com correspondente a credencial enviada o método retorna nulo.</returns>
+            if (user != null)
+            {
+                user.SMEToken = new SMETokenModel();
+                user.SMEToken.Token = CreateToken(user); // Cria o token de acesso
+            }
+
+            string token = user.SMEToken.Token.ToString();
+
+            var endpoint = new EndpointsAPI();
+            PerfilSgpAPI perfilSGP = new PerfilSgpAPI(endpoint);
+
+            return Ok(await perfilSGP.GetCargosDeServidor(codigoRF, token));
+        }
+
+
+
+
+
+        [HttpGet("servidores/{codigoRF}/{codigoCargo}/{anoLetivo}/informacoes_perfil")]
+        public async Task<IActionResult> TestInformacoesPerfil(string codigoRF,
+                                                     int codigoCargo,
+                                                     int anoLetivo, [FromBody]CredentialModel credential)
+        {
+            ClientUserModel user = await Authenticate(credential);
+
+            if (user != null)
+            {
+                user.SMEToken = new SMETokenModel();
+                user.SMEToken.Token = CreateToken(user); // Cria o token de acesso
+            }
+
+            string token = user.SMEToken.Token.ToString();
+
+            var endpoint = new EndpointsAPI();
+            PerfilSgpAPI perfilSGP = new PerfilSgpAPI(endpoint);
+
+            return Ok(await perfilSGP.getInformacoesPerfil(codigoRF, codigoCargo, anoLetivo, token));
+        }
+
+
+        [HttpGet("funcionario/{codigoCargo}")]
+        public async Task<IActionResult> TesteFuncionario(string codigoCargo, [FromBody]CredentialModel credential)
+        {
+            ClientUserModel user = await Authenticate(credential);
+
+            if (user != null)
+            {
+                user.SMEToken = new SMETokenModel();
+                user.SMEToken.Token = CreateToken(user); // Cria o token de acesso
+            }
+
+            string token = user.SMEToken.Token.ToString();
+
+            var endpoint = new EndpointsAPI();
+
+            var funcionario = new FuncionariosAPI(endpoint);
+
+            return Ok(await funcionario.GetFuncionarios(codigoCargo, token));
+        }
+
+
+
         private async Task<ClientUserModel> Authenticate(CredentialModel credential)
         {
             // Configurações iniciais
@@ -169,11 +228,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             }
         }
 
-        /// <summary>
-        /// Método para encontrar um usuário pelo username. Não está implementado corretamente ainda.
-        /// </summary>
-        /// <param name="username">Nome de usuário a ser retornado</param>
-        /// <returns>Usuário com o username especificado.</returns>
         private async Task<ClientUserModel> GetUser(string username)
         {
             string connectionString = @"Server=10.49.16.23\SME_PRD;Database=GestaoPedagogica;User Id=Caique.Santos;Password=Antares2014;";
@@ -205,22 +259,11 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return (clientUser);
         }
 
-
-        /// <summary>
-        /// Método para gerar o token de acesso.
-        /// </summary>
-        /// <param name="user">Objeto contendo informações do usuário</param>
-        /// <returns>Token gerado à partir das informações do usuário.</returns>
         public string CreateToken(ClientUserModel user)
         {
             return (CreateToken(user.Username));
         }
 
-        /// <summary>
-        /// Método para gerar o token de acesso.
-        /// </summary>
-        /// <param name="username">Nome do usuário</param>
-        /// <returns>Token gerado à partir das informações do usuário.</returns>
         public string CreateToken(string username)
         {
             // Adicionar Claims para restringir o acesso dos usuários a determinados conteudos
@@ -245,12 +288,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return (new JwtSecurityTokenHandler().WriteToken(token));
         }
 
-        /// <summary>
-        /// Método para extrair atributos de uma página html (raw) pela propriedade 'name'. Só funciona se a propriedade 'name' estiver antes do 'value'.
-        /// </summary>
-        /// <param name="source">Fonte do html (raw)</param>
-        /// <param name="name">Nome do atributo desejado</param>
-        /// <returns>Valor (value) do atributo desejado</returns>
         private static string ExtractDataByName(string source, string name)
         {
             int startIndex = source.IndexOf(string.Format("name=\"{0}\"", name));

@@ -1,4 +1,4 @@
-﻿using SME.Pedagogico.Gestao.Data.Integracao.DTO;
+﻿using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
         }
 
         public async Task<List<BuscaTurmasAtribuidasDTO>> GetTurmasDoProfessor(string codigoRF, int codigoUE, string anoLetivo, string token)
-        { 
+        {   
 
             var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.BuscaTurmasDeProfessores);
 

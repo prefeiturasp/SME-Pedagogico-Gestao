@@ -8,23 +8,22 @@ using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 
 namespace SME.Pedagogico.Gestao.Data.Integracao
 {
-    public class TurmasAPI
+    public class FuncionariosAPI
     {
         private readonly EndpointsAPI endpointsAPI;
 
-        public TurmasAPI(EndpointsAPI endpointsAPI)
+        public FuncionariosAPI(EndpointsAPI endpointsAPI)
         {
             this.endpointsAPI = endpointsAPI;
         }
 
-        public async Task<List<AlunosNaTurmaDTO>> GetAlunosNaTurma(int codigoTurma,
-                                                int anoLetivo, string token)
-        {  
-            var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.BuscaAlunosNaTurma);
+        public async Task<List<FuncionariosDTO >> GetFuncionarios(string codigoCargo, string token)
+        {
+            var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.BuscaFuncionario);
 
             return await HttpHelper
-                .GetAsync<List<AlunosNaTurmaDTO>>
-                      (token, string.Format(url, codigoTurma, anoLetivo));
+                .GetAsync<List<FuncionariosDTO>>
+                      (token, string.Format(url, codigoCargo));
         }
 
     }
