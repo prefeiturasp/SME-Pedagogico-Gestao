@@ -56,7 +56,28 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 var businessSondagemMatematica = new Data.Business.SondagemMatematica(_config);
                 await businessSondagemMatematica.InsertPoolCM(dadosSondagem);
 
-                return (Ok());
+                return Ok();
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
+
+        /// <summary>
+        /// Método para fazer a sondagem de matemática de CM.
+        /// </summary>
+        /// <param name="filtroSondagem">Objeto que contém filtro para retorno de sondagem de CM</param>
+        /// <returns>Dados </returns>
+        [HttpPost]
+        public async Task<ActionResult> ListaSondagemCM([FromBody]FiltroSondagemMatematicaDTO filtroSondagem)
+        {
+            try
+            {
+                var businessSondagemMatematica = new Data.Business.SondagemMatematica(_config);
+                var sondagemCM = await businessSondagemMatematica.ListPoolCM(filtroSondagem);
+
+                return Ok(sondagemCM);
             }
             catch (System.Exception ex)
             {
@@ -77,7 +98,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 var businessSondagemMatematica = new Data.Business.SondagemMatematica(_config);
                 await businessSondagemMatematica.InsertPoolCA(dadosSondagem);
 
-                return (Ok());
+                return Ok();
             }
             catch (System.Exception ex)
             {
@@ -98,7 +119,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 var businessSondagemMatematica = new Data.Business.SondagemMatematica(_config);
                 await businessSondagemMatematica.InsertPoolNumeros(dadosSondagem);
 
-                return (Ok());
+                return Ok();
             }
             catch (System.Exception ex)
             {

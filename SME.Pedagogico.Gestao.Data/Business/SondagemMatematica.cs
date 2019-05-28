@@ -87,6 +87,11 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
+        public async Task<SondagemMatematicaOrdemDTO> ListPoolCM(FiltroSondagemMatematicaDTO filtroSondagem)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task InsertPoolNumeros(List<SondagemMatematicaNumerosDTO> dadosSondagem)
         {
             using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
