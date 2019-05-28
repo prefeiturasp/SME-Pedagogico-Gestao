@@ -26,7 +26,6 @@ class Poll extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            pollStudents: [],
             navSelected: "",
             didAnswerPoll: false, //usar para perguntar para salvar sondagem
             sondagemType: ClassRoomEnum.ClassEmpty,//Retirar o default depois//PT,MT,1A,2A,3ACA,3ACM,4ACA,4ACM,5ACA,5ACM,6ACA,6ACM
@@ -60,7 +59,7 @@ class Poll extends Component {
     }
     
     updatePollStudent(sequence, subjectName, propertyName, value) {
-        var pollStudents = this.state.pollStudents;
+        var pollStudents = this.props.poll.students;
         for (var i = 0; i < pollStudents.length; i++) {
             if (pollStudents[i].studentCodeEol === sequence) {
                 if (subjectName === "portuguese") {
@@ -264,7 +263,7 @@ class Poll extends Component {
         debugger;
         if (this.props.poll.pollSelected !== null) {
             if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
-                var response = this.props.pollMethods.save_poll_portuguese_student(this.state.pollStudents);
+                var response = this.props.pollMethods.save_poll_portuguese_student(this.props.poll.students);
               
                 alert(this.props.poll.pollSelected + response);
             } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMT) {
@@ -341,41 +340,41 @@ class Poll extends Component {
 
         switch (sondagemType) {
             case ClassRoomEnum.Class1A:
-                componentRender = <StudentPollMath1ACard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
+                componentRender = <StudentPollMath1ACard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             case ClassRoomEnum.Class2A:
-                componentRender = <StudentPollMath2ACard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
+                componentRender = <StudentPollMath2ACard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             case ClassRoomEnum.Class3ACA:
-                componentRender = <StudentPollMath3ACACard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
+                componentRender = <StudentPollMath3ACACard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             case ClassRoomEnum.Class3ACM:
-                componentRender = <StudentPollMath3ACMCard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
+                componentRender = <StudentPollMath3ACMCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             case ClassRoomEnum.Class4ACA:
-                componentRender = <StudentPollMath4ACACard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
+                componentRender = <StudentPollMath4ACACard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             case ClassRoomEnum.Class4ACM:
-                componentRender = <StudentPollMath4ACMCard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
+                componentRender = <StudentPollMath4ACMCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             case ClassRoomEnum.Class5ACA:
-                componentRender = <StudentPollMath5ACACard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
+                componentRender = <StudentPollMath5ACACard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             case ClassRoomEnum.Class5ACM:
-                componentRender = <StudentPollMath5ACMCard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
+                componentRender = <StudentPollMath5ACMCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             case ClassRoomEnum.Class6ACA:
-                componentRender = <StudentPollMath6ACACard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
+                componentRender = <StudentPollMath6ACACard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             case ClassRoomEnum.Class6ACM:
-                componentRender = <StudentPollMath6ACMCard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
+                componentRender = <StudentPollMath6ACMCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             case ClassRoomEnum.ClassPT:
-                componentRender = <StudentPollPortugueseCard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
+                componentRender = <StudentPollPortugueseCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             case ClassRoomEnum.ClassMT:
                 debugger;
-                componentRender = <StudentPollMathAlfabetizacaoCard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
+                componentRender = <StudentPollMathAlfabetizacaoCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             default:
                 componentRender = "";
