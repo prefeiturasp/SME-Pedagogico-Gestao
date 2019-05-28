@@ -23,6 +23,7 @@ class PollReportFilter extends Component {
         this.onChangeProficiency = this.onChangeProficiency.bind(this);
         this.onChangeTerm = this.onChangeTerm.bind(this);
         this.setSelectedFilter = this.setSelectedFilter.bind(this);
+        this.checkButton = this.checkButton.bind(this);
     }
 
     componentDidMount() {
@@ -84,6 +85,15 @@ class PollReportFilter extends Component {
         this.props.getPollReport(parameters);
     }
 
+    checkButton() {
+        var parameters = this.state.selectedFilter;
+
+        if (parameters.discipline != null && parameters.proficiency != null && parameters.term != null)
+            return (false);
+
+        return (true);
+    }
+
     render() {
         return (
             <div className="d-flex flex-column d-inline-flex">
@@ -95,7 +105,7 @@ class PollReportFilter extends Component {
                     <div className="px-2"></div>
                     <SelectChangeColor className="custom-select-sm" defaultText="Período" options={this.state.terms} onChange={this.onChangeTerm} />
                     <div className="px-2"></div>
-                    <button type="button" className="btn btn-sm btn-outline-primary" style={{ width: 109 }} onClick={this.setSelectedFilter}>Buscar</button>
+                    <button type="button" className="btn btn-sm btn-outline-primary" style={{ width: 109 }} onClick={this.setSelectedFilter} disabled={this.checkButton()}>Buscar</button>
                 </div>
             </div>
         );
