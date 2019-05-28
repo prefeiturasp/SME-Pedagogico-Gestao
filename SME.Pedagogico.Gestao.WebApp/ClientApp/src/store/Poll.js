@@ -34,7 +34,7 @@ export const actionCreators = {
 
 export const reducer = (state, action, pollSelected, pollTypeSelected, pollYear, pollstudents) => {
     state = state || initialState;
-    debugger;
+
     switch (action.type) {
          
         case types.SET_POLL_INFO:

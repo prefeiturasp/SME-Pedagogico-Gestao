@@ -10,15 +10,9 @@ export default function* () {
 
 function* GetStudents({ classRoom }) {
     try {
-
         const data = yield call(getStudentsPollPortugueseRequestApi, classRoom);
-      
-
 
         yield put({ type: Poll.types.SET_POLL_PORTUGUESE_STUDENTS, data });
-        debugger;
-        
-
     }
 
     catch (error) {
@@ -32,20 +26,20 @@ function getStudentsPollPortugueseRequestApi(classRoom) {
         method: "post",
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(classRoom)
-    })
-        .then(response => response.json()));
-    debugger;
-   
-    //return lStudants;
+    }).then(response => response.json()));
 }
 
 function* SavePollPortuguese(students) {
-    debugger;
-    return (yield fetch("/api/sondagemPortugues/IncluirSondagemPortugues", {
-                method: "post",
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(students.pollstudents)
-            }).then(response => response.json())
-    );
-   // return (yield true);
+    try {
+        var data = yield fetch("/api/sondagemPortugues/IncluirSondagemPortugues", {
+            method: "post",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(students.pollstudents)
+        }).then(response => response.json());
+        debugger;
+        return (data);
+    } catch (error) {
+        console.log(error);
+    }
+    
 } 
