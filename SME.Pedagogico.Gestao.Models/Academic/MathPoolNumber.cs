@@ -11,8 +11,7 @@ namespace SME.Pedagogico.Gestao.Models.Academic
         public string AlunoEolCode { get; set; }
         public int AnoLetivo { get; set; }
         public int AnoTurma { get; set; }
-        public int SemestreCode { get; set; }
-        public virtual Semester Semestre { get; set; }
+        public int Semestre { get; set; }
         public string Familiares { get; set; }
         public string Opacos { get; set; }
         public string Transparentes { get; set; }

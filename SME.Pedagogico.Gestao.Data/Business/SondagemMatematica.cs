@@ -37,16 +37,17 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     {
                         if (studentPoolCM == null)
                         {
-                            studentPoolCM = new MathPoolCM();
-                            studentPoolCM.AlunoEolCode = student.CodigoEolAluno;
-                            studentPoolCM.DreEolCode = student.CodigoEolDRE;
-                            studentPoolCM.EscolaEolCode = student.CodigoEolEscola;
-                            studentPoolCM.AnoTurma = Convert.ToInt32(student.AnoTurma);
-                            studentPoolCM.TurmaEolCode = student.AnoTurma;
-                            studentPoolCM.AnoLetivo = Convert.ToInt32(student.AnoLetivo);
+                            var newStudentPoolCM = new MathPoolCM();
+                            newStudentPoolCM.AlunoEolCode = student.CodigoEolAluno;
+                            newStudentPoolCM.DreEolCode = student.CodigoEolDRE;
+                            newStudentPoolCM.EscolaEolCode = student.CodigoEolEscola;
+                            newStudentPoolCM.AnoTurma = Convert.ToInt32(student.AnoTurma);
+                            newStudentPoolCM.TurmaEolCode = student.CodigoEolTurma;
+                            newStudentPoolCM.AnoLetivo = Convert.ToInt32(student.AnoLetivo);
+                            newStudentPoolCM.Semestre = semestre;
 
-                            MapValuesPoolCM(student, ref studentPoolCM, semestre);
-                            await db.MathPoolCMs.AddAsync(studentPoolCM);
+                            MapValuesPoolCM(student, ref newStudentPoolCM, semestre);
+                            await db.MathPoolCMs.AddAsync(newStudentPoolCM);
                         }
                         else
                         {
@@ -64,8 +65,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                      ref MathPoolCM studentPoolCM, 
                                      int semestre)
         {
-            studentPoolCM.Semestre = new Semester();
-            studentPoolCM.Semestre.Value = semestre.ToString();
+            studentPoolCM.Semestre = semestre;
 
             if (semestre == 1) {
                 studentPoolCM.Ordem4Ideia = studentDTO.Ideia4Semestre1;
@@ -95,7 +95,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         public async Task<List<SondagemMatematicaOrdemDTO>> ListPoolCMAsync(FiltroSondagemMatematicaDTO filtroSondagem)
         {
             try
-            {
+             {
                 var retornoSondagem = new List<SondagemMatematicaOrdemDTO>();
 
                 using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
@@ -128,13 +128,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             studentDTO.CodigoEolDRE = filtroSondagem.DreEolCode;
                             studentDTO.CodigoEolEscola = filtroSondagem.EscolaEolCode;
                             studentDTO.AnoTurma = filtroSondagem.AnoTurma;
+                            studentDTO.CodigoEolTurma = filtroSondagem.TurmaEolCode;
 
                             if (studentPollsMath?.Count > 0)
                             {
-                                for (int semestre = 1; semestre <= db.Semesters.Count(); semestre++)
+                                for (int semestre = 1; semestre <= 2; semestre++)
                                 {
                                     var studentPollMath = studentPollsMath
-                                                            .Where(s => s.Semestre.Value == semestre.ToString())
+                                                            .Where(s => s.Semestre == semestre)
                                                             .FirstOrDefault();
 
                                     if (semestre.Equals(1))
@@ -218,13 +219,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             studentDTO.CodigoEolDRE = filtroSondagem.DreEolCode;
                             studentDTO.CodigoEolEscola = filtroSondagem.EscolaEolCode;
                             studentDTO.AnoTurma = filtroSondagem.AnoTurma;
+                            studentDTO.CodigoEolTurma = filtroSondagem.TurmaEolCode;
 
                             if (studentPollsMath?.Count > 0)
                             {
-                                for (int semestre = 1; semestre <= db.Semesters.Count(); semestre++)
+                                for (int semestre = 1; semestre <= 2; semestre++)
                                 {
                                     var studentPollMath = studentPollsMath
-                                                            .Where(s => s.Semestre.Value == semestre.ToString())
+                                                            .Where(s => s.Semestre == semestre)
                                                             .FirstOrDefault();
 
                                     if (semestre.Equals(1))
@@ -305,13 +307,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             studentDTO.CodigoEolDRE = filtroSondagem.DreEolCode;
                             studentDTO.CodigoEolEscola = filtroSondagem.EscolaEolCode;
                             studentDTO.AnoTurma = filtroSondagem.AnoTurma;
+                            studentDTO.CodigoEolTurma = filtroSondagem.TurmaEolCode;
 
                             if (studentPollsMath?.Count > 0)
                             {
-                                for (int semestre = 1; semestre <= db.Semesters.Count(); semestre++)
+                                for (int semestre = 1; semestre <= 2; semestre++)
                                 {
                                     var studentPollMath = studentPollsMath
-                                                            .Where(s => s.Semestre.Value == semestre.ToString())
+                                                            .Where(s => s.Semestre == semestre)
                                                             .FirstOrDefault();
 
                                     if (semestre.Equals(1))
@@ -423,20 +426,21 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     x.TurmaEolCode == student.AnoTurma &&
                      x.AlunoEolCode == student.CodigoEolAluno).FirstOrDefault();
 
-                    for (int semestre = 1; semestre <= db.Semesters.Count(); semestre++)
+                    for (int semestre = 1; semestre <= 2; semestre++)
                     {
                         if (studentPoolNumeros == null)
                         {
-                            studentPoolNumeros = new MathPoolNumber();
-                            studentPoolNumeros.AlunoEolCode = student.CodigoEolAluno;
-                            studentPoolNumeros.DreEolCode = student.CodigoEolDRE;
-                            studentPoolNumeros.EscolaEolCode = student.CodigoEolEscola;
-                            studentPoolNumeros.AnoTurma = Convert.ToInt32(student.AnoTurma);
-                            studentPoolNumeros.TurmaEolCode = student.AnoTurma;
-                            studentPoolNumeros.AnoLetivo = Convert.ToInt32(student.AnoLetivo);
+                            var newStudentPoolNumeros = new MathPoolNumber();
+                            newStudentPoolNumeros.AlunoEolCode = student.CodigoEolAluno;
+                            newStudentPoolNumeros.DreEolCode = student.CodigoEolDRE;
+                            newStudentPoolNumeros.EscolaEolCode = student.CodigoEolEscola;
+                            newStudentPoolNumeros.AnoTurma = Convert.ToInt32(student.AnoTurma);
+                            newStudentPoolNumeros.TurmaEolCode = student.CodigoEolTurma;
+                            newStudentPoolNumeros.AnoLetivo = Convert.ToInt32(student.AnoLetivo);
+                            newStudentPoolNumeros.Semestre = semestre;
 
-                            MapValuesPoolNumbers(student, ref studentPoolNumeros, semestre);
-                            await db.MathPoolNumbers.AddAsync(studentPoolNumeros);
+                            MapValuesPoolNumbers(student, ref newStudentPoolNumeros, semestre);
+                            await db.MathPoolNumbers.AddAsync(newStudentPoolNumeros);
                         }
                         else
                         {
@@ -453,8 +457,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private void MapValuesPoolNumbers(SondagemMatematicaNumerosDTO studentDTO, ref MathPoolNumber studentPoolNumeros, int semestre)
         {
-            studentPoolNumeros.Semestre = new Semester();
-            studentPoolNumeros.Semestre.Value = semestre.ToString();
+            studentPoolNumeros.Semestre = semestre;
 
             if (semestre == 1)
             {
@@ -493,16 +496,17 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     {
                         if (studentPoolCA == null)
                         {
-                            studentPoolCA = new MathPoolCA();
-                            studentPoolCA.AlunoEolCode = student.CodigoEolAluno;
-                            studentPoolCA.DreEolCode = student.CodigoEolDRE;
-                            studentPoolCA.EscolaEolCode = student.CodigoEolEscola;
-                            studentPoolCA.AnoTurma = Convert.ToInt32(student.AnoTurma);
-                            studentPoolCA.TurmaEolCode = student.AnoTurma;
-                            studentPoolCA.AnoLetivo = Convert.ToInt32(student.AnoLetivo);
+                            var newStudentPoolCA = new MathPoolCA();
+                            newStudentPoolCA.AlunoEolCode = student.CodigoEolAluno;
+                            newStudentPoolCA.DreEolCode = student.CodigoEolDRE;
+                            newStudentPoolCA.EscolaEolCode = student.CodigoEolEscola;
+                            newStudentPoolCA.AnoTurma = Convert.ToInt32(student.AnoTurma);
+                            newStudentPoolCA.TurmaEolCode = student.CodigoEolTurma;
+                            newStudentPoolCA.AnoLetivo = Convert.ToInt32(student.AnoLetivo);
+                            newStudentPoolCA.Semestre = semestre;
 
-                            MapValuesPoolCA(student, ref studentPoolCA, semestre);
-                            await db.MathPoolCAs.AddAsync(studentPoolCA);
+                            MapValuesPoolCA(student, ref newStudentPoolCA, semestre);
+                            await db.MathPoolCAs.AddAsync(newStudentPoolCA);
                         }
                         else
                         {
@@ -518,8 +522,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private void MapValuesPoolCA(SondagemMatematicaOrdemDTO studentDTO, ref MathPoolCA studentPoolCA, int semestre)
         {
-            studentPoolCA.Semestre = new Semester();
-            studentPoolCA.Semestre.Value = semestre.ToString();
+            studentPoolCA.Semestre = semestre;
 
             if (semestre == 1)
             {

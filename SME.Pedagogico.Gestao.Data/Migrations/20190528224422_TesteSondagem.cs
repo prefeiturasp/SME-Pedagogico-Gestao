@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SME.Pedagogico.Gestao.Data.Migrations
 {
-    public partial class m1 : Migration
+    public partial class TesteSondagem : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -44,6 +44,88 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_LogControls", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MathPoolCAs",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    DreEolCode = table.Column<string>(nullable: true),
+                    NumeroChamada = table.Column<string>(nullable: true),
+                    EscolaEolCode = table.Column<string>(nullable: true),
+                    TurmaEolCode = table.Column<string>(nullable: true),
+                    AlunoEolCode = table.Column<string>(nullable: true),
+                    AnoLetivo = table.Column<int>(nullable: false),
+                    AnoTurma = table.Column<int>(nullable: false),
+                    Semestre = table.Column<int>(nullable: false),
+                    Ordem1Ideia = table.Column<string>(nullable: true),
+                    Ordem1Resultado = table.Column<string>(nullable: true),
+                    Ordem2Ideia = table.Column<string>(nullable: true),
+                    Ordem2Resultado = table.Column<string>(nullable: true),
+                    Ordem3Ideia = table.Column<string>(nullable: true),
+                    Ordem3Resultado = table.Column<string>(nullable: true),
+                    Ordem4Ideia = table.Column<string>(nullable: true),
+                    Ordem4Resultado = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MathPoolCAs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MathPoolCMs",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    DreEolCode = table.Column<string>(nullable: true),
+                    NumeroChamada = table.Column<string>(nullable: true),
+                    EscolaEolCode = table.Column<string>(nullable: true),
+                    TurmaEolCode = table.Column<string>(nullable: true),
+                    AlunoEolCode = table.Column<string>(nullable: true),
+                    AnoLetivo = table.Column<int>(nullable: false),
+                    AnoTurma = table.Column<int>(nullable: false),
+                    Semestre = table.Column<int>(nullable: false),
+                    Ordem4Ideia = table.Column<string>(nullable: true),
+                    Ordem4Resultado = table.Column<string>(nullable: true),
+                    Ordem5Ideia = table.Column<string>(nullable: true),
+                    Ordem5Resultado = table.Column<string>(nullable: true),
+                    Ordem6Ideia = table.Column<string>(nullable: true),
+                    Ordem6Resultado = table.Column<string>(nullable: true),
+                    Ordem7Ideia = table.Column<string>(nullable: true),
+                    Ordem7Resultado = table.Column<string>(nullable: true),
+                    Ordem8Ideia = table.Column<string>(nullable: true),
+                    Ordem8Resultado = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MathPoolCMs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MathPoolNumbers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    DreEolCode = table.Column<string>(nullable: true),
+                    NumeroChamada = table.Column<string>(nullable: true),
+                    EscolaEolCode = table.Column<string>(nullable: true),
+                    TurmaEolCode = table.Column<string>(nullable: true),
+                    AlunoEolCode = table.Column<string>(nullable: true),
+                    AnoLetivo = table.Column<int>(nullable: false),
+                    AnoTurma = table.Column<int>(nullable: false),
+                    Semestre = table.Column<int>(nullable: false),
+                    Familiares = table.Column<string>(nullable: true),
+                    Opacos = table.Column<string>(nullable: true),
+                    Transparentes = table.Column<string>(nullable: true),
+                    TerminamZero = table.Column<string>(nullable: true),
+                    Algarismos = table.Column<string>(nullable: true),
+                    Processo = table.Column<string>(nullable: true),
+                    ZeroIntercalados = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MathPoolNumbers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -274,44 +356,44 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                 columns: new[] { "Id", "Description", "Value" },
                 values: new object[,]
                 {
-                    { "be548576-329a-48b4-aefd-25242706ee9d", "Adm DRE", "21" },
-                    { "9b631a08-ee65-4b39-84e5-4c2ea436eef8", "CEFAI", "18" },
-                    { "f98e0f55-072d-48ab-98bb-2fe37603f660", "PAAI", "19" },
-                    { "0e2aaf43-8f41-48ab-bdef-b749cf2d0cc8", "DIPED DRE", "20" },
-                    { "51610fc5-25a5-438e-b4e0-74f56dfdb72f", "AEE", "35" },
-                    { "191c2c1a-d19d-4332-9eb3-592978a1c252", "Básico DRE", "22" },
-                    { "003d355f-95f8-45f9-80e0-4baa0fb13f2a", "Básico Escola", "23" },
-                    { "6cca3723-99ad-40f9-b354-a67a44ee8672", "Infantil", "24" },
-                    { "40b3d294-d342-4a00-a3d1-47e6ad5eef10", "UE Parceira", "25" },
-                    { "8600e523-4abc-46f4-8bb2-c6a38d3799de", "AD", "26" },
-                    { "75891ab4-b76a-45c9-9d1a-8324550c3e06", "CP", "27" },
-                    { "51afbfd1-d355-423a-9b20-607a5f0f6020", "Secretário Escola", "28" },
-                    { "f0ea4dd4-5a60-44d5-a622-ed106a9d6d04", "COTIC", "29" },
-                    { "ab281bac-1e57-4f9b-b657-5e8abb9e9915", "UE", "30" },
-                    { "bda0b10e-6550-4637-96b0-3db53078deb9", "CJ E Volante (PEI, ADI)", "31" },
-                    { "1be173c6-f5eb-4247-b03c-8b924a9f48c8", "Fund. e Inf.", "32" },
-                    { "f9912e39-6c63-46f2-8239-a771edd9a9ea", "NAAPA", "17" },
-                    { "e0f3ea9d-14fe-4c96-a9ad-449fd1e4e2e1", "DIPED", "16" },
-                    { "ba0adabe-1e56-4899-9826-fa40f95ab117", "Supervisor DRE", "15" },
-                    { "f57b5396-9b7c-4a7b-bfdc-520c6f680a4d", "Técnico", "14" },
-                    { "76575987-8ad8-473a-b038-5b930134567e", "ATE", "37" },
-                    { "3ff47b49-e800-4aa7-a3e6-5069699eedc5", "Readaptado", "36" },
-                    { "6e57bd06-df9d-4086-900a-b4ba3d97af8a", "Desenvolvedor", "0" },
-                    { "105988b7-f897-4980-8bd0-0a6203f6c97f", "COTIC", "1" },
-                    { "baeb4587-f4b2-4650-a1c8-c968f8abf7dc", "SME", "2" },
-                    { "81fff531-f5e0-4474-b193-31d82a20be40", "COPED", "3" },
-                    { "752b2174-ab94-46bd-9257-004d335b0993", "DIEFEM", "4" },
-                    { "8b77c60d-7be4-464e-9a1b-2a2379d741c4", "POA", "33" },
-                    { "5c4b286f-3ca4-47aa-a30b-4c6f20d80ffa", "DIEI", "5" },
-                    { "bdf94c64-f8b4-4da4-87e9-3213e5e9f30c", "DIEE", "7" },
-                    { "665cce38-0a70-4950-b243-9fe4919385de", "NTA", "8" },
-                    { "df3297dc-a677-4b1b-9bb0-6817dc69b7c1", "NTC", "9" },
-                    { "a30a11ec-73d3-455f-a686-91e07131db14", "NTC-NAAPA", "10" },
-                    { "88fe6e3c-2bd9-490c-9d88-f2c00f3b9b89", "DIEE-Conveniado", "11" },
-                    { "4810a4f4-9b6a-4e41-8bd9-8d4c66da7bbe", "COPED Básico", "12" },
-                    { "5a5275df-b702-422e-8009-16d890690548", "Regional", "13" },
-                    { "6da5534f-c7ff-4da9-bcc4-3437900936e6", "DIEJA", "6" },
-                    { "3b788a18-c920-48e1-b114-8572f703d219", "PAP", "34" }
+                    { "dcd5cc8d-0200-4a0e-9991-c4c968b8f504", "Adm DRE", "21" },
+                    { "5961af2d-5dc5-4e42-96dc-7f76335b1dfb", "CEFAI", "18" },
+                    { "cf689ec4-1bed-4a63-863b-faa456d717ed", "PAAI", "19" },
+                    { "6b758450-35da-4524-b33b-ffc2683b1b38", "DIPED DRE", "20" },
+                    { "816a0b93-dc7c-40be-897b-ce8ae2ce7ef7", "AEE", "35" },
+                    { "9236989a-beb1-4bf8-a69e-b5d636a43c84", "Básico DRE", "22" },
+                    { "f261dfd8-ee97-465f-8c6d-d4335a273a04", "Básico Escola", "23" },
+                    { "b9a3fce0-1670-446a-a25b-4f96d6b82dc7", "Infantil", "24" },
+                    { "290fbcce-41a1-4f4b-8038-0283f4c3afff", "UE Parceira", "25" },
+                    { "c6bf9e65-41db-49be-8c1b-b46bdf75c703", "AD", "26" },
+                    { "47712116-10a1-4986-ab37-a73580dbe1d0", "CP", "27" },
+                    { "7a01afa1-5fea-48c7-9a4e-a71fa9976b1f", "Secretário Escola", "28" },
+                    { "1d1c0e78-bc6a-4775-b90d-7a3337b1b901", "COTIC", "29" },
+                    { "be83de1d-4483-4e48-a866-69355e9272f7", "UE", "30" },
+                    { "81086b4c-8018-47c5-8fb9-77bd021746c5", "CJ E Volante (PEI, ADI)", "31" },
+                    { "7a4c897f-cc47-4c50-bc79-d279c67b9f56", "Fund. e Inf.", "32" },
+                    { "edc1d4f1-22f8-4a36-b14b-a3a92844a0a0", "NAAPA", "17" },
+                    { "7c46c06b-e1f3-456a-ba51-b42930d8a867", "DIPED", "16" },
+                    { "8d3679fa-0913-4777-8d5d-5d88cbb0485b", "Supervisor DRE", "15" },
+                    { "cf3ccdb1-8ec1-4aa8-aeff-435c67fb1eb0", "Técnico", "14" },
+                    { "94452f76-e8e4-4e8a-a1c9-453c6b7415f5", "ATE", "37" },
+                    { "aaacebf3-c2a7-4306-a5fc-e3b41cb8cce4", "Readaptado", "36" },
+                    { "4260c5a8-7f3d-46a1-84c0-1efc5b1fb3cf", "Desenvolvedor", "0" },
+                    { "2afb3a62-20f9-4808-9afc-31eb8bbcfd7e", "COTIC", "1" },
+                    { "c27f2289-fb63-42da-93b4-65d3fa78e1dd", "SME", "2" },
+                    { "23ad88c5-ad38-4114-b7f4-2f93d5f6e337", "COPED", "3" },
+                    { "b9255c52-332c-48bb-a4a9-4442ddc4d760", "DIEFEM", "4" },
+                    { "b0336907-0c6f-4110-9dbf-eebbc382c3ae", "POA", "33" },
+                    { "b40fe4bb-6bcb-48ae-8925-7dba477e4292", "DIEI", "5" },
+                    { "0dfd7173-3944-44bb-a819-29af9531eb30", "DIEE", "7" },
+                    { "5f312ccb-0948-432b-a7d5-774dcfa76615", "NTA", "8" },
+                    { "1d19e3e1-0a96-4e58-bd6e-6a2225ab7429", "NTC", "9" },
+                    { "32a805c0-d90a-400d-b55e-21078ea12471", "NTC-NAAPA", "10" },
+                    { "f00b981e-d8a7-4670-b03a-223e8ec48e8d", "DIEE-Conveniado", "11" },
+                    { "6cc2dd8c-1b0b-41d3-872b-c330a1265b6c", "COPED Básico", "12" },
+                    { "9d40d95c-dca3-4ac0-83c1-a868d4ee1645", "Regional", "13" },
+                    { "8d1257e8-48b1-4cd2-9dcb-1d1b97a34920", "DIEJA", "6" },
+                    { "aeff35c1-4418-404b-94c8-cea3f1badfe6", "PAP", "34" }
                 });
 
             migrationBuilder.InsertData(
@@ -319,9 +401,9 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                 columns: new[] { "Id", "PollTypeDescription" },
                 values: new object[,]
                 {
-                    { "9d55c349-8153-4a12-ae78-3eb3b80cf288", "Sondagem de Português" },
-                    { "9863c6d1-d203-4edc-b5e4-7680f5ed9ada", "Sondagem de Alfabetização de Matemática" },
-                    { "5ded59ca-bd0e-46ba-9a91-c17b89d86736", "Sondagem de Matemática" }
+                    { "6be6a388-b167-4c8c-90de-8e5f27ca7da8", "Sondagem de Português" },
+                    { "bd4f9eb1-cab1-47be-b594-dba0729baa26", "Sondagem de Alfabetização de Matemática" },
+                    { "6537ad19-2119-411d-a61b-4572c57784db", "Sondagem de Matemática" }
                 });
 
             migrationBuilder.InsertData(
@@ -329,15 +411,15 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { "e38c72f7-c981-4a04-822d-150953a82f80", "Admin" },
-                    { "cff47dc2-be18-4126-a8e4-a80a43585a08", "Diretor" },
-                    { "09ff8eb8-69ce-4803-bb2d-aa89e2ca63cb", "Supervisor" },
-                    { "12bea91b-0d06-481e-a66c-a9d4dc8dd094", "Diretor" },
-                    { "2209799e-e4a7-43ad-bd10-ff47164552f7", "Secretario(a)" },
-                    { "b402aa41-b41c-4d9c-821b-62a62aaffdef", "Auxiliar" },
-                    { "e3c0ed73-5b8b-49ab-81a7-6a82d9cc3528", "Professor" },
-                    { "351d07e9-3ad8-4147-98c3-dfb640d7fa42", "Responsavel" },
-                    { "d0404d69-3d75-45d7-8f98-4d64003fcb66", "Aluno" }
+                    { "d2e64fd5-8931-4be4-b719-12f9b1f95e79", "Admin" },
+                    { "1bbaf68c-4ac1-4065-8cc4-f6d2ac7993e6", "Diretor" },
+                    { "b12166e3-fc51-4984-9e9c-54d777153e64", "Supervisor" },
+                    { "7fc4eb43-ff2a-4698-b921-1b302b55f72a", "Diretor" },
+                    { "1f69b6ec-ab22-4db8-871e-5b4c81d06b1c", "Secretario(a)" },
+                    { "c9333014-e3f0-4615-9064-50f3f079d987", "Auxiliar" },
+                    { "be22948d-214a-4236-a231-96362a0f3233", "Professor" },
+                    { "9718027f-86d4-472d-95e7-d17f076afc4b", "Responsavel" },
+                    { "58e40b92-a090-4bcb-8b9a-422ce08d65cf", "Aluno" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -407,6 +489,15 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "LoggedUsers");
+
+            migrationBuilder.DropTable(
+                name: "MathPoolCAs");
+
+            migrationBuilder.DropTable(
+                name: "MathPoolCMs");
+
+            migrationBuilder.DropTable(
+                name: "MathPoolNumbers");
 
             migrationBuilder.DropTable(
                 name: "PollType");

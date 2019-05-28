@@ -16,7 +16,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
     {
         #region ==================== ATTRIBUTES ====================
 
-        private readonly SMEManagementContext _db;
         public readonly IConfiguration _config;
 
         #endregion
@@ -27,10 +26,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// Construtor padrão para o SondagemMatematicaController, faz injeção de dependências SMEManagementContext.
         /// </summary>
         /// <param name="db">Depêndencia de dataContext (SMEManagementContext)</param>
-        public SondagemMatematicaController(SMEManagementContext db, 
-                                            IConfiguration config)
+        public SondagemMatematicaController(IConfiguration config)
         {
-            _db = db;
             _config = config;
         }
 
