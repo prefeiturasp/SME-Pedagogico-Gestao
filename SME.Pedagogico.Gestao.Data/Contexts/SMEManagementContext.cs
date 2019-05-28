@@ -15,6 +15,10 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
         public DbSet<Models.Academic.Teacher> Teachers { get; set; }
         public DbSet<Models.Academic.TeacherCode> TeacherCodes { get; set; }
         public DbSet<Models.Academic.PortuguesePoll> PortuguesePolls { get; set; }
+        public DbSet<Models.Academic.Semester> Semesters { get; set; }
+        public DbSet<Models.Academic.MathPoolCM> MathPoolCMs { get; set; }
+        public DbSet<Models.Academic.MathPoolCA> MathPoolCAs { get; set; }
+        public DbSet<Models.Academic.MathPoolNumber> MathPoolNumbers { get; set; }
 
         #endregion ---------- Academic ----------
 
@@ -33,8 +37,6 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
         public DbSet<Models.Entity.Profile> Profiles { get; set; }
 
         #endregion ---------- Entity ----------
-
-
 
         #region ---------- Organization ----------
         public DbSet<Models.Organization.Code> Codes { get; set; }
@@ -134,6 +136,13 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
             };
 
             modelBuilder.Entity<Models.Academic.PollType>().HasData(pollTypes);
+
+            Models.Academic.Semester[] semesters = new Models.Academic.Semester[]
+            {
+                new Models.Academic.Semester() { Value = "1"},
+                new Models.Academic.Semester() { Value = "2"},
+            };
+            modelBuilder.Entity<Models.Academic.Semester>().HasData(semesters);
 
         }
 

@@ -33,79 +33,6 @@ const PollReportGridTotal = (props) => {
 }
 
 export default class PollReportMathGrid extends Component {
-    constructor() {
-        super();
-
-        this.pollReportItems = [
-            {
-                orderName: "ORDEM 1",
-                results: [
-                    { testName: "Acertou", testIdeaQuantity: 60, testIdeaPercentage: 60, testResultQuantity: 60, testResultPercentage: 60 },
-                    { testName: "Errou", testIdeaQuantity: 30, testIdeaPercentage: 30, testResultQuantity: 30, testResultPercentage: 30 },
-                    { testName: "Não Resolveu", testIdeaQuantity: 45, testIdeaPercentage: 45, testResultQuantity: 45, testResultPercentage: 45 },
-                ]
-            },
-            {
-                orderName: "ORDEM 2",
-                results: [
-                    { testName: "Acertou", testIdeaQuantity: 60, testIdeaPercentage: 60, testResultQuantity: 60, testResultPercentage: 60 },
-                    { testName: "Errou", testIdeaQuantity: 30, testIdeaPercentage: 30, testResultQuantity: 30, testResultPercentage: 30 },
-                    { testName: "Não Resolveu", testIdeaQuantity: 45, testIdeaPercentage: 45, testResultQuantity: 45, testResultPercentage: 45 },
-                ]
-            },
-            {
-                orderName: "ORDEM 3",
-                results: [
-                    { testName: "Acertou", testIdeaQuantity: 60, testIdeaPercentage: 60, testResultQuantity: 60, testResultPercentage: 60 },
-                    { testName: "Errou", testIdeaQuantity: 30, testIdeaPercentage: 30, testResultQuantity: 30, testResultPercentage: 30 },
-                    { testName: "Não Resolveu", testIdeaQuantity: 45, testIdeaPercentage: 45, testResultQuantity: 45, testResultPercentage: 45 },
-                ]
-            },
-            {
-                orderName: "ORDEM 4",
-                results: [
-                    { testName: "Acertou", testIdeaQuantity: 60, testIdeaPercentage: 60, testResultQuantity: 60, testResultPercentage: 60 },
-                    { testName: "Errou", testIdeaQuantity: 30, testIdeaPercentage: 30, testResultQuantity: 30, testResultPercentage: 30 },
-                    { testName: "Não Resolveu", testIdeaQuantity: 45, testIdeaPercentage: 45, testResultQuantity: 45, testResultPercentage: 45 },
-                ]
-            },
-        ];
-
-        this.pollReportClassroom = [
-            {
-                code: "1", studentName: "Alvaro Ramos Grassi", poll: [
-                    { order: 1, idea: "Acertou", result: "Errou" },
-                    { order: 2, idea: "Acertou", result: "Errou" },
-                    { order: 3, idea: "Acertou", result: "Errou" },
-                    { order: 4, idea: "Acertou", result: "Errou" },
-                ]
-            },
-            { code: "2", studentName: "Amanda Aparecida", poll: [
-                    { order: 1, idea: "Errou", result: "Não Resolveu" },
-                    { order: 1, idea: "Errou", result: "Não Resolveu" },
-                    { order: 1, idea: "Errou", result: "Não Resolveu" },
-                    { order: 4, idea: "Acertou", result: "Errou" },
-                ]
-            },
-            {
-                code: "3", studentName: "Anna Beatriz de Goes Callejon", poll: [
-                    { order: 1, idea: "Acertou", result: "Acertou" },
-                    { order: 2, idea: "Acertou", result: "Acertou" },
-                    { order: 3, idea: "Acertou", result: "Acertou" },
-                    { order: 4, idea: "Acertou", result: "Errou" },
-                ]
-            },
-            {
-                code: "4", studentName: "Caique Siqueira", poll: [
-                    { order: 1, idea: "Acertou", result: "Errou" },
-                    { order: 2, idea: "Acertou", result: "Errou" },
-                    { order: 3, idea: "Acertou", result: "Errou" },
-                    { order: 4, idea: "Acertou", result: "Errou" },
-                ]
-            },
-        ];
-    }
-
     render() {
         var { className } = this.props;
 
@@ -114,21 +41,15 @@ export default class PollReportMathGrid extends Component {
         else
             className += " d-flex flex-column";
 
-        //======================= Seed =======================
-        var reportItems = [];
+        var orders = 0;
 
-        if (this.props.classroomReport === false)
-            reportItems = this.pollReportItems;
-        else
-            reportItems = this.pollReportClassroom;
-
-        var orders = this.pollReportClassroom[0].poll.length;
-        //======================================================
+        if (this.props.classroomReport)
+            orders = this.props.data[0].poll.length
 
         return (
             <div className={className}>
                 {this.props.classroomReport === false ?
-                    reportItems.map(item => {
+                    this.props.data.map(item => {
                         return (
                             <div key={item.orderName}>
                                 <PollReportMathGridHeader classroomReport={this.props.classroomReport} orderName={item.orderName} />
@@ -144,7 +65,7 @@ export default class PollReportMathGrid extends Component {
                     :
                     <div>
                         <PollReportMathGridHeader classroomReport={this.props.classroomReport} orders={orders} />
-                        {reportItems.map(item =>
+                        {this.props.data.map(item =>
                             <PollReportMathGridItem classroomReport={this.props.classroomReport} item={item}/>
                         )}
                     </div>
