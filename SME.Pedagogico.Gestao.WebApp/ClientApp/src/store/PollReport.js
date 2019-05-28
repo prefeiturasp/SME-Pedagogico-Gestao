@@ -2,6 +2,10 @@
     SET_POLL_REPORT_FILTER: "SET_POLL_REPORT_FILTER",
     SHOW_POLL_REPORT_REQUEST: "SHOW_POLL_REPORT_REQUEST",
     HIDE_POLL_REPORT_REQUEST: "HIDE_POLL_REPORT_REQUEST",
+    GET_POLL_REPORT_REQUEST: "GET_POLL_REPORT_REQUEST",
+    SET_POLL_REPORT_DATA: "SET_POLL_REPORT_DATA",
+    POLL_REPORT_API_REQUEST_FAIL: "POLL_REPORT_API_REQUEST_FAIL",
+    POLL_REPORT_REQUEST_NOT_FOUND: "POLL_REPORT_REQUEST_NOT_FOUND",
 }
 
 const initialState = {
@@ -36,14 +40,17 @@ const initialState = {
         discipline: null,
         proficiency: null,
         term: null,
+        classroomReport: false,
     },
     showReport: false,
+    data: null,
 }
 
 export const actionCreators = {
     setPollReportFilter: (selectedFilter) => ({ type: types.SET_POLL_REPORT_FILTER, selectedFilter }),
     showPollReport: () => ({ type: types.SHOW_POLL_REPORT_REQUEST }),
     hidePollReport: () => ({ type: types.HIDE_POLL_REPORT_REQUEST }),
+    getPollReport: (parameters) => ({ type: types.GET_POLL_REPORT_REQUEST, parameters }),
 }
 
 export const reducer = (state, action) => {
@@ -64,6 +71,11 @@ export const reducer = (state, action) => {
             return ({
                 ...state,
                 showReport: false,
+            });
+        case types.SET_POLL_REPORT_DATA:
+            return ({
+                ...state,
+                data: action.data,
             });
         default:
             return (state);

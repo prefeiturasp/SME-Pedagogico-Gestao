@@ -156,14 +156,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
 
-
-
-
-
-
-        /// <summary>
-        ///                    METODOS  ESCOLA 
-        /// <returns></returns>
          
 
         [HttpGet("escolas/{codigoEol}")]
@@ -274,13 +266,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
             return Ok(await escolaAPI.GetTurmasPorEscola(codigoUE, anoLetivo, token));
         }
-         
-
-        /// <summary>
-        ///              FIM    ****   METODOS  ESCOLA 
-        /// <returns></returns>
-
-
+ 
              
 
 
