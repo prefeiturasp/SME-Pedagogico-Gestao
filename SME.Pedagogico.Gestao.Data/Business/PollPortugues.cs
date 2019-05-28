@@ -139,7 +139,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 }
             }
 
-                return liststudentPollPortuguese;
+                return liststudentPollPortuguese.OrderBy(x => Convert.ToInt32(x.sequenceNumber)).ToList();
         }
             catch (Exception ex)
             {
