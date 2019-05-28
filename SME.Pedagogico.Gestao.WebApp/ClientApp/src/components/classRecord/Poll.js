@@ -260,12 +260,11 @@ class Poll extends Component {
     }
 
     savePollStudent() {
-        debugger;
         if (this.props.poll.pollSelected !== null) {
             if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
                 var response = this.props.pollMethods.save_poll_portuguese_student(this.props.poll.students);
-              
-                alert(this.props.poll.pollSelected + response);
+                debugger;      
+                
             } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMT) {
                 //if number
 
@@ -284,7 +283,7 @@ class Poll extends Component {
             navSelected: elementSeleted,
         });
 
-        //debugger;
+        
         
     }
     openPortuguesePoll(element) {
@@ -301,7 +300,7 @@ class Poll extends Component {
             "yearClassroom": "1"
         } 
 
-        debugger;
+        
 
         this.props.pollMethods.set_poll_info(ClassRoomEnum.ClassPT, "", "1"); //passar pollSelected, pollTypeSelected, pollYear
         this.props.pollMethods.get_poll_portuguese_students(classRoomMock);
@@ -373,7 +372,7 @@ class Poll extends Component {
                 componentRender = <StudentPollPortugueseCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             case ClassRoomEnum.ClassMT:
-                debugger;
+                
                 componentRender = <StudentPollMathAlfabetizacaoCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             default:
