@@ -160,11 +160,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
 
 
-
-        /// <summary>
-        ///                    METODOS  ESCOLA 
-        /// <returns></returns>
-         
+        
 
         [HttpGet("escolas/{codigoEol}")]
         public async Task<IActionResult> TesteGetEscolasPor(string codigoEol, [FromBody]CredentialModel credential)
@@ -263,7 +259,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return Ok(await escolaAPI.GetSubprefeiturasPor(codigoEscolaEol, token));
         }
 
-        [HttpGet("escolas/{codigoUE}/turmas/anos_letivos/{anoLetivo}")]
+        [HttpPost("escolas/{codigoUE}/turmas/anos_letivos/{anoLetivo}")]
         public async Task<IActionResult> TesteGetTurmasPorEscola(int codigoUE, string anoLetivo, [FromBody]CredentialModel credential)
         {
             string token = await ObtemTokenAsync(credential);
@@ -275,15 +271,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return Ok(await escolaAPI.GetTurmasPorEscola(codigoUE, anoLetivo, token));
         }
          
-
-        /// <summary>
-        ///              FIM    ****   METODOS  ESCOLA 
-        /// <returns></returns>
-
-
-             
-
-
         private async Task<string> ObtemTokenAsync(CredentialModel credential)
         {
             ClientUserModel user = await Authenticate(credential);
