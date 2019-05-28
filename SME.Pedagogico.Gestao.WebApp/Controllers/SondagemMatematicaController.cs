@@ -68,14 +68,56 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// Método para fazer a sondagem de matemática de CM.
         /// </summary>
         /// <param name="filtroSondagem">Objeto que contém filtro para retorno de sondagem de CM</param>
-        /// <returns>Dados </returns>
+        /// <returns>Dados da sondagem</returns>
         [HttpPost]
         public async Task<ActionResult> ListaSondagemCM([FromBody]FiltroSondagemMatematicaDTO filtroSondagem)
         {
             try
             {
                 var businessSondagemMatematica = new Data.Business.SondagemMatematica(_config);
-                var sondagemCM = await businessSondagemMatematica.ListPoolCM(filtroSondagem);
+                var sondagemCM = await businessSondagemMatematica.ListPoolCMAsync(filtroSondagem);
+
+                return Ok(sondagemCM);
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
+
+        /// <summary>
+        /// Método para fazer a sondagem de matemática de CA.
+        /// </summary>
+        /// <param name="filtroSondagem">Objeto que contém filtro para retorno de sondagem de CA</param>
+        /// <returns>Dados da sondagem</returns>
+        [HttpPost]
+        public async Task<ActionResult> ListaSondagemCA([FromBody]FiltroSondagemMatematicaDTO filtroSondagem)
+        {
+            try
+            {
+                var businessSondagemMatematica = new Data.Business.SondagemMatematica(_config);
+                var sondagemCM = await businessSondagemMatematica.ListPoolCAAsync(filtroSondagem);
+
+                return Ok(sondagemCM);
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
+
+        /// <summary>
+        /// Método para fazer a sondagem de matemática de Numeros.
+        /// </summary>
+        /// <param name="filtroSondagem">Objeto que contém filtro para retorno de sondagem de Numeros</param>
+        /// <returns>Dados da sondagem</returns>
+        [HttpPost]
+        public async Task<ActionResult> ListaSondagemNumeros([FromBody]FiltroSondagemMatematicaDTO filtroSondagem)
+        {
+            try
+            {
+                var businessSondagemMatematica = new Data.Business.SondagemMatematica(_config);
+                var sondagemCM = await businessSondagemMatematica.ListPoolNumerosAsync(filtroSondagem);
 
                 return Ok(sondagemCM);
             }
