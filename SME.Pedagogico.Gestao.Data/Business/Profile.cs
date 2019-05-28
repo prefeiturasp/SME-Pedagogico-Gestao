@@ -1,14 +1,15 @@
 ﻿using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.DataTransfer;
 using SME.Pedagogico.Gestao.Data.Functionalities;
+using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO;
-using System;
+using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.Data.Business
 {
-  public class Profile
+    public class Profile
     {
         private string _token;
         public Profile(IConfiguration config)
@@ -17,101 +18,53 @@ namespace SME.Pedagogico.Gestao.Data.Business
             _token = createToken.CreateTokenProvisorio();
         }
 
-
-        public FuncionarioDTO GetOccupationsRF(string rf)
+        public async Task<RetornoCargosServidorDTO> GetOccupationsRF(string rf)
         {
-            
-            // ir na API pegar a parada 
-            if (rf == "7944560")
+            try
             {
-                var employeeDto = new FuncionarioDTO();
-                // Chamar A Api de cargos por RF aqui 
-                // Exemplo de objeto Retornado
-                //{
-                //    "nomeServidor": "HELOISA MARIA DE MORAIS GIANNICHI",
-                //    "codigoServidor": "7944560",
-                //    "cargos": [
-                //                 {
-                //                     "codigoCargo": "3360",
-                //                     "nomeCargo": "DIRETOR DE ESCOLA",
-                //                     "nomeCargoSobreposto": "ASSISTENTE TECNICO DE EDUCACAO I",
-                //                     "codigoCargoSobreposto": "2640"
-                //                 }
-                //               ]
-                // }
-
-
-                var listOccupationsEmployeeDTO = new List<CargoDTO>();
-                employeeDto.nomeServidor = "HELOISA MARIA DE MORAIS GIANNICHI";
-                employeeDto.codigoServidor = "7944560";
-
-                var occupationsDTO = new CargoDTO()
+                var endPoint = new EndpointsAPI();
+                var profileApi = new PerfilSgpAPI(endPoint);
+                var occupations = await profileApi.GetCargosDeServidor(rf, _token);
+                if (occupations != null)
                 {
-                    codigoCargo = "3360",
-                    nomeCargo = "DIRETOR DE ESCOLA",
-                    nomeCargoSobreposto = "ASSISTENTE TECNICO DE EDUCACAO I",
-                    codigoCargoSobreposto = "2640"
-                };
+                    return occupations;
+                }
 
-                listOccupationsEmployeeDTO.Add(occupationsDTO);
-                employeeDto.ListOccupations = listOccupationsEmployeeDTO;
-                return employeeDto;
+                else
+                {
+                    return null;
+                }
             }
-
-            else
+            catch (System.Exception ex)
             {
-                return null;
+                throw ex;
             }
-        
         }
 
-        public PerfisServidoresDTO GetProfileEmployeeInformation(string codeRF, string codeOccupations, string schoolYear)
-        {  
-            
-            //ChamarAPI api/perfis/servidores
-            var teacher = new PerfisServidoresDTO();
 
-          
-                var listaDre = new List<DreDTO>();
-                var listSchool = new List<EscolaDTO>();
-                var listClassRoom = new List<TurmaDTO>();
-              
-          
-                teacher.codigoServidor = "6950167";
-                teacher.nomeServidor = "ANGELA LUCIA BARBOSA PEREIRA";
+        public async Task<RetornoInfoPerfilDTO> GetProfileEmployeeInformation(string codeRF, string codeOccupations, string schoolYear)
+        {
+            try
+            {
+                var endPoint = new EndpointsAPI();
+                var profileApi = new PerfilSgpAPI(endPoint);
+                var profileInformation = await profileApi.getInformacoesPerfil(codeRF, int.Parse(codeOccupations), int.Parse(schoolYear), _token);
+                if (profileInformation != null)
+                {
+                    return profileInformation;
+                }
 
-                var dre = new DreDTO();
-                dre.codigo = "108800";
-                dre.nome = "DIRETORIA REGIONAL DE EDUCACAO JACANA/TREMEMBE";
-                dre.sigla = "DRE - JT";
-                listaDre.Add(dre);
-                teacher.drEs = listaDre;
+                else
+                {
+                    return null;
+                }
+            }
+            catch (System.Exception ex)
+            {
 
-                var school = new EscolaDTO();
-                school.codigo = "094765";
-                school.codigoDRE = "108800";
-                school.nome = "MAXIMO DE MOURA SANTOS, PROF.";
-                school.sigla = "PROF. MAXIMO DE MOURA SANTOS";
-
-                listSchool.Add(school);
-                teacher.escolas = listSchool;
-
-                var turma1A = new TurmaDTO();
-                turma1A.codigo = "1992661";
-                turma1A.codigoEscola = "094765";
-                turma1A.nome = "1A";
-
-                var turma1B = new TurmaDTO();
-                turma1A.codigo = "1992674";
-                turma1A.codigoEscola = "1B";
-                turma1A.nome = "094765";
-
-                listClassRoom.Add(turma1A);
-                listClassRoom.Add(turma1B);
-
-                teacher.turmas = listClassRoom;
-
-            return teacher;
+                throw ex;
+            }
+           
         }
     }
 }
