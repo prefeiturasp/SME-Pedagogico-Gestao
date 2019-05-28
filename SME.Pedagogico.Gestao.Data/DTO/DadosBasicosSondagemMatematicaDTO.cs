@@ -8,7 +8,7 @@ namespace SME.Pedagogico.Gestao.Data.DTO
         public string NomeAluno { get; set; }
 
         [JsonProperty(PropertyName = "sequenceNumber")]
-        public string NumeroAluno { get; set; }
+        public string NumeroAlunoChamada { get; set; }
 
         [JsonProperty(PropertyName = "studentCodeEol")]
         public string CodigoEolAluno { get; set; }

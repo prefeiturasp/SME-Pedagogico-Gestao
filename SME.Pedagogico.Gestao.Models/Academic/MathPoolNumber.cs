@@ -1,6 +1,8 @@
-﻿namespace SME.Pedagogico.Gestao.Models.Academic
+﻿using SME.Pedagogico.Gestao.Models.Base.Abstracts;
+
+namespace SME.Pedagogico.Gestao.Models.Academic
 {
-    public class MathPoolNumber
+    public class MathPoolNumber : Table
     {
         public string DreEolCode { get; set; }
         public string NumeroChamada { get; set; }
