@@ -68,8 +68,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
         public string BuscaTurmasPorEscola { get; set; } = "escolas/{0}/turmas/anos_letivos/{1}";
 
         // ******  FIM   Métodos da API Escola  **************************************************************************
-
-
+         
 
 
 

@@ -3,19 +3,16 @@ import * as Poll from '../store/Poll';
 
 export default function* () {
     yield all([
-      //  takeLatest(Poll.types.GET_POLL_PORTUGUESE_STUDENTS, GetStudents),
+        takeLatest(Poll.types.GET_POLL_PORTUGUESE_STUDENTS, GetStudents),
         takeLatest(Poll.types.SAVE_POLL_PORTUGUESE, SavePollPortuguese),
     ]);
 }
 
 function* GetStudents({ classRoom }) {
     try {
-
         const data = yield call(getStudentsPollPortugueseRequestApi, classRoom);
+
         yield put({ type: Poll.types.SET_POLL_PORTUGUESE_STUDENTS, data });
-
-        
-
     }
 
     catch (error) {
@@ -25,24 +22,24 @@ function* GetStudents({ classRoom }) {
 
 function getStudentsPollPortugueseRequestApi(classRoom) {
   
-    return (fetch("/api/classRoomStudents/ListaAlunosDaTurma", {
+    return (fetch("/api/sondagemPortugues/ListarSondagemPortugues", {
         method: "post",
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(classRoom)
-    })
-        .then(response => response.json()));
-    debugger;
-   
-    //return lStudants;
+    }).then(response => response.json()));
 }
 
-function* SavePollPortuguese({ students }) {
-    debugger;
-    //return (yield fetch("/api/", {
-    //            method: "post",
-    //            headers: { 'Content-Type': 'application/json' },
-    //            body: JSON.stringify(students)
-    //        }).then(response => response.json())
-    //);
-    return (yield true);
+function* SavePollPortuguese(students) {
+    try {
+        var data = yield fetch("/api/sondagemPortugues/IncluirSondagemPortugues", {
+            method: "post",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(students.pollstudents)
+        }).then(response => response.json());
+        debugger;
+        return (data);
+    } catch (error) {
+        console.log(error);
+    }
+    
 } 

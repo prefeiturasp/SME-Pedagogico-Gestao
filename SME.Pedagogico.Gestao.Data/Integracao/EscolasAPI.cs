@@ -61,7 +61,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
                       (token, string.Format(url, codigoUE, tipoSala, anoLetivo));
         }
 
-        public async Task<List<FuncionariosDTO>> GetFuncionarios(string codigoUE, string token)
+        public async Task<List<FuncionariosDTO>> GetFuncionarios(  string codigoUE, string token)
         {
             var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.BuscaFuncionariosdaEscola);
 
