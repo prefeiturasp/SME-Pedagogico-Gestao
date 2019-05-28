@@ -43,6 +43,15 @@ class PollReport extends Component {
     }
 
     render() {
+        var reportData = null;
+
+        if (this.props.pollReport.showReport === true)
+            reportData = this.props.pollReport.data;
+        else
+            reportData = [];
+
+        this.classroomReport = this.props.pollReport.selectedFilter.classroomReport;
+
         return (
             <div>
                 <Card className="mb-3">
@@ -66,10 +75,10 @@ class PollReport extends Component {
                             <div>
                                 <PollReportBreadcrumb className="mt-4" name="Planilha" />
 
-                                {this.props.pollReport.selectedFilter.discipline === "Língua Portuguesa" ?
-                                    <PollReportPortugueseGrid className="mt-3" classroomReport={this.classroomReport} />
-                                    :
-                                    <PollReportMathGrid className="mt-3" classroomReport={this.classroomReport} />
+                            {this.props.pollReport.selectedFilter.discipline === "Língua Portuguesa" ?
+                                <PollReportPortugueseGrid className="mt-3" classroomReport={this.classroomReport} data={reportData} />
+                                :
+                                <PollReportMathGrid className="mt-3" classroomReport={this.classroomReport} data={reportData} />
                                 }
 
                                 <PollReportBreadcrumb className="mt-5" name="Gráfico" />

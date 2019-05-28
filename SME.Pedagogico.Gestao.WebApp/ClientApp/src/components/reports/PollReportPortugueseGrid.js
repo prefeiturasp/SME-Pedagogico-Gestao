@@ -76,25 +76,7 @@ const PollReportGridTotal = (props) => {
     );
 }
 
-export default class PollReportPortugueseGrid extends Component {
-    constructor() {
-        super();
-
-        this.pollReportItems = [
-            { optionName: "Pré-Silábico", studentQuantity: "60", studentPercentage: "35,71" },
-            { optionName: "Silábico sem Valor", studentQuantity: "30", studentPercentage: "17,86" },
-            { optionName: "Silábico com Valor", studentQuantity: "45", studentPercentage: "26,78" },
-            { optionName: "Silábico Alfabético", studentQuantity: "23", studentPercentage: "13,69" },
-            { optionName: "Alfabético", studentQuantity: "10", studentPercentage: "5,95" },
-        ];
-        this.pollReportClassroom = [
-            { code: "1", studentName: "Alvaro Ramos Grassi", studentValue: "Pré-Silábico" },
-            { code: "2", studentName: "Amanda Aparecida", studentValue: "Pré-Silábico" },
-            { code: "3", studentName: "Anna Beatriz de Goes Callejon", studentValue: "Silábico Alfabético" },
-            { code: "4", studentName: "Caique Siqueira", studentValue: "Alfabético" },
-        ];
-    }
-    
+export default class PollReportPortugueseGrid extends Component {    
     render() {
         var { className } = this.props;
 
@@ -103,20 +85,11 @@ export default class PollReportPortugueseGrid extends Component {
         else
             className += " d-flex flex-column";
 
-        //======================= Seed //=======================
-        var reportItems = [];
-
-        if (this.props.classroomReport === false)
-            reportItems = this.pollReportItems;
-        else
-            reportItems = this.pollReportClassroom;
-        //======================================================
-
         return (
             <div className={className}>
                 <PollReportGridHeader classroomReport={this.props.classroomReport} />
 
-                {reportItems.map(item =>
+                {this.props.data.map(item =>
                     <PollReportGridItem {...item} classroomReport={this.props.classroomReport} />
                 )}
 

@@ -5,6 +5,7 @@ import UserSaga from '../sagas/User';
 import FrequencySaga from '../sagas/Frequency';
 import ClassRoomStudentsSaga from '../sagas/ClassRoomStudents';
 import PollSaga from '../sagas/Poll';
+import PollReportSaga from '../sagas/PollReport';
 import * as LeftMenu from './LeftMenu';
 import * as Calendar from './Calendar';
 import * as Frequency from './Frequency';
@@ -72,6 +73,7 @@ export default function configureStore(history, initialState) {
     reduxSaga.run(FrequencySaga);
     reduxSaga.run(ClassRoomStudentsSaga);
     reduxSaga.run(PollSaga);
+    reduxSaga.run(PollReportSaga);
 
     return ({ store, persistor });
 }
