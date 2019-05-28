@@ -54,7 +54,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             try
             {
                 var businessSondagemMatematica = new Data.Business.SondagemMatematica(_config);
-                await businessSondagemMatematica.InsertPoolCM(dadosSondagem);
+                await businessSondagemMatematica.InsertPoolCMAsync(dadosSondagem);
 
                 return Ok();
             }
@@ -96,7 +96,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             try
             {
                 var businessSondagemMatematica = new Data.Business.SondagemMatematica(_config);
-                await businessSondagemMatematica.InsertPoolCA(dadosSondagem);
+                await businessSondagemMatematica.InsertPoolCAAsync(dadosSondagem);
 
                 return Ok();
             }
@@ -117,7 +117,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             try
             {
                 var businessSondagemMatematica = new Data.Business.SondagemMatematica(_config);
-                await businessSondagemMatematica.InsertPoolNumeros(dadosSondagem);
+                await businessSondagemMatematica.InsertPoolNumerosAsync(dadosSondagem);
 
                 return Ok();
             }

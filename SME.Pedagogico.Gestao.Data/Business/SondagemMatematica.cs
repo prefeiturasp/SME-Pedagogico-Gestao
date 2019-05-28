@@ -4,20 +4,25 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.DTO;
+using SME.Pedagogico.Gestao.Data.Functionalities;
+using SME.Pedagogico.Gestao.Data.Integracao;
+using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using SME.Pedagogico.Gestao.Models.Academic;
 
 namespace SME.Pedagogico.Gestao.Data.Business
 {
     public class SondagemMatematica
     {
+        private string _token;
+
         public IConfiguration _config;
         public SondagemMatematica(IConfiguration config)
         {
-
-            _config = config;
+            var createToken = new CreateToken(config);
+            _token = createToken.CreateTokenProvisorio();
         }
 
-        public async Task InsertPoolCM(List<SondagemMatematicaOrdemDTO> dadosSondagem)
+        public async Task InsertPoolCMAsync(List<SondagemMatematicaOrdemDTO> dadosSondagem)
         {
             using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
             {
@@ -87,12 +92,119 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public async Task<SondagemMatematicaOrdemDTO> ListPoolCM(FiltroSondagemMatematicaDTO filtroSondagem)
+        public async Task<List<SondagemMatematicaOrdemDTO>> ListPoolCM(FiltroSondagemMatematicaDTO filtroSondagem)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var retornoSondagem = new List<SondagemMatematicaOrdemDTO>();
+
+                using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+                {
+                    var sondagemDaTurma = db.MathPoolCMs
+                                                        .Where(x => x.TurmaEolCode.Equals(filtroSondagem.TurmaEolCode))
+                                                        .ToList();
+
+
+                    var turmApi = new TurmasAPI(new EndpointsAPI());
+
+                    var classroomStudentsFromAPI = await turmApi.GetAlunosNaTurma(Convert.ToInt32(filtroSondagem.TurmaEolCode), Convert.ToInt32(filtroSondagem.AnoLetivo), _token);
+
+                    classroomStudentsFromAPI = classroomStudentsFromAPI.Where(x => x.CodigoSituacaoMatricula == 1).ToList();
+                    if (classroomStudentsFromAPI == null)
+                    {
+                        return null;
+                    }
+
+                    foreach (var studentClassRoom in classroomStudentsFromAPI)
+                    {
+                        var studentDTO = new SondagemMatematicaOrdemDTO();
+                        if (sondagemDaTurma != null)
+                        {
+                            var studentPollsMath = sondagemDaTurma.Where(x => x.AlunoEolCode == studentClassRoom.CodigoAluno.ToString()).ToList();
+                            studentDTO.NomeAluno = studentClassRoom.NomeAluno;
+                            studentDTO.CodigoEolAluno = studentClassRoom.CodigoAluno.ToString();
+                            studentDTO.NumeroAlunoChamada = studentClassRoom.NumeroAlunoChamada.ToString();
+                            studentDTO.AnoLetivo = filtroSondagem.AnoTurma;
+                            studentDTO.CodigoEolDRE = filtroSondagem.DreEolCode;
+                            studentDTO.CodigoEolEscola = filtroSondagem.EscolaEolCode;
+                            studentDTO.AnoTurma = filtroSondagem.AnoTurma;
+
+                            if (studentPollsMath?.Count > 0)
+                            {
+                                for (int semestre = 1; semestre <= db.Semesters.Count(); semestre++)
+                                {
+                                    var studentPollMath = studentPollsMath.ElementAt(semestre - 1);
+
+                                    if (semestre.Equals(1))
+                                    {
+                                        studentDTO.Ideia4Semestre1 = studentPollMath.Ordem4Ideia;
+                                        studentDTO.Ideia5Semestre1 = studentPollMath.Ordem5Ideia;
+                                        studentDTO.Ideia6Semestre1 = studentPollMath.Ordem6Ideia;
+                                        studentDTO.Ideia7Semestre1 = studentPollMath.Ordem7Ideia;
+                                        studentDTO.Ideia8Semestre1 = studentPollMath.Ordem8Ideia;
+                                        studentDTO.Resultado4Semestre1 = studentPollMath.Ordem4Resultado;
+                                        studentDTO.Resultado6Semestre1 = studentPollMath.Ordem5Resultado;
+                                        studentDTO.Resultado7Semestre1 = studentPollMath.Ordem6Resultado;
+                                        studentDTO.Resultado5Semestre1 = studentPollMath.Ordem7Resultado;
+                                        studentDTO.Resultado8Semestre1 = studentPollMath.Ordem8Resultado;
+                                    }
+                                    else if (semestre.Equals(2))
+                                    {
+                                        studentDTO.Ideia4Semestre2 = studentPollMath.Ordem4Ideia;
+                                        studentDTO.Ideia5Semestre2 = studentPollMath.Ordem5Ideia;
+                                        studentDTO.Ideia6Semestre2 = studentPollMath.Ordem6Ideia;
+                                        studentDTO.Ideia7Semestre2 = studentPollMath.Ordem7Ideia;
+                                        studentDTO.Ideia8Semestre2 = studentPollMath.Ordem8Ideia;
+                                        studentDTO.Resultado4Semestre2 = studentPollMath.Ordem4Resultado;
+                                        studentDTO.Resultado6Semestre2 = studentPollMath.Ordem5Resultado;
+                                        studentDTO.Resultado7Semestre2 = studentPollMath.Ordem6Resultado;
+                                        studentDTO.Resultado5Semestre2 = studentPollMath.Ordem7Resultado;
+                                        studentDTO.Resultado8Semestre2 = studentPollMath.Ordem8Resultado;
+                                    }
+                                }
+
+                            }
+                            else
+                            {
+                                AddEmptyCMPoolTo(studentDTO);
+                            }
+
+                            retornoSondagem.Add(studentDTO);
+                        }
+                    }
+                }
+                return retornoSondagem;
+            } catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public async Task InsertPoolNumeros(List<SondagemMatematicaNumerosDTO> dadosSondagem)
+        private void AddEmptyCMPoolTo(SondagemMatematicaOrdemDTO studentDTO)
+        {
+            studentDTO.Ideia4Semestre1 = string.Empty;
+            studentDTO.Ideia5Semestre1 = string.Empty;
+            studentDTO.Ideia6Semestre1 = string.Empty;
+            studentDTO.Ideia7Semestre1 = string.Empty;
+            studentDTO.Ideia8Semestre1 = string.Empty;
+            studentDTO.Resultado4Semestre1 = string.Empty;
+            studentDTO.Resultado6Semestre1 = string.Empty;
+            studentDTO.Resultado7Semestre1 = string.Empty;
+            studentDTO.Resultado5Semestre1 = string.Empty;
+            studentDTO.Resultado8Semestre1 = string.Empty;
+            studentDTO.Ideia5Semestre2 = string.Empty;
+            studentDTO.Ideia4Semestre2 = string.Empty;
+            studentDTO.Ideia6Semestre2 = string.Empty;
+            studentDTO.Ideia7Semestre2 = string.Empty;
+            studentDTO.Ideia8Semestre2 = string.Empty;
+            studentDTO.Resultado4Semestre2 = string.Empty;
+            studentDTO.Resultado6Semestre2 = string.Empty;
+            studentDTO.Resultado7Semestre2 = string.Empty;
+            studentDTO.Resultado5Semestre2 = string.Empty;
+            studentDTO.Resultado8Semestre2 = string.Empty;
+        }
+
+        public async Task InsertPoolNumerosAsync(List<SondagemMatematicaNumerosDTO> dadosSondagem)
         {
             using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
             {
@@ -158,7 +270,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public async Task InsertPoolCA(List<SondagemMatematicaOrdemDTO> dadosSondagem)
+        public async Task InsertPoolCAAsync(List<SondagemMatematicaOrdemDTO> dadosSondagem)
         {
             using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
             {
