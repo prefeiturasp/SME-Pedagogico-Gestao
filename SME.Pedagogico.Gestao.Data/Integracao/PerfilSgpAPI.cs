@@ -29,7 +29,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
         public async Task<RetornoInfoPerfilDTO> getInformacoesPerfil(string codigoRF,
                                                      int codigoCargo,
                                                      int anoLetivo, string token)
-        { 
+        {
             var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.BuscaInformacoesPerfil);
 
             return await HttpHelper

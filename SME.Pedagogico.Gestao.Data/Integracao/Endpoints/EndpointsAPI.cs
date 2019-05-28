@@ -10,7 +10,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
         private string buscaAlunosNaTurma = "";
 
 
-        public string BaseEndpoint { get; set; } = "http://10.50.0.196/api/";
+        public string BaseEndpoint { get; set; } = "http://10.50.0.196:82/api/";
 
         public string BuscaAlunosNaTurma { get; set; } = "turmas/{0}/alunos/anosLetivos/{1}";
 
@@ -69,6 +69,29 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
 
         // ******  FIM   Métodos da API Escola  **************************************************************************
          
+
+
+
+        // ******       Métodos da API DREs  **************************************************************************
+        //[HttpGet]
+        public string BuscaDres { get; set; } = "";
+
+        //[HttpGet("{codigoDRE}")] 
+        public string BuscaDresPorCodigo { get; set; } = "{0}";
+
+        //[HttpGet("{codigoDRE}/escolas/{tipoEscola}")]
+        public string BuscaEscolasPorDREPorTipoEscola { get; set; } = "{0}/escolas/{1}";
+
+        //[HttpGet("{codigoDRE}/escolas/")]
+        public string BuscaEscolasPorDre { get; set; } = "{0}/escolas/";
+
+        //[HttpGet("escolas/{tipoEscola}")]
+        public string BuscaEscolasPorTipoEscola { get; set; } = "escolas/{0}";
+
+        //[HttpGet("{codigoDRE}/subprefeituras")] 
+        public string BuscaSubprefeituraPor { get; set; } = "{0}/subprefeituras";
+
+        // ****** FIM   Métodos da API DREs  **************************************************************************
 
     }
 }
