@@ -59,7 +59,6 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
         public string BuscaFuncionariosdaEscolaPorCargo { get; set; } = "escolas/{0}/funcionarios/cargos/{1}";
 
 
-
         //HttpGet("{codigoEscolaEol}/subprefeituras")]
         public string BuscaSubprefeiturasPor { get; set; } = "escolas/{0}/subprefeituras";
 

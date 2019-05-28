@@ -45,8 +45,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         studentPollPortuguese.yearClassroom = student.yearClassroom;
                         studentPollPortuguese.classroomCodeEol = student.classroomCodeEol;
                         studentPollPortuguese.studentCodeEol = student.studentCodeEol;
-
-
                         MapValuesPollPortuguese(student, studentPollPortuguese);
                         await db.PortuguesePolls.AddAsync(studentPollPortuguese);
                     }
@@ -87,7 +85,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                     // Pega alunos da API 
                     // tratar se ppor um acaso retornar uma lista vazia 
-                    var studentsClassRoom = new Data.Business.ClassRoom();
+                    var studentsClassRoom = new ClassRoom();
                    // var listStudentsClassRoom = studentsClassRoom.MockListaChamada();
                     var endpointsAPI = new EndpointsAPI();
 
@@ -127,7 +125,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                 studentDTO.t4e = studentPollPortuguese.writing4B;
                                 studentDTO.t4l = studentPollPortuguese.reading4B;
                             }
-
 
                             else
                             {
