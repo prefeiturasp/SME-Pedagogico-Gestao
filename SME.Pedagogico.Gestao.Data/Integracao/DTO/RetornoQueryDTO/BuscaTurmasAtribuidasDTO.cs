@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SME.Pedagogico.Gestao.Data.Integracao.DTO
+namespace SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO
 {
     public class BuscaTurmasAtribuidasDTO
     {

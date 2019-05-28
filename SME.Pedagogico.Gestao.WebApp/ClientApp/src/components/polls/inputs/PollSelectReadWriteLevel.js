@@ -16,7 +16,7 @@ export default class PollSelectReadWriteLevel extends Component {
     getColor(value) {
         var defaultColor = "custom-select custom-select-sm ";
 
-        if (value !== undefined && (value === "1" || value === "2" || value === "3" || value === "4")) {
+        if (value !== undefined && (value === "Nivel1" || value === "Nivel2" || value === "Nivel3" || value === "Nivel4")) {
             return (defaultColor + this.props.columnColor);
         } else {
             return (defaultColor + "text-white");
@@ -33,10 +33,10 @@ export default class PollSelectReadWriteLevel extends Component {
             <div>
                 <select id={"pollItem-" + this.props.name + "-" + this.props.sequence} value={this.props.value} className={this.getColor(this.props.value)} onChange={this.onOptionChange}>
                     <option defaultValue hidden className="text-muted" value=""></option>
-                    <option className={"custom-select custom-select-sm text-white " + this.props.columnColor} value="1">Nível 1</option>
-                    <option className={"custom-select custom-select-sm text-white " + this.props.columnColor} value="2">Nível 2</option>
-                    <option className={"custom-select custom-select-sm text-white " + this.props.columnColor} value="3">Nível 3</option>
-                    <option className={"custom-select custom-select-sm text-white " + this.props.columnColor} value="4">Nível 4</option>
+                    <option className={"custom-select custom-select-sm text-white " + this.props.columnColor} value="Nivel1">Nível 1</option>
+                    <option className={"custom-select custom-select-sm text-white " + this.props.columnColor} value="Nivel2">Nível 2</option>
+                    <option className={"custom-select custom-select-sm text-white " + this.props.columnColor} value="Nivel3">Nível 3</option>
+                    <option className={"custom-select custom-select-sm text-white " + this.props.columnColor} value="Nivel4">Nível 4</option>
                 </select>
             </div>
 

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.DataTransfer;
 using SME.Pedagogico.Gestao.Data.Functionalities;
+using SME.Pedagogico.Gestao.Data.Integracao;
+using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using SME.Pedagogico.Gestao.Models.Academic;
 using System;
 using System.Collections.Generic;
@@ -47,7 +49,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                         MapValuesPollPortuguese(student, studentPollPortuguese);
                         await db.PortuguesePolls.AddAsync(studentPollPortuguese);
-                       
                     }
 
                     else
@@ -57,9 +58,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     }
                 }
 
-              await db.SaveChangesAsync();
+                await db.SaveChangesAsync();
             }
-
         }
 
         private static void MapValuesPollPortuguese(StudentPollPortuguese student, PortuguesePoll studentPollPortuguese)
@@ -88,74 +88,76 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     // Pega alunos da API 
                     // tratar se ppor um acaso retornar uma lista vazia 
                     var studentsClassRoom = new Data.Business.ClassRoom();
-                    var listStudentsClassRoom = studentsClassRoom.MockListaChamada();
+                   // var listStudentsClassRoom = studentsClassRoom.MockListaChamada();
+                    var endpointsAPI = new EndpointsAPI();
 
+                    var turmApi = new TurmasAPI(endpointsAPI);
+
+                    var listStudentsClassRoom = await turmApi.GetAlunosNaTurma(Convert.ToInt32(classRoom.classroomCodeEol), Convert.ToInt32(classRoom.schoolYear), _token);
+
+                    listStudentsClassRoom = listStudentsClassRoom.Where(x => x.CodigoSituacaoMatricula == 1).ToList();
                     if (listStudentsClassRoom == null)
                     {
                         return null;
                     }
 
-                    if (listStudentsClassRoom != null)
+                    foreach (var studentClassRoom in listStudentsClassRoom)
                     {
-                        foreach (var studentClassRoom in listStudentsClassRoom)
+                        var studentDTO = new StudentPollPortuguese();
+                        if (listStudentsPollPortuguese != null)
                         {
-                            var studentDTO = new StudentPollPortuguese();
-                            if (listStudentsPollPortuguese != null)
-                            {
-                                foreach (var studentPortuguese in listStudentsPollPortuguese)
-                                {
-                                    if (studentPortuguese.studentCodeEol == studentClassRoom.codigoAluno)
-                                    {
-                                        studentDTO.name = studentClassRoom.nomeAluno;
-                                        studentDTO.studentCodeEol = studentClassRoom.codigoAluno;
-                                        studentDTO.sequenceNumber = studentClassRoom.numeroAlunoChamada;
-                                        studentDTO.t1e = studentPortuguese.writing1B;
-                                        studentDTO.t1l = studentPortuguese.reading1B;
-                                        studentDTO.t2e = studentPortuguese.writing2B;
-                                        studentDTO.t2l = studentPortuguese.reading2B;
-                                        studentDTO.t3e = studentPortuguese.writing3B;
-                                        studentDTO.t3l = studentPortuguese.reading3B;
-                                        studentDTO.t4e = studentPortuguese.writing4B;
-                                        studentDTO.t4l = studentPortuguese.reading4B;
-                                    }
+                            var studentPollPortuguese = listStudentsPollPortuguese.Where(x => x.studentCodeEol == studentClassRoom.CodigoAluno.ToString()).FirstOrDefault();
+                            studentDTO.name = studentClassRoom.NomeAluno;
+                            studentDTO.studentCodeEol = studentClassRoom.CodigoAluno.ToString();
+                            studentDTO.sequenceNumber = studentClassRoom.NumeroAlunoChamada.ToString();
+                            studentDTO.classroomCodeEol = classRoom.classroomCodeEol;
+                            studentDTO.schoolYear = classRoom.schoolYear;
+                            studentDTO.dreCodeEol = classRoom.dreCodeEol;
+                            studentDTO.schoolCodeEol = classRoom.schoolCodeEol;
+                            studentDTO.yearClassroom = classRoom.yearClassroom;
 
-                                    else
-                                    {
-                                        AddStudentPollPortuguese(studentClassRoom, studentDTO);
-                                    }
-                                }
+                            if (studentPollPortuguese != null)
+                            {
+                                studentDTO.t1e = studentPollPortuguese.writing1B;
+                                studentDTO.t1l = studentPollPortuguese.reading1B;
+                                studentDTO.t2e = studentPollPortuguese.writing2B;
+                                studentDTO.t2l = studentPollPortuguese.reading2B;
+                                studentDTO.t3e = studentPollPortuguese.writing3B;
+                                studentDTO.t3l = studentPollPortuguese.reading3B;
+                                studentDTO.t4e = studentPollPortuguese.writing4B;
+                                studentDTO.t4l = studentPollPortuguese.reading4B;
                             }
+
+
                             else
                             {
-                                AddStudentPollPortuguese(studentClassRoom, studentDTO);
+                                AddStudentPollPortuguese(studentDTO);
                             }
 
-                            liststudentPollPortuguese.Add(studentDTO);
-                        }
+                        liststudentPollPortuguese.Add(studentDTO);
                     }
                 }
+            }
 
                 return liststudentPollPortuguese;
-            }
-            catch (Exception)
+        }
+            catch (Exception ex)
             {
                 throw;
             }
-        }
+}
 
-        private static void AddStudentPollPortuguese(Data.Business.StudentClassRoom studentClassRoom, StudentPollPortuguese studentDTO)
-        {
-            studentDTO.name = studentClassRoom.nomeAluno;
-            studentDTO.sequenceNumber = studentClassRoom.numeroAlunoChamada;
-            studentDTO.studentCodeEol = studentClassRoom.codigoAluno;
-            studentDTO.t1e = string.Empty;
-            studentDTO.t1l = string.Empty;
-            studentDTO.t2e = string.Empty;
-            studentDTO.t2l = string.Empty;
-            studentDTO.t3e = string.Empty;
-            studentDTO.t3l = string.Empty;
-            studentDTO.t4e = string.Empty;
-            studentDTO.t4l = string.Empty;
-        }
+private static void AddStudentPollPortuguese(StudentPollPortuguese studentDTO)
+{
+    studentDTO.t1e = string.Empty;
+    studentDTO.t1l = string.Empty;
+    studentDTO.t2e = string.Empty;
+    studentDTO.t2l = string.Empty;
+    studentDTO.t3e = string.Empty;
+    studentDTO.t3l = string.Empty;
+    studentDTO.t4e = string.Empty;
+    studentDTO.t4l = string.Empty;
+}
+
     }
 }

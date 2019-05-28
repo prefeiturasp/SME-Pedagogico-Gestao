@@ -15,10 +15,10 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
     [Produces("application/json")]
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class PollPortugueseController : ControllerBase
+    public class SondagemPortuguesController : ControllerBase
     {
         public IConfiguration _config;
-        public PollPortugueseController(IConfiguration config)
+        public SondagemPortuguesController(IConfiguration config)
         {
 
             _config = config;
@@ -57,7 +57,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 };
 
                 var BusinessPoll = new Data.Business.PollPortuguese(_config);
-                var ListStudentPollPortuguese = BusinessPoll.ListStudentPollPortuguese(classRoomDataTransfer);
+                var ListStudentPollPortuguese = await BusinessPoll.ListStudentPollPortuguese(classRoomDataTransfer);
 
                 if(ListStudentPollPortuguese != null)
                 {

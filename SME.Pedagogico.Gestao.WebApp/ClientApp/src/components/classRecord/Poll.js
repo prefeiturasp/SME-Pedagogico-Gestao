@@ -20,12 +20,12 @@ import StudentPollMath5ACMCard from '../polls/StudentPollMath5ACMCard'
 import StudentPollMath6ACACard from '../polls/StudentPollMath6ACACard'
 import StudentPollMath6ACMCard from '../polls/StudentPollMath6ACMCard'
 import StudentPollPortugueseCard from '../polls/StudentPollPortugueseCard'
+import { debounce } from 'redux-saga/effects';
 
 class Poll extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            pollStudents: [],
             navSelected: "",
             didAnswerPoll: false, //usar para perguntar para salvar sondagem
             sondagemType: ClassRoomEnum.ClassEmpty,//Retirar o default depois//PT,MT,1A,2A,3ACA,3ACM,4ACA,4ACM,5ACA,5ACM,6ACA,6ACM
@@ -38,6 +38,7 @@ class Poll extends Component {
 
         this.openPortuguesePoll = this.openPortuguesePoll.bind(this);
         this.openMathSubPoll = this.openMathSubPoll.bind(this);
+        this.openMathBtnSubPoll = this.openMathBtnSubPoll.bind(this);
         this.openMathPoll = this.openMathPoll.bind(this);
 
         this.props.pollMethods.set_poll_info(null, null, null);
@@ -58,7 +59,7 @@ class Poll extends Component {
     }
     
     updatePollStudent(sequence, subjectName, propertyName, value) {
-        var pollStudents = this.state.pollStudents;
+        var pollStudents = this.props.poll.students;
         for (var i = 0; i < pollStudents.length; i++) {
             if (pollStudents[i].studentCodeEol === sequence) {
                 if (subjectName === "portuguese") {
@@ -93,47 +94,47 @@ class Poll extends Component {
                     break;
                 } else if (subjectName === "mathalfabetizacao") {
                     switch (propertyName) {
-                        case "t1b2":
-                            pollStudents[i].pollresults.mathalfabetizacao.t1b2 = value;
+                        case "familiares1S":
+                            pollStudents[i].familiares1S = value;
                             break;
-                        case "t1b4":
-                            pollStudents[i].pollresults.mathalfabetizacao.t1b4 = value;
+                        case "familiares2S":
+                            pollStudents[i].familiares2S = value;
                             break;
-                        case "t2b2":
-                            pollStudents[i].pollresults.mathalfabetizacao.t2b2 = value;
+                        case "opacos1S":
+                            pollStudents[i].opacos1S = value;
                             break;
-                        case "t2b4":
-                            pollStudents[i].pollresults.mathalfabetizacao.t2b4 = value;
+                        case "opacos2S":
+                            pollStudents[i].opacos2S = value;
                             break;
-                        case "t3b2":
-                            pollStudents[i].pollresults.mathalfabetizacao.t3b2 = value;
+                        case "transparentes1S":
+                            pollStudents[i].transparentes1S = value;
                             break;
-                        case "t3b4":
-                            pollStudents[i].pollresults.mathalfabetizacao.t3b4 = value;
+                        case "transparentes2S":
+                            pollStudents[i].transparentes2S = value;
                             break;
-                        case "t4b2":
-                            pollStudents[i].pollresults.mathalfabetizacao.t4b2 = value;
+                        case "terminamzero1S":
+                            pollStudents[i].terminamzero1S = value;
                             break;
-                        case "t4b4":
-                            pollStudents[i].pollresults.mathalfabetizacao.t4b4 = value;
+                        case "terminamzero2S":
+                            pollStudents[i].terminamzero2S = value;
                             break;
-                        case "t5b2":
-                            pollStudents[i].pollresults.mathalfabetizacao.t5b2 = value;
+                        case "algarismos1S":
+                            pollStudents[i].algarismos1S = value;
                             break;
-                        case "t5b4":
-                            pollStudents[i].pollresults.mathalfabetizacao.t5b4 = value;
+                        case "algarismos2S":
+                            pollStudents[i].algarismos2S = value;
                             break;
-                        case "t6b2":
-                            pollStudents[i].pollresults.mathalfabetizacao.t6b2 = value;
+                        case "processo1S":
+                            pollStudents[i].processo1S = value;
                             break;
-                        case "t6b4":
-                            pollStudents[i].pollresults.mathalfabetizacao.t6b4 = value;
+                        case "processo2S":
+                            pollStudents[i].processo2S = value;
                             break;
-                        case "t7b2":
-                            pollStudents[i].pollresults.mathalfabetizacao.t7b2 = value;
+                        case "zerointercalados1S":
+                            pollStudents[i].zerointercalados1S = value;
                             break;
-                        case "t7b4":
-                            pollStudents[i].pollresults.mathalfabetizacao.t7b4 = value;
+                        case "zerointercalados2S":
+                            pollStudents[i].zerointercalados2S = value;
                             break;
                         default:
                             break;
@@ -141,108 +142,108 @@ class Poll extends Component {
                     break;
                 } else if (subjectName === "math") {
                     switch (propertyName) {
-                        case "t1i2":
-                            pollStudents[i].pollresults.math.t1i2 = value;
+                        case "orderm1Ideia1S":
+                            pollStudents[i].orderm1Ideia1S = value;
                             break;
-                        case "t1r2":
-                            pollStudents[i].pollresults.math.t1r2 = value;
+                        case "orderm1Resultado1S":
+                            pollStudents[i].orderm1Resultado1S = value;
                             break;
-                        case "t1i4":
-                            pollStudents[i].pollresults.math.t1i4 = value;
+                        case "orderm1Ideia2S":
+                            pollStudents[i].orderm1Ideia2S = value;
                             break;
-                        case "t1r4":
-                            pollStudents[i].pollresults.math.t1r4 = value;
-                            break;
-
-                        case "t2i2":
-                            pollStudents[i].pollresults.math.t2i2 = value;
-                            break;
-                        case "t2r2":
-                            pollStudents[i].pollresults.math.t2r2 = value;
-                            break;
-                        case "t2i4":
-                            pollStudents[i].pollresults.math.t2i4 = value;
-                            break;
-                        case "t2r4":
-                            pollStudents[i].pollresults.math.t2r4 = value;
+                        case "orderm1Resultado2S":
+                            pollStudents[i].orderm1Resultado2S = value;
                             break;
 
-                        case "t3i2":
-                            pollStudents[i].pollresults.math.t3i2 = value;
+                        case "orderm2Ideia1S":
+                            pollStudents[i].orderm2Ideia1S = value;
                             break;
-                        case "t3r2":
-                            pollStudents[i].pollresults.math.t3r2 = value;
+                        case "orderm2Resultado1S":
+                            pollStudents[i].orderm2Resultado1S = value;
                             break;
-                        case "t3i4":
-                            pollStudents[i].pollresults.math.t3i4 = value;
+                        case "orderm2Ideia2S":
+                            pollStudents[i].orderm2Ideia2S = value;
                             break;
-                        case "t3r4":
-                            pollStudents[i].pollresults.math.t3r4 = value;
-                            break;
-
-                        case "t4i2":
-                            pollStudents[i].pollresults.math.t4i2 = value;
-                            break;
-                        case "t4r2":
-                            pollStudents[i].pollresults.math.t4r2 = value;
-                            break;
-                        case "t4i4":
-                            pollStudents[i].pollresults.math.t4i4 = value;
-                            break;
-                        case "t4r4":
-                            pollStudents[i].pollresults.math.t4r4 = value;
+                        case "orderm2Resultado2S":
+                            pollStudents[i].orderm2Resultado2S = value;
                             break;
 
-                        case "t5i2":
-                            pollStudents[i].pollresults.math.t5i2 = value;
+                        case "orderm3Ideia1S":
+                            pollStudents[i].orderm3Ideia1S = value;
                             break;
-                        case "t5r2":
-                            pollStudents[i].pollresults.math.t5r2 = value;
+                        case "orderm3Resultado1S":
+                            pollStudents[i].orderm3Resultado1S = value;
                             break;
-                        case "t5i4":
-                            pollStudents[i].pollresults.math.t5i4 = value;
+                        case "orderm3Ideia2S":
+                            pollStudents[i].orderm3Ideia2S = value;
                             break;
-                        case "t5r4":
-                            pollStudents[i].pollresults.math.t5r4 = value;
-                            break;
-
-                        case "t6i2":
-                            pollStudents[i].pollresults.math.t6i2 = value;
-                            break;
-                        case "t6r2":
-                            pollStudents[i].pollresults.math.t6r2 = value;
-                            break;
-                        case "t6i4":
-                            pollStudents[i].pollresults.math.t6i4 = value;
-                            break;
-                        case "t6r4":
-                            pollStudents[i].pollresults.math.t6r4 = value;
+                        case "orderm3Resultado2S":
+                            pollStudents[i].orderm3Resultado2S = value;
                             break;
 
-                        case "t7i2":
-                            pollStudents[i].pollresults.math.t7i2 = value;
+                        case "orderm4Ideia1S":
+                            pollStudents[i].orderm4Ideia1S = value;
                             break;
-                        case "t7r2":
-                            pollStudents[i].pollresults.math.t7r2 = value;
+                        case "orderm4Resultado1S":
+                            pollStudents[i].orderm4Resultado1S = value;
                             break;
-                        case "t7i4":
-                            pollStudents[i].pollresults.math.t7i4 = value;
+                        case "orderm4Ideia2S":
+                            pollStudents[i].orderm4Ideia2S = value;
                             break;
-                        case "t7r4":
-                            pollStudents[i].pollresults.math.t7r4 = value;
+                        case "orderm4Resultado2S":
+                            pollStudents[i].orderm4Resultado2S = value;
                             break;
 
-                        case "t8i2":
-                            pollStudents[i].pollresults.math.t8i2 = value;
+                        case "orderm5Ideia1S":
+                            pollStudents[i].orderm5Ideia1S = value;
                             break;
-                        case "t8r2":
-                            pollStudents[i].pollresults.math.t8r2 = value;
+                        case "orderm5Resultado1S":
+                            pollStudents[i].orderm5Resultado1S = value;
                             break;
-                        case "t8i4":
-                            pollStudents[i].pollresults.math.t8i4 = value;
+                        case "orderm5Ideia2S":
+                            pollStudents[i].orderm5Ideia2S = value;
                             break;
-                        case "t8r4":
-                            pollStudents[i].pollresults.math.t8r4 = value;
+                        case "orderm5Resultado2S":
+                            pollStudents[i].orderm5Resultado2S = value;
+                            break;
+
+                        case "orderm6Ideia1S":
+                            pollStudents[i].orderm6Ideia1S = value;
+                            break;
+                        case "orderm6Resultado1S":
+                            pollStudents[i].orderm6Resultado1S = value;
+                            break;
+                        case "orderm6Ideia2S":
+                            pollStudents[i].orderm6Ideia2S = value;
+                            break;
+                        case "orderm6Resultado2S":
+                            pollStudents[i].orderm6Resultado2S = value;
+                            break;
+
+                        case "orderm7Ideia1S":
+                            pollStudents[i].orderm7Ideia1S = value;
+                            break;
+                        case "orderm7Resultado1S":
+                            pollStudents[i].orderm7Resultado1S = value;
+                            break;
+                        case "orderm7Ideia2S":
+                            pollStudents[i].orderm7Ideia2S = value;
+                            break;
+                        case "orderm7Resultado2S":
+                            pollStudents[i].orderm7Resultado2S = value;
+                            break;
+
+                        case "orderm8Ideia1S":
+                            pollStudents[i].orderm8Ideia1S = value;
+                            break;
+                        case "orderm8Resultado1S":
+                            pollStudents[i].orderm8Resultado1S = value;
+                            break;
+                        case "orderm8Ideia2S":
+                            pollStudents[i].orderm8Ideia2S = value;
+                            break;
+                        case "orderm8Resultado2S8Ideia2S":
+                            pollStudents[i].orderm8Resultado2S8Ideia2S = value;
                             break;
                         default:
                             break;
@@ -259,12 +260,16 @@ class Poll extends Component {
     }
 
     savePollStudent() {
+        debugger;
         if (this.props.poll.pollSelected !== null) {
             if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
-                var response = this.props.pollMethods.save_poll_student(this.props.poll.students);
-                debugger;
+                var response = this.props.pollMethods.save_poll_portuguese_student(this.props.poll.students);
+              
                 alert(this.props.poll.pollSelected + response);
             } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMT) {
+                //if number
+
+                //if ordem
                 alert(this.props.poll.pollSelected);
             } 
         } else {
@@ -288,15 +293,21 @@ class Poll extends Component {
         this.setState({
             sondagemType: ClassRoomEnum.ClassPT,
         });
-        var test = {
-            EolCode: "12345",
-            Schoolyear: 2019
+        var classRoomMock = {
+            "dreCodeEol": "4",
+            "schoolCodeEol": "44",
+            "classroomCodeEol": "1992661",
+            "schoolYear": "2019",
+            "yearClassroom": "1"
+        } 
 
-        };
-        
-        this.props.pollMethods.get_poll_portuguese_students(test);
+        debugger;
+
         this.props.pollMethods.set_poll_info(ClassRoomEnum.ClassPT, "", "1"); //passar pollSelected, pollTypeSelected, pollYear
-        this.setState({ pollStudents: this.props.poll.students });
+        this.props.pollMethods.get_poll_portuguese_students(classRoomMock);
+        this.setState({
+            pollStudents: this.props.poll.students,
+        });
     }
     
     openMathPoll(element) {
@@ -304,57 +315,66 @@ class Poll extends Component {
         this.setState({
             sondagemType: ClassRoomEnum.ClassMT,
         });
+        this.openMathSubPoll();
         //alert("Poll Matematica");
     }
 
-    openMathSubPoll(element) { //mudar nome
+    openMathSubPoll() { 
+        this.props.pollMethods.set_poll_info(ClassRoomEnum.ClassMT, "", "1"); //passar pollSelected, pollTypeSelected, pollYear
+        this.props.pollMethods.get_poll_math_numbers_students();
+        this.setState({ pollStudents: this.props.poll.students});
+        debugger;
         //this.toggleButton(element.currentTarget.id);
         //literacyMathPoll
         //subMathPoll //1A 2A 3ACA 3ACM .. 6ACA 6ACM
-
-        alert("Poll Alfabetizacao Matematica");
     }
 
+    openMathBtnSubPoll(element) {
+        //disparar para atualizar o ano, tipo
+        //this.props.pollMethods.set_poll_info(ClassRoomEnum.ClassMT, this.props.state.pollTypeSelected, "1"); 
+        //metodo que o boao vai disparar //mudar nome
+    }
     render() {
         var componentRender;
         var sondagemType = this.state.sondagemType;
 
         switch (sondagemType) {
             case ClassRoomEnum.Class1A:
-                componentRender = <StudentPollMath1ACard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
+                componentRender = <StudentPollMath1ACard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             case ClassRoomEnum.Class2A:
-                componentRender = <StudentPollMath2ACard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
+                componentRender = <StudentPollMath2ACard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             case ClassRoomEnum.Class3ACA:
-                componentRender = <StudentPollMath3ACACard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
+                componentRender = <StudentPollMath3ACACard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             case ClassRoomEnum.Class3ACM:
-                componentRender = <StudentPollMath3ACMCard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
+                componentRender = <StudentPollMath3ACMCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             case ClassRoomEnum.Class4ACA:
-                componentRender = <StudentPollMath4ACACard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
+                componentRender = <StudentPollMath4ACACard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             case ClassRoomEnum.Class4ACM:
-                componentRender = <StudentPollMath4ACMCard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
+                componentRender = <StudentPollMath4ACMCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             case ClassRoomEnum.Class5ACA:
-                componentRender = <StudentPollMath5ACACard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
+                componentRender = <StudentPollMath5ACACard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             case ClassRoomEnum.Class5ACM:
-                componentRender = <StudentPollMath5ACMCard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
+                componentRender = <StudentPollMath5ACMCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             case ClassRoomEnum.Class6ACA:
-                componentRender = <StudentPollMath6ACACard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
+                componentRender = <StudentPollMath6ACACard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             case ClassRoomEnum.Class6ACM:
-                componentRender = <StudentPollMath6ACMCard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
+                componentRender = <StudentPollMath6ACMCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             case ClassRoomEnum.ClassPT:
-                componentRender = <StudentPollPortugueseCard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
+                componentRender = <StudentPollPortugueseCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             case ClassRoomEnum.ClassMT:
-                componentRender = <StudentPollMathAlfabetizacaoCard students={this.state.pollStudents} updatePollStudent={this.updatePollStudent} />;
+                debugger;
+                componentRender = <StudentPollMathAlfabetizacaoCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
                 break;
             default:
                 componentRender = "";
