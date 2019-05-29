@@ -34,6 +34,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 {
                     PollReportPortugueseStudentResult result = new PollReportPortugueseStudentResult();
                     result.Results = await BuscarDadosPorTurmaAsync(parameters);
+
+                    
                     result.ChartData.Add(new Models.RelatorioSondagem.PortChartDataModel()
                     {
                         Name = "PS",
@@ -258,11 +260,14 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                         Result = "Errou"
                     });
 
-
-                    result.Results.Add(item1);
+                    result.Results = new List<PollReportMathStudentItem>();
+                    result.Results.Add(item1); 
                     result.Results.Add(item2);
                     result.Results.Add(item3);
                     result.Results.Add(item4);
+
+                    result.ChartData = new List<Models.RelatorioSondagem.MathChartDataModel>();
+
                     result.ChartData.Add(new Models.RelatorioSondagem.MathChartDataModel()
                     {
                         Name = "ORDEM 1",
@@ -282,7 +287,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                         Result = new List<int>() { 60, 30, 45 }
                     });
 
-                    return (Ok(result));
+                    return (Ok(result));     //   pollreportfilter-> 84
+                     
                 }
                 else
                 {

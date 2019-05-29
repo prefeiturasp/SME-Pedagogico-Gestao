@@ -254,9 +254,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         {
                             if (proficiencia == "Escrita")
                             {
-
-                                //var writing1B = query.GroupBy(fu => fu.writing1B).Select(g => new { Label = g.Key, Value = g.Count() * 100 / listStudentsPollPortuguese.Count() }).ToList();
-
                                 var writing1B = query.GroupBy(fu => fu.writing1B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
 
                                 foreach (var item in writing1B)
@@ -288,6 +285,112 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             }
                         }
                         break;
+                    case "2° Bimestre":
+                        {
+                            if (proficiencia == "Escrita")
+                            {
+                                var writing2B = query.GroupBy(fu => fu.writing2B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
+
+                                foreach (var item in writing2B)
+                                {
+                                    if (!item.Label.Trim().Equals(""))
+                                    {
+                                        PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                        itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                        itemRetorno.studentQuantity = item.Value;
+                                        listReturn.Add(itemRetorno);
+                                    }
+                                }
+
+                            }
+                            else //leitura
+                            {
+                                var reading2B = query.GroupBy(fu => fu.reading2B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
+
+                                foreach (var item in reading2B)
+                                {
+                                    if (!item.Label.Trim().Equals(""))
+                                    {
+                                        PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                        itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                        itemRetorno.studentQuantity = item.Value;
+                                        listReturn.Add(itemRetorno);
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    case "3° Bimestre":
+                        {
+                            if (proficiencia == "Escrita")
+                            {
+                                var writing3B = query.GroupBy(fu => fu.writing3B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
+
+                                foreach (var item in writing3B)
+                                {
+                                    if (!item.Label.Trim().Equals(""))
+                                    {
+                                        PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                        itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                        itemRetorno.studentQuantity = item.Value;
+                                        listReturn.Add(itemRetorno);
+                                    }
+                                }
+
+                            }
+                            else //leitura
+                            {
+                                var reading3B = query.GroupBy(fu => fu.reading3B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
+
+                                foreach (var item in reading3B)
+                                {
+                                    if (!item.Label.Trim().Equals(""))
+                                    {
+                                        PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                        itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                        itemRetorno.studentQuantity = item.Value;
+                                        listReturn.Add(itemRetorno);
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    case "4° Bimestre":
+                        {
+                            if (proficiencia == "Escrita")
+                            {
+                                var writing4B = query.GroupBy(fu => fu.writing4B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
+
+                                foreach (var item in writing4B)
+                                {
+                                    if (!item.Label.Trim().Equals(""))
+                                    {
+                                        PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                        itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                        itemRetorno.studentQuantity = item.Value;
+                                        listReturn.Add(itemRetorno);
+                                    }
+                                }
+
+                            }
+                            else //leitura
+                            {
+                                var reading4B = query.GroupBy(fu => fu.reading4B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
+
+                                foreach (var item in reading4B)
+                                {
+                                    if (!item.Label.Trim().Equals(""))
+                                    {
+                                        PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                        itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                        itemRetorno.studentQuantity = item.Value;
+                                        listReturn.Add(itemRetorno);
+                                    }
+                                }
+                            }
+                        }
+                        break;
+
                 }
 
                 int total = 0;

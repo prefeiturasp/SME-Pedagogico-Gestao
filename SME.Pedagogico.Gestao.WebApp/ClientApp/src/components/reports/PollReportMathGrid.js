@@ -60,11 +60,15 @@ export default class PollReportMathGrid extends Component {
                 data[i].totalStudentResultQuantity = 0;
                 data[i].totalStudentResultPercentage = 0;
 
-                for (var j = 0; j < data[i].results.length; j++) {
-                    data[i].totalStudentIdeaQuantity += data[i].results[j].testIdeaQuantity;
-                    data[i].totalStudentIdeaPercentage += data[i].results[j].testIdeaPercentage;
-                    data[i].totalStudentResultQuantity += data[i].results[j].testResultQuantity;
-                    data[i].totalStudentResultPercentage += data[i].results[j].testResultPercentage;
+                debugger;
+                if (data[i].results !== undefined) {
+
+                    for (var j = 0; j < data[i].results.length; j++) {
+                        data[i].totalStudentIdeaQuantity += data[i].results[j].testIdeaQuantity;
+                        data[i].totalStudentIdeaPercentage += data[i].results[j].testIdeaPercentage;
+                        data[i].totalStudentResultQuantity += data[i].results[j].testResultQuantity;
+                        data[i].totalStudentResultPercentage += data[i].results[j].testResultPercentage;
+                    }
                 }
             }
         }
