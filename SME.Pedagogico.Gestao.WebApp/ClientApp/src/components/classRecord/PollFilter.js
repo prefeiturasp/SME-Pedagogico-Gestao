@@ -1,9 +1,42 @@
 ﻿import React, { Component } from 'react';
 import SelectChangeColor from '../inputs/SelectChangeColor';
 import CircleButton from '../inputs/CircleButton';
+import { connect } from 'react-redux';
+import { actionCreators as actionCreatorsPoll } from '../../store/Filters';
+import { bindActionCreators } from 'redux';
 
-export default class PollFilter extends Component {
+class PollFilter extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedDre: null,
+        }
+
+        this.SelectedDre = this.SelectedDre.bind(this);
+    }
+
+    SelectedDre(event) {
+
+        var schoolCode = {
+            schoolYear: "2019",
+
+        }
+    }
+
+    componentDidMount() {
+       this.props.filterMethods.getDre();
+    }
+
     render() {
+        const { selectedDre } = this.state;
+        const listDresOptions = [];
+        for (var item in this.props.filters.listDres) {
+            listDresOptions.push({
+                value: this.props.filters.listDres[item].codigoDRE,
+                label: this.props.filters.listDres[item].siglaDRE,
+            });
+        }
+
         const options = [
             { value: "1", label: "One" },
             { value: "2", label: "Two" },
@@ -13,9 +46,10 @@ export default class PollFilter extends Component {
 
         return (
             <div className="py-2 px-3 d-flex align-items-center">
-                <SelectChangeColor className="" defaultText="Ano" options={options} disabled="true" />
+                <SelectChangeColor className="" defaultText="Ano" options={listDresOptions} disabled="true" />
                 <div className="px-2"></div>
-                <SelectChangeColor className="col-4" defaultText="Selecione a DRE" options={options} />
+                <SelectChangeColor className="col-4" defaultText="Selecione a DRE"
+                    value={selectedDre} options={listDresOptions} onChange={this.SelectedDre} />
                 <div className="px-2"></div>
                 <SelectChangeColor className="col-4" defaultText="Escola" options={options} />
                 <div className="px-2"></div>
@@ -28,3 +62,16 @@ export default class PollFilter extends Component {
         );
     }
 }
+
+export default connect(
+    state => (
+        {
+            filters: state.filters
+        }
+    ),
+    dispatch => (
+        {
+            filterMethods: bindActionCreators(actionCreatorsPoll, dispatch)
+        }
+    )
+)(PollFilter);

@@ -78,7 +78,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 //Necessário para gerar o Token temporariamente
                 var filterBusiness = new Filters(_config);
-                var listDres = filterBusiness.GetListDre();
+                var listDres = await filterBusiness.GetListDre();
 
                 if (listDres != null)
                 {
