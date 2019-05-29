@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SME.Pedagogico.Gestao.Data.DataTransfer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,6 +63,33 @@ namespace SME.Pedagogico.Gestao.Data.Business
             using (Data.Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
                 return (db.Users.Any(x => x.Name == username && x.Password == Functionalities.Cryptography.HashPassword(password)));
         }
+
+        public static PrivilegedAccessModel ValidatePrivilegedUser(string username)
+        {
+            using (Data.Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            {
+                var user = db.PrivilegedAccess.Where(x => x.Login == username).FirstOrDefault();
+
+                if (user != null)
+                {
+                    var userPrivileged = new PrivilegedAccessModel()
+                    {
+                        Login = user.Login,
+                        Name = user.Name,
+                        OccupationPlace = user.OccupationPlace,
+                        OccupationPlaceCode = user.OccupationPlaceCode,
+                    };
+
+                    return userPrivileged;
+                }
+
+                return null;
+              
+            }
+              
+        }
+
+
 
         public static async Task<bool> LoginUser(string username, string session, string refreshToken)
         {

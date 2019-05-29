@@ -18,6 +18,11 @@ namespace SME.Pedagogico.Gestao.Data.Business
             _token = createToken.CreateTokenProvisorio();
         }
 
+        private void DeParaProfile()
+        {
+            
+        }
+
         public async Task<RetornoCargosServidorDTO> GetOccupationsRF(string rf)
         {
             try
@@ -27,9 +32,15 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var occupations = await profileApi.GetCargosDeServidor(rf, _token);
                 if (occupations != null)
                 {
+
+                    var result = await GetProfileEmployeeInformation(rf, occupations.cargos[0].codigoCargo, "2019");
                     return occupations;
+
+
                 }
 
+
+             
                 else
                 {
                     return null;
