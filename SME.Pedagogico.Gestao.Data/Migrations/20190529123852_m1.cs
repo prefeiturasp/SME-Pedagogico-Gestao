@@ -47,6 +47,88 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MathPoolCAs",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    DreEolCode = table.Column<string>(nullable: true),
+                    NumeroChamada = table.Column<string>(nullable: true),
+                    EscolaEolCode = table.Column<string>(nullable: true),
+                    TurmaEolCode = table.Column<string>(nullable: true),
+                    AlunoEolCode = table.Column<string>(nullable: true),
+                    AnoLetivo = table.Column<int>(nullable: false),
+                    AnoTurma = table.Column<int>(nullable: false),
+                    Semestre = table.Column<int>(nullable: false),
+                    Ordem1Ideia = table.Column<string>(nullable: true),
+                    Ordem1Resultado = table.Column<string>(nullable: true),
+                    Ordem2Ideia = table.Column<string>(nullable: true),
+                    Ordem2Resultado = table.Column<string>(nullable: true),
+                    Ordem3Ideia = table.Column<string>(nullable: true),
+                    Ordem3Resultado = table.Column<string>(nullable: true),
+                    Ordem4Ideia = table.Column<string>(nullable: true),
+                    Ordem4Resultado = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MathPoolCAs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MathPoolCMs",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    DreEolCode = table.Column<string>(nullable: true),
+                    NumeroChamada = table.Column<string>(nullable: true),
+                    EscolaEolCode = table.Column<string>(nullable: true),
+                    TurmaEolCode = table.Column<string>(nullable: true),
+                    AlunoEolCode = table.Column<string>(nullable: true),
+                    AnoLetivo = table.Column<int>(nullable: false),
+                    AnoTurma = table.Column<int>(nullable: false),
+                    Semestre = table.Column<int>(nullable: false),
+                    Ordem4Ideia = table.Column<string>(nullable: true),
+                    Ordem4Resultado = table.Column<string>(nullable: true),
+                    Ordem5Ideia = table.Column<string>(nullable: true),
+                    Ordem5Resultado = table.Column<string>(nullable: true),
+                    Ordem6Ideia = table.Column<string>(nullable: true),
+                    Ordem6Resultado = table.Column<string>(nullable: true),
+                    Ordem7Ideia = table.Column<string>(nullable: true),
+                    Ordem7Resultado = table.Column<string>(nullable: true),
+                    Ordem8Ideia = table.Column<string>(nullable: true),
+                    Ordem8Resultado = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MathPoolCMs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MathPoolNumbers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    DreEolCode = table.Column<string>(nullable: true),
+                    NumeroChamada = table.Column<string>(nullable: true),
+                    EscolaEolCode = table.Column<string>(nullable: true),
+                    TurmaEolCode = table.Column<string>(nullable: true),
+                    AlunoEolCode = table.Column<string>(nullable: true),
+                    AnoLetivo = table.Column<int>(nullable: false),
+                    AnoTurma = table.Column<int>(nullable: false),
+                    Semestre = table.Column<int>(nullable: false),
+                    Familiares = table.Column<string>(nullable: true),
+                    Opacos = table.Column<string>(nullable: true),
+                    Transparentes = table.Column<string>(nullable: true),
+                    TerminamZero = table.Column<string>(nullable: true),
+                    Algarismos = table.Column<string>(nullable: true),
+                    Processo = table.Column<string>(nullable: true),
+                    ZeroIntercalados = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MathPoolNumbers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PollType",
                 columns: table => new
                 {
@@ -96,18 +178,6 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Semesters",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    Value = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Semesters", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Students",
                 columns: table => new
                 {
@@ -140,109 +210,6 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MathPoolCAs",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    DreEolCode = table.Column<string>(nullable: true),
-                    NumeroChamada = table.Column<string>(nullable: true),
-                    EscolaEolCode = table.Column<string>(nullable: true),
-                    TurmaEolCode = table.Column<string>(nullable: true),
-                    AlunoEolCode = table.Column<string>(nullable: true),
-                    AnoLetivo = table.Column<int>(nullable: false),
-                    AnoTurma = table.Column<int>(nullable: false),
-                    SemestreCode = table.Column<int>(nullable: false),
-                    SemestreId = table.Column<string>(nullable: true),
-                    Ordem1Ideia = table.Column<string>(nullable: true),
-                    Ordem1Resultado = table.Column<string>(nullable: true),
-                    Ordem2Ideia = table.Column<string>(nullable: true),
-                    Ordem2Resultado = table.Column<string>(nullable: true),
-                    Ordem3Ideia = table.Column<string>(nullable: true),
-                    Ordem3Resultado = table.Column<string>(nullable: true),
-                    Ordem4Ideia = table.Column<string>(nullable: true),
-                    Ordem4Resultado = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MathPoolCAs", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_MathPoolCAs_Semesters_SemestreId",
-                        column: x => x.SemestreId,
-                        principalTable: "Semesters",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MathPoolCMs",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    DreEolCode = table.Column<string>(nullable: true),
-                    NumeroChamada = table.Column<string>(nullable: true),
-                    EscolaEolCode = table.Column<string>(nullable: true),
-                    TurmaEolCode = table.Column<string>(nullable: true),
-                    AlunoEolCode = table.Column<string>(nullable: true),
-                    AnoLetivo = table.Column<int>(nullable: false),
-                    AnoTurma = table.Column<int>(nullable: false),
-                    SemestreCode = table.Column<int>(nullable: false),
-                    SemestreId = table.Column<string>(nullable: true),
-                    Ordem4Ideia = table.Column<string>(nullable: true),
-                    Ordem4Resultado = table.Column<string>(nullable: true),
-                    Ordem5Ideia = table.Column<string>(nullable: true),
-                    Ordem5Resultado = table.Column<string>(nullable: true),
-                    Ordem6Ideia = table.Column<string>(nullable: true),
-                    Ordem6Resultado = table.Column<string>(nullable: true),
-                    Ordem7Ideia = table.Column<string>(nullable: true),
-                    Ordem7Resultado = table.Column<string>(nullable: true),
-                    Ordem8Ideia = table.Column<string>(nullable: true),
-                    Ordem8Resultado = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MathPoolCMs", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_MathPoolCMs_Semesters_SemestreId",
-                        column: x => x.SemestreId,
-                        principalTable: "Semesters",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MathPoolNumbers",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    DreEolCode = table.Column<string>(nullable: true),
-                    NumeroChamada = table.Column<string>(nullable: true),
-                    EscolaEolCode = table.Column<string>(nullable: true),
-                    TurmaEolCode = table.Column<string>(nullable: true),
-                    AlunoEolCode = table.Column<string>(nullable: true),
-                    AnoLetivo = table.Column<int>(nullable: false),
-                    AnoTurma = table.Column<int>(nullable: false),
-                    SemestreCode = table.Column<int>(nullable: false),
-                    SemestreId = table.Column<string>(nullable: true),
-                    Familiares = table.Column<string>(nullable: true),
-                    Opacos = table.Column<string>(nullable: true),
-                    Transparentes = table.Column<string>(nullable: true),
-                    TerminamZero = table.Column<string>(nullable: true),
-                    Algarismos = table.Column<string>(nullable: true),
-                    Processo = table.Column<string>(nullable: true),
-                    ZeroIntercalados = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MathPoolNumbers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_MathPoolNumbers_Semesters_SemestreId",
-                        column: x => x.SemestreId,
-                        principalTable: "Semesters",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -389,44 +356,44 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                 columns: new[] { "Id", "Description", "Value" },
                 values: new object[,]
                 {
-                    { "29822a20-9fe5-42d2-a302-8a7c534417d9", "DIPED DRE", "20" },
-                    { "c406e11d-1ddf-4504-8be3-2a50f775c88e", "DIPED", "16" },
-                    { "9a88ba77-2554-4697-abd0-d8b13f641749", "NAAPA", "17" },
-                    { "51b468a5-bc92-40dd-95d6-73eb2c7422a9", "CEFAI", "18" },
-                    { "027237ee-45d8-4c61-b0de-213b8e7ac6f3", "PAAI", "19" },
-                    { "ab764528-209d-4165-bfba-fe9d985e0b40", "POA", "33" },
-                    { "b48cd2c5-37c3-403b-8bd8-ba56529080fa", "Adm DRE", "21" },
-                    { "246a7c04-f46c-4859-9bc0-c875c0d45322", "Básico DRE", "22" },
-                    { "24d1ccf3-456e-41c3-a2dd-aaf0c0d9729a", "Básico Escola", "23" },
-                    { "b4d9a395-a460-4a0e-996a-d051d82588fa", "Infantil", "24" },
-                    { "6167f461-3ef3-480c-8f71-9c14552b9333", "UE Parceira", "25" },
-                    { "6948d66e-886a-47f0-ace6-b820a4030109", "AD", "26" },
-                    { "2e22e385-f105-467d-bb3f-8564e3289c0a", "CP", "27" },
-                    { "2773349a-2e2e-4adc-ae50-a69f734c3bec", "Secretário Escola", "28" },
-                    { "466bdd28-265e-466b-9b5b-7166760b1264", "COTIC", "29" },
-                    { "3e85d9dc-afa5-4d41-8a35-ccceabfd3fb7", "UE", "30" },
-                    { "134eb1eb-fe3e-4fa7-b7c5-a58b579845e2", "Supervisor DRE", "15" },
-                    { "adc0c949-f6ab-4b61-b612-43a45edae7a1", "Técnico", "14" },
-                    { "44b91af5-b509-4365-b7bb-72508f333cad", "Regional", "13" },
-                    { "ac58e4ac-3f53-4447-a101-b253361a4ebf", "COPED Básico", "12" },
-                    { "7de1b1ea-0d58-44b1-ab74-b74e2b452cf8", "ATE", "37" },
-                    { "65ef0593-8316-4b9c-905c-e04a891c78be", "Readaptado", "36" },
-                    { "4027faa8-6a75-49c8-b3f0-d4b4ce892a72", "AEE", "35" },
-                    { "8ea18421-aab8-4a3b-b8d2-0bb4058d7af7", "PAP", "34" },
-                    { "40c5564d-1161-4eb0-9a03-3d3838d4f612", "Desenvolvedor", "0" },
-                    { "627cf780-12ac-4061-8d52-4ef9c19a211c", "COTIC", "1" },
-                    { "f1545524-6cd8-40d1-80de-43f8a29f0812", "SME", "2" },
-                    { "e7f7bd1f-da7e-4126-97ab-6fa37778e8a9", "CJ E Volante (PEI, ADI)", "31" },
-                    { "b5a54dbe-a987-4cf8-abc5-862cf9ae27bd", "COPED", "3" },
-                    { "16ad812b-458d-4fdc-aeb7-2b63f88534ad", "DIEI", "5" },
-                    { "8056b661-054a-4915-a54e-542b9a39a87c", "DIEJA", "6" },
-                    { "c5abbcee-b49c-4a5d-88a8-1822ae21c0e9", "DIEE", "7" },
-                    { "a0d90a3d-daac-439d-a010-5ee241ca21c2", "NTA", "8" },
-                    { "c94a1157-6337-4048-833e-7634ab119d14", "NTC", "9" },
-                    { "209671f4-062c-4212-9880-25c687596f02", "NTC-NAAPA", "10" },
-                    { "7f2b4746-aef1-4e38-b18c-d000fffaca06", "DIEE-Conveniado", "11" },
-                    { "09eb6a00-a01a-416d-a4bf-1d7a073c1838", "DIEFEM", "4" },
-                    { "6e0b3bd2-8345-48df-8bfd-c7a881d7ea51", "Fund. e Inf.", "32" }
+                    { "0a8b3595-6f6b-4d6e-81e4-f1826d3da37e", "Adm DRE", "21" },
+                    { "50a0e80d-9d5b-4713-835f-09a56248b44a", "CEFAI", "18" },
+                    { "fe434680-fe03-41c7-acb9-8f511746b41a", "PAAI", "19" },
+                    { "36ed87ac-4275-42f2-a75b-5fa547b70753", "DIPED DRE", "20" },
+                    { "88043d28-597f-4c12-88ec-8b6c8875103f", "AEE", "35" },
+                    { "6302fdfc-0c6c-4f7e-945b-1d4c8fff736e", "Básico DRE", "22" },
+                    { "3286b28d-fb7f-471c-af62-8ed1adc5d874", "Básico Escola", "23" },
+                    { "3b49f06b-5556-41fb-8ff0-3ca1bacb5cad", "Infantil", "24" },
+                    { "5995f4c5-778f-47bc-8654-213bccf3dc31", "UE Parceira", "25" },
+                    { "ec0c56c7-712a-47c1-b7e1-39b63147496f", "AD", "26" },
+                    { "a697365a-f498-4037-b540-9995354a0bef", "CP", "27" },
+                    { "b0d9d4ba-1049-48c3-9a02-d3cd47af8376", "Secretário Escola", "28" },
+                    { "da4907bf-a429-4969-83c2-3fa98ca16471", "COTIC", "29" },
+                    { "2678c42a-51ea-4e8e-beb8-87c0f2b83cec", "UE", "30" },
+                    { "77e78b7b-1937-4ac7-a00d-19aaf16676f7", "CJ E Volante (PEI, ADI)", "31" },
+                    { "7ddd662b-5328-453c-8e4a-cba428a90e5c", "Fund. e Inf.", "32" },
+                    { "ae5bcc88-e0f0-4ffd-a9b4-1c1e6c2349b4", "NAAPA", "17" },
+                    { "5f4a869d-b853-4b43-b634-a7960d4ce7f7", "DIPED", "16" },
+                    { "b6da64a5-577e-4c59-b9b2-4aa37960417d", "Supervisor DRE", "15" },
+                    { "c6901a8b-0bd6-4330-b3ac-0272d84d453e", "Técnico", "14" },
+                    { "b2099da5-6f64-42c0-91da-3db5d7b130a8", "ATE", "37" },
+                    { "e885f644-1560-41a8-a540-18d6c7c15c8f", "Readaptado", "36" },
+                    { "3bd1f7d4-7dfd-476d-9436-9c5961f64671", "Desenvolvedor", "0" },
+                    { "ae173a7e-7889-4b98-99be-8ca314fb222e", "COTIC", "1" },
+                    { "1c0773fc-ae0a-44c2-8399-b87dbc946bd7", "SME", "2" },
+                    { "4d19f725-cce9-4510-941d-f1a9168ec710", "COPED", "3" },
+                    { "6d3cf3d8-ecc3-47dc-b896-1b1ff3df10c8", "DIEFEM", "4" },
+                    { "2600cd95-c905-4f4d-94c4-157d19dacd56", "POA", "33" },
+                    { "0b580b7c-45d7-45c9-b4a4-6f13607b690d", "DIEI", "5" },
+                    { "579127fa-5403-437b-a2c2-eee9fefcc821", "DIEE", "7" },
+                    { "660c20a1-7334-41b5-b4c3-7686e5f89acf", "NTA", "8" },
+                    { "36eca0d8-cde9-4732-9d56-e936be526f55", "NTC", "9" },
+                    { "72530dbe-f96a-420b-9cf9-e61eb95aaf56", "NTC-NAAPA", "10" },
+                    { "053be69a-2d8d-4a00-8381-244017ed9481", "DIEE-Conveniado", "11" },
+                    { "e46fec96-56d6-49dd-b592-68c01c7f1479", "COPED Básico", "12" },
+                    { "5e59b7d2-eb7a-4c6d-9a3e-69e86a59882e", "Regional", "13" },
+                    { "3a42190f-a7fd-47bd-b019-2228edce0d8b", "DIEJA", "6" },
+                    { "cfade1fe-ad27-4616-8799-63ddb0fb1943", "PAP", "34" }
                 });
 
             migrationBuilder.InsertData(
@@ -434,9 +401,9 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                 columns: new[] { "Id", "PollTypeDescription" },
                 values: new object[,]
                 {
-                    { "44b4a82f-fd7f-4af0-998b-579228c476b2", "Sondagem de Português" },
-                    { "f01407f8-6c30-4004-9e3b-c5e483fd948f", "Sondagem de Alfabetização de Matemática" },
-                    { "25314e28-6fec-4136-b532-6d8760e1d5bf", "Sondagem de Matemática" }
+                    { "80f00b0a-83ef-43ed-992d-d347a623530a", "Sondagem de Português" },
+                    { "ace13700-f61f-48a2-a0e3-4ed24ce75187", "Sondagem de Alfabetização de Matemática" },
+                    { "fb7169be-c342-47a4-8aff-381fbfe8360c", "Sondagem de Matemática" }
                 });
 
             migrationBuilder.InsertData(
@@ -444,24 +411,15 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { "4a540cc1-20c2-44a0-8f5e-2ffcf51440d8", "Admin" },
-                    { "c3a1db7e-76bf-463b-ab97-2504454ef017", "Diretor" },
-                    { "d8d006dc-76c8-41b2-b289-0414d334aef7", "Supervisor" },
-                    { "ab986c67-74c0-49db-81fb-09e2d689d18e", "Diretor" },
-                    { "2a52728b-7623-4c3d-9b4f-fcc9aa70f8ef", "Secretario(a)" },
-                    { "15391af7-0dde-4891-8e91-1e84ddbdc2f6", "Auxiliar" },
-                    { "69533883-a7ea-4b99-ab96-d7725f48fc4f", "Professor" },
-                    { "a91e3094-88c9-439a-9769-282a400ad833", "Responsavel" },
-                    { "3308dfc4-e27f-4c29-b5d2-c126b0d0e7ed", "Aluno" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Semesters",
-                columns: new[] { "Id", "Value" },
-                values: new object[,]
-                {
-                    { "1bdfffdc-52b8-4d51-916f-215dd7abc105", "2" },
-                    { "e660c118-eb98-4dc2-bb8f-c1c9b175fa6b", "1" }
+                    { "1dc87b6e-3ff6-4b03-8e42-061707539d6e", "Admin" },
+                    { "b2dbf20f-0b1e-4b7e-8bbf-1a198aff59d4", "Diretor" },
+                    { "22187201-7faa-4697-9810-57caf3f32b4a", "Supervisor" },
+                    { "8f22a0a4-cc43-4325-acf3-40f0adfe5aa4", "Diretor" },
+                    { "43e19740-b0f6-4131-9294-5e35e79a34b9", "Secretario(a)" },
+                    { "5cdf9d7c-00f4-40ad-899e-226028b1ebaa", "Auxiliar" },
+                    { "cfa2d04f-c164-4ecb-aef0-6c4fbfe6145d", "Professor" },
+                    { "8b95062f-357b-4a28-b542-a77d5111e867", "Responsavel" },
+                    { "33ca495d-43d9-4fba-bf9f-466fc886bb11", "Aluno" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -469,21 +427,6 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                 table: "LoggedUsers",
                 column: "UserId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MathPoolCAs_SemestreId",
-                table: "MathPoolCAs",
-                column: "SemestreId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MathPoolCMs_SemestreId",
-                table: "MathPoolCMs",
-                column: "SemestreId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MathPoolNumbers_SemestreId",
-                table: "MathPoolNumbers",
-                column: "SemestreId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Profiles_StudentId",
@@ -573,9 +516,6 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserRoles");
-
-            migrationBuilder.DropTable(
-                name: "Semesters");
 
             migrationBuilder.DropTable(
                 name: "Students");
