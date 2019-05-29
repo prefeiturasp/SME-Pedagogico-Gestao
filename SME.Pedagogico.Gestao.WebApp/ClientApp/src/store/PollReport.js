@@ -44,6 +44,7 @@ const initialState = {
     },
     showReport: false,
     data: null,
+    chartData: null,
 }
 
 export const actionCreators = {
@@ -75,7 +76,8 @@ export const reducer = (state, action) => {
         case types.SET_POLL_REPORT_DATA:
             return ({
                 ...state,
-                data: action.data,
+                data: action.pollReportResponse.data,
+                chartData: action.pollReportResponse.chartData
             });
         default:
             return (state);

@@ -32,14 +32,65 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 if (parameters.ClassroomReport)
                 {
-                    List<PollReportPortugueseStudentItem> result = await BuscarDadosPorTurmaAsync(parameters);
+                    PollReportPortugueseStudentResult result = new PollReportPortugueseStudentResult();
+                    result.Results = await BuscarDadosPorTurmaAsync(parameters);
+                    result.ChartData.Add(new Models.RelatorioSondagem.PortChartDataModel()
+                    {
+                        Name = "PS",
+                        Value = 60
+                    });
+                    result.ChartData.Add(new Models.RelatorioSondagem.PortChartDataModel()
+                    {
+                        Name = "SSV",
+                        Value = 30
+                    });
+                    result.ChartData.Add(new Models.RelatorioSondagem.PortChartDataModel()
+                    {
+                        Name = "SCV",
+                        Value = 45
+                    });
+                    result.ChartData.Add(new Models.RelatorioSondagem.PortChartDataModel()
+                    {
+                        Name = "SA",
+                        Value = 23
+                    });
+                    result.ChartData.Add(new Models.RelatorioSondagem.PortChartDataModel()
+                    {
+                        Name = "A",
+                        Value = 50
+                    });
 
                     return (Ok(result));
                 }
                 else
                 {
-
-                    List<PollReportPortugueseItem> result = await BuscarDadosSyncAsync(parameters, "2019", "4", "", "");
+                    PollReportPortugueseResult result = new PollReportPortugueseResult();
+                    result.Results = await BuscarDadosSyncAsync(parameters, "2019", "4", "", "");
+                    result.ChartData.Add(new Data.DTO.PortChartDataModel()
+                    {
+                        Name = "PS",
+                        Value = 60
+                    });
+                    result.ChartData.Add(new Data.DTO.PortChartDataModel()
+                    {
+                        Name = "SSV",
+                        Value = 30
+                    });
+                    result.ChartData.Add(new Data.DTO.PortChartDataModel()
+                    {
+                        Name = "SCV",
+                        Value = 45
+                    });
+                    result.ChartData.Add(new Data.DTO.PortChartDataModel()
+                    {
+                        Name = "SA",
+                        Value = 23
+                    });
+                    result.ChartData.Add(new Data.DTO.PortChartDataModel()
+                    {
+                        Name = "A",
+                        Value = 50
+                    });
                     //await BuscarDadosSync(parameters, anoLetivo, codigoDre, codigoEscola, codigoCurso);
 
                     //   List<PollReportPortugueseItem> result = new List<PollReportPortugueseItem>();
@@ -84,7 +135,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 if (parameters.ClassroomReport)
                 {
-                    List<PollReportMathStudentItem> result = new List<PollReportMathStudentItem>();
+                    PollReportMathStudentResult result = new PollReportMathStudentResult();
+                    //List<PollReportMathStudentItem> result = new List<PollReportMathStudentItem>();
 
                     PollReportMathStudentItem item1 = new PollReportMathStudentItem()
                     {
@@ -207,10 +259,28 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     });
 
 
-                    result.Add(item1);
-                    result.Add(item2);
-                    result.Add(item3);
-                    result.Add(item4);
+                    result.Results.Add(item1);
+                    result.Results.Add(item2);
+                    result.Results.Add(item3);
+                    result.Results.Add(item4);
+                    result.ChartData.Add(new Models.RelatorioSondagem.MathChartDataModel()
+                    {
+                        Name = "ORDEM 1",
+                        Idea = new List<int>() { 60, 13, 30 },
+                        Result = new List<int>() { 25, 30, 45 }
+                    });
+                    result.ChartData.Add(new Models.RelatorioSondagem.MathChartDataModel()
+                    {
+                        Name = "ORDEM 2",
+                        Idea = new List<int>() { 20, 40, 30 },
+                        Result = new List<int>() { 10, 15, 5 }
+                    });
+                    result.ChartData.Add(new Models.RelatorioSondagem.MathChartDataModel()
+                    {
+                        Name = "ORDEM 3",
+                        Idea = new List<int>() { 60, 13, 30 },
+                        Result = new List<int>() { 60, 30, 45 }
+                    });
 
                     return (Ok(result));
                 }
@@ -320,11 +390,29 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                         TestResultPercentage = 45
                     });
 
-                    List<PollReportMathItem> result = new List<PollReportMathItem>();
-                    result.Add(item1);
-                    result.Add(item2);
-                    result.Add(item3);
-                    result.Add(item4);
+                    PollReportMathResult result = new PollReportMathResult();
+                    result.Results.Add(item1);
+                    result.Results.Add(item2);
+                    result.Results.Add(item3);
+                    result.Results.Add(item4);
+                    result.ChartData.Add(new Data.DTO.MathChartDataModel()
+                    {
+                        Name = "ORDEM 1",
+                        Idea = new List<int>() { 60, 13, 30 },
+                        Result = new List<int>() { 25, 30, 45 }
+                    });
+                    result.ChartData.Add(new Data.DTO.MathChartDataModel()
+                    {
+                        Name = "ORDEM 2",
+                        Idea = new List<int>() { 20, 40, 30 },
+                        Result = new List<int>() { 10, 15, 5 }
+                    });
+                    result.ChartData.Add(new Data.DTO.MathChartDataModel()
+                    {
+                        Name = "ORDEM 3",
+                        Idea = new List<int>() { 60, 13, 30 },
+                        Result = new List<int>() { 60, 30, 45 }
+                    });
 
                     return (Ok(result));
                 }

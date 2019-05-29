@@ -4,7 +4,6 @@
 
 .clickable {
     cursor: pointer;
-    z-index: 1;
 }
 
 .sc-blue {

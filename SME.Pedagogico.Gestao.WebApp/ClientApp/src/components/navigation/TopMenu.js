@@ -19,7 +19,7 @@ class TopMenu extends Component {
 
     render() {
         return (
-            <div id="top-menu" className="fixed-top d-flex w-auto">
+            <div id="top-menu" className="d-flex w-auto">
                 <div id="logo-content-top-menu" className="d-flex justify-content-center align-items-center clickable">
                     <Link to="/">
                         <img id="logo-top-menu" src="./img/RegistreSME_V3.svg" alt="Logo" />
