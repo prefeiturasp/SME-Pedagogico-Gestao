@@ -46,9 +46,11 @@ class TopMenu extends Component {
 
                     <div className="d-flex">
                         <small className="d-flex align-items-center font-weight-light text-muted">{this.props.user.activeRole.roleName}</small>
-                        <div className="btn btn-outline-light rounded-circle d-flex justify-content-center align-items-center ml-2 mr-3 top-menu-button">
-                            <i className="fas fa-chalkboard-teacher  top-menu-button-icon"></i>
-                        </div>
+                        <Link to="/Usuario/TrocarPerfil">
+                            <div className="btn btn-outline-light rounded-circle d-flex justify-content-center align-items-center ml-2 mr-3 top-menu-button">
+                                <i className="fas fa-chalkboard-teacher top-menu-button-icon"></i>
+                            </div>
+                        </Link>
                     </div>
 
                     <div className="d-flex">
