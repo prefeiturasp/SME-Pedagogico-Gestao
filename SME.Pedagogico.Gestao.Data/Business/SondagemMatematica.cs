@@ -325,6 +325,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                         studentDTO.TerminamZero1S = studentPollMath.TerminamZero;
                                         studentDTO.Transparentes1S = studentPollMath.Transparentes;
                                         studentDTO.ZeroIntercalados1S = studentPollMath.ZeroIntercalados;
+                                        studentDTO.Algarismos1S = studentPollMath.Algarismos;
                                     }
                                     else if (semestre.Equals(2))
                                     {
@@ -334,6 +335,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                         studentDTO.TerminamZero2S = studentPollMath.TerminamZero;
                                         studentDTO.Transparentes2S = studentPollMath.Transparentes;
                                         studentDTO.ZeroIntercalados2S = studentPollMath.ZeroIntercalados;
+                                        studentDTO.Algarismos2S = studentPollMath.Algarismos;
                                     }
                                 }
 

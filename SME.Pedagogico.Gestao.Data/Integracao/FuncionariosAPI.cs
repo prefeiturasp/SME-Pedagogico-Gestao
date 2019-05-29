@@ -17,7 +17,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
             this.endpointsAPI = endpointsAPI;
         }
 
-        public async Task<List<FuncionariosDTO >> GetFuncionarios(string codigoCargo, string token)
+        public async Task<List<FuncionariosDTO>> GetFuncionarios(string codigoCargo, string token)
         {
             var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.BuscaFuncionario);
 

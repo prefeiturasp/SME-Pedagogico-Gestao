@@ -4,6 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using SME.Pedagogico.Gestao.Data.DataTransfer;
+using SME.Pedagogico.Gestao.Models.Academic;
 using SME.Pedagogico.Gestao.WebApp.Models.RelatorioSondagem;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
@@ -13,6 +16,13 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
     [ApiController]
     public class RelatorioSondagemController : ControllerBase
     {
+        public IConfiguration _config;
+        public RelatorioSondagemController(IConfiguration config)
+        {
+
+            _config = config;
+        }
+
         #region ==================== METHODS ====================
         [HttpPost]
         public async Task<ActionResult<string>> ObterDados([FromBody]ParametersModel parameters)
@@ -21,37 +31,20 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 if (parameters.ClassroomReport)
                 {
-                    List<PollReportPortugueseStudentItem> result = new List<PollReportPortugueseStudentItem>();
-                    result.Add(new PollReportPortugueseStudentItem()
-                    {
-                        Code = "1",
-                        StudentName = "Alvaro Ramos Grassi",
-                        StudentValue = "Pré-Silábico"
-                    });
-                    result.Add(new PollReportPortugueseStudentItem()
-                    {
-                        Code = "2",
-                        StudentName = "Amanda Aparecida",
-                        StudentValue = "Pré-Silábico"
-                    });
-                    result.Add(new PollReportPortugueseStudentItem()
-                    {
-                        Code = "3",
-                        StudentName = "Anna Beatriz de Goes Callejon",
-                        StudentValue = "Silábico Alfabético"
-                    });
-                    result.Add(new PollReportPortugueseStudentItem()
-                    {
-                        Code = "4",
-                        StudentName = "Caique Siqueira",
-                        StudentValue = "Alfabético"
-                    });
-
-                    return (Ok(result));
+                    List<PollReportPortugueseStudentItem> result = await BuscarDadosPorTurmaAsync(parameters);                 
+                  
+                    return (Ok(result));                   
                 }
                 else
                 {
-                    List<PollReportPortugueseItem> result = new List<PollReportPortugueseItem>();
+
+                    List<PollReportPortugueseItem> result = await BuscarDadosSyncAsync(parameters, "2019","4", "", "");
+                        //await BuscarDadosSync(parameters, anoLetivo, codigoDre, codigoEscola, codigoCurso);
+
+                    //   List<PollReportPortugueseItem> result = new List<PollReportPortugueseItem>();
+
+
+                    //Tirar esse mock e incluar 
                     result.Add(new PollReportPortugueseItem()
                     {
                         OptionName = "Pré-Silábico",
@@ -338,6 +331,114 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
             return (NotFound());
         }
+
+        private async Task<List<PollReportPortugueseItem>> BuscarDadosSyncAsync(ParametersModel parameters, string anoLetivo, string codigoDre, string codigoEscola, string codigoCurso)
+        {
+            var BusinessPoll = new Data.Business.PollPortuguese(_config);
+             BusinessPoll.BuscarDadosRelatorioPortugues(parameters.Proficiency, parameters.Term,  anoLetivo,  codigoDre,  codigoEscola,  codigoCurso);//ajustar para pegar a turma 
+            List<PollReportPortugueseItem> result = new List<PollReportPortugueseItem>();//ola Dani
+            //foreach (var sondagem in listaAlunosTurma)
+            //{
+            //    result.Add(new PollReportPortugueseItem()
+            //    {
+            //        OptionName = "Alfabético",
+            //        studentQuantity = 10,
+            //        StudentPercentage = 5.95
+            //    });
+            //}
+            return result;
+        }
+
+        private async Task<List<PollReportPortugueseStudentItem>> BuscarDadosPorTurmaAsync(ParametersModel parameters)
+        {
+            var BusinessPoll = new Data.Business.PollPortuguese(_config);
+            var listaAlunosTurma = await BusinessPoll.BuscarAlunosTurmaRelatorioPortugues("1992661", parameters.Proficiency, parameters.Term);//ajustar para pegar a turma 
+            List<PollReportPortugueseStudentItem> result = new List<PollReportPortugueseStudentItem>();//ola Dani
+            foreach (var sondagem in listaAlunosTurma)
+            {
+                result.Add(
+                    new PollReportPortugueseStudentItem()
+                    {
+                        Code = sondagem.studentCodeEol,
+                        StudentName = "Aluno " + sondagem.studentCodeEol,
+                        StudentValue = ConverterProficienciaAluno(parameters.Proficiency, parameters.Term, sondagem)
+                    }
+                );
+            }
+            return result;
+        }
+
+        private string ConverterProficienciaAluno(string proficiency, string term, PortuguesePoll aluno)
+        {
+            switch (term)
+            {
+                case "1° Bimestre":
+                    {
+                        if (proficiency == "Escrita")
+                        {
+                            return MontarTextoProficiencia(aluno.writing1B);
+                        }
+                        else
+                        {
+                            return MontarTextoProficiencia(aluno.reading1B);
+                        }
+                    }
+                case "2° Bimestre":
+                    {
+
+                        if (proficiency == "Escrita")
+                        {
+                            return MontarTextoProficiencia(aluno.writing2B);
+                        }
+                        else
+                        {
+                            return MontarTextoProficiencia(aluno.reading2B);
+                        }
+                    }
+                case "3° Bimestre":
+                    {
+
+                        if (proficiency == "Escrita")
+                        {
+                            return MontarTextoProficiencia(aluno.writing3B);
+                        }
+                        else
+                        {
+                            return MontarTextoProficiencia(aluno.reading3B);
+                        }
+                    }
+                default:
+
+                    if (proficiency == "Escrita")
+                    {
+                        return MontarTextoProficiencia(aluno.writing4B);
+                    }
+                    else
+                    {
+                        return MontarTextoProficiencia(aluno.reading4B);
+                    }
+            }
+        }
+
+        private string MontarTextoProficiencia(string proficiencia)
+        {
+            switch (proficiencia)
+            {
+                case "PS":
+                    return "Pré silábico";
+                case "SSV":
+                    return "Silábico sem valor sonoro";
+                case "SCV":
+                    return "Silábico com valor sonoro";
+                case "SA":
+                    return "Silábico - alfabético";
+                case "ALF":
+                    return "Alfabético";
+                default:
+                    return proficiencia;
+            }
+        }       
+
         #endregion ==================== METHODS ====================
     }
 }

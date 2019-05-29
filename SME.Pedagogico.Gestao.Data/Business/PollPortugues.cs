@@ -86,7 +86,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     // Pega alunos da API 
                     // tratar se ppor um acaso retornar uma lista vazia 
                     var studentsClassRoom = new ClassRoom();
-                   // var listStudentsClassRoom = studentsClassRoom.MockListaChamada();
+                    // var listStudentsClassRoom = studentsClassRoom.MockListaChamada();
                     var endpointsAPI = new EndpointsAPI();
 
                     var turmApi = new TurmasAPI(endpointsAPI);
@@ -131,30 +131,144 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                 AddStudentPollPortuguese(studentDTO);
                             }
 
-                        liststudentPollPortuguese.Add(studentDTO);
+                            liststudentPollPortuguese.Add(studentDTO);
+                        }
                     }
                 }
-            }
 
                 return liststudentPollPortuguese.OrderBy(x => Convert.ToInt32(x.sequenceNumber)).ToList();
-        }
+            }
             catch (Exception ex)
             {
                 throw;
             }
-}
+        }
 
-private static void AddStudentPollPortuguese(StudentPollPortuguese studentDTO)
-{
-    studentDTO.t1e = string.Empty;
-    studentDTO.t1l = string.Empty;
-    studentDTO.t2e = string.Empty;
-    studentDTO.t2l = string.Empty;
-    studentDTO.t3e = string.Empty;
-    studentDTO.t3l = string.Empty;
-    studentDTO.t4e = string.Empty;
-    studentDTO.t4l = string.Empty;
-}
+        private static void AddStudentPollPortuguese(StudentPollPortuguese studentDTO)
+        {
+            studentDTO.t1e = string.Empty;
+            studentDTO.t1l = string.Empty;
+            studentDTO.t2e = string.Empty;
+            studentDTO.t2l = string.Empty;
+            studentDTO.t3e = string.Empty;
+            studentDTO.t3l = string.Empty;
+            studentDTO.t4e = string.Empty;
+            studentDTO.t4l = string.Empty;
+        }
 
+        public async Task<List<PortuguesePoll>> BuscarAlunosTurmaRelatorioPortugues(string turmaEol, string proficiencia, string bimestre)
+        {
+            try
+            {
+                var liststudentPollPortuguese = new List<StudentPollPortuguese>();
+                using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+                {
+                    var listStudentsPollPortuguese = new List<Models.Academic.PortuguesePoll>();
+                    switch (bimestre)
+                    {
+                        case "1° Bimestre":
+                            {
+                                if (proficiencia == "Escrita")
+                                {
+                                    listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.writing1B)).ToList();
+                                }
+                                else
+                                {
+                                    listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.reading1B)).ToList();
+                                }
+                                break;
+                            }
+                        case "2° Bimestre":
+                            {
+                                if (proficiencia == "Escrita")
+                                {
+                                    listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.writing2B)).ToList();
+                                }
+                                else
+                                {
+                                    listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.reading2B)).ToList();
+                                }
+                                break;
+                            }
+                        case "3° Bimestre":
+                            {
+                                if (proficiencia == "Escrita")
+                                {
+                                    listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.writing3B)).ToList();
+                                }
+                                else
+                                {
+                                    listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.reading3B)).ToList();
+                                }
+                                break;
+                            }
+                        default:
+                            if (proficiencia == "Escrita")
+                            {
+                                listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.writing4B)).ToList();
+                            }
+                            else
+                            {
+                                listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.reading4B)).ToList();
+                            }
+                            break;
+                    }
+
+                    return listStudentsPollPortuguese;
+                    //fazer order by por nome
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public void BuscarDadosRelatorioPortugues(string proficiencia, string bimestre, string anoLetivo, string codigoDre, string codigoEscola, string codigoCurso)
+        {
+            var liststudentPollPortuguese = new List<StudentPollPortuguese>();
+            using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            {
+                var listStudentsPollPortuguese = new List<Models.Academic.PortuguesePoll>();
+                IQueryable<PortuguesePoll> query = db.Set<PortuguesePoll>();
+             
+                query = db.PortuguesePolls.Where(x => x.schoolYear == anoLetivo);
+
+                //montando filtros genericamente
+                if (!string.IsNullOrWhiteSpace(codigoDre))
+                    query = query.Where(u => u.dreCodeEol == codigoDre);
+
+                if (!string.IsNullOrWhiteSpace(codigoEscola))
+                    query = query.Where(u => u.schoolCodeEol == codigoEscola);
+
+                if (!string.IsNullOrWhiteSpace(codigoCurso))
+                    query = query.Where(u => u.yearClassroom == codigoCurso);
+
+                switch (bimestre)
+                {
+                    case "1° Bimestre":
+                        {
+                            if (proficiencia == "Escrita")
+                            {
+                                var writing1B = query.GroupBy(fu => fu.writing1B).Select(g => new { Label = g.Key, Value = g.Count() * 100 / listStudentsPollPortuguese.Count() }).ToList();
+                                //  var writing2B = listStudentsPollPortuguese.GroupBy(fu => fu.writing2B).Select(g => new { Label = g.Key, Value = g.Count() * 100 / listStudentsPollPortuguese.Count() }).ToList();
+                                //  var writing3B = listStudentsPollPortuguese.GroupBy(fu => fu.writing3B).Select(g => new { Label = g.Key, Value = g.Count() * 100 / listStudentsPollPortuguese.Count() }).ToList();
+                                //  var writing4B = listStudentsPollPortuguese.GroupBy(fu => fu.writing4B).Select(g => new { Label = g.Key, Value = g.Count() * 100 / listStudentsPollPortuguese.Count() }).ToList();
+                              //  return writing1B;
+                            }
+                            else //leitura
+                            {
+                                var reading1B =  query.GroupBy(fu => fu.reading1B).Select(g => new { Label = g.Key, Value = g.Count()}).ToList();
+                                    //query.GroupBy(fu => fu.reading1B).Select(g => new { Label = g.Key, Value = g.Count() * 100 / query.Count() }).ToList();
+                                    //   var reading2B = listStudentsPollPortuguese.GroupBy(fu => fu.reading2B).Select(g => new { Label = g.Key, Value = g.Count() * 100 / listStudentsPollPortuguese.Count() }).ToList();
+                                    // var reading3B = listStudentsPollPortuguese.GroupBy(fu => fu.reading3B).Select(g => new { Label = g.Key, Value = g.Count() * 100 / listStudentsPollPortuguese.Count() }).ToList();
+                                    // var reading4B = listStudentsPollPortuguese.GroupBy(fu => fu.reading4B).Select(g => new { Label = g.Key, Value = g.Count() * 100 / listStudentsPollPortuguese.Count() }).ToList();
+
+                            }
+                        }
+                            break;
+                        }
+                }
+            }
+        }
     }
-}
