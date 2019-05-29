@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
-    [Authorize]
     [Produces("application/json")]
     [Route("api/[controller]/[action]")]
     [ApiController]

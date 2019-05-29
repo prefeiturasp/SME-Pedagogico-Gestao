@@ -314,11 +314,11 @@ class Poll extends Component {
 
     openMathSubPoll() {
         var classRoomMock = {
-            "dreCodeEol": "4",
-            "schoolCodeEol": "44",
-            "classroomCodeEol": "1992661",
+            "dreCodeEol": "108100 ",
+            "schoolCodeEol": "000191",
+            "classroomCodeEol": "1996399",
             "schoolYear": "2019",
-            "yearClassroom": "6"
+            "yearClassroom": "1"
         }
 
         if (classRoomMock.yearClassroom === "1" || classRoomMock.yearClassroom === "2" || classRoomMock.yearClassroom === "3") {
@@ -332,7 +332,7 @@ class Poll extends Component {
 
 
         if (this.props.poll.pollTypeSelected === "Numeric") {
-            //this.props.pollMethods.get_poll_math_numbers_students(classRoomMock);
+            this.props.pollMethods.get_poll_math_numbers_students(classRoomMock);
         } else if (this.props.poll.pollTypeSelected === "CA") {
             //this.props.pollMethods.get_poll_math_ca_students(classRoomMock);
         } else if (this.props.poll.pollTypeSelected === "CM") {
@@ -395,7 +395,7 @@ class Poll extends Component {
         } else {
             componentRender = "";
         }
-        alert(this.props.poll.pollSelected + " " + this.props.poll.pollTypeSelected + " " + this.props.poll.pollYear);
+        console.log(this.props.poll.pollSelected + " " + this.props.poll.pollTypeSelected + " " + this.props.poll.pollYear);
 
         return (
             <>

@@ -1,6 +1,4 @@
-﻿import { actionChannel } from "redux-saga/effects";
-
-export const types = {
+﻿export const types = {
     SET_POLL_INFO: "SET_POLL_INFO",
     SET_POLL_TYPE_SELECTED: "SET_POLL_TYPE_SELECTED",
     UPDATE_POLL_STUDENTS: "UPDATE_POLL_STUDENTS",

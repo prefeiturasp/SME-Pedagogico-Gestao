@@ -55,9 +55,11 @@ function* SavePollPortuguese(students) {
 
 function* GetStudentsMathNumbers({ classRoom }) {
     try {
+        debugger;
         const data = yield call(getStudentsPollMathNumbersRequestApi, classRoom);
-
+        debugger;
         yield put({ type: Poll.types.SET_POLL_MATH_NUMBERS_STUDENTS, data });
+        debugger;
     }
 
     catch (error) {
@@ -66,11 +68,19 @@ function* GetStudentsMathNumbers({ classRoom }) {
 }
 
 function getStudentsPollMathNumbersRequestApi(classRoom) {
-    return (fetch("/api/sondagemMatematica/ListarSondagemNumeros", {
-        method: "post",
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(classRoom)
-    }).then(response => response.json()));
+    var data = [];
+    try {
+        data = fetch("/api/sondagemMatematica/ListaSondagemNumeros", {
+            method: "post",
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(classRoom)
+        }).then(response => response.json())
+        debugger
+    } catch (e) {
+        console.log(e);
+    }
+    debugger;
+    return (data);
 }
 
 function* SavePollMathNumbers(students) {
