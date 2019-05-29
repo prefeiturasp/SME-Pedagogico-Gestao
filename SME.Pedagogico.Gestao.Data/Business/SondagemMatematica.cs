@@ -30,7 +30,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 {
 
                     var studentPoolCM = db.MathPoolCMs.Where(x =>
-                    x.TurmaEolCode == student.AnoTurma &&
+                    x.TurmaEolCode == student.CodigoEolTurma &&
                      x.AlunoEolCode == student.CodigoEolAluno).FirstOrDefault();
 
                     for (int semestre = 1; semestre <= 2; semestre++)
@@ -425,7 +425,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 {
 
                     var studentPoolNumeros = db.MathPoolNumbers.Where(x =>
-                    x.TurmaEolCode == student.AnoTurma &&
+                    x.TurmaEolCode == student.CodigoEolTurma &&
                      x.AlunoEolCode == student.CodigoEolAluno).FirstOrDefault();
 
                     for (int semestre = 1; semestre <= 2; semestre++)
@@ -491,7 +491,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 {
 
                     var studentPoolCA = db.MathPoolCAs.Where(x =>
-                    x.TurmaEolCode == student.AnoTurma &&
+                    x.TurmaEolCode == student.CodigoEolTurma &&
                      x.AlunoEolCode == student.CodigoEolAluno).FirstOrDefault();
 
                     for (int semestre = 1; semestre <= 2; semestre++)

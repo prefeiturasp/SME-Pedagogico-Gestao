@@ -15,7 +15,6 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
         public DbSet<Models.Academic.Teacher> Teachers { get; set; }
         public DbSet<Models.Academic.TeacherCode> TeacherCodes { get; set; }
         public DbSet<Models.Academic.PortuguesePoll> PortuguesePolls { get; set; }
-        public DbSet<Models.Academic.Semester> Semesters { get; set; }
         public DbSet<Models.Academic.MathPoolCM> MathPoolCMs { get; set; }
         public DbSet<Models.Academic.MathPoolCA> MathPoolCAs { get; set; }
         public DbSet<Models.Academic.MathPoolNumber> MathPoolNumbers { get; set; }
@@ -136,16 +135,7 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
                 new  Models.Academic.PollType() { PollTypeDescription = "Sondagem de Alfabetização de Matemática"}
             };
 
-            modelBuilder.Entity<Models.Academic.PollType>().HasData(pollTypes);
-
-            Models.Academic.Semester[] semesters = new Models.Academic.Semester[]
-            {
-                new Models.Academic.Semester() { Value = "1"},
-                new Models.Academic.Semester() { Value = "2"},
-            };
-            modelBuilder.Entity<Models.Academic.Semester>().HasData(semesters);
-
-          
+            modelBuilder.Entity<Models.Academic.PollType>().HasData(pollTypes);          
 
             Models.Authentication.PrivilegedAccess[] pvAccess = new Models.Authentication.PrivilegedAccess[]
             {

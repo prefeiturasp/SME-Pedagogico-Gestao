@@ -1,14 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using SME.Pedagogico.Gestao.Data.Contexts;
 using SME.Pedagogico.Gestao.Data.DTO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
-    [Authorize]
     [Produces("application/json")]
     [Route("api/[controller]/[action]")]
     [ApiController]
