@@ -379,41 +379,40 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> LoginIdentity([FromBody]CredentialModel credential)
         {
-            //var userPrivileged = Authentication.ValidatePrivilegedUser(credential.Username);
+            var userPrivileged = Authentication.ValidatePrivilegedUser(credential.Username);
 
-            //if (userPrivileged != null)
-            //{
-            //    // Verica se ja existe no banco 
-            //    if (!Authentication.ValidateUser(credential.Username, credential.Password))
-            //    {
+            if (userPrivileged != null)
+            {
+                // Verica se ja existe no banco 
+                if (!Authentication.ValidateUser(credential.Username, credential.Password))
+                {
 
-            //        await Authentication.RegisterUser(credential.Username, credential.Password);
-            //        if (userPrivileged.OccupationPlace == "AMCOM")
-            //        {
-            //            var boolean = await Authentication.SetRole(credential.Username, "Admin", "0");
-            //        }
+                    await Authentication.RegisterUser(credential.Username, credential.Password);
+                    if (userPrivileged.OccupationPlace == "AMCOM")
+                    {
+                        var boolean = await Authentication.SetRole(credential.Username, "Admin", "0");
+                    }
 
-            //        else if (userPrivileged.OccupationPlace == "SME")
-            //        {
-            //            var boolean = await Authentication.SetRole(credential.Username, "Admin", "2");
-            //        }
+                    else if (userPrivileged.OccupationPlace == "SME")
+                    {
+                        var boolean = await Authentication.SetRole(credential.Username, "Admin", "2");
+                    }
 
-            //    }
-            //    string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
-            //    string refreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
-            //    await Data.Business.Authentication.LoginUser(credential.Username, session, refreshToken); // Loga o usuário no sistema
+                }
+                string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
+                string refreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
+                await Data.Business.Authentication.LoginUser(credential.Username, session, refreshToken); // Loga o usuário no sistema
 
-            //    return (Ok(new
-            //    {
-            //        Token = CreateToken(credential.Username),
-            //        Session = session,
-            //        RefreshToken = refreshToken,
+                return (Ok(new
+                {
+                    Token = CreateToken(credential.Username),
+                    Session = session,
+                    RefreshToken = refreshToken,
 
-            //        Roles = await GetUserRoles(credential.Username)
-            //    }));
-            //} else
-
-             if (!Data.Business.Authentication.ValidateUser(credential.Username, credential.Password))
+                    Roles = await GetUserRoles(credential.Username)
+                }));
+            }
+            else if (!Data.Business.Authentication.ValidateUser(credential.Username, credential.Password))
             {
                 // Executa o método de autenticação pelo CoreSSO.Identity (sistema legado)
                 ClientUserModel user = await Authenticate(credential);

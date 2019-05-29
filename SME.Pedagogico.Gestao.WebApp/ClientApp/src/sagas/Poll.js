@@ -46,7 +46,7 @@ function* SavePollPortuguese(students) {
             body: JSON.stringify(students.pollstudents)
         }).then(response => response.json());
         debugger;
-        return (data);
+        return (data.status);
     } catch (error) {
         console.log(error);
     }
