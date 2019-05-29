@@ -19,7 +19,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
 
         public async Task<List<AlunosNaTurmaDTO>> GetAlunosNaTurma(int codigoTurma,
                                                 int anoLetivo, string token)
-        {  
+        {
             var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.BuscaAlunosNaTurma);
 
             return await HttpHelper

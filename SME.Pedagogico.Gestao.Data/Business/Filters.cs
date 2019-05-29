@@ -2,13 +2,16 @@
 using SME.Pedagogico.Gestao.Data.Functionalities;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO;
+using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
+using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.Data.Business
 {
- public class Filters
+    public class Filters
     {
         private string _token;
         public Filters(IConfiguration config)
@@ -17,11 +20,31 @@ namespace SME.Pedagogico.Gestao.Data.Business
             _token = createToken.CreateTokenProvisorio();
         }
 
-        //public List<EscolaDTO> GetSchools(string CodeDRE)
-        //{
 
+        public async Task<List<SalasPorUEDTO>> GetClassRoomSchool(string schoolCodeEol, string schooYear)
+        {
+            try
+            {
+                var endPoint = new EndpointsAPI();
+                var schoolApi = new EscolasAPI(endPoint);
+                var listClassRoom = await schoolApi.GetTurmasPorEscola(int.Parse(schoolCodeEol), schooYear, _token);
+                if (listClassRoom != null)
+                {
+                    return listClassRoom;
+                }
 
-        //    var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.BuscaTurmasDeProfessores);
-        //}
+                else
+                {
+                    return null;
+                }
+            }
+            catch (System.Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
     }
 }

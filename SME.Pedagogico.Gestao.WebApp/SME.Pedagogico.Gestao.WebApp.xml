@@ -96,5 +96,39 @@
             <param name="config">Depêndencia de configurações</param>
             <param name="db">Depêndencia de dataContext (SMEManagementContext)</param>
         </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.SondagemMatematicaController.#ctor(SME.Pedagogico.Gestao.Data.Contexts.SMEManagementContext,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Construtor padrão para o SondagemMatematicaController, faz injeção de dependências SMEManagementContext.
+            </summary>
+            <param name="db">Depêndencia de dataContext (SMEManagementContext)</param>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.SondagemMatematicaController.GravaSondagemCM(System.Collections.Generic.List{SME.Pedagogico.Gestao.Data.DTO.SondagemMatematicaOrdemDTO})">
+            <summary>
+            Método para fazer a sondagem de matemática de CM.
+            </summary>
+            <param name="dadosSondagem">Objeto que contém informações da sondagem de matemática</param>
+            <returns></returns>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.SondagemMatematicaController.ListaSondagemCM(SME.Pedagogico.Gestao.Data.DTO.FiltroSondagemMatematicaDTO)">
+            <summary>
+            Método para fazer a sondagem de matemática de CM.
+            </summary>
+            <param name="filtroSondagem">Objeto que contém filtro para retorno de sondagem de CM</param>
+            <returns>Dados </returns>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.SondagemMatematicaController.GravaSondagemCA(System.Collections.Generic.List{SME.Pedagogico.Gestao.Data.DTO.SondagemMatematicaOrdemDTO})">
+            <summary>
+            Método para fazer a sondagem de matemática de CA.
+            </summary>
+            <param name="dadosSondagem">Objeto que contém informações da sondagem de matemática</param>
+            <returns></returns>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.SondagemMatematicaController.GravaSondagemNumeros(System.Collections.Generic.List{SME.Pedagogico.Gestao.Data.DTO.SondagemMatematicaNumerosDTO})">
+            <summary>
+            Método para fazer a sondagem de matemática de Números.
+            </summary>
+            <param name="dadosSondagem">Objeto que contém informações da sondagem de matemática</param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

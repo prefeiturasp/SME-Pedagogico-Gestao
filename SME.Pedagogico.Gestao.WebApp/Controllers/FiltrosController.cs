@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.Business;
+using SME.Pedagogico.Gestao.Data.Integracao;
+using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,32 +22,57 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             _config = config;
         }
 
+        [HttpGet]
+        public async Task<ActionResult<string>> ListarTurmasPorEscola(string schoolCodeEol, string schoolYear)
+        {
+            try
+            {
+                //Necessário para gerar o Token temporariamente
+                var filterBusiness = new Filters(_config);
+                var funcionarioDTO = filterBusiness.GetClassRoomSchool(schoolCodeEol, schoolYear);
+
+                if (funcionarioDTO != null)
+                {
+                    return (Ok(funcionarioDTO));
+                }
+                else
+                {
+                    return (NoContent());
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
+
+        public async Task<ActionResult<string>> ListarEscolasPorDre(string schoolCodeEol, string schoolYear)
+        {
+            try
+            {
+                //Necessário para gerar o Token temporariamente
+                var filterBusiness = new Filters(_config);
+                var funcionarioDTO = filterBusiness.GetClassRoomSchool(schoolCodeEol, schoolYear);
+
+                if (funcionarioDTO != null)
+                {
+                    return (Ok(funcionarioDTO));
+                }
+                else
+                {
+                    return (NoContent());
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
 
 
-        //[HttpGet]
-        //public async Task<ActionResult> EscolasPorDre(string codigoDRE)
-        //{
-        //    try
-        //    {
-        //        //Necessário para gerar o Token temporariamente
-        //         var filterBusiness = new Filters(_config);
-
-        //        var listSchools = filterBusiness.GetSchools(codigoDRE);
-
-        //        if (listSchools != null)
-        //        {
-        //            return (Ok(listSchools));
-        //        }
-        //        else
-        //        {
-        //            return (NoContent());
-        //        }
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, ex);
-        //    }
-        //}
     }
+
 }
+
