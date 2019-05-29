@@ -28,13 +28,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 foreach (var student in dadosSondagem)
                 {
-
-                    var studentPoolCM = db.MathPoolCMs.Where(x =>
-                    x.TurmaEolCode == student.CodigoEolTurma &&
-                     x.AlunoEolCode == student.CodigoEolAluno).FirstOrDefault();
-
                     for (int semestre = 1; semestre <= 2; semestre++)
                     {
+                        var studentPoolCM = db.MathPoolCMs.Where(x =>
+                                                                x.TurmaEolCode == student.CodigoEolTurma &&
+                                                                 x.AlunoEolCode == student.CodigoEolAluno &&
+                                                                 x.Semestre == semestre).FirstOrDefault();
+
                         if (studentPoolCM == null)
                         {
                             var newStudentPoolCM = new MathPoolCM();
@@ -46,12 +46,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             newStudentPoolCM.AnoLetivo = Convert.ToInt32(student.AnoLetivo);
                             newStudentPoolCM.Semestre = semestre;
 
-                            MapValuesPoolCM(student, ref newStudentPoolCM, semestre);
+                            MapValuesPoolCM(student, ref newStudentPoolCM);
                             await db.MathPoolCMs.AddAsync(newStudentPoolCM);
                         }
                         else
                         {
-                            MapValuesPoolCM(student, ref studentPoolCM, semestre);
+                            MapValuesPoolCM(student, ref studentPoolCM);
                             db.MathPoolCMs.Update(studentPoolCM);
                         }
                     }
@@ -62,12 +62,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
         }       
 
         private void MapValuesPoolCM(SondagemMatematicaOrdemDTO studentDTO, 
-                                     ref MathPoolCM studentPoolCM, 
-                                     int semestre)
+                                     ref MathPoolCM studentPoolCM)
         {
-            studentPoolCM.Semestre = semestre;
-
-            if (semestre == 1) {
+            if (studentPoolCM.Semestre == 1) {
                 studentPoolCM.Ordem4Ideia = studentDTO.Ideia4Semestre1;
                 studentPoolCM.Ordem4Resultado = studentDTO.Resultado4Semestre1;
                 studentPoolCM.Ordem5Ideia = studentDTO.Ideia5Semestre1;
@@ -78,7 +75,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 studentPoolCM.Ordem7Resultado = studentDTO.Resultado7Semestre1;
                 studentPoolCM.Ordem8Ideia = studentDTO.Ideia8Semestre1;
                 studentPoolCM.Ordem8Resultado = studentDTO.Resultado8Semestre1;
-            } else if (semestre == 2) {
+            } else if (studentPoolCM.Semestre == 2) {
                 studentPoolCM.Ordem4Ideia = studentDTO.Ideia4Semestre2;
                 studentPoolCM.Ordem4Resultado = studentDTO.Resultado4Semestre2;
                 studentPoolCM.Ordem5Ideia = studentDTO.Ideia5Semestre2;
@@ -423,13 +420,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 foreach (var student in dadosSondagem)
                 {
-
-                    var studentPoolNumeros = db.MathPoolNumbers.Where(x =>
-                    x.TurmaEolCode == student.CodigoEolTurma &&
-                     x.AlunoEolCode == student.CodigoEolAluno).FirstOrDefault();
-
                     for (int semestre = 1; semestre <= 2; semestre++)
                     {
+                        var studentPoolNumeros = db.MathPoolNumbers.Where(x =>
+                                                                            x.TurmaEolCode == student.CodigoEolTurma &&
+                                                                             x.AlunoEolCode == student.CodigoEolAluno &&
+                                                                             x.Semestre == semestre).FirstOrDefault();
+
                         if (studentPoolNumeros == null)
                         {
                             var newStudentPoolNumeros = new MathPoolNumber();
@@ -441,13 +438,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             newStudentPoolNumeros.AnoLetivo = Convert.ToInt32(student.AnoLetivo);
                             newStudentPoolNumeros.Semestre = semestre;
 
-                            MapValuesPoolNumbers(student, ref newStudentPoolNumeros, semestre);
+                            MapValuesPoolNumbers(student, ref newStudentPoolNumeros);
                             await db.MathPoolNumbers.AddAsync(newStudentPoolNumeros);
                         }
                         else
                         {
 
-                            MapValuesPoolNumbers(student, ref studentPoolNumeros, semestre);
+                            MapValuesPoolNumbers(student, ref studentPoolNumeros);
                             db.MathPoolNumbers.Update(studentPoolNumeros);
                         }
                     }
@@ -457,11 +454,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        private void MapValuesPoolNumbers(SondagemMatematicaNumerosDTO studentDTO, ref MathPoolNumber studentPoolNumeros, int semestre)
+        private void MapValuesPoolNumbers(SondagemMatematicaNumerosDTO studentDTO, ref MathPoolNumber studentPoolNumeros)
         {
-            studentPoolNumeros.Semestre = semestre;
-
-            if (semestre == 1)
+            if (studentPoolNumeros.Semestre == 1)
             {
                 studentPoolNumeros.Familiares = studentDTO.Familiares1S;
                 studentPoolNumeros.Opacos = studentDTO.Opacos1S;
@@ -471,7 +466,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 studentPoolNumeros.Processo = studentDTO.Processo1S;
                 studentPoolNumeros.ZeroIntercalados = studentDTO.ZeroIntercalados1S;
             }
-            else if (semestre == 2)
+            else if (studentPoolNumeros.Semestre == 2)
             {
                 studentPoolNumeros.Familiares = studentDTO.Familiares2S;
                 studentPoolNumeros.Opacos = studentDTO.Opacos2S;
@@ -489,13 +484,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 foreach (var student in dadosSondagem)
                 {
-
-                    var studentPoolCA = db.MathPoolCAs.Where(x =>
-                    x.TurmaEolCode == student.CodigoEolTurma &&
-                     x.AlunoEolCode == student.CodigoEolAluno).FirstOrDefault();
-
                     for (int semestre = 1; semestre <= 2; semestre++)
                     {
+                        var studentPoolCA = db.MathPoolCAs.Where(x =>
+                                                                x.TurmaEolCode == student.CodigoEolTurma &&
+                                                                 x.AlunoEolCode == student.CodigoEolAluno &&
+                                                                 x.Semestre == semestre).FirstOrDefault();
+
                         if (studentPoolCA == null)
                         {
                             var newStudentPoolCA = new MathPoolCA();
@@ -507,12 +502,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             newStudentPoolCA.AnoLetivo = Convert.ToInt32(student.AnoLetivo);
                             newStudentPoolCA.Semestre = semestre;
 
-                            MapValuesPoolCA(student, ref newStudentPoolCA, semestre);
+                            MapValuesPoolCA(student, ref newStudentPoolCA);
                             await db.MathPoolCAs.AddAsync(newStudentPoolCA);
                         }
                         else
                         {
-                            MapValuesPoolCA(student, ref studentPoolCA, semestre);
+                            MapValuesPoolCA(student, ref studentPoolCA);
                             db.MathPoolCAs.Update(studentPoolCA);
                         }
                     }
@@ -522,11 +517,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        private void MapValuesPoolCA(SondagemMatematicaOrdemDTO studentDTO, ref MathPoolCA studentPoolCA, int semestre)
+        private void MapValuesPoolCA(SondagemMatematicaOrdemDTO studentDTO, ref MathPoolCA studentPoolCA)
         {
-            studentPoolCA.Semestre = semestre;
-
-            if (semestre == 1)
+            if (studentPoolCA.Semestre == 1)
             {
                 studentPoolCA.Ordem1Ideia = studentDTO.Ideia1Semestre1;
                 studentPoolCA.Ordem1Resultado = studentDTO.Resultado1Semestre1;
@@ -537,7 +530,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 studentPoolCA.Ordem4Ideia = studentDTO.Ideia4Semestre1;
                 studentPoolCA.Ordem4Resultado = studentDTO.Resultado4Semestre1;
             }
-            else if (semestre == 2)
+            else if (studentPoolCA.Semestre == 2)
             {
                 studentPoolCA.Ordem1Ideia = studentDTO.Ideia1Semestre2;
                 studentPoolCA.Ordem1Resultado = studentDTO.Resultado1Semestre2;
