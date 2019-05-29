@@ -263,12 +263,19 @@ class Poll extends Component {
                 debugger;      
                 
             } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMT) {
-                //if number, usar a pollty
-
-                //if ordem CA
-
-                //if ordem CM
-                alert(this.props.poll.pollSelected);
+                if (this.props.poll.pollTypeSelected === "Numeric") {
+                    console.log(this.props.poll.students);
+                    var response = this.props.pollMethods.save_poll_math_numbers_students(this.props.poll.students);
+                } else if (this.props.poll.pollTypeSelected === "CA") {
+                    console.log(this.props.poll.students);
+                    var response = this.props.pollMethods.save_poll_math_ca_students(this.props.poll.students);
+                } else if (this.props.poll.pollTypeSelected === "CM") {
+                    console.log(this.props.poll.students);
+                    var response = this.props.pollMethods.save_poll_math_cm_students(this.props.poll.students);
+                } 
+                debugger;
+                console.log(response);
+                console.log(this.props.poll.pollSelected);
             } 
         } else {
             alert(this.props.poll.pollSelected);
@@ -332,11 +339,14 @@ class Poll extends Component {
 
 
         if (this.props.poll.pollTypeSelected === "Numeric") {
+            debugger;
             this.props.pollMethods.get_poll_math_numbers_students(classRoomMock);
         } else if (this.props.poll.pollTypeSelected === "CA") {
-            //this.props.pollMethods.get_poll_math_ca_students(classRoomMock);
+            debugger;
+            this.props.pollMethods.get_poll_math_ca_students(classRoomMock);
         } else if (this.props.poll.pollTypeSelected === "CM") {
-            //this.props.pollMethods.get_poll_math_cm_students(classRoomMock);
+            debugger;
+            this.props.pollMethods.get_poll_math_cm_students(classRoomMock);
         } 
 
         

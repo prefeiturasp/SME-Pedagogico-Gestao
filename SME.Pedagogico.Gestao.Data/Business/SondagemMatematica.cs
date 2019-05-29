@@ -365,12 +365,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
             studentDTO.TerminamZero1S = string.Empty;
             studentDTO.Transparentes1S = string.Empty;
             studentDTO.ZeroIntercalados1S = string.Empty;
+            studentDTO.Algarismos1S = string.Empty;
             studentDTO.Familiares2S = string.Empty;
             studentDTO.Opacos2S = string.Empty;
             studentDTO.Processo2S = string.Empty;
             studentDTO.TerminamZero2S = string.Empty;
             studentDTO.Transparentes2S = string.Empty;
             studentDTO.ZeroIntercalados2S = string.Empty;
+            studentDTO.Algarismos2S = string.Empty;
         }
 
         private void AddEmptyCAPoolTo(SondagemMatematicaOrdemDTO studentDTO)

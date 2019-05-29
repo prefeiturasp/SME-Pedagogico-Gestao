@@ -85,6 +85,7 @@ function getStudentsPollMathNumbersRequestApi(classRoom) {
 
 function* SavePollMathNumbers(students) {
     try {
+        console.log(students);
         var data = yield fetch("/api/sondagemMatematica/GravaSondagemNumeros", {
             method: "post",
             headers: { 'Content-Type': 'application/json' },
@@ -94,6 +95,7 @@ function* SavePollMathNumbers(students) {
         return (data);
     } catch (error) {
         console.log(error);
+        debugger;
     }
 }
 
