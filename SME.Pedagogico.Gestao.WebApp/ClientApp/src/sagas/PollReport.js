@@ -10,13 +10,16 @@ export default function* () {
 function* GetPollReportSaga({ parameters }) {
     try {
         const data = yield call(getPollReportData, parameters);
-
-        console.log(data);
-
+        
         if (data.status === 401)
             yield put({ type: PollReport.types.POLL_REPORT_REQUEST_NOT_FOUND });
         else {
-            yield put({ type: PollReport.types.SET_POLL_REPORT_DATA, data });
+            var pollReportResponse = {
+                data: data.results,
+                chartData: data.chartData
+            }
+
+            yield put({ type: PollReport.types.SET_POLL_REPORT_DATA, pollReportResponse });
         }
 
         yield put({ type: PollReport.types.SHOW_POLL_REPORT_REQUEST });

@@ -21,7 +21,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         }
 
 
-        public async Task<List<SalasPorUEDTO>> GetClassRoomSchool(string schoolCodeEol, string schooYear)
+        public async Task<List<SalasPorUEDTO>> GetListClassRoomSchool(string schoolCodeEol, string schooYear)
         {
             try
             {
@@ -46,5 +46,54 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         }
 
+
+        public async Task<List<EscolasPorDREDTO>> GetListSchoolDre(string dreCodeEol, string schooYear)
+        {
+            try
+            {
+                var endPoint = new EndpointsAPI();
+                var schoolApi = new DREAPI(endPoint);
+                var listSchools = await schoolApi.GetEscolasPorDRE(dreCodeEol, _token);
+                if (listSchools != null)
+                {
+                    return listSchools;
+                }
+
+                else
+                {
+                    return null;
+                }
+            }
+            catch (System.Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
+        public async Task<List<DREsDTO>> GetListDre()
+        {
+            try
+            { 
+                var endPoint = new EndpointsAPI();
+                var dreApi = new DREAPI(endPoint);
+                var listDres = await dreApi.GetDres(_token);
+                if (listDres != null)
+                {
+                    return listDres;
+                }
+
+                else
+                {
+                    return null;
+                }
+            }
+            catch (System.Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }

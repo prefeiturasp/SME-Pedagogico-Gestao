@@ -15,6 +15,7 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
         public DbSet<Models.Academic.Teacher> Teachers { get; set; }
         public DbSet<Models.Academic.TeacherCode> TeacherCodes { get; set; }
         public DbSet<Models.Academic.PortuguesePoll> PortuguesePolls { get; set; }
+        public DbSet<Models.Academic.Semester> Semesters { get; set; }
         public DbSet<Models.Academic.MathPoolCM> MathPoolCMs { get; set; }
         public DbSet<Models.Academic.MathPoolCA> MathPoolCAs { get; set; }
         public DbSet<Models.Academic.MathPoolNumber> MathPoolNumbers { get; set; }
@@ -28,6 +29,7 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
         public DbSet<Models.Authentication.Role> Roles { get; set; }
         public DbSet<Models.Authentication.User> Users { get; set; }
         public DbSet<Models.Authentication.UserRole> UserRoles { get; set; }
+        public DbSet<Models.Authentication.PrivilegedAccess> PrivilegedAccess { get; set; }
 
         #endregion ---------- Authentication ----------
 
@@ -136,6 +138,50 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
 
             modelBuilder.Entity<Models.Academic.PollType>().HasData(pollTypes);
 
+            Models.Academic.Semester[] semesters = new Models.Academic.Semester[]
+            {
+                new Models.Academic.Semester() { Value = "1"},
+                new Models.Academic.Semester() { Value = "2"},
+            };
+            modelBuilder.Entity<Models.Academic.Semester>().HasData(semesters);
+
+          
+
+            Models.Authentication.PrivilegedAccess[] pvAccess = new Models.Authentication.PrivilegedAccess[]
+            {
+                new Models.Authentication.PrivilegedAccess()
+                {
+                    Login = "danielli.amcom",
+                    Name  = "Danielli",
+                    OccupationPlace = "AMCOM",
+                    OccupationPlaceCode = 1
+
+                },
+                new Models.Authentication.PrivilegedAccess()
+                {
+                    Login = "jeff.amcom",
+                    Name  = "Jeff",
+                    OccupationPlace = "AMCOM",
+                    OccupationPlaceCode = 1
+                },
+                new Models.Authentication.PrivilegedAccess()
+                {
+                    Login = "aline.amcom",
+                    Name  = "Aline",
+                    OccupationPlace = "AMCOM",
+                    OccupationPlaceCode = 1
+                },
+
+                new Models.Authentication.PrivilegedAccess()
+                {
+                    Login = "gabi.sme",
+                    Name  = "Gabi",
+                    OccupationPlace = "SME",
+                    OccupationPlaceCode = 2
+                },
+
+            };
+            modelBuilder.Entity<Models.Authentication.PrivilegedAccess>().HasData(pvAccess);
         }
 
         #endregion ==================== METHODS ====================
