@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.DataTransfer;
+using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.Functionalities;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
@@ -224,14 +225,17 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public void BuscarDadosRelatorioPortugues(string proficiencia, string bimestre, string anoLetivo, string codigoDre, string codigoEscola, string codigoCurso)
+        public async Task<List<PollReportPortugueseItem>> BuscarDadosRelatorioPortugues(string proficiencia, string bimestre, string anoLetivo, string codigoDre, string codigoEscola, string codigoCurso)
         {
             var liststudentPollPortuguese = new List<StudentPollPortuguese>();
+
+            var listReturn = new List<PollReportPortugueseItem>();
+
             using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
             {
                 var listStudentsPollPortuguese = new List<Models.Academic.PortuguesePoll>();
                 IQueryable<PortuguesePoll> query = db.Set<PortuguesePoll>();
-             
+
                 query = db.PortuguesePolls.Where(x => x.schoolYear == anoLetivo);
 
                 //montando filtros genericamente
@@ -250,25 +254,75 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         {
                             if (proficiencia == "Escrita")
                             {
-                                var writing1B = query.GroupBy(fu => fu.writing1B).Select(g => new { Label = g.Key, Value = g.Count() * 100 / listStudentsPollPortuguese.Count() }).ToList();
-                                //  var writing2B = listStudentsPollPortuguese.GroupBy(fu => fu.writing2B).Select(g => new { Label = g.Key, Value = g.Count() * 100 / listStudentsPollPortuguese.Count() }).ToList();
-                                //  var writing3B = listStudentsPollPortuguese.GroupBy(fu => fu.writing3B).Select(g => new { Label = g.Key, Value = g.Count() * 100 / listStudentsPollPortuguese.Count() }).ToList();
-                                //  var writing4B = listStudentsPollPortuguese.GroupBy(fu => fu.writing4B).Select(g => new { Label = g.Key, Value = g.Count() * 100 / listStudentsPollPortuguese.Count() }).ToList();
-                              //  return writing1B;
+
+                                //var writing1B = query.GroupBy(fu => fu.writing1B).Select(g => new { Label = g.Key, Value = g.Count() * 100 / listStudentsPollPortuguese.Count() }).ToList();
+
+                                var writing1B = query.GroupBy(fu => fu.writing1B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
+
+                                foreach (var item in writing1B)
+                                {
+                                    if (!item.Label.Trim().Equals(""))
+                                    {
+                                        PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                        itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                        itemRetorno.studentQuantity = item.Value;
+                                        listReturn.Add(itemRetorno);
+                                    }
+                                }
+
                             }
                             else //leitura
                             {
-                                var reading1B =  query.GroupBy(fu => fu.reading1B).Select(g => new { Label = g.Key, Value = g.Count()}).ToList();
-                                    //query.GroupBy(fu => fu.reading1B).Select(g => new { Label = g.Key, Value = g.Count() * 100 / query.Count() }).ToList();
-                                    //   var reading2B = listStudentsPollPortuguese.GroupBy(fu => fu.reading2B).Select(g => new { Label = g.Key, Value = g.Count() * 100 / listStudentsPollPortuguese.Count() }).ToList();
-                                    // var reading3B = listStudentsPollPortuguese.GroupBy(fu => fu.reading3B).Select(g => new { Label = g.Key, Value = g.Count() * 100 / listStudentsPollPortuguese.Count() }).ToList();
-                                    // var reading4B = listStudentsPollPortuguese.GroupBy(fu => fu.reading4B).Select(g => new { Label = g.Key, Value = g.Count() * 100 / listStudentsPollPortuguese.Count() }).ToList();
+                                var reading1B = query.GroupBy(fu => fu.reading1B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
 
+                                foreach (var item in reading1B)
+                                {
+                                    if (!item.Label.Trim().Equals(""))
+                                    {
+                                        PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                        itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                        itemRetorno.studentQuantity = item.Value;
+                                        listReturn.Add(itemRetorno);
+                                    }
+                                }
                             }
                         }
-                            break;
-                        }
+                        break;
                 }
+
+                int total = 0;
+                foreach (var item in listReturn)
+                {
+                    total += item.studentQuantity;
+                }
+
+                foreach (var item in listReturn)
+                {
+                    item.StudentPercentage = (double)item.studentQuantity / (double)total * 100;
+                }
+                return listReturn;
+            }
+        }
+
+
+
+        private string MontarTextoProficiencia(string proficiencia)
+        {
+            switch (proficiencia)
+            {
+                case "PS":
+                    return "Pré silábico";
+                case "SSV":
+                    return "Silábico sem valor sonoro";
+                case "SCV":
+                    return "Silábico com valor sonoro";
+                case "SA":
+                    return "Silábico - alfabético";
+                case "ALF":
+                    return "Alfabético";
+                default:
+                    return proficiencia;
             }
         }
     }
+}
