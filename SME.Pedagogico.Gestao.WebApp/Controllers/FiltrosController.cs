@@ -29,11 +29,11 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 //Necessário para gerar o Token temporariamente
                 var filterBusiness = new Filters(_config);
-                var funcionarioDTO = filterBusiness.GetClassRoomSchool(schoolCodeEol, schoolYear);
+                var listClassRoom = filterBusiness.GetListClassRoomSchool(schoolCodeEol, schoolYear);
 
-                if (funcionarioDTO != null)
+                if (listClassRoom != null)
                 {
-                    return (Ok(funcionarioDTO));
+                    return (Ok(listClassRoom));
                 }
                 else
                 {
@@ -53,11 +53,36 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 //Necessário para gerar o Token temporariamente
                 var filterBusiness = new Filters(_config);
-                var funcionarioDTO = filterBusiness.GetClassRoomSchool(schoolCodeEol, schoolYear);
+                var listSchool = filterBusiness.GetListClassRoomSchool(schoolCodeEol, schoolYear);
 
-                if (funcionarioDTO != null)
+                if (listSchool != null)
                 {
-                    return (Ok(funcionarioDTO));
+                    return (Ok(listSchool));
+                }
+                else
+                {
+                    return (NoContent());
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
+
+
+        public async Task<ActionResult<string>> ListarDres()
+        {
+            try
+            {
+                //Necessário para gerar o Token temporariamente
+                var filterBusiness = new Filters(_config);
+                var listDres = filterBusiness.GetListDre();
+
+                if (listDres != null)
+                {
+                    return (Ok(listDres));
                 }
                 else
                 {
