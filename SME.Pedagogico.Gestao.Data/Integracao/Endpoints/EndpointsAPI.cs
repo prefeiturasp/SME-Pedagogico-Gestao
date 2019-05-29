@@ -73,22 +73,22 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
 
         // ******       Métodos da API DREs  **************************************************************************
         //[HttpGet]
-        public string BuscaDres { get; set; } = "";
+        public string BuscaDres { get; set; } = "dres";
 
         //[HttpGet("{codigoDRE}")] 
-        public string BuscaDresPorCodigo { get; set; } = "{0}";
+        public string BuscaDresPorCodigo { get; set; } = "dres/{0}";
 
         //[HttpGet("{codigoDRE}/escolas/{tipoEscola}")]
-        public string BuscaEscolasPorDREPorTipoEscola { get; set; } = "{0}/escolas/{1}";
+        public string BuscaEscolasPorDREPorTipoEscola { get; set; } = "dres/{0}/escolas/{1}";
 
         //[HttpGet("{codigoDRE}/escolas/")]
-        public string BuscaEscolasPorDre { get; set; } = "{0}/escolas/";
+        public string BuscaEscolasPorDre { get; set; } = "dres/{0}/escolas/";
 
         //[HttpGet("escolas/{tipoEscola}")]
-        public string BuscaEscolasPorTipoEscola { get; set; } = "escolas/{0}";
+        public string BuscaEscolasPorTipoEscola { get; set; } = "dres/escolas/{0}";
 
         //[HttpGet("{codigoDRE}/subprefeituras")] 
-        public string BuscaSubprefeituraPor { get; set; } = "{0}/subprefeituras";
+        public string BuscaSubprefeituraPor { get; set; } = "dres/{0}/subprefeituras";
 
         // ****** FIM   Métodos da API DREs  **************************************************************************
 

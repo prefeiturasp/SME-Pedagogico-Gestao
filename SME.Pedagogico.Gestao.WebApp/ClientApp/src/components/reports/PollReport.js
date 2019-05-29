@@ -11,44 +11,39 @@ import { connect } from 'react-redux';
 import { actionCreators } from '../../store/PollReport';
 import { bindActionCreators } from 'redux';
 
+import TwoStepsSave from '../messaging/TwoStepsSave';
+
 class PollReport extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.classroomReport = true;
-        this.portChartData = [
-            { name: "PS", value: 60 },
-            { name: "SSV", value: 30 },
-            { name: "SCV", value: 45 },
-            { name: "SA", value: 23 },
-            { name: "A", value: 50 },
-        ];
-        this.mathChartData = [
-            {
-                name: "ORDEM 1",
-                idea: [60, 13, 30],
-                result: [25, 30, 45]
-            },
-            {
-                name: "ORDEM 2",
-                idea: [20, 40, 30],
-                result: [10, 15, 5]
-            },
-            {
-                name: "ORDEM 3",
-                idea: [60, 13, 30],
-                result: [60, 30, 45]
-            },
-        ];
+
+        this.state = {
+            showMessage: false
+        }
+
+        this.testMethod = this.testMethod.bind(this);
+    }
+
+    testMethod() {
+        this.setState({
+            showMessage: !this.state.showMessage
+        })
     }
 
     render() {
         var reportData = null;
+        var chartData = null;
 
-        if (this.props.pollReport.showReport === true)
+        if (this.props.pollReport.showReport === true) {
             reportData = this.props.pollReport.data;
-        else
+            chartData = this.props.pollReport.chartData;
+        }
+        else {
             reportData = [];
+            chartData = [];
+        }
 
         this.classroomReport = this.props.pollReport.selectedFilter.classroomReport;
 
@@ -75,19 +70,19 @@ class PollReport extends Component {
                             <div>
                                 <PollReportBreadcrumb className="mt-4" name="Planilha" />
 
-                            {this.props.pollReport.selectedFilter.discipline === "Língua Portuguesa" ?
-                                <PollReportPortugueseGrid className="mt-3" classroomReport={this.classroomReport} data={reportData} />
-                                :
-                                <PollReportMathGrid className="mt-3" classroomReport={this.classroomReport} data={reportData} />
+                                {this.props.pollReport.selectedFilter.discipline === "Língua Portuguesa" ?
+                                    <PollReportPortugueseGrid className="mt-3" classroomReport={this.classroomReport} data={reportData} />
+                                    :
+                                    <PollReportMathGrid className="mt-3" classroomReport={this.classroomReport} data={reportData} />
                                 }
 
                                 <PollReportBreadcrumb className="mt-5" name="Gráfico" />
 
                                 {this.props.pollReport.selectedFilter.discipline === "Língua Portuguesa" ?
-                                    <PollReportPortugueseChart data={this.portChartData} />
+                                    <PollReportPortugueseChart data={chartData} />
                                     :
                                     <div className="mt-4">
-                                        {this.mathChartData.map(item => {
+                                        {chartData.map(item => {
                                             var chartId = item.name.replace(" ", "").toLowerCase();
 
                                             return (
@@ -100,6 +95,9 @@ class PollReport extends Component {
                         }
                     </div>
                 </Card>
+
+                <TwoStepsSave show={this.state.showMessage} showControl={this.testMethod} />
+
             </div>
         );
     }

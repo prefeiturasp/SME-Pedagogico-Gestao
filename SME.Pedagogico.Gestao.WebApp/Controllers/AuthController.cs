@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using SME.Pedagogico.Gestao.Models.Authentication;
 using SME.Pedagogico.Gestao.WebApp.Contexts;
 using SME.Pedagogico.Gestao.WebApp.Models.Auth;
+using SME.Pedagogico.Gestao.Data.Business;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -15,6 +16,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using SME.Pedagogico.Gestao.Data.Integracao.DTO;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
@@ -241,6 +243,53 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return (userRoles);
         }
 
+        private async Task<bool> SetOccupationsRF(string rf)
+        {
+            var ProfileBusiness = new Profile(_config);
+            var occupations = await ProfileBusiness.GetOccupationsRF(rf);
+            string roleName = "";
+            string accessLevel = "";
+
+            if (occupations != null)
+            {
+                //Implementar regra de cargo sobrePosto 
+
+
+                foreach (var occupation in occupations.cargos)
+                {
+                    switch (occupation.codigoCargo)
+                    {
+                        case "3239":
+                            roleName = "Professor";
+                            accessLevel = "32";
+                            break;
+                        case "3301":
+                            roleName = "Professor";
+                            accessLevel = "32";
+                            break;
+                        case "3336":
+                            roleName = "Professor";
+                            accessLevel = "32";
+                            break;
+                        case "3379":
+                            roleName = "Surpervisor";
+                            accessLevel = "27";
+                            break;
+                        default:
+                            return false;
+
+                    }
+
+                    var boolean = await Authentication.SetRole(rf, roleName, accessLevel);
+
+                }
+                return true;
+            }
+
+            return false;
+
+        }
+
         #endregion -------------------- PRIVATE --------------------
 
         #region -------------------- PUBLIC --------------------
@@ -330,7 +379,41 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> LoginIdentity([FromBody]CredentialModel credential)
         {
-            if (!Data.Business.Authentication.ValidateUser(credential.Username, credential.Password))
+            var userPrivileged = Authentication.ValidatePrivilegedUser(credential.Username);
+
+            if (userPrivileged != null)
+            {
+                // Verica se ja existe no banco 
+                if (!Authentication.ValidateUser(credential.Username, credential.Password))
+                {
+
+                    await Authentication.RegisterUser(credential.Username, credential.Password);
+                    if (userPrivileged.OccupationPlace == "AMCOM")
+                    {
+                        var boolean = await Authentication.SetRole(credential.Username, "Admin", "0");
+                    }
+
+                    else if (userPrivileged.OccupationPlace == "SME")
+                    {
+                        var boolean = await Authentication.SetRole(credential.Username, "Admin", "2");
+                    }
+
+                }
+                string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
+                string refreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
+                await Data.Business.Authentication.LoginUser(credential.Username, session, refreshToken); // Loga o usuário no sistema
+
+                return (Ok(new
+                {
+                    Token = CreateToken(credential.Username),
+                    Session = session,
+                    RefreshToken = refreshToken,
+
+                    Roles = await GetUserRoles(credential.Username)
+                }));
+            }
+
+            else if (!Data.Business.Authentication.ValidateUser(credential.Username, credential.Password))
             {
                 // Executa o método de autenticação pelo CoreSSO.Identity (sistema legado)
                 ClientUserModel user = await Authenticate(credential);
@@ -343,6 +426,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     user.SMEToken.RefreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
                     await Data.Business.Authentication.RegisterUser(credential.Username, credential.Password); // Cadastra o usuário dentro do banco PostgreSQL (Novo SGP)
                     await Data.Business.Authentication.LoginUser(credential.Username, user.SMEToken.Session, user.SMEToken.RefreshToken); // Loga o usuário no sistema
+
+                    var bol = await SetOccupationsRF(credential.Username);
+                    // se bol = false return 401
                     user.Roles = await GetUserRoles(credential.Username);
 
                     return (Ok(user));
@@ -360,6 +446,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     Token = CreateToken(credential.Username),
                     Session = session,
                     RefreshToken = refreshToken,
+                    //
                     Roles = await GetUserRoles(credential.Username)
                 }));
             }

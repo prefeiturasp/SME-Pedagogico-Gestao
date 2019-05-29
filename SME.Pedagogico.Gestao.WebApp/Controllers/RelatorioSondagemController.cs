@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.DataTransfer;
+using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Models.Academic;
 using SME.Pedagogico.Gestao.WebApp.Models.RelatorioSondagem;
 
@@ -31,50 +32,101 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 if (parameters.ClassroomReport)
                 {
-                    List<PollReportPortugueseStudentItem> result = await BuscarDadosPorTurmaAsync(parameters);                 
-                  
-                    return (Ok(result));                   
+                    PollReportPortugueseStudentResult result = new PollReportPortugueseStudentResult();
+                    result.Results = await BuscarDadosPorTurmaAsync(parameters);
+                    result.ChartData.Add(new Models.RelatorioSondagem.PortChartDataModel()
+                    {
+                        Name = "PS",
+                        Value = 60
+                    });
+                    result.ChartData.Add(new Models.RelatorioSondagem.PortChartDataModel()
+                    {
+                        Name = "SSV",
+                        Value = 30
+                    });
+                    result.ChartData.Add(new Models.RelatorioSondagem.PortChartDataModel()
+                    {
+                        Name = "SCV",
+                        Value = 45
+                    });
+                    result.ChartData.Add(new Models.RelatorioSondagem.PortChartDataModel()
+                    {
+                        Name = "SA",
+                        Value = 23
+                    });
+                    result.ChartData.Add(new Models.RelatorioSondagem.PortChartDataModel()
+                    {
+                        Name = "A",
+                        Value = 50
+                    });
+
+                    return (Ok(result));
                 }
                 else
                 {
-
-                    List<PollReportPortugueseItem> result = await BuscarDadosSyncAsync(parameters, "2019","4", "", "");
-                        //await BuscarDadosSync(parameters, anoLetivo, codigoDre, codigoEscola, codigoCurso);
+                    PollReportPortugueseResult result = new PollReportPortugueseResult();
+                    result.Results = await BuscarDadosSyncAsync(parameters, "2019", "4", "", "");
+                    result.ChartData.Add(new Data.DTO.PortChartDataModel()
+                    {
+                        Name = "PS",
+                        Value = 60
+                    });
+                    result.ChartData.Add(new Data.DTO.PortChartDataModel()
+                    {
+                        Name = "SSV",
+                        Value = 30
+                    });
+                    result.ChartData.Add(new Data.DTO.PortChartDataModel()
+                    {
+                        Name = "SCV",
+                        Value = 45
+                    });
+                    result.ChartData.Add(new Data.DTO.PortChartDataModel()
+                    {
+                        Name = "SA",
+                        Value = 23
+                    });
+                    result.ChartData.Add(new Data.DTO.PortChartDataModel()
+                    {
+                        Name = "A",
+                        Value = 50
+                    });
+                    //await BuscarDadosSync(parameters, anoLetivo, codigoDre, codigoEscola, codigoCurso);
 
                     //   List<PollReportPortugueseItem> result = new List<PollReportPortugueseItem>();
 
 
-                    //Tirar esse mock e incluar 
-                    result.Add(new PollReportPortugueseItem()
-                    {
-                        OptionName = "Pré-Silábico",
-                        studentQuantity = 60,
-                        StudentPercentage = 35.71
-                    });
-                    result.Add(new PollReportPortugueseItem()
-                    {
-                        OptionName = "Silábico sem Valor",
-                        studentQuantity = 30,
-                        StudentPercentage = 17.86
-                    });
-                    result.Add(new PollReportPortugueseItem()
-                    {
-                        OptionName = "Silábico com Valor",
-                        studentQuantity = 45,
-                        StudentPercentage = 26.78
-                    });
-                    result.Add(new PollReportPortugueseItem()
-                    {
-                        OptionName = "Silábico Alfabético",
-                        studentQuantity = 23,
-                        StudentPercentage = 13.69
-                    });
-                    result.Add(new PollReportPortugueseItem()
-                    {
-                        OptionName = "Alfabético",
-                        studentQuantity = 10,
-                        StudentPercentage = 5.95
-                    });
+                    ////Tirar esse mock e incluar 
+                    //result.Add(new PollReportPortugueseItem()
+                    //{
+                    //    OptionName = "Pré-Silábico",
+                    //    studentQuantity = 60,
+                    //    StudentPercentage = 35.71
+                    //});
+                    //result.Add(new PollReportPortugueseItem()
+                    //{
+                    //    OptionName = "Silábico sem Valor",
+                    //    studentQuantity = 30,
+                    //    StudentPercentage = 17.86
+                    //});
+                    //result.Add(new PollReportPortugueseItem()
+                    //{
+                    //    OptionName = "Silábico com Valor",
+                    //    studentQuantity = 45,
+                    //    StudentPercentage = 26.78
+                    //});
+                    //result.Add(new PollReportPortugueseItem()
+                    //{
+                    //    OptionName = "Silábico Alfabético",
+                    //    studentQuantity = 23,
+                    //    StudentPercentage = 13.69
+                    //});
+                    //result.Add(new PollReportPortugueseItem()
+                    //{
+                    //    OptionName = "Alfabético",
+                    //    studentQuantity = 10,
+                    //    StudentPercentage = 5.95
+                    //});
 
                     return (Ok(result));
                 }
@@ -83,7 +135,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 if (parameters.ClassroomReport)
                 {
-                    List<PollReportMathStudentItem> result = new List<PollReportMathStudentItem>();
+                    PollReportMathStudentResult result = new PollReportMathStudentResult();
+                    //List<PollReportMathStudentItem> result = new List<PollReportMathStudentItem>();
 
                     PollReportMathStudentItem item1 = new PollReportMathStudentItem()
                     {
@@ -206,10 +259,28 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     });
 
 
-                    result.Add(item1);
-                    result.Add(item2);
-                    result.Add(item3);
-                    result.Add(item4);
+                    result.Results.Add(item1);
+                    result.Results.Add(item2);
+                    result.Results.Add(item3);
+                    result.Results.Add(item4);
+                    result.ChartData.Add(new Models.RelatorioSondagem.MathChartDataModel()
+                    {
+                        Name = "ORDEM 1",
+                        Idea = new List<int>() { 60, 13, 30 },
+                        Result = new List<int>() { 25, 30, 45 }
+                    });
+                    result.ChartData.Add(new Models.RelatorioSondagem.MathChartDataModel()
+                    {
+                        Name = "ORDEM 2",
+                        Idea = new List<int>() { 20, 40, 30 },
+                        Result = new List<int>() { 10, 15, 5 }
+                    });
+                    result.ChartData.Add(new Models.RelatorioSondagem.MathChartDataModel()
+                    {
+                        Name = "ORDEM 3",
+                        Idea = new List<int>() { 60, 13, 30 },
+                        Result = new List<int>() { 60, 30, 45 }
+                    });
 
                     return (Ok(result));
                 }
@@ -319,11 +390,29 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                         TestResultPercentage = 45
                     });
 
-                    List<PollReportMathItem> result = new List<PollReportMathItem>();
-                    result.Add(item1);
-                    result.Add(item2);
-                    result.Add(item3);
-                    result.Add(item4);
+                    PollReportMathResult result = new PollReportMathResult();
+                    result.Results.Add(item1);
+                    result.Results.Add(item2);
+                    result.Results.Add(item3);
+                    result.Results.Add(item4);
+                    result.ChartData.Add(new Data.DTO.MathChartDataModel()
+                    {
+                        Name = "ORDEM 1",
+                        Idea = new List<int>() { 60, 13, 30 },
+                        Result = new List<int>() { 25, 30, 45 }
+                    });
+                    result.ChartData.Add(new Data.DTO.MathChartDataModel()
+                    {
+                        Name = "ORDEM 2",
+                        Idea = new List<int>() { 20, 40, 30 },
+                        Result = new List<int>() { 10, 15, 5 }
+                    });
+                    result.ChartData.Add(new Data.DTO.MathChartDataModel()
+                    {
+                        Name = "ORDEM 3",
+                        Idea = new List<int>() { 60, 13, 30 },
+                        Result = new List<int>() { 60, 30, 45 }
+                    });
 
                     return (Ok(result));
                 }
@@ -335,25 +424,16 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         private async Task<List<PollReportPortugueseItem>> BuscarDadosSyncAsync(ParametersModel parameters, string anoLetivo, string codigoDre, string codigoEscola, string codigoCurso)
         {
             var BusinessPoll = new Data.Business.PollPortuguese(_config);
-             BusinessPoll.BuscarDadosRelatorioPortugues(parameters.Proficiency, parameters.Term,  anoLetivo,  codigoDre,  codigoEscola,  codigoCurso);//ajustar para pegar a turma 
-            List<PollReportPortugueseItem> result = new List<PollReportPortugueseItem>();//ola Dani
-            //foreach (var sondagem in listaAlunosTurma)
-            //{
-            //    result.Add(new PollReportPortugueseItem()
-            //    {
-            //        OptionName = "Alfabético",
-            //        studentQuantity = 10,
-            //        StudentPercentage = 5.95
-            //    });
-            //}
-            return result;
+               
+            return await BusinessPoll.BuscarDadosRelatorioPortugues(parameters.Proficiency, parameters.Term, anoLetivo, codigoDre, codigoEscola, codigoCurso);
+            ;
         }
 
         private async Task<List<PollReportPortugueseStudentItem>> BuscarDadosPorTurmaAsync(ParametersModel parameters)
         {
             var BusinessPoll = new Data.Business.PollPortuguese(_config);
             var listaAlunosTurma = await BusinessPoll.BuscarAlunosTurmaRelatorioPortugues("1992661", parameters.Proficiency, parameters.Term);//ajustar para pegar a turma 
-            List<PollReportPortugueseStudentItem> result = new List<PollReportPortugueseStudentItem>();//ola Dani
+            List<PollReportPortugueseStudentItem> result = new List<PollReportPortugueseStudentItem>(); 
             foreach (var sondagem in listaAlunosTurma)
             {
                 result.Add(
@@ -437,7 +517,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 default:
                     return proficiencia;
             }
-        }       
+        }
 
         #endregion ==================== METHODS ====================
     }
