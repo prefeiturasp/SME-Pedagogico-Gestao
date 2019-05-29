@@ -20,7 +20,6 @@ import StudentPollMath5ACMCard from '../polls/StudentPollMath5ACMCard'
 import StudentPollMath6ACACard from '../polls/StudentPollMath6ACACard'
 import StudentPollMath6ACMCard from '../polls/StudentPollMath6ACMCard'
 import StudentPollPortugueseCard from '../polls/StudentPollPortugueseCard'
-import { debounce } from 'redux-saga/effects';
 
 class Poll extends Component {
     constructor(props) {
@@ -38,10 +37,9 @@ class Poll extends Component {
 
         this.openPortuguesePoll = this.openPortuguesePoll.bind(this);
         this.openMathSubPoll = this.openMathSubPoll.bind(this);
-        this.openMathBtnSubPoll = this.openMathBtnSubPoll.bind(this);
         this.openMathPoll = this.openMathPoll.bind(this);
 
-        this.props.pollMethods.set_poll_info(null, null, null);
+        
     }
     componentDidUpdate() {//ver em ClassPlan o método ClassRoomClick
         
@@ -55,7 +53,7 @@ class Poll extends Component {
     }
 
     componentDidMount() {
-     
+        this.props.pollMethods.set_poll_info(null, null, null);
     }
     
     updatePollStudent(sequence, subjectName, propertyName, value) {
@@ -256,7 +254,6 @@ class Poll extends Component {
         
         this.setState({ pollStudents: pollStudents });
         this.props.pollMethods.update_poll_students(pollStudents);
-        //this.props.poll.students = pollStudents;
     }
 
     savePollStudent() {
@@ -266,9 +263,11 @@ class Poll extends Component {
                 debugger;      
                 
             } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMT) {
-                //if number
+                //if number, usar a pollty
 
-                //if ordem
+                //if ordem CA
+
+                //if ordem CM
                 alert(this.props.poll.pollSelected);
             } 
         } else {
@@ -300,9 +299,8 @@ class Poll extends Component {
             "yearClassroom": "1"
         } 
 
-        
 
-        this.props.pollMethods.set_poll_info(ClassRoomEnum.ClassPT, "", "1"); //passar pollSelected, pollTypeSelected, pollYear
+        this.props.pollMethods.set_poll_info(this.state.sondagemType, "", classRoomMock.yearClassroom); //passar pollSelected, pollTypeSelected, pollYear
         this.props.pollMethods.get_poll_portuguese_students(classRoomMock);
         this.setState({
             pollStudents: this.props.poll.students,
@@ -311,74 +309,94 @@ class Poll extends Component {
     
     openMathPoll(element) {
         this.toggleButton(element.currentTarget.id);
-        this.setState({
-            sondagemType: ClassRoomEnum.ClassMT,
-        });
         this.openMathSubPoll();
-        //alert("Poll Matematica");
     }
 
-    openMathSubPoll() { 
-        this.props.pollMethods.set_poll_info(ClassRoomEnum.ClassMT, "", "1"); //passar pollSelected, pollTypeSelected, pollYear
-        this.props.pollMethods.get_poll_math_numbers_students();
-        this.setState({ pollStudents: this.props.poll.students});
+    openMathSubPoll() {
+        var classRoomMock = {
+            "dreCodeEol": "4",
+            "schoolCodeEol": "44",
+            "classroomCodeEol": "1992661",
+            "schoolYear": "2019",
+            "yearClassroom": "6"
+        }
+
+        if (classRoomMock.yearClassroom === "1" || classRoomMock.yearClassroom === "2" || classRoomMock.yearClassroom === "3") {
+            this.props.pollMethods.set_poll_info(ClassRoomEnum.ClassMT, "Numeric", classRoomMock.yearClassroom); //passar pollSelected, pollTypeSelected, pollYear
+        } else {
+            this.props.pollMethods.set_poll_info(ClassRoomEnum.ClassMT, "CA", classRoomMock.yearClassroom); //passar pollSelected, pollTypeSelected, pollYear
+        }
+        this.setState({
+            sondagemType: this.props.poll.pollSelected,
+        });
+
+
+        if (this.props.poll.pollTypeSelected === "Numeric") {
+            //this.props.pollMethods.get_poll_math_numbers_students(classRoomMock);
+        } else if (this.props.poll.pollTypeSelected === "CA") {
+            //this.props.pollMethods.get_poll_math_ca_students(classRoomMock);
+        } else if (this.props.poll.pollTypeSelected === "CM") {
+            //this.props.pollMethods.get_poll_math_cm_students(classRoomMock);
+        } 
+
+        
+        //this.setState({ pollStudents: this.props.poll.students});
+        
         debugger;
         //this.toggleButton(element.currentTarget.id);
         //literacyMathPoll
         //subMathPoll //1A 2A 3ACA 3ACM .. 6ACA 6ACM
     }
 
-    openMathBtnSubPoll(element) {
-        //disparar para atualizar o ano, tipo
-        //this.props.pollMethods.set_poll_info(ClassRoomEnum.ClassMT, this.props.state.pollTypeSelected, "1"); 
-        //metodo que o boao vai disparar //mudar nome
-    }
     render() {
         var componentRender;
         var sondagemType = this.state.sondagemType;
 
-        switch (sondagemType) {
-            case ClassRoomEnum.Class1A:
-                componentRender = <StudentPollMath1ACard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
-                break;
-            case ClassRoomEnum.Class2A:
-                componentRender = <StudentPollMath2ACard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
-                break;
-            case ClassRoomEnum.Class3ACA:
-                componentRender = <StudentPollMath3ACACard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
-                break;
-            case ClassRoomEnum.Class3ACM:
-                componentRender = <StudentPollMath3ACMCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
-                break;
-            case ClassRoomEnum.Class4ACA:
-                componentRender = <StudentPollMath4ACACard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
-                break;
-            case ClassRoomEnum.Class4ACM:
-                componentRender = <StudentPollMath4ACMCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
-                break;
-            case ClassRoomEnum.Class5ACA:
-                componentRender = <StudentPollMath5ACACard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
-                break;
-            case ClassRoomEnum.Class5ACM:
-                componentRender = <StudentPollMath5ACMCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
-                break;
-            case ClassRoomEnum.Class6ACA:
-                componentRender = <StudentPollMath6ACACard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
-                break;
-            case ClassRoomEnum.Class6ACM:
-                componentRender = <StudentPollMath6ACMCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
-                break;
-            case ClassRoomEnum.ClassPT:
-                componentRender = <StudentPollPortugueseCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
-                break;
-            case ClassRoomEnum.ClassMT:
-                
+        
+        if (sondagemType === ClassRoomEnum.ClassPT) {
+            componentRender = <StudentPollPortugueseCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
+        } else if (sondagemType === ClassRoomEnum.ClassMT) {
+            if (this.props.poll.pollTypeSelected === "Numeric" && (this.props.poll.pollYear ==="1" || this.props.poll.pollYear === "2" || this.props.poll.pollYear === "3")) {
                 componentRender = <StudentPollMathAlfabetizacaoCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
-                break;
-            default:
-                componentRender = "";
-
+            } else if (this.props.poll.pollYear === "1") {
+                if (this.props.poll.pollTypeSelected === "CA") {
+                    componentRender = <StudentPollMath1ACard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
+                } 
+            } else if (this.props.poll.pollYear === "2") {
+                if (this.props.poll.pollTypeSelected === "CA") {
+                    componentRender = <StudentPollMath2ACard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
+                } 
+            } else if (this.props.poll.pollYear === "3") {
+                if (this.props.poll.pollTypeSelected === "CA") {
+                    componentRender = <StudentPollMath3ACACard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
+                } else if (this.props.poll.pollTypeSelected === "CM") {
+                    componentRender = <StudentPollMath3ACMCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
+                }
+            } else if (this.props.poll.pollYear === "4") {
+                if (this.props.poll.pollTypeSelected === "CA") {
+                    componentRender = <StudentPollMath4ACACard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
+                } else if (this.props.poll.pollTypeSelected === "CM") {
+                    componentRender = <StudentPollMath4ACMCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
+                }
+            } else if (this.props.poll.pollYear === "5") {
+                if (this.props.poll.pollTypeSelected === "CA") {
+                    componentRender = <StudentPollMath5ACACard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
+                } else if (this.props.poll.pollTypeSelected === "CM") {
+                    componentRender = <StudentPollMath5ACMCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
+                }
+            } else if (this.props.poll.pollYear === "6") {
+                if (this.props.poll.pollTypeSelected === "CA") {
+                    componentRender = <StudentPollMath6ACACard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
+                } else if (this.props.poll.pollTypeSelected === "CM") {
+                    componentRender = <StudentPollMath6ACMCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
+                }
+            }
+            
+        } else {
+            componentRender = "";
         }
+        alert(this.props.poll.pollSelected + " " + this.props.poll.pollTypeSelected + " " + this.props.poll.pollYear);
+
         return (
             <>
                 <Card className="mb-3">

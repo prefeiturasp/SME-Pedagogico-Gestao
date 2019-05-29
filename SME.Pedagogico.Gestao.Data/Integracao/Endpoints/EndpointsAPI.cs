@@ -10,7 +10,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
         private string buscaAlunosNaTurma = "";
 
 
-        public string BaseEndpoint { get; set; } = "http://10.50.0.196:82/api/";
+        public string BaseEndpoint { get; set; } = "http://10.50.0.196/api/";
 
         public string BuscaAlunosNaTurma { get; set; } = "turmas/{0}/alunos/anosLetivos/{1}";
 
