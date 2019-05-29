@@ -6,6 +6,7 @@
     LOGOUT_USER: "LOGOUT_USER",
     ON_AUTHENTICATION_REQUEST: "ON_AUTHENTICATION_REQUEST",
     FINISH_AUTHENTICATION_REQUEST: "FINISH_AUTHENTICATION_REQUEST",
+    SET_ACTIVE_ROLE: "SET_ACTIVE_ROLE",
 }
 const initialState = {
     name: null,
@@ -25,7 +26,8 @@ const initialState = {
 export const actionCreators = {
     login: (credential) => ({ type: types.LOGIN_REQUEST, credential }),
     setUser: (user) => ({ type: types.SET_USER, user }),
-    logout: (credential) => ({ type: types.LOGOUT_REQUEST, credential })
+    logout: (credential) => ({ type: types.LOGOUT_REQUEST, credential }),
+    setActiveRole: (role) => ({ type: types.SET_ACTIVE_ROLE, role }),
 };
 
 export const reducer = (state, action) => {
@@ -58,6 +60,11 @@ export const reducer = (state, action) => {
                 ...state,
                 onAuthenticationRequest: false,
             });
+        case types.SET_ACTIVE_ROLE:
+            return ({
+                ...state,
+                activeRole: action.role,
+            })
         default:
             return (state);
     }
