@@ -63,7 +63,7 @@ export default class StudentPollMath1ACard extends Component {
                 <table className="table table-sm table-bordered table-hover table-sondagem-matematica" style={{ overflow: "hidden", overflowX: "auto" }}>
                     <thead>
                         <tr>
-                            <th rowSpan="5" className="align-middle border text-color-purple "><div className="ml-2">Sondagem - 1º ano aditivo</div></th>
+                            <th rowSpan="5" className="align-middle border text-color-purple "><div className="ml-2">Sondagem - 1º ano <b>Campo Aditivo</b></div></th>
                             <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem1_head"><small>PROBLEMAS DE COMPOSIÇÃO</small></th>
                             <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem2_head"><small>PROBLEMAS DE COMPOSIÇÃO</small></th>
                             <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem3_head"><small>PROBLEMAS DE COMPOSIÇÃO</small></th>

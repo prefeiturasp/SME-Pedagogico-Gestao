@@ -4,6 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import UnauthenticatedRoute from './routes/UnauthenticatedRoute';
 import AuthenticatedDashboardRoute from './routes/AuthenticatedDashboardRoute';
 import Login from './components/login/Login';
+import SelectProfile from './components/profile/SelectProfile';
 import Home from './components/home/Home';
 import ClassPlan from './components/classRecord/ClassPlan';
 import AnnualPlan from './components/classRecord/AnnualPlan';
@@ -26,6 +27,7 @@ export default class App extends Component {
                     <AuthenticatedDashboardRoute path="/RegistroDeClasse/PlanoDeCiclo" exact component={CyclePlan} />
                     <AuthenticatedDashboardRoute path="/RegistroDeClasse/Sondagem" exact component={Poll} />
                     <AuthenticatedDashboardRoute path="/RegistroDeClasse/Documentos" exact component={Documents} />*/}
+                <AuthenticatedDashboardRoute path="/Usuario/TrocarPerfil" exact component={SelectProfile} />
                 <AuthenticatedDashboardRoute path="/" exact component={Poll} />
                 <AuthenticatedDashboardRoute path="/Relatorios/Sondagem" exact component={PollReport} />
                 <Route component={NotFound} />

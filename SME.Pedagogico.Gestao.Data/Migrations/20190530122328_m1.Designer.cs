@@ -10,7 +10,7 @@ using SME.Pedagogico.Gestao.Data.Contexts;
 namespace SME.Pedagogico.Gestao.Data.Migrations
 {
     [DbContext(typeof(SMEManagementContext))]
-    [Migration("20190529011555_m1")]
+    [Migration("20190530122328_m1")]
     partial class m1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,15 +54,11 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
 
                     b.Property<string>("Ordem4Resultado");
 
-                    b.Property<int>("SemestreCode");
-
-                    b.Property<string>("SemestreId");
+                    b.Property<int>("Semestre");
 
                     b.Property<string>("TurmaEolCode");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SemestreId");
 
                     b.ToTable("MathPoolCAs");
                 });
@@ -104,15 +100,11 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
 
                     b.Property<string>("Ordem8Resultado");
 
-                    b.Property<int>("SemestreCode");
-
-                    b.Property<string>("SemestreId");
+                    b.Property<int>("Semestre");
 
                     b.Property<string>("TurmaEolCode");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SemestreId");
 
                     b.ToTable("MathPoolCMs");
                 });
@@ -142,9 +134,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
 
                     b.Property<string>("Processo");
 
-                    b.Property<int>("SemestreCode");
-
-                    b.Property<string>("SemestreId");
+                    b.Property<int>("Semestre");
 
                     b.Property<string>("TerminamZero");
 
@@ -155,8 +145,6 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                     b.Property<string>("ZeroIntercalados");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SemestreId");
 
                     b.ToTable("MathPoolNumbers");
                 });
@@ -175,17 +163,17 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "7b8dab37-4897-41fc-ae2d-c92119d6b675",
+                            Id = "65e51681-7b5d-41fd-b273-38d2f8608d80",
                             PollTypeDescription = "Sondagem de Português"
                         },
                         new
                         {
-                            Id = "441c22b6-c627-4a79-a04f-32454cd227c8",
+                            Id = "129fddcb-e034-4281-a883-b458f5f460f4",
                             PollTypeDescription = "Sondagem de Matemática"
                         },
                         new
                         {
-                            Id = "4dcbf25e-0d6c-4ccf-b025-442d13dac07c",
+                            Id = "db696972-476f-4c94-8111-9dfc802473ee",
                             PollTypeDescription = "Sondagem de Alfabetização de Matemática"
                         });
                 });
@@ -226,30 +214,6 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PortuguesePolls");
-                });
-
-            modelBuilder.Entity("SME.Pedagogico.Gestao.Models.Academic.Semester", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Value");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Semesters");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "4cb1c00d-0f4f-49d0-8f2f-a67b697af1cc",
-                            Value = "1"
-                        },
-                        new
-                        {
-                            Id = "4721ed3f-d591-4c06-ae57-cab3edc7eebc",
-                            Value = "2"
-                        });
                 });
 
             modelBuilder.Entity("SME.Pedagogico.Gestao.Models.Academic.Student", b =>
@@ -328,229 +292,229 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "fd68f013-1d9d-44e5-a817-5b37f71ed690",
+                            Id = "a1349d54-4ff7-4501-a7fe-a7aef06082eb",
                             Description = "Desenvolvedor",
                             Value = "0"
                         },
                         new
                         {
-                            Id = "7786a674-fc18-4da8-9965-c02956ba5a98",
+                            Id = "d260e23f-05ff-4504-82c4-9f4083998acc",
                             Description = "COTIC",
                             Value = "1"
                         },
                         new
                         {
-                            Id = "1bf1b083-a2ed-433f-b35e-c8a7dfdfc792",
+                            Id = "3111466b-37d1-45fa-88e7-ab8dbb97fdf2",
                             Description = "SME",
                             Value = "2"
                         },
                         new
                         {
-                            Id = "8db5ba3e-d49a-4f8a-9128-09c52509ff52",
+                            Id = "c0a888ac-0dbf-418e-8856-e82862a49e2c",
                             Description = "COPED",
                             Value = "3"
                         },
                         new
                         {
-                            Id = "9a9895d7-71bd-46c6-a4a9-ce53d20e011e",
+                            Id = "5ed5858b-4552-4659-a0d9-b957e7d2fc74",
                             Description = "DIEFEM",
                             Value = "4"
                         },
                         new
                         {
-                            Id = "118d1a8a-f020-40db-b6f5-6b189104136a",
+                            Id = "b11180eb-6891-44da-a1d6-842af8e0d5af",
                             Description = "DIEI",
                             Value = "5"
                         },
                         new
                         {
-                            Id = "d26ec454-0bfe-41f3-974f-fc8f769d722a",
+                            Id = "f4ecc4c0-b2ee-4635-bec0-6b2f85020f66",
                             Description = "DIEJA",
                             Value = "6"
                         },
                         new
                         {
-                            Id = "46ca96f2-af50-4746-be63-c9c79f523dee",
+                            Id = "090d01ca-0e62-4ccb-a196-b5343568a4ed",
                             Description = "DIEE",
                             Value = "7"
                         },
                         new
                         {
-                            Id = "7a6348e6-3c14-4ecb-9338-7d2126bd11dc",
+                            Id = "fbd90918-f722-4a6a-b5ca-85c9ed32f62e",
                             Description = "NTA",
                             Value = "8"
                         },
                         new
                         {
-                            Id = "dfbafdad-961f-4f7a-8912-6d688e737b9d",
+                            Id = "fc220044-40b9-4304-a4d7-76d94f9df76a",
                             Description = "NTC",
                             Value = "9"
                         },
                         new
                         {
-                            Id = "c6162cb9-cf26-4c27-a275-d6f3c5428768",
+                            Id = "dbc179fc-429d-494e-ba5a-7445508d391e",
                             Description = "NTC-NAAPA",
                             Value = "10"
                         },
                         new
                         {
-                            Id = "cc5e194a-ce83-4ef6-aff9-f11fa25837ee",
+                            Id = "eb000636-7fa0-4282-8d9e-b53907629d70",
                             Description = "DIEE-Conveniado",
                             Value = "11"
                         },
                         new
                         {
-                            Id = "0e58c654-4551-4fee-83b5-faba20e37f41",
+                            Id = "e75e4781-c3c7-42ff-b6e4-dcb094d0b408",
                             Description = "COPED Básico",
                             Value = "12"
                         },
                         new
                         {
-                            Id = "3ece5641-72ed-46af-a3d0-4d7478f80838",
+                            Id = "84247726-b860-4eaa-9085-f2bade667773",
                             Description = "Regional",
                             Value = "13"
                         },
                         new
                         {
-                            Id = "bdd40003-3bf4-495e-bf96-4f31788316eb",
+                            Id = "08bfba36-82ae-45e0-bf2d-dc26a0439daf",
                             Description = "Técnico",
                             Value = "14"
                         },
                         new
                         {
-                            Id = "c472462d-9a05-43b9-a5a0-4eecf09c67ad",
+                            Id = "107cee38-af45-4ab3-a0aa-9202bc1e4d9d",
                             Description = "Supervisor DRE",
                             Value = "15"
                         },
                         new
                         {
-                            Id = "d3143bd9-c3ab-4ac8-850e-a21f05383230",
+                            Id = "c1be46fc-cf03-4564-a27e-704f55a896c0",
                             Description = "DIPED",
                             Value = "16"
                         },
                         new
                         {
-                            Id = "5649f295-7f77-410c-b4f1-95777e116a84",
+                            Id = "c15e8724-8a99-4532-9bf6-83ddde6c3c51",
                             Description = "NAAPA",
                             Value = "17"
                         },
                         new
                         {
-                            Id = "7afd3a8d-9b86-40e3-a1ed-959f03d8c5b0",
+                            Id = "e61ba98c-6035-42bb-b59f-3cd8595befec",
                             Description = "CEFAI",
                             Value = "18"
                         },
                         new
                         {
-                            Id = "66f51d6d-d1c2-48d7-b1c9-a441229a4bc1",
+                            Id = "913e38c8-5b0c-4bf5-8df8-1d2ecc2599ee",
                             Description = "PAAI",
                             Value = "19"
                         },
                         new
                         {
-                            Id = "888c8c29-5771-4475-91f6-f13cec5c40cb",
+                            Id = "853e76cc-13f7-4443-8df7-14014c28eb57",
                             Description = "DIPED DRE",
                             Value = "20"
                         },
                         new
                         {
-                            Id = "8fceb54a-fd67-44f1-9bb3-8f776f825215",
+                            Id = "4822300d-8530-41c0-98b0-e1675f6f0ee7",
                             Description = "Adm DRE",
                             Value = "21"
                         },
                         new
                         {
-                            Id = "ba3c4fad-21f1-4e27-b285-239ec8e1b41e",
+                            Id = "5ca3850a-640a-4b9b-b048-49a965e30567",
                             Description = "Básico DRE",
                             Value = "22"
                         },
                         new
                         {
-                            Id = "20e076b6-282a-49ec-92b2-2e7d67563d18",
+                            Id = "f81fcb55-4e45-45a0-9076-cc06c3788c34",
                             Description = "Básico Escola",
                             Value = "23"
                         },
                         new
                         {
-                            Id = "f6fad244-5ed8-4537-9907-440845c49956",
+                            Id = "c54fc706-18e5-41f7-9eea-8368dcd05b9a",
                             Description = "Infantil",
                             Value = "24"
                         },
                         new
                         {
-                            Id = "1eefc7dc-3437-4e20-bc04-61751ddebca8",
+                            Id = "550d95f4-5ec1-4a31-ad15-b485011fc08a",
                             Description = "UE Parceira",
                             Value = "25"
                         },
                         new
                         {
-                            Id = "c0249ef3-2a97-4d5f-92cf-e20ea276a339",
+                            Id = "d523a817-4225-4982-a701-d0bdcdd96448",
                             Description = "AD",
                             Value = "26"
                         },
                         new
                         {
-                            Id = "19bee4e5-68a6-406d-9f94-a77501ec0135",
+                            Id = "6b162dad-548e-4b42-92b2-1cc88b307098",
                             Description = "CP",
                             Value = "27"
                         },
                         new
                         {
-                            Id = "9b29f6ec-c58a-4d2a-9687-85f94840fbeb",
+                            Id = "bf7f2f44-9e8b-4def-9476-f71c0fa55ae3",
                             Description = "Secretário Escola",
                             Value = "28"
                         },
                         new
                         {
-                            Id = "7c3cc57d-2703-4408-a69f-3013ac30d4f1",
+                            Id = "0f499016-c18f-41c3-8fc6-9bc28c806900",
                             Description = "COTIC",
                             Value = "29"
                         },
                         new
                         {
-                            Id = "5c1fe9ce-ce38-4896-90b3-278ae8acc721",
+                            Id = "4dcb64e2-4e8c-4b14-ab5a-0ac53b4bc846",
                             Description = "UE",
                             Value = "30"
                         },
                         new
                         {
-                            Id = "7a8c6da8-931e-4bf9-abd9-de26b31f06e3",
+                            Id = "48909849-80cf-4632-96c2-ea21cdadb757",
                             Description = "CJ E Volante (PEI, ADI)",
                             Value = "31"
                         },
                         new
                         {
-                            Id = "e60c724a-6bd3-4c8c-9554-94e9e3cac85f",
+                            Id = "03878382-8b6e-49a1-8220-71b49f71c2cd",
                             Description = "Fund. e Inf.",
                             Value = "32"
                         },
                         new
                         {
-                            Id = "60204118-bd92-4845-abf0-798a3814fdef",
+                            Id = "092596f8-7bb0-46e0-8fb2-96b22467966e",
                             Description = "POA",
                             Value = "33"
                         },
                         new
                         {
-                            Id = "0392b063-5db0-4b85-b781-572c8d63110e",
+                            Id = "2268d1df-394f-4371-a414-9077d55f41bd",
                             Description = "PAP",
                             Value = "34"
                         },
                         new
                         {
-                            Id = "cf24d574-2b58-4b6f-aa91-90422ab5bb90",
+                            Id = "60725cae-430c-467c-8cc7-01a55ba9f38d",
                             Description = "AEE",
                             Value = "35"
                         },
                         new
                         {
-                            Id = "28332e80-fb12-48ba-8f91-93f917cd1da5",
+                            Id = "c6adeade-17b2-4148-bf32-1164ed8fd106",
                             Description = "Readaptado",
                             Value = "36"
                         },
                         new
                         {
-                            Id = "7ad1e379-6ecf-488d-930e-dc64c124a764",
+                            Id = "af3883f5-df4c-4ce5-aeff-5f4dc074e881",
                             Description = "ATE",
                             Value = "37"
                         });
@@ -599,7 +563,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "139113e3-b90a-4f42-8fd8-bab3a60a76c4",
+                            Id = "9c496c5d-9f5e-43f7-9349-16f2703e58aa",
                             Login = "danielli.amcom",
                             Name = "Danielli",
                             OccupationPlace = "AMCOM",
@@ -607,7 +571,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "87eec126-acd8-46ce-ba9a-6f6eb7e898c0",
+                            Id = "da9647ba-36fc-4075-9fad-ee741e0c25ac",
                             Login = "jeff.amcom",
                             Name = "Jeff",
                             OccupationPlace = "AMCOM",
@@ -615,7 +579,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "b1fcaa76-deee-4308-b0ec-2a80775d896b",
+                            Id = "575a4d13-9765-46a9-8129-18bf5be80693",
                             Login = "aline.amcom",
                             Name = "Aline",
                             OccupationPlace = "AMCOM",
@@ -623,7 +587,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "e075775d-9a6b-4d1d-b669-40dc05386a96",
+                            Id = "3615baf1-8ea0-473a-843b-764b3270ebca",
                             Login = "gabi.sme",
                             Name = "Gabi",
                             OccupationPlace = "SME",
@@ -645,47 +609,47 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "2d684d56-ec0c-4e68-8ec2-d5d827a82c75",
+                            Id = "91182f29-dba7-4a31-9caf-68fb89fcf36a",
                             Name = "Admin"
                         },
                         new
                         {
-                            Id = "143ed30f-06e9-4011-9eeb-75da1e0a4d47",
+                            Id = "a846f46e-1383-4268-a194-f63ad91e34c6",
                             Name = "Diretor"
                         },
                         new
                         {
-                            Id = "2e16b83d-d639-4285-9178-b0050fac5321",
+                            Id = "ae1f7cfe-52e8-4474-bbfd-cc12a1512219",
                             Name = "Supervisor"
                         },
                         new
                         {
-                            Id = "5a8eeb43-f98f-4f12-a661-a0df3a1be74d",
+                            Id = "0ccb5f2f-8dad-4e95-8d12-1fc3e53cf95a",
                             Name = "Diretor"
                         },
                         new
                         {
-                            Id = "164ef8ec-7fb4-4cea-81ea-bb5c2813f80e",
+                            Id = "43c3e7b9-651d-44f1-a9d5-7448c06f3b25",
                             Name = "Secretario(a)"
                         },
                         new
                         {
-                            Id = "dbd50975-45e3-471b-86be-ddabab2222db",
+                            Id = "f653ebe3-9fbd-4b33-9700-77e2c16a5f6f",
                             Name = "Auxiliar"
                         },
                         new
                         {
-                            Id = "941eb81d-0562-48eb-b65d-5b60d238838b",
+                            Id = "1b7bfe68-4cff-4d24-a54f-2b1fb185ed9e",
                             Name = "Professor"
                         },
                         new
                         {
-                            Id = "64d84265-e28c-4173-8df2-6d0767e165ac",
+                            Id = "de6cb4ff-f82c-4396-8f6e-c4377a5919b6",
                             Name = "Responsavel"
                         },
                         new
                         {
-                            Id = "fb6eabbe-d45a-476b-a9da-1c84f24dfc48",
+                            Id = "fdead5ff-9da1-4b11-9692-b36698786906",
                             Name = "Aluno"
                         });
                 });
@@ -779,27 +743,6 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("LogControls");
-                });
-
-            modelBuilder.Entity("SME.Pedagogico.Gestao.Models.Academic.MathPoolCA", b =>
-                {
-                    b.HasOne("SME.Pedagogico.Gestao.Models.Academic.Semester", "Semestre")
-                        .WithMany()
-                        .HasForeignKey("SemestreId");
-                });
-
-            modelBuilder.Entity("SME.Pedagogico.Gestao.Models.Academic.MathPoolCM", b =>
-                {
-                    b.HasOne("SME.Pedagogico.Gestao.Models.Academic.Semester", "Semestre")
-                        .WithMany()
-                        .HasForeignKey("SemestreId");
-                });
-
-            modelBuilder.Entity("SME.Pedagogico.Gestao.Models.Academic.MathPoolNumber", b =>
-                {
-                    b.HasOne("SME.Pedagogico.Gestao.Models.Academic.Semester", "Semestre")
-                        .WithMany()
-                        .HasForeignKey("SemestreId");
                 });
 
             modelBuilder.Entity("SME.Pedagogico.Gestao.Models.Academic.StudentCode", b =>

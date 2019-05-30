@@ -1,7 +1,4 @@
 ﻿using SME.Pedagogico.Gestao.Models.Base.Abstracts;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SME.Pedagogico.Gestao.Models.Academic
 {
@@ -14,8 +11,7 @@ namespace SME.Pedagogico.Gestao.Models.Academic
         public string AlunoEolCode { get; set; }
         public int AnoLetivo { get; set; }
         public int AnoTurma { get; set; }
-        public int SemestreCode { get; set; }
-        public virtual Semester Semestre { get; set; }
+        public int Semestre { get; set; }
         public string Ordem4Ideia { get; set; }
         public string Ordem4Resultado { get; set; }
         public string Ordem5Ideia { get; set; }

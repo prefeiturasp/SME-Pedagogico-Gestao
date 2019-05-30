@@ -92,7 +92,7 @@ export default class PollReportPortugueseGrid extends Component {
             for (var key in this.props.data) {
                 totalStudents += this.props.data[key].studentQuantity;
                 totalPercentage += this.props.data[key].studentPercentage;
-            } 
+            }
 
 
         return (

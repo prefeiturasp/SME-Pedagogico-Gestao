@@ -21,8 +21,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Models.RelatorioSondagem
 
     public class PollReportMathStudentResult
     {
-        public List<PollReportMathStudentItem> Results { get; set; }
-        public List<MathChartDataModel> ChartData { get; set; }
+        public List<PollReportMathStudentItem> Results { get; set; } = new List<PollReportMathStudentItem>();
+        public List<MathChartDataModel> ChartData { get; set; } = new List<MathChartDataModel>();
     }
 
     public class PollReportMathStudentItem
