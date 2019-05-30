@@ -43,7 +43,7 @@ export const reducer = (state, action) => {
                 listDres: action.listDres
             });
         case types.LIST_SCHOOLS:
-            debugger;
+          
             return ({
                 ...state,
                 scholls: action.listSchool,

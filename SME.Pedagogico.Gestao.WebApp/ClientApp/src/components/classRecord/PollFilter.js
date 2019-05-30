@@ -19,7 +19,6 @@ class PollFilter extends Component {
     }
 
     SelectedDre(event) {
-        debugger;
         var index = event.nativeEvent.target.selectedIndex;
         var label = event.nativeEvent.target[index].value;
 
@@ -34,7 +33,7 @@ class PollFilter extends Component {
 
 
     SelectedSchool(event) {
-        debugger;
+      
         var index = event.nativeEvent.target.selectedIndex;
         var label = event.nativeEvent.target[index].value;
 
@@ -76,9 +75,7 @@ class PollFilter extends Component {
                 });
          
         }
-        debugger;
         if (this.props.filters.listClassRoom != [] && this.props.filters.listClassRoom != null ) {
-            debugger;
             for (var item in this.props.filters.listClassRoom) {
                 listClassRoomOptions.push({
                     value: this.props.filters.listClassRoom[item].codigoTurma,

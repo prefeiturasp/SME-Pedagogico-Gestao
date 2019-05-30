@@ -89,8 +89,6 @@ class ClassPlan extends Component {
         };
         this.props.classRoomStudents.get_classroom_students(test);
         var list = this.props.classRoomStudentsState.classRoom;
-        //debugger;
-
     }
 
     disabledCheck(event) {

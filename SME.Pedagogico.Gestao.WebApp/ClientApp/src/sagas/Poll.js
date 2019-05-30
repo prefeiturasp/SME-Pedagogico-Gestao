@@ -45,7 +45,6 @@ function* SavePollPortuguese(students) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(students.pollstudents)
         }).then(response => response.json());
-        debugger;
         return (data.status);
     } catch (error) {
         console.log(error);
@@ -55,11 +54,8 @@ function* SavePollPortuguese(students) {
 
 function* GetStudentsMathNumbers({ classRoom }) {
     try {
-        debugger;
         const data = yield call(getStudentsPollMathNumbersRequestApi, classRoom);
-        debugger;
         yield put({ type: Poll.types.SET_POLL_MATH_NUMBERS_STUDENTS, data });
-        debugger;
     }
 
     catch (error) {
@@ -75,11 +71,9 @@ function getStudentsPollMathNumbersRequestApi(classRoom) {
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify(classRoom)
         }).then(response => response.json())
-        debugger
     } catch (e) {
         console.log(e);
     }
-    debugger;
     return (data);
 }
 
@@ -91,11 +85,9 @@ function* SavePollMathNumbers(students) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(students.pollstudents)
         }).then(response => response.json());
-        debugger;
         return (data);
     } catch (error) {
         console.log(error);
-        debugger;
     }
 }
 
@@ -127,7 +119,6 @@ function* SavePollMathCA(students) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(students.pollstudents)
         }).then(response => response.json());
-        debugger;
         return (data);
     } catch (error) {
         console.log(error);
@@ -162,7 +153,6 @@ function* SavePollMathCM(students) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(students.pollstudents)
         }).then(response => response.json());
-        debugger;
         return (data);
     } catch (error) {
         console.log(error);

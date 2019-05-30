@@ -60,7 +60,6 @@ export default class PollReportMathGrid extends Component {
                 data[i].totalStudentResultQuantity = 0;
                 data[i].totalStudentResultPercentage = 0;
 
-                debugger;
                 if (data[i].results !== undefined) {
 
                     for (var j = 0; j < data[i].results.length; j++) {

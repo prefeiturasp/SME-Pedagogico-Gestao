@@ -22,13 +22,10 @@ class SondagemClassSelected extends Component {
         }
 
         if (this.props.poll.pollTypeSelected === "Numeric") {
-            debugger;
             this.props.pollMethods.get_poll_math_numbers_students(classRoomMock);
         } else if (this.props.poll.pollTypeSelected === "CA") {
-            debugger;
             this.props.pollMethods.get_poll_math_ca_students(classRoomMock);
         } else if (this.props.poll.pollTypeSelected === "CM") {
-            debugger;
             this.props.pollMethods.get_poll_math_cm_students(classRoomMock);
         } 
     }

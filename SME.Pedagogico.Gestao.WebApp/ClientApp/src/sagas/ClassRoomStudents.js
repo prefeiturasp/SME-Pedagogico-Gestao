@@ -50,7 +50,6 @@ function getStudentsClassRoomRequestApi(classRoom) {
         body: JSON.stringify(classRoom)
     })
         .then(response => response.json()));
-    debugger;
    // const lStudants = [
     //    {
     //        "codigoAluno": 7138321,

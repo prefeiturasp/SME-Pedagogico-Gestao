@@ -411,7 +411,6 @@ class Poll extends Component {
                     console.log(this.props.poll.studentsPollMathCM);
                     var response = this.props.pollMethods.save_poll_math_cm_students(this.props.poll.studentsPollMathCM);
                 } 
-                debugger;
                 console.log(response);
                 console.log(this.props.poll.pollSelected);
             }
@@ -478,20 +477,16 @@ class Poll extends Component {
 
 
         if (this.props.poll.pollTypeSelected === "Numeric") {
-            debugger;
             this.props.pollMethods.get_poll_math_numbers_students(classRoomMock);
         } else if (this.props.poll.pollTypeSelected === "CA") {
-            debugger;
             this.props.pollMethods.get_poll_math_ca_students(classRoomMock);
         } else if (this.props.poll.pollTypeSelected === "CM") {
-            debugger;
             this.props.pollMethods.get_poll_math_cm_students(classRoomMock);
         } 
 
         
         //this.setState({ pollStudents: this.props.poll.students});
         
-        debugger;
         //this.toggleButton(element.currentTarget.id);
         //literacyMathPoll
         //subMathPoll //1A 2A 3ACA 3ACM .. 6ACA 6ACM
