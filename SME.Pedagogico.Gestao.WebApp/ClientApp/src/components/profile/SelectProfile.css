@@ -1,0 +1,28 @@
+﻿.profile-button {
+    height: 36px;
+    background-color: #E8E8E8;
+    border-radius: 4px;
+}
+
+    .profile-button:hover {
+        background-color: #33B082;
+        border-radius: 4px;
+    }
+
+.profile-button-separator {
+    width: 1px;
+    height: 26px;
+    background-color: #A8A8A8;
+}
+
+.profile-button:hover .profile-button-separator {
+    background-color: #ffffff;
+}
+
+.profile-button:hover .profile-button-text {
+    color: #ffffff;
+}
+
+.profile-button-icon {
+    color: #A8A8A8;
+}

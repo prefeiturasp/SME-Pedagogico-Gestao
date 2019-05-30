@@ -14,7 +14,7 @@ export default class StudentPollMathAlfabetizacao extends Component {
         return (
             <tr>
                 <th className="align-middle">
-                    <small className="ml-2 pr-4"><b>{this.props.sequenceNumber}</b></small><small>{this.props.student.name}</small>
+                    <small className="ml-2 pr-4"><b>{this.props.student.sequenceNumber}</b></small><small>{this.props.student.name}</small>
                 </th>
                 <th className="text-center border poll-select-container familiares_col">
                     <PollSelectYesNo subjectName="mathalfabetizacao" sequence={this.props.student.studentCodeEol} name="familiares1S" value={this.props.student.familiares1S} updatePollStudent={this.props.updatePollStudent} columnColor="bg-bluescale" />

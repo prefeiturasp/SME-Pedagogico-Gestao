@@ -81,7 +81,7 @@ class PollReportFilter extends Component {
         this.props.setPollReportFilter(this.state.selectedFilter);
 
         var parameters = this.state.selectedFilter;
-        parameters.classroomReport = false;
+        parameters.classroomReport = true;
         this.props.getPollReport(parameters);
     }
 

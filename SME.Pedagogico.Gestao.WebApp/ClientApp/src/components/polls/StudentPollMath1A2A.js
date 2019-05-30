@@ -14,7 +14,7 @@ export default class StudentPollMath1A2A extends Component {
         return (
             <tr>
                 <th className="align-middle">
-                    <small className="ml-2 pr-4"><b>{this.props.sequenceNumber}</b></small><small>{this.props.student.name}</small>
+                    <small className="ml-2 pr-4"><b>{this.props.student.sequenceNumber}</b></small><small>{this.props.student.name}</small>
                 </th>
                 <th colSpan="2" className="text-center border poll-select-container ordem1_col">
                     <PollSelectRightWrong sequence={this.props.student.studentCodeEol} name="orderm1Ideia1S" value={this.props.student.orderm1Ideia1S} updatePollStudent={this.props.updatePollStudent} columnColor="bg-bluescale" />

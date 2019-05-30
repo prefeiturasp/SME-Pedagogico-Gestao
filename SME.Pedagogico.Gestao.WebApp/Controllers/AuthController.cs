@@ -412,7 +412,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     Roles = await GetUserRoles(credential.Username)
                 }));
             }
-
             else if (!Data.Business.Authentication.ValidateUser(credential.Username, credential.Password))
             {
                 // Executa o método de autenticação pelo CoreSSO.Identity (sistema legado)

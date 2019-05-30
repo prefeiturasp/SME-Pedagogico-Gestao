@@ -6,11 +6,23 @@ using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.WebApp.Models.RelatorioSondagem
 {
+    public class PollReportPortugueseStudentResult
+    {
+        public List<PollReportPortugueseStudentItem> Results { get; set; }
+        public List<PortChartDataModel> ChartData { get; set; }
+    }
+
     public class PollReportPortugueseStudentItem
     {
         public string Code { get; set; }
         public string StudentName { get; set; }
         public string StudentValue { get; set; }
+    }
+
+    public class PollReportMathStudentResult
+    {
+        public List<PollReportMathStudentItem> Results { get; set; } = new List<PollReportMathStudentItem>();
+        public List<MathChartDataModel> ChartData { get; set; } = new List<MathChartDataModel>();
     }
 
     public class PollReportMathStudentItem

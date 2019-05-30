@@ -4,7 +4,6 @@
 
 .clickable {
     cursor: pointer;
-    z-index: 1;
 }
 
 .sc-blue {
@@ -45,4 +44,8 @@
 
 .sc-text-size-2 {
     font-size: 16px;
+}
+
+.sc-text-size-4 {
+    font-size: 24px;
 }

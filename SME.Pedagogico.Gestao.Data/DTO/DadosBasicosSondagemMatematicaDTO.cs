@@ -19,6 +19,9 @@ namespace SME.Pedagogico.Gestao.Data.DTO
         [JsonProperty(PropertyName = "schoolCodeEol")]
         public string CodigoEolEscola { get; set; }
 
+        [JsonProperty(PropertyName = "classroomCodeEol")]
+        public string CodigoEolTurma { get; set; }
+
         [JsonProperty(PropertyName = "schoolYear")]
         public string AnoLetivo { get; set; }
 

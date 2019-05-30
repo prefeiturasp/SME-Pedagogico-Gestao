@@ -43,8 +43,35 @@ export default class PollReportMathGrid extends Component {
 
         var orders = 0;
 
-        if (this.props.classroomReport)
+        if (this.props.classroomReport && this.props.data.length > 0)
             orders = this.props.data[0].poll.length
+
+        var data = this.props.data;
+
+        var totalStudentIdeaQuantity = 0;
+        var totalStudentIdeaPercentage = 0;
+        var totalStudentResultQuantity = 0;
+        var totalStudentResultPercentage = 0;
+
+        if (this.props.classroomReport === false) {
+            for (var i = 0; i < data.length; i++) {
+                data[i].totalStudentIdeaQuantity = 0;
+                data[i].totalStudentIdeaPercentage = 0;
+                data[i].totalStudentResultQuantity = 0;
+                data[i].totalStudentResultPercentage = 0;
+
+                debugger;
+                if (data[i].results !== undefined) {
+
+                    for (var j = 0; j < data[i].results.length; j++) {
+                        data[i].totalStudentIdeaQuantity += data[i].results[j].testIdeaQuantity;
+                        data[i].totalStudentIdeaPercentage += data[i].results[j].testIdeaPercentage;
+                        data[i].totalStudentResultQuantity += data[i].results[j].testResultQuantity;
+                        data[i].totalStudentResultPercentage += data[i].results[j].testResultPercentage;
+                    }
+                }
+            }
+        }
 
         return (
             <div className={className}>
@@ -58,7 +85,11 @@ export default class PollReportMathGrid extends Component {
                                     <PollReportMathGridItem {...result} />
                                 )}
 
-                                <PollReportGridTotal className="mb-4" totalIdeaQuantity="84" totalIdeaPercentage="100" totalResultQuantity="84" totalResultPercentage="100" />
+                                <PollReportGridTotal className="mb-4"
+                                    totalIdeaQuantity={item.totalStudentIdeaQuantity}
+                                    totalIdeaPercentage={item.totalStudentIdeaPercentage.toFixed(2)}
+                                    totalResultQuantity={item.totalStudentResultQuantity}
+                                    totalResultPercentage={item.totalStudentResultPercentage.toFixed(2)} />
                             </div>
                         );
                     })
