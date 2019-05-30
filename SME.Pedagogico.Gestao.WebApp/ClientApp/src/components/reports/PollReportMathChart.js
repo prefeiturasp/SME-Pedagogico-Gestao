@@ -63,6 +63,51 @@ export default class PollReportPortugueseChart extends Component {
         });
     }
 
+    componentDidUpdate() {
+        var echarts = require('echarts');
+
+        // initialize echarts instance with prepared DOM
+        var myChart = echarts.init(document.getElementById(this.props.chartIds[0]));
+        var myChart2 = echarts.init(document.getElementById(this.props.chartIds[1]));
+
+        // draw chart
+        myChart.setOption({
+            tooltip: {},
+            xAxis: {
+                data: ['Acertou', 'Errou', 'Não Resolveu']
+            },
+            yAxis: {},
+            series: [{
+                name: 'Alunos',
+                type: 'bar',
+                itemStyle: {
+                    normal: {
+                        color: '#9C96F6'
+                    },
+                },
+                data: this.props.data.idea
+            }]
+        });
+
+        myChart2.setOption({
+            tooltip: {},
+            xAxis: {
+                data: ['Acertou', 'Errou', 'Não Resolveu']
+            },
+            yAxis: {},
+            series: [{
+                name: 'Alunos',
+                type: 'bar',
+                itemStyle: {
+                    normal: {
+                        color: '#0077BE'
+                    },
+                },
+                data: this.props.data.result
+            }]
+        });
+    }
+
     render() {
         return (
             <div className="d-flex flex-column">

@@ -43,7 +43,7 @@ export default class PollReportMathGrid extends Component {
 
         var orders = 0;
 
-        if (this.props.classroomReport)
+        if (this.props.classroomReport && this.props.data.length > 0)
             orders = this.props.data[0].poll.length
 
         var data = this.props.data;
