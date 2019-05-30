@@ -26,6 +26,7 @@ function* GetSchools({ schoolCode }) {
         const data = yield call(getSchoolsAPI, schoolCode);
         var listSchool = data;
         yield put({ type: Filters.types.LIST_SCHOOLS, listSchool })
+        yield put({ type: Filters.types.ACTIVEDRECODE, schoolCode })
     }
     catch (error) {
         yield put({ type: "API_CALL_ERROR" });
@@ -37,6 +38,7 @@ function* GetClassRoom({ classRoomFilter }) {
         const data = yield call(getClassRoomAPI, classRoomFilter);
         var listClassRoom = data;
         yield put({ type: Filters.types.LIST_CLASSROOM, listClassRoom })
+        yield put({ type: Filters.types.ACTIVESCHOOLCODE, classRoomFilter  })
     }
     catch (error) {
         yield put({ type: "API_CALL_ERROR" });

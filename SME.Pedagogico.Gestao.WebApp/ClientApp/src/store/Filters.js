@@ -5,6 +5,10 @@
     LIST_SCHOOLS: "LIST_SCHOOLS",
     GET_CLASSROOM: "GET_CLASSROOM",
     LIST_CLASSROOM: "LIST_CLASSROOM",
+    ACTIVEDRECODE: "ACTIVEDRECODE",
+    ACTIVESCHOOLCODE: "ACTIVESCHOOLCODE",
+    ACTIVECLASSROOMCODE:  "ACTIVECLASSROOMCODE",
+
     //UNAUTHORIZED: "UNAUTHORIZED",
     //LOGOUT_REQUEST: "LOGOUT_REQUEST",
     //LOGOUT_USER: "LOGOUT_USER",
@@ -30,6 +34,7 @@ export const actionCreators = {
     listSchool: () => ({ type: types.LIST_SCHOOLS }),
     getClassroom: (classRoomFilter) => ({ type: types.GET_CLASSROOM, classRoomFilter }),
     listClassRoom: () => ({ type: types.LIST_CLASSROOM }),
+    activeClassroom: (codeClass) => ({ type: types.ACTIVECLASSROOMCODE, codeClass }),
 
 };
 
@@ -53,15 +58,20 @@ export const reducer = (state, action) => {
                 ...state,
                 listClassRoom: action.listClassRoom,
             });
-        case types.ON_AUTHENTICATION_REQUEST:
+        case types.ACTIVEDRECODE:
             return ({
                 ...state,
-                onAuthenticationRequest: true,
+                activeDreCode: action.schoolCode.dreCodeEol,
             });
-        case types.FINISH_AUTHENTICATION_REQUEST:
+        case types.ACTIVESCHOOLCODE:
             return ({
                 ...state,
-                onAuthenticationRequest: false,
+                activeSchollsCode: action.classRoomFilter.schoolCodeEol,
+            });
+        case types.ACTIVECLASSROOMCODE:
+            return ({
+                ...state,
+                activeClassRoomCode: action.codeClass,
             });
         default:
             return (state);

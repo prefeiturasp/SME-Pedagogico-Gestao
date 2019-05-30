@@ -16,6 +16,7 @@ class PollFilter extends Component {
 
         this.SelectedDre = this.SelectedDre.bind(this);
         this.SelectedSchool = this.SelectedSchool.bind(this);
+        this.SelectedClassRoom = this.SelectedClassRoom.bind(this);
     }
 
     SelectedDre(event) {
@@ -31,6 +32,15 @@ class PollFilter extends Component {
 
     }
 
+    SelectedClassRoom(event) {
+
+        var index = event.nativeEvent.target.selectedIndex;
+        var label = event.nativeEvent.target[index].value;
+
+        var codeClassRoom = label;
+
+        this.props.filterMethods.activeClassroom(codeClassRoom);
+    }
 
     SelectedSchool(event) {
       
@@ -102,7 +112,7 @@ class PollFilter extends Component {
                 <div className="px-2"></div>
                 <SelectChangeColor className="" defaultText="Curso" options={options} />
                 <div className="px-2"></div>
-                <SelectChangeColor className="" value={selectedClassRoom} defaultText="Turma" options={listClassRoomOptions} />
+                <SelectChangeColor className="" value={selectedClassRoom} defaultText="Turma" options={listClassRoomOptions} onChange={this.SelectedClassRoom} />
                 <div className="px-2"></div>
                 <CircleButton iconClass="fas fa-search" />
             </div>
