@@ -12,6 +12,7 @@ namespace SME.Pedagogico.Gestao.Models.Academic
         public string schoolYear { get; set; }
         public string yearClassroom { get; set; }
         public string studentCodeEol { get; set; }
+        public string studentNameEol { get; set; }
 
         public string reading1B { get; set; }
         public string writing1B { get; set; }

@@ -45,6 +45,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         studentPollPortuguese.schoolCodeEol = student.schoolCodeEol;
                         studentPollPortuguese.yearClassroom = student.yearClassroom;
                         studentPollPortuguese.classroomCodeEol = student.classroomCodeEol;
+                        studentPollPortuguese.studentNameEol = student.name;
                         studentPollPortuguese.studentCodeEol = student.studentCodeEol;
                         MapValuesPollPortuguese(student, studentPollPortuguese);
                         await db.PortuguesePolls.AddAsync(studentPollPortuguese);
