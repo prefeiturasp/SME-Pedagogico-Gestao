@@ -39,7 +39,7 @@ class Poll extends Component {
         this.openMathSubPoll = this.openMathSubPoll.bind(this);
         this.openMathPoll = this.openMathPoll.bind(this);
 
-        
+        this.props.pollMethods.set_poll_info(null, null, null);
     }
     componentDidUpdate() {//ver em ClassPlan o método ClassRoomClick
         
@@ -53,7 +53,7 @@ class Poll extends Component {
     }
 
     componentDidMount() {
-        this.props.pollMethods.set_poll_info(null, null, null);
+        
     }
     
     updatePollStudent(sequence, subjectName, propertyName, value) {
@@ -414,7 +414,8 @@ class Poll extends Component {
                 debugger;
                 console.log(response);
                 console.log(this.props.poll.pollSelected);
-            } 
+            }
+            alert("Informações salvas com sucesso");
         } else {
             alert(this.props.poll.pollSelected);
         }
@@ -445,11 +446,11 @@ class Poll extends Component {
         } 
 
 
-        this.props.pollMethods.set_poll_info(this.state.sondagemType, "", classRoomMock.yearClassroom); //passar pollSelected, pollTypeSelected, pollYear
+        this.props.pollMethods.set_poll_info(ClassRoomEnum.ClassPT, "", classRoomMock.yearClassroom); //passar pollSelected, pollTypeSelected, pollYear
         this.props.pollMethods.get_poll_portuguese_students(classRoomMock);
-        this.setState({
-            pollStudents: this.props.poll.students,
-        });
+        //this.setState({
+        //    pollStudents: this.props.poll.students,
+        //});
     }
     
     openMathPoll(element) {
