@@ -179,6 +179,186 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 throw;
             }
         }
+         
+        public async Task<PollReportMathResult> BuscarDadosRelatorioMatematicaAsync(string proficiency, string semestre, string anoLetivo, string codigoDre, string codigoEscola, string anoTurma)
+        {
+            if (proficiency.Equals("CM", StringComparison.InvariantCultureIgnoreCase))
+            {
+                //return await BuscaDadosRelatorioMatCM();
+            } else if (proficiency.Equals("CA", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return await BuscaDadosRelatorioMatCAAsync(semestre, anoLetivo, codigoDre, codigoEscola, anoTurma);
+            } else if (proficiency.Equals("Numeros", StringComparison.InvariantCultureIgnoreCase))
+            {
+                //return await BuscaDadosRelatorioMatNumeros);
+            }
+
+            return default;
+        }
+
+        private async Task<PollReportMathResult> BuscaDadosRelatorioMatCAAsync(string semestre, 
+                                                                               string anoLetivo, 
+                                                                               string codigoDre,
+                                                                               string codigoEscola, 
+                                                                               string anoTurma)
+        {
+            var listReturn = new List<PollReportMathItem>();
+
+            using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            {
+                IQueryable<MathPoolCA> query = db.Set<MathPoolCA>();
+                var ideasAndResults = new PollReportMathItem();
+                var relatorioRetorno = new PollReportMathResult();
+
+                query = db.MathPoolCAs
+                          .Where(x => x.AnoLetivo.ToString() == anoLetivo
+                       && x.Semestre.ToString() == semestre);
+
+                query = MontaFiltrosGenericos(codigoDre, codigoEscola, anoTurma, query);
+                
+                var ordem1Ideia = query.GroupBy(fu => fu.Ordem1Ideia)
+                                        .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                        .ToList();
+                var ordem1Resultado = query.GroupBy(fu => fu.Ordem1Resultado)
+                                            .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                            .ToList();
+
+                var ordem2Ideia = query.GroupBy(fu => fu.Ordem2Ideia)
+                                        .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                        .ToList();
+                var ordem2Resultado = query.GroupBy(fu => fu.Ordem2Resultado)
+                                            .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                            .ToList();
+
+                var ordem3Ideia = query.GroupBy(fu => fu.Ordem3Ideia)
+                                        .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                        .ToList();
+                var ordem3Resultado = query.GroupBy(fu => fu.Ordem3Resultado)
+                                            .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                            .ToList();
+
+                var ordem4Ideia = query.GroupBy(fu => fu.Ordem4Ideia)
+                                        .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                        .ToList();
+                var ordem4Resultado = query.GroupBy(fu => fu.Ordem4Resultado)
+                                            .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                            .ToList();
+
+                CreateIdeaItem(ordem1Ideia, order: "1", ref ideasAndResults, ref relatorioRetorno);
+                CreateIdeaItem(ordem2Ideia, order: "2", ref ideasAndResults, ref relatorioRetorno);
+                CreateIdeaItem(ordem3Ideia, order: "3", ref ideasAndResults, ref relatorioRetorno);
+                CreateIdeaItem(ordem4Ideia, order: "4", ref ideasAndResults, ref relatorioRetorno);
+                CreateResultItem(ordem1Resultado, order: "1", ref ideasAndResults, ref relatorioRetorno);
+                CreateResultItem(ordem2Resultado, order: "2", ref ideasAndResults, ref relatorioRetorno);
+                CreateResultItem(ordem3Resultado, order: "3", ref ideasAndResults, ref relatorioRetorno);
+                CreateResultItem(ordem4Resultado, order: "4", ref ideasAndResults, ref relatorioRetorno);
+
+                relatorioRetorno.Results = ideasAndResults;
+
+
+                return default;
+            }
+        }
+
+        private static IQueryable<MathPoolCA> MontaFiltrosGenericos(string codigoDre, string codigoEscola, string anoTurma, IQueryable<MathPoolCA> query)
+        {
+            if (!string.IsNullOrWhiteSpace(codigoDre))
+            {
+                query = query.Where(u => u.DreEolCode == codigoDre);
+            }
+
+            if (!string.IsNullOrWhiteSpace(codigoEscola))
+            {
+                query = query.Where(u => u.EscolaEolCode == codigoEscola);
+            }
+
+            if (!string.IsNullOrWhiteSpace(anoTurma))
+            {
+                query = query.Where(u => u.AnoTurma.ToString() == anoTurma);
+            }
+
+            return query;
+        }
+
+        private void CreateIdeaItem(List<MathGroupByDTO> ordemIdeia, 
+                                    string order, 
+                                    ref PollReportMathItem ideasAndResults, 
+                                    ref PollReportMathResult retornoRelatorio)
+        {
+            var ideaResults = new List<IdeaChartDTO>();
+            var ideaRetorno = new MathItemIdea();
+
+            foreach (var item in ordemIdeia)
+            {
+                if (!item.Label.Trim().Equals(""))
+                {
+                    if (item.Label.Equals("A", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        ideaRetorno.CorrectIdeaQuantity = item.Value;
+                    }
+                    else if (item.Label.Equals("E", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        ideaRetorno.IncorrectIdeaQuantity = item.Value;
+                    }
+                    else if (item.Label.Equals("NR", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        ideaRetorno.NotAnsweredIdeaQuantity = item.Value;
+                    }
+                }
+            }
+
+            var ideaTotalStudents = ideaRetorno.CorrectIdeaQuantity + ideaRetorno.IncorrectIdeaQuantity + ideaRetorno.NotAnsweredIdeaQuantity;
+
+            ideaRetorno.CorrectIdeaPercentage = (ideaRetorno.CorrectIdeaQuantity / ideaTotalStudents) * 100;
+            ideaRetorno.IncorrectIdeaPercentage = (ideaRetorno.IncorrectIdeaQuantity / ideaTotalStudents) * 100;
+            ideaRetorno.NotAnsweredIdeaPercentage = (ideaRetorno.NotAnsweredIdeaQuantity / ideaTotalStudents) * 100;
+            ideaRetorno.OrderName = order;
+
+            ideasAndResults.IdeaResults.Add(ideaRetorno);
+            ideaResults.Add(new IdeaChartDTO() { Description = "Acertou", Quantity = ideaRetorno.CorrectIdeaQuantity });
+            ideaResults.Add(new IdeaChartDTO() { Description = "Errou", Quantity = ideaRetorno.IncorrectIdeaQuantity });
+            ideaResults.Add(new IdeaChartDTO() { Description = "Não Resolveu", Quantity = ideaRetorno.NotAnsweredIdeaQuantity });
+        }
+
+        private void CreateResultItem(List<MathGroupByDTO> ordemResult, 
+                                      string order, 
+                                      ref PollReportMathItem ideasAndResults, 
+                                      ref List<MathChartDataModel> retornoRelatorio)
+        {
+            var resultRetorno = new MathItemResult();
+            var resultResults = new List<ResultChartDTO>();
+
+            foreach (var item in ordemResult)
+            {
+                if (!item.Label.Trim().Equals(""))
+                {
+                    if (item.Label.Equals("A"))
+                    {
+                        resultRetorno.CorrectResultQuantity = item.Value;
+                    }
+                    else if (item.Label.Equals("E"))
+                    {
+                        resultRetorno.IncorrectResultQuantity = item.Value;
+                    }
+                    else if (item.Label.Equals("NR"))
+                    {
+                        resultRetorno.NotAnsweredResultQuantity = item.Value;
+                    }
+                }
+            }
+
+            var ideaTotalStudents = resultRetorno.CorrectResultQuantity + resultRetorno.IncorrectResultQuantity + resultRetorno.NotAnsweredResultQuantity;
+
+            resultRetorno.CorrectResultPercentage = (resultRetorno.CorrectResultQuantity / ideaTotalStudents) * 100;
+            resultRetorno.IncorrectResultPercentage = (resultRetorno.IncorrectResultQuantity / ideaTotalStudents) * 100;
+            resultRetorno.NotAnsweredResultPercentage = (resultRetorno.NotAnsweredResultQuantity / ideaTotalStudents) * 100;
+            resultRetorno.OrderName = order;
+
+            ideasAndResults.ResultResults.Add(resultRetorno);
+            resultResults.Add(new ResultChartDTO() { Description = "Acertou", Quantity = resultRetorno.CorrectResultQuantity });
+            resultResults.Add(new ResultChartDTO() { Description = "Errou", Quantity = resultRetorno.IncorrectResultQuantity });
+            resultResults.Add(new ResultChartDTO() { Description = "Não Resolveu", Quantity = resultRetorno.NotAnsweredResultQuantity });
+        }
 
         public async Task<List<SondagemMatematicaOrdemDTO>> ListPoolCAAsync(FiltroSondagemMatematicaDTO filtroSondagem)
         {
