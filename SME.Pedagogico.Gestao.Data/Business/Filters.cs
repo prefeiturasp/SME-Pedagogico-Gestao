@@ -52,7 +52,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 var endPoint = new EndpointsAPI();
                 var schoolApi = new DREAPI(endPoint);
-                var listSchools = await schoolApi.GetEscolasPorDRE(dreCodeEol, _token);
+                var listSchools = await schoolApi.GetEscolasPorDREPorTipoEscola(dreCodeEol, "1", _token);
                 if (listSchools != null)
                 {
                     return listSchools.OrderBy(x => x.NomeEscola).ToList();
