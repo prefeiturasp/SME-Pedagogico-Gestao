@@ -14,9 +14,8 @@
 const initialState = {
     listDres: [],
     shoolYear: null,
-    dres: null,
     scholls: [],
-    classRoom: null,
+    listClassRoom: null,
     yearClassRoom: null,
     activeDreCode: null,
     activeSchollsCode: null,
@@ -29,7 +28,7 @@ export const actionCreators = {
     listDre: () => ({type: types.LIST_DRES}),
     getSchool: (schoolCode) => ({ type: types.GET_SCHOOL, schoolCode }),
     listSchool: () => ({ type: types.LIST_SCHOOLS }),
-    getClassroom: (classroomCode) => ({ type: types.GET_CLASSROOM, classroomCode }),
+    getClassroom: (classRoomFilter) => ({ type: types.GET_CLASSROOM, classRoomFilter }),
     listClassRoom: () => ({ type: types.LIST_CLASSROOM }),
 
 };
@@ -44,14 +43,15 @@ export const reducer = (state, action) => {
                 listDres: action.listDres
             });
         case types.LIST_SCHOOLS:
+            debugger;
             return ({
                 ...state,
                 scholls: action.listSchool,
             });
-        case types.LOGOUT_USER:
+        case types.LIST_CLASSROOM:
             return ({
                 ...state,
-                ...initialState
+                listClassRoom: action.listClassRoom,
             });
         case types.ON_AUTHENTICATION_REQUEST:
             return ({
