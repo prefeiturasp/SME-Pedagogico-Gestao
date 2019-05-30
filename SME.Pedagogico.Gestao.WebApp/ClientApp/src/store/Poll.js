@@ -1,7 +1,8 @@
 ﻿export const types = {
     SET_POLL_INFO: "SET_POLL_INFO",
     SET_POLL_TYPE_SELECTED: "SET_POLL_TYPE_SELECTED",
-
+    SET_POLL_LIST_INITIAL_STATE:"SET_POLL_LIST_INITIAL_STATE",
+    
     UPDATE_POLL_STUDENTS: "UPDATE_POLL_STUDENTS",
     GET_POLL_PORTUGUESE_STUDENTS: "GET_POLL_PORTUGUESE_STUDENTS",
     SET_POLL_PORTUGUESE_STUDENTS: "SET_POLL_PORTUGUESE_STUDENTS",
@@ -37,7 +38,7 @@ const initialState = {
 export const actionCreators = {
     set_poll_info: (pollSelected, pollTypeSelected, pollYear) => ({ type: types.SET_POLL_INFO, pollSelected, pollTypeSelected, pollYear }),
     set_poll_type_selected: (pollTypeSelected) => ({ type: types.SET_POLL_TYPE_SELECTED, pollTypeSelected }),
-
+    set_poll_list_initial_state: () => ({ type: types.SET_POLL_LIST_INITIAL_STATE}),
 
     update_poll_students: (pollstudents) => ({ type: types.UPDATE_POLL_STUDENTS, pollstudents }),
     set_poll_portuguese_students: (pollstudents) => ({ type: types.SET_POLL_PORTUGUESE_STUDENTS, pollstudents }),
@@ -61,7 +62,7 @@ export const actionCreators = {
     save_poll_math_cm_students: (pollstudents) => ({ type: types.SAVE_POLL_MATH_CM_STUDENTS, pollstudents }),
 }
 
-export const reducer = (state, action, pollSelected, pollTypeSelected, pollYear, pollstudents) => {
+export const reducer = (state, action) => {
     state = state || initialState;
 
     switch (action.type) {
@@ -69,7 +70,9 @@ export const reducer = (state, action, pollSelected, pollTypeSelected, pollYear,
         case types.SET_POLL_INFO:
             return ({ ...state, pollSelected: action.pollSelected, pollTypeSelected: action.pollTypeSelected, pollYear: action.pollYear });
         case types.SET_POLL_TYPE_SELECTED:
-            return ({ ...state, pollTypeSelected: action.pollTypeSelected});
+            return ({ ...state, pollTypeSelected: action.pollTypeSelected });
+        case types.SET_POLL_LIST_INITIAL_STATE:
+            return ({ ...state, students: initialState.students, studentsPollMathNumbers: initialState.studentsPollMathNumbers, studentsPollMathCA: initialState.studentsPollMathCA, studentsPollMathCM: initialState.studentsPollMathCM});
         case types.SET_POLL_PORTUGUESE_STUDENTS:
             return ({
                 ...state, students: action.data,

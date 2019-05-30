@@ -36,10 +36,10 @@ class Poll extends Component {
         this.toggleButton = this.toggleButton.bind(this);
 
         this.openPortuguesePoll = this.openPortuguesePoll.bind(this);
-        this.openMathSubPoll = this.openMathSubPoll.bind(this);
         this.openMathPoll = this.openMathPoll.bind(this);
 
         this.props.pollMethods.set_poll_info(null, null, null);
+        //this.props.pollMethods.set_poll_list_initial_state();
     }
     componentDidUpdate() {//ver em ClassPlan o método ClassRoomClick
         
@@ -49,7 +49,7 @@ class Poll extends Component {
         } else if (this.state.navSelected === "matematica-tab" && document.getElementById("portugues-tab") !== null && document.getElementById("matematica-tab") !== null) {
             document.getElementById("portugues-tab").className = "btn btn-outline-primary btn-sm btn-planning";
             document.getElementById("matematica-tab").className = "btn btn-outline-primary btn-sm btn-planning active";
-        }
+        } 
     }
 
     componentDidMount() {
@@ -261,8 +261,8 @@ class Poll extends Component {
                                 case "orderm8Ideia2S":
                                     pollStudents[i].orderm8Ideia2S = value;
                                     break;
-                                case "orderm8Resultado2S8Ideia2S":
-                                    pollStudents[i].orderm8Resultado2S8Ideia2S = value;
+                                case "orderm8Resultado2S":
+                                    pollStudents[i].orderm8Resultado2S = value;
                                     break;
                                 default:
                                     break;
@@ -379,8 +379,8 @@ class Poll extends Component {
                                 case "orderm8Ideia2S":
                                     pollStudents[i].orderm8Ideia2S = value;
                                     break;
-                                case "orderm8Resultado2S8Ideia2S":
-                                    pollStudents[i].orderm8Resultado2S8Ideia2S = value;
+                                case "orderm8Resultado2S":
+                                    pollStudents[i].orderm8Resultado2S = value;
                                     break;
                                 default:
                                     break;
@@ -411,7 +411,7 @@ class Poll extends Component {
                     console.log(this.props.poll.studentsPollMathCM);
                     var response = this.props.pollMethods.save_poll_math_cm_students(this.props.poll.studentsPollMathCM);
                 } 
-                debugger;
+                
                 console.log(response);
                 console.log(this.props.poll.pollSelected);
             }
@@ -434,18 +434,18 @@ class Poll extends Component {
     openPortuguesePoll(element) {
         this.toggleButton(element.currentTarget.id);
         //aqui vai ter que mudar de acordo com o ano que entrar...
-        this.setState({
-            sondagemType: ClassRoomEnum.ClassPT,
-        });
+        //this.setState({
+        //    sondagemType: ClassRoomEnum.ClassPT,
+        //});
         var classRoomMock = {
-            "dreCodeEol": "4",
-            "schoolCodeEol": "44",
-            "classroomCodeEol": "1992661",
+            "dreCodeEol": "108100 ",
+            "schoolCodeEol": "000191",
+            "classroomCodeEol": "1996441",
             "schoolYear": "2019",
-            "yearClassroom": "1"
+            "yearClassroom": "6"
         } 
 
-
+        this.props.pollMethods.set_poll_list_initial_state();
         this.props.pollMethods.set_poll_info(ClassRoomEnum.ClassPT, "", classRoomMock.yearClassroom); //passar pollSelected, pollTypeSelected, pollYear
         this.props.pollMethods.get_poll_portuguese_students(classRoomMock);
         //this.setState({
@@ -455,56 +455,54 @@ class Poll extends Component {
     
     openMathPoll(element) {
         this.toggleButton(element.currentTarget.id);
-        this.openMathSubPoll();
-    }
 
-    openMathSubPoll() {
         var classRoomMock = {
             "dreCodeEol": "108100 ",
             "schoolCodeEol": "000191",
-            "classroomCodeEol": "1996399",
+            "classroomCodeEol": "1996441",
             "schoolYear": "2019",
-            "yearClassroom": "1"
+            "yearClassroom": "6"
         }
 
+        this.props.pollMethods.set_poll_list_initial_state();
         if (classRoomMock.yearClassroom === "1" || classRoomMock.yearClassroom === "2" || classRoomMock.yearClassroom === "3") {
             this.props.pollMethods.set_poll_info(ClassRoomEnum.ClassMT, "Numeric", classRoomMock.yearClassroom); //passar pollSelected, pollTypeSelected, pollYear
         } else {
             this.props.pollMethods.set_poll_info(ClassRoomEnum.ClassMT, "CA", classRoomMock.yearClassroom); //passar pollSelected, pollTypeSelected, pollYear
         }
-        this.setState({
-            sondagemType: this.props.poll.pollSelected,
-        });
-
-
+        
         if (this.props.poll.pollTypeSelected === "Numeric") {
-            debugger;
+            
             this.props.pollMethods.get_poll_math_numbers_students(classRoomMock);
         } else if (this.props.poll.pollTypeSelected === "CA") {
-            debugger;
+            
             this.props.pollMethods.get_poll_math_ca_students(classRoomMock);
         } else if (this.props.poll.pollTypeSelected === "CM") {
-            debugger;
+            
             this.props.pollMethods.get_poll_math_cm_students(classRoomMock);
-        } 
+        }
 
-        
+
         //this.setState({ pollStudents: this.props.poll.students});
-        
-        debugger;
+
         //this.toggleButton(element.currentTarget.id);
         //literacyMathPoll
         //subMathPoll //1A 2A 3ACA 3ACM .. 6ACA 6ACM
+        //this.setState({
+        //    sondagemType: this.props.poll.pollSelected,
+        //});
     }
 
+    
     render() {
         var componentRender;
-        var sondagemType = this.state.sondagemType;
+
+        var sondagemType = this.props.poll.pollSelected
 
         
-        if (sondagemType === ClassRoomEnum.ClassPT) {
+        if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
             componentRender = <StudentPollPortugueseCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
-        } else if (sondagemType === ClassRoomEnum.ClassMT) {
+        } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMT) {
             if (this.props.poll.pollTypeSelected === "Numeric" && (this.props.poll.pollYear ==="1" || this.props.poll.pollYear === "2" || this.props.poll.pollYear === "3")) {
                 componentRender = <StudentPollMathAlfabetizacaoCard students={this.props.poll.studentsPollMathNumbers} updatePollStudent={this.updatePollStudent} />;
             } else if (this.props.poll.pollYear === "1") {
@@ -546,6 +544,12 @@ class Poll extends Component {
         }
         console.log(this.props.poll.pollSelected + " " + this.props.poll.pollTypeSelected + " " + this.props.poll.pollYear);
 
+        var btnPortuguese;
+        if (this.props.poll.yearClassroom === "1" || this.props.poll.yearClassroom === "2" || this.props.poll.yearClassroom === "3") {
+            btnPortuguese = <li className="nav-item">{/*Aplicar verificacao de ano se 1 2 3 ano*/}
+                                <button className="btn btn-outline-primary btn-sm btn-planning" id="portugues-tab" onClick={this.openPortuguesePoll}>Língua Portuguesa</button>
+                            </li>;
+        }
         return (
             <>
                 <Card className="mb-3">
@@ -563,9 +567,7 @@ class Poll extends Component {
                     </nav>
                     <hr className="horizontal-rule bg-azul-ux" />
                     <ul className="nav" role="tablist">
-                        <li className="nav-item">
-                            <button className="btn btn-outline-primary btn-sm btn-planning" id="portugues-tab" onClick={this.openPortuguesePoll}>Língua Portuguesa</button>
-                        </li>
+                        {btnPortuguese}
                         <li className="nav-item">
                             <button className="btn btn-outline-primary btn-sm btn-planning" id="matematica-tab" onClick={this.openMathPoll}>Matem&aacute;tica</button>
                         </li>
