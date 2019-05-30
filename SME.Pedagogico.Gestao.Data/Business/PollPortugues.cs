@@ -164,14 +164,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var liststudentPollPortuguese = new List<StudentPollPortuguese>();
                 using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
                 {
-                    var listStudentsPollPortuguese = new List<Models.Academic.PortuguesePoll>();
+                    var listStudentsPollPortuguese = new List<PortuguesePoll>();
                     switch (bimestre)
                     {
                         case "1° Bimestre":
                             {
                                 if (proficiencia == "Escrita")
                                 {
-                                    listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.writing1B)).ToList();
+                                    listStudentsPollPortuguese = db.PortuguesePolls
+                                        .Where(x => x.classroomCodeEol == turmaEol && !
+                                        string.IsNullOrEmpty(x.writing1B)).ToList();
                                 }
                                 else
                                 {
@@ -460,7 +462,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var listaGrafico = graficos.GroupBy(fu => fu.Name).Select(g => new { Label = g.Key, Value = g.Sum(soma => soma.Value) }).ToList();
                 graficos = new List<SME.Pedagogico.Gestao.Data.DTO.PortChartDataModel>();
                 foreach (var item in listaGrafico)
-                {                 
+                {
                     graficos.Add(new SME.Pedagogico.Gestao.Data.DTO.PortChartDataModel()
                     {
                         Name = item.Label,
@@ -472,8 +474,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 return retorno;
             }
         }
-
-
 
         private string MontarTextoProficiencia(string proficiencia)
         {

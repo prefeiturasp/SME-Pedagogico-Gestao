@@ -41,7 +41,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 {
                     PollReportPortugueseResult result = new PollReportPortugueseResult();
                     result = await BuscarDadosSyncAsync(parameters, "2019", "4", "", "");
-                
+
                     return (Ok(result));
                 }
             }
@@ -49,9 +49,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 if (parameters.ClassroomReport)
                 {
-                    PollReportMathStudentResult result = new PollReportMathStudentResult();
-                    //List<PollReportMathStudentItem> result = new List<PollReportMathStudentItem>();
+                    PollReportMathStudentResult result =  BuscarDadosMatematicaPorTurmaAsync(parameters);
 
+                    /* 
                     PollReportMathStudentItem item1 = new PollReportMathStudentItem()
                     {
                         Code = "1",
@@ -198,11 +198,13 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                         Idea = new List<int>() { 60, 13, 30 },
                         Result = new List<int>() { 60, 30, 45 }
                     });
+                    */
 
                     return (Ok(result));     //   pollreportfilter-> 84
 
                 }
-                else
+
+                else    // cONSOLIDADO
                 {
                     PollReportMathItem item1 = new PollReportMathItem() { OrderName = "ORDEM 1" };
                     item1.Results.Add(new MathItemResult()
@@ -339,6 +341,49 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return (NotFound());
         }
 
+        private PollReportMathStudentResult BuscarDadosMatematicaPorTurmaAsync(ParametersModel parameters)
+        {
+            var BusinessPoll = new Data.Business.PollMatematica (_config);
+            var listaAlunosTurma = BusinessPoll.BuscarAlunosTurmaRelatorioMatematica("1992661", parameters.Proficiency, parameters.Term);//ajustar para pegar a turma 
+            List<PollReportMathStudentItem> result = new List<PollReportMathStudentItem>();
+            List<MathChartDataModel> graficos = new List<MathChartDataModel>();
+            foreach (var sondagem in listaAlunosTurma)
+            {
+                //string tipo = ConverterProficienciaAluno(parameters.Proficiency, parameters.Term, sondagem);
+                //result.Add(
+                //    new PollReportPortugueseStudentItem()
+                //    {
+                //        Code = sondagem.studentCodeEol,
+                //        StudentName = "Aluno " + sondagem.studentCodeEol,
+                //        StudentValue = tipo
+                //    }
+                //);
+
+                graficos.Add(new MathChartDataModel()
+                {
+                    Name = "" // tipo
+                    //,Value = 1
+                });
+            }
+
+            PollReportMathStudentResult retorno = new PollReportMathStudentResult();
+            retorno.Results = result;
+
+            var listaGrafico = graficos.GroupBy(fu => fu.Name).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
+            graficos = new List<MathChartDataModel>();
+            foreach (var item in listaGrafico)
+            {
+                graficos.Add(new MathChartDataModel()
+                {
+                    Name = item.Label
+                    //,Value = item.Value
+                });
+            }
+            retorno.ChartData = graficos;
+
+            return retorno;
+        }
+
         private async Task<PollReportPortugueseResult> BuscarDadosSyncAsync(ParametersModel parameters, string anoLetivo, string codigoDre, string codigoEscola, string codigoCurso)
         {
             var BusinessPoll = new Data.Business.PollPortuguese(_config);
@@ -352,7 +397,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             var BusinessPoll = new Data.Business.PollPortuguese(_config);
             var listaAlunosTurma = await BusinessPoll.BuscarAlunosTurmaRelatorioPortugues("1992661", parameters.Proficiency, parameters.Term);//ajustar para pegar a turma 
             List<PollReportPortugueseStudentItem> result = new List<PollReportPortugueseStudentItem>();
-            List<Models.RelatorioSondagem.PortChartDataModel> graficos = new List<Models.RelatorioSondagem.PortChartDataModel>();
+            List<PortChartDataModel> graficos = new List<PortChartDataModel>();
             foreach (var sondagem in listaAlunosTurma)
             {
                 string tipo = ConverterProficienciaAluno(parameters.Proficiency, parameters.Term, sondagem);
@@ -365,7 +410,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     }
                 );
 
-                graficos.Add(new Models.RelatorioSondagem.PortChartDataModel()
+                graficos.Add(new PortChartDataModel()
                 {
                     Name = tipo,
                     Value = 1
@@ -376,10 +421,10 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             retorno.Results = result;
 
             var listaGrafico = graficos.GroupBy(fu => fu.Name).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
-            graficos = new List<Models.RelatorioSondagem.PortChartDataModel>();
+            graficos = new List<PortChartDataModel>();
             foreach (var item in listaGrafico)
-            {               
-                graficos.Add(new Models.RelatorioSondagem.PortChartDataModel()
+            {
+                graficos.Add(new PortChartDataModel()
                 {
                     Name = item.Label,
                     Value = item.Value
