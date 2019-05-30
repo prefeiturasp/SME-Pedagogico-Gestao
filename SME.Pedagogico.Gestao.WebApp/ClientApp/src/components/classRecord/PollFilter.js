@@ -12,6 +12,7 @@ class PollFilter extends Component {
             selectedDre: null,
             selectedSchool: null,
             selectedClassRoom: null,
+            yearClassroom: null,
         }
 
         this.SelectedDre = this.SelectedDre.bind(this);
@@ -33,7 +34,7 @@ class PollFilter extends Component {
 
 
     SelectedSchool(event) {
-      
+
         var index = event.nativeEvent.target.selectedIndex;
         var label = event.nativeEvent.target[index].value;
 
@@ -43,7 +44,6 @@ class PollFilter extends Component {
         }
 
         this.props.filterMethods.getClassroom(classRoomFilter);
-
     }
 
     componentDidMount() {
@@ -59,23 +59,23 @@ class PollFilter extends Component {
         const listSchoolOptions = [];
         const listClassRoomOptions = [];
 
-     
-            for (var item in this.props.filters.listDres ) {
-                listDresOptions.push({
-                    value: this.props.filters.listDres[item].codigoDRE,
-                    label: this.props.filters.listDres[item].siglaDRE,
-                });
-            }
-       
-     
-            for (var item in this.props.filters.scholls) {
-                listSchoolOptions.push({
-                    value: this.props.filters.scholls[item].codigoEscola,
-                    label: this.props.filters.scholls[item].nomeEscola,
-                });
-         
+
+        for (var item in this.props.filters.listDres) {
+            listDresOptions.push({
+                value: this.props.filters.listDres[item].codigoDRE,
+                label: this.props.filters.listDres[item].siglaDRE,
+            });
         }
-        if (this.props.filters.listClassRoom != [] && this.props.filters.listClassRoom != null ) {
+
+
+        for (var item in this.props.filters.scholls) {
+            listSchoolOptions.push({
+                value: this.props.filters.scholls[item].codigoEscola,
+                label: this.props.filters.scholls[item].nomeEscola,
+            });
+
+        }
+        if (this.props.filters.listClassRoom !== [] && this.props.filters.listClassRoom !== null) {
             for (var item in this.props.filters.listClassRoom) {
                 listClassRoomOptions.push({
                     value: this.props.filters.listClassRoom[item].codigoTurma,
@@ -83,24 +83,35 @@ class PollFilter extends Component {
                 });
             }
         }
+
+        var yearClassrooms = [];
+
+        if (this.props.filters.listClassRoom !== null) {
+            var temp = this.props.filters.listClassRoom;
+            var uniques = [];
+
+            for (var i = 0; i < temp.length; i++) {
+                var classroom = temp[i].nomeTurma.substring(0, 1);
+
+                if (uniques.indexOf(classroom) === -1) {
+                    yearClassrooms.push({ label: classroom, value: classroom });
+                    uniques.push(classroom);
+                }
+            }
+        }
+
         const ano = "2019";
-        const options = [
-            { value: "1", label: "One" },
-            { value: "2", label: "Two" },
-            { value: "3", label: "Three" },
-            { value: "4", label: "Four" },
-        ];
 
         return (
             <div className="py-2 px-3 d-flex align-items-center">
-                <SelectChangeColor className="" defaultText="Ano" value={ano} disabled="true" />
+                <SelectChangeColor className="" defaultText="2019" value={ano} disabled="true" />
                 <div className="px-2"></div>
                 <SelectChangeColor className="col-4" defaultText="Selecione a DRE"
                     value={selectedDre} options={listDresOptions} onChange={this.SelectedDre} />
                 <div className="px-2"></div>
                 <SelectChangeColor className="col-4" value={selectedSchool} defaultText="Escola" options={listSchoolOptions} onChange={this.SelectedSchool} />
                 <div className="px-2"></div>
-                <SelectChangeColor className="" defaultText="Curso" options={options} />
+                <SelectChangeColor className="" defaultText="Curso" options={yearClassrooms} />
                 <div className="px-2"></div>
                 <SelectChangeColor className="" value={selectedClassRoom} defaultText="Turma" options={listClassRoomOptions} />
                 <div className="px-2"></div>
