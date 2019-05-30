@@ -13,7 +13,7 @@ namespace SME.Pedagogico.Gestao.Data.DTO
     public class PortChartDataModel
     {
         public string Name { get; set; }
-        public int Value { get; set; }
+        public int Value { get; set; } 
     }
 
     public class PollReportPortugueseItem
