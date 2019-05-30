@@ -1,12 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.Functionalities;
 using SME.Pedagogico.Gestao.Data.Integracao;
-using SME.Pedagogico.Gestao.Data.Integracao.DTO;
+using System.Collections.Generic;
+using System.Linq;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.Data.Business
@@ -28,9 +26,10 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var endPoint = new EndpointsAPI();
                 var schoolApi = new EscolasAPI(endPoint);
                 var listClassRoom = await schoolApi.GetTurmasPorEscola(int.Parse(schoolCodeEol), schooYear, _token);
+              
                 if (listClassRoom != null)
                 {
-                    return listClassRoom;
+                    return listClassRoom.OrderBy(x=> x.NomeTurma).ToList();
                 }
 
                 else
@@ -53,10 +52,10 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 var endPoint = new EndpointsAPI();
                 var schoolApi = new DREAPI(endPoint);
-                var listSchools = await schoolApi.GetEscolasPorDRE(dreCodeEol, _token);
+                var listSchools = await schoolApi.GetEscolasPorDREPorTipoEscola(dreCodeEol, "1", _token);
                 if (listSchools != null)
                 {
-                    return listSchools;
+                    return listSchools.OrderBy(x => x.NomeEscola).ToList();
                 }
 
                 else
@@ -91,7 +90,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
             catch (System.Exception ex)
             {
-
                 throw ex;
             }
         }

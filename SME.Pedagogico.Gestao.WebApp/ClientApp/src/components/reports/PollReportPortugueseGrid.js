@@ -94,6 +94,7 @@ export default class PollReportPortugueseGrid extends Component {
                 totalPercentage += this.props.data[key].studentPercentage;
             }
 
+
         return (
             <div className={className}>
                 <PollReportGridHeader classroomReport={this.props.classroomReport} />

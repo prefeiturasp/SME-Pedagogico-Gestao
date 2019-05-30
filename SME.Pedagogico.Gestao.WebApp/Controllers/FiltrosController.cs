@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.Business;
+using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using System;
@@ -22,14 +23,14 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             _config = config;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<string>> ListarTurmasPorEscola(string schoolCodeEol, string schoolYear)
+        [HttpPost]
+        public async Task<ActionResult<string>> ListarTurmasPorEscola(BuscarTurmasPorEscola classrooms)
         {
             try
             {
                 //Necessário para gerar o Token temporariamente
                 var filterBusiness = new Filters(_config);
-                var listClassRoom = filterBusiness.GetListClassRoomSchool(schoolCodeEol, schoolYear);
+                var listClassRoom =  await filterBusiness.GetListClassRoomSchool(classrooms.schoolCodeEol, classrooms.schoolYear);
 
                 if (listClassRoom != null)
                 {
@@ -47,13 +48,14 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             }
         }
 
-        public async Task<ActionResult<string>> ListarEscolasPorDre(string schoolCodeEol, string schoolYear)
+        [HttpPost]
+        public async Task<ActionResult<string>> ListarEscolasPorDre(BuscarEscolasPorDreDTO schoolFilters)
         {
             try
             {
                 //Necessário para gerar o Token temporariamente
                 var filterBusiness = new Filters(_config);
-                var listSchool = filterBusiness.GetListClassRoomSchool(schoolCodeEol, schoolYear);
+                var listSchool =  await filterBusiness.GetListSchoolDre(schoolFilters.dreCodeEol, schoolFilters.schoolYear);
 
                 if (listSchool != null)
                 {
@@ -78,7 +80,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 //Necessário para gerar o Token temporariamente
                 var filterBusiness = new Filters(_config);
-                var listDres = filterBusiness.GetListDre();
+                var listDres = await filterBusiness.GetListDre();
 
                 if (listDres != null)
                 {
