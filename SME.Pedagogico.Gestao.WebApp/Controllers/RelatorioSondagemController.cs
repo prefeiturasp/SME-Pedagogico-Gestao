@@ -40,7 +40,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 else
                 {
                     PollReportPortugueseResult result = new PollReportPortugueseResult();
-                    result = await BuscarDadosSyncAsync(parameters, "2019", "4", "", "");
+                    result = await BuscarDadosSyncAsync(parameters, "2019", parameters.CodigoDRE, parameters.CodigoEscola, parameters.CodigoCurso);
                 
                     return (Ok(result));
                 }

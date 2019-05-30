@@ -22,6 +22,8 @@
     SET_POLL_MATH_CM_STUDENTS: "SET_POLL_MATH_CM_STUDENTS",
     UPDATE_POLL_MATH_CM_STUDENTS:"UPDATE_POLL_MATH_CM_STUDENTS",
     SAVE_POLL_MATH_CM_STUDENTS: "SAVE_POLL_MATH_CM_STUDENTS",
+
+    SET_SELECTED_FILTER: "SET_SELECTED_FILTER",
 }
 
 const initialState = {
@@ -32,7 +34,14 @@ const initialState = {
     students: [], //students for poll Portuguese
     studentsPollMathNumbers: [], //students for poll math numbers
     studentsPollMathCA: [], //students for poll math CA
-    studentsPollMathCM: [] //students for poll math CM
+    studentsPollMathCM: [], //students for poll math CM
+    selectedFilter: {
+        dreCodeEol: null,
+        schoolCodeEol: null,
+        classroomCodeEol: null,
+        schoolYear: "2019",
+        yearClassroom: null,
+    }
 }
 
 export const actionCreators = {
@@ -60,6 +69,8 @@ export const actionCreators = {
     set_poll_math_cm_students: (classRoom) => ({ type: types.SET_POLL_MATH_CM_STUDENTS, classRoom }),
     update_poll_math_cm_students: (pollstudents) => ({ type: types.UPDATE_POLL_MATH_CM_STUDENTS, pollstudents }),
     save_poll_math_cm_students: (pollstudents) => ({ type: types.SAVE_POLL_MATH_CM_STUDENTS, pollstudents }),
+
+    setSelectedFilter: (filters) => ({ type: types.SET_SELECTED_FILTER, filters }),
 }
 
 export const reducer = (state, action) => {
@@ -104,6 +115,12 @@ export const reducer = (state, action) => {
         case types.UPDATE_POLL_MATH_CM_STUDENTS:
             return ({
                 ...state, studentsPollMathCM: action.pollstudents
+            });
+
+        case types.SET_SELECTED_FILTER:
+            return ({
+                ...state,
+                selectedFilter: action.filters,
             });
         default:
             return (state);

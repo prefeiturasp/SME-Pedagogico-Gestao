@@ -3,6 +3,7 @@ import SelectChangeColor from '../inputs/SelectChangeColor';
 import CircleButton from '../inputs/CircleButton';
 import { connect } from 'react-redux';
 import { actionCreators as actionCreatorsPoll } from '../../store/Filters';
+import { actionCreators as actionCreatorsPoll2 } from '../../store/Poll';
 import { bindActionCreators } from 'redux';
 
 class PollFilter extends Component {
@@ -13,11 +14,14 @@ class PollFilter extends Component {
             selectedSchool: null,
             selectedClassRoom: null,
             yearClassroom: null,
+            classroom: null,
         }
 
         this.SelectedDre = this.SelectedDre.bind(this);
         this.SelectedSchool = this.SelectedSchool.bind(this);
         this.SelectedClassRoom = this.SelectedClassRoom.bind(this);
+        this.setSelectedFilter = this.setSelectedFilter.bind(this);
+        this.getClassroom = this.getClassroom.bind(this);
     }
 
     SelectedDre(event) {
@@ -58,6 +62,25 @@ class PollFilter extends Component {
 
     componentDidMount() {
         this.props.filterMethods.getDre();
+    }
+
+    getClassroom(event) {
+        debugger;
+        this.setState({
+            classroom: event.target.value
+        });
+    }
+
+    setSelectedFilter() {
+        var selectedFilter = {
+            dreCodeEol: this.props.filters.activeDreCode,
+            schoolCodeEol: this.props.filters.activeSchollsCode,
+            classroomCodeEol: this.props.filters.activeClassRoomCode,
+            schoolYear: "2019",
+            yearClassroom: this.state.classroom,
+        }
+
+        this.props.poll2.setSelectedFilter(selectedFilter);
     }
 
     render() {
@@ -121,11 +144,11 @@ class PollFilter extends Component {
                 <div className="px-2"></div>
                 <SelectChangeColor className="col-4" value={selectedSchool} defaultText="Escola" options={listSchoolOptions} onChange={this.SelectedSchool} />
                 <div className="px-2"></div>
-                <SelectChangeColor className="" defaultText="Curso" options={yearClassrooms} />
+                <SelectChangeColor className="" defaultText="Curso" options={yearClassrooms} onChange={this.getClassroom} />
                 <div className="px-2"></div>
                 <SelectChangeColor className="" value={selectedClassRoom} defaultText="Turma" options={listClassRoomOptions} onChange={this.SelectedClassRoom} />
                 <div className="px-2"></div>
-                <CircleButton iconClass="fas fa-search" />
+                <CircleButton iconClass="fas fa-search" onClick={this.setSelectedFilter} />
             </div>
         );
     }
@@ -134,12 +157,14 @@ class PollFilter extends Component {
 export default connect(
     state => (
         {
-            filters: state.filters
+            filters: state.filters,
+            poll: state.poll
         }
     ),
     dispatch => (
         {
-            filterMethods: bindActionCreators(actionCreatorsPoll, dispatch)
+            filterMethods: bindActionCreators(actionCreatorsPoll, dispatch),
+            poll2: bindActionCreators(actionCreatorsPoll2, dispatch),
         }
     )
 )(PollFilter);

@@ -437,13 +437,14 @@ class Poll extends Component {
         //this.setState({
         //    sondagemType: ClassRoomEnum.ClassPT,
         //});
-        var classRoomMock = {
-            "dreCodeEol": "108100 ",
-            "schoolCodeEol": "000191",
-            "classroomCodeEol": "1996441",
-            "schoolYear": "2019",
-            "yearClassroom": "6"
-        } 
+        //var classRoomMock = {
+        //    "dreCodeEol": "108100 ",
+        //    "schoolCodeEol": "000191",
+        //    "classroomCodeEol": "1996441",
+        //    "schoolYear": "2019",
+        //    "yearClassroom": "6"
+        //}
+        var classRoomMock = this.props.poll.selectedFilter;
 
         this.props.pollMethods.set_poll_list_initial_state();
         this.props.pollMethods.set_poll_info(ClassRoomEnum.ClassPT, "", classRoomMock.yearClassroom); //passar pollSelected, pollTypeSelected, pollYear
@@ -456,13 +457,14 @@ class Poll extends Component {
     openMathPoll(element) {
         this.toggleButton(element.currentTarget.id);
 
-        var classRoomMock = {
-            "dreCodeEol": "108100 ",
-            "schoolCodeEol": "000191",
-            "classroomCodeEol": "1996441",
-            "schoolYear": "2019",
-            "yearClassroom": "6"
-        }
+        //var classRoomMock = {
+        //    "dreCodeEol": "108100 ",
+        //    "schoolCodeEol": "000191",
+        //    "classroomCodeEol": "1996441",
+        //    "schoolYear": "2019",
+        //    "yearClassroom": "6"
+        //}
+        var classRoomMock = this.props.poll.selectedFilter;
 
         this.props.pollMethods.set_poll_list_initial_state();
         if (classRoomMock.yearClassroom === "1" || classRoomMock.yearClassroom === "2" || classRoomMock.yearClassroom === "3") {
@@ -545,11 +547,11 @@ class Poll extends Component {
         console.log(this.props.poll.pollSelected + " " + this.props.poll.pollTypeSelected + " " + this.props.poll.pollYear);
 
         var btnPortuguese;
-        if (this.props.poll.yearClassroom === "1" || this.props.poll.yearClassroom === "2" || this.props.poll.yearClassroom === "3") {
+        //if (this.props.poll.yearClassroom === "1" || this.props.poll.yearClassroom === "2" || this.props.poll.yearClassroom === "3") {
             btnPortuguese = <li className="nav-item">{/*Aplicar verificacao de ano se 1 2 3 ano*/}
                                 <button className="btn btn-outline-primary btn-sm btn-planning" id="portugues-tab" onClick={this.openPortuguesePoll}>Língua Portuguesa</button>
                             </li>;
-        }
+        //}
         return (
             <>
                 <Card className="mb-3">

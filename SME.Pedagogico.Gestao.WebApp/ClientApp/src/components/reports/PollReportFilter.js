@@ -81,7 +81,10 @@ class PollReportFilter extends Component {
         this.props.setPollReportFilter(this.state.selectedFilter);
 
         var parameters = this.state.selectedFilter;
-        parameters.classroomReport = true;
+        parameters.classroomReport = this.props.poll.selectedFilter.yearClassroom === null ? false : true;
+        parameters.codigoDRE = this.props.poll.selectedFilter.dreCodeEol;
+        parameters.CodigoEscola = this.props.poll.selectedFilter.schoolCodeEol;
+        parameters.CodigoCurso = this.props.poll.selectedFilter.yearClassroom;
         this.props.getPollReport(parameters);
     }
 
@@ -113,6 +116,6 @@ class PollReportFilter extends Component {
 }
 
 export default connect(
-    state => ({ pollReport: state.pollReport }),
+    state => ({ pollReport: state.pollReport, poll: state.poll }),
     dispatch => bindActionCreators(actionCreators, dispatch)
 )(PollReportFilter);

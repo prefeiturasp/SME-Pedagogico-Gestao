@@ -13,13 +13,14 @@ class SondagemClassSelected extends Component {
     }
     btnSetPollType(e) {
         this.props.pollMethods.set_poll_type_selected(e.currentTarget.value);
-        var classRoomMock = {
-            "dreCodeEol": "108100 ",
-            "schoolCodeEol": "000191",
-            "classroomCodeEol": "1996441",
-            "schoolYear": "2019",
-            "yearClassroom": "6"
-        }
+        //var classRoomMock = {
+        //    "dreCodeEol": "108100 ",
+        //    "schoolCodeEol": "000191",
+        //    "classroomCodeEol": "1996441",
+        //    "schoolYear": "2019",
+        //    "yearClassroom": "6"
+        //}
+        var classRoomMock = this.props.poll.selectedFilter;
 
         this.props.pollMethods.set_poll_list_initial_state();
         if (this.props.poll.pollTypeSelected === "Numeric") {
