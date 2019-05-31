@@ -13,8 +13,10 @@ function* LoginUserSaga({ credential }) {
         yield put({ type: User.types.ON_AUTHENTICATION_REQUEST });
         const data = yield call(authenticateUser, credential);
 
-        if (data.status === 401)
+        if (data.status === 401) {
             yield put({ type: User.types.UNAUTHORIZED });
+            yield put({ type: User.types.FINISH_AUTHENTICATION_REQUEST });
+        }
         else {
             var user = {
                 name: "",

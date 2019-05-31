@@ -43,8 +43,9 @@ export default class PollReportMathGrid extends Component {
 
         var orders = 0;
 
-        if (this.props.classroomReport && this.props.data.length > 0)
-            orders = this.props.data[0].poll.length
+        if (this.props.classroomReport && this.props.data !== undefined)
+            if (this.props.data[0].poll !== undefined)
+                orders = this.props.data[0].poll.length
 
         var data = this.props.data;
 
@@ -60,7 +61,6 @@ export default class PollReportMathGrid extends Component {
                 data[i].totalStudentResultQuantity = 0;
                 data[i].totalStudentResultPercentage = 0;
 
-                debugger;
                 if (data[i].results !== undefined) {
 
                     for (var j = 0; j < data[i].results.length; j++) {

@@ -487,7 +487,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     return "Silábico com valor sonoro";
                 case "SA":
                     return "Silábico - alfabético";
-                case "ALF":
+                case "A":
                     return "Alfabético";
                 default:
                     return proficiencia;

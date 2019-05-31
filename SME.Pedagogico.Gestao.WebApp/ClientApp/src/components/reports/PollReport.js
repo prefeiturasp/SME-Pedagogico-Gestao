@@ -23,7 +23,12 @@ class PollReport extends Component {
             showMessage: false
         }
 
+        this.printClick = this.printClick.bind(this);
         this.testMethod = this.testMethod.bind(this);
+    }
+
+    printClick() {
+        window.print();
     }
 
     testMethod() {
@@ -50,7 +55,7 @@ class PollReport extends Component {
         return (
             <div>
                 <Card className="mb-3">
-                    <PollFilter />
+                    <PollFilter reports={true} />
                 </Card>
 
                 <Card id="pollReport-card">
@@ -59,7 +64,7 @@ class PollReport extends Component {
                             <PollReportFilter />
                             <div className="flex-fill d-flex justify-content-end">
                                 <div className="mt-auto">
-                                    <button type="button" className="btn btn-sm btn-outline-primary" style={{ width: 109 }}>
+                                    <button type="button" className="btn btn-sm btn-outline-primary" style={{ width: 109 }} onClick={this.printClick}>
                                         Imprimir | <i className="fas fa-print"></i>
                                     </button>
                                 </div>
