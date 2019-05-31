@@ -26,18 +26,25 @@ namespace SME.Pedagogico.Gestao.Data.DTO
     public class PollReportMathResult
     {
         public PollReportMathItem Results { get; set; } = new PollReportMathItem();
-        public List<MathChartDataModel> ChartData { get; set; } = new List<MathChartDataModel>();
+        public List<MathIdeaChartDataModel> ChartIdeaData { get; set; } = new List<MathIdeaChartDataModel>();
+        public List<MathResultChartDataModel> ChartResultData { get; set; } = new List<MathResultChartDataModel>();
     }
 
-    public class MathChartDataModel
+    public class MathIdeaChartDataModel
     {
         public string Order { get; set; }
         public List<IdeaChartDTO> Idea { get; set; } = new List<IdeaChartDTO>();
+    }
+
+    public class MathResultChartDataModel
+    {
+        public string Order { get; set; }
         public List<ResultChartDTO> Result { get; set; } = new List<ResultChartDTO>();
     }
 
     public class PollReportMathItem
     {
+        public List<MathNumberResult> NumerosResults { get; set; } = new List<MathNumberResult>();
         public List<MathItemIdea> IdeaResults { get; set; } = new List<MathItemIdea>();
         public List<MathItemResult> ResultResults { get; set; } = new List<MathItemResult>();
     }
@@ -62,5 +69,16 @@ namespace SME.Pedagogico.Gestao.Data.DTO
         public double CorrectResultPercentage { get; set; }
         public double IncorrectResultPercentage { get; set; }
         public double NotAnsweredResultPercentage { get; set; }
+    }
+
+    public class MathNumberResult
+    {
+        public string GroupName { get; set; }
+        public int EscreveConvencionalmenteResultado { get; set; }
+        public int NaoEscreveConvencionalmenteResultado { get; set; }
+        public double EscreveConvencionalmentePercentage { get; set; }
+        public double NaoEscreveConvencionalmentePercentage { get; set; }
+        public string EscreveConvencionalmenteText { get; set; }
+        public string NaoEscreveConvencionalmenteText { get; set; }
     }
 }
