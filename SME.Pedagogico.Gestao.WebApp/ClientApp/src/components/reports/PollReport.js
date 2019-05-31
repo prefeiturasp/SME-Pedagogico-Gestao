@@ -55,7 +55,7 @@ class PollReport extends Component {
         return (
             <div>
                 <Card className="mb-3">
-                    <PollFilter />
+                    <PollFilter reports={true} />
                 </Card>
 
                 <Card id="pollReport-card">

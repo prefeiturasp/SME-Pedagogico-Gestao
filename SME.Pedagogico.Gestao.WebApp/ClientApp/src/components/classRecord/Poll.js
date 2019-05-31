@@ -555,11 +555,10 @@ class Poll extends Component {
         return (
             <>
                 <Card className="mb-3">
-                    <PollFilter />
+                    <PollFilter reports={false} />
                 </Card> 
                 <Card id="classRecord-poll">
-                    <nav className="container-tabpanel navbar"><div className="form-inline">
-                        <button className="btn btn-outline-primary btn-sm">[Em desenvolvimento]EF-1C - EMF - MARIA APARECIDA DO NASCIMENTO</button></div>
+                    <nav className="container-tabpanel navbar">
                         <ul className="nav navbar-nav ml-auto">
                             <li className="nav-item">
                                 <div className="form-inline">
