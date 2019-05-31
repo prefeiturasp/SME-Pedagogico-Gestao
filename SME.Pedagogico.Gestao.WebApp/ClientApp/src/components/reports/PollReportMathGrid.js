@@ -43,8 +43,9 @@ export default class PollReportMathGrid extends Component {
 
         var orders = 0;
 
-        if (this.props.classroomReport)
-            orders = this.props.data[0].poll.length
+        if (this.props.classroomReport && this.props.data !== undefined)
+            if (this.props.data[0].poll !== undefined)
+                orders = this.props.data[0].poll.length
 
         var data = this.props.data;
 
@@ -60,11 +61,14 @@ export default class PollReportMathGrid extends Component {
                 data[i].totalStudentResultQuantity = 0;
                 data[i].totalStudentResultPercentage = 0;
 
-                for (var j = 0; j < data[i].results.length; j++) {
-                    data[i].totalStudentIdeaQuantity += data[i].results[j].testIdeaQuantity;
-                    data[i].totalStudentIdeaPercentage += data[i].results[j].testIdeaPercentage;
-                    data[i].totalStudentResultQuantity += data[i].results[j].testResultQuantity;
-                    data[i].totalStudentResultPercentage += data[i].results[j].testResultPercentage;
+                if (data[i].results !== undefined) {
+
+                    for (var j = 0; j < data[i].results.length; j++) {
+                        data[i].totalStudentIdeaQuantity += data[i].results[j].testIdeaQuantity;
+                        data[i].totalStudentIdeaPercentage += data[i].results[j].testIdeaPercentage;
+                        data[i].totalStudentResultQuantity += data[i].results[j].testResultQuantity;
+                        data[i].totalStudentResultPercentage += data[i].results[j].testResultPercentage;
+                    }
                 }
             }
         }

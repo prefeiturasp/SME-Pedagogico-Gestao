@@ -63,7 +63,7 @@ export default class StudentPollMath3ACACard extends Component {
                 <table className="table table-sm table-bordered table-hover table-sondagem-matematica" style={{ overflow: "hidden", overflowX: "auto" }}>
                     <thead>
                         <tr>
-                            <th rowSpan="5" className="align-middle border text-color-purple "><div className="ml-2">Sondagem - 3º ano <b>Campo aditivo</b></div></th>
+                            <th rowSpan="5" className="align-middle border text-color-purple "><div className="ml-2">Sondagem - 3º ano <b>Campo Aditivo</b></div></th>
                             <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem1_head"><span style={pStyle}>&#60;</span><b className="p-4">Ordem 1 - ideia: COMPOSIÇÃO</b><span value="ordem2" onClick={this.hideShowOrdem} className="testcursor">&#62;</span></th>
                             <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem2_head"><span value="ordem1" onClick={this.hideShowOrdem} className="testcursor">&#60;</span><b className="p-4">Ordem 2 - ideia: TRANFORMAÇÃO</b><span value="ordem3" onClick={this.hideShowOrdem} className="testcursor">&#62;</span></th>
                             <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem3_head"><span value="ordem2" onClick={this.hideShowOrdem} className="testcursor">&#60;</span><b className="p-4">Ordem 3 - ideia: PROPORCIONALIDADE</b><span style={pStyle}>&#62;</span></th>

@@ -96,7 +96,7 @@
             <param name="config">Depêndencia de configurações</param>
             <param name="db">Depêndencia de dataContext (SMEManagementContext)</param>
         </member>
-        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.SondagemMatematicaController.#ctor(SME.Pedagogico.Gestao.Data.Contexts.SMEManagementContext,Microsoft.Extensions.Configuration.IConfiguration)">
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.SondagemMatematicaController.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
             Construtor padrão para o SondagemMatematicaController, faz injeção de dependências SMEManagementContext.
             </summary>
@@ -114,7 +114,21 @@
             Método para fazer a sondagem de matemática de CM.
             </summary>
             <param name="filtroSondagem">Objeto que contém filtro para retorno de sondagem de CM</param>
-            <returns>Dados </returns>
+            <returns>Dados da sondagem</returns>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.SondagemMatematicaController.ListaSondagemCA(SME.Pedagogico.Gestao.Data.DTO.FiltroSondagemMatematicaDTO)">
+            <summary>
+            Método para fazer a sondagem de matemática de CA.
+            </summary>
+            <param name="filtroSondagem">Objeto que contém filtro para retorno de sondagem de CA</param>
+            <returns>Dados da sondagem</returns>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.SondagemMatematicaController.ListaSondagemNumeros(SME.Pedagogico.Gestao.Data.DTO.FiltroSondagemMatematicaDTO)">
+            <summary>
+            Método para fazer a sondagem de matemática de Numeros.
+            </summary>
+            <param name="filtroSondagem">Objeto que contém filtro para retorno de sondagem de Numeros</param>
+            <returns>Dados da sondagem</returns>
         </member>
         <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.SondagemMatematicaController.GravaSondagemCA(System.Collections.Generic.List{SME.Pedagogico.Gestao.Data.DTO.SondagemMatematicaOrdemDTO})">
             <summary>

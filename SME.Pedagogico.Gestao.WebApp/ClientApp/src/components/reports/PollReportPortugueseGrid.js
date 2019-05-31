@@ -89,10 +89,11 @@ export default class PollReportPortugueseGrid extends Component {
         var totalPercentage = 0;
 
         if (this.props.classroomReport === false)
-            for (var item in this.props.data) {
-                totalStudents += item.studentQuantity;
-                totalPercentage += item.studentPercentage;
+            for (var key in this.props.data) {
+                totalStudents += this.props.data[key].studentQuantity;
+                totalPercentage += this.props.data[key].studentPercentage;
             }
+
 
         return (
             <div className={className}>
