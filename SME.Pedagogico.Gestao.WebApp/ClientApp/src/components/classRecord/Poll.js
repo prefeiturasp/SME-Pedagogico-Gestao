@@ -38,8 +38,13 @@ class Poll extends Component {
         this.openPortuguesePoll = this.openPortuguesePoll.bind(this);
         this.openMathPoll = this.openMathPoll.bind(this);
 
+        this.checkButtonPortuguese = this.checkButtonPortuguese.bind(this);
+        this.checkButtonMath = this.checkButtonMath.bind(this);
+        this.checkButtonSave = this.checkButtonSave.bind(this);
+
+
         this.props.pollMethods.set_poll_info(null, null, null);
-        //this.props.pollMethods.set_poll_list_initial_state();
+        this.props.pollMethods.reset_poll_selected_filter_state();
     }
     componentDidUpdate() {//ver em ClassPlan o método ClassRoomClick
         
@@ -431,6 +436,7 @@ class Poll extends Component {
         
         
     }
+
     openPortuguesePoll(element) {
         this.toggleButton(element.currentTarget.id);
         //aqui vai ter que mudar de acordo com o ano que entrar...
@@ -495,6 +501,39 @@ class Poll extends Component {
         //});
     }
 
+    checkButtonPortuguese() {
+        var btn;
+        if (this.props.poll.selectedFilter.yearClassroom !== null && parseInt(this.props.poll.selectedFilter.yearClassroom) < 4 && this.props.poll.selectedFilter.yearClassroom !== undefined) {
+            btn = <li className="nav-item">
+                <button className="btn btn-outline-primary btn-sm btn-planning" id="portugues-tab" onClick={this.openPortuguesePoll}>Língua Portuguesa</button>
+            </li>;
+        }
+        return (btn);
+    }
+
+    checkButtonMath() {
+        var btn;
+        if (this.props.poll.selectedFilter.yearClassroom !== null && parseInt(this.props.poll.selectedFilter.yearClassroom) < 7 && this.props.poll.selectedFilter.yearClassroom !== undefined) {
+            btn = <li className="nav-item">
+                <button className="btn btn-outline-primary btn-sm btn-planning" id="matematica-tab" onClick={this.openMathPoll}>Matem&aacute;tica</button>
+            </li>
+        }
+        return (btn); 
+    }
+
+    checkButtonSave() {
+        var btn;
+        if (this.props.poll.selectedFilter.yearClassroom !== null && parseInt(this.props.poll.selectedFilter.yearClassroom) < 7 && this.props.poll.selectedFilter.yearClassroom !== undefined) {
+            btn = <li className="nav-item">
+                <div className="form-inline">
+                    <button className="btn btn-save text-white" onClick={this.savePollStudent} disabled="">Salvar</button></div>
+            </li>
+        }
+        return (btn);
+    }
+
+    
+    
     
     render() {
         var componentRender;
@@ -546,12 +585,6 @@ class Poll extends Component {
         }
         console.log(this.props.poll.pollSelected + " " + this.props.poll.pollTypeSelected + " " + this.props.poll.pollYear);
 
-        var btnPortuguese;
-        //if (this.props.poll.yearClassroom === "1" || this.props.poll.yearClassroom === "2" || this.props.poll.yearClassroom === "3") {
-            btnPortuguese = <li className="nav-item">{/*Aplicar verificacao de ano se 1 2 3 ano*/}
-                                <button className="btn btn-outline-primary btn-sm btn-planning" id="portugues-tab" onClick={this.openPortuguesePoll}>Língua Portuguesa</button>
-                            </li>;
-        //}
         return (
             <>
                 <Card className="mb-3">
@@ -560,21 +593,17 @@ class Poll extends Component {
                 <Card id="classRecord-poll">
                     <nav className="container-tabpanel navbar">
                         <ul className="nav navbar-nav ml-auto">
-                            <li className="nav-item">
-                                <div className="form-inline">
-                                    <button className="btn btn-save text-white" onClick={this.savePollStudent} disabled="">Salvar</button></div>
-                            </li>
+                            {this.checkButtonSave()}
                         </ul>
                     </nav>
-                    <hr className="horizontal-rule bg-azul-ux" />
+                    
+                    
                     <ul className="nav" role="tablist">
-                        {btnPortuguese}
-                        <li className="nav-item">
-                            <button className="btn btn-outline-primary btn-sm btn-planning" id="matematica-tab" onClick={this.openMathPoll}>Matem&aacute;tica</button>
-                        </li>
+                        {this.checkButtonPortuguese()}
+                        {this.checkButtonMath()}
                     </ul>
-
-
+                    
+                    
                     {componentRender}{/*renderiza o componente de sondagem correspondente*/}
 
 
