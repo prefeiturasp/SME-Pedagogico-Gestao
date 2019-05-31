@@ -532,7 +532,7 @@ class Poll extends Component {
         return (btn);
     }
 
-
+    
     
     
     render() {
@@ -596,12 +596,14 @@ class Poll extends Component {
                             {this.checkButtonSave()}
                         </ul>
                     </nav>
-                    <hr className="horizontal-rule bg-azul-ux" />
+                    
+                    
                     <ul className="nav" role="tablist">
                         {this.checkButtonPortuguese()}
                         {this.checkButtonMath()}
                     </ul>
-
+                    
+                    
                     {componentRender}{/*renderiza o componente de sondagem correspondente*/}
 
 
