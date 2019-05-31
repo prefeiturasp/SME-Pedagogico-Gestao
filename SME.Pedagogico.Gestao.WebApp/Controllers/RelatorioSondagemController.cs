@@ -49,7 +49,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 if (parameters.ClassroomReport)
                 {
-                    PollReportMathStudentResult result =  BuscarDadosMatematicaPorTurmaAsync(parameters);
+                    PollReportMathStudentResult result = BuscarDadosMatematicaPorTurmaAsync(parameters);
 
                     /* 
                     PollReportMathStudentItem item1 = new PollReportMathStudentItem()
@@ -343,28 +343,47 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
         private PollReportMathStudentResult BuscarDadosMatematicaPorTurmaAsync(ParametersModel parameters)
         {
-            var BusinessPoll = new Data.Business.PollMatematica (_config);
-            var listaAlunosTurma = BusinessPoll.BuscarAlunosTurmaRelatorioMatematica("1992661", parameters.Proficiency, parameters.Term);//ajustar para pegar a turma 
+            var BusinessPoll = new Data.Business.PollMatematica(_config);
+
+
+            //ajustar para pegar a turma 
             List<PollReportMathStudentItem> result = new List<PollReportMathStudentItem>();
             List<MathChartDataModel> graficos = new List<MathChartDataModel>();
-            foreach (var sondagem in listaAlunosTurma)
-            {
-                //string tipo = ConverterProficienciaAluno(parameters.Proficiency, parameters.Term, sondagem);
-                //result.Add(
-                //    new PollReportPortugueseStudentItem()
-                //    {
-                //        Code = sondagem.studentCodeEol,
-                //        StudentName = "Aluno " + sondagem.studentCodeEol,
-                //        StudentValue = tipo
-                //    }
-                //);
 
-                graficos.Add(new MathChartDataModel()
+            if (parameters.Proficiency == "Campo Aditivo")
+            {
+                var listaAlunosTurmaObj = BusinessPoll.BuscarAlunosTurmaRelatorioMatematicaCA("1996399", parameters.Proficiency, parameters.Term);
+
+                foreach (var sondagem in listaAlunosTurmaObj)
                 {
-                    Name = "" // tipo
-                    //,Value = 1
-                });
+                    string tipo = "";//ConverterProficienciaAluno(parameters.Proficiency, parameters.Term, sondagem);
+                    result.Add(
+                        new PollReportMathStudentItem()
+                        {
+                            Code = sondagem.AlunoEolCode,
+                            StudentName = "Aluno " + sondagem.AlunoEolCode
+                            //,StudentValue = tipo    //aqui irei inserir o o
+                        }
+                    );
+
+                    graficos.Add(new MathChartDataModel()
+                    {
+                        Name = "" // tipo
+                                  //,Value = 1
+                    });
+                }
             }
+            else if (parameters.Proficiency == "Campo Multiplicativo")
+            {
+
+                var listaAlunosTurma = BusinessPoll.BuscarAlunosTurmaRelatorioMatematicaCM("1996399", parameters.Proficiency, parameters.Term);
+            }
+            else if (parameters.Proficiency == "Números")
+            {
+                var listaAlunosTurma =  BusinessPoll.BuscarAlunosTurmaRelatorioMatematicaNumber("1996399", parameters.Proficiency, parameters.Term);
+
+            }
+
 
             PollReportMathStudentResult retorno = new PollReportMathStudentResult();
             retorno.Results = result;
