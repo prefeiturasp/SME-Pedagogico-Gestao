@@ -62,7 +62,7 @@ export default class StudentPollMath5A6ACM extends Component {
                     <PollSelectRightWrong sequence={this.props.student.studentCodeEol} name="orderm8Ideia2S" value={this.props.student.orderm8Ideia2S} updatePollStudent={this.props.updatePollStudent} columnColor="bg-bluescale" />
                 </th>
                 <th colSpan="2" className="text-center border poll-select-container ordem8_col">
-                    <PollSelectRightWrong sequence={this.props.student.studentCodeEol} name="orderm8Resultado2S8Ideia2S" value={this.props.student.orderm8Resultado2S8Ideia2S} updatePollStudent={this.props.updatePollStudent} columnColor="bg-lila" />
+                    <PollSelectRightWrong sequence={this.props.student.studentCodeEol} name="orderm8Resultado2S" value={this.props.student.orderm8Resultado2S} updatePollStudent={this.props.updatePollStudent} columnColor="bg-lila" />
                 </th>
             </tr>
         );

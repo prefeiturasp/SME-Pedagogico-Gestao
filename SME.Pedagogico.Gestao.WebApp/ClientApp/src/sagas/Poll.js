@@ -13,7 +13,7 @@ export default function* () {
         takeLatest(Poll.types.SAVE_POLL_MATH_CA_STUDENTS, SavePollMathCA),
 
         takeLatest(Poll.types.GET_POLL_MATH_CM_STUDENTS, GetStudentsMathCM),
-        takeLatest(Poll.types.SAVE_POLL_MATH_NUMBERS_STUDENTS, SavePollMathCM),
+        takeLatest(Poll.types.SAVE_POLL_MATH_CM_STUDENTS, SavePollMathCM),
     ]);
 }
 
@@ -45,6 +45,7 @@ function* SavePollPortuguese(students) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(students.pollstudents)
         }).then(response => response.json());
+        
         return (data.status);
     } catch (error) {
         console.log(error);
@@ -54,8 +55,11 @@ function* SavePollPortuguese(students) {
 
 function* GetStudentsMathNumbers({ classRoom }) {
     try {
+        
         const data = yield call(getStudentsPollMathNumbersRequestApi, classRoom);
+        
         yield put({ type: Poll.types.SET_POLL_MATH_NUMBERS_STUDENTS, data });
+        
     }
 
     catch (error) {
@@ -71,9 +75,11 @@ function getStudentsPollMathNumbersRequestApi(classRoom) {
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify(classRoom)
         }).then(response => response.json())
+        debugger
     } catch (e) {
         console.log(e);
     }
+    
     return (data);
 }
 
@@ -85,9 +91,11 @@ function* SavePollMathNumbers(students) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(students.pollstudents)
         }).then(response => response.json());
+        
         return (data);
     } catch (error) {
         console.log(error);
+        
     }
 }
 
@@ -119,6 +127,7 @@ function* SavePollMathCA(students) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(students.pollstudents)
         }).then(response => response.json());
+        
         return (data);
     } catch (error) {
         console.log(error);
@@ -153,6 +162,7 @@ function* SavePollMathCM(students) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(students.pollstudents)
         }).then(response => response.json());
+        
         return (data);
     } catch (error) {
         console.log(error);

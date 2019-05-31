@@ -7,7 +7,8 @@
     LIST_CLASSROOM: "LIST_CLASSROOM",
     ACTIVEDRECODE: "ACTIVEDRECODE",
     ACTIVESCHOOLCODE: "ACTIVESCHOOLCODE",
-    ACTIVECLASSROOMCODE:  "ACTIVECLASSROOMCODE",
+    ACTIVECLASSROOMCODE: "ACTIVECLASSROOMCODE",
+    RESET_POLL_FILTERS: "RESET_POLL_FILTERS,"
 
     //UNAUTHORIZED: "UNAUTHORIZED",
     //LOGOUT_REQUEST: "LOGOUT_REQUEST",
@@ -35,7 +36,7 @@ export const actionCreators = {
     getClassroom: (classRoomFilter) => ({ type: types.GET_CLASSROOM, classRoomFilter }),
     listClassRoom: () => ({ type: types.LIST_CLASSROOM }),
     activeClassroom: (codeClass) => ({ type: types.ACTIVECLASSROOMCODE, codeClass }),
-
+    resetPollFilters: () => ({ type: types.RESET_POLL_FILTERS }),
 };
 
 export const reducer = (state, action) => {
@@ -73,6 +74,11 @@ export const reducer = (state, action) => {
                 ...state,
                 activeClassRoomCode: action.codeClass,
             });
+        case types.RESET_POLL_FILTERS:
+            return ({
+                ...state,
+                ...initialState
+            })
         default:
             return (state);
     }
