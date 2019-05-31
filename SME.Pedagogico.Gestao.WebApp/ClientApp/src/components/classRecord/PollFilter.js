@@ -43,7 +43,7 @@ class PollFilter extends Component {
     }
 
     SelectedClassRoom(event) {
-
+        debugger;
         var index = event.nativeEvent.target.selectedIndex;
         var label = event.nativeEvent.target[index].value;
 
@@ -52,7 +52,7 @@ class PollFilter extends Component {
         this.props.filterMethods.activeClassroom(codeClassRoom);
 
         this.setState({
-            classroom: label.substring(0, 1)
+            classroom: event.target[index].innerText.substring(0, 1)
         });
     }
 

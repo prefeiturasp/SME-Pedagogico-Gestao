@@ -64,10 +64,10 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
 
 
         //HttpGet("{codigoUE}/turmas/anos_letivos/{anoLetivo}")]
-        public string BuscaTurmasPorEscola { get; set; } = "escolas/{0}/turmas/anos_letivos/{1}";
+        public string BuscaTurmasPorEscola { get; set; } = "escolas/{0}/turmasSondagem/anos_letivos/{1}";
 
         // ******  FIM   Métodos da API Escola  **************************************************************************
-         
+
 
 
 
