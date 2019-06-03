@@ -40,7 +40,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 else
                 {
                     PollReportPortugueseResult result = new PollReportPortugueseResult();
-                    result = await BuscarDadosSyncAsync(parameters, "2019", "4", "", "");
+                    result = await BuscarDadosSyncAsync(parameters, "2019", parameters.CodigoDRE, parameters.CodigoEscola, parameters.CodigoCurso);
                 
                     return (Ok(result));
                 }
@@ -236,7 +236,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         private async Task<PollReportPortugueseStudentResult> BuscarDadosPorTurmaAsync(ParametersModel parameters)
         {
             var BusinessPoll = new Data.Business.PollPortuguese(_config);
-            var listaAlunosTurma = await BusinessPoll.BuscarAlunosTurmaRelatorioPortugues("1992661", parameters.Proficiency, parameters.Term);//ajustar para pegar a turma 
+            var listaAlunosTurma = await BusinessPoll.BuscarAlunosTurmaRelatorioPortugues(parameters.CodigoTurmaEol, parameters.Proficiency, parameters.Term);//ajustar para pegar a turma 
             List<PollReportPortugueseStudentItem> result = new List<PollReportPortugueseStudentItem>();
             List<Models.RelatorioSondagem.PortChartDataModel> graficos = new List<Models.RelatorioSondagem.PortChartDataModel>();
             foreach (var sondagem in listaAlunosTurma)

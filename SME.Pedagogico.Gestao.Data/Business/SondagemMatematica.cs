@@ -121,7 +121,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             studentDTO.NomeAluno = studentClassRoom.NomeAluno;
                             studentDTO.CodigoEolAluno = studentClassRoom.CodigoAluno.ToString();
                             studentDTO.NumeroAlunoChamada = studentClassRoom.NumeroAlunoChamada.ToString();
-                            studentDTO.AnoLetivo = filtroSondagem.AnoTurma;
+                            studentDTO.AnoLetivo = filtroSondagem.AnoLetivo;
                             studentDTO.CodigoEolDRE = filtroSondagem.DreEolCode;
                             studentDTO.CodigoEolEscola = filtroSondagem.EscolaEolCode;
                             studentDTO.AnoTurma = filtroSondagem.AnoTurma;
@@ -173,7 +173,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         }
                     }
                 }
-                return retornoSondagem;
+                return retornoSondagem.OrderBy(r => Convert.ToInt32(r.NumeroAlunoChamada)).ToList();
             } catch (Exception)
             {
                 throw;
@@ -645,7 +645,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             studentDTO.NomeAluno = studentClassRoom.NomeAluno;
                             studentDTO.CodigoEolAluno = studentClassRoom.CodigoAluno.ToString();
                             studentDTO.NumeroAlunoChamada = studentClassRoom.NumeroAlunoChamada.ToString();
-                            studentDTO.AnoLetivo = filtroSondagem.AnoTurma;
+                            studentDTO.AnoLetivo = filtroSondagem.AnoLetivo;
                             studentDTO.CodigoEolDRE = filtroSondagem.DreEolCode;
                             studentDTO.CodigoEolEscola = filtroSondagem.EscolaEolCode;
                             studentDTO.AnoTurma = filtroSondagem.AnoTurma;
@@ -693,7 +693,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         }
                     }
                 }
-                return retornoSondagem;
+                return retornoSondagem.OrderBy(r => Convert.ToInt32(r.NumeroAlunoChamada)).ToList();
             }
             catch (Exception)
             {
@@ -733,7 +733,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             studentDTO.NomeAluno = studentClassRoom.NomeAluno;
                             studentDTO.CodigoEolAluno = studentClassRoom.CodigoAluno.ToString();
                             studentDTO.NumeroAlunoChamada = studentClassRoom.NumeroAlunoChamada.ToString();
-                            studentDTO.AnoLetivo = filtroSondagem.AnoTurma;
+                            studentDTO.AnoLetivo = filtroSondagem.AnoLetivo;
                             studentDTO.CodigoEolDRE = filtroSondagem.DreEolCode;
                             studentDTO.CodigoEolEscola = filtroSondagem.EscolaEolCode;
                             studentDTO.AnoTurma = filtroSondagem.AnoTurma;
@@ -779,7 +779,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         }
                     }
                 }
-                return retornoSondagem;
+                return retornoSondagem.OrderBy(r => Convert.ToInt32(r.NumeroAlunoChamada)).ToList();
             }
             catch (Exception)
             {
