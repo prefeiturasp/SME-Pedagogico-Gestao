@@ -598,6 +598,10 @@ class Poll extends Component {
     render() {
         return (
             <>
+                <img src="./img/icon_2_mat_FFFFFF.svg" alt="seta esquerda inativa" style={{ height: 20 }} />
+                <img src="./img/icon_mat_9975FF.svg" alt="seta esquerda ativa" style={{ height: 20 }} />
+                <img src="./img/icon_2_mat_9975FF.svg" alt="seta direita ativa" style={{ height: 20 }} />
+                <img src="./img/icon_mat_FFFFFF.svg" alt="seta direita inativa" style={{ height: 20 }} />
                 <Card className="mb-3">
                     <PollFilter reports={false} />
                 </Card> 

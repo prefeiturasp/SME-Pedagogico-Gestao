@@ -43,7 +43,7 @@ class PollFilter extends Component {
     }
 
     SelectedClassRoom(event) {
-        debugger;
+        
         var index = event.nativeEvent.target.selectedIndex;
         var label = event.nativeEvent.target[index].value;
 

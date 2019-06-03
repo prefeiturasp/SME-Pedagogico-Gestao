@@ -47,9 +47,9 @@ export default class StudentPollMath2ACMCard extends Component {
     }
     hideShowOrdem(event) {
         this.setState({
-            selectedOrdem: event.target.attributes[0].value
+            selectedOrdem: event.currentTarget.attributes[0].value
         });
-        this.showOneHideAll(event.target.attributes[0].value);
+        this.showOneHideAll(event.currentTarget.attributes[0].value);
     }
     render() {
         const pStyle = {
@@ -64,7 +64,7 @@ export default class StudentPollMath2ACMCard extends Component {
                     <thead>
                         <tr>
                             <th rowSpan="5" className="align-middle border text-color-purple "><div className="ml-2">Sondagem - 2º ano <b>Campo Multiplicativo</b></div></th>
-                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem3_head"><span style={pStyle}>&#60;</span><b className="p-4">Ordem 3 - ideia: PROPORCIONALIDADE</b><span style={pStyle}>&#62;</span></th>
+                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem3_head"><span style={pStyle}><img src="./img/icon_mat_9975FF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 3 - ideia: PROPORCIONALIDADE</b><span style={pStyle}><img src="./img/icon_2_mat_9975FF.svg" alt="seta direita inativa"  style={{height:20}}/></span></th>
                         </tr>
                         <tr>
                             <th colSpan="8" className="text-center border text-color-purple" id="ordem3_col"><small>Problemas 1º e 2º Semestres</small></th>
