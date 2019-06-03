@@ -497,9 +497,17 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             var ideaTotalStudents = ideaRetorno.CorrectIdeaQuantity + ideaRetorno.IncorrectIdeaQuantity + ideaRetorno.NotAnsweredIdeaQuantity;
 
-            ideaRetorno.CorrectIdeaPercentage = (ideaRetorno.CorrectIdeaQuantity / ideaTotalStudents) * 100;
-            ideaRetorno.IncorrectIdeaPercentage = (ideaRetorno.IncorrectIdeaQuantity / ideaTotalStudents) * 100;
-            ideaRetorno.NotAnsweredIdeaPercentage = (ideaRetorno.NotAnsweredIdeaQuantity / ideaTotalStudents) * 100;
+            if (ideaTotalStudents < 1)
+            {
+                ideaRetorno.CorrectIdeaPercentage = 0;
+                ideaRetorno.IncorrectIdeaPercentage = 0;
+                ideaRetorno.NotAnsweredIdeaPercentage = 0;
+            } else
+            {
+                ideaRetorno.CorrectIdeaPercentage = (ideaRetorno.CorrectIdeaQuantity / ideaTotalStudents) * 100;
+                ideaRetorno.IncorrectIdeaPercentage = (ideaRetorno.IncorrectIdeaQuantity / ideaTotalStudents) * 100;
+                ideaRetorno.NotAnsweredIdeaPercentage = (ideaRetorno.NotAnsweredIdeaQuantity / ideaTotalStudents) * 100;
+            }
             ideaRetorno.OrderName = order;
 
             ideasAndResults.IdeaResults.Add(ideaRetorno);

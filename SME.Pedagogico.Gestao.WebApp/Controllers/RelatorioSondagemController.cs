@@ -204,7 +204,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 }
                 else
                 {
-                    var result = await BuscaDadosMathAsync(parameters, "2019", "4", "", "");
+                    var result = await BuscaDadosMathAsync(parameters, "2019", "4", "000191", "4");
                     return Ok(result);
                 }
             }
