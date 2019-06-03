@@ -305,6 +305,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                         totalNaoRespondeu = listaAlunosTurma.Where(p => p.Ordem2Resultado.Equals("NR")).Count();
                         break;
 
+
                     case 5:
                         item.Name = "Ordem 3 - Ideia";
                         totalAcertou = listaAlunosTurma.Where(p => p.Ordem3Ideia.Equals("A")).Count();
