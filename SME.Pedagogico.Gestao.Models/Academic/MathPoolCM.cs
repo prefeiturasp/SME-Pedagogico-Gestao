@@ -12,6 +12,8 @@ namespace SME.Pedagogico.Gestao.Models.Academic
         public int AnoLetivo { get; set; }
         public int AnoTurma { get; set; }
         public int Semestre { get; set; }
+        public string Ordem3Ideia { get; set; }
+        public string Ordem3Resultado { get; set; }
         public string Ordem4Ideia { get; set; }
         public string Ordem4Resultado { get; set; }
         public string Ordem5Ideia { get; set; }
