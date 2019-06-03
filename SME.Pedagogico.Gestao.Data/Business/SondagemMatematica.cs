@@ -179,6 +179,439 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 throw;
             }
         }
+         
+        public async Task<PollReportMathResult> BuscarDadosRelatorioMatematicaAsync(string proficiency, string semestre, string anoLetivo, string codigoDre, string codigoEscola, string anoTurma)
+        {
+            if (proficiency.Equals("CM", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return await BuscaDadosRelatorioMatCMAsync(semestre, anoLetivo, codigoDre, codigoEscola, anoTurma);
+            } else if (proficiency.Equals("CA", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return await BuscaDadosRelatorioMatCAAsync(semestre, anoLetivo, codigoDre, codigoEscola, anoTurma);
+            } else if (proficiency.Equals("Numeros", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return await BuscaDadosRelatorioMatNumeros(semestre, anoLetivo, codigoDre, codigoEscola, anoTurma);
+            }
+
+            return default;
+        }
+
+        private async Task<PollReportMathResult> BuscaDadosRelatorioMatNumeros(string semestre, string anoLetivo, string codigoDre, string codigoEscola, string anoTurma)
+        {
+            using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            {
+                IQueryable<MathPoolNumber> query = db.Set<MathPoolNumber>();
+                var ideasAndResults = new PollReportMathItem();
+                var relatorioRetorno = new PollReportMathResult();
+                var ideaCharts = new List<MathIdeaChartDataModel>();
+                var resultCharts = new List<MathResultChartDataModel>();
+
+                query = db.MathPoolNumbers
+                          .Where(x => x.AnoLetivo.ToString() == anoLetivo
+                       && x.Semestre.ToString() == semestre);
+
+                if (query.Count() > 1)
+                {
+                    query = MontaFiltrosGenericosNumeros(codigoDre, codigoEscola, anoTurma, query);
+
+                    var familiaresAgrupados = query.GroupBy(fu => fu.Familiares)
+                                            .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                            .ToList();
+                    var opacosAgrupados = query.GroupBy(fu => fu.Opacos)
+                                                .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                                .ToList();
+
+                    var transparentesAgrupados = query.GroupBy(fu => fu.Transparentes)
+                                            .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                            .ToList();
+                    var terminamZeroAgrupados = query.GroupBy(fu => fu.TerminamZero)
+                                                .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                                .ToList();
+
+                    var algarismosAgrupados = query.GroupBy(fu => fu.Algarismos)
+                                            .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                            .ToList();
+                    var processoAgrupados = query.GroupBy(fu => fu.Processo)
+                                                .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                                .ToList();
+
+                    var zeroIntercaladosAgrupados = query.GroupBy(fu => fu.ZeroIntercalados)
+                                            .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                            .ToList();
+
+                    CreateNumberItem(familiaresAgrupados, grupo: "Familiares", ref relatorioRetorno, ref ideaCharts);
+                    CreateNumberItem(opacosAgrupados, grupo: "Opacos", ref relatorioRetorno, ref ideaCharts);
+                    CreateNumberItem(transparentesAgrupados, grupo: "Transparentes", ref relatorioRetorno, ref ideaCharts);
+                    CreateNumberItem(terminamZeroAgrupados, grupo: "Terminam em zero", ref relatorioRetorno, ref ideaCharts);
+                    CreateNumberItem(algarismosAgrupados, grupo: "Algarismos", ref relatorioRetorno, ref ideaCharts);
+                    CreateNumberItem(processoAgrupados, grupo: "Processo de generalização", ref relatorioRetorno, ref ideaCharts);
+                    CreateNumberItem(zeroIntercaladosAgrupados, grupo: "Zero intercalados", ref relatorioRetorno, ref ideaCharts);
+
+                    relatorioRetorno.Results = ideasAndResults;
+                    relatorioRetorno.ChartIdeaData.AddRange(ideaCharts);
+                    relatorioRetorno.ChartResultData.AddRange(resultCharts);
+
+                    return relatorioRetorno;
+                }
+
+                return default;
+            }
+        }
+
+        private IQueryable<MathPoolNumber> MontaFiltrosGenericosNumeros(string codigoDre, string codigoEscola, string anoTurma, IQueryable<MathPoolNumber> query)
+        {
+            if (!string.IsNullOrWhiteSpace(codigoDre))
+            {
+                query = query.Where(u => u.DreEolCode == codigoDre);
+            }
+
+            if (!string.IsNullOrWhiteSpace(codigoEscola))
+            {
+                query = query.Where(u => u.EscolaEolCode == codigoEscola);
+            }
+
+            if (!string.IsNullOrWhiteSpace(anoTurma))
+            {
+                query = query.Where(u => u.AnoTurma.ToString() == anoTurma);
+            }
+          
+            return query;
+        }
+
+        private async Task<PollReportMathResult> BuscaDadosRelatorioMatCMAsync(string semestre, string anoLetivo, string codigoDre, string codigoEscola, string anoTurma)
+        {
+            var listReturn = new List<PollReportMathItem>();
+
+            using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            {
+                IQueryable<MathPoolCM> query = db.Set<MathPoolCM>();
+                var ideasAndResults = new PollReportMathItem();
+                var relatorioRetorno = new PollReportMathResult();
+                var ideaCharts = new List<MathIdeaChartDataModel>();
+                var resultCharts = new List<MathResultChartDataModel>();
+
+                query = db.MathPoolCMs
+                          .Where(x => x.AnoLetivo.ToString() == anoLetivo
+                       && x.Semestre.ToString() == semestre);
+
+                if (query.Count() > 1)
+                {
+                    query = MontaFiltrosGenericosCM(codigoDre, codigoEscola, anoTurma, query);
+
+                    var ordem4IdeiaAgrupados = query.GroupBy(fu => fu.Ordem4Ideia)
+                                            .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                            .ToList();
+                    var ordem4ResultadoAgrupados = query.GroupBy(fu => fu.Ordem4Resultado)
+                                                .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                                .ToList();
+
+                    var ordem5IdeiaAgrupados = query.GroupBy(fu => fu.Ordem5Ideia)
+                                            .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                            .ToList();
+                    var ordem5ResultadoAgrupados = query.GroupBy(fu => fu.Ordem5Resultado)
+                                                .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                                .ToList();
+
+                    var ordem6IdeiaAgrupados = query.GroupBy(fu => fu.Ordem6Ideia)
+                                            .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                            .ToList();
+                    var ordem6ResultadoAgrupados = query.GroupBy(fu => fu.Ordem6Resultado)
+                                                .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                                .ToList();
+
+                    var ordem7IdeiaAgrupados = query.GroupBy(fu => fu.Ordem7Ideia)
+                                            .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                            .ToList();
+                    var ordem7ResultadoAgrupados = query.GroupBy(fu => fu.Ordem7Resultado)
+                                                .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                                .ToList();
+
+                    var ordem8IdeiaAgrupados = query.GroupBy(fu => fu.Ordem8Ideia)
+                                            .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                            .ToList();
+                    var ordem8ResultadoAgrupados = query.GroupBy(fu => fu.Ordem8Resultado)
+                                                .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                                .ToList();
+
+                    CreateIdeaItem(ordem4IdeiaAgrupados, order: "4", ref ideasAndResults, ref ideaCharts);
+                    CreateIdeaItem(ordem5IdeiaAgrupados, order: "5", ref ideasAndResults, ref ideaCharts);
+                    CreateIdeaItem(ordem6IdeiaAgrupados, order: "6", ref ideasAndResults, ref ideaCharts);
+                    CreateIdeaItem(ordem7IdeiaAgrupados, order: "7", ref ideasAndResults, ref ideaCharts);
+                    CreateIdeaItem(ordem8IdeiaAgrupados, order: "8", ref ideasAndResults, ref ideaCharts);
+                    CreateResultItem(ordem4ResultadoAgrupados, order: "4", ref ideasAndResults, ref resultCharts);
+                    CreateResultItem(ordem5ResultadoAgrupados, order: "5", ref ideasAndResults, ref resultCharts);
+                    CreateResultItem(ordem6ResultadoAgrupados, order: "6", ref ideasAndResults, ref resultCharts);
+                    CreateResultItem(ordem7ResultadoAgrupados, order: "7", ref ideasAndResults, ref resultCharts);
+                    CreateResultItem(ordem8ResultadoAgrupados, order: "8", ref ideasAndResults, ref resultCharts);
+
+                    relatorioRetorno.Results = ideasAndResults;
+                    relatorioRetorno.ChartIdeaData.AddRange(ideaCharts);
+                    relatorioRetorno.ChartResultData.AddRange(resultCharts);
+
+                    return relatorioRetorno;
+                }
+
+                return default;
+            }
+        }
+
+        private IQueryable<MathPoolCM> MontaFiltrosGenericosCM(string codigoDre, string codigoEscola, string anoTurma, IQueryable<MathPoolCM> query)
+        {
+            if (!string.IsNullOrWhiteSpace(codigoDre))
+            {
+                query = query.Where(u => u.DreEolCode == codigoDre);
+            }
+
+            if (!string.IsNullOrWhiteSpace(codigoEscola))
+            {
+                query = query.Where(u => u.EscolaEolCode == codigoEscola);
+            }
+
+            if (!string.IsNullOrWhiteSpace(anoTurma))
+            {
+                query = query.Where(u => u.AnoTurma.ToString() == anoTurma);
+            }
+
+            return query;
+        }
+
+        private async Task<PollReportMathResult> BuscaDadosRelatorioMatCAAsync(string semestre, 
+                                                                               string anoLetivo, 
+                                                                               string codigoDre,
+                                                                               string codigoEscola, 
+                                                                               string anoTurma)
+        {
+            var listReturn = new List<PollReportMathItem>();
+
+            using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            {
+                IQueryable<MathPoolCA> query = db.Set<MathPoolCA>();
+                var ideasAndResults = new PollReportMathItem();
+                var relatorioRetorno = new PollReportMathResult();
+                var ideaCharts = new List<MathIdeaChartDataModel>();
+                var resultCharts = new List<MathResultChartDataModel>();
+
+                query = db.MathPoolCAs
+                          .Where(x => x.AnoLetivo.ToString() == anoLetivo
+                       && x.Semestre.ToString() == semestre);
+
+                if (query.Count() > 1)
+                {
+                    query = MontaFiltrosGenericosCA(codigoDre, codigoEscola, anoTurma, query);
+
+                    var ordem1Ideia = query.GroupBy(fu => fu.Ordem1Ideia)
+                                            .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                            .ToList();
+                    var ordem1Resultado = query.GroupBy(fu => fu.Ordem1Resultado)
+                                                .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                                .ToList();
+
+                    var ordem2Ideia = query.GroupBy(fu => fu.Ordem2Ideia)
+                                            .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                            .ToList();
+                    var ordem2Resultado = query.GroupBy(fu => fu.Ordem2Resultado)
+                                                .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                                .ToList();
+
+                    var ordem3Ideia = query.GroupBy(fu => fu.Ordem3Ideia)
+                                            .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                            .ToList();
+                    var ordem3Resultado = query.GroupBy(fu => fu.Ordem3Resultado)
+                                                .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                                .ToList();
+
+                    var ordem4Ideia = query.GroupBy(fu => fu.Ordem4Ideia)
+                                            .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                            .ToList();
+                    var ordem4Resultado = query.GroupBy(fu => fu.Ordem4Resultado)
+                                                .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                                .ToList();
+
+                    CreateIdeaItem(ordem1Ideia, order: "1", ref ideasAndResults, ref ideaCharts);
+                    CreateIdeaItem(ordem2Ideia, order: "2", ref ideasAndResults, ref ideaCharts);
+                    CreateIdeaItem(ordem3Ideia, order: "3", ref ideasAndResults, ref ideaCharts);
+                    CreateIdeaItem(ordem4Ideia, order: "4", ref ideasAndResults, ref ideaCharts);
+                    CreateResultItem(ordem1Resultado, order: "1", ref ideasAndResults, ref resultCharts);
+                    CreateResultItem(ordem2Resultado, order: "2", ref ideasAndResults, ref resultCharts);
+                    CreateResultItem(ordem3Resultado, order: "3", ref ideasAndResults, ref resultCharts);
+                    CreateResultItem(ordem4Resultado, order: "4", ref ideasAndResults, ref resultCharts);
+
+                    relatorioRetorno.Results = ideasAndResults;
+                    relatorioRetorno.ChartIdeaData.AddRange(ideaCharts);
+                    relatorioRetorno.ChartResultData.AddRange(resultCharts);
+
+                    return relatorioRetorno;
+                }
+
+                return default;
+            }
+        }
+
+        private static IQueryable<MathPoolCA> MontaFiltrosGenericosCA(string codigoDre, string codigoEscola, string anoTurma, IQueryable<MathPoolCA> query)
+        {
+            if (!string.IsNullOrWhiteSpace(codigoDre))
+            {
+                query = query.Where(u => u.DreEolCode == codigoDre);
+            }
+
+            if (!string.IsNullOrWhiteSpace(codigoEscola))
+            {
+                query = query.Where(u => u.EscolaEolCode == codigoEscola);
+            }
+
+            if (!string.IsNullOrWhiteSpace(anoTurma))
+            {
+                query = query.Where(u => u.AnoTurma.ToString() == anoTurma);
+            }
+
+            return query;
+        }
+
+        private void CreateIdeaItem(List<MathGroupByDTO> ordemIdeia, 
+                                    string order, 
+                                    ref PollReportMathItem ideasAndResults, 
+                                    ref List<MathIdeaChartDataModel> ideaCharts)
+        {
+            var ideaResults = new List<IdeaChartDTO>();
+            var ideaRetorno = new MathItemIdea();
+            var ideaChart = new MathIdeaChartDataModel();
+
+            foreach (var item in ordemIdeia)
+            {
+                if (!item.Label.Trim().Equals(""))
+                {
+                    if (item.Label.Equals("A", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        ideaRetorno.CorrectIdeaQuantity = item.Value;
+                    }
+                    else if (item.Label.Equals("E", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        ideaRetorno.IncorrectIdeaQuantity = item.Value;
+                    }
+                    else if (item.Label.Equals("NR", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        ideaRetorno.NotAnsweredIdeaQuantity = item.Value;
+                    }
+                }
+            }
+
+            var ideaTotalStudents = ideaRetorno.CorrectIdeaQuantity + ideaRetorno.IncorrectIdeaQuantity + ideaRetorno.NotAnsweredIdeaQuantity;
+
+            if (ideaTotalStudents < 1)
+            {
+                ideaRetorno.CorrectIdeaPercentage = 0;
+                ideaRetorno.IncorrectIdeaPercentage = 0;
+                ideaRetorno.NotAnsweredIdeaPercentage = 0;
+            } else
+            {
+                ideaRetorno.CorrectIdeaPercentage = (ideaRetorno.CorrectIdeaQuantity / ideaTotalStudents) * 100;
+                ideaRetorno.IncorrectIdeaPercentage = (ideaRetorno.IncorrectIdeaQuantity / ideaTotalStudents) * 100;
+                ideaRetorno.NotAnsweredIdeaPercentage = (ideaRetorno.NotAnsweredIdeaQuantity / ideaTotalStudents) * 100;
+            }
+            ideaRetorno.OrderName = order;
+
+            ideasAndResults.IdeaResults.Add(ideaRetorno);
+            ideaResults.Add(new IdeaChartDTO() { Description = "Acertou", Quantity = ideaRetorno.CorrectIdeaQuantity });
+            ideaResults.Add(new IdeaChartDTO() { Description = "Errou", Quantity = ideaRetorno.IncorrectIdeaQuantity });
+            ideaResults.Add(new IdeaChartDTO() { Description = "Não Resolveu", Quantity = ideaRetorno.NotAnsweredIdeaQuantity });
+
+            ideaChart.Order = order;
+            ideaChart.Idea.AddRange(ideaResults);
+            ideaCharts.Add(ideaChart);
+        }
+
+        private void CreateResultItem(List<MathGroupByDTO> ordemResult, 
+                                      string order, 
+                                      ref PollReportMathItem ideasAndResults,
+                                      ref List<MathResultChartDataModel> resultCharts)
+        {
+            var resultRetorno = new MathItemResult();
+            var resultResults = new List<ResultChartDTO>();
+            var resultChart = new MathResultChartDataModel();
+
+            foreach (var item in ordemResult)
+            {
+                if (!item.Label.Trim().Equals(""))
+                {
+                    if (item.Label.Equals("A"))
+                    {
+                        resultRetorno.CorrectResultQuantity = item.Value;
+                    }
+                    else if (item.Label.Equals("E"))
+                    {
+                        resultRetorno.IncorrectResultQuantity = item.Value;
+                    }
+                    else if (item.Label.Equals("NR"))
+                    {
+                        resultRetorno.NotAnsweredResultQuantity = item.Value;
+                    }
+                }
+            }
+
+            var ideaTotalStudents = resultRetorno.CorrectResultQuantity + resultRetorno.IncorrectResultQuantity + resultRetorno.NotAnsweredResultQuantity;
+
+            resultRetorno.CorrectResultPercentage = (resultRetorno.CorrectResultQuantity / ideaTotalStudents) * 100;
+            resultRetorno.IncorrectResultPercentage = (resultRetorno.IncorrectResultQuantity / ideaTotalStudents) * 100;
+            resultRetorno.NotAnsweredResultPercentage = (resultRetorno.NotAnsweredResultQuantity / ideaTotalStudents) * 100;
+            resultRetorno.OrderName = order;
+
+            ideasAndResults.ResultResults.Add(resultRetorno);
+            resultResults.Add(new ResultChartDTO() { Description = "Acertou", Quantity = resultRetorno.CorrectResultQuantity });
+            resultResults.Add(new ResultChartDTO() { Description = "Errou", Quantity = resultRetorno.IncorrectResultQuantity });
+            resultResults.Add(new ResultChartDTO() { Description = "Não Resolveu", Quantity = resultRetorno.NotAnsweredResultQuantity });
+
+            resultChart.Order = order;
+            resultChart.Result.AddRange(resultResults);
+            resultCharts.Add(resultChart);
+        }
+
+
+        private void CreateNumberItem(List<MathGroupByDTO> ordemIdeia,
+                                  string grupo,
+                                  ref PollReportMathResult ideasAndResults,
+                                  ref List<MathIdeaChartDataModel> ideaCharts)
+        {
+            var ideaResults = new List<IdeaChartDTO>();
+            var numberRetorno = new MathNumberResult();
+            var ideaChart = new MathIdeaChartDataModel();
+
+            foreach (var item in ordemIdeia)
+            {
+                if (!item.Label.Trim().Equals(""))
+                {
+                    if (item.Label.Equals("S", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        numberRetorno.EscreveConvencionalmenteResultado = item.Value;
+                    }
+                    else if (item.Label.Equals("N", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        numberRetorno.NaoEscreveConvencionalmenteResultado = item.Value;
+                    }                
+                }
+            }
+
+            var ideaTotalStudents = numberRetorno.EscreveConvencionalmenteResultado + numberRetorno.NaoEscreveConvencionalmenteResultado ;
+
+            if (ideaTotalStudents > 0)
+            {
+                numberRetorno.EscreveConvencionalmentePercentage = (numberRetorno.EscreveConvencionalmenteResultado / ideaTotalStudents) * 100;
+                numberRetorno.NaoEscreveConvencionalmentePercentage = (numberRetorno.NaoEscreveConvencionalmenteResultado / ideaTotalStudents) * 100;
+            } else
+            {
+                numberRetorno.EscreveConvencionalmentePercentage = 0;
+                numberRetorno.NaoEscreveConvencionalmentePercentage = 0;
+            }
+            
+            numberRetorno.GroupName = grupo;
+
+            ideasAndResults.Results.NumerosResults.Add(numberRetorno);
+            ideaResults.Add(new IdeaChartDTO() { Description = "Escreve convencionalmente", Quantity = numberRetorno.EscreveConvencionalmenteResultado});
+            ideaResults.Add(new IdeaChartDTO() { Description = "Não escreve convencionalmente", Quantity = numberRetorno.NaoEscreveConvencionalmenteResultado });
+         
+            ideaChart.Order = grupo;
+            ideaChart.Idea.AddRange(ideaResults);
+            ideaCharts.Add(ideaChart);
+        }
 
         public async Task<List<SondagemMatematicaOrdemDTO>> ListPoolCAAsync(FiltroSondagemMatematicaDTO filtroSondagem)
         {
