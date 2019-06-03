@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.DTO;
+using SME.Pedagogico.Gestao.Data.Enums;
 using SME.Pedagogico.Gestao.Data.Functionalities;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
@@ -65,27 +66,46 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                      ref MathPoolCM studentPoolCM)
         {
             if (studentPoolCM.Semestre == 1) {
-                studentPoolCM.Ordem4Ideia = studentDTO.Ideia4Semestre1;
-                studentPoolCM.Ordem4Resultado = studentDTO.Resultado4Semestre1;
-                studentPoolCM.Ordem5Ideia = studentDTO.Ideia5Semestre1;
-                studentPoolCM.Ordem5Resultado = studentDTO.Resultado5Semestre1;
-                studentPoolCM.Ordem6Ideia = studentDTO.Ideia6Semestre1;
-                studentPoolCM.Ordem6Resultado = studentDTO.Resultado6Semestre1;
-                studentPoolCM.Ordem7Ideia = studentDTO.Ideia7Semestre1;
-                studentPoolCM.Ordem7Resultado = studentDTO.Resultado7Semestre1;
-                studentPoolCM.Ordem8Ideia = studentDTO.Ideia8Semestre1;
-                studentPoolCM.Ordem8Resultado = studentDTO.Resultado8Semestre1;
+
+                if (studentPoolCM.AnoTurma == 2)
+                {
+                    studentPoolCM.Ordem3Ideia = studentDTO.Ideia3Semestre1;
+                    studentPoolCM.Ordem3Resultado = studentDTO.Resultado3Semestre1;
+                }
+                else
+                {
+                    studentPoolCM.Ordem4Ideia = studentDTO.Ideia4Semestre1;
+                    studentPoolCM.Ordem4Resultado = studentDTO.Resultado4Semestre1;
+                    studentPoolCM.Ordem5Ideia = studentDTO.Ideia5Semestre1;
+                    studentPoolCM.Ordem5Resultado = studentDTO.Resultado5Semestre1;
+                    studentPoolCM.Ordem6Ideia = studentDTO.Ideia6Semestre1;
+                    studentPoolCM.Ordem6Resultado = studentDTO.Resultado6Semestre1;
+                    studentPoolCM.Ordem7Ideia = studentDTO.Ideia7Semestre1;
+                    studentPoolCM.Ordem7Resultado = studentDTO.Resultado7Semestre1;
+                    studentPoolCM.Ordem8Ideia = studentDTO.Ideia8Semestre1;
+                    studentPoolCM.Ordem8Resultado = studentDTO.Resultado8Semestre1;
+                }
+
             } else if (studentPoolCM.Semestre == 2) {
-                studentPoolCM.Ordem4Ideia = studentDTO.Ideia4Semestre2;
-                studentPoolCM.Ordem4Resultado = studentDTO.Resultado4Semestre2;
-                studentPoolCM.Ordem5Ideia = studentDTO.Ideia5Semestre2;
-                studentPoolCM.Ordem5Resultado = studentDTO.Resultado5Semestre2;
-                studentPoolCM.Ordem6Ideia = studentDTO.Ideia6Semestre2;
-                studentPoolCM.Ordem6Resultado = studentDTO.Resultado6Semestre2;
-                studentPoolCM.Ordem7Ideia = studentDTO.Ideia7Semestre2;
-                studentPoolCM.Ordem7Resultado = studentDTO.Resultado7Semestre2;
-                studentPoolCM.Ordem8Ideia = studentDTO.Ideia8Semestre2;
-                studentPoolCM.Ordem8Resultado = studentDTO.Resultado8Semestre2;
+
+                if (studentPoolCM.AnoTurma == 2)
+                {
+                    studentPoolCM.Ordem3Ideia = studentDTO.Ideia3Semestre2;
+                    studentPoolCM.Ordem3Resultado = studentDTO.Resultado3Semestre2;
+                }
+                else
+                {
+                    studentPoolCM.Ordem4Ideia = studentDTO.Ideia4Semestre2;
+                    studentPoolCM.Ordem4Resultado = studentDTO.Resultado4Semestre2;
+                    studentPoolCM.Ordem5Ideia = studentDTO.Ideia5Semestre2;
+                    studentPoolCM.Ordem5Resultado = studentDTO.Resultado5Semestre2;
+                    studentPoolCM.Ordem6Ideia = studentDTO.Ideia6Semestre2;
+                    studentPoolCM.Ordem6Resultado = studentDTO.Resultado6Semestre2;
+                    studentPoolCM.Ordem7Ideia = studentDTO.Ideia7Semestre2;
+                    studentPoolCM.Ordem7Resultado = studentDTO.Resultado7Semestre2;
+                    studentPoolCM.Ordem8Ideia = studentDTO.Ideia8Semestre2;
+                    studentPoolCM.Ordem8Resultado = studentDTO.Resultado8Semestre2;
+                }
             }
         }
 
@@ -137,29 +157,45 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                                     if (semestre.Equals(1))
                                     {
-                                        studentDTO.Ideia4Semestre1 = studentPollMath.Ordem4Ideia;
-                                        studentDTO.Ideia5Semestre1 = studentPollMath.Ordem5Ideia;
-                                        studentDTO.Ideia6Semestre1 = studentPollMath.Ordem6Ideia;
-                                        studentDTO.Ideia7Semestre1 = studentPollMath.Ordem7Ideia;
-                                        studentDTO.Ideia8Semestre1 = studentPollMath.Ordem8Ideia;
-                                        studentDTO.Resultado4Semestre1 = studentPollMath.Ordem4Resultado;
-                                        studentDTO.Resultado6Semestre1 = studentPollMath.Ordem5Resultado;
-                                        studentDTO.Resultado7Semestre1 = studentPollMath.Ordem6Resultado;
-                                        studentDTO.Resultado5Semestre1 = studentPollMath.Ordem7Resultado;
-                                        studentDTO.Resultado8Semestre1 = studentPollMath.Ordem8Resultado;
+                                        if (studentPollMath.AnoTurma == (int)AnoTurmaEnum.SegundoAno)
+                                        {
+                                            studentDTO.Ideia3Semestre1 = studentPollMath.Ordem3Ideia;
+                                            studentDTO.Resultado3Semestre1 = studentPollMath.Ordem3Resultado;
+                                        }
+                                        else
+                                        {
+                                            studentDTO.Ideia4Semestre1 = studentPollMath.Ordem4Ideia;
+                                            studentDTO.Ideia5Semestre1 = studentPollMath.Ordem5Ideia;
+                                            studentDTO.Ideia6Semestre1 = studentPollMath.Ordem6Ideia;
+                                            studentDTO.Ideia7Semestre1 = studentPollMath.Ordem7Ideia;
+                                            studentDTO.Ideia8Semestre1 = studentPollMath.Ordem8Ideia;
+                                            studentDTO.Resultado4Semestre1 = studentPollMath.Ordem4Resultado;
+                                            studentDTO.Resultado6Semestre1 = studentPollMath.Ordem5Resultado;
+                                            studentDTO.Resultado7Semestre1 = studentPollMath.Ordem6Resultado;
+                                            studentDTO.Resultado5Semestre1 = studentPollMath.Ordem7Resultado;
+                                            studentDTO.Resultado8Semestre1 = studentPollMath.Ordem8Resultado;
+                                        }
                                     }
                                     else if (semestre.Equals(2))
                                     {
-                                        studentDTO.Ideia4Semestre2 = studentPollMath.Ordem4Ideia;
-                                        studentDTO.Ideia5Semestre2 = studentPollMath.Ordem5Ideia;
-                                        studentDTO.Ideia6Semestre2 = studentPollMath.Ordem6Ideia;
-                                        studentDTO.Ideia7Semestre2 = studentPollMath.Ordem7Ideia;
-                                        studentDTO.Ideia8Semestre2 = studentPollMath.Ordem8Ideia;
-                                        studentDTO.Resultado4Semestre2 = studentPollMath.Ordem4Resultado;
-                                        studentDTO.Resultado6Semestre2 = studentPollMath.Ordem5Resultado;
-                                        studentDTO.Resultado7Semestre2 = studentPollMath.Ordem6Resultado;
-                                        studentDTO.Resultado5Semestre2 = studentPollMath.Ordem7Resultado;
-                                        studentDTO.Resultado8Semestre2 = studentPollMath.Ordem8Resultado;
+                                        if (studentPollMath.AnoTurma == (int)AnoTurmaEnum.SegundoAno)
+                                        {
+                                            studentDTO.Ideia3Semestre2 = studentPollMath.Ordem3Ideia;
+                                            studentDTO.Resultado3Semestre2 = studentPollMath.Ordem3Resultado;
+                                        }
+                                        else
+                                        {
+                                            studentDTO.Ideia4Semestre2 = studentPollMath.Ordem4Ideia;
+                                            studentDTO.Ideia5Semestre2 = studentPollMath.Ordem5Ideia;
+                                            studentDTO.Ideia6Semestre2 = studentPollMath.Ordem6Ideia;
+                                            studentDTO.Ideia7Semestre2 = studentPollMath.Ordem7Ideia;
+                                            studentDTO.Ideia8Semestre2 = studentPollMath.Ordem8Ideia;
+                                            studentDTO.Resultado4Semestre2 = studentPollMath.Ordem4Resultado;
+                                            studentDTO.Resultado6Semestre2 = studentPollMath.Ordem5Resultado;
+                                            studentDTO.Resultado7Semestre2 = studentPollMath.Ordem6Resultado;
+                                            studentDTO.Resultado5Semestre2 = studentPollMath.Ordem7Resultado;
+                                            studentDTO.Resultado8Semestre2 = studentPollMath.Ordem8Resultado;
+                                        }
                                     }
                                 }
 
@@ -663,23 +699,31 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                     {
                                         studentDTO.Ideia1Semestre1 = studentPollMath.Ordem1Ideia;
                                         studentDTO.Ideia2Semestre1 = studentPollMath.Ordem2Ideia;
-                                        studentDTO.Ideia3Semestre1 = studentPollMath.Ordem3Ideia;
-                                        studentDTO.Ideia4Semestre1 = studentPollMath.Ordem4Ideia;
                                         studentDTO.Resultado1Semestre1 = studentPollMath.Ordem1Resultado;
                                         studentDTO.Resultado2Semestre1 = studentPollMath.Ordem2Resultado;
-                                        studentDTO.Resultado3Semestre1 = studentPollMath.Ordem3Resultado;
-                                        studentDTO.Resultado4Semestre1 = studentPollMath.Ordem4Resultado;
+
+                                        if (studentPollMath.AnoTurma != (int)AnoTurmaEnum.SegundoAno)
+                                        {
+                                            studentDTO.Resultado3Semestre1 = studentPollMath.Ordem3Resultado;
+                                            studentDTO.Resultado4Semestre1 = studentPollMath.Ordem4Resultado;
+                                            studentDTO.Ideia3Semestre1 = studentPollMath.Ordem3Ideia;
+                                            studentDTO.Ideia4Semestre1 = studentPollMath.Ordem4Ideia;
+                                        }
                                     }
                                     else if (semestre.Equals(2))
                                     {
                                         studentDTO.Ideia1Semestre2 = studentPollMath.Ordem1Ideia;
                                         studentDTO.Ideia2Semestre2 = studentPollMath.Ordem2Ideia;
-                                        studentDTO.Ideia3Semestre2 = studentPollMath.Ordem3Ideia;
-                                        studentDTO.Ideia4Semestre2 = studentPollMath.Ordem4Ideia;
                                         studentDTO.Resultado1Semestre2 = studentPollMath.Ordem1Resultado;
                                         studentDTO.Resultado2Semestre2 = studentPollMath.Ordem2Resultado;
-                                        studentDTO.Resultado3Semestre2 = studentPollMath.Ordem3Resultado;
-                                        studentDTO.Resultado4Semestre2 = studentPollMath.Ordem4Resultado;
+
+                                        if (studentPollMath.AnoTurma != (int)AnoTurmaEnum.SegundoAno)
+                                        {
+                                            studentDTO.Resultado3Semestre2 = studentPollMath.Ordem3Resultado;
+                                            studentDTO.Resultado4Semestre2 = studentPollMath.Ordem4Resultado;
+                                            studentDTO.Ideia3Semestre2 = studentPollMath.Ordem3Ideia;
+                                            studentDTO.Ideia4Semestre2 = studentPollMath.Ordem4Ideia;
+                                        }
                                     }
                                 }
 
@@ -807,46 +851,64 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private void AddEmptyCAPoolTo(SondagemMatematicaOrdemDTO studentDTO)
         {
+            var anoTurma = Convert.ToInt32(studentDTO.AnoTurma);
+
             studentDTO.Ideia1Semestre1 = string.Empty;
             studentDTO.Ideia2Semestre1 = string.Empty;
-            studentDTO.Ideia3Semestre1 = string.Empty;
-            studentDTO.Ideia4Semestre1 = string.Empty;
             studentDTO.Resultado1Semestre1 = string.Empty;
             studentDTO.Resultado2Semestre1 = string.Empty;
-            studentDTO.Resultado3Semestre1 = string.Empty;
-            studentDTO.Resultado4Semestre1 = string.Empty;
             studentDTO.Ideia1Semestre2 = string.Empty;
             studentDTO.Ideia2Semestre2 = string.Empty;
-            studentDTO.Ideia3Semestre2 = string.Empty;
-            studentDTO.Ideia4Semestre2 = string.Empty;
             studentDTO.Resultado1Semestre2 = string.Empty;
             studentDTO.Resultado2Semestre2 = string.Empty;
-            studentDTO.Resultado3Semestre2 = string.Empty;
-            studentDTO.Resultado4Semestre2 = string.Empty;
+
+            if (anoTurma != (int)AnoTurmaEnum.SegundoAno)
+            {
+                studentDTO.Ideia3Semestre1 = string.Empty;
+                studentDTO.Ideia4Semestre1 = string.Empty;
+                studentDTO.Ideia3Semestre2 = string.Empty;
+                studentDTO.Ideia4Semestre2 = string.Empty;
+                studentDTO.Resultado3Semestre1 = string.Empty;
+                studentDTO.Resultado4Semestre1 = string.Empty;
+                studentDTO.Resultado3Semestre2 = string.Empty;
+                studentDTO.Resultado4Semestre2 = string.Empty;
+            }
         }
 
         private void AddEmptyCMPoolTo(SondagemMatematicaOrdemDTO studentDTO)
         {
-            studentDTO.Ideia4Semestre1 = string.Empty;
-            studentDTO.Ideia5Semestre1 = string.Empty;
-            studentDTO.Ideia6Semestre1 = string.Empty;
-            studentDTO.Ideia7Semestre1 = string.Empty;
-            studentDTO.Ideia8Semestre1 = string.Empty;
-            studentDTO.Resultado4Semestre1 = string.Empty;
-            studentDTO.Resultado6Semestre1 = string.Empty;
-            studentDTO.Resultado7Semestre1 = string.Empty;
-            studentDTO.Resultado5Semestre1 = string.Empty;
-            studentDTO.Resultado8Semestre1 = string.Empty;
-            studentDTO.Ideia5Semestre2 = string.Empty;
-            studentDTO.Ideia4Semestre2 = string.Empty;
-            studentDTO.Ideia6Semestre2 = string.Empty;
-            studentDTO.Ideia7Semestre2 = string.Empty;
-            studentDTO.Ideia8Semestre2 = string.Empty;
-            studentDTO.Resultado4Semestre2 = string.Empty;
-            studentDTO.Resultado6Semestre2 = string.Empty;
-            studentDTO.Resultado7Semestre2 = string.Empty;
-            studentDTO.Resultado5Semestre2 = string.Empty;
-            studentDTO.Resultado8Semestre2 = string.Empty;
+            var anoTurma = Convert.ToInt32(studentDTO.AnoTurma);
+
+            if (anoTurma == (int)AnoTurmaEnum.SegundoAno)
+            {
+                studentDTO.Ideia3Semestre1 = string.Empty;
+                studentDTO.Ideia3Semestre2 = string.Empty;
+                studentDTO.Resultado3Semestre1 = string.Empty;
+                studentDTO.Resultado3Semestre2 = string.Empty;
+            }
+            else
+            {
+                studentDTO.Ideia4Semestre1 = string.Empty;
+                studentDTO.Ideia5Semestre1 = string.Empty;
+                studentDTO.Ideia6Semestre1 = string.Empty;
+                studentDTO.Ideia7Semestre1 = string.Empty;
+                studentDTO.Ideia8Semestre1 = string.Empty;
+                studentDTO.Resultado4Semestre1 = string.Empty;
+                studentDTO.Resultado6Semestre1 = string.Empty;
+                studentDTO.Resultado7Semestre1 = string.Empty;
+                studentDTO.Resultado5Semestre1 = string.Empty;
+                studentDTO.Resultado8Semestre1 = string.Empty;
+                studentDTO.Ideia5Semestre2 = string.Empty;
+                studentDTO.Ideia4Semestre2 = string.Empty;
+                studentDTO.Ideia6Semestre2 = string.Empty;
+                studentDTO.Ideia7Semestre2 = string.Empty;
+                studentDTO.Ideia8Semestre2 = string.Empty;
+                studentDTO.Resultado4Semestre2 = string.Empty;
+                studentDTO.Resultado6Semestre2 = string.Empty;
+                studentDTO.Resultado7Semestre2 = string.Empty;
+                studentDTO.Resultado5Semestre2 = string.Empty;
+                studentDTO.Resultado8Semestre2 = string.Empty;
+            }
         }
 
         public async Task InsertPoolNumerosAsync(List<SondagemMatematicaNumerosDTO> dadosSondagem)
@@ -960,10 +1022,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 studentPoolCA.Ordem1Resultado = studentDTO.Resultado1Semestre1;
                 studentPoolCA.Ordem2Ideia = studentDTO.Ideia2Semestre1;
                 studentPoolCA.Ordem2Resultado = studentDTO.Resultado2Semestre1;
-                studentPoolCA.Ordem3Ideia = studentDTO.Ideia3Semestre1;
-                studentPoolCA.Ordem3Resultado = studentDTO.Resultado3Semestre1;
-                studentPoolCA.Ordem4Ideia = studentDTO.Ideia4Semestre1;
-                studentPoolCA.Ordem4Resultado = studentDTO.Resultado4Semestre1;
+
+                if (studentPoolCA.AnoTurma != (int)AnoTurmaEnum.SegundoAno)
+                {
+                    studentPoolCA.Ordem3Ideia = studentDTO.Ideia3Semestre1;
+                    studentPoolCA.Ordem3Resultado = studentDTO.Resultado3Semestre1;
+                    studentPoolCA.Ordem4Ideia = studentDTO.Ideia4Semestre1;
+                    studentPoolCA.Ordem4Resultado = studentDTO.Resultado4Semestre1;
+                }
             }
             else if (studentPoolCA.Semestre == 2)
             {
@@ -971,10 +1037,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 studentPoolCA.Ordem1Resultado = studentDTO.Resultado1Semestre2;
                 studentPoolCA.Ordem2Ideia = studentDTO.Ideia2Semestre2;
                 studentPoolCA.Ordem2Resultado = studentDTO.Resultado2Semestre2;
-                studentPoolCA.Ordem3Ideia = studentDTO.Ideia3Semestre2;
-                studentPoolCA.Ordem3Resultado = studentDTO.Resultado3Semestre2;
-                studentPoolCA.Ordem4Ideia = studentDTO.Ideia4Semestre2;
-                studentPoolCA.Ordem4Resultado = studentDTO.Resultado4Semestre2;
+
+                if (studentPoolCA.AnoTurma != (int)AnoTurmaEnum.SegundoAno)
+                {
+                    studentPoolCA.Ordem3Ideia = studentDTO.Ideia3Semestre2;
+                    studentPoolCA.Ordem3Resultado = studentDTO.Resultado3Semestre2;
+                    studentPoolCA.Ordem4Ideia = studentDTO.Ideia4Semestre2;
+                    studentPoolCA.Ordem4Resultado = studentDTO.Resultado4Semestre2;
+                }
             }
         }
     }
