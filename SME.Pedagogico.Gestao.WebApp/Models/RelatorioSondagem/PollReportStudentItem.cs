@@ -35,7 +35,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Models.RelatorioSondagem
 
     public class MathStudentItemResult
     {
-        public string Order { get; set; }
+        public int Order { get; set; }
         public string Idea { get; set; }
         public string Result { get; set; }
     }
