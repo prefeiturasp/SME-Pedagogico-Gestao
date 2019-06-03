@@ -366,7 +366,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 result = BuscaDadosNumeros(parameters.CodigoEscola, parameters.Proficiency, parameters.Term, BusinessPoll);
             }
 
-
             PollReportMathStudentResult retorno = new PollReportMathStudentResult();
             retorno.Results = result;
 
@@ -400,7 +399,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
                 MathStudentItemResult item1 = new MathStudentItemResult();
                 item1.Idea = sondagem.Ordem1Ideia;
-                item1.Order = 1;
+                item1.Order = "1";
                 item1.Result = sondagem.Ordem1Resultado;
 
                 pollTotal.Add(item1);
@@ -408,14 +407,14 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
                 MathStudentItemResult item2 = new MathStudentItemResult();
                 item1.Idea = sondagem.Ordem2Ideia;
-                item1.Order = 2;
+                item1.Order = "2";
                 item1.Result = sondagem.Ordem2Resultado;
 
                 pollTotal.Add(item2);
 
                 MathStudentItemResult item3 = new MathStudentItemResult();
                 item1.Idea = sondagem.Ordem3Ideia;
-                item1.Order = 3;
+                item1.Order = "3";
                 item1.Result = sondagem.Ordem3Resultado;
 
                 pollTotal.Add(item3);
@@ -423,7 +422,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
                 MathStudentItemResult item4 = new MathStudentItemResult();
                 item1.Idea = sondagem.Ordem4Ideia;
-                item1.Order = 4;
+                item1.Order = "4";
                 item1.Result = sondagem.Ordem4Resultado;
 
                 pollTotal.Add(item4);
@@ -465,7 +464,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
                 MathStudentItemResult item4 = new MathStudentItemResult();
                 item4.Idea = sondagem.Ordem4Ideia;
-                item4.Order = 4;
+                item4.Order = "4";
                 item4.Result = sondagem.Ordem4Resultado;
 
                 pollTotal.Add(item4);
@@ -473,14 +472,14 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
                 MathStudentItemResult item5 = new MathStudentItemResult();
                 item5.Idea = sondagem.Ordem5Ideia;
-                item5.Order = 5;
+                item5.Order = "5";
                 item5.Result = sondagem.Ordem5Resultado;
 
                 pollTotal.Add(item5);
 
                 MathStudentItemResult item6 = new MathStudentItemResult();
                 item6.Idea = sondagem.Ordem6Ideia;
-                item6.Order = 6;
+                item6.Order = "6";
                 item6.Result = sondagem.Ordem6Resultado;
 
                 pollTotal.Add(item6);
@@ -488,14 +487,14 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
                 MathStudentItemResult item7 = new MathStudentItemResult();
                 item7.Idea = sondagem.Ordem7Ideia;
-                item7.Order = 7;
+                item7.Order = "7";
                 item7.Result = sondagem.Ordem7Resultado;
 
                 pollTotal.Add(item7);
 
                 MathStudentItemResult item8 = new MathStudentItemResult();
                 item8.Idea = sondagem.Ordem8Ideia;
-                item8.Order = 8;
+                item8.Order = "8";
                 item8.Result = sondagem.Ordem8Resultado;
 
                 pollTotal.Add(item7);
@@ -536,43 +535,43 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
                 MathStudentItemResult item1 = new MathStudentItemResult();
                 item1.Idea = "Familiares ou Frequentes";
-                item1.Order = 1;
+                item1.Order = "Familiares ou Frequentes";  
                 item1.Result = sondagem.Familiares;
                 pollTotal.Add(item1);
 
                 MathStudentItemResult item2 = new MathStudentItemResult();
                 item1.Idea = "Opacos";
-                item1.Order = 1;
+                item1.Order = "Opacos";
                 item1.Result = sondagem.Opacos;
                 pollTotal.Add(item2);
 
                 MathStudentItemResult item3 = new MathStudentItemResult();
                 item1.Idea = "Transparentes";
-                item1.Order = 1;
+                item1.Order = "Transparentes";
                 item1.Result = sondagem.Transparentes;
                 pollTotal.Add(item3);
 
                 MathStudentItemResult item4 = new MathStudentItemResult();
                 item1.Idea = "Terminam em Zero";
-                item1.Order = 1;
+                item1.Order = "1";
                 item1.Result = sondagem.TerminamZero;
                 pollTotal.Add(item4);
 
                 MathStudentItemResult item5 = new MathStudentItemResult();
                 item1.Idea = "Algarismos Iguais";
-                item1.Order = 1;
+                item1.Order = "1";
                 item1.Result = sondagem.Algarismos ;
                 pollTotal.Add(item4);
 
                 MathStudentItemResult item6 = new MathStudentItemResult();
                 item1.Idea = "Processos de Generalização";
-                item1.Order = 1;
+                item1.Order = "1";
                 item1.Result = sondagem.Processo;
                 pollTotal.Add(item4);
 
                 MathStudentItemResult item7 = new MathStudentItemResult();
                 item1.Idea = "Zeros Intercalados";
-                item1.Order = 1;
+                item1.Order = "1";
                 item1.Result = sondagem.ZeroIntercalados;
                 pollTotal.Add(item4);
 
