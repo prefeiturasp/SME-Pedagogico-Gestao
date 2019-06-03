@@ -314,7 +314,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             return query;
         }
 
-        private async Task<PollReportMathResult> BuscaDadosRelatorioMatCMAsync(string semestre, string anoLetivo, string codigoDre, string codigoEscola, string anoTurma)
+        private async Task<PollReportMathResult> BuscaDadosRelatorioMatCMAsync(string semestre, string anoLetivo, string codigoDre, string codigoEscola, string anoTurmaParam)
         {
             var listReturn = new List<PollReportMathItem>();
 
@@ -325,6 +325,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var relatorioRetorno = new PollReportMathResult();
                 var ideaCharts = new List<MathIdeaChartDataModel>();
                 var resultCharts = new List<MathResultChartDataModel>();
+                var anoTurma = Convert.ToInt32(anoTurmaParam);
 
                 query = db.MathPoolCMs
                           .Where(x => x.AnoLetivo.ToString() == anoLetivo
@@ -332,53 +333,68 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 if (query.Count() > 1)
                 {
-                    query = MontaFiltrosGenericosCM(codigoDre, codigoEscola, anoTurma, query);
+                    query = MontaFiltrosGenericosCM(codigoDre, codigoEscola, anoTurmaParam, query);
 
-                    var ordem4IdeiaAgrupados = query.GroupBy(fu => fu.Ordem4Ideia)
+                    if (anoTurma == (int)AnoTurmaEnum.SegundoAno)
+                    {
+                        var ordem3IdeiaAgrupados = query.GroupBy(fu => fu.Ordem3Ideia)
                                             .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
                                             .ToList();
-                    var ordem4ResultadoAgrupados = query.GroupBy(fu => fu.Ordem4Resultado)
+                        var ordem3ResultadoAgrupados = query.GroupBy(fu => fu.Ordem3Resultado)
                                                 .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
                                                 .ToList();
 
-                    var ordem5IdeiaAgrupados = query.GroupBy(fu => fu.Ordem5Ideia)
-                                            .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
-                                            .ToList();
-                    var ordem5ResultadoAgrupados = query.GroupBy(fu => fu.Ordem5Resultado)
+                        CreateIdeaItem(ordem3IdeiaAgrupados, order: "3", ref ideasAndResults, ref ideaCharts);
+                        CreateResultItem(ordem3ResultadoAgrupados, order: "3", ref ideasAndResults, ref resultCharts);
+                    }
+                    else
+                    {
+                        var ordem4IdeiaAgrupados = query.GroupBy(fu => fu.Ordem4Ideia)
                                                 .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
                                                 .ToList();
+                        var ordem4ResultadoAgrupados = query.GroupBy(fu => fu.Ordem4Resultado)
+                                                    .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                                    .ToList();
 
-                    var ordem6IdeiaAgrupados = query.GroupBy(fu => fu.Ordem6Ideia)
-                                            .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
-                                            .ToList();
-                    var ordem6ResultadoAgrupados = query.GroupBy(fu => fu.Ordem6Resultado)
+                        var ordem5IdeiaAgrupados = query.GroupBy(fu => fu.Ordem5Ideia)
                                                 .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
                                                 .ToList();
+                        var ordem5ResultadoAgrupados = query.GroupBy(fu => fu.Ordem5Resultado)
+                                                    .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                                    .ToList();
 
-                    var ordem7IdeiaAgrupados = query.GroupBy(fu => fu.Ordem7Ideia)
-                                            .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
-                                            .ToList();
-                    var ordem7ResultadoAgrupados = query.GroupBy(fu => fu.Ordem7Resultado)
+                        var ordem6IdeiaAgrupados = query.GroupBy(fu => fu.Ordem6Ideia)
                                                 .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
                                                 .ToList();
+                        var ordem6ResultadoAgrupados = query.GroupBy(fu => fu.Ordem6Resultado)
+                                                    .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                                    .ToList();
 
-                    var ordem8IdeiaAgrupados = query.GroupBy(fu => fu.Ordem8Ideia)
-                                            .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
-                                            .ToList();
-                    var ordem8ResultadoAgrupados = query.GroupBy(fu => fu.Ordem8Resultado)
+                        var ordem7IdeiaAgrupados = query.GroupBy(fu => fu.Ordem7Ideia)
                                                 .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
                                                 .ToList();
+                        var ordem7ResultadoAgrupados = query.GroupBy(fu => fu.Ordem7Resultado)
+                                                    .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                                    .ToList();
 
-                    CreateIdeaItem(ordem4IdeiaAgrupados, order: "4", ref ideasAndResults, ref ideaCharts);
-                    CreateIdeaItem(ordem5IdeiaAgrupados, order: "5", ref ideasAndResults, ref ideaCharts);
-                    CreateIdeaItem(ordem6IdeiaAgrupados, order: "6", ref ideasAndResults, ref ideaCharts);
-                    CreateIdeaItem(ordem7IdeiaAgrupados, order: "7", ref ideasAndResults, ref ideaCharts);
-                    CreateIdeaItem(ordem8IdeiaAgrupados, order: "8", ref ideasAndResults, ref ideaCharts);
-                    CreateResultItem(ordem4ResultadoAgrupados, order: "4", ref ideasAndResults, ref resultCharts);
-                    CreateResultItem(ordem5ResultadoAgrupados, order: "5", ref ideasAndResults, ref resultCharts);
-                    CreateResultItem(ordem6ResultadoAgrupados, order: "6", ref ideasAndResults, ref resultCharts);
-                    CreateResultItem(ordem7ResultadoAgrupados, order: "7", ref ideasAndResults, ref resultCharts);
-                    CreateResultItem(ordem8ResultadoAgrupados, order: "8", ref ideasAndResults, ref resultCharts);
+                        var ordem8IdeiaAgrupados = query.GroupBy(fu => fu.Ordem8Ideia)
+                                                .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                                .ToList();
+                        var ordem8ResultadoAgrupados = query.GroupBy(fu => fu.Ordem8Resultado)
+                                                    .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                                    .ToList();
+
+                        CreateIdeaItem(ordem4IdeiaAgrupados, order: "4", ref ideasAndResults, ref ideaCharts);
+                        CreateIdeaItem(ordem5IdeiaAgrupados, order: "5", ref ideasAndResults, ref ideaCharts);
+                        CreateIdeaItem(ordem6IdeiaAgrupados, order: "6", ref ideasAndResults, ref ideaCharts);
+                        CreateIdeaItem(ordem7IdeiaAgrupados, order: "7", ref ideasAndResults, ref ideaCharts);
+                        CreateIdeaItem(ordem8IdeiaAgrupados, order: "8", ref ideasAndResults, ref ideaCharts);
+                        CreateResultItem(ordem4ResultadoAgrupados, order: "4", ref ideasAndResults, ref resultCharts);
+                        CreateResultItem(ordem5ResultadoAgrupados, order: "5", ref ideasAndResults, ref resultCharts);
+                        CreateResultItem(ordem6ResultadoAgrupados, order: "6", ref ideasAndResults, ref resultCharts);
+                        CreateResultItem(ordem7ResultadoAgrupados, order: "7", ref ideasAndResults, ref resultCharts);
+                        CreateResultItem(ordem8ResultadoAgrupados, order: "8", ref ideasAndResults, ref resultCharts);
+                    }
 
                     relatorioRetorno.Results = ideasAndResults;
                     relatorioRetorno.ChartIdeaData.AddRange(ideaCharts);
@@ -415,7 +431,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                                                                string anoLetivo, 
                                                                                string codigoDre,
                                                                                string codigoEscola, 
-                                                                               string anoTurma)
+                                                                               string anoTurmaParam)
         {
             var listReturn = new List<PollReportMathItem>();
 
@@ -426,6 +442,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var relatorioRetorno = new PollReportMathResult();
                 var ideaCharts = new List<MathIdeaChartDataModel>();
                 var resultCharts = new List<MathResultChartDataModel>();
+                var anoTurma = Convert.ToInt32(anoTurmaParam);
 
                 query = db.MathPoolCAs
                           .Where(x => x.AnoLetivo.ToString() == anoLetivo
@@ -433,7 +450,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 if (query.Count() > 1)
                 {
-                    query = MontaFiltrosGenericosCA(codigoDre, codigoEscola, anoTurma, query);
+                    query = MontaFiltrosGenericosCA(codigoDre, codigoEscola, anoTurmaParam, query);
 
                     var ordem1Ideia = query.GroupBy(fu => fu.Ordem1Ideia)
                                             .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
@@ -449,28 +466,32 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                                 .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
                                                 .ToList();
 
-                    var ordem3Ideia = query.GroupBy(fu => fu.Ordem3Ideia)
+                    if (anoTurma != (int)AnoTurmaEnum.SegundoAno)
+                    {
+                        var ordem3Ideia = query.GroupBy(fu => fu.Ordem3Ideia)
                                             .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
                                             .ToList();
-                    var ordem3Resultado = query.GroupBy(fu => fu.Ordem3Resultado)
-                                                .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
-                                                .ToList();
+                        var ordem3Resultado = query.GroupBy(fu => fu.Ordem3Resultado)
+                                                    .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                                    .ToList();
 
-                    var ordem4Ideia = query.GroupBy(fu => fu.Ordem4Ideia)
-                                            .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
-                                            .ToList();
-                    var ordem4Resultado = query.GroupBy(fu => fu.Ordem4Resultado)
+                        var ordem4Ideia = query.GroupBy(fu => fu.Ordem4Ideia)
                                                 .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
                                                 .ToList();
+                        var ordem4Resultado = query.GroupBy(fu => fu.Ordem4Resultado)
+                                                    .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
+                                                    .ToList();
+
+                        CreateIdeaItem(ordem3Ideia, order: "3", ref ideasAndResults, ref ideaCharts);
+                        CreateIdeaItem(ordem4Ideia, order: "4", ref ideasAndResults, ref ideaCharts);
+                        CreateResultItem(ordem3Resultado, order: "3", ref ideasAndResults, ref resultCharts);
+                        CreateResultItem(ordem4Resultado, order: "4", ref ideasAndResults, ref resultCharts);
+                    }                    
 
                     CreateIdeaItem(ordem1Ideia, order: "1", ref ideasAndResults, ref ideaCharts);
                     CreateIdeaItem(ordem2Ideia, order: "2", ref ideasAndResults, ref ideaCharts);
-                    CreateIdeaItem(ordem3Ideia, order: "3", ref ideasAndResults, ref ideaCharts);
-                    CreateIdeaItem(ordem4Ideia, order: "4", ref ideasAndResults, ref ideaCharts);
                     CreateResultItem(ordem1Resultado, order: "1", ref ideasAndResults, ref resultCharts);
                     CreateResultItem(ordem2Resultado, order: "2", ref ideasAndResults, ref resultCharts);
-                    CreateResultItem(ordem3Resultado, order: "3", ref ideasAndResults, ref resultCharts);
-                    CreateResultItem(ordem4Resultado, order: "4", ref ideasAndResults, ref resultCharts);
 
                     relatorioRetorno.Results = ideasAndResults;
                     relatorioRetorno.ChartIdeaData.AddRange(ideaCharts);
