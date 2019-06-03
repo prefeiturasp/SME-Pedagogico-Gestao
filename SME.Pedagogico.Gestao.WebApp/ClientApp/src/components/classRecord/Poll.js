@@ -11,6 +11,7 @@ import { bindActionCreators } from 'redux';
 import StudentPollMathAlfabetizacaoCard from '../polls/StudentPollMathAlfabetizacaoCard'
 import StudentPollMath1ACard from '../polls/StudentPollMath1ACard'
 import StudentPollMath2ACard from '../polls/StudentPollMath2ACard'
+import StudentPollMath2ACMCard from '../polls/StudentPollMath2ACMCard'
 import StudentPollMath3ACACard from '../polls/StudentPollMath3ACACard'
 import StudentPollMath3ACMCard from '../polls/StudentPollMath3ACMCard'
 import StudentPollMath4ACACard from '../polls/StudentPollMath4ACACard'
@@ -29,6 +30,7 @@ class Poll extends Component {
             didAnswerPoll: false, //usar para perguntar para salvar sondagem
             sondagemType: ClassRoomEnum.ClassEmpty,//Retirar o default depois//PT,MT,1A,2A,3ACA,3ACM,4ACA,4ACM,5ACA,5ACM,6ACA,6ACM
         }
+        this.componentRender = this.componentRender.bind(this);
 
         this.updatePollStudent = this.updatePollStudent.bind(this);
         this.savePollStudent = this.savePollStudent.bind(this);
@@ -60,7 +62,65 @@ class Poll extends Component {
     componentDidMount() {
         
     }
-    
+    componentWillUpdate() {
+       
+    }
+
+    componentRender() {
+        var componentRender;
+
+        var sondagemType = this.props.poll.pollSelected
+
+
+        if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
+            componentRender = <StudentPollPortugueseCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
+        } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMT) {
+            if (this.props.poll.pollTypeSelected === "Numeric" && (this.props.poll.pollYear === "1" || this.props.poll.pollYear === "2" || this.props.poll.pollYear === "3")) {
+                componentRender = <StudentPollMathAlfabetizacaoCard students={this.props.poll.studentsPollMathNumbers} updatePollStudent={this.updatePollStudent} />;
+            } else if (this.props.poll.pollYear === "1") {
+                if (this.props.poll.pollTypeSelected === "CA") {
+                    componentRender = <StudentPollMath1ACard students={this.props.poll.studentsPollMathCA} updatePollStudent={this.updatePollStudent} />;
+                }
+            } else if (this.props.poll.pollYear === "2") {
+                if (this.props.poll.pollTypeSelected === "CA") {
+                    componentRender = <StudentPollMath2ACard students={this.props.poll.studentsPollMathCA} updatePollStudent={this.updatePollStudent} />;
+                } else if (this.props.poll.pollTypeSelected === "CM") {
+                    componentRender = <StudentPollMath2ACMCard students={this.props.poll.studentsPollMathCM} updatePollStudent={this.updatePollStudent} />;
+                }
+            } else if (this.props.poll.pollYear === "3") {
+                if (this.props.poll.pollTypeSelected === "CA") {
+                    componentRender = <StudentPollMath3ACACard students={this.props.poll.studentsPollMathCA} updatePollStudent={this.updatePollStudent} />;
+                } else if (this.props.poll.pollTypeSelected === "CM") {
+                    componentRender = <StudentPollMath3ACMCard students={this.props.poll.studentsPollMathCM} updatePollStudent={this.updatePollStudent} />;
+                }
+            } else if (this.props.poll.pollYear === "4") {
+                if (this.props.poll.pollTypeSelected === "CA") {
+                    componentRender = <StudentPollMath4ACACard students={this.props.poll.studentsPollMathCA} updatePollStudent={this.updatePollStudent} />;
+                } else if (this.props.poll.pollTypeSelected === "CM") {
+                    componentRender = <StudentPollMath4ACMCard students={this.props.poll.studentsPollMathCM} updatePollStudent={this.updatePollStudent} />;
+                }
+            } else if (this.props.poll.pollYear === "5") {
+                if (this.props.poll.pollTypeSelected === "CA") {
+                    componentRender = <StudentPollMath5ACACard students={this.props.poll.studentsPollMathCA} updatePollStudent={this.updatePollStudent} />;
+                } else if (this.props.poll.pollTypeSelected === "CM") {
+                    componentRender = <StudentPollMath5ACMCard students={this.props.poll.studentsPollMathCM} updatePollStudent={this.updatePollStudent} />;
+                }
+            } else if (this.props.poll.pollYear === "6") {
+                if (this.props.poll.pollTypeSelected === "CA") {
+                    componentRender = <StudentPollMath6ACACard students={this.props.poll.studentsPollMathCA} updatePollStudent={this.updatePollStudent} />;
+                } else if (this.props.poll.pollTypeSelected === "CM") {
+                    componentRender = <StudentPollMath6ACMCard students={this.props.poll.studentsPollMathCM} updatePollStudent={this.updatePollStudent} />;
+                }
+            }
+
+        } else {
+            componentRender = "";
+        }
+        console.log(this.props.poll.pollSelected + " " + this.props.poll.pollTypeSelected + " " + this.props.poll.pollYear);
+
+
+        return (componentRender);
+    }
     updatePollStudent(sequence, subjectName, propertyName, value) {
         if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
             var pollStudents = this.props.poll.students;
@@ -536,55 +596,6 @@ class Poll extends Component {
     
     
     render() {
-        var componentRender;
-
-        var sondagemType = this.props.poll.pollSelected
-
-        
-        if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
-            componentRender = <StudentPollPortugueseCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
-        } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMT) {
-            if (this.props.poll.pollTypeSelected === "Numeric" && (this.props.poll.pollYear ==="1" || this.props.poll.pollYear === "2" || this.props.poll.pollYear === "3")) {
-                componentRender = <StudentPollMathAlfabetizacaoCard students={this.props.poll.studentsPollMathNumbers} updatePollStudent={this.updatePollStudent} />;
-            } else if (this.props.poll.pollYear === "1") {
-                if (this.props.poll.pollTypeSelected === "CA") {
-                    componentRender = <StudentPollMath1ACard students={this.props.poll.studentsPollMathCA} updatePollStudent={this.updatePollStudent} />;
-                } 
-            } else if (this.props.poll.pollYear === "2") {
-                if (this.props.poll.pollTypeSelected === "CA") {
-                    componentRender = <StudentPollMath2ACard students={this.props.poll.studentsPollMathCA} updatePollStudent={this.updatePollStudent} />;
-                } 
-            } else if (this.props.poll.pollYear === "3") {
-                if (this.props.poll.pollTypeSelected === "CA") {
-                    componentRender = <StudentPollMath3ACACard students={this.props.poll.studentsPollMathCA} updatePollStudent={this.updatePollStudent} />;
-                } else if (this.props.poll.pollTypeSelected === "CM") {
-                    componentRender = <StudentPollMath3ACMCard students={this.props.poll.studentsPollMathCM} updatePollStudent={this.updatePollStudent} />;
-                }
-            } else if (this.props.poll.pollYear === "4") {
-                if (this.props.poll.pollTypeSelected === "CA") {
-                    componentRender = <StudentPollMath4ACACard students={this.props.poll.studentsPollMathCA} updatePollStudent={this.updatePollStudent} />;
-                } else if (this.props.poll.pollTypeSelected === "CM") {
-                    componentRender = <StudentPollMath4ACMCard students={this.props.poll.studentsPollMathCM} updatePollStudent={this.updatePollStudent} />;
-                }
-            } else if (this.props.poll.pollYear === "5") {
-                if (this.props.poll.pollTypeSelected === "CA") {
-                    componentRender = <StudentPollMath5ACACard students={this.props.poll.studentsPollMathCA} updatePollStudent={this.updatePollStudent} />;
-                } else if (this.props.poll.pollTypeSelected === "CM") {
-                    componentRender = <StudentPollMath5ACMCard students={this.props.poll.studentsPollMathCM} updatePollStudent={this.updatePollStudent} />;
-                }
-            } else if (this.props.poll.pollYear === "6") {
-                if (this.props.poll.pollTypeSelected === "CA") {
-                    componentRender = <StudentPollMath6ACACard students={this.props.poll.studentsPollMathCA} updatePollStudent={this.updatePollStudent} />;
-                } else if (this.props.poll.pollTypeSelected === "CM") {
-                    componentRender = <StudentPollMath6ACMCard students={this.props.poll.studentsPollMathCM} updatePollStudent={this.updatePollStudent} />;
-                }
-            }
-            
-        } else {
-            componentRender = "";
-        }
-        console.log(this.props.poll.pollSelected + " " + this.props.poll.pollTypeSelected + " " + this.props.poll.pollYear);
-
         return (
             <>
                 <Card className="mb-3">
@@ -603,11 +614,7 @@ class Poll extends Component {
                         {this.checkButtonMath()}
                     </ul>
                     
-                    
-                    {componentRender}{/*renderiza o componente de sondagem correspondente*/}
-
-
-
+                    {this.componentRender()}
                 </Card>
             </>
         );
