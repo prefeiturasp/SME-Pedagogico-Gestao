@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import StudentPollMath1A2A from '../polls/StudentPollMath1A2A'
+import StudentPollMath1A from '../polls/StudentPollMath1A'
 import LegendsRightWrong from '../polls/component/LegendsRightWrong'
 import SondagemClassSelected from '../polls/component/SondagemClassSelected'
 //Sondagem Matmática 1 Ano
@@ -180,7 +180,7 @@ export default class StudentPollMath1ACard extends Component {
                     <tbody>
 
                         {this.props.students.map(student => (
-                            <StudentPollMath1A2A key={student.sequence} student={student} updatePollStudent={this.props.updatePollStudent} />
+                            <StudentPollMath1A key={student.sequence} student={student} updatePollStudent={this.props.updatePollStudent} />
                         ))}
 
                     </tbody>
