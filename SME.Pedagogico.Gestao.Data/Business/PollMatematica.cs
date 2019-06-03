@@ -31,9 +31,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var listStudentsPoll = new List<MathPoolCA>();
                 using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
                 {
-                    listStudentsPoll = db.MathPoolCAs.Where(x => x.TurmaEolCode == turmaEol && !string.IsNullOrEmpty(x.Ordem1Ideia)).ToList();
-
-
+                    listStudentsPoll = db.MathPoolCAs.Where(x => x.TurmaEolCode == turmaEol ).ToList();
+                    /*
+                     && 
+                    (
+                    !string.IsNullOrEmpty(x.Ordem1Ideia) || 
+                    !string.IsNullOrEmpty(x.Ordem2Ideia) || 
+                    !string.IsNullOrEmpty(x.Ordem3Ideia) || 
+                    !string.IsNullOrEmpty(x.Ordem4Ideia)  
+                    )
+                    */
                 }
                 return listStudentsPoll;
             }
@@ -42,7 +49,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 throw;
             }
         }
-         
+
         public List<MathPoolCM> BuscarAlunosTurmaRelatorioMatematicaCM(string turmaEol, string proficiencia, string bimestre)
         {
             try
@@ -51,7 +58,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var listStudentsPoll = new List<MathPoolCM>();
                 using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
                 {
-                    listStudentsPoll = db.MathPoolCMs.Where(x => x.TurmaEolCode == turmaEol && !string.IsNullOrEmpty(x.Ordem4Ideia)).ToList(); 
+                    listStudentsPoll = db.MathPoolCMs.Where(x => x.TurmaEolCode == turmaEol &&
+                    (
+                    !string.IsNullOrEmpty(x.Ordem4Ideia)
+                     || !string.IsNullOrEmpty(x.Ordem5Ideia)
+                     || !string.IsNullOrEmpty(x.Ordem6Ideia)
+                     || !string.IsNullOrEmpty(x.Ordem7Ideia)
+                     || !string.IsNullOrEmpty(x.Ordem8Ideia)
+                     )).ToList();
                 }
                 return listStudentsPoll;
             }
@@ -70,7 +84,15 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var listStudentsPoll = new List<MathPoolNumber>();
                 using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
                 {
-                    listStudentsPoll = db.MathPoolNumbers.Where(x => x.TurmaEolCode == turmaEol && !string.IsNullOrEmpty(x.Opacos)).ToList();
+                    listStudentsPoll = db.MathPoolNumbers.Where(x => x.TurmaEolCode == turmaEol &&
+                    (!string.IsNullOrEmpty(x.Familiares)
+                    || !string.IsNullOrEmpty(x.Opacos)
+                    || !string.IsNullOrEmpty(x.Transparentes)
+                    || !string.IsNullOrEmpty(x.TerminamZero)
+                    || !string.IsNullOrEmpty(x.Algarismos)
+                    || !string.IsNullOrEmpty(x.Processo)
+                    || !string.IsNullOrEmpty(x.ZeroIntercalados)
+                    )).ToList();
                 }
                 return listStudentsPoll;
             }
