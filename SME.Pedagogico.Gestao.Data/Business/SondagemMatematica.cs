@@ -592,8 +592,15 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             var ideaTotalStudents = numberRetorno.EscreveConvencionalmenteResultado + numberRetorno.NaoEscreveConvencionalmenteResultado ;
 
-            numberRetorno.EscreveConvencionalmentePercentage = (numberRetorno.EscreveConvencionalmenteResultado / ideaTotalStudents) * 100;
-            numberRetorno.NaoEscreveConvencionalmentePercentage = (numberRetorno.NaoEscreveConvencionalmenteResultado / ideaTotalStudents) * 100;
+            if (ideaTotalStudents > 0)
+            {
+                numberRetorno.EscreveConvencionalmentePercentage = (numberRetorno.EscreveConvencionalmenteResultado / ideaTotalStudents) * 100;
+                numberRetorno.NaoEscreveConvencionalmentePercentage = (numberRetorno.NaoEscreveConvencionalmenteResultado / ideaTotalStudents) * 100;
+            } else
+            {
+                numberRetorno.EscreveConvencionalmentePercentage = 0;
+                numberRetorno.NaoEscreveConvencionalmentePercentage = 0;
+            }
             
             numberRetorno.GroupName = grupo;
 
