@@ -11,8 +11,6 @@ import { connect } from 'react-redux';
 import { actionCreators } from '../../store/PollReport';
 import { bindActionCreators } from 'redux';
 
-import TwoStepsSave from '../messaging/TwoStepsSave';
-
 class PollReport extends Component {
     constructor(props) {
         super(props);
@@ -24,25 +22,18 @@ class PollReport extends Component {
         }
 
         this.printClick = this.printClick.bind(this);
-        this.testMethod = this.testMethod.bind(this);
     }
 
     printClick() {
-        var scale = 'scale(0.6)';
-        document.body.style.webkitTransform = scale;    // Chrome, Opera, Safari
-        document.body.style.msTransform = scale;       // IE 9
-        document.body.style.transform = scale;     // General
+        //var scale = 'scale(0.6)';
+        //document.body.style.webkitTransform = scale;    // Chrome, Opera, Safari
+        //document.body.style.msTransform = scale;       // IE 9
+        //document.body.style.transform = scale;     // General
         window.print();
-        scale = 'scale(1)';
-        document.body.style.webkitTransform = scale;    // Chrome, Opera, Safari
-        document.body.style.msTransform = scale;       // IE 9
-        document.body.style.transform = scale;     // General
-    }
-
-    testMethod() {
-        this.setState({
-            showMessage: !this.state.showMessage
-        })
+        //scale = 'scale(1)';
+        //document.body.style.webkitTransform = scale;    // Chrome, Opera, Safari
+        //document.body.style.msTransform = scale;       // IE 9
+        //document.body.style.transform = scale;     // General
     }
 
     render() {
@@ -108,9 +99,6 @@ class PollReport extends Component {
                         }
                     </div>
                 </Card>
-
-                <TwoStepsSave show={this.state.showMessage} showControl={this.testMethod} />
-
             </div>
         );
     }

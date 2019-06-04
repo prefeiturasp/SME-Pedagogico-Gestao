@@ -16,7 +16,9 @@ class PollReportFilter extends Component {
                 discipline: null,
                 proficiency: null,
                 term: null,
-            }
+            },
+            selectedProficiency: null,
+            selectedTerm: null,
         }
 
         this.initialFilterChange = this.initialFilterChange.bind(this);
@@ -44,36 +46,56 @@ class PollReportFilter extends Component {
                 proficiency: null,
                 term: null,
             },
+            selectedProficiency: "",
+            selectedTerm: "",
             proficiencies: filters[event.target.value].proficiencies,
             terms: filters[event.target.value].terms,
         });
     }
 
     onChangeProficiency(event) {
+        var proficiencies = this.state.proficiencies;
         var index = event.nativeEvent.target.selectedIndex;
         var label = event.nativeEvent.target[index].text;
         var selectedFilter = this.state.selectedFilter;
+        var selectedProficiency = null;
+
+        for (var i = 0; i < proficiencies.length; i++)
+            if (proficiencies[i].label === label) {
+                selectedProficiency = proficiencies[i].value;
+                break;
+            }
 
         this.setState({
             selectedFilter: {
                 discipline: selectedFilter.discipline,
                 proficiency: label,
                 term: selectedFilter.term,
-            }
+            },
+            selectedProficiency: selectedProficiency
         });
     }
 
     onChangeTerm(event) {
+        var terms = this.state.terms;
         var index = event.nativeEvent.target.selectedIndex;
         var label = event.nativeEvent.target[index].text;
         var selectedFilter = this.state.selectedFilter;
+        var selectedTerm = null;
+
+        for (var i = 0; i < terms.length; i++)
+            if (terms[i].label === label) {
+                selectedTerm = terms[i].value;
+                break;
+            }
 
         this.setState({
             selectedFilter: {
                 discipline: selectedFilter.discipline,
                 proficiency: selectedFilter.proficiency,
                 term: label,
-            }
+            },
+            selectedTerm: selectedTerm
         });
     }
 
@@ -106,9 +128,9 @@ class PollReportFilter extends Component {
                 <div className="pt-2 d-inline-flex">
                     <SelectChangeColor className="custom-select-sm" defaultText="Matéria" options={this.initialFilter} onChange={this.initialFilterChange} />
                     <div className="px-2"></div>
-                    <SelectChangeColor className="custom-select-sm" defaultText="Proficiência" options={this.state.proficiencies} onChange={this.onChangeProficiency} />
+                    <SelectChangeColor className="custom-select-sm" defaultText="Proficiência" options={this.state.proficiencies} onChange={this.onChangeProficiency} value={this.state.selectedProficiency} resetColor={this.state.selectedProficiency === "" ? true : false} />
                     <div className="px-2"></div>
-                    <SelectChangeColor className="custom-select-sm" defaultText="Período" options={this.state.terms} onChange={this.onChangeTerm} />
+                    <SelectChangeColor className="custom-select-sm" defaultText="Período" options={this.state.terms} onChange={this.onChangeTerm} value={this.state.selectedTerm} resetColor={this.state.selectedTerm === "" ? true : false} />
                     <div className="px-2"></div>
                     <button type="button" className="btn btn-sm btn-outline-primary" style={{ width: 109 }} onClick={this.setSelectedFilter} disabled={this.checkButton()}>Buscar</button>
                 </div>
