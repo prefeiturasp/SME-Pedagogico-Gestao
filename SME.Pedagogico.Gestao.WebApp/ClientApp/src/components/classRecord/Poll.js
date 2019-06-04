@@ -22,6 +22,8 @@ import StudentPollMath6ACACard from '../polls/StudentPollMath6ACACard'
 import StudentPollMath6ACMCard from '../polls/StudentPollMath6ACMCard'
 import StudentPollPortugueseCard from '../polls/StudentPollPortugueseCard'
 
+import TwoStepsSave from '../messaging/TwoStepsSave';
+
 class Poll extends Component {
     constructor(props) {
         super(props);
@@ -29,6 +31,7 @@ class Poll extends Component {
             navSelected: "",
             didAnswerPoll: false, //usar para perguntar para salvar sondagem
             sondagemType: ClassRoomEnum.ClassEmpty,
+            showMessageBox: false,
         }
         this.componentRender = this.componentRender.bind(this);
 
@@ -48,7 +51,16 @@ class Poll extends Component {
         this.props.pollMethods.set_poll_info(null, null, null);
         this.props.pollMethods.reset_poll_selected_filter_state();
 
+
+        this.toggleMessageBox = this.toggleMessageBox.bind(this);
     }
+
+    toggleMessageBox() {
+        this.setState({
+            showMessageBox: !this.state.showMessageBox,
+        })
+    }
+
     componentDidUpdate() {
         
         if (this.state.navSelected === "portugues-tab" && document.getElementById("portugues-tab") !== null && document.getElementById("matematica-tab") !== null) {
@@ -485,7 +497,6 @@ class Poll extends Component {
                 console.log(response);
                 console.log(this.props.poll.pollSelected);
             }
-            alert("Informações salvas com sucesso");
         } else {
             //alert(this.props.poll.pollSelected);
         }
@@ -559,7 +570,10 @@ class Poll extends Component {
         if (this.props.poll.selectedFilter.yearClassroom !== null && parseInt(this.props.poll.selectedFilter.yearClassroom) < 7 && this.props.poll.selectedFilter.yearClassroom !== undefined) {
             btn = <li className="nav-item">
                     <div className="form-inline">
-                        <button id="btnSave" className="btn btn-save text-white deactive" onClick={this.savePollStudent} disabled="">Salvar</button></div>
+                        <button id="btnSave" className="btn btn-save text-white deactive" onClick={this.toggleMessageBox} disabled="">Salvar</button>
+                    </div>
+
+                    <TwoStepsSave show={this.state.showMessageBox} showControl={this.toggleMessageBox} runMethod={this.savePollStudent} />
                   </li>
         }
         return (btn);
