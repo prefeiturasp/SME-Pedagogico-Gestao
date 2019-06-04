@@ -46,7 +46,8 @@ class SondagemClassSelected extends Component {
             case "2":
                 buttonRender =  <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="Third group">
                                     <button id="2Numeric" value="Numeric" onClick={this.btnSetPollType} type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-left border-right-0">2º ano - Números</button>
-                                    <button id="2ACA" value="CA" onClick={this.btnSetPollType} type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-right border-left-0">2º ano - CA</button>
+                                    <button id="2CA" value="CA" onClick={this.btnSetPollType} type="button" className="btn btn-outline-primary btn-sm btn-matematica border-left-0 border-right-0">2º ano - CA</button>
+                                    <button id="2CM" value="CM" onClick={this.btnSetPollType} type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-double-right border-left-0">2º ano - CM</button>
                                 </div>;
                 break;
             case "3":
