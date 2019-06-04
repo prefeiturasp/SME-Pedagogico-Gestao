@@ -86,8 +86,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             PollReportMathStudentResult retorno = new PollReportMathStudentResult();
             //ajustar para pegar a turma 
             List<PollReportMathStudentItem> result = new List<PollReportMathStudentItem>();
-             
-
+              
             if (parameters.Proficiency == "Campo Aditivo")
             {
                 result = BuscaDadosCA(parameters.CodigoEscola, parameters.Proficiency, parameters.Term, BusinessPoll);
@@ -335,8 +334,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 item.Idea = new List<string> { "Escreve convencionamente", "Não escreve convencionamente" };
                 item.Result = new List<int> { totalSim, totalNao };
                 graficos.Add(item);
-            }
-
+            } 
             return graficos;
         }
 
