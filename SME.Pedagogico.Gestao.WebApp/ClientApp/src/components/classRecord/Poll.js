@@ -28,7 +28,7 @@ class Poll extends Component {
         this.state = {
             navSelected: "",
             didAnswerPoll: false, //usar para perguntar para salvar sondagem
-            sondagemType: ClassRoomEnum.ClassEmpty,//Retirar o default depois//PT,MT,1A,2A,3ACA,3ACM,4ACA,4ACM,5ACA,5ACM,6ACA,6ACM
+            sondagemType: ClassRoomEnum.ClassEmpty,
         }
         this.componentRender = this.componentRender.bind(this);
 
@@ -48,7 +48,7 @@ class Poll extends Component {
         this.props.pollMethods.set_poll_info(null, null, null);
         this.props.pollMethods.reset_poll_selected_filter_state();
     }
-    componentDidUpdate() {//ver em ClassPlan o método ClassRoomClick
+    componentDidUpdate() {
         
         if (this.state.navSelected === "portugues-tab" && document.getElementById("portugues-tab") !== null && document.getElementById("matematica-tab") !== null) {
             document.getElementById("portugues-tab").className = "btn btn-outline-primary btn-sm btn-planning active";
@@ -159,7 +159,6 @@ class Poll extends Component {
                     }
                 }
             }
-            //this.setState({ pollStudents: pollStudents });
             this.props.pollMethods.update_poll_students(pollStudents);
 
         } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMT) {
@@ -218,7 +217,6 @@ class Poll extends Component {
                         }
                     }
                 }
-                //this.setState({ pollStudents: pollStudents });
                 this.props.pollMethods.update_poll_math_numbers_students(pollStudents);
             } else if (this.props.poll.pollTypeSelected === "CA") {
                 var pollStudents = this.props.poll.studentsPollMathCA;
@@ -336,7 +334,6 @@ class Poll extends Component {
                         }
                     }
                 }
-                //this.setState({ pollStudents: pollStudents });
                 this.props.pollMethods.update_poll_math_ca_students(pollStudents);
             } else if (this.props.poll.pollTypeSelected === "CM") {
                 var pollStudents = this.props.poll.studentsPollMathCM;
@@ -454,7 +451,6 @@ class Poll extends Component {
                         }
                     }
                 }
-                //this.setState({ pollStudents: pollStudents });
                 this.props.pollMethods.update_poll_math_cm_students(pollStudents);
             }
 
@@ -499,44 +495,22 @@ class Poll extends Component {
 
     openPortuguesePoll(element) {
         this.toggleButton(element.currentTarget.id);
-        //aqui vai ter que mudar de acordo com o ano que entrar...
-        //this.setState({
-        //    sondagemType: ClassRoomEnum.ClassPT,
-        //});
-        //var classRoomMock = {
-        //    "dreCodeEol": "108100 ",
-        //    "schoolCodeEol": "000191",
-        //    "classroomCodeEol": "1996441",
-        //    "schoolYear": "2019",
-        //    "yearClassroom": "6"
-        //}
         var classRoomMock = this.props.poll.selectedFilter;
 
         this.props.pollMethods.set_poll_list_initial_state();
         this.props.pollMethods.set_poll_info(ClassRoomEnum.ClassPT, "", classRoomMock.yearClassroom); //passar pollSelected, pollTypeSelected, pollYear
         this.props.pollMethods.get_poll_portuguese_students(classRoomMock);
-        //this.setState({
-        //    pollStudents: this.props.poll.students,
-        //});
     }
     
     openMathPoll(element) {
         this.toggleButton(element.currentTarget.id);
-
-        //var classRoomMock = {
-        //    "dreCodeEol": "108100 ",
-        //    "schoolCodeEol": "000191",
-        //    "classroomCodeEol": "1996441",
-        //    "schoolYear": "2019",
-        //    "yearClassroom": "6"
-        //}
         var classRoomMock = this.props.poll.selectedFilter;
 
         this.props.pollMethods.set_poll_list_initial_state();
         if (classRoomMock.yearClassroom === "1" || classRoomMock.yearClassroom === "2" || classRoomMock.yearClassroom === "3") {
-            this.props.pollMethods.set_poll_info(ClassRoomEnum.ClassMT, "Numeric", classRoomMock.yearClassroom); //passar pollSelected, pollTypeSelected, pollYear
+            this.props.pollMethods.set_poll_info(ClassRoomEnum.ClassMT, "Numeric", classRoomMock.yearClassroom);
         } else {
-            this.props.pollMethods.set_poll_info(ClassRoomEnum.ClassMT, "CA", classRoomMock.yearClassroom); //passar pollSelected, pollTypeSelected, pollYear
+            this.props.pollMethods.set_poll_info(ClassRoomEnum.ClassMT, "CA", classRoomMock.yearClassroom);
         }
         
         if (this.props.poll.pollTypeSelected === "Numeric") {
@@ -549,16 +523,6 @@ class Poll extends Component {
             
             this.props.pollMethods.get_poll_math_cm_students(classRoomMock);
         }
-
-
-        //this.setState({ pollStudents: this.props.poll.students});
-
-        //this.toggleButton(element.currentTarget.id);
-        //literacyMathPoll
-        //subMathPoll //1A 2A 3ACA 3ACM .. 6ACA 6ACM
-        //this.setState({
-        //    sondagemType: this.props.poll.pollSelected,
-        //});
     }
 
     checkButtonPortuguese() {
@@ -603,16 +567,14 @@ class Poll extends Component {
                 </Card> 
                 <Card id="classRecord-poll">
                     <nav className="container-tabpanel navbar">
+                        <ul className="nav" role="tablist">
+                            {this.checkButtonPortuguese()}
+                            {this.checkButtonMath()}
+                        </ul>
                         <ul className="nav navbar-nav ml-auto">
                             {this.checkButtonSave()}
                         </ul>
                     </nav>
-                    
-                    
-                    <ul className="nav" role="tablist">
-                        {this.checkButtonPortuguese()}
-                        {this.checkButtonMath()}
-                    </ul>
                     
                     {this.componentRender()}
                 </Card>
