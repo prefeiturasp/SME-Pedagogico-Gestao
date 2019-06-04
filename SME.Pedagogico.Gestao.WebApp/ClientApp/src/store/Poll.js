@@ -126,6 +126,13 @@ export const reducer = (state, action) => {
             return ({
                 ...state,
                 selectedFilter: action.filters,
+                pollSelected: initialState.pollSelected, 
+                pollTypeSelected: initialState.pollTypeSelected,
+                pollYear: initialState.pollYear,
+                students: initialState.students,
+                studentsPollMathNumbers: initialState.studentsPollMathNumbers,
+                studentsPollMathCA: initialState.studentsPollMathCA,
+                studentsPollMathCM: initialState.studentsPollMathCM,
             });
         default:
             return (state);
