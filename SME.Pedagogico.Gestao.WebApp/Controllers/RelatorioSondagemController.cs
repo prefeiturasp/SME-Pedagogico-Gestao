@@ -57,7 +57,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
                 else    // cONSOLIDADO
                 {
-                    var result = await BuscaDadosMathAsync(parameters, "2014", "4", "500747", "1");
+                    var result = await BuscaDadosMathAsync(parameters, "2019", parameters.CodigoDRE, parameters.CodigoEscola, parameters.CodigoCurso);
                     return Ok(result);
                 }
             }
