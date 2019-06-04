@@ -246,7 +246,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     new PollReportPortugueseStudentItem()
                     {
                         Code = sondagem.studentCodeEol,
-                        StudentName = "Aluno " + sondagem.studentCodeEol,
+                        StudentName = sondagem.studentNameEol,
                         StudentValue = tipo
                     }
                 );
