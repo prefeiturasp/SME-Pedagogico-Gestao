@@ -31,16 +31,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var listStudentsPoll = new List<MathPoolCA>();
                 using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
                 {
-                    listStudentsPoll = db.MathPoolCAs.Where(x => x.TurmaEolCode == turmaEol ).ToList();
-                    /*
-                     && 
+                    listStudentsPoll = db.MathPoolCAs.Where(x => x.TurmaEolCode == turmaEol &&
                     (
-                    !string.IsNullOrEmpty(x.Ordem1Ideia) || 
-                    !string.IsNullOrEmpty(x.Ordem2Ideia) || 
-                    !string.IsNullOrEmpty(x.Ordem3Ideia) || 
-                    !string.IsNullOrEmpty(x.Ordem4Ideia)  
-                    )
-                    */
+                    !string.IsNullOrEmpty(x.Ordem1Ideia) ||
+                    !string.IsNullOrEmpty(x.Ordem2Ideia) ||
+                    !string.IsNullOrEmpty(x.Ordem3Ideia) ||
+                    !string.IsNullOrEmpty(x.Ordem4Ideia)
+                    )).ToList();
                 }
                 return listStudentsPoll;
             }

@@ -86,8 +86,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             PollReportMathStudentResult retorno = new PollReportMathStudentResult();
             //ajustar para pegar a turma 
             List<PollReportMathStudentItem> result = new List<PollReportMathStudentItem>();
-
-            parameters.CodigoEscola = "1996399";
+             
 
             if (parameters.Proficiency == "Campo Aditivo")
             {
