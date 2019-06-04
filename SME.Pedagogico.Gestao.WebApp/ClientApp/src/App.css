@@ -6,6 +6,16 @@
     cursor: pointer;
 }
 
+.sc-darkblue-button {
+    background-color: #086397;
+    border-color: #086397;
+}
+
+.sc-darkblue-outline-button {
+    border-color: #086397;
+    color: #086397;;
+}
+
 .sc-blue {
     background-color: #1E90FF;
 }

@@ -39,3 +39,12 @@
     .top-navigation-button > a {
         text-decoration: none;
     }
+
+.top-navigation-button-selected {
+    cursor: pointer;
+    background-color: #EEEEEE;
+}
+
+    .top-navigation-button-selected > a {
+        text-decoration: none;
+    }

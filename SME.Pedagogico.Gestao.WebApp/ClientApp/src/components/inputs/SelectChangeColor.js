@@ -42,6 +42,12 @@ export default class Select extends Component {
                 color: "white"
             };
 
+        if (this.props.resetColor)
+            style = {
+                backgroundColor: "white",
+                color: "black"
+            };
+
         return (
             <select className={className} {...rest} onChange={onChange} style={style} disabled={disabled} >
                 <option defaultValue hidden className="text-muted" value="">{defaultText}</option>

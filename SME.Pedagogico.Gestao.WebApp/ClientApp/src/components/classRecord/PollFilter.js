@@ -176,7 +176,7 @@ class PollFilter extends Component {
                 <div className="px-2"></div>
                 <SelectChangeColor className="col-4" value={selectedSchool} defaultText="Escola" options={listSchoolOptions} onChange={this.SelectedSchool} />
                 <div className="px-2"></div>
-                <SelectChangeColor className="" defaultText="Curso" options={yearClassrooms} onChange={this.getClassroom} />
+                <SelectChangeColor className="" defaultText="Ano" options={yearClassrooms} onChange={this.getClassroom} />
                 <div className="px-2"></div>
                 <SelectChangeColor className="" value={selectedClassRoom} defaultText="Turma" options={listClassRoomOptions} onChange={this.SelectedClassRoom} />
                 <div className="px-2"></div>
