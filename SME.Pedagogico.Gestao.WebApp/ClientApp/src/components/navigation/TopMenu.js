@@ -3,6 +3,7 @@ import './TopMenu.css'
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { actionCreators } from '../../store/User';
+import { actionCreators as pollRouterActionCreators } from '../../store/PollRouter';
 import { bindActionCreators } from 'redux';
 import Breadcrumb from './Breadcrumb';
 
@@ -11,10 +12,34 @@ class TopMenu extends Component {
         super();
 
         this.logout = this.logout.bind(this);
+        this.changeRoutePoll = this.changeRoutePoll.bind(this);
+        this.changeRoutePollReport = this.changeRoutePollReport.bind(this);
+    }
+
+    componentWillMount() {
+        var pathname = document.location.pathname;
+        switch (pathname) {
+            case "/":
+                this.changeRoutePoll();
+                break;
+            case "/Relatorios/Sondagem":
+                this.changeRoutePollReport();
+                break;
+            default:
+                break;
+        }
     }
 
     logout() {
-        this.props.logout({ username: this.props.user.username, session: this.props.user.session });
+        this.props.userMethods.logout({ username: this.props.user.username, session: this.props.user.session });
+    }
+
+    changeRoutePoll() {
+        this.props.pollRouterMethods.setActiveRoute("Sondagem");
+    }
+
+    changeRoutePollReport() {
+        this.props.pollRouterMethods.setActiveRoute("Relatórios");
     }
 
     render() {
@@ -31,14 +56,14 @@ class TopMenu extends Component {
                     <div className="d-flex flex-fill ml-4"></div>
 
                     <div className="d-flex h-100">
-                        <div className="border-left top-navigation-button">
-                            <Link className="d-flex align-items-center h-100 w-100" to="/">
+                        <div className={this.props.pollRouter.activeRoute === "Sondagem" ? "border-left top-navigation-button-selected" : "border-left top-navigation-button"}>
+                            <Link className="d-flex align-items-center h-100 w-100" to="/" onClick={this.changeRoutePoll}>
                                 <small className="mx-3 font-weight-light text-muted">Sondagem</small>
                             </Link>
                         </div>
 
-                        <div className="mr-3 border border-top-0 border-bottom-0 top-navigation-button">
-                            <Link className="d-flex align-items-center h-100 w-100" to="/Relatorios/Sondagem">
+                        <div className={this.props.pollRouter.activeRoute === "Relatórios" ? "mr-3 border border-top-0 border-bottom-0 top-navigation-button-selected" : "mr-3 border border-top-0 border-bottom-0 top-navigation-button"}>
+                            <Link className="d-flex align-items-center h-100 w-100" to="/Relatorios/Sondagem" onClick={this.changeRoutePollReport}>
                                 <small className="mx-3 font-weight-light text-muted">Relat&oacute;rios</small>
                             </Link>
                         </div>
@@ -66,6 +91,6 @@ class TopMenu extends Component {
 }
 
 export default connect(
-    state => ({ user: state.user }),
-    dispatch => bindActionCreators(actionCreators, dispatch)
+    state => ({ user: state.user, pollRouter: state.pollRouter }),
+    dispatch => ({ userMethods: bindActionCreators(actionCreators, dispatch), pollRouterMethods: bindActionCreators(pollRouterActionCreators, dispatch) })
 )(TopMenu);
