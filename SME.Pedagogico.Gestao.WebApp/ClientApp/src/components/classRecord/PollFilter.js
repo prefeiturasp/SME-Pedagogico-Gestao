@@ -208,9 +208,9 @@ class PollFilter extends Component {
                 <div className="px-2"></div>
                 <SelectChangeColor className="col-4" value={selectedSchool} defaultText="Escola" options={listSchoolOptions} onChange={this.SelectedSchool} resetColor={selectedSchool === "" ? true : false} />
                 <div className="px-2"></div>
-                <SelectChangeColor className="" value={this.state.classroom} defaultText="Ano" options={yearClassrooms} onChange={this.getClassroom} activeColor={this.state.classroom === "" ? false : true} resetColor={this.state.classroom === "" ? true : false} />
+                <SelectChangeColor className="col" value={this.state.classroom} defaultText="Ano" options={yearClassrooms} onChange={this.getClassroom} activeColor={this.state.classroom === "" ? false : true} resetColor={this.state.classroom === "" ? true : false} />
                 <div className="px-2"></div>
-                <SelectChangeColor className="" value={selectedClassRoom} defaultText="Turma" options={listClassRoomOptions} onChange={this.SelectedClassRoom} resetColor={selectedClassRoom === "" ? true : false} />
+                <SelectChangeColor className="col" value={selectedClassRoom} defaultText="Turma" options={listClassRoomOptions} onChange={this.SelectedClassRoom} resetColor={selectedClassRoom === "" ? true : false} />
                 <div className="px-2"></div>
                 <CircleButton iconClass="fas fa-search" onClick={this.setSelectedFilter} disabled={!this.checkDisabledButton()} />
             </div>
