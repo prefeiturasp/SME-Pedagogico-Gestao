@@ -2,7 +2,7 @@
 
 const ClickableButton = (props) => {
     return (
-        <div className="btn btn btn-primary rounded-circle d-flex justify-content-center align-items-center ml-2 sc-blue border-0"
+        <div className="btn btn btn-primary rounded-circle d-flex justify-content-center align-items-center sc-blue border-0"
             style={{ width: 40, height: 40 }}
             onClick={props.onClick}>
             <i className={props.iconClass}></i>
@@ -12,7 +12,7 @@ const ClickableButton = (props) => {
 
 const DisabledButton = (props) => {
     return (
-        <div className="rounded-circle d-flex justify-content-center align-items-center ml-2 sc-gray border-0"
+        <div className="rounded-circle d-flex justify-content-center align-items-center sc-gray border-0"
             style={{ width: 40, height: 40 }}>
             <i className={props.iconClass}></i>
         </div>

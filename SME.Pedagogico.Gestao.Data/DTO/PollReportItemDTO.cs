@@ -28,6 +28,7 @@ namespace SME.Pedagogico.Gestao.Data.DTO
         public PollReportMathItem Results { get; set; } = new PollReportMathItem();
         public List<MathIdeaChartDataModel> ChartIdeaData { get; set; } = new List<MathIdeaChartDataModel>();
         public List<MathResultChartDataModel> ChartResultData { get; set; } = new List<MathResultChartDataModel>();
+        public List<MathNumeroChartDataModel> ChartNumberData { get; set; } = new List<MathNumeroChartDataModel>();
     }
 
     public class MathIdeaChartDataModel
@@ -40,6 +41,12 @@ namespace SME.Pedagogico.Gestao.Data.DTO
     {
         public string Order { get; set; }
         public List<ResultChartDTO> Result { get; set; } = new List<ResultChartDTO>();
+    }
+
+    public class MathNumeroChartDataModel
+    {
+        public string Order { get; set; }
+        public List<NumeroChartDTO> Numbers { get; set; } = new List<NumeroChartDTO>();
     }
 
     public class PollReportMathItem
