@@ -689,14 +689,14 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             switch (proficiencia)
             {
                 case "PS":
-                    return "Pré silábico";
+                    return "Présilabico";
                 case "SSV":
-                    return "Silábico sem valor sonoro";
+                    return "Silábico sem valor";
                 case "SCV":
-                    return "Silábico com valor sonoro";
+                    return "Silábico com valor";
                 case "SA":
-                    return "Silábico - alfabético";
-                case "ALF":
+                    return "Silábico alfabético";
+                case "A":
                     return "Alfabético";
                 default:
                     return proficiencia;
