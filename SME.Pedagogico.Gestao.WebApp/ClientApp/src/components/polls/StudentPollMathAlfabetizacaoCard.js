@@ -20,6 +20,7 @@ class StudentPollMathAlfabetizacaoCard extends Component {
         };
         this.hideShowOrdem = this.hideShowOrdem.bind(this);
         this.showOneHideAll = this.showOneHideAll.bind(this);
+
     }
     componentDidMount() {
         this.showOneHideAll(this.state.selectedOrdem);
@@ -57,6 +58,7 @@ class StudentPollMathAlfabetizacaoCard extends Component {
         const pStyle = {
             color: '#DADADA'
         };
+        var pollYear = this.props.poll.pollYear;
         return (
             <div>
                 <div id="wrapper">
@@ -65,7 +67,7 @@ class StudentPollMathAlfabetizacaoCard extends Component {
                 <table className="table table-sm table-bordered table-hover table-sondagem-matematica" style={{ overflow: "hidden", overflowX: "auto" }}>
                     <thead>
                         <tr>
-                            <th rowSpan="2" className="align-middle border text-color-purple"><div className="ml-2">Sondagem - {this.state.class}º ano números</div></th>
+                            <th rowSpan="2" className="align-middle border text-color-purple"><div className="ml-2">Sondagem - {pollYear}º ano números</div></th>
                             <th colSpan="2" id="familiares_col_head" className="text-center border text-color-purple "><span style={pStyle}><img src="./img/icon_pt_DADADA.svg" alt="seta esquerda inativa" style={{ height: 20 }} /> </span><b className="p-4">Familiares ou frequentes</b><span value="opacos_col" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_pt_7C4DFF.svg" alt="seta direita ativa" style={{ height: 20 }} /></span></th>
                             <th colSpan="2" id="opacos_col_head" className="text-center border text-color-purple "><span value="familiares_col" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_pt_7C4DFF.svg" alt="seta esquerda ativa" style={{ height: 20 }} /></span><b className="p-4">Opacos</b><span value="transparentes_col" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_pt_7C4DFF.svg" alt="seta direita ativa" style={{ height: 20 }} /></span></th>
                             <th colSpan="2" id="transparentes_col_head" className="text-center border text-color-purple "><span value="opacos_col" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_pt_7C4DFF.svg" alt="seta esquerda ativa" style={{ height: 20 }} /></span><b className="p-4">Transparentes</b><span value="zero_col" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_pt_7C4DFF.svg" alt="seta direita ativa" style={{ height: 20 }} /></span></th>
