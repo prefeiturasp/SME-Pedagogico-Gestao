@@ -1,4 +1,5 @@
-﻿export const types = {
+﻿// Store filters 	
+export const types = {
     GET_DRE: "GET_DRE",
     LIST_DRES: "LIST_DRES",
     GET_SCHOOL: "GET_SCHOOL",
@@ -8,7 +9,9 @@
     ACTIVEDRECODE: "ACTIVEDRECODE",
     ACTIVESCHOOLCODE: "ACTIVESCHOOLCODE",
     ACTIVECLASSROOMCODE: "ACTIVECLASSROOMCODE",
-    RESET_POLL_FILTERS: "RESET_POLL_FILTERS,"
+    RESET_POLL_FILTERS: "RESET_POLL_FILTERS",
+    GET_FILTERS_TEACHER: "GET_FILTERS_TEACHER",
+    SET_FILTERS_TEACHER: "SET_FILTERS_TEACHER",
 
     //UNAUTHORIZED: "UNAUTHORIZED",
     //LOGOUT_REQUEST: "LOGOUT_REQUEST",
@@ -26,17 +29,19 @@ const initialState = {
     activeSchollsCode: null,
     activeYearClassRoomCode: null,
     activeClassRoomCode: null,
+    filterTeachers: null,
 };
 
 export const actionCreators = {
     getDre: () => ({ type: types.GET_DRE }),
-    listDre: () => ({type: types.LIST_DRES}),
+    listDre: () => ({ type: types.LIST_DRES }),
     getSchool: (schoolCode) => ({ type: types.GET_SCHOOL, schoolCode }),
     listSchool: () => ({ type: types.LIST_SCHOOLS }),
     getClassroom: (classRoomFilter) => ({ type: types.GET_CLASSROOM, classRoomFilter }),
     listClassRoom: () => ({ type: types.LIST_CLASSROOM }),
     activeClassroom: (codeClass) => ({ type: types.ACTIVECLASSROOMCODE, codeClass }),
     resetPollFilters: () => ({ type: types.RESET_POLL_FILTERS }),
+    getFilters_teacher: (profileOccupatios) => ({ type: types.GET_FILTERS_TEACHER, profileOccupatios }),
 };
 
 export const reducer = (state, action) => {
@@ -49,7 +54,7 @@ export const reducer = (state, action) => {
                 listDres: action.listDres
             });
         case types.LIST_SCHOOLS:
-          
+
             return ({
                 ...state,
                 scholls: action.listSchool,
@@ -78,6 +83,14 @@ export const reducer = (state, action) => {
             return ({
                 ...state,
                 ...initialState
+            });
+        case types.SET_FILTERS_TEACHER:
+            return ({
+                ...state,
+                filterTeachers: action.teste,
+                scholls: action.teste.escolas,
+                listDres: action.teste.drEs,
+                listClassRoom: action.teste.turmas
             })
         default:
             return (state);
