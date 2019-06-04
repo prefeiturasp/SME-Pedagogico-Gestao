@@ -1,6 +1,9 @@
 ﻿.btn.btn-save.text-white {
     background-color: #F39200;
 }
+.btn.btn-save.text-white.deactive {
+    background-color: #EEEEEE;
+}
 .testcursor{
     cursor:pointer;
 }

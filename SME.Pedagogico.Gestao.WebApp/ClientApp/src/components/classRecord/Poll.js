@@ -47,6 +47,7 @@ class Poll extends Component {
 
         this.props.pollMethods.set_poll_info(null, null, null);
         this.props.pollMethods.reset_poll_selected_filter_state();
+
     }
     componentDidUpdate() {
         
@@ -56,21 +57,30 @@ class Poll extends Component {
         } else if (this.state.navSelected === "matematica-tab" && document.getElementById("portugues-tab") !== null && document.getElementById("matematica-tab") !== null) {
             document.getElementById("portugues-tab").className = "btn btn-outline-primary btn-sm btn-planning";
             document.getElementById("matematica-tab").className = "btn btn-outline-primary btn-sm btn-planning active";
-        } 
+        }
+
+        if (this.props.poll.students.length > 0 || this.props.poll.studentsPollMathNumbers.length > 0 || this.props.poll.studentsPollMathCA.length > 0 || this.props.poll.studentsPollMathCM.length > 0) {
+            if (document.getElementById("btnSave")!==null) {
+                document.getElementById("btnSave").className = "btn btn-save text-white";
+            }
+        } else {
+            if (document.getElementById("btnSave") !== null) {
+                document.getElementById("btnSave").className = "btn btn-save text-white deactive";
+            }
+        }
     }
 
     componentDidMount() {
         
     }
     componentWillUpdate() {
-       
+        
     }
 
     componentRender() {
         var componentRender;
 
         var sondagemType = this.props.poll.pollSelected
-
 
         if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
             componentRender = <StudentPollPortugueseCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
@@ -112,7 +122,6 @@ class Poll extends Component {
                     componentRender = <StudentPollMath6ACMCard students={this.props.poll.studentsPollMathCM} updatePollStudent={this.updatePollStudent} />;
                 }
             }
-
         } else {
             componentRender = "";
         }
@@ -478,7 +487,7 @@ class Poll extends Component {
             }
             alert("Informações salvas com sucesso");
         } else {
-            alert(this.props.poll.pollSelected);
+            //alert(this.props.poll.pollSelected);
         }
         console.log(this.props);
         
@@ -549,9 +558,9 @@ class Poll extends Component {
         var btn;
         if (this.props.poll.selectedFilter.yearClassroom !== null && parseInt(this.props.poll.selectedFilter.yearClassroom) < 7 && this.props.poll.selectedFilter.yearClassroom !== undefined) {
             btn = <li className="nav-item">
-                <div className="form-inline">
-                    <button className="btn btn-save text-white" onClick={this.savePollStudent} disabled="">Salvar</button></div>
-            </li>
+                    <div className="form-inline">
+                        <button id="btnSave" className="btn btn-save text-white deactive" onClick={this.savePollStudent} disabled="">Salvar</button></div>
+                  </li>
         }
         return (btn);
     }
