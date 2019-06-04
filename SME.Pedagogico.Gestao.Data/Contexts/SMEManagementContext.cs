@@ -170,6 +170,14 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
                     OccupationPlaceCode = 2
                 },
 
+                new Models.Authentication.PrivilegedAccess()
+                {
+                    Login = "heloisa.sme",
+                    Name  = "Heloisa Giannichi",
+                    OccupationPlace = "SME",
+                    OccupationPlaceCode = 2
+                },
+
             };
             modelBuilder.Entity<Models.Authentication.PrivilegedAccess>().HasData(pvAccess);
         }

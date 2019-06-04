@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SME.Pedagogico.Gestao.Models.Academic
 {
-    public class PortuguesePoll : Base.Abstracts.Table
+    public class MathPoll : Base.Abstracts.Table
     {
         public string dreCodeEol { get; set; }
         public string schoolCodeEol { get; set; }
@@ -12,7 +12,6 @@ namespace SME.Pedagogico.Gestao.Models.Academic
         public string schoolYear { get; set; }
         public string yearClassroom { get; set; }
         public string studentCodeEol { get; set; }
-        public string studentNameEol { get; set; }
 
         public string reading1B { get; set; }
         public string writing1B { get; set; }
