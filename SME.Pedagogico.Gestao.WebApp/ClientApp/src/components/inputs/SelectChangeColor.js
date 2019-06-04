@@ -36,10 +36,16 @@ export default class Select extends Component {
 
         var style = {};
 
-        if (this.state.optionChanged)
+        if (this.state.optionChanged || this.props.activeColor)
             style = {
                 backgroundColor: "#1E90FF",
                 color: "white"
+            };
+
+        if (this.props.resetColor)
+            style = {
+                backgroundColor: "white",
+                color: "black"
             };
 
         return (

@@ -204,139 +204,25 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 }
                 else
                 {
-                    PollReportMathItem item1 = new PollReportMathItem() { OrderName = "ORDEM 1" };
-                    item1.Results.Add(new MathItemResult()
-                    {
-                        TestName = "Acertou",
-                        TestIdeaQuantity = 60,
-                        TestIdeaPercentage = 60,
-                        TestResultQuantity = 60,
-                        TestResultPercentage = 60
-                    });
-                    item1.Results.Add(new MathItemResult()
-                    {
-                        TestName = "Errou",
-                        TestIdeaQuantity = 30,
-                        TestIdeaPercentage = 30,
-                        TestResultQuantity = 30,
-                        TestResultPercentage = 30
-                    });
-                    item1.Results.Add(new MathItemResult()
-                    {
-                        TestName = "Não Respondeu",
-                        TestIdeaQuantity = 45,
-                        TestIdeaPercentage = 45,
-                        TestResultQuantity = 45,
-                        TestResultPercentage = 45
-                    });
-
-                    PollReportMathItem item2 = new PollReportMathItem() { OrderName = "ORDEM 2" };
-                    item2.Results.Add(new MathItemResult()
-                    {
-                        TestName = "Acertou",
-                        TestIdeaQuantity = 60,
-                        TestIdeaPercentage = 60,
-                        TestResultQuantity = 60,
-                        TestResultPercentage = 60
-                    });
-                    item2.Results.Add(new MathItemResult()
-                    {
-                        TestName = "Errou",
-                        TestIdeaQuantity = 30,
-                        TestIdeaPercentage = 30,
-                        TestResultQuantity = 30,
-                        TestResultPercentage = 30
-                    });
-                    item2.Results.Add(new MathItemResult()
-                    {
-                        TestName = "Não Respondeu",
-                        TestIdeaQuantity = 45,
-                        TestIdeaPercentage = 45,
-                        TestResultQuantity = 45,
-                        TestResultPercentage = 45
-                    });
-
-                    PollReportMathItem item3 = new PollReportMathItem() { OrderName = "ORDEM 3" };
-                    item3.Results.Add(new MathItemResult()
-                    {
-                        TestName = "Acertou",
-                        TestIdeaQuantity = 60,
-                        TestIdeaPercentage = 60,
-                        TestResultQuantity = 60,
-                        TestResultPercentage = 60
-                    });
-                    item3.Results.Add(new MathItemResult()
-                    {
-                        TestName = "Errou",
-                        TestIdeaQuantity = 30,
-                        TestIdeaPercentage = 30,
-                        TestResultQuantity = 30,
-                        TestResultPercentage = 30
-                    });
-                    item3.Results.Add(new MathItemResult()
-                    {
-                        TestName = "Não Respondeu",
-                        TestIdeaQuantity = 45,
-                        TestIdeaPercentage = 45,
-                        TestResultQuantity = 45,
-                        TestResultPercentage = 45
-                    });
-
-                    PollReportMathItem item4 = new PollReportMathItem() { OrderName = "ORDEM 4" };
-                    item4.Results.Add(new MathItemResult()
-                    {
-                        TestName = "Acertou",
-                        TestIdeaQuantity = 60,
-                        TestIdeaPercentage = 60,
-                        TestResultQuantity = 60,
-                        TestResultPercentage = 60
-                    });
-                    item4.Results.Add(new MathItemResult()
-                    {
-                        TestName = "Errou",
-                        TestIdeaQuantity = 30,
-                        TestIdeaPercentage = 30,
-                        TestResultQuantity = 30,
-                        TestResultPercentage = 30
-                    });
-                    item4.Results.Add(new MathItemResult()
-                    {
-                        TestName = "Não Respondeu",
-                        TestIdeaQuantity = 45,
-                        TestIdeaPercentage = 45,
-                        TestResultQuantity = 45,
-                        TestResultPercentage = 45
-                    });
-
-                    PollReportMathResult result = new PollReportMathResult();
-                    result.Results.Add(item1);
-                    result.Results.Add(item2);
-                    result.Results.Add(item3);
-                    result.Results.Add(item4);
-                    result.ChartData.Add(new Data.DTO.MathChartDataModel()
-                    {
-                        Name = "ORDEM 1",
-                        Idea = new List<int>() { 60, 13, 30 },
-                        Result = new List<int>() { 25, 30, 45 }
-                    });
-                    result.ChartData.Add(new Data.DTO.MathChartDataModel()
-                    {
-                        Name = "ORDEM 2",
-                        Idea = new List<int>() { 20, 40, 30 },
-                        Result = new List<int>() { 10, 15, 5 }
-                    });
-                    result.ChartData.Add(new Data.DTO.MathChartDataModel()
-                    {
-                        Name = "ORDEM 3",
-                        Idea = new List<int>() { 60, 13, 30 },
-                        Result = new List<int>() { 60, 30, 45 }
-                    });
-
-                    return (Ok(result));
+                    var result = await BuscaDadosMathAsync(parameters, "2014", "4", "500747", "1");
+                    return Ok(result);
                 }
             }
 
             return (NotFound());
+        }
+
+        private async Task<PollReportMathResult> BuscaDadosMathAsync(ParametersModel parameters, string anoLetivo, string codigoDre, string codigoEscola, string anoTurma)
+        {
+            var businessPoll = new Data.Business.SondagemMatematica(_config);
+
+            return await businessPoll
+                .BuscarDadosRelatorioMatematicaAsync(parameters.Proficiency, 
+                                                     parameters.Term, 
+                                                     anoLetivo, 
+                                                     codigoDre, 
+                                                     codigoEscola, 
+                                                     anoTurma);            
         }
 
         private async Task<PollReportPortugueseResult> BuscarDadosSyncAsync(ParametersModel parameters, string anoLetivo, string codigoDre, string codigoEscola, string codigoCurso)
