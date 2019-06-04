@@ -5,7 +5,8 @@ export default function* () {
     yield all([
         takeLatest(Filters.types.GET_DRE, GetDres),
         takeLatest(Filters.types.GET_SCHOOL, GetSchools),
-        takeLatest(Filters.types.GET_CLASSROOM, GetClassRoom)
+        takeLatest(Filters.types.GET_CLASSROOM, GetClassRoom),
+        takeLatest(Filters.types.GET_FILTERS_TEACHER, GetFiltersTeacher),
     ]);
 }
 
@@ -38,7 +39,7 @@ function* GetClassRoom({ classRoomFilter }) {
         const data = yield call(getClassRoomAPI, classRoomFilter);
         var listClassRoom = data;
         yield put({ type: Filters.types.LIST_CLASSROOM, listClassRoom })
-        yield put({ type: Filters.types.ACTIVESCHOOLCODE, classRoomFilter  })
+        yield put({ type: Filters.types.ACTIVESCHOOLCODE, classRoomFilter })
     }
     catch (error) {
         yield put({ type: "API_CALL_ERROR" });
@@ -46,6 +47,26 @@ function* GetClassRoom({ classRoomFilter }) {
 }
 
 
+function* GetFiltersTeacher({ profileOccupatios }) {
+    try {
+        const data = yield call(getTeacherFiltersApi, profileOccupatios);
+        var teste = data;
+        yield put({ type: Filters.types.SET_FILTERS_TEACHER, teste })
+    }
+    catch (error) {
+        yield put({ type: "API_CALL_ERROR" });
+    }
+}
+
+// Filter Sagas 
+function getTeacherFiltersApi(profileOccupatios) {
+    return (fetch("/api/Cargo/PerfilServidor", {
+        method: "post",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(profileOccupatios)
+    })
+        .then(response => response.json()));
+}
 function getSchoolsAPI(schoolCode) {
     return (fetch("/api/Filtros/ListarEscolasPorDre", {
         method: "post",
@@ -57,7 +78,7 @@ function getSchoolsAPI(schoolCode) {
 
 
 function getClassRoomAPI(classRoomFilter) {
-  
+
     return (fetch("/api/Filtros/ListarTurmasPorEscola", {
         method: "post",
         headers: { 'Content-Type': 'application/json' },

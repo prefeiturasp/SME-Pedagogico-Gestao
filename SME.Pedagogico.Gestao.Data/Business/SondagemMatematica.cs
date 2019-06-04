@@ -218,13 +218,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
          
         public async Task<PollReportMathResult> BuscarDadosRelatorioMatematicaAsync(string proficiency, string semestre, string anoLetivo, string codigoDre, string codigoEscola, string anoTurma)
         {
-            if (proficiency.Equals("CM", StringComparison.InvariantCultureIgnoreCase))
+            if (proficiency.Equals("Campo Multiplicativo", StringComparison.InvariantCultureIgnoreCase))
             {
                 return await BuscaDadosRelatorioMatCMAsync(semestre, anoLetivo, codigoDre, codigoEscola, anoTurma);
-            } else if (proficiency.Equals("CA", StringComparison.InvariantCultureIgnoreCase))
+            } else if (proficiency.Equals("Campo Aditivo", StringComparison.InvariantCultureIgnoreCase))
             {
                 return await BuscaDadosRelatorioMatCAAsync(semestre, anoLetivo, codigoDre, codigoEscola, anoTurma);
-            } else if (proficiency.Equals("Numeros", StringComparison.InvariantCultureIgnoreCase))
+            } else if (proficiency.Equals("Números", StringComparison.InvariantCultureIgnoreCase))
             {
                 return await BuscaDadosRelatorioMatNumeros(semestre, anoLetivo, codigoDre, codigoEscola, anoTurma);
             }
@@ -243,7 +243,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 query = db.MathPoolNumbers
                           .Where(x => x.AnoLetivo.ToString() == anoLetivo
-                       && x.Semestre.ToString() == semestre);
+                       && x.Semestre.ToString() == semestre.Substring(0,1));
 
                 if (query.Count() > 1)
                 {
@@ -327,7 +327,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 query = db.MathPoolCMs
                           .Where(x => x.AnoLetivo.ToString() == anoLetivo
-                       && x.Semestre.ToString() == semestre);
+                       && x.Semestre.ToString() == semestre.Substring(0, 1));
 
                 if (query.Count() > 1)
                 {
@@ -444,7 +444,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 query = db.MathPoolCAs
                           .Where(x => x.AnoLetivo.ToString() == anoLetivo
-                       && x.Semestre.ToString() == semestre);
+                       && x.Semestre.ToString() == semestre.Substring(0, 1));
 
                 if (query.Count() > 1)
                 {
@@ -603,11 +603,20 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 }
             }
 
-            var ideaTotalStudents = resultRetorno.CorrectResultQuantity + resultRetorno.IncorrectResultQuantity + resultRetorno.NotAnsweredResultQuantity;
+            var resultTotalStudents = resultRetorno.CorrectResultQuantity + resultRetorno.IncorrectResultQuantity + resultRetorno.NotAnsweredResultQuantity;
 
-            resultRetorno.CorrectResultPercentage = (resultRetorno.CorrectResultQuantity / ideaTotalStudents) * 100;
-            resultRetorno.IncorrectResultPercentage = (resultRetorno.IncorrectResultQuantity / ideaTotalStudents) * 100;
-            resultRetorno.NotAnsweredResultPercentage = (resultRetorno.NotAnsweredResultQuantity / ideaTotalStudents) * 100;
+            if (resultTotalStudents < 1)
+            {
+                resultRetorno.CorrectResultPercentage = 0;
+                resultRetorno.IncorrectResultPercentage = 0;
+                resultRetorno.NotAnsweredResultPercentage = 0;
+            }
+            else
+            {
+                resultRetorno.CorrectResultPercentage = (resultRetorno.CorrectResultQuantity / resultTotalStudents) * 100;
+                resultRetorno.IncorrectResultPercentage = (resultRetorno.IncorrectResultQuantity / resultTotalStudents) * 100;
+                resultRetorno.NotAnsweredResultPercentage = (resultRetorno.NotAnsweredResultQuantity / resultTotalStudents) * 100;
+            }
             resultRetorno.OrderName = order;
 
             ideasAndResults.ResultResults.Add(resultRetorno);
