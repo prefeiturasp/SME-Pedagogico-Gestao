@@ -217,14 +217,14 @@ export default class StudentPollMath5ACACard extends Component {
                             </th>
                         </tr>
                         <tr>
-                            <th colSpan="4" className="text-center border poll-select-container ordem1_col"><small className="text-muted">1ºS</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container ordem1_col"><small className="text-muted">2ºS</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container ordem2_col"><small className="text-muted">1ºS</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container ordem2_col"><small className="text-muted">2ºS</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container ordem3_col"><small className="text-muted">1ºS</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container ordem3_col"><small className="text-muted">2ºS</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container ordem4_col"><small className="text-muted">1ºS</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container ordem4_col"><small className="text-muted">2ºS</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem1_col"><small className="text-muted">1º Semestre</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem1_col"><small className="text-muted">2º Semestre</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem2_col"><small className="text-muted">1º Semestre</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem2_col"><small className="text-muted">2º Semestre</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem3_col"><small className="text-muted">1º Semestre</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem3_col"><small className="text-muted">2º Semestre</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem4_col"><small className="text-muted">1º Semestre</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem4_col"><small className="text-muted">2º Semestre</small></th>
                         </tr>
                         <tr>
                             <th colSpan="2" className="text-center border poll-select-container ordem1_col"><small className="text-muted">Ideia</small></th>

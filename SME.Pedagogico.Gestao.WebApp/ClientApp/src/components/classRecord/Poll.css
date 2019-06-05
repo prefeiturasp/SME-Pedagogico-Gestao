@@ -145,3 +145,7 @@ th.align-middle.border.text-color-purple {
     width: 33%;
     display: inline-flex;
 }
+
+.btn-group.mr-2.btn-group-sm.pills {
+    padding: .5rem 1rem;
+}

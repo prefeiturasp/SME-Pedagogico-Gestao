@@ -53,7 +53,6 @@ class StudentPollPortugueseCard extends Component {
 
     }
     hideShowOrdem(event) {
-        debugger;
         this.setState({ 
             selectedOrdem: event.currentTarget.attributes[0].value
         });

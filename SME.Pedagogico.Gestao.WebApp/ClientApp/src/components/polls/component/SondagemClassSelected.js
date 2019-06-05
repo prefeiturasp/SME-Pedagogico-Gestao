@@ -83,45 +83,45 @@ class SondagemClassSelected extends Component {
         var buttonRender;
         switch (this.props.poll.pollYear) {
             case "1":
-                buttonRender =  <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="Second group">
+                buttonRender =  <div className="btn-group mr-2 btn-group-sm pills" role="group" aria-label="Second group">
                                     <button id="1Numeric" value="Numeric" onClick={this.btnSetPollType} type="button" className={this.btnCheckNumeric()}>1º ano - Números</button>
                                     <button id="1CA" value="CA" onClick={this.btnSetPollType} type="button" className={this.btnCheckCA()}>1º ano - CA</button>
                                 </div>;
                 break;
             case "2":
-                buttonRender =  <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="Third group">
+                buttonRender =  <div className="btn-group mr-2 btn-group-sm pills" role="group" aria-label="Third group">
                                     <button id="2Numeric" value="Numeric" onClick={this.btnSetPollType} type="button" className={this.btnCheckNumeric()}>2º ano - Números</button>
                                     <button id="2CA" value="CA" onClick={this.btnSetPollType} type="button" className={this.btnCheckCA()}>2º ano - CA</button>
                                     <button id="2CM" value="CM" onClick={this.btnSetPollType} type="button" className={this.btnCheckCM()}>2º ano - CM</button>
                                 </div>;
                 break;
             case "3":
-                buttonRender = <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="Fourth group">
+                buttonRender = <div className="btn-group mr-2 btn-group-sm pills" role="group" aria-label="Fourth group">
                                     <button id="3Numeric" value="Numeric" onClick={this.btnSetPollType} type="button" className={this.btnCheckNumeric()}>3º ano - Números</button>
                                     <button id="3CA" value="CA" onClick={this.btnSetPollType} type="button" className={this.btnCheckCA()}>3º ano - CA</button>
                                     <button id="3CM" value="CM" onClick={this.btnSetPollType} type="button" className={this.btnCheckCM()}>3º ano - CM</button>
                                 </div>;
                 break;
             case "4":
-                buttonRender =  <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="Fifth group">
+                buttonRender =  <div className="btn-group mr-2 btn-group-sm pills" role="group" aria-label="Fifth group">
                                     <button id="4CA" value="CA" onClick={this.btnSetPollType} type="button" className={this.btnCheckCA()}>4º ano - CA</button>
                                     <button id="4CM" value="CM" onClick={this.btnSetPollType} type="button" className={this.btnCheckCM()}>4º ano - CM</button>
                                 </div>;
                 break;
             case "5":
-                buttonRender =  <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="Sixth group">
+                buttonRender =  <div className="btn-group mr-2 btn-group-sm pills" role="group" aria-label="Sixth group">
                                     <button id="5CA" value="CA" onClick={this.btnSetPollType} type="button" className={this.btnCheckCA()}>5º ano - CA</button>
                                     <button id="5CM" value="CM" onClick={this.btnSetPollType} type="button" className={this.btnCheckCM()}>5º ano - CM</button>
                                 </div>;
                 break;
             case "6":
-                buttonRender =  <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="Seventh group">
+                buttonRender =  <div className="btn-group mr-2 btn-group-sm pills" role="group" aria-label="Seventh group">
                                     <button id="6CA" value="CA" onClick={this.btnSetPollType} type="button" className={this.btnCheckCA()}>6º ano - CA</button>
                                     <button id="6CM" value="CM" onClick={this.btnSetPollType} type="button" className={this.btnCheckCM()}>6º ano - CM</button>
                                 </div>;
                 break;
             case "MT"://retirar posteriormente
-                buttonRender =  <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="First group">
+                buttonRender =  <div className="btn-group mr-2 btn-group-sm pills" role="group" aria-label="First group">
                                     <button id="MT" type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-single">Alfabetização</button>
                                 </div>;
                 break;
