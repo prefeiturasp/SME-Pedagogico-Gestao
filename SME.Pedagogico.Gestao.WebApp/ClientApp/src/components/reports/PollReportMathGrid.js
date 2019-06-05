@@ -66,7 +66,7 @@ export default class PollReportMathGrid extends Component {
         data.totals = [];
         var indexes = [];
 
-        if (data.ideaResults.length > 0)
+        if (this.props.classroomReport === false && data.ideaResults.length > 0)
             for (var i = 0; i < data.ideaResults.length; i++) {
                 indexes.push(i);
                 data.totals.push({
@@ -76,7 +76,7 @@ export default class PollReportMathGrid extends Component {
                     totalStudentResultPercentage: data.resultResults[i].correctResultPercentage + data.resultResults[i].incorrectResultPercentage + data.resultResults[i].notAnsweredResultPercentage,
                 });
             }
-        else
+        else if (data.numerosResults !== undefined && data.numerosResults.length > 0)
             for (var j = 0; j < data.numerosResults.length; j++)
                 indexes.push(j);
 
@@ -147,7 +147,7 @@ export default class PollReportMathGrid extends Component {
                     <div>
                         <PollReportMathGridHeader classroomReport={this.props.classroomReport} orders={orders} />
                         {this.props.data.map(item =>
-                            <PollReportMathGridItem classroomReport={this.props.classroomReport} item={item}/> 
+                            <PollReportMathGridItem classroomReport={this.props.classroomReport} item={item} />
                         )}
                     </div>
                 }
