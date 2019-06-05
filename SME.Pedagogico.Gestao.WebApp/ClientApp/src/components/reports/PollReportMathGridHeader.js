@@ -66,33 +66,51 @@ export default class PollReportMathGridHeader extends Component {
                     </div>
                 </div>
             );
-        else
-            return (
-                <div>
-                    <div className="d-flex poll-report-grid-header border-bottom border-white">
-                        <div className="col-4 sc-gray">
-                            <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-bold">ORDEM {this.props.orderName}</div>
+        else {
+            if (this.props.numbers !== true)
+                return (
+                    <div>
+                        <div className="d-flex poll-report-grid-header border-bottom border-white">
+                            <div className="col-4 sc-gray">
+                                <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-bold">ORDEM {this.props.orderName}</div>
+                            </div>
+                            <div className="col-8 sc-gray">
+                                <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center">PROBLEMAS DE COMPOSIÇÃO</div>
+                            </div>
                         </div>
-                        <div className="col-8 sc-gray">
-                            <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center">PROBLEMAS DE COMPOSIÇÃO</div>
+                        <div className="d-flex poll-report-grid-header border-bottom border-white">
+                            <div className="col-4 sc-gray border-right border-white"></div>
+                            <div className="col-3 sc-gray border-right border-right border-white">
+                                <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center">Ideia</div>
+                            </div>
+                            <div className="col-1 sc-gray border-right border-white">
+                                <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center">%</div>
+                            </div>
+                            <div className="col-3 sc-gray border-right border-right border-white">
+                                <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center">Resultado</div>
+                            </div>
+                            <div className="col-1 sc-gray border-right border-white">
+                                <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center">%</div>
+                            </div>
                         </div>
                     </div>
-                    <div className="d-flex poll-report-grid-header border-bottom border-white">
-                        <div className="col-4 sc-gray border-right border-white"></div>
-                        <div className="col-3 sc-gray border-right border-right border-white">
-                            <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center">Ideia</div>
-                        </div>
-                        <div className="col-1 sc-gray border-right border-white">
-                            <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center">%</div>
-                        </div>
-                        <div className="col-3 sc-gray border-right border-right border-white">
-                            <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center">Resultado</div>
-                        </div>
-                        <div className="col-1 sc-gray border-right border-white">
-                            <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center">%</div>
+                );
+            else
+                return (
+                    <div>
+                        <div className="d-flex poll-report-grid-header border-bottom border-white">
+                            <div className="col-4 sc-gray">
+                                <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-bold">{this.props.orderName}</div>
+                            </div>
+                            <div className="col-7 sc-gray border-left border-white">
+                                <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center font-weight-bold">Alunos</div>
+                            </div>
+                            <div className="col-1 sc-gray border-left border-white">
+                                <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center font-weight-bold">%</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            );
+                );
+        }
     }
 }
