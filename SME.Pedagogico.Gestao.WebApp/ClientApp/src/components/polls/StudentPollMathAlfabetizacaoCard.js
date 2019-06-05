@@ -77,20 +77,20 @@ class StudentPollMathAlfabetizacaoCard extends Component {
                             <th colSpan="2" id="zeros_col_head" className="text-center border text-color-purple "><span value="processo_col" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_pt_7C4DFF.svg" alt="seta esquerda ativa" style={{ height: 20 }} /></span><b className="p-4">Zeros intercalados</b><span style={pStyle}><img src="./img/icon_2_pt_DADADA.svg" alt="seta direita inativa" style={{ height: 20 }} /></span></th>
                         </tr>
                         <tr>
-                            <th className="text-center border poll-select-container familiares_col"><small className="text-muted">1ºS</small></th>
-                            <th className="text-center border poll-select-container familiares_col"><small className="text-muted">2ºS</small></th>
-                            <th className="text-center border poll-select-container opacos_col"><small className="text-muted">1ºS</small></th>
-                            <th className="text-center border poll-select-container opacos_col"><small className="text-muted">2ºS</small></th>
-                            <th className="text-center border poll-select-container transparentes_col"><small className="text-muted">1ºS</small></th>
-                            <th className="text-center border poll-select-container transparentes_col"><small className="text-muted">2ºS</small></th>
-                            <th className="text-center border poll-select-container zero_col"><small className="text-muted">1ºS</small></th>
-                            <th className="text-center border poll-select-container zero_col"><small className="text-muted">2ºS</small></th>
-                            <th className="text-center border poll-select-container algarismos_col"><small className="text-muted">1ºS</small></th>
-                            <th className="text-center border poll-select-container algarismos_col"><small className="text-muted">2ºS</small></th>
-                            <th className="text-center border poll-select-container processo_col"><small className="text-muted">1ºS</small></th>
-                            <th className="text-center border poll-select-container processo_col"><small className="text-muted">2ºS</small></th>
-                            <th className="text-center border poll-select-container zeros_col"><small className="text-muted">1ºS</small></th>
-                            <th className="text-center border poll-select-container zeros_col"><small className="text-muted">2ºS</small></th>
+                            <th className="text-center border poll-select-container familiares_col"><small className="text-muted">1º Semestre</small></th>
+                            <th className="text-center border poll-select-container familiares_col"><small className="text-muted">2º Semestre</small></th>
+                            <th className="text-center border poll-select-container opacos_col"><small className="text-muted">1º Semestre</small></th>
+                            <th className="text-center border poll-select-container opacos_col"><small className="text-muted">2º Semestre</small></th>
+                            <th className="text-center border poll-select-container transparentes_col"><small className="text-muted">1º Semestre</small></th>
+                            <th className="text-center border poll-select-container transparentes_col"><small className="text-muted">2º Semestre</small></th>
+                            <th className="text-center border poll-select-container zero_col"><small className="text-muted">1º Semestre</small></th>
+                            <th className="text-center border poll-select-container zero_col"><small className="text-muted">2º Semestre</small></th>
+                            <th className="text-center border poll-select-container algarismos_col"><small className="text-muted">1º Semestre</small></th>
+                            <th className="text-center border poll-select-container algarismos_col"><small className="text-muted">2º Semestre</small></th>
+                            <th className="text-center border poll-select-container processo_col"><small className="text-muted">1º Semestre</small></th>
+                            <th className="text-center border poll-select-container processo_col"><small className="text-muted">2º Semestre</small></th>
+                            <th className="text-center border poll-select-container zeros_col"><small className="text-muted">1º Semestre</small></th>
+                            <th className="text-center border poll-select-container zeros_col"><small className="text-muted">2º Semestre</small></th>
                         </tr>
                     </thead>
 
