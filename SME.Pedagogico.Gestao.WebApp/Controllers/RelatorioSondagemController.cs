@@ -50,8 +50,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 if (parameters.ClassroomReport)
                 {
-                    PollReportMathStudentResult result = BuscarDadosMatematicaPorTurmaAsync(parameters); 
-                    return (Ok(result));     
+                    PollReportMathStudentResult result = BuscarDadosMatematicaPorTurmaAsync(parameters);
+                    return (Ok(result));
 
                 }
 
@@ -86,10 +86,10 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             PollReportMathStudentResult retorno = new PollReportMathStudentResult();
             //ajustar para pegar a turma 
             List<PollReportMathStudentItem> result = new List<PollReportMathStudentItem>();
-              
+
             if (parameters.Proficiency == "Campo Aditivo")
             {
-                result = BuscaDadosCA(parameters.CodigoTurmaEol , parameters.Proficiency, parameters.Term, BusinessPoll);
+                result = BuscaDadosCA(parameters.CodigoTurmaEol, parameters.Proficiency, parameters.Term, BusinessPoll);
                 graficos = BuscaGraficoCA(parameters.CodigoTurmaEol, parameters.Proficiency, parameters.Term, BusinessPoll);
             }
             else if (parameters.Proficiency == "Campo Multiplicativo")
@@ -109,7 +109,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return retorno;
         }
 
-         
+
         private List<MathChartDataModel> BuscaGraficoCA(string codigoEscola, string proficiency, string term, PollMatematica BusinessPoll)
         {
             List<PollReportMathStudentItem> result = new List<PollReportMathStudentItem>();
@@ -118,73 +118,52 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
             var listaAlunosTurma = BusinessPoll.BuscarAlunosTurmaRelatorioMatematicaCA(codigoEscola, proficiency, term);
 
-            for (int i = 1; i < 9; i++)
+            for (int ordem = 1; ordem < 5; ordem++)
             {
                 MathChartDataModel item = new MathChartDataModel();
-                int totalAcertou = 0;
-                int totalErrou = 0;
-                int totalNaoRespondeu = 0;
 
-                switch (i)
+                switch (ordem)
                 {
                     case 1:
-                        item.Name = "Ordem 1 - Ideia";
-                        totalAcertou = listaAlunosTurma.Where(p => p.Ordem1Ideia.Equals("A")).Count();
-                        totalErrou = listaAlunosTurma.Where(p => p.Ordem1Ideia.Equals("E")).Count();
-                        totalNaoRespondeu = listaAlunosTurma.Where(p => p.Ordem1Ideia.Equals("NR")).Count(); 
+                        item.Name = "Ordem 1";
+                        item.Idea = new List<int> {  listaAlunosTurma.Where(p => p.Ordem1Ideia.Equals("A")).Count(),
+                            listaAlunosTurma.Where(p => p.Ordem1Ideia.Equals("E")).Count(),
+                            listaAlunosTurma.Where(p => p.Ordem1Ideia.Equals("NR")).Count() };
+                        item.Result = new List<int> { listaAlunosTurma.Where(p => p.Ordem1Resultado.Equals("A")).Count() ,
+                            listaAlunosTurma.Where(p => p.Ordem1Resultado.Equals("E")).Count() ,
+                            listaAlunosTurma.Where(p => p.Ordem1Resultado.Equals("NR")).Count()};
                         break;
                     case 2:
-                        item.Name = "Ordem 1 - Resultado";
-                        totalAcertou = listaAlunosTurma.Where(p => p.Ordem1Resultado.Equals("A")).Count();
-                        totalErrou = listaAlunosTurma.Where(p => p.Ordem1Resultado.Equals("E")).Count();
-                        totalNaoRespondeu = listaAlunosTurma.Where(p => p.Ordem1Resultado.Equals("NR")).Count();
+                        item.Name = "Ordem 2";
+                        item.Idea = new List<int> {  listaAlunosTurma.Where(p => p.Ordem2Ideia.Equals("A")).Count(),
+                            listaAlunosTurma.Where(p => p.Ordem2Ideia.Equals("E")).Count(),
+                            listaAlunosTurma.Where(p => p.Ordem2Ideia.Equals("NR")).Count() };
+                        item.Result = new List<int> { listaAlunosTurma.Where(p => p.Ordem2Resultado.Equals("A")).Count() ,
+                            listaAlunosTurma.Where(p => p.Ordem2Resultado.Equals("E")).Count() ,
+                            listaAlunosTurma.Where(p => p.Ordem2Resultado.Equals("NR")).Count()};
                         break;
-
                     case 3:
-                        item.Name = "Ordem 2 - Ideia";
-                        totalAcertou = listaAlunosTurma.Where(p => p.Ordem2Ideia.Equals("A")).Count();
-                        totalErrou = listaAlunosTurma.Where(p => p.Ordem2Ideia.Equals("E")).Count();
-                        totalNaoRespondeu = listaAlunosTurma.Where(p => p.Ordem2Ideia.Equals("NR")).Count();
+                        item.Name = "Ordem 3";
+                        item.Idea = new List<int> {  listaAlunosTurma.Where(p => p.Ordem3Ideia.Equals("A")).Count(),
+                            listaAlunosTurma.Where(p => p.Ordem3Ideia.Equals("E")).Count(),
+                            listaAlunosTurma.Where(p => p.Ordem3Ideia.Equals("NR")).Count() };
+                        item.Result = new List<int> { listaAlunosTurma.Where(p => p.Ordem3Resultado.Equals("A")).Count() ,
+                            listaAlunosTurma.Where(p => p.Ordem3Resultado.Equals("E")).Count() ,
+                            listaAlunosTurma.Where(p => p.Ordem3Resultado.Equals("NR")).Count()  };
                         break;
                     case 4:
-                        item.Name = "Ordem 2 - Resultado";
-                        totalAcertou = listaAlunosTurma.Where(p => p.Ordem2Resultado.Equals("A")).Count();
-                        totalErrou = listaAlunosTurma.Where(p => p.Ordem2Resultado.Equals("E")).Count();
-                        totalNaoRespondeu = listaAlunosTurma.Where(p => p.Ordem2Resultado.Equals("NR")).Count();
-                        break;
-
-
-                    case 5:
-                        item.Name = "Ordem 3 - Ideia";
-                        totalAcertou = listaAlunosTurma.Where(p => p.Ordem3Ideia.Equals("A")).Count();
-                        totalErrou = listaAlunosTurma.Where(p => p.Ordem3Ideia.Equals("E")).Count();
-                        totalNaoRespondeu = listaAlunosTurma.Where(p => p.Ordem3Ideia.Equals("NR")).Count();
-                        break;
-                    case 6:
-                        item.Name = "Ordem 3 - Resultado";
-                        totalAcertou = listaAlunosTurma.Where(p => p.Ordem3Resultado.Equals("A")).Count();
-                        totalErrou = listaAlunosTurma.Where(p => p.Ordem3Resultado.Equals("E")).Count();
-                        totalNaoRespondeu = listaAlunosTurma.Where(p => p.Ordem3Resultado.Equals("NR")).Count();
-                        break;
-                    case 7:
-                        item.Name = "Ordem 4 - Ideia";
-                        totalAcertou = listaAlunosTurma.Where(p => p.Ordem4Ideia.Equals("A")).Count();
-                        totalErrou = listaAlunosTurma.Where(p => p.Ordem4Ideia.Equals("E")).Count();
-                        totalNaoRespondeu = listaAlunosTurma.Where(p => p.Ordem4Ideia.Equals("NR")).Count();
-                        break;
-                    case 8:
-                        item.Name = "Ordem 4 - Resultado";
-                        totalAcertou = listaAlunosTurma.Where(p => p.Ordem4Resultado.Equals("A")).Count();
-                        totalErrou = listaAlunosTurma.Where(p => p.Ordem4Resultado.Equals("E")).Count();
-                        totalNaoRespondeu = listaAlunosTurma.Where(p => p.Ordem4Resultado.Equals("NR")).Count();
+                        item.Name = "Ordem 4";
+                        item.Idea = new List<int> {  listaAlunosTurma.Where(p => p.Ordem4Ideia.Equals("A")).Count(),
+                            listaAlunosTurma.Where(p => p.Ordem4Ideia.Equals("E")).Count(),
+                            listaAlunosTurma.Where(p => p.Ordem4Ideia.Equals("NR")).Count() };
+                        item.Result = new List<int> { listaAlunosTurma.Where(p => p.Ordem4Resultado.Equals("A")).Count() ,
+                            listaAlunosTurma.Where(p => p.Ordem4Resultado.Equals("E")).Count() ,
+                            listaAlunosTurma.Where(p => p.Ordem4Resultado.Equals("NR")).Count()};
                         break;
                 }
-
-                item.Idea = new List<string> { "Acertou", "Errou", "Não Respondeu" };
-                item.Result = new List<int> { totalAcertou, totalErrou, totalNaoRespondeu };
                 graficos.Add(item);
 
-            } 
+            }
             return graficos;
         }
 
@@ -197,85 +176,61 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
             var listaAlunosTurma = BusinessPoll.BuscarAlunosTurmaRelatorioMatematicaCM(codigoEscola, proficiency, term);
 
-            for (int i = 4; i < 11; i++)
+            for (int ordem = 4; ordem < 11; ordem++)
             {
                 MathChartDataModel item = new MathChartDataModel();
-                int totalAcertou = 0;
-                int totalErrou = 0;
-                int totalNaoRespondeu = 0;
 
-                switch (i)
+                switch (ordem)
                 {
-                    case 1:
-                        item.Name = "Ordem 4 - Ideia";
-                        totalAcertou = listaAlunosTurma.Where(p => p.Ordem4Ideia.Equals("A")).Count();
-                        totalErrou = listaAlunosTurma.Where(p => p.Ordem4Ideia.Equals("E")).Count();
-                        totalNaoRespondeu = listaAlunosTurma.Where(p => p.Ordem4Ideia.Equals("NR")).Count(); 
-                        break;
-                    case 2:
-                        item.Name = "Ordem 4 - Resultado";
-                        totalAcertou = listaAlunosTurma.Where(p => p.Ordem4Ideia.Equals("A")).Count();
-                        totalErrou = listaAlunosTurma.Where(p => p.Ordem4Ideia.Equals("E")).Count();
-                        totalNaoRespondeu = listaAlunosTurma.Where(p => p.Ordem4Ideia.Equals("NR")).Count();
-                        break;
-
-                    case 3:
-                        item.Name = "Ordem 5 - Ideia";
-                        totalAcertou = listaAlunosTurma.Where(p => p.Ordem5Ideia.Equals("A")).Count();
-                        totalErrou = listaAlunosTurma.Where(p => p.Ordem5Ideia.Equals("E")).Count();
-                        totalNaoRespondeu = listaAlunosTurma.Where(p => p.Ordem5Ideia.Equals("NR")).Count();
-                        break;
                     case 4:
-                        item.Name = "Ordem 5 - Resultado";
-                        totalAcertou = listaAlunosTurma.Where(p => p.Ordem5Ideia.Equals("A")).Count();
-                        totalErrou = listaAlunosTurma.Where(p => p.Ordem5Ideia.Equals("E")).Count();
-                        totalNaoRespondeu = listaAlunosTurma.Where(p => p.Ordem5Ideia.Equals("NR")).Count();
+                        item.Name = "Ordem 4";
+                        item.Idea = new List<int> {  listaAlunosTurma.Where(p => p.Ordem4Ideia.Equals("A")).Count(),
+                            listaAlunosTurma.Where(p => p.Ordem4Ideia.Equals("E")).Count(),
+                            listaAlunosTurma.Where(p => p.Ordem4Ideia.Equals("NR")).Count() };
+                        item.Result = new List<int> { listaAlunosTurma.Where(p => p.Ordem4Resultado.Equals("A")).Count() ,
+                            listaAlunosTurma.Where(p => p.Ordem4Resultado.Equals("E")).Count() ,
+                            listaAlunosTurma.Where(p => p.Ordem4Resultado.Equals("NR")).Count()};
                         break;
-
                     case 5:
-                        item.Name = "Ordem 6 - Ideia";
-                        totalAcertou = listaAlunosTurma.Where(p => p.Ordem6Ideia.Equals("A")).Count();
-                        totalErrou = listaAlunosTurma.Where(p => p.Ordem6Ideia.Equals("E")).Count();
-                        totalNaoRespondeu = listaAlunosTurma.Where(p => p.Ordem6Ideia.Equals("NR")).Count();
+                        item.Name = "Ordem 5";
+                        item.Idea = new List<int> {  listaAlunosTurma.Where(p => p.Ordem5Ideia.Equals("A")).Count(),
+                            listaAlunosTurma.Where(p => p.Ordem5Ideia.Equals("E")).Count(),
+                            listaAlunosTurma.Where(p => p.Ordem5Ideia.Equals("NR")).Count() };
+                        item.Result = new List<int> { listaAlunosTurma.Where(p => p.Ordem5Resultado.Equals("A")).Count() ,
+                            listaAlunosTurma.Where(p => p.Ordem5Resultado.Equals("E")).Count() ,
+                            listaAlunosTurma.Where(p => p.Ordem5Resultado.Equals("NR")).Count()};
                         break;
                     case 6:
-                        item.Name = "Ordem 6 - Resultado";
-                        totalAcertou = listaAlunosTurma.Where(p => p.Ordem6Resultado.Equals("A")).Count();
-                        totalErrou = listaAlunosTurma.Where(p => p.Ordem6Resultado.Equals("E")).Count();
-                        totalNaoRespondeu = listaAlunosTurma.Where(p => p.Ordem6Resultado.Equals("NR")).Count();
+                        item.Name = "Ordem 6";
+                        item.Idea = new List<int> {  listaAlunosTurma.Where(p => p.Ordem6Ideia.Equals("A")).Count(),
+                            listaAlunosTurma.Where(p => p.Ordem6Ideia.Equals("E")).Count(),
+                            listaAlunosTurma.Where(p => p.Ordem6Ideia.Equals("NR")).Count() };
+                        item.Result = new List<int> { listaAlunosTurma.Where(p => p.Ordem6Resultado.Equals("A")).Count() ,
+                            listaAlunosTurma.Where(p => p.Ordem6Resultado.Equals("E")).Count() ,
+                            listaAlunosTurma.Where(p => p.Ordem6Resultado.Equals("NR")).Count()};
                         break;
+
                     case 7:
-                        item.Name = "Ordem 7 - Ideia";
-                        totalAcertou = listaAlunosTurma.Where(p => p.Ordem7Ideia.Equals("A")).Count();
-                        totalErrou = listaAlunosTurma.Where(p => p.Ordem7Ideia.Equals("E")).Count();
-                        totalNaoRespondeu = listaAlunosTurma.Where(p => p.Ordem7Ideia.Equals("NR")).Count();
+                        item.Name = "Ordem 4";
+                        item.Idea = new List<int> {  listaAlunosTurma.Where(p => p.Ordem7Ideia.Equals("A")).Count(),
+                            listaAlunosTurma.Where(p => p.Ordem7Ideia.Equals("E")).Count(),
+                            listaAlunosTurma.Where(p => p.Ordem7Ideia.Equals("NR")).Count() };
+                        item.Result = new List<int> { listaAlunosTurma.Where(p => p.Ordem7Resultado.Equals("A")).Count() ,
+                            listaAlunosTurma.Where(p => p.Ordem7Resultado.Equals("E")).Count() ,
+                            listaAlunosTurma.Where(p => p.Ordem7Resultado.Equals("NR")).Count()};
                         break;
                     case 8:
-                        item.Name = "Ordem 7 - Resultado";
-                        totalAcertou = listaAlunosTurma.Where(p => p.Ordem7Ideia.Equals("A")).Count();
-                        totalErrou = listaAlunosTurma.Where(p => p.Ordem7Ideia.Equals("E")).Count();
-                        totalNaoRespondeu = listaAlunosTurma.Where(p => p.Ordem7Ideia.Equals("NR")).Count();
-                        break;
-
-                    case 9:
-                        item.Name = "Ordem 8 - Ideia";
-                        totalAcertou = listaAlunosTurma.Where(p => p.Ordem8Ideia.Equals("A")).Count();
-                        totalErrou = listaAlunosTurma.Where(p => p.Ordem8Ideia.Equals("E")).Count();
-                        totalNaoRespondeu = listaAlunosTurma.Where(p => p.Ordem8Ideia.Equals("NR")).Count();
-                        break;
-                    case 10:
-                        item.Name = "Ordem 8 - Resultado";
-                        totalAcertou = listaAlunosTurma.Where(p => p.Ordem8Ideia.Equals("A")).Count();
-                        totalErrou = listaAlunosTurma.Where(p => p.Ordem8Ideia.Equals("E")).Count();
-                        totalNaoRespondeu = listaAlunosTurma.Where(p => p.Ordem8Ideia.Equals("NR")).Count();
+                        item.Name = "Ordem 4";
+                        item.Idea = new List<int> {  listaAlunosTurma.Where(p => p.Ordem8Ideia.Equals("A")).Count(),
+                            listaAlunosTurma.Where(p => p.Ordem8Ideia.Equals("E")).Count(),
+                            listaAlunosTurma.Where(p => p.Ordem8Ideia.Equals("NR")).Count() };
+                        item.Result = new List<int> { listaAlunosTurma.Where(p => p.Ordem8Resultado.Equals("A")).Count() ,
+                            listaAlunosTurma.Where(p => p.Ordem8Resultado.Equals("E")).Count() ,
+                            listaAlunosTurma.Where(p => p.Ordem8Resultado.Equals("NR")).Count()};
                         break;
                 }
-
-                item.Idea = new List<string> { "Acertou", "Errou", "Não Respondeu" };
-                item.Result = new List<int> { totalAcertou, totalErrou, totalNaoRespondeu };
                 graficos.Add(item);
-
-            } 
+            }
             return graficos;
         }
 
@@ -287,54 +242,50 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
             var listaAlunosTurma = BusinessPoll.BuscarAlunosTurmaRelatorioMatematicaNumber(codigoEscola, proficiency, term);
 
-            for (int i = 1; i < 9; i++)
+            for (int ordem = 1; ordem < 8; ordem++)
             {
                 MathChartDataModel item = new MathChartDataModel();
-                int totalSim = 0;
-                int totalNao = 0;
 
-                switch (i)
+                switch (ordem)
                 {
                     case 1:
                         item.Name = "Familiares ou Frequentes";
-                        totalSim = listaAlunosTurma.Where(p => p.Familiares.Equals("S")).Count();
-                        totalNao = listaAlunosTurma.Where(p => p.Familiares.Equals("N")).Count();
+                        item.Idea = new List<int> { listaAlunosTurma.Where(p => p.Familiares.Equals("S")).Count() };
+                        item.Result = new List<int> { listaAlunosTurma.Where(p => p.Familiares.Equals("N")).Count() };
                         break;
                     case 2:
                         item.Name = "Opacos";
-                        totalSim = listaAlunosTurma.Where(p => p.Opacos.Equals("S")).Count();
-                        totalNao = listaAlunosTurma.Where(p => p.Opacos.Equals("N")).Count();
+                        item.Idea = new List<int> { listaAlunosTurma.Where(p => p.Opacos.Equals("S")).Count() };
+                        item.Result = new List<int> { listaAlunosTurma.Where(p => p.Opacos.Equals("N")).Count() };
                         break;
                     case 3:
                         item.Name = "Transparentes";
-                        totalSim = listaAlunosTurma.Where(p => p.Transparentes.Equals("S")).Count();
-                        totalNao = listaAlunosTurma.Where(p => p.Transparentes.Equals("N")).Count();
+                        item.Idea = new List<int> { listaAlunosTurma.Where(p => p.Transparentes.Equals("S")).Count() };
+                        item.Result = new List<int> { listaAlunosTurma.Where(p => p.Transparentes.Equals("N")).Count() };
                         break;
                     case 4:
                         item.Name = "Terminam em Zero";
-                        totalSim = listaAlunosTurma.Where(p => p.TerminamZero.Equals("S")).Count();
-                        totalNao = listaAlunosTurma.Where(p => p.TerminamZero.Equals("N")).Count();
+                        item.Idea = new List<int> { listaAlunosTurma.Where(p => p.TerminamZero.Equals("S")).Count() };
+                        item.Result = new List<int> { listaAlunosTurma.Where(p => p.TerminamZero.Equals("N")).Count() };
                         break;
                     case 5:
                         item.Name = "Algarismos Iguais";
-                        totalSim = listaAlunosTurma.Where(p => p.Algarismos.Equals("S")).Count();
-                        totalNao = listaAlunosTurma.Where(p => p.Algarismos.Equals("N")).Count();
+                        item.Idea = new List<int> { listaAlunosTurma.Where(p => p.Algarismos.Equals("S")).Count() };
+                        item.Result = new List<int> { listaAlunosTurma.Where(p => p.Algarismos.Equals("N")).Count() };
                         break;
                     case 6:
                         item.Name = "Processo de Generalização";
-                        totalSim = listaAlunosTurma.Where(p => p.Processo.Equals("S")).Count();
-                        totalNao = listaAlunosTurma.Where(p => p.Processo.Equals("N")).Count();
+                        item.Idea = new List<int> { listaAlunosTurma.Where(p => p.Processo.Equals("S")).Count() };
+                        item.Result = new List<int> { listaAlunosTurma.Where(p => p.Processo.Equals("N")).Count() };
                         break;
                     case 7:
                         item.Name = "Zeros Intercalados";
-                        totalSim = listaAlunosTurma.Where(p => p.ZeroIntercalados.Equals("S")).Count();
-                        totalNao = listaAlunosTurma.Where(p => p.ZeroIntercalados.Equals("N")).Count();
+                        item.Idea = new List<int> { listaAlunosTurma.Where(p => p.ZeroIntercalados.Equals("S")).Count() };
+                        item.Result = new List<int> { listaAlunosTurma.Where(p => p.ZeroIntercalados.Equals("N")).Count() };
                         break;
                 }
-                item.Idea = new List<string> { "Escreve convencionamente", "Não escreve convencionamente" };
-                item.Result = new List<int> { totalSim, totalNao };
                 graficos.Add(item);
-            } 
+            }
             return graficos;
         }
 
