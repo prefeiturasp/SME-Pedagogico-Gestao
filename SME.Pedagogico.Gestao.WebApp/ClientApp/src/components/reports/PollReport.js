@@ -8,6 +8,7 @@ import PollReportMathGrid from './PollReportMathGrid';
 import PollReportPortugueseChart from './PollReportPortugueseChart';
 import PollReportMathChart from './PollReportMathChart';
 import PollReportMathNumbersChart from './PollReportMathNumbersChart';
+import PollReportMathChartClassroom from './PollReportMathChartClassroom';
 import { connect } from 'react-redux';
 import { actionCreators } from '../../store/PollReport';
 import { bindActionCreators } from 'redux';
@@ -40,6 +41,7 @@ class PollReport extends Component {
     render() {
         var reportData = null;
         var chartData = null;
+        var mathType = null;
 
         if (this.props.pollReport.showReport === true) {
             reportData = this.props.pollReport.data;
@@ -57,6 +59,7 @@ class PollReport extends Component {
         if (this.props.pollReport.showReport === true) {
             if (chartData.chartIdeaData !== undefined && chartData.chartIdeaData.length > 0) {
                 chartData.totals = [];
+                mathType = "consolidado";
 
                 for (var i = 0; i < chartData.chartIdeaData.length; i++) {
                     indexes.push(i);
@@ -100,7 +103,7 @@ class PollReport extends Component {
                 }
             }
             else {
-
+                mathType = "turma";
             }
         }
 
@@ -139,16 +142,20 @@ class PollReport extends Component {
                                     <PollReportPortugueseChart data={chartData} />
                                     :
                                     <div className="mt-4">
-                                    {chartData.chartIdeaData.length > 0 ?
-                                        indexes.map(index => {
-                                            var chartId = "ordem" + chartData.chartIdeaData[index].order;
+                                    {this.classroomReport === false ? (
+                                        chartData.chartIdeaData.length > 0 ?
+                                            indexes.map(index => {
+                                                var chartId = "ordem" + chartData.chartIdeaData[index].order;
 
-                                            return (
-                                                <PollReportMathChart key={chartId} chartIds={[(chartId + "idea"), (chartId + "result")]} data={chartData.totals[index]} />
-                                            );
-                                        })
+                                                return (
+                                                    <PollReportMathChart key={chartId} chartIds={[(chartId + "idea"), (chartId + "result")]} data={chartData.totals[index]} />
+                                                );
+                                            })
+                                            :
+                                            <PollReportMathNumbersChart data={chartData.chartNumberData} />
+                                    )
                                         :
-                                        <PollReportMathNumbersChart data={chartData} />
+                                        <PollReportMathChartClassroom data={chartData} />
                                     }
                                     </div>
                                 }

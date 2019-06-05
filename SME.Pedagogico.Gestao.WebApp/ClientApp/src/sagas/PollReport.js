@@ -35,6 +35,12 @@ function* GetPollReportSaga({ parameters }) {
                     }
                 }
             }
+            else {
+                pollReportResponse = {
+                    data: data.results,
+                    chartData: data.chartData
+                };
+            }
 
             yield put({ type: PollReport.types.SET_POLL_REPORT_DATA, pollReportResponse });
         }
