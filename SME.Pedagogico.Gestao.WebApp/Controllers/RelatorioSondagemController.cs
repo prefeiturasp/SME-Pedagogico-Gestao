@@ -89,18 +89,18 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
               
             if (parameters.Proficiency == "Campo Aditivo")
             {
-                result = BuscaDadosCA(parameters.CodigoEscola, parameters.Proficiency, parameters.Term, BusinessPoll);
-                graficos = BuscaGraficoCA(parameters.CodigoEscola, parameters.Proficiency, parameters.Term, BusinessPoll);
+                result = BuscaDadosCA(parameters.CodigoTurmaEol , parameters.Proficiency, parameters.Term, BusinessPoll);
+                graficos = BuscaGraficoCA(parameters.CodigoTurmaEol, parameters.Proficiency, parameters.Term, BusinessPoll);
             }
             else if (parameters.Proficiency == "Campo Multiplicativo")
             {
-                result = BuscaDadosCM(parameters.CodigoEscola, parameters.Proficiency, parameters.Term, BusinessPoll);
-                graficos = BuscaGraficoCM(parameters.CodigoEscola, parameters.Proficiency, parameters.Term, BusinessPoll);
+                result = BuscaDadosCM(parameters.CodigoTurmaEol, parameters.Proficiency, parameters.Term, BusinessPoll);
+                graficos = BuscaGraficoCM(parameters.CodigoTurmaEol, parameters.Proficiency, parameters.Term, BusinessPoll);
             }
             else if (parameters.Proficiency == "Números")
             {
-                result = BuscaDadosNumeros(parameters.CodigoEscola, parameters.Proficiency, parameters.Term, BusinessPoll);
-                graficos = BuscaGraficoNumeros(parameters.CodigoEscola, parameters.Proficiency, parameters.Term, BusinessPoll);
+                result = BuscaDadosNumeros(parameters.CodigoTurmaEol, parameters.Proficiency, parameters.Term, BusinessPoll);
+                graficos = BuscaGraficoNumeros(parameters.CodigoTurmaEol, parameters.Proficiency, parameters.Term, BusinessPoll);
             }
 
             retorno.Results = result;
@@ -338,11 +338,11 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return graficos;
         }
 
-        private List<PollReportMathStudentItem> BuscaDadosCA(string codigoEscola, string proficiency, string term, PollMatematica BusinessPoll)
+        private List<PollReportMathStudentItem> BuscaDadosCA(string codigoTurma, string proficiency, string term, PollMatematica BusinessPoll)
         {
             List<PollReportMathStudentItem> result = new List<PollReportMathStudentItem>();
 
-            var listaAlunosTurma = BusinessPoll.BuscarAlunosTurmaRelatorioMatematicaCA(codigoEscola, proficiency, term);
+            var listaAlunosTurma = BusinessPoll.BuscarAlunosTurmaRelatorioMatematicaCA(codigoTurma, proficiency, term);
 
             foreach (var sondagem in listaAlunosTurma)
             {
