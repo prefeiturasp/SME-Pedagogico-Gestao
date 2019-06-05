@@ -48,48 +48,56 @@ export default class PollReportMathGrid extends Component {
                 orders = this.props.data[0].poll.length
 
         var data = this.props.data;
+        data.totals = [];
+        var indexes = [];
 
-        var totalStudentIdeaQuantity = 0;
-        var totalStudentIdeaPercentage = 0;
-        var totalStudentResultQuantity = 0;
-        var totalStudentResultPercentage = 0;
-
-        if (this.props.classroomReport === false) {
-            for (var i = 0; i < data.length; i++) {
-                data[i].totalStudentIdeaQuantity = 0;
-                data[i].totalStudentIdeaPercentage = 0;
-                data[i].totalStudentResultQuantity = 0;
-                data[i].totalStudentResultPercentage = 0;
-
-                if (data[i].results !== undefined) {
-
-                    for (var j = 0; j < data[i].results.length; j++) {
-                        data[i].totalStudentIdeaQuantity += data[i].results[j].testIdeaQuantity;
-                        data[i].totalStudentIdeaPercentage += data[i].results[j].testIdeaPercentage;
-                        data[i].totalStudentResultQuantity += data[i].results[j].testResultQuantity;
-                        data[i].totalStudentResultPercentage += data[i].results[j].testResultPercentage;
-                    }
-                }
+        if (data.ideaResults.length > 0)
+            for (var i = 0; i < data.ideaResults.length; i++) {
+                indexes.push(i);
+                data.totals.push({
+                    totalStudentIdeaQuantity: data.ideaResults[i].correctIdeaQuantity + data.ideaResults[i].incorrectIdeaQuantity + data.ideaResults[i].notAnsweredIdeaQuantity,
+                    totalStudentIdeaPercentage: data.ideaResults[i].correctIdeaPercentage + data.ideaResults[i].incorrectIdeaPercentage + data.ideaResults[i].notAnsweredIdeaPercentage,
+                    totalStudentResultQuantity: data.resultResults[i].correctResultQuantity + data.resultResults[i].incorrectResultQuantity + data.resultResults[i].notAnsweredResultQuantity,
+                    totalStudentResultPercentage: data.resultResults[i].correctResultPercentage + data.resultResults[i].incorrectResultPercentage + data.resultResults[i].notAnsweredResultPercentage,
+                });
             }
-        }
+        else
+            for (var j = 0; j < data.numerosResults.length; j++)
+                indexes.push(j);
 
         return (
             <div className={className}>
                 {this.props.classroomReport === false ?
-                    this.props.data.map(item => {
+                    indexes.map(index => {
                         return (
-                            <div key={item.orderName}>
-                                <PollReportMathGridHeader classroomReport={this.props.classroomReport} orderName={item.orderName} />
-
-                                {item.results.map(result =>
-                                    <PollReportMathGridItem {...result} />
-                                )}
-
+                            <div key={data.ideaResults[index].orderName}>
+                                <PollReportMathGridHeader classroomReport={this.props.classroomReport} orderName={data.ideaResults[index].orderName} />
+                                <PollReportMathGridItem
+                                    classroomReport={this.props.classroomReport}
+                                    testName="Acertou"
+                                    testIdeaQuantity={data.ideaResults[index].correctIdeaQuantity}
+                                    testIdeaPercentage={data.ideaResults[index].correctIdeaPercentage}
+                                    testResultQuantity={data.resultResults[index].correctResultQuantity}
+                                    testResultPercentage={data.resultResults[index].correctResultPercentage} />
+                                <PollReportMathGridItem
+                                    classroomReport={this.props.classroomReport}
+                                    testName="Errou"
+                                    testIdeaQuantity={data.ideaResults[index].incorrectIdeaQuantity}
+                                    testIdeaPercentage={data.ideaResults[index].incorrectIdeaPercentage}
+                                    testResultQuantity={data.resultResults[index].incorrectResultQuantity}
+                                    testResultPercentage={data.resultResults[index].incorrectResultPercentage} />
+                                <PollReportMathGridItem
+                                    classroomReport={this.props.classroomReport}
+                                    testName="Não Resolveu"
+                                    testIdeaQuantity={data.ideaResults[index].notAnsweredIdeaQuantity}
+                                    testIdeaPercentage={data.ideaResults[index].notAnsweredIdeaPercentage}
+                                    testResultQuantity={data.resultResults[index].notAnsweredResultQuantity}
+                                    testResultPercentage={data.resultResults[index].notAnsweredResultPercentage} />
                                 <PollReportGridTotal className="mb-4"
-                                    totalIdeaQuantity={item.totalStudentIdeaQuantity}
-                                    totalIdeaPercentage={item.totalStudentIdeaPercentage.toFixed(2)}
-                                    totalResultQuantity={item.totalStudentResultQuantity}
-                                    totalResultPercentage={item.totalStudentResultPercentage.toFixed(2)} />
+                                    totalIdeaQuantity={data.totals[index].totalStudentIdeaQuantity}
+                                    totalIdeaPercentage={data.totals[index].totalStudentIdeaPercentage.toFixed(2)}
+                                    totalResultQuantity={data.totals[index].totalStudentResultQuantity}
+                                    totalResultPercentage={data.totals[index].totalStudentResultPercentage.toFixed(2)} />
                             </div>
                         );
                     })
