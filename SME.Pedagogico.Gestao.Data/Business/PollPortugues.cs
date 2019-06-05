@@ -482,7 +482,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             switch (proficiencia)
             {
                 case "PS":
-                    return "Présilabico";
+                    return "Pré-Silábico";
                 case "SSV":
                     return "Silábico sem valor";
                 case "SCV":

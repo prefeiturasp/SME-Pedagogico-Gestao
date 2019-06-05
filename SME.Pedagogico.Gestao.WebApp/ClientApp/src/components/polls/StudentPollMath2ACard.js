@@ -72,7 +72,7 @@ export default class StudentPollMath2ACard extends Component {
             <table className="table table-sm table-bordered table-hover table-sondagem-matematica" style={{ overflow: "hidden", overflowX: "auto" }}>
                     <thead>
                         <tr>
-                            <th rowSpan="5" className="align-middle border text-color-purple "><div className="ml-2">Sondagem - 2º ano <b>Campo Aditivo</b></div></th>
+                            <th rowSpan="5" className="align-middle border text-color-purple "><div className="ml-2">Sondagem - 2º ano | <b>Campo Aditivo</b></div></th>
                             <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem1_head"><span style={pStyle}><img src="./img/icon_mat_9975FF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 1 - ideia: COMPOSIÇÃO</b><span value="ordem2" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_mat_FFFFFF.svg" alt="seta direita ativa" style={{ height: 20 }} /></span></th>
                             <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem2_head"><span value="ordem1" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_mat_FFFFFF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 2 - ideia: TRANSFORMAÇÃO</b><span style={pStyle}><img src="./img/icon_2_mat_9975FF.svg" alt="seta direita inativa"  style={{height:20}}/></span></th>
                         </tr>

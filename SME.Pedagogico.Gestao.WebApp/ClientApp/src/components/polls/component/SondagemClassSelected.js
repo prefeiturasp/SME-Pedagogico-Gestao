@@ -66,18 +66,6 @@ class SondagemClassSelected extends Component {
     btnSetPollType(e) {
         this.props.pollMethods.set_poll_type_selected(e.currentTarget.value);
         var classRoomMock = this.props.poll.selectedFilter;
-
-        //this.props.pollMethods.set_poll_list_initial_state();
-        //if (this.props.poll.pollTypeSelected === "Numeric") {
-            
-        //    this.props.pollMethods.get_poll_math_numbers_students(classRoomMock);
-        //} else if (this.props.poll.pollTypeSelected === "CA") {
-            
-        //    this.props.pollMethods.get_poll_math_ca_students(classRoomMock);
-        //} else if (this.props.poll.pollTypeSelected === "CM") {
-            
-        //    this.props.pollMethods.get_poll_math_cm_students(classRoomMock);
-        //} 
     }
     render() {
         var buttonRender;
@@ -131,6 +119,7 @@ class SondagemClassSelected extends Component {
         }
         return (
             <div className="btn-planning">
+                <hr />
                 {buttonRender}
             </div>
         );

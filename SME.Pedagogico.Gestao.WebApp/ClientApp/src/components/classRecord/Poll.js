@@ -598,7 +598,6 @@ class Poll extends Component {
                             {this.checkButtonSave()}
                         </ul>
                     </nav>
-                    
                     {this.componentRender()}
                 </Card>
             </>
