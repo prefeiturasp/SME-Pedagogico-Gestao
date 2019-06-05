@@ -7,6 +7,7 @@ import PollReportPortugueseGrid from './PollReportPortugueseGrid';
 import PollReportMathGrid from './PollReportMathGrid';
 import PollReportPortugueseChart from './PollReportPortugueseChart';
 import PollReportMathChart from './PollReportMathChart';
+import PollReportMathNumbersChart from './PollReportMathNumbersChart';
 import { connect } from 'react-redux';
 import { actionCreators } from '../../store/PollReport';
 import { bindActionCreators } from 'redux';
@@ -52,10 +53,9 @@ class PollReport extends Component {
         this.classroomReport = this.props.pollReport.selectedFilter.classroomReport;
 
         var indexes = [];
-        debugger;
 
-        if (this.props.pollReport.showReport === true)
-            if (chartData.chartIdeaData.length > 0) {
+        if (this.props.pollReport.showReport === true) {
+            if (chartData.chartIdeaData !== undefined && chartData.chartIdeaData.length > 0) {
                 chartData.totals = [];
 
                 for (var i = 0; i < chartData.chartIdeaData.length; i++) {
@@ -99,6 +99,10 @@ class PollReport extends Component {
                     }
                 }
             }
+            else {
+
+            }
+        }
 
         return (
             <div>
@@ -135,13 +139,17 @@ class PollReport extends Component {
                                     <PollReportPortugueseChart data={chartData} />
                                     :
                                     <div className="mt-4">
-                                        {indexes.map(index => {
+                                    {chartData.chartIdeaData.length > 0 ?
+                                        indexes.map(index => {
                                             var chartId = "ordem" + chartData.chartIdeaData[index].order;
 
                                             return (
                                                 <PollReportMathChart key={chartId} chartIds={[(chartId + "idea"), (chartId + "result")]} data={chartData.totals[index]} />
                                             );
-                                        })}
+                                        })
+                                        :
+                                        <PollReportMathNumbersChart data={chartData} />
+                                    }
                                     </div>
                                 }
                             </div>
