@@ -62,7 +62,7 @@ export default class PollReportMathGrid extends Component {
             if (this.props.data[0].poll !== undefined)
                 orders = this.props.data[0].poll.length
 
-        var data = this.props.data;
+        var { data } = this.props;
         data.totals = [];
         var indexes = [];
 
@@ -79,6 +79,12 @@ export default class PollReportMathGrid extends Component {
         else if (data.numerosResults !== undefined && data.numerosResults.length > 0)
             for (var j = 0; j < data.numerosResults.length; j++)
                 indexes.push(j);
+
+        var numberTest = false;
+
+        if (this.props.classroomReport === true)
+            if (data[0].poll[0].order === 0)
+                numberTest = true;
 
         return (
             <div className={className}>
@@ -145,9 +151,9 @@ export default class PollReportMathGrid extends Component {
                     })
                     :
                     <div>
-                        <PollReportMathGridHeader classroomReport={this.props.classroomReport} orders={orders} />
+                        <PollReportMathGridHeader classroomReport={this.props.classroomReport} orders={orders} numbers={numberTest} headers={data[0].poll} />
                         {this.props.data.map(item =>
-                            <PollReportMathGridItem classroomReport={this.props.classroomReport} item={item} />
+                            <PollReportMathGridItem classroomReport={this.props.classroomReport} item={item} numbers={numberTest} />
                         )}
                     </div>
                 }

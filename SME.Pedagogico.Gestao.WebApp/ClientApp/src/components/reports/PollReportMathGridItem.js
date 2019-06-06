@@ -19,21 +19,51 @@ const PollReportGridItem2 = (props) => {
 export default class PollReportMathGridItem extends Component {
     render() {
         if (this.props.classroomReport === true) {
-            const { item } = this.props;
+            if (this.props.numbers === false) {
+                const { item } = this.props;
 
-            return (
-                <div className="d-flex poll-report-grid-item border-bottom">
-                    <div className="col-1">
-                        <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-light">{item.code}</div>
+                return (
+                    <div className="d-flex poll-report-grid-item border-bottom">
+                        <div className="col-1">
+                            <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-light">{item.code}</div>
+                        </div>
+                        <div className="col-3">
+                            <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-light">{item.studentName}</div>
+                        </div>
+                        {item.poll.map(gridItem =>
+                            [<PollReportGridItem1 idea={gridItem.idea} />, <PollReportGridItem2 result={gridItem.result} />]
+                        )}
                     </div>
-                    <div className="col-3">
-                        <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-light">{item.studentName}</div>
+                );
+            }
+            else {
+                const { item } = this.props;
+
+                return (
+                    <div className="d-flex poll-report-grid-item border-bottom">
+                        <div className="col-1">
+                            <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-light">{item.code}</div>
+                        </div>
+                        <div className="col-3">
+                            <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-light">{item.studentName}</div>
+                        </div>
+                        {item.poll.map(gridItem => {
+                            if (gridItem.result === "Escreve convencionalmente")
+                                return (
+                                    <div className="col sc-lightpurple border-left border-white">
+                                        <div className="sc-text-size-000 d-flex flex-fill h-100 align-items-center justify-content-center text-white font-weight-light">{gridItem.result}</div>
+                                    </div>
+                                );
+                            else
+                                return (
+                                    <div className="col sc-darkblue border-left border-white">
+                                        <div className="sc-text-size-000 d-flex flex-fill h-100 align-items-center justify-content-center text-white font-weight-light">{gridItem.result}</div>
+                                    </div>
+                                );
+                        })}
                     </div>
-                    {item.poll.map(gridItem =>
-                        [<PollReportGridItem1 idea={gridItem.idea} />, <PollReportGridItem2 result={gridItem.result} />]
-                    )}
-                </div>
-            );
+                );
+            }
         }
         else {
             if (this.props.numbers !== true)

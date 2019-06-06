@@ -107,6 +107,13 @@ class PollReport extends Component {
             }
         }
 
+        var numbers = false;
+
+        if (reportData !== [] && reportData.length > 0)
+            if (reportData[0].poll[0].order === 0)
+                numbers = true;
+
+
         return (
             <div>
                 <Card className="mb-3">
@@ -142,8 +149,8 @@ class PollReport extends Component {
                                     <PollReportPortugueseChart data={chartData} />
                                     :
                                     <div className="mt-4">
-                                    {this.classroomReport === false ? (
-                                        chartData.chartIdeaData.length > 0 ?
+                                    {this.classroomReport === false ?
+                                        (chartData.chartIdeaData.length > 0 ?
                                             indexes.map(index => {
                                                 var chartId = "ordem" + chartData.chartIdeaData[index].order;
 
@@ -153,9 +160,20 @@ class PollReport extends Component {
                                             })
                                             :
                                             <PollReportMathNumbersChart data={chartData.chartNumberData} />
-                                    )
+                                        )
                                         :
-                                        <PollReportMathChartClassroom data={chartData} />
+                                        numbers === false ? 
+                                            (chartData.map(item => {
+                                                var order = item.name.replace(" ", "").toLowerCase();
+                                                var chart1Id = order + "-ideaChart";
+                                                var chart2Id = order + "-resultChart"
+
+                                                return (
+                                                    <PollReportMathChartClassroom data={item} chartIds={[chart1Id, chart2Id]} numbers={numbers} />
+                                                );
+                                            }))
+                                            :
+                                            <PollReportMathChartClassroom data={chartData} numbers={numbers} />
                                     }
                                     </div>
                                 }
