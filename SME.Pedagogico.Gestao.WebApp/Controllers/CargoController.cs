@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿//CargoController
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using SME.Pedagogico.Gestao.Data.Business;
-using SME.Pedagogico.Gestao.Data.Integracao.DTO;
+using SME.Pedagogico.Gestao.Data.DTO;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
@@ -46,14 +45,19 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 return StatusCode(500, ex);
             }
         }
-
-        public async Task<ActionResult> PerfilServidor(string codigoRF, string codigoCargo, string anoLetivo)
+        [HttpPost]
+        public async Task<ActionResult> PerfilServidor(BuscaPerfilServidor occupationsProfile)
         {
             try
             {
+                string codigoRF = occupationsProfile.codigoRF;
+                string codigoCargo = occupationsProfile.codigoCargo;
+                string anoLetivo = occupationsProfile.anoLetivo;
+
                 //Necessário para gerar o Token temporariamente
                 var profileBusiness = new Profile(_config);
-                var profileInformation = profileBusiness.GetProfileEmployeeInformation(codigoRF, codigoCargo, anoLetivo);
+
+                var profileInformation = await profileBusiness.GetProfileEmployeeInformation(codigoRF, codigoCargo, anoLetivo);
 
                 if (profileInformation != null)
                 {

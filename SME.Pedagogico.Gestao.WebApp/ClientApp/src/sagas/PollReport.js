@@ -10,13 +10,36 @@ export default function* () {
 function* GetPollReportSaga({ parameters }) {
     try {
         const data = yield call(getPollReportData, parameters);
-        
+
         if (data.status === 401)
             yield put({ type: PollReport.types.POLL_REPORT_REQUEST_NOT_FOUND });
         else {
-            var pollReportResponse = {
-                data: data.results,
-                chartData: data.chartData
+            var pollReportResponse = null;
+
+            if (parameters.discipline !== "Matemática")
+                pollReportResponse = {
+                    data: data.results,
+                    chartData: data.chartData
+                }
+            else if (parameters.classroomReport === false) {
+                pollReportResponse = {
+                    data: {
+                        numerosResults: data.results.numerosResults,
+                        ideaResults: data.results.ideaResults,
+                        resultResults: data.results.resultResults
+                    },
+                    chartData: {
+                        chartIdeaData: data.chartIdeaData,
+                        chartNumberData: data.chartNumberData,
+                        chartResultData: data.chartResultData
+                    }
+                }
+            }
+            else {
+                pollReportResponse = {
+                    data: data.results,
+                    chartData: data.chartData
+                };
             }
 
             yield put({ type: PollReport.types.SET_POLL_REPORT_DATA, pollReportResponse });

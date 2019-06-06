@@ -16,7 +16,7 @@ class PollReportBreadcrumb extends Component {
             <div className={className}>
                 <div className="mx-1 my-2">
                     <span className="sc-text-purple sc-text-size-2">Sondagem {this.props.name} / </span>
-                    <span className="sc-text-size-1 text-muted font-weight-light">1° Ano / </span>
+                    <span className="sc-text-size-1 text-muted font-weight-light">{this.props.pollReport.selectedFilter.CodigoCurso}° Ano / </span>
                     <span className="sc-text-size-1 text-muted font-weight-light">{this.props.pollReport.selectedFilter.discipline} / </span>
                     <span className="sc-text-size-1 text-muted font-weight-light">{this.props.pollReport.selectedFilter.proficiency} / </span>
                     <span className="sc-text-size-1 text-muted font-weight-light">{this.props.pollReport.selectedFilter.term}</span>

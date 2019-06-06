@@ -53,10 +53,10 @@ class StudentPollPortugueseCard extends Component {
 
     }
     hideShowOrdem(event) {
-        this.setState({
-            selectedOrdem: event.target.attributes[0].value
+        this.setState({ 
+            selectedOrdem: event.currentTarget.attributes[0].value
         });
-        this.showOneHideAll(event.target.attributes[0].value);
+        this.showOneHideAll(event.currentTarget.attributes[0].value);
     }
     render() {
         var componentLegendRender, rendererStudentPollPortuguese;
@@ -78,15 +78,14 @@ class StudentPollPortugueseCard extends Component {
 
         return (
             <div>
-                
                 <table className="table table-sm table-bordered table-hover table-sondagem-matematica" style={{ overflow: "hidden", overflowX: "auto" }}>
                     <thead>
                         <tr>
                             <th rowSpan="2" className="align-middle border text-color-purple"><div className="ml-2">Sondagem</div></th>
-                            <th colSpan="2" id="1bim_col_head" className="text-center border text-color-purple "><span style={pStyle}>&#60;</span><b className="p-4">1° Bimestre</b><span value="2bim_col" onClick={this.hideShowOrdem} className="testcursor">&#62;</span></th>
-                            <th colSpan="2" id="2bim_col_head" className="text-center border text-color-purple "><span value="1bim_col" onClick={this.hideShowOrdem} className="testcursor">&#60;</span><b className="p-4">2° Bimestre</b><span value="3bim_col" onClick={this.hideShowOrdem} className="testcursor">&#62;</span></th>
-                            <th colSpan="2" id="3bim_col_head" className="text-center border text-color-purple "><span value="2bim_col" onClick={this.hideShowOrdem} className="testcursor">&#60;</span><b className="p-4">3° Bimestre</b><span value="4bim_col" onClick={this.hideShowOrdem} className="testcursor">&#62;</span></th>
-                            <th colSpan="2" id="4bim_col_head" className="text-center border text-color-purple "><span value="3bim_col" onClick={this.hideShowOrdem} className="testcursor">&#60;</span><b className="p-4">4° Bimestre</b><span style={pStyle}>&#62;</span></th>
+                            <th colSpan="2" id="1bim_col_head" className="text-center border text-color-purple "><span style={pStyle}><img src="./img/icon_pt_DADADA.svg" alt="seta esquerda inativa" style={{ height: 20 }} /></span><b className="p-4">1° Bimestre</b><span value="2bim_col" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_pt_7C4DFF.svg" alt="seta direita ativa" style={{height:20}}/></span></th>
+                            <th colSpan="2" id="2bim_col_head" className="text-center border text-color-purple "><span value="1bim_col" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_pt_7C4DFF.svg" alt="seta esquerda ativa" style={{ height: 20 }} /></span><b className="p-4">2° Bimestre</b><span value="3bim_col" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_pt_7C4DFF.svg" alt="seta direita ativa" style={{ height: 20 }} /></span></th>
+                            <th colSpan="2" id="3bim_col_head" className="text-center border text-color-purple "><span value="2bim_col" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_pt_7C4DFF.svg" alt="seta esquerda ativa" style={{ height: 20 }} /></span><b className="p-4">3° Bimestre</b><span value="4bim_col" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_pt_7C4DFF.svg" alt="seta direita inativa" style={{ height: 20 }} /></span></th>
+                            <th colSpan="2" id="4bim_col_head" className="text-center border text-color-purple "><span value="3bim_col" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_pt_7C4DFF.svg" alt="seta esquerda ativa" style={{ height: 20 }} /></span><b className="p-4">4° Bimestre</b><span style={pStyle}><img src="./img/icon_2_pt_DADADA.svg" alt="seta direita inativa"  style={{height:20}}/></span></th>
                         </tr>
                         <tr>
                             <th className="text-center border poll-select-container 1bim_col"><small className="text-muted">Escrita</small></th>

@@ -88,7 +88,7 @@ export const reducer = (state, action) => {
         case types.SET_POLL_LIST_INITIAL_STATE:
             return ({ ...state, students: initialState.students, studentsPollMathNumbers: initialState.studentsPollMathNumbers, studentsPollMathCA: initialState.studentsPollMathCA, studentsPollMathCM: initialState.studentsPollMathCM});
         case types.RESET_POLL_SELECTED_FILTER_STATE:
-            return ({ ...state, selectedFilter: initialState.selectedFilter });
+            return ({ ...state, selectedFilter: initialState.selectedFilter, students: initialState.students, studentsPollMathNumbers: initialState.studentsPollMathNumbers, studentsPollMathCA: initialState.studentsPollMathCA, studentsPollMathCM: initialState.studentsPollMathCM });
         case types.SET_POLL_PORTUGUESE_STUDENTS:
             return ({
                 ...state, students: action.data,
@@ -126,6 +126,13 @@ export const reducer = (state, action) => {
             return ({
                 ...state,
                 selectedFilter: action.filters,
+                pollSelected: initialState.pollSelected, 
+                pollTypeSelected: initialState.pollTypeSelected,
+                pollYear: initialState.pollYear,
+                students: initialState.students,
+                studentsPollMathNumbers: initialState.studentsPollMathNumbers,
+                studentsPollMathCA: initialState.studentsPollMathCA,
+                studentsPollMathCM: initialState.studentsPollMathCM,
             });
         default:
             return (state);

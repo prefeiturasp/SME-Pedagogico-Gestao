@@ -47,9 +47,9 @@ export default class StudentPollMath3ACMCard extends Component {
     }
     hideShowOrdem(event) {
         this.setState({
-            selectedOrdem: event.target.attributes[0].value
+            selectedOrdem: event.currentTarget.attributes[0].value
         });
-        this.showOneHideAll(event.target.attributes[0].value);
+        this.showOneHideAll(event.currentTarget.attributes[0].value);
     }
     render() {
         const pStyle = {
@@ -63,9 +63,9 @@ export default class StudentPollMath3ACMCard extends Component {
             <table className="table table-sm table-bordered table-hover table-sondagem-matematica" style={{ overflow: "hidden", overflowX: "auto" }}>
                     <thead>
                         <tr>
-                            <th rowSpan="5" className="align-middle border text-color-purple "><div className="ml-2">Sondagem - 3º ano <b>Campo Multiplicativo</b></div></th>
-                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem4_head"><span style={pStyle}>&#60;</span><b className="p-4">Ordem 4 - ideia: CONFIGURAÇÃO RETANGULAR</b><span value="ordem5" onClick={this.hideShowOrdem} className="testcursor">&#62;</span></th>
-                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem5_head"><span value="ordem4" onClick={this.hideShowOrdem} className="testcursor">&#60;</span><b className="p-4">Ordem 5 - ideia: PROPORCIONALIDADE</b><span style={pStyle}>&#62;</span></th>
+                            <th rowSpan="5" className="align-middle border text-color-purple "><div className="ml-2">Sondagem - 3º ano | <b>Campo Multiplicativo</b></div></th>
+                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem4_head"><span style={pStyle}><img src="./img/icon_mat_9975FF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 4 - ideia: CONFIGURAÇÃO RETANGULAR</b><span value="ordem5" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_mat_FFFFFF.svg" alt="seta direita ativa" style={{ height: 20 }} /></span></th>
+                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem5_head"><span value="ordem4" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_mat_FFFFFF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 5 - ideia: PROPORCIONALIDADE</b><span style={pStyle}><img src="./img/icon_2_mat_9975FF.svg" alt="seta direita inativa" style={{ height: 20 }} /></span></th>
                         </tr>
                         <tr>
                             <th colSpan="8" className="text-center border text-color-purple" id="ordem4_col"><small>Problemas 1º e 2º Semestres</small></th>
@@ -126,10 +126,10 @@ export default class StudentPollMath3ACMCard extends Component {
                             </th>
                         </tr>
                         <tr>
-                            <th colSpan="4" className="text-center border poll-select-container ordem4_col"><small className="text-muted">1ºS</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container ordem4_col"><small className="text-muted">2ºS</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container ordem5_col"><small className="text-muted">1ºS</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container ordem5_col"><small className="text-muted">2ºS</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem4_col"><small className="text-muted">1º Semestre</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem4_col"><small className="text-muted">2º Semestre</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem5_col"><small className="text-muted">1º Semestre</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem5_col"><small className="text-muted">2º Semestre</small></th>
                         </tr>
                         <tr>
                             <th colSpan="2" className="text-center border poll-select-container ordem4_col"><small className="text-muted">Ideia</small></th>

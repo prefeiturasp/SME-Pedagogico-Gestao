@@ -6,6 +6,16 @@
     cursor: pointer;
 }
 
+.sc-darkblue-button {
+    background-color: #086397;
+    border-color: #086397;
+}
+
+.sc-darkblue-outline-button {
+    border-color: #086397;
+    color: #086397;;
+}
+
 .sc-blue {
     background-color: #1E90FF;
 }
@@ -32,6 +42,14 @@
 
 .sc-text-purple {
     color: #7C4DFF;
+}
+
+.sc-text-size-000 {
+    font-size: 9px;
+}
+
+.sc-text-size-00 {
+    font-size: 10px;
 }
 
 .sc-text-size-0 {

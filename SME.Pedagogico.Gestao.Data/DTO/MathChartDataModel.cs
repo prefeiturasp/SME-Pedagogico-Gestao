@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SME.Pedagogico.Gestao.WebApp.Models.RelatorioSondagem
+namespace SME.Pedagogico.Gestao.Data.DTO
 {
-    public class PortChartDataModel
+    public class MathChartDataModel
     {
         public string Name { get; set; }
-        public int Value { get; set; }
+        public List<int> Idea { get; set; }
+        public List<int> Result { get; set; }
     }
 }

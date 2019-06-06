@@ -1,6 +1,9 @@
 ﻿.btn.btn-save.text-white {
     background-color: #F39200;
 }
+.btn.btn-save.text-white.deactive {
+    background-color: #EEEEEE;
+}
 .testcursor{
     cursor:pointer;
 }
@@ -38,7 +41,7 @@ th.align-middle.border.text-color-purple {
 }
 
 .btn-planning {
-    margin: 10px;
+    margin: 10px 10px 10px 0px;
 }
 
 .btn.btn-outline-primary.btn-sm.btn-planning {
@@ -141,4 +144,8 @@ th.align-middle.border.text-color-purple {
 .sondagem-matematica-student {
     width: 33%;
     display: inline-flex;
+}
+
+.btn-group.mr-2.btn-group-sm.pills {
+    padding: .5rem 1rem;
 }

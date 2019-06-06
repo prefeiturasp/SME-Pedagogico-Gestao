@@ -219,13 +219,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
          
         public async Task<PollReportMathResult> BuscarDadosRelatorioMatematicaAsync(string proficiency, string semestre, string anoLetivo, string codigoDre, string codigoEscola, string anoTurma)
         {
-            if (proficiency.Equals("CM", StringComparison.InvariantCultureIgnoreCase))
+            if (proficiency.Equals("Campo Multiplicativo", StringComparison.InvariantCultureIgnoreCase))
             {
                 return await BuscaDadosRelatorioMatCMAsync(semestre, anoLetivo, codigoDre, codigoEscola, anoTurma);
-            } else if (proficiency.Equals("CA", StringComparison.InvariantCultureIgnoreCase))
+            } else if (proficiency.Equals("Campo Aditivo", StringComparison.InvariantCultureIgnoreCase))
             {
                 return await BuscaDadosRelatorioMatCAAsync(semestre, anoLetivo, codigoDre, codigoEscola, anoTurma);
-            } else if (proficiency.Equals("Numeros", StringComparison.InvariantCultureIgnoreCase))
+            } else if (proficiency.Equals("Números", StringComparison.InvariantCultureIgnoreCase))
             {
                 return await BuscaDadosRelatorioMatNumeros(semestre, anoLetivo, codigoDre, codigoEscola, anoTurma);
             }
@@ -238,14 +238,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
             using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
             {
                 IQueryable<MathPoolNumber> query = db.Set<MathPoolNumber>();
-                var ideasAndResults = new PollReportMathItem();
+                var numbers = new PollReportMathItem();
                 var relatorioRetorno = new PollReportMathResult();
-                var ideaCharts = new List<MathIdeaChartDataModel>();
-                var resultCharts = new List<MathResultChartDataModel>();
+                var numberCharts = new List<MathNumeroChartDataModel>();
 
                 query = db.MathPoolNumbers
                           .Where(x => x.AnoLetivo.ToString() == anoLetivo
-                       && x.Semestre.ToString() == semestre);
+                       && x.Semestre.ToString() == semestre.Substring(0,1));
 
                 if (query.Count() > 1)
                 {
@@ -276,17 +275,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                             .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
                                             .ToList();
 
-                    CreateNumberItem(familiaresAgrupados, grupo: "Familiares", ref relatorioRetorno, ref ideaCharts);
-                    CreateNumberItem(opacosAgrupados, grupo: "Opacos", ref relatorioRetorno, ref ideaCharts);
-                    CreateNumberItem(transparentesAgrupados, grupo: "Transparentes", ref relatorioRetorno, ref ideaCharts);
-                    CreateNumberItem(terminamZeroAgrupados, grupo: "Terminam em zero", ref relatorioRetorno, ref ideaCharts);
-                    CreateNumberItem(algarismosAgrupados, grupo: "Algarismos", ref relatorioRetorno, ref ideaCharts);
-                    CreateNumberItem(processoAgrupados, grupo: "Processo de generalização", ref relatorioRetorno, ref ideaCharts);
-                    CreateNumberItem(zeroIntercaladosAgrupados, grupo: "Zero intercalados", ref relatorioRetorno, ref ideaCharts);
+                    CreateNumberItem(familiaresAgrupados, grupo: "Familiares", ref numbers, ref numberCharts);
+                    CreateNumberItem(opacosAgrupados, grupo: "Opacos", ref numbers, ref numberCharts);
+                    CreateNumberItem(transparentesAgrupados, grupo: "Transparentes", ref numbers, ref numberCharts);
+                    CreateNumberItem(terminamZeroAgrupados, grupo: "Terminam em zero", ref numbers, ref numberCharts);
+                    CreateNumberItem(algarismosAgrupados, grupo: "Algarismos", ref numbers, ref numberCharts);
+                    CreateNumberItem(processoAgrupados, grupo: "Processo de generalização", ref numbers, ref numberCharts);
+                    CreateNumberItem(zeroIntercaladosAgrupados, grupo: "Zero intercalados", ref numbers, ref numberCharts);
 
-                    relatorioRetorno.Results = ideasAndResults;
-                    relatorioRetorno.ChartIdeaData.AddRange(ideaCharts);
-                    relatorioRetorno.ChartResultData.AddRange(resultCharts);
+                    relatorioRetorno.Results = numbers;
+                    relatorioRetorno.ChartNumberData.AddRange(numberCharts);
 
                     return relatorioRetorno;
                 }
@@ -330,7 +328,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 query = db.MathPoolCMs
                           .Where(x => x.AnoLetivo.ToString() == anoLetivo
-                       && x.Semestre.ToString() == semestre);
+                       && x.Semestre.ToString() == semestre.Substring(0, 1));
 
                 if (query.Count() > 1)
                 {
@@ -447,7 +445,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 query = db.MathPoolCAs
                           .Where(x => x.AnoLetivo.ToString() == anoLetivo
-                       && x.Semestre.ToString() == semestre);
+                       && x.Semestre.ToString() == semestre.Substring(0, 1));
 
                 if (query.Count() > 1)
                 {
@@ -606,11 +604,20 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 }
             }
 
-            var ideaTotalStudents = resultRetorno.CorrectResultQuantity + resultRetorno.IncorrectResultQuantity + resultRetorno.NotAnsweredResultQuantity;
+            var resultTotalStudents = resultRetorno.CorrectResultQuantity + resultRetorno.IncorrectResultQuantity + resultRetorno.NotAnsweredResultQuantity;
 
-            resultRetorno.CorrectResultPercentage = (resultRetorno.CorrectResultQuantity / ideaTotalStudents) * 100;
-            resultRetorno.IncorrectResultPercentage = (resultRetorno.IncorrectResultQuantity / ideaTotalStudents) * 100;
-            resultRetorno.NotAnsweredResultPercentage = (resultRetorno.NotAnsweredResultQuantity / ideaTotalStudents) * 100;
+            if (resultTotalStudents < 1)
+            {
+                resultRetorno.CorrectResultPercentage = 0;
+                resultRetorno.IncorrectResultPercentage = 0;
+                resultRetorno.NotAnsweredResultPercentage = 0;
+            }
+            else
+            {
+                resultRetorno.CorrectResultPercentage = (resultRetorno.CorrectResultQuantity / resultTotalStudents) * 100;
+                resultRetorno.IncorrectResultPercentage = (resultRetorno.IncorrectResultQuantity / resultTotalStudents) * 100;
+                resultRetorno.NotAnsweredResultPercentage = (resultRetorno.NotAnsweredResultQuantity / resultTotalStudents) * 100;
+            }
             resultRetorno.OrderName = order;
 
             ideasAndResults.ResultResults.Add(resultRetorno);
@@ -626,12 +633,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private void CreateNumberItem(List<MathGroupByDTO> ordemIdeia,
                                   string grupo,
-                                  ref PollReportMathResult ideasAndResults,
-                                  ref List<MathIdeaChartDataModel> ideaCharts)
+                                  ref PollReportMathItem numerosResults,
+                                  ref List<MathNumeroChartDataModel> numerosCharts)
         {
-            var ideaResults = new List<IdeaChartDTO>();
             var numberRetorno = new MathNumberResult();
-            var ideaChart = new MathIdeaChartDataModel();
+            var numeroResults = new List<NumeroChartDTO>();
+            var numeroCharts = new MathNumeroChartDataModel();
 
             foreach (var item in ordemIdeia)
             {
@@ -640,10 +647,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     if (item.Label.Equals("S", StringComparison.InvariantCultureIgnoreCase))
                     {
                         numberRetorno.EscreveConvencionalmenteResultado = item.Value;
+                        numberRetorno.EscreveConvencionalmenteText = "Escreve convencionalmente";
                     }
                     else if (item.Label.Equals("N", StringComparison.InvariantCultureIgnoreCase))
                     {
                         numberRetorno.NaoEscreveConvencionalmenteResultado = item.Value;
+                        numberRetorno.NaoEscreveConvencionalmenteText = "Não escreve convencionalmente";
                     }                
                 }
             }
@@ -662,13 +671,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
             
             numberRetorno.GroupName = grupo;
 
-            ideasAndResults.Results.NumerosResults.Add(numberRetorno);
-            ideaResults.Add(new IdeaChartDTO() { Description = "Escreve convencionalmente", Quantity = numberRetorno.EscreveConvencionalmenteResultado});
-            ideaResults.Add(new IdeaChartDTO() { Description = "Não escreve convencionalmente", Quantity = numberRetorno.NaoEscreveConvencionalmenteResultado });
+            numerosResults.NumerosResults.Add(numberRetorno);
+            numeroResults.Add(new NumeroChartDTO() { Description = "Escreve convencionalmente", Quantity = numberRetorno.EscreveConvencionalmenteResultado});
+            numeroResults.Add(new NumeroChartDTO() { Description = "Não escreve convencionalmente", Quantity = numberRetorno.NaoEscreveConvencionalmenteResultado });
          
-            ideaChart.Order = grupo;
-            ideaChart.Idea.AddRange(ideaResults);
-            ideaCharts.Add(ideaChart);
+            numeroCharts.Order = grupo;
+            numeroCharts.Numbers.AddRange(numeroResults);
+            numerosCharts.Add(numeroCharts);
         }
 
         public async Task<List<SondagemMatematicaOrdemDTO>> ListPoolCAAsync(FiltroSondagemMatematicaDTO filtroSondagem)
