@@ -33,6 +33,7 @@ export default class PollSelectWrite extends Component {
             <div>
                 <select id={"pollItem-" + this.props.name + "-" + this.props.sequence} value={this.props.value} className={this.getColor(this.props.value)} onChange={this.onOptionChange}>
                     <option defaultValue hidden className="text-muted" value=""></option>
+                    <option className={"custom-select custom-select-sm text-white" + this.props.columnColor} value=""></option>
                     <option className={"custom-select custom-select-sm text-white" + this.props.columnColor} value="PS">PS</option>
                     <option className={"custom-select custom-select-sm text-white" + this.props.columnColor} value="SSV">SSV</option>
                     <option className={"custom-select custom-select-sm text-white" + this.props.columnColor} value="SCV">SCV</option>

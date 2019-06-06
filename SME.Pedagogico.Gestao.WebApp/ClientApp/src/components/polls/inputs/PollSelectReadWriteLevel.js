@@ -33,6 +33,7 @@ export default class PollSelectReadWriteLevel extends Component {
             <div>
                 <select id={"pollItem-" + this.props.name + "-" + this.props.sequence} value={this.props.value} className={this.getColor(this.props.value)} onChange={this.onOptionChange}>
                     <option defaultValue hidden className="text-muted" value=""></option>
+                    <option className={"custom-select custom-select-sm text-white " + this.props.columnColor} value=""></option>
                     <option className={"custom-select custom-select-sm text-white " + this.props.columnColor} value="Nivel1">Nível 1</option>
                     <option className={"custom-select custom-select-sm text-white " + this.props.columnColor} value="Nivel2">Nível 2</option>
                     <option className={"custom-select custom-select-sm text-white " + this.props.columnColor} value="Nivel3">Nível 3</option>

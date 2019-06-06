@@ -133,7 +133,6 @@ class PollFilter extends Component {
     }
 
     checkDisabledButton() {
-        debugger;
         if (this.props.reports) {
             if (this.props.filters.activeDreCode !== null && this.props.filters.activeSchollsCode !== null)
                 return (true);
