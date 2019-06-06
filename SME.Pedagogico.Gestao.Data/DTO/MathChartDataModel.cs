@@ -9,7 +9,7 @@ namespace SME.Pedagogico.Gestao.Data.DTO
     public class MathChartDataModel
     {
         public string Name { get; set; }
-        public List<string> Idea { get; set; }
+        public List<int> Idea { get; set; }
         public List<int> Result { get; set; }
     }
 }

@@ -63,7 +63,7 @@ export default class StudentPollMath2ACMCard extends Component {
                 <table className="table table-sm table-bordered table-hover table-sondagem-matematica" style={{ overflow: "hidden", overflowX: "auto" }}>
                     <thead>
                         <tr>
-                            <th rowSpan="5" className="align-middle border text-color-purple "><div className="ml-2">Sondagem - 2º ano <b>Campo Multiplicativo</b></div></th>
+                            <th rowSpan="5" className="align-middle border text-color-purple "><div className="ml-2">Sondagem - 2º ano | <b>Campo Multiplicativo</b></div></th>
                             <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem3_head"><span style={pStyle}><img src="./img/icon_mat_9975FF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 3 - ideia: PROPORCIONALIDADE</b><span style={pStyle}><img src="./img/icon_2_mat_9975FF.svg" alt="seta direita inativa"  style={{height:20}}/></span></th>
                         </tr>
                         <tr>
@@ -98,8 +98,8 @@ export default class StudentPollMath2ACMCard extends Component {
                             </th>
                         </tr>
                         <tr>
-                            <th colSpan="4" className="text-center border poll-select-container ordem3_col"><small className="text-muted">1ºS</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container ordem3_col"><small className="text-muted">2ºS</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem3_col"><small className="text-muted">1º Semestre</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem3_col"><small className="text-muted">2º Semestre</small></th>
                         </tr>
                         <tr>
                             <th colSpan="2" className="text-center border poll-select-container ordem3_col"><small className="text-muted">Ideia</small></th>

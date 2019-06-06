@@ -29,7 +29,7 @@ class PollFilter extends Component {
     componentWillMount() {
         this.props.filterMethods.resetPollFilters();
         var role = this.props.user;
-    
+        
         if (role.activeRole.roleName === ROLES_ENUM.PROFESSOR) {
             var profileOccupatios = {
                 codigoRF: this.props.user.username,
@@ -128,7 +128,9 @@ class PollFilter extends Component {
         }
         
         this.props.poll2.setSelectedFilter(selectedFilter);
-        
+
+        if (this.props.resultClick !== undefined)
+            this.props.resultClick(true);
     }
 
     checkDisabledButton() {
@@ -139,7 +141,12 @@ class PollFilter extends Component {
                 return (false);
         }
         else {
-            if (this.props.filters.activeDreCode !== null && this.props.filters.activeSchollsCode !== null || this.props.filters.activeClassRoomCode !== null)
+            if (this.props.user.activeRole.roleName !== ROLES_ENUM.PROFESSOR) {
+                if (this.props.filters.activeDreCode !== null && this.props.filters.activeSchollsCode !== null && this.props.filters.activeClassRoomCode !== null)
+                    return (true);
+                else
+                    return (false);
+            }else if (this.props.filters.activeClassRoomCode !== null)
                 return (true);
             else
                 return (false);
@@ -155,7 +162,7 @@ class PollFilter extends Component {
         var selectClassroom = null;
 
         const listDresOptions = [{ label: "Todas", value: "todas" }];
-        const listSchoolOptions = [{ label: "Todas", value: "todas" }];
+        const listSchoolOptions = [];
         const listClassRoomOptions = [];
 
         const ano = "2019";
@@ -198,7 +205,6 @@ class PollFilter extends Component {
             selectSchool = <SelectChangeColor className="col-4" value={SchoolSelected} defaultText="Escola"
                 options={listSchoolOptions} disabled={disabledSchool} resetColor={SchoolSelected === "" ? true : false} />
 
-            debugger;
             if (this.state.classroom !== null)
                 for (var item in this.props.filters.filterTeachers.turmas) {
                     if (this.props.filters.listClassRoom[item].nome.startsWith(this.state.classroom))
@@ -241,6 +247,9 @@ class PollFilter extends Component {
              selectDre = <SelectChangeColor className="col-4" defaultText="Selecione a DRE"
                 value={selectedDre} options={listDresOptions} onChange={this.SelectedDre} />
 
+            if (this.props.filters.activeDreCode !== null) {
+                listSchoolOptions.push({ label: "Todas", value: "todas" });
+            }
 
             for (var item in this.props.filters.listDres) {
                 listDresOptions.push({

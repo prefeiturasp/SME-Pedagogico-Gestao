@@ -75,7 +75,6 @@ function getStudentsPollMathNumbersRequestApi(classRoom) {
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify(classRoom)
         }).then(response => response.json())
-        debugger
     } catch (e) {
         console.log(e);
     }

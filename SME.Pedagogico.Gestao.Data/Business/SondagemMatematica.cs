@@ -40,6 +40,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         {
                             var newStudentPoolCM = new MathPoolCM();
                             newStudentPoolCM.AlunoEolCode = student.CodigoEolAluno;
+                            newStudentPoolCM.AlunoNome = student.NomeAluno;
                             newStudentPoolCM.DreEolCode = student.CodigoEolDRE;
                             newStudentPoolCM.EscolaEolCode = student.CodigoEolEscola;
                             newStudentPoolCM.AnoTurma = Convert.ToInt32(student.AnoTurma);
@@ -958,6 +959,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         {
                             var newStudentPoolNumeros = new MathPoolNumber();
                             newStudentPoolNumeros.AlunoEolCode = student.CodigoEolAluno;
+                            newStudentPoolNumeros.AlunoNome = student.NomeAluno;
                             newStudentPoolNumeros.DreEolCode = student.CodigoEolDRE;
                             newStudentPoolNumeros.EscolaEolCode = student.CodigoEolEscola;
                             newStudentPoolNumeros.AnoTurma = Convert.ToInt32(student.AnoTurma);
@@ -1022,6 +1024,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         {
                             var newStudentPoolCA = new MathPoolCA();
                             newStudentPoolCA.AlunoEolCode = student.CodigoEolAluno;
+                            newStudentPoolCA.AlunoNome = student.NomeAluno;
                             newStudentPoolCA.DreEolCode = student.CodigoEolDRE;
                             newStudentPoolCA.EscolaEolCode = student.CodigoEolEscola;
                             newStudentPoolCA.AnoTurma = Convert.ToInt32(student.AnoTurma);

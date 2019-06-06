@@ -7,6 +7,8 @@ import PollReportPortugueseGrid from './PollReportPortugueseGrid';
 import PollReportMathGrid from './PollReportMathGrid';
 import PollReportPortugueseChart from './PollReportPortugueseChart';
 import PollReportMathChart from './PollReportMathChart';
+import PollReportMathNumbersChart from './PollReportMathNumbersChart';
+import PollReportMathChartClassroom from './PollReportMathChartClassroom';
 import { connect } from 'react-redux';
 import { actionCreators } from '../../store/PollReport';
 import { bindActionCreators } from 'redux';
@@ -18,10 +20,12 @@ class PollReport extends Component {
         this.classroomReport = true;
 
         this.state = {
-            showMessage: false
+            showMessage: false,
+            showPollFilter: false,
         }
 
         this.printClick = this.printClick.bind(this);
+        this.openPollFilter = this.openPollFilter.bind(this);
     }
 
     printClick() {
@@ -36,9 +40,16 @@ class PollReport extends Component {
         //document.body.style.transform = scale;     // General
     }
 
+    openPollFilter(value) {
+        this.setState({
+            showPollFilter: value,
+        });
+    }
+
     render() {
         var reportData = null;
         var chartData = null;
+        var mathType = null;
 
         if (this.props.pollReport.showReport === true) {
             reportData = this.props.pollReport.data;
@@ -52,11 +63,11 @@ class PollReport extends Component {
         this.classroomReport = this.props.pollReport.selectedFilter.classroomReport;
 
         var indexes = [];
-        debugger;
 
-        if (this.props.pollReport.showReport === true)
-            if (chartData.chartIdeaData.length > 0) {
+        if (this.props.pollReport.showReport === true) {
+            if (chartData.chartIdeaData !== undefined && chartData.chartIdeaData.length > 0) {
                 chartData.totals = [];
+                mathType = "consolidado";
 
                 for (var i = 0; i < chartData.chartIdeaData.length; i++) {
                     indexes.push(i);
@@ -99,55 +110,87 @@ class PollReport extends Component {
                     }
                 }
             }
+            else {
+                mathType = "turma";
+            }
+        }
+
+        var numbers = false;
+
+        if (reportData !== [] && reportData.length > 0 && reportData[0].poll !== undefined)
+            if (reportData[0].poll[0].order === 0)
+                numbers = true;
+
 
         return (
             <div>
                 <Card className="mb-3">
-                    <PollFilter reports={true} />
+                    <PollFilter reports={true} resultClick={this.openPollFilter}/>
                 </Card>
 
-                <Card id="pollReport-card">
-                    <div className="py-2 px-3">
-                        <div className="d-flex">
-                            <PollReportFilter />
-                            <div className="flex-fill d-flex justify-content-end">
-                                <div className="mt-auto">
-                                    <button type="button" className="btn btn-sm btn-outline-primary" style={{ width: 109 }} onClick={this.printClick}>
-                                        Imprimir | <i className="fas fa-print"></i>
-                                    </button>
+                {this.state.showPollFilter &&
+                    <Card id="pollReport-card">
+                        <div className="py-2 px-3">
+                            <div className="d-flex">
+                                <PollReportFilter />
+                                <div className="flex-fill d-flex justify-content-end">
+                                    <div className="mt-auto">
+                                        <button type="button" className="btn btn-sm btn-outline-primary" style={{ width: 109 }} onClick={this.printClick}>
+                                            Imprimir | <i className="fas fa-print"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
+
+                            {this.props.pollReport.showReport === true &&
+                                <div>
+                                    <PollReportBreadcrumb className="mt-4" name="Planilha" />
+
+                                    {this.props.pollReport.selectedFilter.discipline === "Língua Portuguesa" ?
+                                        <PollReportPortugueseGrid className="mt-3" classroomReport={this.classroomReport} data={reportData} />
+                                        :
+                                        <PollReportMathGrid className="mt-3" classroomReport={this.classroomReport} data={reportData} />
+                                    }
+
+                                    <PollReportBreadcrumb className="mt-5" name="Gráfico" />
+
+                                    {this.props.pollReport.selectedFilter.discipline === "Língua Portuguesa" ?
+                                        <PollReportPortugueseChart data={chartData} />
+                                        :
+                                        <div className="mt-4">
+                                            {this.classroomReport === false ?
+                                                (chartData.chartIdeaData.length > 0 ?
+                                                    indexes.map(index => {
+                                                        var chartId = "ordem" + chartData.chartIdeaData[index].order;
+
+                                                        return (
+                                                            <PollReportMathChart key={chartId} chartIds={[(chartId + "idea"), (chartId + "result")]} data={chartData.totals[index]} />
+                                                        );
+                                                    })
+                                                    :
+                                                    <PollReportMathNumbersChart data={chartData.chartNumberData} />
+                                                )
+                                                :
+                                                numbers === false ?
+                                                    (chartData.map(item => {
+                                                        var order = item.name.replace(" ", "").toLowerCase();
+                                                        var chart1Id = order + "-ideaChart";
+                                                        var chart2Id = order + "-resultChart"
+
+                                                        return (
+                                                            <PollReportMathChartClassroom data={item} chartIds={[chart1Id, chart2Id]} numbers={numbers} />
+                                                        );
+                                                    }))
+                                                    :
+                                                    <PollReportMathChartClassroom data={chartData} numbers={numbers} />
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            }
                         </div>
-
-                        {this.props.pollReport.showReport === true && 
-                            <div>
-                                <PollReportBreadcrumb className="mt-4" name="Planilha" />
-
-                                {this.props.pollReport.selectedFilter.discipline === "Língua Portuguesa" ?
-                                    <PollReportPortugueseGrid className="mt-3" classroomReport={this.classroomReport} data={reportData} />
-                                    :
-                                    <PollReportMathGrid className="mt-3" classroomReport={this.classroomReport} data={reportData} />
-                                }
-
-                                <PollReportBreadcrumb className="mt-5" name="Gráfico" />
-
-                                {this.props.pollReport.selectedFilter.discipline === "Língua Portuguesa" ?
-                                    <PollReportPortugueseChart data={chartData} />
-                                    :
-                                    <div className="mt-4">
-                                        {indexes.map(index => {
-                                            var chartId = "ordem" + chartData.chartIdeaData[index].order;
-
-                                            return (
-                                                <PollReportMathChart key={chartId} chartIds={[(chartId + "idea"), (chartId + "result")]} data={chartData.totals[index]} />
-                                            );
-                                        })}
-                                    </div>
-                                }
-                            </div>
-                        }
-                    </div>
-                </Card>
+                    </Card>
+                }
             </div>
         );
     }

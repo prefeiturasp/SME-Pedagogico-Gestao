@@ -1,6 +1,9 @@
 ﻿.btn.btn-save.text-white {
     background-color: #F39200;
 }
+.btn.btn-save.text-white:hover {
+    background-color: #CC7A00;
+}
 .btn.btn-save.text-white.deactive {
     background-color: #EEEEEE;
 }
@@ -49,46 +52,57 @@ th.align-middle.border.text-color-purple {
     color: #8458FF;
 }
 
-    .btn.btn-outline-primary.btn-sm.btn-planning:hover {
-        background-color: #8458FF;
-        border-color: #8458FF;
-        color: white;
-    }
+.btn.btn-outline-primary.btn-sm.btn-planning:hover {
+    background-color: #8458FF;
+    border-color: #8458FF;
+    color: white;
+}
 
-    .btn.btn-outline-primary.btn-sm.btn-planning.active {
-        background-color: #8458FF;
-        border-color: #8458FF;
-        color: white;
-    }
+.btn.btn-outline-primary.btn-sm.btn-planning.active {
+    background-color: #8458FF;
+    border-color: #8458FF;
+    color: white;
+}
+.btn.btn-outline-primary.btn-sm.btn-planning.active:hover {
+    background-color: #6933ff;
+    border-color: #6933ff;
+    color: white;
+}
 
 .btn.btn-outline-primary.btn-sm.btn-matematica {
     color: #8458FF;
     border-color: #8458FF;
 }
 
-    .btn.btn-outline-primary.btn-sm.btn-matematica:hover {
-        color: white;
-        background: #8458FF;
-        border-color: #8458FF;
-    }
+.btn.btn-outline-primary.btn-sm.btn-matematica:hover {
+    color: white;
+    background: #8458FF;
+    border-color: #8458FF;
+}
 
-    .btn.btn-outline-primary.btn-sm.btn-matematica.active {
-        color: white;
-        background: #8458FF;
-        border-color: #8458FF;
-    }
+.btn.btn-outline-primary.btn-sm.btn-matematica.active {
+    color: white;
+    background: #8458FF;
+    border-color: #8458FF;
+}
 
-    .btn.btn-outline-primary.btn-sm.btn-matematica.btn-single {
-        border-radius: 24px;
-    }
+.btn.btn-outline-primary.btn-sm.btn-matematica.active:hover {
+    color: white;
+    background: #6933FF;
+    border-color: #6933FF;
+}
 
-    .btn.btn-outline-primary.btn-sm.btn-matematica.btn-double-left {
-        border-radius: 24px 0px 0px 24px;
-    }
+.btn.btn-outline-primary.btn-sm.btn-matematica.btn-single {
+    border-radius: 24px;
+}
 
-    .btn.btn-outline-primary.btn-sm.btn-matematica.btn-double-right {
-        border-radius: 0px 24px 24px 0px;
-    }
+.btn.btn-outline-primary.btn-sm.btn-matematica.btn-double-left {
+    border-radius: 24px 0px 0px 24px;
+}
+
+.btn.btn-outline-primary.btn-sm.btn-matematica.btn-double-right {
+    border-radius: 0px 24px 24px 0px;
+}
 
 .text-center.border.text-color-purple.sondagemmatematicath {
     width: 50px;
@@ -144,4 +158,8 @@ th.align-middle.border.text-color-purple {
 .sondagem-matematica-student {
     width: 33%;
     display: inline-flex;
+}
+
+.btn-group.mr-2.btn-group-sm.pills {
+    padding: .5rem 1rem;
 }

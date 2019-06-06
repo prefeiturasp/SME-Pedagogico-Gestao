@@ -64,7 +64,7 @@ export default class StudentPollMath6ACMCard extends Component {
             <table className="table table-sm table-bordered table-hover table-sondagem-matematica" style={{ overflow: "hidden", overflowX: "auto" }}>
                     <thead>
                         <tr>
-                            <th rowSpan="5" className="align-middle border text-color-purple "><div className="ml-2">Sondagem - 6º ano <b>Campo Multiplicativo</b></div></th>
+                            <th rowSpan="5" className="align-middle border text-color-purple "><div className="ml-2">Sondagem - 6º ano | <b>Campo Multiplicativo</b></div></th>
                             <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem5_head"><span style={pStyle}><img src="./img/icon_mat_9975FF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 5 - ideia: COMBINATÓRIA</b><span value="ordem6" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_mat_FFFFFF.svg" alt="seta direita ativa" style={{ height: 20 }} /></span></th>
                             <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem6_head"><span value="ordem5" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_mat_FFFFFF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 6 - ideia: CONFIGURAÇÃO RETANGULAR</b><span value="ordem7" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_mat_FFFFFF.svg" alt="seta direita ativa" style={{ height: 20 }} /></span></th>
                             <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem7_head"><span value="ordem6" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_mat_FFFFFF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 7 - ideia: PROPORCIONALIDADE</b><span value="ordem8" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_mat_FFFFFF.svg" alt="seta direita ativa" style={{ height: 20 }} /></span></th>
@@ -205,14 +205,14 @@ export default class StudentPollMath6ACMCard extends Component {
                             </th>
                         </tr>
                         <tr>
-                            <th colSpan="4" className="text-center border poll-select-container ordem5_col"><small className="text-muted">1ºS</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container ordem5_col"><small className="text-muted">2ºS</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container ordem6_col"><small className="text-muted">1ºS</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container ordem6_col"><small className="text-muted">2ºS</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container ordem7_col"><small className="text-muted">1ºS</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container ordem7_col"><small className="text-muted">2ºS</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container ordem8_col"><small className="text-muted">1ºS</small></th>
-                            <th colSpan="4" className="text-center border poll-select-container ordem8_col"><small className="text-muted">2ºS</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem5_col"><small className="text-muted">1º Semestre</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem5_col"><small className="text-muted">2º Semestre</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem6_col"><small className="text-muted">1º Semestre</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem6_col"><small className="text-muted">2º Semestre</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem7_col"><small className="text-muted">1º Semestre</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem7_col"><small className="text-muted">2º Semestre</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem8_col"><small className="text-muted">1º Semestre</small></th>
+                            <th colSpan="4" className="text-center border poll-select-container ordem8_col"><small className="text-muted">2º Semestre</small></th>
                         </tr>
                         <tr>
                             <th colSpan="2" className="text-center border poll-select-container ordem5_col"><small className="text-muted">Ideia</small></th>
