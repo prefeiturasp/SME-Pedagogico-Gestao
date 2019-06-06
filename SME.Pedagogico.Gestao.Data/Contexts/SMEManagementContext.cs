@@ -139,6 +139,33 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
 
             Models.Authentication.PrivilegedAccess[] pvAccess = new Models.Authentication.PrivilegedAccess[]
             {
+                 new Models.Authentication.PrivilegedAccess()
+                {
+                    Login = "caique.amcom",
+                    Name  = "Caique Latorre",
+                    OccupationPlace = "AMCOM",
+                    OccupationPlaceCode = 1
+
+                },
+                  new Models.Authentication.PrivilegedAccess()
+                {
+                    Login = "massato.amcom",
+                    Name  = "Massato Kanno",
+                    OccupationPlace = "AMCOM",
+                    OccupationPlaceCode = 1
+
+                },
+
+                new Models.Authentication.PrivilegedAccess()
+                {
+                    Login = "Daniel.amcom",
+                    Name  = "Daniel Matsumoto",
+                    OccupationPlace = "AMCOM",
+                    OccupationPlaceCode = 1
+
+                },
+
+
                 new Models.Authentication.PrivilegedAccess()
                 {
                     Login = "danielli.amcom",

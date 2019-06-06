@@ -38,7 +38,6 @@ class PollFilter extends Component {
             }
             this.props.filterMethods.getFilters_teacher(profileOccupatios);
         }
-
     }
 
     componentDidMount() {
@@ -134,7 +133,7 @@ class PollFilter extends Component {
 
     checkDisabledButton() {
         if (this.props.reports) {
-            if (this.props.filters.activeDreCode !== null && this.props.filters.activeSchollsCode !== null)
+            if (this.props.filters.activeDreCode !== null && this.props.filters.activeSchollsCode !== null || this.props.filters.activeClassRoomCode !== null)
                 return (true);
             else
                 return (false);
