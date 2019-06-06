@@ -107,6 +107,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                              || !string.IsNullOrEmpty(x.Processo)
                                              || !string.IsNullOrEmpty(x.ZeroIntercalados)
                                              )).ToList();
+
                         break;
                     case "2° Semestre":
                         listStudentsPoll = db.MathPoolNumbers.Where(x => x.TurmaEolCode == turmaEol &&
@@ -119,6 +120,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                              || !string.IsNullOrEmpty(x.Processo)
                                              || !string.IsNullOrEmpty(x.ZeroIntercalados)
                                              )).ToList();
+
                         break;
                     default:
                         break;
