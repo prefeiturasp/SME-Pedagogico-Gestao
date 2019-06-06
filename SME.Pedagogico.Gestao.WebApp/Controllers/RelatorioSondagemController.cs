@@ -89,7 +89,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
             if (parameters.Proficiency == "Campo Aditivo")
             {
-                result = BuscaDadosCA(parameters.CodigoTurmaEol, parameters.Proficiency, parameters.Term, BusinessPoll);
+                result = BuscaDadosCA(parameters, BusinessPoll);
                 graficos = BuscaGraficoCA(parameters.CodigoTurmaEol, parameters.Proficiency, parameters.Term, BusinessPoll);
             }
             else if (parameters.Proficiency == "Campo Multiplicativo")
@@ -99,8 +99,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             }
             else if (parameters.Proficiency == "Números")
             {
-                result = BuscaDadosNumeros(parameters.CodigoTurmaEol, parameters.Proficiency, parameters.Term, BusinessPoll);
-                graficos = BuscaGraficoNumeros(parameters.CodigoTurmaEol, parameters.Proficiency, parameters.Term, BusinessPoll);
+                result = BuscaDadosNumeros(parameters, BusinessPoll);
+                graficos = BuscaGraficoNumeros(parameters, BusinessPoll);
             }
 
             retorno.Results = result;
@@ -234,13 +234,16 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return graficos;
         }
 
-        private List<MathChartDataModel> BuscaGraficoNumeros(string codigoEscola, string proficiency, string term, PollMatematica BusinessPoll)
+        private List<MathChartDataModel> BuscaGraficoNumeros(ParametersModel parameters, PollMatematica BusinessPoll)
         {
             List<PollReportMathStudentItem> result = new List<PollReportMathStudentItem>();
 
             List<MathChartDataModel> graficos = new List<MathChartDataModel>();
 
-            var listaAlunosTurma = BusinessPoll.BuscarAlunosTurmaRelatorioMatematicaNumber(codigoEscola, proficiency, term);
+            var listaAlunosTurma =
+                    BusinessPoll.BuscarAlunosTurmaRelatorioMatematicaNumber(parameters.CodigoTurmaEol,
+                                                            parameters.Proficiency,
+                                                            parameters.Term);
 
             for (int ordem = 1; ordem < 8; ordem++)
             {
@@ -289,11 +292,13 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return graficos;
         }
 
-        private List<PollReportMathStudentItem> BuscaDadosCA(string codigoTurma, string proficiency, string term, PollMatematica BusinessPoll)
+        private List<PollReportMathStudentItem> BuscaDadosCA(ParametersModel parameters, PollMatematica BusinessPoll)
         {
             List<PollReportMathStudentItem> result = new List<PollReportMathStudentItem>();
 
-            var listaAlunosTurma = BusinessPoll.BuscarAlunosTurmaRelatorioMatematicaCA(codigoTurma, proficiency, term);
+            var listaAlunosTurma = BusinessPoll.BuscarAlunosTurmaRelatorioMatematicaCA(parameters.CodigoTurmaEol,
+                                                            parameters.Proficiency,
+                                                            parameters.Term);
 
             foreach (var sondagem in listaAlunosTurma)
             {
@@ -335,7 +340,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     new PollReportMathStudentItem()
                     {
                         Code = sondagem.AlunoEolCode,
-                        StudentName = "Aluno " + sondagem.AlunoEolCode,
+                        StudentName = sondagem.AlunoNome,
                         Poll = pollTotal
                     }
                 );
@@ -395,7 +400,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     new PollReportMathStudentItem()
                     {
                         Code = sondagem.AlunoEolCode,
-                        StudentName = "Aluno " + sondagem.AlunoEolCode,
+                        StudentName = sondagem.AlunoNome,
                         Poll = pollTotal
                     }
                 );
@@ -433,17 +438,19 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
             return "";
         }
-        private List<PollReportMathStudentItem> BuscaDadosNumeros(string codigoEscola, string proficiency, string term, PollMatematica BusinessPoll)
+        private List<PollReportMathStudentItem> BuscaDadosNumeros(ParametersModel parameters, PollMatematica BusinessPoll)
         {
             List<PollReportMathStudentItem> result = new List<PollReportMathStudentItem>();
 
             List<MathChartDataModel> graficos = new List<MathChartDataModel>();
 
-            var listaAlunosTurma = BusinessPoll.BuscarAlunosTurmaRelatorioMatematicaNumber(codigoEscola, proficiency, term);
+            var listaAlunosTurma = BusinessPoll
+                                    .BuscarAlunosTurmaRelatorioMatematicaNumber
+                                          (parameters.CodigoTurmaEol, parameters.Proficiency,
+                                          parameters.Term);
 
             foreach (var sondagem in listaAlunosTurma)
             {
-
                 List<MathStudentItemResult> pollTotal = new List<MathStudentItemResult>();
 
                 MathStudentItemResult item1 = new MathStudentItemResult();
@@ -485,46 +492,10 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     new PollReportMathStudentItem()
                     {
                         Code = sondagem.AlunoEolCode,
-                        StudentName = "Aluno " + sondagem.AlunoEolCode,
+                        StudentName = sondagem.AlunoNome,
                         Poll = pollTotal
                     }
-                );
-                /*
-                graficos.Add(new MathChartDataModel()
-                {
-                    Name = "Opacos",
-                    Result = { 10, 20, 30 }
-                });
-
-                graficos.Add(new MathChartDataModel()
-                {
-                    Name = "Transparentes",
-                    Result = { 10, 20, 30 }
-                });
-
-                graficos.Add(new MathChartDataModel()
-                {
-                    Name = "Terminam em Zero",
-                    Result = { 10, 20, 30 }
-                });
-
-                graficos.Add(new MathChartDataModel()
-                {
-                    Name = "Algarismos Iguais",
-                    Result = { 10, 20, 30 }
-                });
-
-                graficos.Add(new MathChartDataModel()
-                {
-                    Name = "Processos de Generalização",
-                    Result = { 10, 20, 30 }
-                });
-
-                graficos.Add(new MathChartDataModel()
-                {
-                    Name = "Zeros Intercalados",
-                    Result = { 10, 20, 30 }
-                });*/
+                ); 
 
             }
 
