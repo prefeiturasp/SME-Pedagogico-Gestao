@@ -156,7 +156,7 @@ class PollFilter extends Component {
         var selectClassroom = null;
 
         const listDresOptions = [{ label: "Todas", value: "todas" }];
-        const listSchoolOptions = [{ label: "Todas", value: "todas" }];
+        const listSchoolOptions = [];
         const listClassRoomOptions = [];
 
         const ano = "2019";
@@ -242,6 +242,9 @@ class PollFilter extends Component {
              selectDre = <SelectChangeColor className="col-4" defaultText="Selecione a DRE"
                 value={selectedDre} options={listDresOptions} onChange={this.SelectedDre} />
 
+            if (this.props.filters.activeDreCode !== null) {
+                listSchoolOptions.push({ label: "Todas", value: "todas" });
+            }
 
             for (var item in this.props.filters.listDres) {
                 listDresOptions.push({
