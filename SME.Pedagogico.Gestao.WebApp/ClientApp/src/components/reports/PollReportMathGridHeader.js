@@ -56,7 +56,7 @@ export default class PollReportMathGridHeader extends Component {
                         </div>
                         <div className="d-flex poll-report-grid-header">
                             <div className="col-1 sc-gray">
-                                <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center">#</div>
+                                <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center">Cod. EOL</div>
                             </div>
                             <div className="col-3 sc-gray">
                                 <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center">Alunos</div>
@@ -72,7 +72,7 @@ export default class PollReportMathGridHeader extends Component {
                     <div>
                         <div className="d-flex poll-report-grid-header border-bottom border-white">
                             <div className="col-1 sc-gray">
-                                <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-bold">#</div>
+                                <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-bold">Cod. EOL</div>
                             </div>
                             <div className="col-3 sc-gray">
                                 <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-bold">Alunos</div>

@@ -129,7 +129,9 @@ class PollFilter extends Component {
         }
         
         this.props.poll2.setSelectedFilter(selectedFilter);
-        
+
+        if (this.props.resultClick !== undefined)
+            this.props.resultClick(true);
     }
 
     checkDisabledButton() {
@@ -204,7 +206,6 @@ class PollFilter extends Component {
             selectSchool = <SelectChangeColor className="col-4" value={SchoolSelected} defaultText="Escola"
                 options={listSchoolOptions} disabled={disabledSchool} resetColor={SchoolSelected === "" ? true : false} />
 
-            debugger;
             if (this.state.classroom !== null)
                 for (var item in this.props.filters.filterTeachers.turmas) {
                     if (this.props.filters.listClassRoom[item].nome.startsWith(this.state.classroom))

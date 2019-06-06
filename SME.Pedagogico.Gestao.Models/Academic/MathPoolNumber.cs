@@ -9,6 +9,7 @@ namespace SME.Pedagogico.Gestao.Models.Academic
         public string EscolaEolCode { get; set; }
         public string TurmaEolCode { get; set; }
         public string AlunoEolCode { get; set; }
+        public string AlunoNome { get; set; }
         public int AnoLetivo { get; set; }
         public int AnoTurma { get; set; }
         public int Semestre { get; set; }
