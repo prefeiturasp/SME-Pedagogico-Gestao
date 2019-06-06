@@ -29,7 +29,7 @@ class PollFilter extends Component {
     componentWillMount() {
         this.props.filterMethods.resetPollFilters();
         var role = this.props.user;
-    
+        
         if (role.activeRole.roleName === ROLES_ENUM.PROFESSOR) {
             var profileOccupatios = {
                 codigoRF: this.props.user.username,
@@ -133,6 +133,7 @@ class PollFilter extends Component {
     }
 
     checkDisabledButton() {
+        debugger;
         if (this.props.reports) {
             if (this.props.filters.activeDreCode !== null && this.props.filters.activeSchollsCode !== null)
                 return (true);
@@ -140,7 +141,12 @@ class PollFilter extends Component {
                 return (false);
         }
         else {
-            if (this.props.filters.activeDreCode !== null && this.props.filters.activeSchollsCode !== null || this.props.filters.activeClassRoomCode !== null)
+            if (this.props.user.activeRole.roleName !== ROLES_ENUM.PROFESSOR) {
+                if (this.props.filters.activeDreCode !== null && this.props.filters.activeSchollsCode !== null && this.props.filters.activeClassRoomCode !== null)
+                    return (true);
+                else
+                    return (false);
+            }else if (this.props.filters.activeClassRoomCode !== null)
                 return (true);
             else
                 return (false);
