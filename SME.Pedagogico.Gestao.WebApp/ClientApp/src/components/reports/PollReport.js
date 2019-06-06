@@ -109,7 +109,7 @@ class PollReport extends Component {
 
         var numbers = false;
 
-        if (reportData !== [] && reportData.length > 0)
+        if (reportData !== [] && reportData.length > 0 && reportData[0].poll !== undefined)
             if (reportData[0].poll[0].order === 0)
                 numbers = true;
 
