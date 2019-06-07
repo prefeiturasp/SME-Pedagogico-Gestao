@@ -29,11 +29,11 @@ function* LoginUserSaga({ credential }) {
                 lastAuthentication: new Date(),
                 roles: data.roles,
                 activeRole: null,
+                listOccupations: data.listOccupations,
             };
-
+    
             if (data.roles.length > 0)
                 user.activeRole = data.roles[0];
-
             yield put({ type: User.types.FINISH_AUTHENTICATION_REQUEST });
             yield put({ type: User.types.SET_USER, user });
         }

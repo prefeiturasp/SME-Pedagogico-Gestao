@@ -5,6 +5,7 @@ using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -19,7 +20,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             _token = createToken.CreateTokenProvisorio();
         }
 
-   
+
         public async Task<RetornoCargosServidorDTO> GetOccupationsRF(string rf)
         {
             try
@@ -29,27 +30,39 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var endPoint = new EndpointsAPI();
                 var profileApi = new PerfilSgpAPI(endPoint);
                 var occupations = await profileApi.GetCargosDeServidor(rf, _token);
+                bool occupationAccess = false; ;
                 if (occupations != null)
                 {
-                   
-                 // var result = await GetProfileEmployeeInformation(rf, occupations.cargos[0].codigoCargo, "2019");
-                
-                
-                    return occupations;
+                    foreach (var occupation in occupations.cargos)
+                    {
+                        if (occupation.codigoCargo == "3239" ||
+                            occupation.codigoCargo == "3301" ||
+                            occupation.codigoCargo == "3336" ||
+                            occupation.codigoCargo == "3379")
+                        {
+                            occupationAccess = true;
+                            break;
+                        }
+                    }
+
+                    if (occupationAccess)
+                        return occupations;
+                    else
+                    {
+                        return null;
+                    }
                 }
-             
                 else
                 {
                     return null;
                 }
             }
-            catch (System.Exception ex)
+
+            catch (Exception ex)
             {
-                throw ex;
+                return null;
             }
         }
-
-
 
         public async Task<List<SalasPorUEDTO>> GetListClassRoomSchool(string schoolCodeEol, string schooYear)
         {
@@ -148,7 +161,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 throw ex;
             }
-           
+
         }
     }
 }

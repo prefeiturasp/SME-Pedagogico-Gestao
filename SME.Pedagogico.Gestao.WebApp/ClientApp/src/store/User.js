@@ -21,6 +21,7 @@ const initialState = {
     isUnauthorized: false,
     activeRole: null,
     onAuthenticationRequest: false,
+    listOccupations: null,
 };
 
 export const actionCreators = {

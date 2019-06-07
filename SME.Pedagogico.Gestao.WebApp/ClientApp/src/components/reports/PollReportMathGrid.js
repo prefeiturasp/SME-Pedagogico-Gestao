@@ -129,7 +129,7 @@ export default class PollReportMathGrid extends Component {
                                     <PollReportMathGridItem
                                         numbers={true}
                                         classroomReport={this.props.classroomReport}
-                                        testName={data.numerosResults[index].escreveConvencionalmenteText}
+                                        testName="Escreve convencionalmente"
                                         testQuantity={data.numerosResults[index].escreveConvencionalmenteResultado}
                                         testPercentage={data.numerosResults[index].escreveConvencionalmentePercentage}
                                     />
@@ -137,7 +137,7 @@ export default class PollReportMathGrid extends Component {
                                         numbers={true}
                                         secondColor={true}
                                         classroomReport={this.props.classroomReport}
-                                        testName={"Não " + data.numerosResults[index].escreveConvencionalmenteText.toLowerCase()}
+                                        testName="Não escreve convencionalmente"
                                         testQuantity={data.numerosResults[index].naoEscreveConvencionalmenteResultado}
                                         testPercentage={data.numerosResults[index].naoEscreveConvencionalmentePercentage}
                                     />
