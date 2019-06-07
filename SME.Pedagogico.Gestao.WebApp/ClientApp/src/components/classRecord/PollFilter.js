@@ -4,6 +4,7 @@ import CircleButton from '../inputs/CircleButton';
 import { connect } from 'react-redux';
 import { actionCreators as actionCreatorsPoll } from '../../store/Filters';
 import { actionCreators as actionCreatorsPoll2 } from '../../store/Poll';
+import { actionCreators as actionCreatorsPollRouter } from '../../store/PollRouter';
 import { bindActionCreators } from 'redux';
 import { ROLES_ENUM } from '../../Enums';
 
@@ -161,12 +162,16 @@ class PollFilter extends Component {
         var selectSchool = null;
         var selectClassroom = null;
 
-        const listDresOptions = [{ label: "Todas", value: "todas" }];
+        const listDresOptions = [];
         const listSchoolOptions = [];
         const listClassRoomOptions = [];
 
         const ano = "2019";
-    
+
+        if (this.props.pollRouter.activeRoute !== "Sondagem") {
+            listDresOptions.push({ label: "Todas", value: "todas" });
+        }
+
         if (this.props.filters.filterTeachers !== null) {
             var DreSelected;
             var SchoolSelected;
@@ -248,7 +253,9 @@ class PollFilter extends Component {
                 value={selectedDre} options={listDresOptions} onChange={this.SelectedDre} />
 
             if (this.props.filters.activeDreCode !== null) {
-                listSchoolOptions.push({ label: "Todas", value: "todas" });
+                if (this.props.pollRouter.activeRoute !== "Sondagem") {
+                    listSchoolOptions.push({ label: "Todas", value: "todas" });
+                }
             }
 
             for (var item in this.props.filters.listDres) {
@@ -334,13 +341,15 @@ export default connect(
         {
             filters: state.filters,
             poll: state.poll,
-            user: state.user
+            user: state.user,
+            pollRouter: state.pollRouter
         }
     ),
     dispatch => (
         {
             filterMethods: bindActionCreators(actionCreatorsPoll, dispatch),
             poll2: bindActionCreators(actionCreatorsPoll2, dispatch),
+            pollRouterMethods: bindActionCreators(actionCreatorsPollRouter, dispatch),
         }
     )
 )(PollFilter);
