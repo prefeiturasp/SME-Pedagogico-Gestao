@@ -2,7 +2,8 @@
     SET_POLL_INFO: "SET_POLL_INFO",
     SET_POLL_TYPE_SELECTED: "SET_POLL_TYPE_SELECTED",
     SET_POLL_LIST_INITIAL_STATE: "SET_POLL_LIST_INITIAL_STATE",
-    RESET_POLL_SELECTED_FILTER_STATE:"RESET_POLL_SELECTED_FILTER_STATE",
+    RESET_POLL_SELECTED_FILTER_STATE: "RESET_POLL_SELECTED_FILTER_STATE",
+    
     
     UPDATE_POLL_STUDENTS: "UPDATE_POLL_STUDENTS",
     GET_POLL_PORTUGUESE_STUDENTS: "GET_POLL_PORTUGUESE_STUDENTS",
@@ -42,7 +43,8 @@ const initialState = {
         classroomCodeEol: null,
         schoolYear: "2019",
         yearClassroom: null,
-    }
+    },
+    newDataToSave: false,
 }
 
 export const actionCreators = {
@@ -86,9 +88,9 @@ export const reducer = (state, action) => {
         case types.SET_POLL_TYPE_SELECTED:
             return ({ ...state, pollTypeSelected: action.pollTypeSelected });
         case types.SET_POLL_LIST_INITIAL_STATE:
-            return ({ ...state, students: initialState.students, studentsPollMathNumbers: initialState.studentsPollMathNumbers, studentsPollMathCA: initialState.studentsPollMathCA, studentsPollMathCM: initialState.studentsPollMathCM});
+            return ({ ...state, students: initialState.students, studentsPollMathNumbers: initialState.studentsPollMathNumbers, studentsPollMathCA: initialState.studentsPollMathCA, studentsPollMathCM: initialState.studentsPollMathCM, newDataToSave: false,});
         case types.RESET_POLL_SELECTED_FILTER_STATE:
-            return ({ ...state, selectedFilter: initialState.selectedFilter, students: initialState.students, studentsPollMathNumbers: initialState.studentsPollMathNumbers, studentsPollMathCA: initialState.studentsPollMathCA, studentsPollMathCM: initialState.studentsPollMathCM });
+            return ({ ...state, selectedFilter: initialState.selectedFilter, students: initialState.students, studentsPollMathNumbers: initialState.studentsPollMathNumbers, studentsPollMathCA: initialState.studentsPollMathCA, studentsPollMathCM: initialState.studentsPollMathCM, newDataToSave: false, });
         case types.SET_POLL_PORTUGUESE_STUDENTS:
             return ({
                 ...state, students: action.data,
@@ -107,19 +109,19 @@ export const reducer = (state, action) => {
             });
         case types.UPDATE_POLL_STUDENTS:
             return ({
-                ...state, students: action.pollstudents
+                ...state, students: action.pollstudents, newDataToSave: true,
             });
         case types.UPDATE_POLL_MATH_NUMBERS_STUDENTS:
             return ({
-                ...state, studentsPollMathNumbers: action.pollstudents
+                ...state, studentsPollMathNumbers: action.pollstudents, newDataToSave: true,
             });
         case types.UPDATE_POLL_MATH_CA_STUDENTS:
             return ({
-                ...state, studentsPollMathCA: action.pollstudents
+                ...state, studentsPollMathCA: action.pollstudents, newDataToSave: true,
             });
         case types.UPDATE_POLL_MATH_CM_STUDENTS:
             return ({
-                ...state, studentsPollMathCM: action.pollstudents
+                ...state, studentsPollMathCM: action.pollstudents, newDataToSave: true,
             });
 
         case types.SET_SELECTED_FILTER:
@@ -133,6 +135,7 @@ export const reducer = (state, action) => {
                 studentsPollMathNumbers: initialState.studentsPollMathNumbers,
                 studentsPollMathCA: initialState.studentsPollMathCA,
                 studentsPollMathCM: initialState.studentsPollMathCM,
+                newDataToSave: false,
             });
         default:
             return (state);
