@@ -431,9 +431,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 return "Escreve convencionalmente";
             }
-            else if (texto.Equals("Não escreve convencionalmente"))
+            else if (texto.Equals("N"))
             {
-                return "Errou";
+                return "Não escreve convencionalmente";
             }
 
             return "";
