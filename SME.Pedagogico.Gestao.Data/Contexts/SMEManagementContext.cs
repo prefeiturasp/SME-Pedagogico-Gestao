@@ -158,7 +158,7 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
 
                 new Models.Authentication.PrivilegedAccess()
                 {
-                    Login = "Daniel.amcom",
+                    Login = "daniel.amcom",
                     Name  = "Daniel Matsumoto",
                     OccupationPlace = "AMCOM",
                     OccupationPlaceCode = 1
