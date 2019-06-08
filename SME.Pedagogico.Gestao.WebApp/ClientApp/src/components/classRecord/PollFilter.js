@@ -7,6 +7,7 @@ import { actionCreators as actionCreatorsPoll2 } from '../../store/Poll';
 import { actionCreators as actionCreatorsPollRouter } from '../../store/PollRouter';
 import { bindActionCreators } from 'redux';
 import { ROLES_ENUM } from '../../Enums';
+import { debounce } from 'redux-saga/effects';
 
 class PollFilter extends Component {
     constructor(props) {
@@ -25,27 +26,78 @@ class PollFilter extends Component {
         this.setSelectedFilter = this.setSelectedFilter.bind(this);
         this.getClassroom = this.getClassroom.bind(this);
         this.checkDisabledButton = this.checkDisabledButton.bind(this);
+        this.selectedDreTeacher = this.selectedDreTeacher.bind(this);
+        this.selectedSchoolTeacher = this.selectedSchoolTeacher.bind(this);
+
     }
 
     componentWillMount() {
         this.props.filterMethods.resetPollFilters();
         var role = this.props.user;
-        
-        if (role.activeRole.roleName === ROLES_ENUM.PROFESSOR) {
+        debugger;
+
+        if (role.activeRole.roleName === ROLES_ENUM.PROFESSOR ||
+            role.activeRole.roleName === ROLES_ENUM.COORDENADOR_PEDAGOGICO) {
+
+            var codeOccupations = this.props.user.listOccupations[0];
+
             var profileOccupatios = {
                 codigoRF: this.props.user.username,
-                codigoCargo: '3239',
+                codigoCargo: codeOccupations,
                 anoLetivo: '2019',
             }
             this.props.filterMethods.getFilters_teacher(profileOccupatios);
+            if (this.props.filters.filterTeachers !== []) {
+                if (this.props.filters.filterTeachers.drEs.length == 1) {
+                    var schoolCode = {
+                        dreCodeEol: this.props.filters.filterTeachers.drEs[0].codigo
+                    }
+
+                    this.props.filterMethods.activeDreCode(schoolCode);
+                }
+                if (this.props.filters.filterTeachers.escolas.length == 1) {
+                    var classRoomFilter = {
+                        schoolCodeEol: this.props.filters.filterTeachers.escolas[0].codigo
+                    }
+
+                    this.props.filterMethods.activeSchoolCode(classRoomFilter);
+                }
+            }
+
+         
+
+            //classRoomFilter.schoolCodeEol,
+
         }
     }
-
     componentDidMount() {
+
+
         this.props.filterMethods.getDre();
     }
 
+    selectedDreTeacher(event) {
+        var index = event.nativeEvent.target.selectedIndex;
+        var label = event.nativeEvent.target[index].value;
+        var schoolCode = {
+            dreCodeEol: label
+        }
+
+        this.props.filterMethods.activeDreCode(schoolCode);
+    }
+
+    selectedSchoolTeacher(event) {
+        var index = event.nativeEvent.target.selectedIndex;
+        var label = event.nativeEvent.target[index].value;
+        var classRoomFilter = {
+            schoolCodeEol: label
+        }
+
+        this.props.filterMethods.activeSchoolCode(classRoomFilter);
+    }
+
     SelectedDre(event) {
+
         this.props.filterMethods.resetPollFilters();
         this.props.filterMethods.getDre();
         var index = event.nativeEvent.target.selectedIndex;
@@ -127,7 +179,7 @@ class PollFilter extends Component {
             schoolYear: "2019",
             yearClassroom: this.state.classroom,
         }
-        
+
         this.props.poll2.setSelectedFilter(selectedFilter);
 
         if (this.props.resultClick !== undefined)
@@ -147,7 +199,7 @@ class PollFilter extends Component {
                     return (true);
                 else
                     return (false);
-            }else if (this.props.filters.activeClassRoomCode !== null)
+            } else if (this.props.filters.activeClassRoomCode !== null)
                 return (true);
             else
                 return (false);
@@ -161,7 +213,8 @@ class PollFilter extends Component {
         var selectDre = null;
         var selectSchool = null;
         var selectClassroom = null;
-
+        var yearClassrooms = [];
+        var hiddenDisabled = false;
         const listDresOptions = [];
         const listSchoolOptions = [];
         const listClassRoomOptions = [];
@@ -188,23 +241,33 @@ class PollFilter extends Component {
             if (this.props.filters.filterTeachers.drEs.length == 1) {
                 DreSelected = this.props.filters.filterTeachers.drEs[0].codigo;
                 enabledDre = true;
+
+            }
+
+            else {
+
+
+
             }
             selectDre = <SelectChangeColor className="col-4" defaultText="Selecione a DRE"
-                value={DreSelected} options={listDresOptions} disabled={enabledDre} />
-
+                value={DreSelected} options={listDresOptions} disabled={enabledDre} onChange={this.selectedDreTeacher} />
+            debugger;
             // escolas de professor 
+            var listSchools = this.props.filters.filterTeachers.escolas.filter(x => x.codigoDRE === this.props.filters.activeDreCode)
 
-
-            for (var item in this.props.filters.filterTeachers.escolas) {
+            debugger;
+            for (var item in listSchools) {
                 listSchoolOptions.push({
-                    value: this.props.filters.filterTeachers.escolas[item].codigo,
-                    label: this.props.filters.filterTeachers.escolas[item].nome,
+                    value: listSchools[item].codigo,
+                    label: listSchools[item].nome,
                 });
             }
 
             if (this.props.filters.filterTeachers.escolas.length == 1) {
                 SchoolSelected = this.props.filters.filterTeachers.escolas[0].codigo;
                 disabledSchool = true;
+
+
             }
 
             selectSchool = <SelectChangeColor className="col-4" value={SchoolSelected} defaultText="Escola"
@@ -226,7 +289,7 @@ class PollFilter extends Component {
                     });
                 }
 
-            var yearClassrooms = [];
+            // var yearClassrooms = [];
 
             if (this.props.filters.listClassRoom !== null) {
                 var temp = this.props.filters.listClassRoom;
@@ -249,7 +312,7 @@ class PollFilter extends Component {
         }
 
         else {
-             selectDre = <SelectChangeColor className="col-4" defaultText="Selecione a DRE"
+            selectDre = <SelectChangeColor className="col-4" defaultText="Selecione a DRE"
                 value={selectedDre} options={listDresOptions} onChange={this.SelectedDre} />
 
             if (this.props.filters.activeDreCode !== null) {
@@ -277,7 +340,6 @@ class PollFilter extends Component {
                 selectSchool = <SelectChangeColor className="col-4" value={SchoolSelected} defaultText="Escola"
                     options={listSchoolOptions} onChange={this.SelectedSchool} resetColor={SchoolSelected === "" ? true : false} />
 
-
                 if (selectedSchool !== "todas") {
                     if (this.props.filters.listClassRoom !== [] && this.props.filters.listClassRoom !== null && this.props.filters.listClassRoom.length > 1) {
                         if (this.state.classroom !== null)
@@ -298,8 +360,6 @@ class PollFilter extends Component {
                     }
                 }
 
-                var yearClassrooms = [];
-
                 if (this.props.filters.listClassRoom !== null) {
                     var temp = this.props.filters.listClassRoom;
                     var uniques = [];
@@ -315,7 +375,17 @@ class PollFilter extends Component {
                 }
             }
 
-          
+            if (selectedSchool == "todas" || selectedDre == "todas") {
+                hiddenDisabled = true;
+
+                var listyearClassrooms = [1, 2, 3, 4, 5, 6];
+                for (var item in listyearClassrooms) {
+                    yearClassrooms.push({
+                        value: listyearClassrooms[item],
+                        label: listyearClassrooms[item],
+                    });
+                }
+            }
         }
 
         return (
@@ -328,14 +398,14 @@ class PollFilter extends Component {
                 <div className="px-2"></div>
                 <SelectChangeColor className="col" value={this.state.classroom} defaultText="Ano" options={yearClassrooms} onChange={this.getClassroom} activeColor={this.state.classroom === "" ? false : true} resetColor={this.state.classroom === "" ? true : false} />
                 <div className="px-2"></div>
-                <SelectChangeColor className="col" value={selectedClassRoom} defaultText="Turma" options={listClassRoomOptions} onChange={this.SelectedClassRoom} resetColor={selectedClassRoom === "" ? true : false} />
+                <SelectChangeColor className="col" value={selectedClassRoom} defaultText="Turma" options={listClassRoomOptions} disabled={hiddenDisabled} onChange={this.SelectedClassRoom} resetColor={selectedClassRoom === "" ? true : false} />
                 <div className="px-2"></div>
                 <CircleButton iconClass="fas fa-search" onClick={this.setSelectedFilter} disabled={!this.checkDisabledButton()} />
             </div>
         );
+
     }
 }
-
 export default connect(
     state => (
         {

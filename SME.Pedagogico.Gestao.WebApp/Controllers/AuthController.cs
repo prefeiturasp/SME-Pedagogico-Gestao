@@ -277,7 +277,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                             haveOccupationAccess = true;
                             break;
                         case "3379":
-                            roleName = "Supervisor";
+                            roleName = "CP";
                             accessLevel = "27";
                             haveOccupationAccess = true;
                             break;
@@ -479,7 +479,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                             Session = session,
                             RefreshToken = refreshToken,
                             Roles = await GetUserRoles(credential.Username),
-                            // ListOccupations = listOccupations,
+                             ListOccupations = listOccupations,
                         }));
                     }
                     else

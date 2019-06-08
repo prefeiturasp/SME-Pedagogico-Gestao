@@ -74,7 +74,7 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
             {
                 new Models.Authentication.Role() { Name = "Admin" },
                 new Models.Authentication.Role() { Name = "Diretor" },
-                new Models.Authentication.Role() { Name = "Supervisor" },
+                new Models.Authentication.Role() { Name = "CP" },
                 new Models.Authentication.Role() { Name = "Diretor" },
                 new Models.Authentication.Role() { Name = "Secretario(a)" },
                 new Models.Authentication.Role() { Name = "Auxiliar" },

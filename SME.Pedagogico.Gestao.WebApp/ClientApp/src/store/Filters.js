@@ -42,6 +42,8 @@ export const actionCreators = {
     activeClassroom: (codeClass) => ({ type: types.ACTIVECLASSROOMCODE, codeClass }),
     resetPollFilters: () => ({ type: types.RESET_POLL_FILTERS }),
     getFilters_teacher: (profileOccupatios) => ({ type: types.GET_FILTERS_TEACHER, profileOccupatios }),
+    activeDreCode: (schoolCode) => ({ type: types.ACTIVEDRECODE, schoolCode }),
+    activeSchoolCode: (classRoomFilter) => ({ type: types.ACTIVESCHOOLCODE, classRoomFilter  })
 };
 
 export const reducer = (state, action) => {
@@ -87,10 +89,10 @@ export const reducer = (state, action) => {
         case types.SET_FILTERS_TEACHER:
             return ({
                 ...state,
-                filterTeachers: action.teste,
-                scholls: action.teste.escolas,
-                listDres: action.teste.drEs,
-                listClassRoom: action.teste.turmas
+                filterTeachers: action.filters,
+                scholls: action.filters.escolas,
+                listDres: action.filters.drEs,
+                listClassRoom: action.filters.turmas
             })
         default:
             return (state);
