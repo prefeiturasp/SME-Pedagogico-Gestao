@@ -34,6 +34,7 @@ class PollFilter extends Component {
     }
 
     componentWillMount() {
+        
         this.props.filterMethods.resetPollFilters();
         var role = this.props.user;
         if (role.activeRole.roleName === ROLES_ENUM.PROFESSOR ||
@@ -49,34 +50,36 @@ class PollFilter extends Component {
 
 
             this.props.filterMethods.getFilters_teacher(profileOccupatios);
-            if (this.props.filters.filterTeachers !== null) {
-                if (this.props.filters.filterTeachers.drEs.length == 1) {
-                    var schoolCode = {
-                        dreCodeEol: this.props.filters.filterTeachers.drEs[0].codigo
-                    }
+            //if (this.props.filters.filterTeachers !== null) {
+            //    if (this.props.filters.filterTeachers.drEs.length == 1) {
+            //        var schoolCode = {
+            //            dreCodeEol: this.props.filters.filterTeachers.drEs[0].codigo
+            //        }
 
-                    this.props.filterMethods.activeDreCode(schoolCode);
-                    var listSchools = this.props.filters.filterTeachers.escolas.filter(x => x.codigoDRE === this.props.filters.filterTeachers.drEs[0].codigo)
-                }
-                if (this.props.filters.filterTeachers.escolas.length == 1) {
-                    var classRoomFilter = {
-                        schoolCodeEol: this.props.filters.filterTeachers.escolas[0].codigo
-                    }
+            //        this.props.filterMethods.activeDreCode(schoolCode);
+            //        var listSchools = this.props.filters.filterTeachers.escolas.filter(x => x.codigoDRE === this.props.filters.filterTeachers.drEs[0].codigo)
+            //    }
+            //    if (this.props.filters.filterTeachers.escolas.length == 1) {
+            //        var classRoomFilter = {
+            //            schoolCodeEol: this.props.filters.filterTeachers.escolas[0].codigo
+            //        }
 
-                    this.props.filterMethods.activeSchoolCode(classRoomFilter);
-                }
-            }
+            //        this.props.filterMethods.activeSchoolCode(classRoomFilter);
+            //    }
+            //}
 
-            this.setState({
-                listSchools: listSchools
-            });
+
+            //          
+            //this.setState({
+            //    listSchools: listSchools
+            //});
         }
     }
 
     componentDidUpdate() {
-       
 
-}
+
+    }
     componentDidMount() {
         this.props.filterMethods.getDre();
     }
@@ -91,7 +94,7 @@ class PollFilter extends Component {
 
         this.props.filterMethods.activeDreCode(schoolCode);
 
-        debugger
+        
         var listSchools = this.props.filters.filterTeachers.escolas.filter(x => x.codigoDRE === label)
 
         if (listSchools.length == 1) {
@@ -112,7 +115,7 @@ class PollFilter extends Component {
     }
     selectedSchoolTeacher(event) {
         var listClassRoomTeacher = [];
-        debugger
+        
         var index = event.nativeEvent.target.selectedIndex;
         var label = event.nativeEvent.target[index].value;
         var classRoomFilter = {
@@ -268,7 +271,12 @@ class PollFilter extends Component {
         const ano = "2019";
 
         if (this.props.pollRouter.activeRoute !== "Sondagem") {
-            listDresOptions.push({ label: "Todas", value: "todas" });
+            if (this.props.user.activeRole.roleName !== ROLES_ENUM.PROFESSOR &&
+                this.props.user.activeRole.roleName !== ROLES_ENUM.COORDENADOR_PEDAGOGICO) {
+
+               
+                listDresOptions.push({ label: "Todas", value: "todas" });
+            }
         }
 
         if (this.props.filters.filterTeachers !== null) {
@@ -284,11 +292,11 @@ class PollFilter extends Component {
                 });
             }
 
-            if (this.props.filters.filterTeachers.drEs.length == 1) {
-                DreSelected = this.props.filters.filterTeachers.drEs[0].codigo;
-                enabledDre = true;
+            //if (this.props.filters.filterTeachers.drEs.length == 1) {
+            //    DreSelected = this.props.filters.filterTeachers.drEs[0].codigo;
+            //    enabledDre = true;
 
-            }
+            //}
 
             selectDre = <SelectChangeColor className="col-4" defaultText="Selecione a DRE"
                 value={DreSelected} options={listDresOptions} disabled={enabledDre} onChange={this.selectedDreTeacher} />
