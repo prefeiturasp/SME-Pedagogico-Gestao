@@ -60,9 +60,18 @@ export default function configureStore(history, initialState) {
     if (isDevelopment)
         middleware.push(logger);
 
-    const rootReducer = combineReducers({
+    const appReducer = combineReducers({
         ...reducers
     });
+
+    const rootReducer = (state, action) => {
+        if (action.type === User.types.LOGOUT_USER) {
+            storage.removeItem('persist:root');
+            state = undefined;
+        }
+
+        return appReducer(state, action)
+    };
 
     const persistedReducer = persistReducer(persistConfig, rootReducer);
 

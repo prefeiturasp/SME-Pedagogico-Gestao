@@ -64,6 +64,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 return (db.Users.Any(x => x.Name == username && x.Password == Functionalities.Cryptography.HashPassword(password)));
         }
 
+        public static bool ValidateUser(string username)
+        {
+            using (Data.Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+                return (db.Users.Any(x => x.Name == username));
+        }
+
         public static PrivilegedAccessModel ValidatePrivilegedUser(string username)
         {
             using (Data.Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())

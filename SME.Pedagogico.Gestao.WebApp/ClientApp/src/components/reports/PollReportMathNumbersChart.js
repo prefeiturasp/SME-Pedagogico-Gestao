@@ -1,7 +1,13 @@
 ﻿import React, { Component } from 'react';
 
 class MathChart extends Component {
-    componentDidMount() {
+    constructor() {
+        super();
+
+        this.updateChart = this.updateChart.bind(this);
+    }
+
+    updateChart() {
         var echarts = require('echarts');
         var myChart = echarts.init(document.getElementById("id-" + this.props.name.replace(" ", "").toLowerCase()));
 
@@ -24,6 +30,14 @@ class MathChart extends Component {
                 }]
             }]
         });
+    }
+
+    componentDidMount() {
+        this.updateChart();
+    }
+
+    componentDidUpdate() {
+        this.updateChart();
     }
 
     render() {

@@ -116,7 +116,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
             List<MathChartDataModel> graficos = new List<MathChartDataModel>();
 
-            var listaAlunosTurma = BusinessPoll.BuscarAlunosTurmaRelatorioMatematicaCA(parameters.CodigoEscola, parameters.Proficiency, parameters.Term);
+            var listaAlunosTurma = BusinessPoll.BuscarAlunosTurmaRelatorioMatematicaCA(parameters.CodigoTurmaEol , parameters.Proficiency, parameters.Term);
 
             for (int ordem = 1; ordem < 5; ordem++)
             {
@@ -187,7 +187,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
             List<MathChartDataModel> graficos = new List<MathChartDataModel>();
 
-            var listaAlunosTurma = BusinessPoll.BuscarAlunosTurmaRelatorioMatematicaCM(parameters.CodigoEscola, parameters.Proficiency, parameters.Term);
+            var listaAlunosTurma = BusinessPoll.BuscarAlunosTurmaRelatorioMatematicaCM(parameters.CodigoTurmaEol , parameters.Proficiency, parameters.Term);
 
             if (parameters.CodigoCurso.Equals("2"))
             {
@@ -399,7 +399,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         {
             List<PollReportMathStudentItem> result = new List<PollReportMathStudentItem>();
 
-            var listaAlunosTurma = BusinessPoll.BuscarAlunosTurmaRelatorioMatematicaCM(parameters.CodigoEscola, parameters.Proficiency, parameters.Term);
+            var listaAlunosTurma = BusinessPoll.BuscarAlunosTurmaRelatorioMatematicaCM(parameters.CodigoTurmaEol , parameters.Proficiency, parameters.Term);
 
             foreach (var sondagem in listaAlunosTurma)
             {
@@ -415,8 +415,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     item.Idea = ideia;
                     item.Order = 3;
                     item.Result = resultado;
-                    pollTotal.Add(item);
-                    break;
+                    pollTotal.Add(item); 
                 }
                 else
                 {

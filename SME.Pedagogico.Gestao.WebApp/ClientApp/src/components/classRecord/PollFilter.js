@@ -76,10 +76,6 @@ class PollFilter extends Component {
         }
     }
 
-    componentDidUpdate() {
-
-
-    }
     componentDidMount() {
         this.props.filterMethods.getDre();
     }
@@ -98,19 +94,18 @@ class PollFilter extends Component {
         var listSchools = this.props.filters.filterTeachers.escolas.filter(x => x.codigoDRE === label)
 
         if (listSchools.length == 1) {
-            //      disabledSchool = true;
             var filterSchool = {
                 schoolCodeEol: listSchools[0].codigo
             };
 
             this.props.filterMethods.activeSchoolCode(filterSchool);
-
-
         }
 
 
         this.setState({
-            listSchools: listSchools
+            listSchools: listSchools,
+            yearClassroom: null,
+            classroom: "",
         });
     }
     selectedSchoolTeacher(event) {
@@ -127,7 +122,6 @@ class PollFilter extends Component {
         if (this.props.user.activeRole.roleName == ROLES_ENUM.PROFESSOR) {
 
             listClassRoomTeacher = this.props.filters.filterTeachers.turmas.filter(x => x.codigoEscola === label)
-
         }
 
         else if (this.props.user.activeRole.roleName == ROLES_ENUM.COORDENADOR_PEDAGOGICO) {
@@ -141,7 +135,9 @@ class PollFilter extends Component {
         }
 
         this.setState({
-            listClassRoomTeacher: listClassRoomTeacher
+            listClassRoomTeacher: listClassRoomTeacher,
+            yearClassroom: null,
+            classroom: "",
         });
     }
 
@@ -237,10 +233,22 @@ class PollFilter extends Component {
 
     checkDisabledButton() {
         if (this.props.reports) {
-            if (this.props.filters.activeDreCode !== null && this.props.filters.activeSchollsCode !== null || this.props.filters.activeClassRoomCode !== null)
+
+            //Independente do perfil o relatorio so pode ser tirado por Ano
+            if (this.state.classroom !== null && this.state.classroom !== "") {
                 return (true);
-            else
+            }
+
+            else {
                 return (false);
+            }
+
+
+            //if (this.props.filters.activeDreCode !== null &&
+            //    this.props.filters.activeSchollsCode !== null || this.props.filters.activeClassRoomCode !== null)
+            //    return (true);
+            //else
+            //    return (false);
         }
         else {
             if (this.props.user.activeRole.roleName !== ROLES_ENUM.PROFESSOR) {
@@ -291,12 +299,6 @@ class PollFilter extends Component {
                     label: this.props.filters.filterTeachers.drEs[item].nome.replace("DIRETORIA REGIONAL DE EDUCACAO", "DRE -"),
                 });
             }
-
-            //if (this.props.filters.filterTeachers.drEs.length == 1) {
-            //    DreSelected = this.props.filters.filterTeachers.drEs[0].codigo;
-            //    enabledDre = true;
-
-            //}
 
             selectDre = <SelectChangeColor className="col-4" defaultText="Selecione a DRE"
                 value={DreSelected} options={listDresOptions} disabled={enabledDre} onChange={this.selectedDreTeacher} />

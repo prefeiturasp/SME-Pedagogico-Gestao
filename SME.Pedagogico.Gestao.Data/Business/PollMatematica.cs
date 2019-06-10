@@ -65,7 +65,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     case "1° Semestre":
                         listStudentsPoll = db.MathPoolCMs.Where(x => x.TurmaEolCode == turmaEol &&
                         x.Semestre.Equals(1) &&
-                            (!string.IsNullOrEmpty(x.Ordem4Ideia)
+                            (!string.IsNullOrEmpty(x.Ordem3Ideia)
+                            || !string.IsNullOrEmpty(x.Ordem4Ideia)
                             || !string.IsNullOrEmpty(x.Ordem5Ideia)
                             || !string.IsNullOrEmpty(x.Ordem6Ideia)
                             || !string.IsNullOrEmpty(x.Ordem7Ideia)
@@ -75,7 +76,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     case "2° Semestre":
                         listStudentsPoll = db.MathPoolCMs.Where(x => x.TurmaEolCode == turmaEol &&
                         x.Semestre.Equals(2) &&
-                            (!string.IsNullOrEmpty(x.Ordem4Ideia)
+                            (!string.IsNullOrEmpty(x.Ordem3Ideia)
+                            || !string.IsNullOrEmpty(x.Ordem4Ideia)
                             || !string.IsNullOrEmpty(x.Ordem5Ideia)
                             || !string.IsNullOrEmpty(x.Ordem6Ideia)
                             || !string.IsNullOrEmpty(x.Ordem7Ideia)
