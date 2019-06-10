@@ -173,7 +173,7 @@ class PollReport extends Component {
                                                 :
                                                 numbers === false ?
                                                     (chartData.map(item => {
-                                                        var order = item.name.replace(" ", "").toLowerCase();
+                                                        var order = item.name !== null ? item.name.replace(" ", "").toLowerCase() : "";
                                                         var chart1Id = order + "-ideaChart";
                                                         var chart2Id = order + "-resultChart"
 

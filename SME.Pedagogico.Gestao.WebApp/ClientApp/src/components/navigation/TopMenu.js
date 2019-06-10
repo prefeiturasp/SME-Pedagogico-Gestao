@@ -63,9 +63,9 @@ class TopMenu extends Component {
                         </div>
 
                         <div className={this.props.pollRouter.activeRoute === "Relatórios" ? "mr-3 border border-top-0 border-bottom-0 top-navigation-button-selected" : "mr-3 border border-top-0 border-bottom-0 top-navigation-button"}>
-                            <Link className="d-flex align-items-center h-100 w-100" to="/Relatorios/Sondagem" onClick={this.changeRoutePollReport}>
+                            <a className="d-flex align-items-center h-100 w-100" href="/Relatorios/Sondagem" onClick={this.changeRoutePollReport}>
                                 <small className="mx-3 font-weight-light text-muted">Relat&oacute;rios</small>
-                            </Link>
+                            </a>
                         </div>
                     </div>
 

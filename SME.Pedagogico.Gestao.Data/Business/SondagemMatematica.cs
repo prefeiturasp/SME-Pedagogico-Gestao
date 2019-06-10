@@ -396,8 +396,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     }
 
                     relatorioRetorno.Results = ideasAndResults;
-                    relatorioRetorno.ChartIdeaData.AddRange(ideaCharts);
-                    relatorioRetorno.ChartResultData.AddRange(resultCharts);
+                    relatorioRetorno.ChartIdeaData.AddRange(ideaCharts.OrderBy(i => Convert.ToInt32(i.Order)));
+                    relatorioRetorno.ChartResultData.AddRange(resultCharts.OrderBy(i => Convert.ToInt32(i.Order)));
 
                     return relatorioRetorno;
                 }
@@ -493,8 +493,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     CreateResultItem(ordem2Resultado, order: "2", ref ideasAndResults, ref resultCharts);
 
                     relatorioRetorno.Results = ideasAndResults;
-                    relatorioRetorno.ChartIdeaData.AddRange(ideaCharts);
-                    relatorioRetorno.ChartResultData.AddRange(resultCharts);
+                    relatorioRetorno.ChartIdeaData.AddRange(ideaCharts.OrderBy(i => Convert.ToInt32(i.Order)));
+                    relatorioRetorno.ChartResultData.AddRange(resultCharts.OrderBy(i => Convert.ToInt32(i.Order)));
 
                     return relatorioRetorno;
                 }
