@@ -40,12 +40,12 @@ function getStudentsPollPortugueseRequestApi(classRoom) {
 
 function* SavePollPortuguese(students) {
     try {
+        yield put({ type: Poll.types.SET_POLL_DATA_SAVED_STATE });
         var data = yield fetch("/api/sondagemPortugues/IncluirSondagemPortugues", {
             method: "post",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(students.pollstudents)
         }).then(response => response.json());
-        
         return (data.status);
     } catch (error) {
         console.log(error);
@@ -84,13 +84,12 @@ function getStudentsPollMathNumbersRequestApi(classRoom) {
 
 function* SavePollMathNumbers(students) {
     try {
-        console.log(students);
+        yield put({ type: Poll.types.SET_POLL_DATA_SAVED_STATE });
         var data = yield fetch("/api/sondagemMatematica/GravaSondagemNumeros", {
             method: "post",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(students.pollstudents)
         }).then(response => response.json());
-        
         return (data);
     } catch (error) {
         console.log(error);
@@ -121,12 +120,12 @@ function getStudentsPollMathCARequestApi(classRoom) {
 
 function* SavePollMathCA(students) {
     try {
+        yield put({ type: Poll.types.SET_POLL_DATA_SAVED_STATE });
         var data = yield fetch("/api/sondagemMatematica/GravaSondagemCA", {
             method: "post",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(students.pollstudents)
         }).then(response => response.json());
-        
         return (data);
     } catch (error) {
         console.log(error);
@@ -156,12 +155,12 @@ function getStudentsPollMathCMRequestApi(classRoom) {
 
 function* SavePollMathCM(students) {
     try {
+        yield put({ type: Poll.types.SET_POLL_DATA_SAVED_STATE });
         var data = yield fetch("/api/sondagemMatematica/GravaSondagemCM", {
             method: "post",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(students.pollstudents)
         }).then(response => response.json());
-        
         return (data);
     } catch (error) {
         console.log(error);

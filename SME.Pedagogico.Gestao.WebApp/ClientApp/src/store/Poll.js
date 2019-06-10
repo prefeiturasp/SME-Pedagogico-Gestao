@@ -2,6 +2,7 @@
     SET_POLL_INFO: "SET_POLL_INFO",
     SET_POLL_TYPE_SELECTED: "SET_POLL_TYPE_SELECTED",
     SET_POLL_LIST_INITIAL_STATE: "SET_POLL_LIST_INITIAL_STATE",
+    SET_POLL_DATA_SAVED_STATE: "SET_POLL_DATA_SAVED_STATE",
     RESET_POLL_SELECTED_FILTER_STATE: "RESET_POLL_SELECTED_FILTER_STATE",
     
     
@@ -51,6 +52,7 @@ export const actionCreators = {
     set_poll_info: (pollSelected, pollTypeSelected, pollYear) => ({ type: types.SET_POLL_INFO, pollSelected, pollTypeSelected, pollYear }),
     set_poll_type_selected: (pollTypeSelected) => ({ type: types.SET_POLL_TYPE_SELECTED, pollTypeSelected }),
     set_poll_list_initial_state: () => ({ type: types.SET_POLL_LIST_INITIAL_STATE }),
+    set_poll_data_saved_state: () => ({ type: types.SET_POLL_DATA_SAVED_STATE }),    
     reset_poll_selected_filter_state: () => ({ type: types.RESET_POLL_SELECTED_FILTER_STATE}),
 
 
@@ -84,11 +86,13 @@ export const reducer = (state, action) => {
     switch (action.type) {
          
         case types.SET_POLL_INFO:
-            return ({ ...state, pollSelected: action.pollSelected, pollTypeSelected: action.pollTypeSelected, pollYear: action.pollYear });
+            return ({ ...state, pollSelected: action.pollSelected, pollTypeSelected: action.pollTypeSelected, pollYear: action.pollYear, newDataToSave: false });
         case types.SET_POLL_TYPE_SELECTED:
-            return ({ ...state, pollTypeSelected: action.pollTypeSelected });
+            return ({ ...state, pollTypeSelected: action.pollTypeSelected, newDataToSave: false });
         case types.SET_POLL_LIST_INITIAL_STATE:
             return ({ ...state, students: initialState.students, studentsPollMathNumbers: initialState.studentsPollMathNumbers, studentsPollMathCA: initialState.studentsPollMathCA, studentsPollMathCM: initialState.studentsPollMathCM, newDataToSave: false,});
+        case types.SET_POLL_DATA_SAVED_STATE:
+            return ({ ...state, newDataToSave: false});
         case types.RESET_POLL_SELECTED_FILTER_STATE:
             return ({ ...state, selectedFilter: initialState.selectedFilter, students: initialState.students, studentsPollMathNumbers: initialState.studentsPollMathNumbers, studentsPollMathCA: initialState.studentsPollMathCA, studentsPollMathCM: initialState.studentsPollMathCM, newDataToSave: false, });
         case types.SET_POLL_PORTUGUESE_STUDENTS:

@@ -72,7 +72,7 @@ class Poll extends Component {
             document.getElementById("matematica-tab").className = "btn btn-outline-primary btn-sm btn-planning active";
         }
 
-        if (this.props.poll.students.length > 0 || this.props.poll.studentsPollMathNumbers.length > 0 || this.props.poll.studentsPollMathCA.length > 0 || this.props.poll.studentsPollMathCM.length > 0) {
+        if (this.props.poll.newDataToSave) {
             if (document.getElementById("btnSave")!==null) {
                 document.getElementById("btnSave").className = "btn btn-save text-white";
             }
@@ -571,7 +571,7 @@ class Poll extends Component {
         if (this.props.poll.selectedFilter.yearClassroom !== null && parseInt(this.props.poll.selectedFilter.yearClassroom) < 7 && this.props.poll.selectedFilter.yearClassroom !== undefined) {
             btn = <li className="nav-item">
                     <div className="form-inline">
-                        <button id="btnSave" className="btn btn-save text-white deactive" onClick={this.toggleMessageBox} disabled="">Salvar</button>
+                    <button id="btnSave" className="btn btn-save text-white deactive" onClick={this.toggleMessageBox} disabled={!this.props.poll.newDataToSave}>Salvar</button>
                     </div>
 
                     <TwoStepsSave show={this.state.showMessageBox} showControl={this.toggleMessageBox} runMethod={this.savePollStudent} />
