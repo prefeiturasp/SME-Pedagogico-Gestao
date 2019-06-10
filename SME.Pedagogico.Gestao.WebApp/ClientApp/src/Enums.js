@@ -1,5 +1,6 @@
 ﻿
 
 export const ROLES_ENUM = {
-    PROFESSOR: "Professor"
+    PROFESSOR: "Professor",
+    COORDENADOR_PEDAGOGICO:"CP",
 }
