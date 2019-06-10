@@ -258,7 +258,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
                 foreach (var occupation in occupations.cargos)
                 {
-                    haveOccupationAccess = false; 
+                    haveOccupationAccess = false;
                     switch (occupation.codigoCargo)
                     {
                         case "3239":
@@ -282,7 +282,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                             haveOccupationAccess = true;
                             break;
                         default:
-                            haveOccupationAccess = false; 
+                            haveOccupationAccess = false;
                             break;
                     }
 
@@ -291,7 +291,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                         await Authentication.SetRole(rf, roleName, accessLevel);
                         ListcodeOcupations.Add(occupation.codigoCargo);
                     }
-                
+
                 }
             }
             return ListcodeOcupations;
@@ -388,15 +388,77 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         {
             var ProfileBusiness = new Profile(_config);
             var listOccupations = new List<string>();
-            // Verica se ja existe no banco 
-            if (!Authentication.ValidateUser(credential.Username, credential.Password))
-            {
-                // Cadastra o usuário dentro do banco PostgreSQL (Novo SGP)
 
+            // Verifica se ja existe na tabela de usuários
+            if (Authentication.ValidateUser(credential.Username))
+            {   // se já existir verifica se usuário e senha estão corretos
+                if (!Authentication.ValidateUser(credential.Username, credential.Password))
+                {
+                    // Se não estiver correto  retorna não autorizado
+                    return (Unauthorized());
+                }
+                // se usuário e senha estiverem corretos 
+                else
+                {
+                    // Verifica se possui acesso privilegiado
+                    var userPrivileged = Authentication.ValidatePrivilegedUser(credential.Username);
+
+                    //Se possui acesso privilegiado 
+                    if (userPrivileged != null)
+                    {
+                        string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
+                        string refreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
+                        await Data.Business.Authentication.LoginUser(credential.Username, session, refreshToken); // Loga o usuário no sistema
+
+                        return (Ok(new
+                        {
+                            Token = CreateToken(credential.Username),
+                            Session = session,
+                            RefreshToken = refreshToken,
+                            Roles = await GetUserRoles(credential.Username),
+                        }));
+                    }
+
+                    else
+                    {
+                        // Se nao possui acesso privilegiado é Professor ou CP
+                        // Verifica se o cargo dele pode acessar o sistema 
+                        var occupations = await ProfileBusiness.GetOccupationsRF(credential.Username);
+                        if (occupations != null)
+                        {
+                            //  await Authentication.RegisterUser(credential.Username, credential.Password);
+                            listOccupations = await SetOccupationsRF(credential.Username, occupations);
+                            string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
+                            string refreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
+                            await Data.Business.Authentication.LoginUser(credential.Username, session, refreshToken); // Loga o usuário no sistema
+
+                            return (Ok(new
+                            {
+                                Token = CreateToken(credential.Username),
+                                Session = session,
+                                RefreshToken = refreshToken,
+                                Roles = await GetUserRoles(credential.Username),
+                                ListOccupations = listOccupations,
+                            }));
+                        }
+                        else
+                        {
+                            // caso o cargo não possa acessar o sistema retorna não autorizado
+                            return (Unauthorized());
+                        }
+                    }
+                }
+            }
+
+            // Se não existir na tabela de usuários é o primeiro login
+            else
+            {
+                //Verifica se possui acesso privilegiado
                 var userPrivileged = Authentication.ValidatePrivilegedUser(credential.Username);
                 //Se possui acesso privilegiado 
                 if (userPrivileged != null)
                 {
+                    //Registra o usuário no sistema
                     await Authentication.RegisterUser(credential.Username, credential.Password);
 
                     if (userPrivileged.OccupationPlace == "AMCOM")
@@ -409,17 +471,19 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     }
                 }
 
+                // Se não possui acesso privilegiado é Cp ou professor
                 else
-                {   // Se nao possui acesso privilegiado é Professor ou CP
-
+                {
+                    // verifica se possui algum cargo que possa acesssar o sistema 
                     var occupations = await ProfileBusiness.GetOccupationsRF(credential.Username);
                     if (occupations != null)
                     {
+                        //registra usuario no sistema
                         await Authentication.RegisterUser(credential.Username, credential.Password);
                         listOccupations = await SetOccupationsRF(credential.Username, occupations);
                     }
                     else
-                    {
+                    { // se não possui um cargo que possa acessar o sistema retorna nao autorizado
                         return (Unauthorized());
                     }
                 }
@@ -438,59 +502,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     Roles = await GetUserRoles(credential.Username)
                 }));
             }
-
-            // SE JÁ ESTIVER CADASTRADO
-            else
-            {
-                var userPrivileged = Authentication.ValidatePrivilegedUser(credential.Username);
-
-                //Se possui acesso privilegiado 
-                if (userPrivileged != null)
-                {
-                    string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
-                    string refreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
-                    await Data.Business.Authentication.LoginUser(credential.Username, session, refreshToken); // Loga o usuário no sistema
-
-                    return (Ok(new
-                    {
-                        Token = CreateToken(credential.Username),
-                        Session = session,
-                        RefreshToken = refreshToken,
-                        Roles = await GetUserRoles(credential.Username),
-                       // ListOccupations = listOccupations,
-                    }));
-                }
-
-                else
-                {
-                    // Se nao possui acesso privilegiado é Professor ou CP
-                    var occupations = await ProfileBusiness.GetOccupationsRF(credential.Username);
-                    if (occupations != null)
-                    {
-                        await Authentication.RegisterUser(credential.Username, credential.Password);
-                        listOccupations = await SetOccupationsRF(credential.Username, occupations);
-                        string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
-                        string refreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
-                        await Data.Business.Authentication.LoginUser(credential.Username, session, refreshToken); // Loga o usuário no sistema
-
-                        return (Ok(new
-                        {
-                            Token = CreateToken(credential.Username),
-                            Session = session,
-                            RefreshToken = refreshToken,
-                            Roles = await GetUserRoles(credential.Username),
-                             ListOccupations = listOccupations,
-                        }));
-                    }
-                    else
-                    {
-                        return (Unauthorized());
-                    }
-                }
-               
-            }
         }
-
 
         /// <summary>
         /// Método para fazer o logout utilizando o sistema http://identity.sme.prefeitura.sp.gov.br.
