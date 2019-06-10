@@ -46,6 +46,7 @@ class Poll extends Component {
         this.checkButtonPortuguese = this.checkButtonPortuguese.bind(this);
         this.checkButtonMath = this.checkButtonMath.bind(this);
         this.checkButtonSave = this.checkButtonSave.bind(this);
+        this.checkPollCard = this.checkPollCard.bind(this);
 
 
         this.props.pollMethods.set_poll_info(null, null, null);
@@ -580,7 +581,13 @@ class Poll extends Component {
     }
 
     
-    
+    checkPollCard() {
+        if (this.props.poll.selectedFilter.yearClassroom !== null && parseInt(this.props.poll.selectedFilter.yearClassroom) < 7 && this.props.poll.selectedFilter.yearClassroom !== undefined) {
+            return "false";
+        } else {
+            return "true";
+        }
+    }
     
     render() {
         return (
@@ -588,7 +595,7 @@ class Poll extends Component {
                 <Card className="mb-3">
                     <PollFilter reports={false} />
                 </Card> 
-                <Card id="classRecord-poll">
+                <Card id="classRecord-poll" hide={this.checkPollCard()}>
                     <nav className="container-tabpanel navbar">
                         <ul className="nav" role="tablist">
                             {this.checkButtonPortuguese()}

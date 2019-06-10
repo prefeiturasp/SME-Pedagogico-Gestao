@@ -1,7 +1,13 @@
 ﻿import React, { Component } from 'react';
 
 class MathChart extends Component {
-    componentDidMount() {
+    constructor() {
+        super();
+
+        this.updateChart = this.updateChart.bind(this);
+    }
+
+    updateChart() {
         var echarts = require('echarts');
         var myChart = echarts.init(document.getElementById("id-" + this.props.name.replace(" ", "").toLowerCase()));
 
@@ -24,6 +30,14 @@ class MathChart extends Component {
                 }]
             }]
         });
+    }
+
+    componentDidMount() {
+        this.updateChart();
+    }
+
+    componentDidUpdate() {
+        this.updateChart();
     }
 
     render() {
@@ -63,10 +77,6 @@ export default class PollReportMathChartClassroom extends Component {
     }
 
     updateChart() {
-
-    }
-
-    componentDidMount() {
         if (this.props.numbers === false) {
             var echarts = require('echarts');
 
@@ -111,6 +121,14 @@ export default class PollReportMathChartClassroom extends Component {
                 }]
             });
         }
+    }
+
+    componentDidMount() {
+        this.updateChart();
+    }
+
+    componentDidUpdate() {
+        this.updateChart();
     }
 
     render() {
