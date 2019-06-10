@@ -51,14 +51,14 @@ class Login extends Component {
                                 <form id="login-form" onSubmit={this.loginButtomClick}>
                                     <div className="d-flex align-items-center">
                                         <i className="fas fa-user login-icon" style={{ color: "rgba(102, 102, 102, 0.5)"}}></i>&nbsp;
-                                        <input autoFocus id="username" className="form-control login-control border-top-0 border-right-0 border-left-0" type="text" placeholder="Usuário" value={this.state.username} onChange={this.onTextChange} />
+                                        <input autoFocus id="username" className="form-control login-control border-top-0 border-right-0 border-left-0" type="text" placeholder="Usuário (Utilizar o mesmo do SGP)" value={this.state.username} onChange={this.onTextChange} />
                                     </div>
 
                                     <div className="py-1"></div>
 
                                     <div className="d-flex align-items-center">
                                         <i className="fas fa-lock login-icon" style={{ color: "rgba(102, 102, 102, 0.5)" }}></i>&nbsp;
-                                        <input id="password" className="form-control login-control border-top-0 border-right-0 border-left-0" type="password" placeholder="Senha" value={this.state.password} onChange={this.onTextChange} />
+                                        <input id="password" className="form-control login-control border-top-0 border-right-0 border-left-0" type="password" placeholder="Senha (Utilizar a mesma do SGP)" value={this.state.password} onChange={this.onTextChange} />
                                     </div>
 
                                     {this.props.user.isUnauthorized &&
