@@ -337,21 +337,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 switch (ordem)
                 {
                     case 1:
-                        if (codigoCurso == "1")
-                        {
-                            legenda.AppendFormat(" {0} - PROBLEMAS DE COMPOSIÇÃO", ordem);
-                        }
-                        else
-                        {
-
-                            legenda.AppendFormat(" {0} - COMPOSIÇÃO", ordem);
-                        }
+                        legenda.AppendFormat(" {0} - COMPOSIÇÃO", ordem);
                         break;
                     case 2:
 
                         if (codigoCurso == "1")
                         {
-                            legenda.AppendFormat(" {0} - PROBLEMAS DE COMPOSIÇÃO", ordem);
+                            legenda.AppendFormat(" {0} - COMPOSIÇÃO", ordem);
                         }
                         else
                         {
@@ -362,7 +354,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     case 3:
                         if (codigoCurso == "1")
                         {
-                            legenda.AppendFormat(" {0} - PROBLEMAS DE COMPOSIÇÃO", ordem);
+                            legenda.AppendFormat(" {0} - COMPOSIÇÃO", ordem);
                         }
                         else if (codigoCurso == "3")
                         {
@@ -392,7 +384,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         }
                         break;
                     case 4:
-                        if (codigoCurso == "2")
+                        if (codigoCurso == "3")
                         {
                             legenda.AppendFormat(" {0} - CONFIGURAÇÃO RETANGULAR", ordem);
                         }
