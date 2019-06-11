@@ -64,10 +64,10 @@ export default class StudentPollMath4ACACard extends Component {
                     <thead>
                         <tr>
                             <th rowSpan="5" className="align-middle border text-color-purple "><div className="ml-2">Sondagem - 4º ano | <b>Campo Aditivo</b></div></th>
-                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem1_head"><span style={pStyle}><img src="./img/icon_mat_9975FF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 1 - ideia: COMPOSIÇÃO</b><span value="ordem2" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_mat_FFFFFF.svg" alt="seta direita ativa" style={{ height: 20 }} /></span></th>
-                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem2_head"><span value="ordem1" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_mat_FFFFFF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 2 - ideia: TRANSFORMAÇÃO</b><span value="ordem3" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_mat_FFFFFF.svg" alt="seta direita ativa" style={{ height: 20 }} /></span></th>
-                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem3_head"><span value="ordem2" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_mat_FFFFFF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 3 - ideia: COMPOSIÇÃO DE TRANSF.</b><span value="ordem4" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_mat_FFFFFF.svg" alt="seta direita ativa" style={{ height: 20 }} /></span></th>
-                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem4_head"><span value="ordem3" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_mat_FFFFFF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 4 - ideia: COMPARAÇÃO</b><span style={pStyle}><img src="./img/icon_2_mat_9975FF.svg" alt="seta direita inativa" style={{ height: 20 }} /></span></th>
+                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem1_head"><span style={pStyle}><img src="./img/icon_mat_9975FF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 1 - COMPOSIÇÃO</b><span value="ordem2" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_mat_FFFFFF.svg" alt="seta direita ativa" style={{ height: 20 }} /></span></th>
+                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem2_head"><span value="ordem1" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_mat_FFFFFF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 2 - TRANSFORMAÇÃO</b><span value="ordem3" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_mat_FFFFFF.svg" alt="seta direita ativa" style={{ height: 20 }} /></span></th>
+                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem3_head"><span value="ordem2" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_mat_FFFFFF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 3 - COMPOSIÇÃO DE TRANSF.</b><span value="ordem4" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_mat_FFFFFF.svg" alt="seta direita ativa" style={{ height: 20 }} /></span></th>
+                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem4_head"><span value="ordem3" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_mat_FFFFFF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 4 - COMPARAÇÃO</b><span style={pStyle}><img src="./img/icon_2_mat_9975FF.svg" alt="seta direita inativa" style={{ height: 20 }} /></span></th>
                         </tr>
                         <tr>
                             <th colSpan="8" className="text-center border text-color-purple" id="ordem1_col"><small>Problemas 1º e 2º Semestres</small></th>
@@ -141,7 +141,7 @@ export default class StudentPollMath4ACACard extends Component {
                                             <th><small>T2</small></th>
                                         </tr>
                                         <tr>
-                                            <td><small>Dado</small></td>
+                                            <td><small>Dada</small></td>
                                             <td><small>Dada</small></td>
                                             <td><small>Dada</small></td>
                                             <td><small>?</small></td>
@@ -167,7 +167,7 @@ export default class StudentPollMath4ACACard extends Component {
                                             <small>Dado</small>
                                         </div>
                                         <div className="col table-column-sondagem">
-                                            <small>Dada</small>
+                                            <small>Dado</small>
                                         </div>
                                         <div className="col table-column-sondagem">
                                             <small>?</small>
