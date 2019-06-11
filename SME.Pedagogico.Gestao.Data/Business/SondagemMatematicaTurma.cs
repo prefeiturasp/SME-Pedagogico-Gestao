@@ -164,7 +164,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 }
                 else
                 {
-                    for (int i = 5; i < 9; i++)
+                    for (int i = 4; i < 9; i++)
                     {
                         MathStudentItemResult item = new MathStudentItemResult();
                         string ideia = "";
@@ -172,6 +172,18 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                         switch (i)
                         {
+                            case 4:
+
+                                if (CodigoCurso.Equals("3"))
+                                {
+                                    ideia = ConverteTextoPollMatematica(sondagem.Ordem4Ideia);
+                                    resultado = ConverteTextoPollMatematica(sondagem.Ordem4Resultado);
+                                    item.Idea = ideia;
+                                    item.Order = i;
+                                    item.Result = resultado;
+                                    pollTotal.Add(item);
+                                }
+                                break;
                             case 5:
                                 ideia = ConverteTextoPollMatematica(sondagem.Ordem5Ideia);
                                 resultado = ConverteTextoPollMatematica(sondagem.Ordem5Resultado);
@@ -181,12 +193,15 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                 pollTotal.Add(item);
                                 break;
                             case 6:
-                                ideia = ConverteTextoPollMatematica(sondagem.Ordem6Ideia);
-                                resultado = ConverteTextoPollMatematica(sondagem.Ordem6Resultado);
-                                item.Idea = ideia;
-                                item.Order = i;
-                                item.Result = resultado;
-                                pollTotal.Add(item);
+                                if (!CodigoCurso.Equals("3"))
+                                {
+                                    ideia = ConverteTextoPollMatematica(sondagem.Ordem6Ideia);
+                                    resultado = ConverteTextoPollMatematica(sondagem.Ordem6Resultado);
+                                    item.Idea = ideia;
+                                    item.Order = i;
+                                    item.Result = resultado;
+                                    pollTotal.Add(item);
+                                }
                                 break;
                             case 7:
                                 if (!CodigoCurso.Equals("3"))
@@ -325,12 +340,26 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
             else
             {
-                for (int ordem = 5; ordem < 11; ordem++)
+                for (int ordem = 4; ordem < 11; ordem++)
                 {
                     MathChartDataModel item = new MathChartDataModel();
 
                     switch (ordem)
                     {
+                        case 4:
+                            if (CodigoCurso.Equals("3"))
+                            {
+                                item.Name = "Ordem 4";
+                                item.Idea = new List<int> { listaAlunosTurma.Where(p => p.Ordem4Ideia != null &&      p.Ordem4Ideia.Equals("A")).Count(),
+                                                        listaAlunosTurma.Where(p => p.Ordem4Ideia != null &&      p.Ordem4Ideia.Equals("E")).Count(),
+                                                        listaAlunosTurma.Where(p => p.Ordem4Ideia != null &&      p.Ordem4Ideia.Equals("NR")).Count() };
+                                item.Result = new List<int> {   listaAlunosTurma.Where(p => p.Ordem4Resultado != null &&  p.Ordem4Resultado.Equals("A")).Count() ,
+                                                        listaAlunosTurma.Where(p => p.Ordem4Resultado != null &&  p.Ordem4Resultado.Equals("E")).Count() ,
+                                                        listaAlunosTurma.Where(p => p.Ordem4Resultado != null &&  p.Ordem4Resultado.Equals("NR")).Count()};
+                                graficos.Add(item);
+                            }
+                            break;
+
                         case 5:
                             item.Name = "Ordem 5";
                             item.Idea = new List<int> { listaAlunosTurma.Where(p => p.Ordem5Ideia != null &&      p.Ordem5Ideia.Equals("A")).Count(),
@@ -342,14 +371,17 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             graficos.Add(item);
                             break;
                         case 6:
-                            item.Name = "Ordem 6";
-                            item.Idea = new List<int> {     listaAlunosTurma.Where(p => p.Ordem6Ideia != null &&      p.Ordem6Ideia.Equals("A")).Count(),
+                            if (!CodigoCurso.Equals("3"))
+                            {
+                                item.Name = "Ordem 6";
+                                item.Idea = new List<int> {     listaAlunosTurma.Where(p => p.Ordem6Ideia != null &&      p.Ordem6Ideia.Equals("A")).Count(),
                                                         listaAlunosTurma.Where(p => p.Ordem6Ideia != null &&      p.Ordem6Ideia.Equals("E")).Count(),
                                                         listaAlunosTurma.Where(p => p.Ordem6Ideia != null &&      p.Ordem6Ideia.Equals("NR")).Count() };
-                            item.Result = new List<int> {   listaAlunosTurma.Where(p => p.Ordem6Resultado != null &&  p.Ordem6Resultado.Equals("A")).Count() ,
+                                item.Result = new List<int> {   listaAlunosTurma.Where(p => p.Ordem6Resultado != null &&  p.Ordem6Resultado.Equals("A")).Count() ,
                                                         listaAlunosTurma.Where(p => p.Ordem6Resultado != null &&  p.Ordem6Resultado.Equals("E")).Count() ,
                                                         listaAlunosTurma.Where(p => p.Ordem6Resultado != null &&  p.Ordem6Resultado.Equals("NR")).Count()};
-                            graficos.Add(item);
+                                graficos.Add(item);
+                            }
                             break;
 
                         case 7:
