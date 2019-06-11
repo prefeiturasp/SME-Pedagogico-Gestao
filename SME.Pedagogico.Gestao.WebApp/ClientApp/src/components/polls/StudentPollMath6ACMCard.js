@@ -121,7 +121,7 @@ export default class StudentPollMath6ACMCard extends Component {
                                     </div>
                                     <div className="row">
                                         <div className="col table-column-sondagem">
-                                            <small>2° Bl</small>
+                                            <small>1° S</small>
                                         </div>
                                         <div className="col table-column-sondagem">
                                             <small>Dadas</small>
@@ -135,7 +135,7 @@ export default class StudentPollMath6ACMCard extends Component {
                                     </div>
                                     <div className="row">
                                         <div className="col table-column-sondagem">
-                                            <small>4° Bl</small>
+                                            <small>2° S</small>
                                         </div>
                                         <div className="col table-column-sondagem">
                                             <small>Dadas</small>

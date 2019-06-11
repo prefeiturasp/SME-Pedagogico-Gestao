@@ -120,7 +120,7 @@ export default class StudentPollMath6ACACard extends Component {
                                     </div>
                                     <div className="row">
                                         <div className="col table-column-sondagem">
-                                            <small>2° Bl</small>
+                                            <small>1° S</small>
                                         </div>
                                         <div className="col table-column-sondagem">
                                             <small>?</small>
@@ -134,7 +134,7 @@ export default class StudentPollMath6ACACard extends Component {
                                     </div>
                                     <div className="row">
                                         <div className="col table-column-sondagem">
-                                            <small>4° Bl</small>
+                                            <small>2° S</small>
                                         </div>
                                         <div className="col table-column-sondagem">
                                             <small>Dado</small>
@@ -187,7 +187,7 @@ export default class StudentPollMath6ACACard extends Component {
                                     </div>
                                     <div className="row">
                                         <div className="col table-column-sondagem">
-                                            <small>2° Bl</small>
+                                            <small>1° S</small>
                                         </div>
                                         <div className="col table-column-sondagem">
                                             <small>Dado</small>
@@ -201,7 +201,7 @@ export default class StudentPollMath6ACACard extends Component {
                                     </div>
                                     <div className="row">
                                         <div className="col table-column-sondagem">
-                                            <small>4° Bl</small>
+                                            <small>2° S</small>
                                         </div>
                                         <div className="col table-column-sondagem">
                                             <small>Dado</small>
