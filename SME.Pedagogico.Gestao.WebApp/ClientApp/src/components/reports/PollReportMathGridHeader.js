@@ -42,12 +42,7 @@ export default class PollReportMathGridHeader extends Component {
             if (this.props.numbers !== true)
                 return (
                     <div>
-                        <div className="d-flex poll-report-grid-header border-bottom border-white">
-                            <div className="col-4"></div>
-                            <div className="col-8 sc-gray">
-                                <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center">PROBLEMAS DE COMPOSIÇÃO</div>
-                            </div>
-                        </div>
+
                         <div className="d-flex poll-report-grid-header border-bottom border-white">
                             <div className="col-4 "></div>
                             {/*orderIndexes.map(item =>
