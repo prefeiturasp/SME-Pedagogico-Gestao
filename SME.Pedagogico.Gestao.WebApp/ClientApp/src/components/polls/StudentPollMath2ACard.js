@@ -73,8 +73,8 @@ export default class StudentPollMath2ACard extends Component {
                     <thead>
                         <tr>
                             <th rowSpan="5" className="align-middle border text-color-purple "><div className="ml-2">Sondagem - 2º ano | <b>Campo Aditivo</b></div></th>
-                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem1_head"><span style={pStyle}><img src="./img/icon_mat_9975FF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 1 - ideia: COMPOSIÇÃO</b><span value="ordem2" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_mat_FFFFFF.svg" alt="seta direita ativa" style={{ height: 20 }} /></span></th>
-                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem2_head"><span value="ordem1" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_mat_FFFFFF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 2 - ideia: TRANSFORMAÇÃO</b><span style={pStyle}><img src="./img/icon_2_mat_9975FF.svg" alt="seta direita inativa"  style={{height:20}}/></span></th>
+                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem1_head"><span style={pStyle}><img src="./img/icon_mat_9975FF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 1 - COMPOSIÇÃO</b><span value="ordem2" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_mat_FFFFFF.svg" alt="seta direita ativa" style={{ height: 20 }} /></span></th>
+                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem2_head"><span value="ordem1" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_mat_FFFFFF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 2 - TRANSFORMAÇÃO</b><span style={pStyle}><img src="./img/icon_2_mat_9975FF.svg" alt="seta direita inativa"  style={{height:20}}/></span></th>
                         </tr>
                         <tr>
                             <th colSpan="4" className="text-center border text-color-purple" id="ordem1_col"><small>Problemas 1º Semestre</small></th>
@@ -86,24 +86,24 @@ export default class StudentPollMath2ACard extends Component {
                                 <div className="container">
                                     <div className="row">
                                         <div className="col table-column-sondagem">
+                                            <small>Parte</small>
+                                        </div>
+                                        <div className="col table-column-sondagem">
+                                            <small>Parte</small>
+                                        </div>
+                                        <div className="col table-column-sondagem">
                                             <small>Todo</small>
-                                        </div>
-                                        <div className="col table-column-sondagem">
-                                            <small>Parte</small>
-                                        </div>
-                                        <div className="col table-column-sondagem">
-                                            <small>Parte</small>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col table-column-sondagem">
-                                            <small>Dado</small>
-                                        </div>
-                                        <div className="col table-column-sondagem">
-                                            <small>?</small>
+                                            <small>Dada</small>
                                         </div>
                                         <div className="col table-column-sondagem">
                                             <small>Dada</small>
+                                        </div>
+                                        <div className="col table-column-sondagem">
+                                            <small>?</small>
                                         </div>
                                     </div>
                                 </div>
@@ -126,10 +126,10 @@ export default class StudentPollMath2ACard extends Component {
                                             <small>Dado</small>
                                         </div>
                                         <div className="col table-column-sondagem">
-                                            <small>?</small>
+                                            <small>Dada</small>
                                         </div>
                                         <div className="col table-column-sondagem">
-                                            <small>Dada</small>
+                                            <small>?</small>
                                         </div>
                                     </div>
                                 </div>

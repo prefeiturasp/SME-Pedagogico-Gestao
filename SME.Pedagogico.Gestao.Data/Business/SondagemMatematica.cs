@@ -395,6 +395,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         CreateResultItem(ordem8ResultadoAgrupados, order: "8", ref ideasAndResults, ref resultCharts);
                     }
 
+                    ideasAndResults.IdeaResults.OrderBy(i => Convert.ToInt32(i.OrderName));
+                    ideasAndResults.ResultResults.OrderBy(i => Convert.ToInt32(i.OrderName));
+
                     relatorioRetorno.Results = ideasAndResults;
                     relatorioRetorno.ChartIdeaData.AddRange(ideaCharts.OrderBy(i => Convert.ToInt32(i.Order)));
                     relatorioRetorno.ChartResultData.AddRange(resultCharts.OrderBy(i => Convert.ToInt32(i.Order)));
@@ -491,6 +494,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     CreateIdeaItem(ordem2Ideia, order: "2", ref ideasAndResults, ref ideaCharts);
                     CreateResultItem(ordem1Resultado, order: "1", ref ideasAndResults, ref resultCharts);
                     CreateResultItem(ordem2Resultado, order: "2", ref ideasAndResults, ref resultCharts);
+
+                    ideasAndResults.IdeaResults=  ideasAndResults.IdeaResults.OrderBy(i => Convert.ToInt32(i.OrderName)).ToList();
+                    ideasAndResults.ResultResults = ideasAndResults.ResultResults.OrderBy(i => Convert.ToInt32(i.OrderName)).ToList();
 
                     relatorioRetorno.Results = ideasAndResults;
                     relatorioRetorno.ChartIdeaData.AddRange(ideaCharts.OrderBy(i => Convert.ToInt32(i.Order)));

@@ -64,7 +64,7 @@ export default class StudentPollMath2ACMCard extends Component {
                     <thead>
                         <tr>
                             <th rowSpan="5" className="align-middle border text-color-purple "><div className="ml-2">Sondagem - 2º ano | <b>Campo Multiplicativo</b></div></th>
-                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem3_head"><span style={pStyle}><img src="./img/icon_mat_9975FF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 3 - ideia: PROPORCIONALIDADE</b><span style={pStyle}><img src="./img/icon_2_mat_9975FF.svg" alt="seta direita inativa"  style={{height:20}}/></span></th>
+                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem3_head"><span style={pStyle}><img src="./img/icon_mat_9975FF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 3 - PROPORCIONALIDADE</b><span style={pStyle}><img src="./img/icon_2_mat_9975FF.svg" alt="seta direita inativa"  style={{height:20}}/></span></th>
                         </tr>
                         <tr>
                             <th colSpan="8" className="text-center border text-color-purple" id="ordem3_col"><small>Problemas 1º e 2º Semestres</small></th>
@@ -74,19 +74,21 @@ export default class StudentPollMath2ACMCard extends Component {
                                 <div className="container">
                                     <div className="row">
                                         <div className="col table-column-sondagem">
-                                            <small>Valor maior</small>
+                                            <small>Grandeza I</small>
                                         </div>
                                         <div className="col table-column-sondagem">
-                                            <small>Valor menor</small>
-                                        </div>
-                                        <div className="col table-column-sondagem">
-                                            <small>&#8800; entre valores</small>
+                                            <small>Grandeza II</small>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col table-column-sondagem">
-                                            <small>Dado</small>
+                                            <small>Dada</small>
                                         </div>
+                                        <div className="col table-column-sondagem">
+                                            <small>Dada</small>
+                                        </div>
+                                    </div>
+                                    <div className="row">
                                         <div className="col table-column-sondagem">
                                             <small>Dada</small>
                                         </div>
@@ -94,6 +96,7 @@ export default class StudentPollMath2ACMCard extends Component {
                                             <small>?</small>
                                         </div>
                                     </div>
+
                                 </div>
                             </th>
                         </tr>

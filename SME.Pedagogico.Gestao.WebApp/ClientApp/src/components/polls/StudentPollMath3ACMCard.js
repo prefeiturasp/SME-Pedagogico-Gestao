@@ -64,8 +64,8 @@ export default class StudentPollMath3ACMCard extends Component {
                     <thead>
                         <tr>
                             <th rowSpan="5" className="align-middle border text-color-purple "><div className="ml-2">Sondagem - 3º ano | <b>Campo Multiplicativo</b></div></th>
-                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem4_head"><span style={pStyle}><img src="./img/icon_mat_9975FF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 4 - ideia: CONFIGURAÇÃO RETANGULAR</b><span value="ordem5" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_mat_FFFFFF.svg" alt="seta direita ativa" style={{ height: 20 }} /></span></th>
-                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem5_head"><span value="ordem4" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_mat_FFFFFF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 5 - ideia: PROPORCIONALIDADE</b><span style={pStyle}><img src="./img/icon_2_mat_9975FF.svg" alt="seta direita inativa" style={{ height: 20 }} /></span></th>
+                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem4_head"><span style={pStyle}><img src="./img/icon_mat_9975FF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 4 - CONFIGURAÇÃO RETANGULAR</b><span value="ordem5" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_mat_FFFFFF.svg" alt="seta direita ativa" style={{ height: 20 }} /></span></th>
+                            <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem5_head"><span value="ordem4" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_mat_FFFFFF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 5 - PROPORCIONALIDADE</b><span style={pStyle}><img src="./img/icon_2_mat_9975FF.svg" alt="seta direita inativa" style={{ height: 20 }} /></span></th>
                         </tr>
                         <tr>
                             <th colSpan="8" className="text-center border text-color-purple" id="ordem4_col"><small>Problemas 1º e 2º Semestres</small></th>
@@ -76,21 +76,21 @@ export default class StudentPollMath3ACMCard extends Component {
                                 <div className="container">
                                     <div className="row">
                                         <div className="col table-column-sondagem">
-                                            <small>Todo</small>
+                                            <small>Linhas</small>
                                         </div>
                                         <div className="col table-column-sondagem">
-                                            <small>Parte</small>
+                                            <small>Colunas</small>
                                         </div>
                                         <div className="col table-column-sondagem">
-                                            <small>Parte</small>
+                                            <small>Total</small>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col table-column-sondagem">
-                                            <small>Dado</small>
+                                            <small>Dadas</small>
                                         </div>
                                         <div className="col table-column-sondagem">
-                                            <small>Dada</small>
+                                            <small>Dadas</small>
                                         </div>
                                         <div className="col table-column-sondagem">
                                             <small>?</small>
@@ -102,19 +102,21 @@ export default class StudentPollMath3ACMCard extends Component {
                                 <div className="container">
                                     <div className="row">
                                         <div className="col table-column-sondagem">
-                                            <small>Estado inicial</small>
+                                            <small>Grandeza I</small>
                                         </div>
                                         <div className="col table-column-sondagem">
-                                            <small>Estado final</small>
-                                        </div>
-                                        <div className="col table-column-sondagem">
-                                            <small>Transformação</small>
+                                            <small>Grandeza II</small>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col table-column-sondagem">
-                                            <small>Dado</small>
+                                            <small>Dada</small>
                                         </div>
+                                        <div className="col table-column-sondagem">
+                                            <small>Dada</small>
+                                        </div>
+                                    </div>
+                                    <div className="row">
                                         <div className="col table-column-sondagem">
                                             <small>Dada</small>
                                         </div>

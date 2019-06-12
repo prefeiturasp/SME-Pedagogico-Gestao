@@ -93,7 +93,7 @@ class PollFilter extends Component {
         
         var listSchools = this.props.filters.filterTeachers.escolas.filter(x => x.codigoDRE === label)
 
-        if (listSchools.length == 1) {
+        if (listSchools.length === 1) {
             var filterSchool = {
                 schoolCodeEol: listSchools[0].codigo
             };
@@ -119,12 +119,12 @@ class PollFilter extends Component {
 
         this.props.filterMethods.activeSchoolCode(classRoomFilter);
 
-        if (this.props.user.activeRole.roleName == ROLES_ENUM.PROFESSOR) {
+        if (this.props.user.activeRole.roleName === ROLES_ENUM.PROFESSOR) {
 
             listClassRoomTeacher = this.props.filters.filterTeachers.turmas.filter(x => x.codigoEscola === label)
         }
 
-        else if (this.props.user.activeRole.roleName == ROLES_ENUM.COORDENADOR_PEDAGOGICO) {
+        else if (this.props.user.activeRole.roleName === ROLES_ENUM.COORDENADOR_PEDAGOGICO) {
             var classRoomFilter = {
                 schoolCodeEol: label,
                 schoolYear: "2019",
@@ -313,7 +313,7 @@ class PollFilter extends Component {
             selectSchool = <SelectChangeColor className="col-4" value={SchoolSelected} defaultText="Escola"
                 options={listSchoolOptions} disabled={disabledSchool} onChange={this.selectedSchoolTeacher} resetColor={SchoolSelected === "" ? true : false} />
 
-            if (this.props.user.activeRole.roleName == ROLES_ENUM.PROFESSOR) {
+            if (this.props.user.activeRole.roleName === ROLES_ENUM.PROFESSOR) {
 
 
                 if (this.state.classroom !== null)
@@ -351,7 +351,7 @@ class PollFilter extends Component {
                 }
             }
 
-            else if (this.props.user.activeRole.roleName == ROLES_ENUM.COORDENADOR_PEDAGOGICO) {
+            else if (this.props.user.activeRole.roleName === ROLES_ENUM.COORDENADOR_PEDAGOGICO) {
 
                 if (selectedSchool !== "todas") {
                     if (this.props.filters.listClassRoom !== [] && this.props.filters.listClassRoom !== null && this.props.filters.listClassRoom.length > 1) {
@@ -390,7 +390,7 @@ class PollFilter extends Component {
                 }
             }
 
-            if (selectedSchool == "todas" || selectedDre == "todas") {
+            if (selectedSchool === "todas" || selectedDre === "todas") {
                 hiddenDisabled = true;
 
                 var listyearClassrooms = [1, 2, 3, 4, 5, 6];
@@ -476,7 +476,7 @@ class PollFilter extends Component {
                 }
             }
 
-            if (selectedSchool == "todas" || selectedDre == "todas") {
+            if (selectedSchool === "todas" || selectedDre === "todas") {
                 hiddenDisabled = true;
 
                 var listyearClassrooms = [1, 2, 3, 4, 5, 6];
