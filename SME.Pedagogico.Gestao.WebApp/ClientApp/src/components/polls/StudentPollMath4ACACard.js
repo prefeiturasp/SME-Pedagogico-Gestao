@@ -33,7 +33,7 @@ export default class StudentPollMath4ACACard extends Component {
         for (var j = 0; j < columnFiltered.length; j++) {
             document.getElementById(columnFiltered[j] + "_head").style.display = "none";//esconde head
             document.getElementById(columnFiltered[j] + "_table").style.display = "none";//esconde table com as tabelas com as informações
-            document.getElementById(columnFiltered[j] + "_col").style.display = "none";
+            //document.getElementById(columnFiltered[j] + "_col").style.display = "none";
         }
 
         all_col = document.getElementsByClassName("text-center border poll-select-container " + element + "_col");
@@ -42,7 +42,7 @@ export default class StudentPollMath4ACACard extends Component {
         }
 
         document.getElementById(element + "_head").style.display = "table-cell";//exibe a head
-        document.getElementById(element + "_col").style.display = "table-cell";//exibe a coluna da ordem
+        //document.getElementById(element + "_col").style.display = "table-cell";//exibe a coluna da ordem
         document.getElementById(element + "_table").style.display = "table-cell";//exibe table com as tabelas com as informações
     }
     hideShowOrdem(event) {
@@ -69,12 +69,14 @@ export default class StudentPollMath4ACACard extends Component {
                             <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem3_head"><span value="ordem2" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_mat_FFFFFF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 3 - COMPOSIÇÃO DE TRANSF.</b><span value="ordem4" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_mat_FFFFFF.svg" alt="seta direita ativa" style={{ height: 20 }} /></span></th>
                             <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem4_head"><span value="ordem3" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_mat_FFFFFF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 4 - COMPARAÇÃO</b><span style={pStyle}><img src="./img/icon_2_mat_9975FF.svg" alt="seta direita inativa" style={{ height: 20 }} /></span></th>
                         </tr>
+                        {/*
                         <tr>
                             <th colSpan="8" className="text-center border text-color-purple" id="ordem1_col"><small>Problemas 1º e 2º Semestres</small></th>
                             <th colSpan="8" className="text-center border text-color-purple" id="ordem2_col"><small>Problemas 1º e 2º Semestres</small></th>
                             <th colSpan="8" className="text-center border text-color-purple" id="ordem3_col"><small>Problemas 1º e 2º Semestres</small></th>
                             <th colSpan="8" className="text-center border text-color-purple" id="ordem4_col"><small>Problemas 1º e 2º Semestres</small></th>
                         </tr>
+                        */}
                         <tr>
                             <th colSpan="8" id="ordem1_table">
                                 <div className="container">
@@ -137,7 +139,7 @@ export default class StudentPollMath4ACACard extends Component {
                                             <th rowSpan="2" className="align-middle"><small>Estado Final</small></th>
                                         </tr>
                                         <tr>
-                                            <th><small>TI</small></th>
+                                            <th><small>T1</small></th>
                                             <th><small>T2</small></th>
                                         </tr>
                                         <tr>
@@ -209,7 +211,7 @@ export default class StudentPollMath4ACACard extends Component {
                     <tbody>
 
                         {this.props.students.map(student => (
-                            <StudentPollMath4A5A6ACA key={student.sequence} student={student} updatePollStudent={this.props.updatePollStudent} />
+                            <StudentPollMath4A5A6ACA key={student.studentCodeEol} student={student} updatePollStudent={this.props.updatePollStudent} />
                         ))}
 
                     </tbody>

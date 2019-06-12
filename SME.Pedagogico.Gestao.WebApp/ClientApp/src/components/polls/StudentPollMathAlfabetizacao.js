@@ -17,10 +17,10 @@ export default class StudentPollMathAlfabetizacao extends Component {
                     <small className="ml-2 pr-4"><b>{this.props.student.sequenceNumber}</b></small><small>{this.props.student.name}</small>
                 </th>
                 <th className="text-center border poll-select-container familiares_col">
-                    <PollSelectYesNo subjectName="mathalfabetizacao" sequence={this.props.student.studentCodeEol} name="familiares1S" value={this.props.student.familiares1S} updatePollStudent={this.props.updatePollStudent} columnColor="bg-bluescale" />
+                    <PollSelectYesNo subjectName="mathalfabetizacao" sequence={this.props.student.studentCodeEol} name="familiares1S" value={this.props.student.familiares1S} updatePollStudent={this.props.updatePollStudent} columnColor="bg-bluescale" disabled={false}/>
                 </th>
                 <th className="text-center border poll-select-container familiares_col">
-                    <PollSelectYesNo subjectName="mathalfabetizacao" sequence={this.props.student.studentCodeEol} name="familiares2S" value={this.props.student.familiares2S} updatePollStudent={this.props.updatePollStudent} columnColor="bg-lila" />
+                    <PollSelectYesNo subjectName="mathalfabetizacao" sequence={this.props.student.studentCodeEol} name="familiares2S" value={this.props.student.familiares2S} updatePollStudent={this.props.updatePollStudent} columnColor="bg-lila" disabled={false}/>
                 </th>
                 <th className="text-center border poll-select-container opacos_col">
                     <PollSelectYesNo subjectName="mathalfabetizacao" sequence={this.props.student.studentCodeEol} name="opacos1S" value={this.props.student.opacos1S} updatePollStudent={this.props.updatePollStudent} columnColor="bg-bluescale" />
