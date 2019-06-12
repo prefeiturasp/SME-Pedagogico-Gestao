@@ -34,7 +34,7 @@ export default class StudentPollMath2ACard extends Component {
         for (var j = 0; j < columnFiltered.length; j++) {
             document.getElementById(columnFiltered[j] + "_head").style.display = "none";//esconde head
             document.getElementById(columnFiltered[j] + "_table").style.display = "none";//esconde table com as tabelas com as informações
-            document.getElementById(columnFiltered[j] + "_col").style.display = "none";
+            //document.getElementById(columnFiltered[j] + "_col").style.display = "none";
             if (columnFiltered[j] === "ordem1") { //mudança por causa da ordem1 que possui divisões de coluna
                 document.getElementById(columnFiltered[j] + "_col2").style.display = "none";
                 document.getElementById(columnFiltered[j] + "_table2").style.display = "none";
