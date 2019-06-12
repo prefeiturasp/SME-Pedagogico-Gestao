@@ -23,8 +23,9 @@ namespace SME.Pedagogico.Gestao.Data.DTO
     }
 
     public class MathStudentItemResult
-    {
-        public int Order { get; set; }
+    { 
+        public string Name { get; set; }
+        public string Order { get; set; }
         public string Idea { get; set; }
         public string Result { get; set; }
     }
