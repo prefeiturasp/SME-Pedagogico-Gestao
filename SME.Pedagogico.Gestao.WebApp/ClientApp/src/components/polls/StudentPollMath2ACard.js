@@ -3,7 +3,6 @@ import StudentPollMath2A from '../polls/StudentPollMath2A'
 import LegendsRightWrong from '../polls/component/LegendsRightWrong'
 import SondagemClassSelected from '../polls/component/SondagemClassSelected'
 //Sondagem Matmática 2 Ano
-//Falta o componente receber a lista de alunos
 export default class StudentPollMath2ACard extends Component {
     constructor(props) {
         super(props);
@@ -34,9 +33,7 @@ export default class StudentPollMath2ACard extends Component {
         for (var j = 0; j < columnFiltered.length; j++) {
             document.getElementById(columnFiltered[j] + "_head").style.display = "none";//esconde head
             document.getElementById(columnFiltered[j] + "_table").style.display = "none";//esconde table com as tabelas com as informações
-            document.getElementById(columnFiltered[j] + "_col").style.display = "none";
             if (columnFiltered[j] === "ordem1") { //mudança por causa da ordem1 que possui divisões de coluna
-                document.getElementById(columnFiltered[j] + "_col2").style.display = "none";
                 document.getElementById(columnFiltered[j] + "_table2").style.display = "none";
             }
         }
@@ -47,10 +44,8 @@ export default class StudentPollMath2ACard extends Component {
         }
 
         document.getElementById(element + "_head").style.display = "table-cell";//exibe a head
-        //document.getElementById(element + "_col").style.display = "table-cell";//exibe a coluna da ordem
         document.getElementById(element + "_table").style.display = "table-cell";//exibe table com as tabelas com as informações
         if (element === "ordem1") {
-            //document.getElementById(element + "_col2").style.display = "table-cell"
             document.getElementById(element + "_table2").style.display = "table-cell";
         }
     }
@@ -76,13 +71,6 @@ export default class StudentPollMath2ACard extends Component {
                             <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem1_head"><span style={pStyle}><img src="./img/icon_mat_9975FF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 1 - COMPOSIÇÃO</b><span value="ordem2" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_mat_FFFFFF.svg" alt="seta direita ativa" style={{ height: 20 }} /></span></th>
                             <th colSpan="8" className="text-center border sondagem-matematica-title" id="ordem2_head"><span value="ordem1" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_mat_FFFFFF.svg" alt="seta esquerda" style={{ height: 20 }} /></span><b className="p-4">Ordem 2 - TRANSFORMAÇÃO</b><span style={pStyle}><img src="./img/icon_2_mat_9975FF.svg" alt="seta direita inativa"  style={{height:20}}/></span></th>
                         </tr>
-                        {/*
-                        <tr>
-                            <th colSpan="4" className="text-center border text-color-purple" id="ordem1_col"><small>Problemas 1º Semestre</small></th>
-                            <th colSpan="4" className="text-center border text-color-purple" id="ordem1_col2"><small>Problemas 2º Semestre</small></th>
-                            <th colSpan="8" className="text-center border text-color-purple" id="ordem2_col"><small>Problemas 1º e 2º Semestres</small></th>
-                        </tr>
-                        */}
                         <tr>
                             <th colSpan="4" id="ordem1_table">
                                 <div className="container">
@@ -184,7 +172,7 @@ export default class StudentPollMath2ACard extends Component {
                     <tbody>
 
                         {this.props.students.map(student => (
-                            <StudentPollMath2A key={student.studentCodeEol} student={student} updatePollStudent={this.props.updatePollStudent} />
+                            <StudentPollMath2A key={student.studentCodeEol} student={student} updatePollStudent={this.props.updatePollStudent} editLock1S={this.props.editLock1S} editLock2S={this.props.editLock2S}/>
                         ))}
 
                     </tbody>

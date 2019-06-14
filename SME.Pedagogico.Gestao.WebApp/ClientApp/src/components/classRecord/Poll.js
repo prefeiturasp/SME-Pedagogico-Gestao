@@ -6,6 +6,7 @@ import PollFilter from './PollFilter';
 import { ClassRoomEnum } from '../polls/component/ClassRoomHelper'
 import { connect } from 'react-redux';
 import { actionCreators as actionCreatorsPoll } from '../../store/Poll';
+import { actionCreators as actionCreatorsPollOptionSelectLock } from '../../store/PollOptionSelectLock';
 import { bindActionCreators } from 'redux';
 
 import StudentPollMathAlfabetizacaoCard from '../polls/StudentPollMathAlfabetizacaoCard'
@@ -54,6 +55,33 @@ class Poll extends Component {
 
 
         this.toggleMessageBox = this.toggleMessageBox.bind(this);
+
+        var todayDate = new Date();
+        if (new Date("2019-06-13") <= todayDate && todayDate <= new Date("2019-07-06")) {
+            this.props.pollOptionSelectLockMethods.set_poll_1b_lock(false);
+            this.props.pollOptionSelectLockMethods.set_poll_2b_lock(false);
+            this.props.pollOptionSelectLockMethods.set_poll_3b_lock(true);
+            this.props.pollOptionSelectLockMethods.set_poll_4b_lock(true);
+
+            this.props.pollOptionSelectLockMethods.set_poll_1s_lock(false);
+            this.props.pollOptionSelectLockMethods.set_poll_2s_lock(true);
+        } else if (new Date("2019-09-16") <= todayDate && todayDate <= new Date("2019-10-12")) {
+            this.props.pollOptionSelectLockMethods.set_poll_1b_lock(true);
+            this.props.pollOptionSelectLockMethods.set_poll_2b_lock(true);
+            this.props.pollOptionSelectLockMethods.set_poll_3b_lock(false);
+            this.props.pollOptionSelectLockMethods.set_poll_4b_lock(true);
+
+            this.props.pollOptionSelectLockMethods.set_poll_1s_lock(true);
+            this.props.pollOptionSelectLockMethods.set_poll_2s_lock(true);
+        } else if (new Date("2019-11-15") <= todayDate && todayDate <= new Date("2019-12-15")) {
+            this.props.pollOptionSelectLockMethods.set_poll_1b_lock(true);
+            this.props.pollOptionSelectLockMethods.set_poll_2b_lock(true);
+            this.props.pollOptionSelectLockMethods.set_poll_3b_lock(true);
+            this.props.pollOptionSelectLockMethods.set_poll_4b_lock(false);
+
+            this.props.pollOptionSelectLockMethods.set_poll_1s_lock(true);
+            this.props.pollOptionSelectLockMethods.set_poll_2s_lock(false);
+        } 
     }
 
     toggleMessageBox() {
@@ -81,6 +109,8 @@ class Poll extends Component {
                 document.getElementById("btnSave").className = "btn btn-save text-white deactive";
             }
         }
+
+        
     }
 
     componentDidMount() {
@@ -96,43 +126,43 @@ class Poll extends Component {
         var sondagemType = this.props.poll.pollSelected
 
         if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
-            componentRender = <StudentPollPortugueseCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} />;
+            componentRender = <StudentPollPortugueseCard students={this.props.poll.students} updatePollStudent={this.updatePollStudent} editLock1b={this.props.pollOptionSelectLock.poll_1b_lock} editLock2b={this.props.pollOptionSelectLock.poll_2b_lock} editLock3b={this.props.pollOptionSelectLock.poll_3b_lock} editLock4b={this.props.pollOptionSelectLock.poll_4b_lock}/>;
         } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMT) {
             if (this.props.poll.pollTypeSelected === "Numeric" && (this.props.poll.pollYear === "1" || this.props.poll.pollYear === "2" || this.props.poll.pollYear === "3")) {
-                componentRender = <StudentPollMathAlfabetizacaoCard students={this.props.poll.studentsPollMathNumbers} updatePollStudent={this.updatePollStudent} />;
+                componentRender = <StudentPollMathAlfabetizacaoCard students={this.props.poll.studentsPollMathNumbers} updatePollStudent={this.updatePollStudent} editLock1S={this.props.pollOptionSelectLock.poll_1s_lock} editLock2S={this.props.pollOptionSelectLock.poll_2s_lock}/>;
             } else if (this.props.poll.pollYear === "1") {
                 if (this.props.poll.pollTypeSelected === "CA") {
-                    componentRender = <StudentPollMath1ACard students={this.props.poll.studentsPollMathCA} updatePollStudent={this.updatePollStudent} />;
+                    componentRender = <StudentPollMath1ACard students={this.props.poll.studentsPollMathCA} updatePollStudent={this.updatePollStudent} editLock1S={this.props.pollOptionSelectLock.poll_1s_lock} editLock2S={this.props.pollOptionSelectLock.poll_2s_lock}/>;
                 }
             } else if (this.props.poll.pollYear === "2") {
                 if (this.props.poll.pollTypeSelected === "CA") {
-                    componentRender = <StudentPollMath2ACard students={this.props.poll.studentsPollMathCA} updatePollStudent={this.updatePollStudent} />;
+                    componentRender = <StudentPollMath2ACard students={this.props.poll.studentsPollMathCA} updatePollStudent={this.updatePollStudent} editLock1S={this.props.pollOptionSelectLock.poll_1s_lock} editLock2S={this.props.pollOptionSelectLock.poll_2s_lock}/>;
                 } else if (this.props.poll.pollTypeSelected === "CM") {
-                    componentRender = <StudentPollMath2ACMCard students={this.props.poll.studentsPollMathCM} updatePollStudent={this.updatePollStudent} />;
+                    componentRender = <StudentPollMath2ACMCard students={this.props.poll.studentsPollMathCM} updatePollStudent={this.updatePollStudent} editLock1S={this.props.pollOptionSelectLock.poll_1s_lock} editLock2S={this.props.pollOptionSelectLock.poll_2s_lock}/>;
                 }
             } else if (this.props.poll.pollYear === "3") {
                 if (this.props.poll.pollTypeSelected === "CA") {
-                    componentRender = <StudentPollMath3ACACard students={this.props.poll.studentsPollMathCA} updatePollStudent={this.updatePollStudent} />;
+                    componentRender = <StudentPollMath3ACACard students={this.props.poll.studentsPollMathCA} updatePollStudent={this.updatePollStudent} editLock1S={this.props.pollOptionSelectLock.poll_1s_lock} editLock2S={this.props.pollOptionSelectLock.poll_2s_lock}/>;
                 } else if (this.props.poll.pollTypeSelected === "CM") {
-                    componentRender = <StudentPollMath3ACMCard students={this.props.poll.studentsPollMathCM} updatePollStudent={this.updatePollStudent} />;
+                    componentRender = <StudentPollMath3ACMCard students={this.props.poll.studentsPollMathCM} updatePollStudent={this.updatePollStudent} editLock1S={this.props.pollOptionSelectLock.poll_1s_lock} editLock2S={this.props.pollOptionSelectLock.poll_2s_lock}/>;
                 }
             } else if (this.props.poll.pollYear === "4") {
                 if (this.props.poll.pollTypeSelected === "CA") {
-                    componentRender = <StudentPollMath4ACACard students={this.props.poll.studentsPollMathCA} updatePollStudent={this.updatePollStudent} />;
+                    componentRender = <StudentPollMath4ACACard students={this.props.poll.studentsPollMathCA} updatePollStudent={this.updatePollStudent} editLock1S={this.props.pollOptionSelectLock.poll_1s_lock} editLock2S={this.props.pollOptionSelectLock.poll_2s_lock}/>;
                 } else if (this.props.poll.pollTypeSelected === "CM") {
-                    componentRender = <StudentPollMath4ACMCard students={this.props.poll.studentsPollMathCM} updatePollStudent={this.updatePollStudent} />;
+                    componentRender = <StudentPollMath4ACMCard students={this.props.poll.studentsPollMathCM} updatePollStudent={this.updatePollStudent} editLock1S={this.props.pollOptionSelectLock.poll_1s_lock} editLock2S={this.props.pollOptionSelectLock.poll_2s_lock}/>;
                 }
             } else if (this.props.poll.pollYear === "5") {
                 if (this.props.poll.pollTypeSelected === "CA") {
-                    componentRender = <StudentPollMath5ACACard students={this.props.poll.studentsPollMathCA} updatePollStudent={this.updatePollStudent} />;
+                    componentRender = <StudentPollMath5ACACard students={this.props.poll.studentsPollMathCA} updatePollStudent={this.updatePollStudent} editLock1S={this.props.pollOptionSelectLock.poll_1s_lock} editLock2S={this.props.pollOptionSelectLock.poll_2s_lock}/>;
                 } else if (this.props.poll.pollTypeSelected === "CM") {
-                    componentRender = <StudentPollMath5ACMCard students={this.props.poll.studentsPollMathCM} updatePollStudent={this.updatePollStudent} />;
+                    componentRender = <StudentPollMath5ACMCard students={this.props.poll.studentsPollMathCM} updatePollStudent={this.updatePollStudent} editLock1S={this.props.pollOptionSelectLock.poll_1s_lock} editLock2S={this.props.pollOptionSelectLock.poll_2s_lock}/>;
                 }
             } else if (this.props.poll.pollYear === "6") {
                 if (this.props.poll.pollTypeSelected === "CA") {
-                    componentRender = <StudentPollMath6ACACard students={this.props.poll.studentsPollMathCA} updatePollStudent={this.updatePollStudent} />;
+                    componentRender = <StudentPollMath6ACACard students={this.props.poll.studentsPollMathCA} updatePollStudent={this.updatePollStudent} editLock1S={this.props.pollOptionSelectLock.poll_1s_lock} editLock2S={this.props.pollOptionSelectLock.poll_2s_lock}/>;
                 } else if (this.props.poll.pollTypeSelected === "CM") {
-                    componentRender = <StudentPollMath6ACMCard students={this.props.poll.studentsPollMathCM} updatePollStudent={this.updatePollStudent} />;
+                    componentRender = <StudentPollMath6ACMCard students={this.props.poll.studentsPollMathCM} updatePollStudent={this.updatePollStudent} editLock1S={this.props.pollOptionSelectLock.poll_1s_lock} editLock2S={this.props.pollOptionSelectLock.poll_2s_lock}/>;
                 }
             }
         } else {
@@ -614,12 +644,14 @@ class Poll extends Component {
 export default connect(
     state => (
         {
-            poll: state.poll
+            poll: state.poll,
+            pollOptionSelectLock: state.pollOptionSelectLock
         }
     ),
     dispatch => (
         {
-            pollMethods: bindActionCreators(actionCreatorsPoll, dispatch)
+            pollMethods: bindActionCreators(actionCreatorsPoll, dispatch),
+            pollOptionSelectLockMethods: bindActionCreators(actionCreatorsPollOptionSelectLock, dispatch)
         }
     )
 )(Poll);

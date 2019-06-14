@@ -8,7 +8,6 @@ import { actionCreators as actionCreatorsPoll } from '../../store/Poll';
 import { bindActionCreators } from 'redux';
 
 //Sondagem Matmática Alfabetização
-//Falta o componente receber a lista de alunos
 class StudentPollMathAlfabetizacaoCard extends Component {
     constructor(props) {
         super(props);
@@ -96,7 +95,7 @@ class StudentPollMathAlfabetizacaoCard extends Component {
 
                     <tbody>
                         {this.props.students.map(student =>
-                            <StudentPollMathAlfabetizacao key={student.sequenceNumber} student={student} updatePollStudent={this.props.updatePollStudent} />
+                            <StudentPollMathAlfabetizacao key={student.studentCodeEol} student={student} updatePollStudent={this.props.updatePollStudent} editLock1S={this.props.editLock1S} editLock2S={this.props.editLock2S}/>
                         )}
                     </tbody>
                 </table>
