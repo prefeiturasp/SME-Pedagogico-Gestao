@@ -90,12 +90,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 }
 
                 return null;
-              
             }
-              
         }
-
-
 
         public static async Task<bool> LoginUser(string username, string session, string refreshToken)
         {

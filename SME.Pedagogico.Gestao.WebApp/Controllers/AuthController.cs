@@ -281,6 +281,11 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                             accessLevel = "27";
                             haveOccupationAccess = true;
                             break;
+                        case "3360":
+                            roleName = "Diretor";
+                            accessLevel = "27";
+                            haveOccupationAccess = true;
+                            break;
                         default:
                             haveOccupationAccess = false;
                             break;
@@ -468,6 +473,11 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     else if (userPrivileged.OccupationPlace == "SME")
                     {
                         var boolean = await Authentication.SetRole(credential.Username, "Admin", "2");
+                    }
+
+                    else if (userPrivileged.OccupationPlaceCode == 3)
+                    {
+                        await Authentication.SetRole(credential.Username, "Adm DRE", "21");
                     }
                 }
 

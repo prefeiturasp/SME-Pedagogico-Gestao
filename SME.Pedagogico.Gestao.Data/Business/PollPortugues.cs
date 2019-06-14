@@ -31,7 +31,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 foreach (var student in ListStudentsModel)
                 {
-
                     var studentPollPortuguese = db.PortuguesePolls.Where(x =>
                     x.classroomCodeEol == student.classroomCodeEol &&
                      x.studentCodeEol == student.studentCodeEol).FirstOrDefault();
