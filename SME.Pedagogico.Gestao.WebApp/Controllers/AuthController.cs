@@ -543,6 +543,24 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Método para resetar a senha do usuário desejado
+        /// </summary>
+        /// <param name="credential">Objeto contendo nome de usuário, nova senha e "key" para conseguir acessar a funcionalidade</param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<ActionResult<string>> ResetPassword([FromBody] ResetPassword credential)
+        {
+            if (credential.Key == "sgp123456789")
+            {
+                if (await Data.Business.Authentication.ResetPassword(credential.Username, credential.NewPassword))
+                    return (Ok());
+            }
+
+            return (Forbid());
+        }
+
         #endregion -------------------- PUBLIC --------------------
 
         #endregion ==================== METHODS ====================

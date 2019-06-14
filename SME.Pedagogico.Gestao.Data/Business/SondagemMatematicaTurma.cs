@@ -27,7 +27,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                                                                             string codigoEscola,
                                                                                             string codigoTurmaEol, string CodigoCurso)
         {
-            ;
             List<MathChartDataModel> graficos = new List<MathChartDataModel>();
 
             PollReportMathStudentResult retorno = new PollReportMathStudentResult();
@@ -43,12 +42,30 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 result = BuscaDadosCM(codigoTurmaEol, proficiency, term, CodigoCurso);
                 graficos = BuscaGraficoCM(codigoTurmaEol, proficiency, term, CodigoCurso);
-            }
-            else if (proficiency == "Números")
-            {
-                result = BuscaDadosNumeros(codigoTurmaEol, proficiency, term);
-                graficos = BuscaGraficoNumeros(codigoTurmaEol, proficiency, term);
-            }
+            } 
+
+            result = result.OrderBy(r => r.StudentName).ToList();
+
+            retorno.Results = result;
+            retorno.ChartData = graficos;
+
+            return retorno;
+        }
+
+
+        public PollReportMathStudentNumbersResult BuscarDadosMatematicaPorTurmaNumbersAsync(string proficiency, string term,
+                                                                                            string codigoDRE,
+                                                                                            string codigoEscola,
+                                                                                            string codigoTurmaEol, string CodigoCurso)
+        {
+            List<MathChartDataModel> graficos = new List<MathChartDataModel>();
+
+            PollReportMathStudentNumbersResult retorno = new PollReportMathStudentNumbersResult();
+            //ajustar para pegar a turma 
+            List<PollReportMathStudentNumbersItem> result = new List<PollReportMathStudentNumbersItem>();
+
+            result = BuscaDadosNumeros(codigoTurmaEol, proficiency, term);
+            graficos = BuscaGraficoNumeros(codigoTurmaEol, proficiency, term);
 
             result = result.OrderBy(r => r.StudentName).ToList();
 
@@ -93,7 +110,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     switch (ordem)
                     {
                         case 1:
-                            item.Name = CadastraLegenda(Proficiency, ordem, CodigoCurso, false);
                             ideia = ConverteTextoPollMatematica(sondagem.Ordem1Ideia);
                             resultado = ConverteTextoPollMatematica(sondagem.Ordem1Resultado);
                             item.Idea = ideia;
@@ -102,7 +118,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             pollTotal.Add(item);
                             break;
                         case 2:
-                            item.Name = CadastraLegenda(Proficiency, ordem, CodigoCurso, false);
                             ideia = ConverteTextoPollMatematica(sondagem.Ordem2Ideia);
                             resultado = ConverteTextoPollMatematica(sondagem.Ordem2Resultado);
                             item.Idea = ideia;
@@ -113,7 +128,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         case 3:
                             if (!CodigoCurso.Equals("2"))
                             {
-                                item.Name = CadastraLegenda(Proficiency, ordem, CodigoCurso, false);
                                 ideia = ConverteTextoPollMatematica(sondagem.Ordem3Ideia);
                                 resultado = ConverteTextoPollMatematica(sondagem.Ordem3Resultado);
                                 item.Idea = ideia;
@@ -125,7 +139,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         case 4:
                             if (!CodigoCurso.Equals("1") && !CodigoCurso.Equals("2") && !CodigoCurso.Equals("3"))
                             {
-                                item.Name = CadastraLegenda(Proficiency, ordem, CodigoCurso, false);
                                 ideia = ConverteTextoPollMatematica(sondagem.Ordem4Ideia);
                                 resultado = ConverteTextoPollMatematica(sondagem.Ordem4Resultado);
                                 item.Idea = ideia;
@@ -159,7 +172,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     string ideia = "";
                     string resultado = "";
 
-                    item.Name = CadastraLegenda(Proficiency, 3, CodigoCurso, false);
                     ideia = ConverteTextoPollMatematica(sondagem.Ordem3Ideia);
                     resultado = ConverteTextoPollMatematica(sondagem.Ordem3Resultado);
                     item.Idea = ideia;
@@ -180,7 +192,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             case 4:
                                 if (CodigoCurso.Equals("3"))
                                 {
-                                    item.Name = CadastraLegenda(Proficiency, ordem, CodigoCurso, false);
                                     ideia = ConverteTextoPollMatematica(sondagem.Ordem4Ideia);
                                     resultado = ConverteTextoPollMatematica(sondagem.Ordem4Resultado);
                                     item.Idea = ideia;
@@ -190,7 +201,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                 }
                                 break;
                             case 5:
-                                item.Name = CadastraLegenda(Proficiency, ordem, CodigoCurso, false);
                                 ideia = ConverteTextoPollMatematica(sondagem.Ordem5Ideia);
                                 resultado = ConverteTextoPollMatematica(sondagem.Ordem5Resultado);
                                 item.Idea = ideia;
@@ -201,7 +211,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             case 6:
                                 if (!CodigoCurso.Equals("3"))
                                 {
-                                    item.Name = CadastraLegenda(Proficiency, ordem, CodigoCurso, false);
                                     ideia = ConverteTextoPollMatematica(sondagem.Ordem6Ideia);
                                     resultado = ConverteTextoPollMatematica(sondagem.Ordem6Resultado);
                                     item.Idea = ideia;
@@ -213,7 +222,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             case 7:
                                 if (!CodigoCurso.Equals("3"))
                                 {
-                                    item.Name = CadastraLegenda(Proficiency, ordem, CodigoCurso, false);
                                     ideia = ConverteTextoPollMatematica(sondagem.Ordem7Ideia);
                                     resultado = ConverteTextoPollMatematica(sondagem.Ordem7Resultado);
                                     item.Idea = ideia;
@@ -225,7 +233,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             case 8:
                                 if (!CodigoCurso.Equals("3") && !CodigoCurso.Equals("4"))
                                 {
-                                    item.Name = CadastraLegenda(Proficiency, ordem, CodigoCurso, false);
                                     ideia = ConverteTextoPollMatematica(sondagem.Ordem8Ideia);
                                     resultado = ConverteTextoPollMatematica(sondagem.Ordem8Resultado);
                                     item.Idea = ideia;
@@ -544,7 +551,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             return graficos;
         }
 
-        private List<MathChartDataModel> BuscaGraficoNumeros(string proficiency, string term, string codigoTurmaEol)
+        private List<MathChartDataModel> BuscaGraficoNumeros(string codigoTurmaEol, string proficiency, string term)
         {
             List<PollReportMathStudentItem> result = new List<PollReportMathStudentItem>();
 
@@ -631,60 +638,57 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             return "";
         }
-        private List<PollReportMathStudentItem> BuscaDadosNumeros(string proficiency, string term, string codigoTurmaEol)
+        private List<PollReportMathStudentNumbersItem> BuscaDadosNumeros(string codigoTurmaEol, string proficiency, string term)
         {
-            List<PollReportMathStudentItem> result = new List<PollReportMathStudentItem>();
+            List<PollReportMathStudentNumbersItem> result = new List<PollReportMathStudentNumbersItem>();
 
             List<MathChartDataModel> graficos = new List<MathChartDataModel>();
 
-
             PollMatematica poll = new PollMatematica(_config);
 
-            var listaAlunosTurma = poll.BuscarAlunosTurmaRelatorioMatematicaNumber
-                                          (codigoTurmaEol, proficiency,
-                                          term);
+            var listaAlunosTurma = poll.BuscarAlunosTurmaRelatorioMatematicaNumber(codigoTurmaEol, proficiency, term);
 
             foreach (var sondagem in listaAlunosTurma)
             {
-                List<MathStudentItemResult> pollTotal = new List<MathStudentItemResult>();
+                List<MathStudentItemNumbersResult> pollTotal = new List<MathStudentItemNumbersResult>();
 
-                MathStudentItemResult item1 = new MathStudentItemResult();
+                MathStudentItemNumbersResult item1 = new MathStudentItemNumbersResult();
                 item1.Idea = "Familiares ou Frequentes";
                 item1.Result = ConverteTextoPollMatematica(sondagem.Familiares, true);
                 pollTotal.Add(item1);
 
-                MathStudentItemResult item2 = new MathStudentItemResult();
+                MathStudentItemNumbersResult item2 = new MathStudentItemNumbersResult();
                 item2.Idea = "Opacos";
                 item2.Result = ConverteTextoPollMatematica(sondagem.Opacos, true);
                 pollTotal.Add(item2);
 
-                MathStudentItemResult item3 = new MathStudentItemResult();
+                MathStudentItemNumbersResult item3 = new MathStudentItemNumbersResult();
                 item3.Idea = "Transparentes";
                 item3.Result = ConverteTextoPollMatematica(sondagem.Transparentes, true);
                 pollTotal.Add(item3);
 
-                MathStudentItemResult item4 = new MathStudentItemResult();
+                MathStudentItemNumbersResult item4 = new MathStudentItemNumbersResult();
                 item4.Idea = "Terminam em Zero";
                 item4.Result = ConverteTextoPollMatematica(sondagem.TerminamZero, true);
                 pollTotal.Add(item4);
 
-                MathStudentItemResult item5 = new MathStudentItemResult();
+                MathStudentItemNumbersResult item5 = new MathStudentItemNumbersResult();
                 item5.Idea = "Algarismos Iguais";
                 item5.Result = ConverteTextoPollMatematica(sondagem.Algarismos, true);
                 pollTotal.Add(item5);
 
-                MathStudentItemResult item6 = new MathStudentItemResult();
+                MathStudentItemNumbersResult item6 = new MathStudentItemNumbersResult();
                 item6.Idea = "Processos de Generalização";
                 item6.Result = ConverteTextoPollMatematica(sondagem.Processo, true);
                 pollTotal.Add(item6);
 
-                MathStudentItemResult item7 = new MathStudentItemResult();
+                MathStudentItemNumbersResult item7 = new MathStudentItemNumbersResult();
                 item7.Idea = "Zeros Intercalados";
                 item7.Result = ConverteTextoPollMatematica(sondagem.ZeroIntercalados, true);
                 pollTotal.Add(item7);
 
                 result.Add(
-                    new PollReportMathStudentItem()
+                    new PollReportMathStudentNumbersItem()
                     {
                         Code = sondagem.AlunoEolCode,
                         StudentName = sondagem.AlunoNome,

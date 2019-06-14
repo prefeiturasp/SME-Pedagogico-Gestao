@@ -7,11 +7,7 @@ import StudentPollPortuguese from '../polls/StudentPollPortuguese'
 import StudentPollPortuguese3A from '../polls/StudentPollPortuguese3A'
 import LegendsReadWrite from '../polls/component/LegendsReadWrite'
 import LegendsReadWrite3A from '../polls/component/LegendsReadWrite3A'
-//Sondagem Portugues
-//verificar novamente as turmas que a sondagem de portugues será aplicada
-//Falta o componente receber a lista de alunos
-//preparado ajuste para alterar informações de input e legendas se
-//  é do 3A de portugues
+
 class StudentPollPortugueseCard extends Component {
     constructor(props) {
         super(props);
@@ -67,12 +63,12 @@ class StudentPollPortugueseCard extends Component {
         if (this.props.poll.pollYear === "3") {
             componentLegendRender = <LegendsReadWrite3A />
             rendererStudentPollPortuguese = this.props.students.map(student => (
-                <StudentPollPortuguese3A key={student.sequenceNumber} student={student} updatePollStudent={this.props.updatePollStudent} />
+                <StudentPollPortuguese3A key={student.sequenceNumber} student={student} updatePollStudent={this.props.updatePollStudent} editLock1b={this.props.editLock1b} editLock2b={this.props.editLock2b} editLock3b={this.props.editLock3b} editLock4b={this.props.editLock4b}/>
             ));
         } else {
             componentLegendRender = <LegendsReadWrite />;
             rendererStudentPollPortuguese = this.props.students.map(student => (
-                <StudentPollPortuguese key={student.sequenceNumber} student={student} updatePollStudent={this.props.updatePollStudent} />
+                <StudentPollPortuguese key={student.sequenceNumber} student={student} updatePollStudent={this.props.updatePollStudent} editLock1b={this.props.editLock1b} editLock2b={this.props.editLock2b} editLock3b={this.props.editLock3b} editLock4b={this.props.editLock4b}/>
             ));    
         }
 

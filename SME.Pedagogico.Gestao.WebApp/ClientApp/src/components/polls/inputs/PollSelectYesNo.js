@@ -24,6 +24,7 @@ export default class PollSelectYesNo extends Component {
     }
 
     onOptionChange(event) {
+        debugger;
         this.props.updatePollStudent(this.props.sequence, this.props.subjectName, this.props.name, event.target.value);
     }
 
@@ -31,7 +32,7 @@ export default class PollSelectYesNo extends Component {
         return (
 
             <div>
-                <select id={"pollItem-" + this.props.name + "-" + this.props.sequence} value={this.props.value} className={this.getColor(this.props.value)} onChange={this.onOptionChange}>
+                <select id={"pollItem-" + this.props.name + "-" + this.props.sequence} value={this.props.value} className={this.getColor(this.props.value)} onChange={this.onOptionChange} disabled={this.props.disabled ? true : null}>
                     <option defaultValue hidden className="text-muted" value=""></option>
                     <option className={"custom-select custom-select-sm text-white" + this.props.columnColor} value=""></option>
                     <option className={"custom-select custom-select-sm text-white" + this.props.columnColor} value="S">S</option>
