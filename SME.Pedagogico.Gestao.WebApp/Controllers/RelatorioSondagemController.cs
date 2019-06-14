@@ -50,12 +50,30 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 if (parameters.ClassroomReport)
                 {
-                    PollReportMathStudentResult result =  BuscaDadosMathTurmaAsync(parameters.Proficiency,
+                    if (parameters.Proficiency == "Números")
+                    {
+                        PollReportMathStudentNumbersResult result = BuscaDadosMathTurmaNumbersAsync(parameters.Proficiency,
                                                                                                   parameters.Term,
                                                                                                   parameters.CodigoDRE,
                                                                                                   parameters.CodigoEscola,
                                                                                                   parameters.CodigoTurmaEol, parameters.CodigoCurso);
-                    return (Ok(result));
+
+
+
+
+                        return (Ok(result));
+                    }
+                    else
+                    {
+                        PollReportMathStudentResult result = BuscaDadosMathTurmaAsync(parameters.Proficiency,
+                                                                                                      parameters.Term,
+                                                                                                      parameters.CodigoDRE,
+                                                                                                      parameters.CodigoEscola,
+                                                                                                      parameters.CodigoTurmaEol, parameters.CodigoCurso);
+
+
+                        return (Ok(result));
+                    }
 
                 }
 
@@ -75,6 +93,13 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             var businessPoll = new Data.Business.SondagemMatematicaTurma(_config);
 
             return businessPoll.BuscarDadosMatematicaPorTurmaAsync(proficiency, term, codigoDre, codigoEscola, codigoTurma, codigoCurso);
+
+        }
+        private PollReportMathStudentNumbersResult BuscaDadosMathTurmaNumbersAsync(string proficiency, string term, string codigoDre, string codigoEscola, string codigoTurma, string codigoCurso)
+        {
+            var businessPoll = new Data.Business.SondagemMatematicaTurma(_config);
+
+            return businessPoll.BuscarDadosMatematicaPorTurmaNumbersAsync(proficiency, term, codigoDre, codigoEscola, codigoTurma, codigoCurso);
 
         }
 
