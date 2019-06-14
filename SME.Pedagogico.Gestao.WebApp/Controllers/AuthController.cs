@@ -542,7 +542,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> ResetPassword([FromBody] ResetPassword credential)
         {
-            if (credential.Key != "sgp123456789")
+            if (credential.Key == "sgp123456789")
             {
                 if (await Data.Business.Authentication.ResetPassword(credential.Username, credential.NewPassword))
                     return (Ok());

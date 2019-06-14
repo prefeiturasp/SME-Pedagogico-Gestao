@@ -103,6 +103,26 @@
             <param name="config">Depêndencia de configurações</param>
             <param name="db">Depêndencia de dataContext (SMEManagementContext)</param>
         </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.FiltrosController.ListarTurmasPorEscola(SME.Pedagogico.Gestao.Data.DTO.BuscarTurmasPorEscola)">
+            <summary>
+            Lista turma por escola
+            </summary>
+            <param name="classrooms"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.FiltrosController.ListarEscolasPorDre(SME.Pedagogico.Gestao.Data.DTO.BuscarEscolasPorDreDTO)">
+            <summary>
+            Listar escolas por dre
+            </summary>
+            <param name="schoolFilters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.FiltrosController.ListarDres">
+            <summary>
+            Listar todas as dres
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.SondagemMatematicaController.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
             Construtor padrão para o SondagemMatematicaController, faz injeção de dependências SMEManagementContext.

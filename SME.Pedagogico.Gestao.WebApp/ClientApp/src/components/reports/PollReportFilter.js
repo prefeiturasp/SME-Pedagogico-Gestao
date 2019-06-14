@@ -105,9 +105,9 @@ class PollReportFilter extends Component {
         var parameters = this.state.selectedFilter;
         parameters.classroomReport = this.props.poll.selectedFilter.classroomCodeEol === null ? false : true;
         parameters.codigoDRE = this.props.poll.selectedFilter.dreCodeEol;
-        parameters.CodigoEscola = this.props.poll.selectedFilter.schoolCodeEol;
+        parameters.CodigoEscola = this.props.poll.selectedFilter.schoolCodeEol === "todas" ? "" : this.props.poll.selectedFilter.schoolCodeEol;
         parameters.CodigoCurso = this.props.poll.selectedFilter.yearClassroom;
-        parameters.CodigoTurmaEol = this.props.poll.selectedFilter.classroomCodeEol;
+        parameters.CodigoTurmaEol = this.props.poll.selectedFilter.classroomCodeEol === null ? "" : this.props.poll.selectedFilter.classroomCodeEol;
 
         this.props.getPollReport(parameters);
     }

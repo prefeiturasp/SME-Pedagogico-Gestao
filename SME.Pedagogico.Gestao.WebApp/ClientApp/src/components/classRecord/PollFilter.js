@@ -163,9 +163,9 @@ class PollFilter extends Component {
         });
 
         if (label === "todas") {
-            this.props.filterMethods.activeClassroom("todas");
+            this.props.filterMethods.activeClassroom("");
             this.props.filterMethods.getClassroom({
-                schoolCodeEol: "todas",
+                schoolCodeEol: "",
                 schoolYear: "2019",
             });
         }
