@@ -95,6 +95,27 @@ namespace SME.Pedagogico.Gestao.Data.Business
               
         }
 
+        public static async Task<bool> ResetPassword(string username, string newPassword)
+        {
+            using (Data.Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            {
+                Models.Authentication.User user = await
+                    (from current in db.Users
+                     where current.Name == username
+                     select current).FirstOrDefaultAsync();
+
+                if (user != null)
+                {
+                    user.Password = Functionalities.Cryptography.HashPassword(newPassword);
+                    await db.SaveChangesAsync();
+
+                    return (true);
+                }
+            }
+
+            return (false);
+        }
+
 
 
         public static async Task<bool> LoginUser(string username, string session, string refreshToken)
