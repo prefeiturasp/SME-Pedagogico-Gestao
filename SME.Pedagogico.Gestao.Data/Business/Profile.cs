@@ -39,7 +39,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             occupation.codigoCargo == "3301" ||
                             occupation.codigoCargo == "3336" ||
                             occupation.codigoCargo == "3379" ||
-                            occupation.codigoCargo == "3360")
+                            occupation.codigoCargo == "3360" ||
+                            occupation.codigoCargo == "3875")
                         {
                             occupationAccess = true;
                             break;
