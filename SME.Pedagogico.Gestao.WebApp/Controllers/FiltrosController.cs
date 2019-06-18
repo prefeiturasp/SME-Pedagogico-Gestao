@@ -23,6 +23,11 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             _config = config;
         }
 
+        /// <summary>
+        /// Lista turma por escola
+        /// </summary>
+        /// <param name="classrooms"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<string>> ListarTurmasPorEscola(BuscarTurmasPorEscola classrooms)
         {
@@ -48,6 +53,11 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Listar escolas por dre
+        /// </summary>
+        /// <param name="schoolFilters"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<string>> ListarEscolasPorDre(BuscarEscolasPorDreDTO schoolFilters)
         {
@@ -73,7 +83,11 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Listar todas as dres
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
         public async Task<ActionResult<string>> ListarDres()
         {
             try

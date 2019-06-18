@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
-using SME.Pedagogico.Gestao.Data.DataTransfer;
+using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.Functionalities;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO;
-using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.Data.Business
@@ -20,14 +20,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
             _token = createToken.CreateTokenProvisorio();
         }
 
-
+        EndpointsAPI endPoint = new EndpointsAPI();
         public async Task<RetornoCargosServidorDTO> GetOccupationsRF(string rf)
         {
             try
             {
                 // Pensar num fluxo para que os perfis da cotic enxerguem com duas visualizações 
                 // já que quem esta na tabela de privilegios atualmente nao passa aqui.
-                var endPoint = new EndpointsAPI();
+               
                 var profileApi = new PerfilSgpAPI(endPoint);
                 var occupations = await profileApi.GetCargosDeServidor(rf, _token);
                 bool occupationAccess = false; ;
@@ -38,7 +38,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         if (occupation.codigoCargo == "3239" ||
                             occupation.codigoCargo == "3301" ||
                             occupation.codigoCargo == "3336" ||
-                            occupation.codigoCargo == "3379")
+                            occupation.codigoCargo == "3379" ||
+                            occupation.codigoCargo == "3360")
                         {
                             occupationAccess = true;
                             break;
@@ -119,7 +120,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             try
             {
-                var endPoint = new EndpointsAPI();
                 var dreApi = new DREAPI(endPoint);
                 var listDres = await dreApi.GetDres(_token);
                 if (listDres != null)
@@ -162,6 +162,33 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 throw ex;
             }
 
+        }
+
+        public async Task<List<DREsDTO>> GetCodeDreAdm(string userName)
+        {
+            try
+            {
+                using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+                {
+                    var user = db.PrivilegedAccess.Where(x => x.Login == userName).FirstOrDefault();
+
+                    if(!string.IsNullOrEmpty(user.DreCodeEol))
+                    {
+                        var dreApi = new DREAPI(endPoint);
+                        return await dreApi.GetDresPorCodigo(user.DreCodeEol, _token);
+                    }
+
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

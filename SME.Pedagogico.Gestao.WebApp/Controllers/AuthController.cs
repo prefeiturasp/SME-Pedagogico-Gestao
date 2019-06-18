@@ -281,6 +281,11 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                             accessLevel = "27";
                             haveOccupationAccess = true;
                             break;
+                        case "3360":
+                            roleName = "Diretor";
+                            accessLevel = "27";
+                            haveOccupationAccess = true;
+                            break;
                         default:
                             haveOccupationAccess = false;
                             break;
@@ -469,6 +474,11 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     {
                         var boolean = await Authentication.SetRole(credential.Username, "Admin", "2");
                     }
+
+                    else if (userPrivileged.OccupationPlaceCode == 3)
+                    {
+                        await Authentication.SetRole(credential.Username, "Adm DRE", "21");
+                    }
                 }
 
                 // Se não possui acesso privilegiado é Cp ou professor
@@ -531,6 +541,24 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 else
                     return (Ok());
             }
+        }
+
+        /// <summary>
+        /// Método para resetar a senha do usuário desejado
+        /// </summary>
+        /// <param name="credential">Objeto contendo nome de usuário, nova senha e "key" para conseguir acessar a funcionalidade</param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<ActionResult<string>> ResetPassword([FromBody] ResetPassword credential)
+        {
+            if (credential.Key == "sgp123456789")
+            {
+                if (await Data.Business.Authentication.ResetPassword(credential.Username, credential.NewPassword))
+                    return (Ok());
+            }
+
+            return (Forbid());
         }
 
         #endregion -------------------- PUBLIC --------------------

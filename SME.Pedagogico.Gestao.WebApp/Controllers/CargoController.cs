@@ -74,5 +74,27 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 return StatusCode(500, ex);
             }
         }
+
+        [HttpPost]
+        public async Task<ActionResult> RetornaCodigoDREAdm([FromBody]string userName)
+        {
+            try
+            {
+                var profileBusiness = new Profile(_config);
+                var dre = await profileBusiness.GetCodeDreAdm(userName);
+                if (dre != null)
+                {
+                    return (Ok(dre));
+                }
+                else
+                {
+                    return (NoContent());
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
     }
 }

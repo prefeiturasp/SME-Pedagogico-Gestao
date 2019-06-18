@@ -5,18 +5,41 @@ import { connect } from 'react-redux';
 import { actionCreators } from '../../store/User';
 import { actionCreators as pollRouterActionCreators } from '../../store/PollRouter';
 import { bindActionCreators } from 'redux';
+import { ROLES_ENUM } from '../../Enums';
 import Breadcrumb from './Breadcrumb';
 
 class TopMenu extends Component {
     constructor() {
         super();
-
+        this.state = {
+            isVisible: false
+        }
         this.logout = this.logout.bind(this);
         this.changeRoutePoll = this.changeRoutePoll.bind(this);
         this.changeRoutePollReport = this.changeRoutePollReport.bind(this);
+        this.setVisiblePoll = this.setVisiblePoll.bind(this);
     }
 
+    setVisiblePoll() {
+        this.setState({
+            isVisible: true     
+        });
+    }
+
+
     componentWillMount() {
+      
+        if (this.props.user.activeRole.roleName === ROLES_ENUM.PROFESSOR ||
+            this.props.user.activeRole.roleName === ROLES_ENUM.COORDENADOR_PEDAGOGICO ||
+            this.props.user.activeRole.roleName === ROLES_ENUM.ADMIN) {
+           this.setVisiblePoll();
+           this.changeRoutePoll();
+
+        }
+
+        else {
+            this.changeRoutePollReport();
+        }
         var pathname = document.location.pathname;
         switch (pathname) {
             case "/":
@@ -44,7 +67,7 @@ class TopMenu extends Component {
 
     render() {
         return (
-            <div id="top-menu" className="d-flex w-auto">
+            <div id="top-menu" className="d-flex w-auto" >
                 <div id="logo-content-top-menu" className="d-flex justify-content-center align-items-center clickable">
                     <Link to="/">
                         <img id="logo-top-menu" src="./img/RegistreSME_V3.svg" alt="Logo" />
@@ -56,11 +79,11 @@ class TopMenu extends Component {
                     <div className="d-flex flex-fill ml-4"></div>
 
                     <div className="d-flex h-100">
-                        <div className={this.props.pollRouter.activeRoute === "Sondagem" ? "border-left top-navigation-button-selected" : "border-left top-navigation-button"}>
+                        {this.state.isVisible && <div className={this.props.pollRouter.activeRoute === "Sondagem" ? "border-left top-navigation-button-selected" : "border-left top-navigation-button"}>
                             <Link className="d-flex align-items-center h-100 w-100" to="/" onClick={this.changeRoutePoll}>
                                 <small className="mx-3 font-weight-light text-muted">Sondagem</small>
                             </Link>
-                        </div>
+                        </div>}
 
                         <div className={this.props.pollRouter.activeRoute === "Relatórios" ? "mr-3 border border-top-0 border-bottom-0 top-navigation-button-selected" : "mr-3 border border-top-0 border-bottom-0 top-navigation-button"}>
                             <a className="d-flex align-items-center h-100 w-100" href="/Relatorios/Sondagem" onClick={this.changeRoutePollReport}>

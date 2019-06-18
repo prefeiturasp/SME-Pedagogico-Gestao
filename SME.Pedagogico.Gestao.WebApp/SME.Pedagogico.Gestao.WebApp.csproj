@@ -26,9 +26,65 @@
 
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
+    <Compile Remove="ClientApp\build\**" />
     <Content Remove="$(SpaRoot)**" />
+    <Content Remove="ClientApp\build\**" />
+    <EmbeddedResource Remove="ClientApp\build\**" />
     <None Remove="$(SpaRoot)**" />
+    <None Remove="ClientApp\build\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ClientApp\build\asset-manifest.json" />
+    <None Remove="ClientApp\build\favicon.ico" />
+    <None Remove="ClientApp\build\img\default_avatar.png" />
+    <None Remove="ClientApp\build\img\icon_2_mat_9975FF.svg" />
+    <None Remove="ClientApp\build\img\icon_2_mat_FFFFFF.svg" />
+    <None Remove="ClientApp\build\img\icon_2_pt_7C4DFF.svg" />
+    <None Remove="ClientApp\build\img\icon_2_pt_DADADA.svg" />
+    <None Remove="ClientApp\build\img\icon_mat_9975FF.png" />
+    <None Remove="ClientApp\build\img\icon_mat_9975FF.svg" />
+    <None Remove="ClientApp\build\img\icon_mat_FFFFFF.png" />
+    <None Remove="ClientApp\build\img\icon_mat_FFFFFF.svg" />
+    <None Remove="ClientApp\build\img\icon_pt_7C4DFF.png" />
+    <None Remove="ClientApp\build\img\icon_pt_7C4DFF.svg" />
+    <None Remove="ClientApp\build\img\icon_pt_DADADA.png" />
+    <None Remove="ClientApp\build\img\icon_pt_DADADA.svg" />
+    <None Remove="ClientApp\build\img\LogoSGP_mobile.svg" />
+    <None Remove="ClientApp\build\img\logo_prefeitura_white.svg" />
+    <None Remove="ClientApp\build\img\RegistreSME_V3.png" />
+    <None Remove="ClientApp\build\img\RegistreSME_V3.svg" />
+    <None Remove="ClientApp\build\index.html" />
+    <None Remove="ClientApp\build\manifest.json" />
+    <None Remove="ClientApp\build\precache-manifest.c54e522b4e4be65f764ec87912ce014b.js" />
+    <None Remove="ClientApp\build\service-worker.js" />
+    <None Remove="ClientApp\build\sgp.ico" />
+    <None Remove="ClientApp\build\static\css\2.1ab14258.chunk.css" />
+    <None Remove="ClientApp\build\static\css\2.1ab14258.chunk.css.map" />
+    <None Remove="ClientApp\build\static\css\main.3f12c378.chunk.css" />
+    <None Remove="ClientApp\build\static\css\main.3f12c378.chunk.css.map" />
+    <None Remove="ClientApp\build\static\js\2.90b7a618.chunk.js" />
+    <None Remove="ClientApp\build\static\js\2.90b7a618.chunk.js.map" />
+    <None Remove="ClientApp\build\static\js\main.6b954415.chunk.js" />
+    <None Remove="ClientApp\build\static\js\main.6b954415.chunk.js.map" />
+    <None Remove="ClientApp\build\static\js\runtime~main.a8a9905a.js" />
+    <None Remove="ClientApp\build\static\js\runtime~main.a8a9905a.js.map" />
+    <None Remove="ClientApp\build\static\media\fa-brands-400.2ef8ba34.woff" />
+    <None Remove="ClientApp\build\static\media\fa-brands-400.5bf14553.svg" />
+    <None Remove="ClientApp\build\static\media\fa-brands-400.5e2f9212.woff2" />
+    <None Remove="ClientApp\build\static\media\fa-brands-400.98b6db59.ttf" />
+    <None Remove="ClientApp\build\static\media\fa-brands-400.a7b95dbd.eot" />
+    <None Remove="ClientApp\build\static\media\fa-regular-400.427d721b.woff" />
+    <None Remove="ClientApp\build\static\media\fa-regular-400.5eb754ab.svg" />
+    <None Remove="ClientApp\build\static\media\fa-regular-400.65b9977a.ttf" />
+    <None Remove="ClientApp\build\static\media\fa-regular-400.dcce4b7f.eot" />
+    <None Remove="ClientApp\build\static\media\fa-regular-400.e6257a72.woff2" />
+    <None Remove="ClientApp\build\static\media\fa-solid-900.418dad87.woff2" />
+    <None Remove="ClientApp\build\static\media\fa-solid-900.46e7cec6.eot" />
+    <None Remove="ClientApp\build\static\media\fa-solid-900.49279363.svg" />
+    <None Remove="ClientApp\build\static\media\fa-solid-900.a7140145.woff" />
+    <None Remove="ClientApp\build\static\media\fa-solid-900.ff8d9f8a.ttf" />
   </ItemGroup>
 
   <ItemGroup>

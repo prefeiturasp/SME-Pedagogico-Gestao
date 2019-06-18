@@ -89,12 +89,39 @@
             <param name="credential">Objeto que contém informações da credencial do usuário, neste caso específico é necessário o atributo username</param>
             <returns>Sucesso (status code 200) caso seja possível deslogar o usuário desejado.</returns>
         </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.AuthController.ResetPassword(SME.Pedagogico.Gestao.WebApp.Models.Auth.ResetPassword)">
+            <summary>
+            Método para resetar a senha do usuário desejado
+            </summary>
+            <param name="credential">Objeto contendo nome de usuário, nova senha e "key" para conseguir acessar a funcionalidade</param>
+            <returns></returns>
+        </member>
         <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.ClassRoomStudentsController.#ctor(Microsoft.Extensions.Configuration.IConfiguration,SME.Pedagogico.Gestao.WebApp.Contexts.SMEManagementContext)">
             <summary>
             Construtor padrão para o ClassRoomStudents, faz injeção de dependências de IConfiguration e SMEManagementContext.
             </summary>
             <param name="config">Depêndencia de configurações</param>
             <param name="db">Depêndencia de dataContext (SMEManagementContext)</param>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.FiltrosController.ListarTurmasPorEscola(SME.Pedagogico.Gestao.Data.DTO.BuscarTurmasPorEscola)">
+            <summary>
+            Lista turma por escola
+            </summary>
+            <param name="classrooms"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.FiltrosController.ListarEscolasPorDre(SME.Pedagogico.Gestao.Data.DTO.BuscarEscolasPorDreDTO)">
+            <summary>
+            Listar escolas por dre
+            </summary>
+            <param name="schoolFilters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.FiltrosController.ListarDres">
+            <summary>
+            Listar todas as dres
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.SondagemMatematicaController.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>

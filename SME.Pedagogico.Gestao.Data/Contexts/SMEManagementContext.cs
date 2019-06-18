@@ -66,7 +66,7 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
         {
             optionsBuilder.UseNpgsql(connectionString);
         }
-
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Seed para os perfis
@@ -80,7 +80,8 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
                 new Models.Authentication.Role() { Name = "Auxiliar" },
                 new Models.Authentication.Role() { Name = "Professor" },
                 new Models.Authentication.Role() { Name = "Responsavel" },
-                new Models.Authentication.Role() { Name = "Aluno" }
+                new Models.Authentication.Role() { Name = "Aluno" },
+                new Models.Authentication.Role() { Name = "Adm DRE"}
             };
             modelBuilder.Entity<Models.Authentication.Role>().HasData(roles);
 
@@ -135,7 +136,7 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
                 new  Models.Academic.PollType() { PollTypeDescription = "Sondagem de Alfabetização de Matemática"}
             };
 
-            modelBuilder.Entity<Models.Academic.PollType>().HasData(pollTypes);          
+            modelBuilder.Entity<Models.Academic.PollType>().HasData(pollTypes);
 
             Models.Authentication.PrivilegedAccess[] pvAccess = new Models.Authentication.PrivilegedAccess[]
             {
@@ -144,7 +145,9 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
                     Login = "caique.amcom",
                     Name  = "Caique Latorre",
                     OccupationPlace = "AMCOM",
-                    OccupationPlaceCode = 1
+                    OccupationPlaceCode = 1,
+                    DreCodeEol = "",
+
 
                 },
                   new Models.Authentication.PrivilegedAccess()
@@ -152,7 +155,8 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
                     Login = "massato.amcom",
                     Name  = "Massato Kanno",
                     OccupationPlace = "AMCOM",
-                    OccupationPlaceCode = 1
+                    OccupationPlaceCode = 1,
+                    DreCodeEol = ""
 
                 },
 
@@ -161,7 +165,8 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
                     Login = "daniel.amcom",
                     Name  = "Daniel Matsumoto",
                     OccupationPlace = "AMCOM",
-                    OccupationPlaceCode = 1
+                    OccupationPlaceCode = 1,
+                    DreCodeEol = ""
 
                 },
 
@@ -171,7 +176,8 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
                     Login = "danielli.amcom",
                     Name  = "Danielli",
                     OccupationPlace = "AMCOM",
-                    OccupationPlaceCode = 1
+                    OccupationPlaceCode = 1,
+                    DreCodeEol = ""
 
                 },
                 new Models.Authentication.PrivilegedAccess()
@@ -179,14 +185,16 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
                     Login = "jeff.amcom",
                     Name  = "Jeff",
                     OccupationPlace = "AMCOM",
-                    OccupationPlaceCode = 1
+                    OccupationPlaceCode = 1,
+                    DreCodeEol = ""
                 },
                 new Models.Authentication.PrivilegedAccess()
                 {
                     Login = "aline.amcom",
                     Name  = "Aline",
                     OccupationPlace = "AMCOM",
-                    OccupationPlaceCode = 1
+                    OccupationPlaceCode = 1,
+                    DreCodeEol = ""
                 },
 
                 new Models.Authentication.PrivilegedAccess()
@@ -194,7 +202,8 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
                     Login = "gabi.sme",
                     Name  = "Gabi",
                     OccupationPlace = "SME",
-                    OccupationPlaceCode = 2
+                    OccupationPlaceCode = 2,
+                    DreCodeEol = ""
                 },
 
                 new Models.Authentication.PrivilegedAccess()
@@ -202,8 +211,19 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
                     Login = "heloisa.sme",
                     Name  = "Heloisa Giannichi",
                     OccupationPlace = "SME",
-                    OccupationPlaceCode = 2
+                    OccupationPlaceCode = 2,
+                    DreCodeEol = ""
                 },
+
+                new Models.Authentication.PrivilegedAccess()
+                {
+                    Login = "7418078",
+                    Name  = "Annaa Luisa de Castro",
+                    OccupationPlace = "DIRETORIA REGIONAL DE EDUCACAO BUTANTA",
+                    OccupationPlaceCode = 3,
+                    DreCodeEol = "108100"
+                },
+
 
             };
             modelBuilder.Entity<Models.Authentication.PrivilegedAccess>().HasData(pvAccess);
