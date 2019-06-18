@@ -1,14 +1,15 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
+using static System.Text.Encoding;
 
 namespace SME.Pedagogico.Gestao.Data.Functionalities
 {
- public  class CreateToken
+    public  class CreateToken
     {
         // Passar o método de gerar token pra ca
         private IConfiguration _config;
@@ -26,12 +27,15 @@ namespace SME.Pedagogico.Gestao.Data.Functionalities
         /// <returns>Token gerado à partir das informações do usuário.</returns>
         public string CreateTokenProvisorio()
         {
+            var nomeSistema = _config["JwtSettings:NomeSGP"];
             string username = "Caique.amcom";
             // Adicionar Claims para restringir o acesso dos usuários a determinados conteudos
             Claim[] claims = new Claim[]
             {
                 //new Claim(JwtRegisteredClaimNames.Sub, user.Name),
                 new Claim("username", username),
+                new Claim("hash", CriaHash(nomeSistema)),
+                new Claim("id_sistema", _config["JwtSettings:IdSistema"]),
                 //new Claim(JwtRegisteredClaimNames.Email, user.email),
                 //new Claim(JwtRegisteredClaimNames.Birthdate, user.birthdate.ToString("yyyy-MM-dd")),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
@@ -47,6 +51,24 @@ namespace SME.Pedagogico.Gestao.Data.Functionalities
                 signingCredentials: creds);
 
             return (new JwtSecurityTokenHandler().WriteToken(token));
+        }
+
+        private string CriaHash(string nomeSistema)
+        {
+            byte[] hash;
+
+            using (var algoritmoHash = SHA256.Create())
+            {
+                hash = algoritmoHash.ComputeHash(UTF8.GetBytes(nomeSistema));
+            }
+
+            var sb = new StringBuilder();
+            for (int i = 0; i < hash.Length; i++)
+            {
+                sb.Append(hash[i].ToString("x2"));
+            }
+
+            return sb.ToString();
         }
 
         /// <summary>
