@@ -64,7 +64,7 @@ export default class LegendsReadWrite extends Component {
                                     <div className="ml-auto p-2"><small className="text-muted">Nível 2</small></div>
                                 </div>
                                 <div className="d-flex line max-column-size">
-                                    <div className="p-2 p-2sondagem"><small className="text-muted">Não associou nenhum(a) da(s) palavras ou títulos às imagens correspondentes</small></div>
+                                    <div className="p-2 p-2sondagem"><small className="text-muted">Associou 2 ou menos palavras ou títulos às imagens correspondentes</small></div>
                                     <div className="ml-auto p-2"><small className="text-muted">Nível 3</small></div>
                                 </div>
                                 <div className="d-flex max-column-size">
