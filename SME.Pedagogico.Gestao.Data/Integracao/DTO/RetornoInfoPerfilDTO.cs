@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
+using System.Collections.Generic;
 
 namespace SME.Pedagogico.Gestao.Data.Integracao.DTO
 {
@@ -6,7 +7,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.DTO
     {
         public string NomeServidor { get; set; }
         public string CodigoServidor { get; set; }
-        public HashSet<RetornoDREDTO> DREs { get; set; }
+        public HashSet<DREsDTO> DREs { get; set; }
         public HashSet<RetornoEscolaDTO> Escolas { get; set; }
         public HashSet<RetornoTurmaDTO> Turmas { get; set; }
     }
