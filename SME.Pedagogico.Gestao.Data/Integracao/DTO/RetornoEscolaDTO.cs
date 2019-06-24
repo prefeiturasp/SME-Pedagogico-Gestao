@@ -7,7 +7,9 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.DTO
         [JsonProperty(PropertyName = "Codigo")]
         public string CodigoEscola { get; set; }
         public string CodigoDRE { get; set; }
-        public string Nome { get; set; }
+        
+        [JsonProperty(PropertyName = "Nome")]
+        public string NomeEscola { get; set; }
         public string Sigla { get; set; }
     }
 }
