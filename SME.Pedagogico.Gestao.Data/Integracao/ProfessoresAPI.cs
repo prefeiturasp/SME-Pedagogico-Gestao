@@ -16,13 +16,13 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
             this.endpointsAPI = endpointsAPI;
         }
 
-        public async Task<List<BuscaTurmasAtribuidasDTO>> GetTurmasDoProfessor(string codigoRF, int codigoUE, string anoLetivo, string token)
+        public async Task<List<BuscaTurmasAtribuidasDTO>> GetTurmasDoProfessor(string codigoRF, int codigoEscola, string anoLetivo, string token)
         { 
             var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.BuscaTurmasDeProfessores);
               
             return await HttpHelper
                 .GetAsync<List<BuscaTurmasAtribuidasDTO>>
-                      (token, string.Format(url, codigoRF, codigoUE, anoLetivo));
+                      (token, string.Format(url, codigoRF, codigoEscola, anoLetivo));
         }
 
     }

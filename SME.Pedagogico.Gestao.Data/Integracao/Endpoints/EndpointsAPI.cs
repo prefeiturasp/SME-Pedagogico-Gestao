@@ -16,7 +16,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
 
         public string BuscaCargos { get; set; } = "cargos";
 
-        //professores/{codigoRF}/escolas/{codigoUE}/anos_letivos/{anoLetivo}
+        //professores/{codigoRF}/escolas/{codigoEscola}/anos_letivos/{anoLetivo}
         public string BuscaTurmasDeProfessores { get; set; } = "professores/{0}/escolas/{1}/anos_letivos/{2}";
         // Turmas por escola 
         // Escolas por DRE 
@@ -47,15 +47,15 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
         //HttpGet("tipos_unidade_educacao")]
         public string BuscaTiposUE { get; set; } = "escolas/tipos_unidade_educacao";
 
-        //HttpGet("{codigoUE}/salas/{tipoSala}/anos_letivos/{anoLetivo}")]
+        //HttpGet("{codigoEscola}/salas/{tipoSala}/anos_letivos/{anoLetivo}")]
         public string BuscaTurmasDoTipoSala { get; set; } = "escolas/{0}/salas/{1}/anos_letivos/{2}";
 
 
 
-        //HttpGet("{codigoUE}/funcionarios")]
+        //HttpGet("{codigoEscola}/funcionarios")]
         public string BuscaFuncionariosdaEscola { get; set; } = "escolas/{0}/funcionarios";
 
-        //HttpGet("{codigoUE}/funcionarios/cargos/{codigoCargo}")]
+        //HttpGet("{codigoEscola}/funcionarios/cargos/{codigoCargo}")]
         public string BuscaFuncionariosdaEscolaPorCargo { get; set; } = "escolas/{0}/funcionarios/cargos/{1}";
 
 
@@ -63,7 +63,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
         public string BuscaSubprefeiturasPor { get; set; } = "escolas/{0}/subprefeituras";
 
 
-        //HttpGet("{codigoUE}/turmas/anos_letivos/{anoLetivo}")]
+        //HttpGet("{codigoEscola}/turmas/anos_letivos/{anoLetivo}")]
         public string BuscaTurmasPorEscola { get; set; } = "escolas/{0}/turmasSondagem/anos_letivos/{1}";
 
         // ******  FIM   Métodos da API Escola  **************************************************************************

@@ -25,13 +25,13 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
                       (token, string.Format(url, codigoEol));
         }
 
-        public async Task<List<BuscaProfessorDTO>> GetProfessores(string codigoEolEscola, int anoLetivo, string token)
+        public async Task<List<BuscaProfessorDTO>> GetProfessores(string codigoEscola, int anoLetivo, string token)
         {
             var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.BuscaProfessores);
 
             return await HttpHelper
                 .GetAsync<List<BuscaProfessorDTO>>
-                      (token, string.Format(url, codigoEolEscola, anoLetivo));
+                      (token, string.Format(url, codigoEscola, anoLetivo));
         }
 
         public async Task<List<string>> GetModalidadesEnsino(string token)
@@ -52,50 +52,50 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
                       (token, string.Format(url));
         }
 
-        public async Task<List<SalasPorUEDTO>> GetTurmasDoTipoSala(int codigoUE, string tipoSala, string anoLetivo, string token)
+        public async Task<List<SalasPorUEDTO>> GetTurmasDoTipoSala(int codigoEscola, string tipoSala, string anoLetivo, string token)
         {
             var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.BuscaTurmasDoTipoSala);
 
             return await HttpHelper
                 .GetAsync<List<SalasPorUEDTO>>
-                      (token, string.Format(url, codigoUE, tipoSala, anoLetivo));
+                      (token, string.Format(url, codigoEscola, tipoSala, anoLetivo));
         }
 
-        public async Task<List<FuncionariosDTO>> GetFuncionarios(  string codigoUE, string token)
+        public async Task<List<FuncionariosDTO>> GetFuncionarios(string codigoEscola, string token)
         {
             var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.BuscaFuncionariosdaEscola);
 
             return await HttpHelper
                 .GetAsync<List<FuncionariosDTO>>
-                      (token, string.Format(url, codigoUE));
+                      (token, string.Format(url, codigoEscola));
         }
 
-        public async Task<List<FuncionariosDTO>> GetFuncionariosPorCargo(string codigoCargo, string codigoUE, string token)
+        public async Task<List<FuncionariosDTO>> GetFuncionariosPorCargo(string codigoCargo, string codigoEscola, string token)
         {
             var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.BuscaFuncionariosdaEscolaPorCargo);
 
             return await HttpHelper
                 .GetAsync<List<FuncionariosDTO>>
-                      (token, string.Format(url, codigoCargo, codigoUE));
+                      (token, string.Format(url, codigoCargo, codigoEscola));
         }
 
 
-        public async Task<List<SubprefeituraDTO>> GetSubprefeiturasPor(string codigoEscolaEol, string token)
+        public async Task<List<SubprefeituraDTO>> GetSubprefeiturasPor(string codigoEscola, string token)
         {
             var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.BuscaSubprefeiturasPor);
 
             return await HttpHelper
                 .GetAsync<List<SubprefeituraDTO>>
-                      (token, string.Format(url, codigoEscolaEol));
+                      (token, string.Format(url, codigoEscola));
         }
 
-        public async Task<List<SalasPorUEDTO>> GetTurmasPorEscola(int codigoUE, string anoLetivo, string token)
+        public async Task<List<SalasPorUEDTO>> GetTurmasPorEscola(int codigoEscola, string anoLetivo, string token)
         {
             var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.BuscaTurmasPorEscola);
 
             return await HttpHelper
                 .GetAsync<List<SalasPorUEDTO>>
-                      (token, string.Format(url, codigoUE, anoLetivo));
+                      (token, string.Format(url, codigoEscola, anoLetivo));
         }
     }
 }
