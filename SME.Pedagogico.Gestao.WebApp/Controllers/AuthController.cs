@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using SME.Pedagogico.Gestao.Data.Business;
+using SME.Pedagogico.Gestao.Data.DTO;
+using SME.Pedagogico.Gestao.Data.Integracao.DTO;
 using SME.Pedagogico.Gestao.Models.Authentication;
 using SME.Pedagogico.Gestao.WebApp.Contexts;
 using SME.Pedagogico.Gestao.WebApp.Models.Auth;
-using SME.Pedagogico.Gestao.Data.Business;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -16,7 +18,6 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using SME.Pedagogico.Gestao.Data.Integracao.DTO;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
@@ -547,18 +548,23 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// Método para resetar a senha do usuário desejado
         /// </summary>
         /// <param name="credential">Objeto contendo nome de usuário, nova senha e "key" para conseguir acessar a funcionalidade</param>
-        /// <returns></returns>
+        /// <returns>Caso erro na validação da senha, retorna array de strings com msgs de erro</returns>
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult<string>> ResetPassword([FromBody] ResetPassword credential)
+        public ActionResult<string> ResetPassword([FromBody] ResetPasswordDTO credential)
         {
             if (credential.Key == "sgp123456789")
             {
-                if (await Data.Business.Authentication.ResetPassword(credential.Username, credential.NewPassword))
-                    return (Ok());
+                if (Authentication.ResetPassword(credential, out IEnumerable<string> validationErrors))
+                {
+                    return Ok();
+                } else
+                {
+                    return BadRequest(validationErrors);
+                }
             }
 
-            return (Forbid());
+            return Forbid();
         }
 
         #endregion -------------------- PUBLIC --------------------

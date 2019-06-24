@@ -1,9 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SME.Pedagogico.Gestao.Data.DataTransfer;
+using SME.Pedagogico.Gestao.Data.DTO;
+using SME.Pedagogico.Gestao.Data.Enums;
+using SME.Pedagogico.Gestao.Models.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Cryptography = SME.Pedagogico.Gestao.Data.Functionalities.Cryptography;
 
 namespace SME.Pedagogico.Gestao.Data.Business
 {
@@ -93,28 +98,59 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public static async Task<bool> ResetPassword(string username, string newPassword)
+        public static bool ResetPassword(ResetPasswordDTO credentials, out IEnumerable<string> validationErrors)
         {
             using (Data.Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
             {
-                Models.Authentication.User user = await
+                User user = 
                     (from current in db.Users
-                     where current.Name == username
-                     select current).FirstOrDefaultAsync();
+                     where current.Name == credentials.Username
+                     select current).FirstOrDefault();
+
+                validationErrors = default;
 
                 if (user != null)
                 {
-                    user.Password = Functionalities.Cryptography.HashPassword(newPassword);
-                    await db.SaveChangesAsync();
+                    validationErrors = ValidatePassword(credentials, user);
 
-                    return (true);
+                    if (validationErrors.Count() < 1)
+                    {
+                        user.Password = Cryptography.HashPassword(credentials.NewPassword);
+
+                        return db.SaveChanges() > 0;
+                    }
                 }
-            }
 
-            return (false);
+                return false;
+            }
         }
 
+        private static IEnumerable<string> ValidatePassword(ResetPasswordDTO credentials, User user)
+        {
+            var oldPasswordHash = Cryptography.HashPassword(credentials.OldPassword);
+            var anyUpperCaseLetterPattern = @"[A-Z]+";
+            var anyDigitPattern = @"\d+";
+            var anySpecialCharactertPattern = @"[^a-zA-Z0-9]";
 
+            if (oldPasswordHash != user.Password)
+            {
+                yield return PasswordValidationMsgsEnum.WRONG_OLD_PASSWORD.Text;
+            }
+
+            if (credentials.NewPassword != credentials.NewPasswordRepeat)
+            {
+                yield return PasswordValidationMsgsEnum.PASSWORDS_CONFIRMATION_DIFF.Text;
+            }
+
+            if (credentials.NewPassword.Length < 8 || !(Regex.IsMatch(credentials.NewPassword, anyUpperCaseLetterPattern) && 
+                                                        Regex.IsMatch(credentials.NewPassword, anyDigitPattern) &&
+                                                        Regex.IsMatch(credentials.NewPassword, anySpecialCharactertPattern)))
+            {
+                yield return PasswordValidationMsgsEnum.PASSWORD_INSUFFICIENT_COMPLEXITY.Text;
+            }
+
+            yield break;
+        }
 
         public static async Task<bool> LoginUser(string username, string session, string refreshToken)
         {
