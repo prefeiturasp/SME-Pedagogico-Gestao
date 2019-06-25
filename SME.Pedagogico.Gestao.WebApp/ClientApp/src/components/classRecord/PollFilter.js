@@ -49,7 +49,6 @@ class PollFilter extends Component {
                 anoLetivo: '2019',
             }
 
-
             this.props.filterMethods.getFilters_teacher(profileOccupatios);
             //if (this.props.filters.filterTeachers !== null) {
             //    if (this.props.filters.filterTeachers.drEs.length == 1) {

@@ -7,7 +7,7 @@ const AuthenticatedDashboardRoute = ({ component: C, user, ...rest }) => {
     return (
         <Route {...rest}
             render={props => user.isAuthenticated
-                ? (
+                ? ( 
                     <Dashboard>
                         <C />
                     </Dashboard>

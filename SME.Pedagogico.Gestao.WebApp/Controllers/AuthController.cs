@@ -411,6 +411,29 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     //Se possui acesso privilegiado 
                     if (userPrivileged != null)
                     {
+                        var Roles = await GetUserRoles(credential.Username);
+                        bool existsRolePrivilegied = false; ;
+                        foreach (var role in Roles)
+                        {
+                            if (role.RoleName == "Admin" ||
+                               role.RoleName == "Adm DRE")
+                            {
+                                existsRolePrivilegied = true;
+                            }
+                        }
+
+                        if (!existsRolePrivilegied)
+                        {
+                            await SetRolePrivilegied(credential, userPrivileged);
+                        }
+
+                        // Verifica se o cargo dele pode acessar o sistema 
+                        var occupations = await ProfileBusiness.GetOccupationsRF(credential.Username);
+                        if (occupations != null)
+                        {
+                            //  await Authentication.RegisterUser(credential.Username, credential.Password);
+                            listOccupations = await SetOccupationsRF(credential.Username, occupations);
+                        }
                         string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
                         string refreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
                         await Data.Business.Authentication.LoginUser(credential.Username, session, refreshToken); // Loga o usuário no sistema
@@ -421,6 +444,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                             Session = session,
                             RefreshToken = refreshToken,
                             Roles = await GetUserRoles(credential.Username),
+                            ListOccupations = listOccupations,
                         }));
                     }
 
@@ -466,19 +490,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     //Registra o usuário no sistema
                     await Authentication.RegisterUser(credential.Username, credential.Password);
 
-                    if (userPrivileged.OccupationPlace == "AMCOM")
-                    {
-                        var boolean = await Authentication.SetRole(credential.Username, "Admin", "0");
-                    }
-                    else if (userPrivileged.OccupationPlace == "SME")
-                    {
-                        var boolean = await Authentication.SetRole(credential.Username, "Admin", "2");
-                    }
-
-                    else if (userPrivileged.OccupationPlaceCode == 3)
-                    {
-                        await Authentication.SetRole(credential.Username, "Adm DRE", "21");
-                    }
+                    await SetRolePrivilegied(credential, userPrivileged);
                 }
 
                 // Se não possui acesso privilegiado é Cp ou professor
@@ -511,6 +523,23 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     ListOccupations = listOccupations,
                     Roles = await GetUserRoles(credential.Username)
                 }));
+            }
+        }
+
+        private static async Task SetRolePrivilegied(CredentialModel credential, Data.DataTransfer.PrivilegedAccessModel userPrivileged)
+        {
+            if (userPrivileged.OccupationPlace == "AMCOM")
+            {
+                var boolean = await Authentication.SetRole(credential.Username, "Admin", "0");
+            }
+            else if (userPrivileged.OccupationPlace == "SME")
+            {
+                var boolean = await Authentication.SetRole(credential.Username, "Admin", "2");
+            }
+
+            else if (userPrivileged.OccupationPlaceCode == 3)
+            {
+                await Authentication.SetRole(credential.Username, "Adm DRE", "21");
             }
         }
 
