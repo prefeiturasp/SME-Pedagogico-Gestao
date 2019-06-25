@@ -7,3 +7,10 @@
     background-color: rgba(3, 3, 3, 0.3);
     z-index: 10;
 }
+
+.btn-message{
+    width:109px;
+}
+.btn-message:hover {
+    background-color: #064f79;
+}

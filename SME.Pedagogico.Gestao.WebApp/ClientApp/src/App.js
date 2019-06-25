@@ -14,7 +14,6 @@ import PollReport from './components/reports/PollReport';
 import Documents from './components/classRecord/Documents';
 import NotFound from './components/navigation/NotFound';
 
-import Botao from './components/temp/Botao'
 export default class App extends Component {
     static displayName = App.name;
 
@@ -31,8 +30,6 @@ export default class App extends Component {
                 <AuthenticatedDashboardRoute path="/Usuario/TrocarPerfil" exact component={SelectProfile} />
                 <AuthenticatedDashboardRoute path="/" exact component={Poll} />
                 <AuthenticatedDashboardRoute path="/Relatorios/Sondagem" exact component={PollReport} />
-
-                <UnauthenticatedRoute path="/Botao" exact component={Botao} />
 
                 <Route component={NotFound} />
             </Switch>

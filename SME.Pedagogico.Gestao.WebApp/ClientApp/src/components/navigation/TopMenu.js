@@ -1,23 +1,31 @@
 ﻿import React, { Component } from 'react';
+
 import './TopMenu.css'
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { actionCreators } from '../../store/User';
 import { actionCreators as pollRouterActionCreators } from '../../store/PollRouter';
+import { actionCreators as dataActionCreators } from '../../store/Data';
+
 import { bindActionCreators } from 'redux';
 import { ROLES_ENUM } from '../../Enums';
 import Breadcrumb from './Breadcrumb';
+
+import TwoSteps from '../messaging/TwoSteps'
 
 class TopMenu extends Component {
     constructor() {
         super();
         this.state = {
-            isVisible: false
+            isVisible: false,
+            showMessageBox:false,
         }
         this.logout = this.logout.bind(this);
         this.changeRoutePoll = this.changeRoutePoll.bind(this);
         this.changeRoutePollReport = this.changeRoutePollReport.bind(this);
         this.setVisiblePoll = this.setVisiblePoll.bind(this);
+
+        this.toggleMessageBox = this.toggleMessageBox.bind(this);
     }
 
     setVisiblePoll() {
@@ -59,15 +67,27 @@ class TopMenu extends Component {
 
     changeRoutePoll() {
         this.props.pollRouterMethods.setActiveRoute("Sondagem");
+        this.props.dataMethods.reset_new_data_state();
+        
     }
 
     changeRoutePollReport() {
         this.props.pollRouterMethods.setActiveRoute("Relatórios");
+        this.props.dataMethods.reset_new_data_state();
     }
 
+    toggleMessageBox() {
+        this.setState({
+            showMessageBox: !this.state.showMessageBox,
+        })
+    }
     render() {
+        
         return (
             <div id="top-menu" className="d-flex w-auto" >
+         
+                <TwoSteps show={this.state.showMessageBox} showControl={this.toggleMessageBox} runMethod={this.changeRoutePoll} />
+
                 <div id="logo-content-top-menu" className="d-flex justify-content-center align-items-center clickable">
                     <Link to="/">
                         <img id="logo-top-menu" src="./img/RegistreSME_V3.svg" alt="Logo" />
@@ -82,7 +102,8 @@ class TopMenu extends Component {
                         {this.state.isVisible && <div className={this.props.pollRouter.activeRoute === "Sondagem" ? "border-left top-navigation-button-selected" : "border-left top-navigation-button"}>
                             <Link className="d-flex align-items-center h-100 w-100" to="/" onClick={this.changeRoutePoll}>
                                 <small className="mx-3 font-weight-light text-muted">Sondagem</small>
-                            </Link>
+                            </Link> 
+                            
                         </div>}
 
                         <div className={this.props.pollRouter.activeRoute === "Relatórios" ? "mr-3 border border-top-0 border-bottom-0 top-navigation-button-selected" : "mr-3 border border-top-0 border-bottom-0 top-navigation-button"}>
@@ -114,6 +135,6 @@ class TopMenu extends Component {
 }
 
 export default connect(
-    state => ({ user: state.user, pollRouter: state.pollRouter }),
-    dispatch => ({ userMethods: bindActionCreators(actionCreators, dispatch), pollRouterMethods: bindActionCreators(pollRouterActionCreators, dispatch) })
+    state => ({ user: state.user, pollRouter: state.pollRouter, data:state.data }),
+    dispatch => ({ userMethods: bindActionCreators(actionCreators, dispatch), pollRouterMethods: bindActionCreators(pollRouterActionCreators, dispatch), dataMethods: bindActionCreators(dataActionCreators, dispatch) })
 )(TopMenu);

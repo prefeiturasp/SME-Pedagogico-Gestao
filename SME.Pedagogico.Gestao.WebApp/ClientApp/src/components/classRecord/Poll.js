@@ -7,6 +7,8 @@ import { ClassRoomEnum } from '../polls/component/ClassRoomHelper'
 import { connect } from 'react-redux';
 import { actionCreators as actionCreatorsPoll } from '../../store/Poll';
 import { actionCreators as actionCreatorsPollOptionSelectLock } from '../../store/PollOptionSelectLock';
+import { actionCreators as actionCreatorsData } from '../../store/Data';
+
 import { bindActionCreators } from 'redux';
 
 import StudentPollMathAlfabetizacaoCard from '../polls/StudentPollMathAlfabetizacaoCard'
@@ -24,6 +26,8 @@ import StudentPollMath6ACMCard from '../polls/StudentPollMath6ACMCard'
 import StudentPollPortugueseCard from '../polls/StudentPollPortugueseCard'
 
 import TwoStepsSave from '../messaging/TwoStepsSave';
+import TwoSteps from '../messaging/TwoSteps'
+import { actionCreators } from '../../store/Calendar';
 
 class Poll extends Component {
     constructor(props) {
@@ -32,7 +36,9 @@ class Poll extends Component {
             navSelected: "",
             didAnswerPoll: false, //usar para perguntar para salvar sondagem
             sondagemType: ClassRoomEnum.ClassEmpty,
-            showMessageBox: false,
+            showMessageBox: false, //para botao save
+            showMessagePortugueseBox: false, //para botao para abrir portugues
+            showMessageMathBox: false, //para botao para abrir matematica
         }
         this.componentRender = this.componentRender.bind(this);
 
@@ -54,8 +60,10 @@ class Poll extends Component {
         this.props.pollMethods.reset_poll_selected_filter_state();
 
 
-        this.toggleMessageBox = this.toggleMessageBox.bind(this);
-
+        this.toggleMessageBox = this.toggleMessageBox.bind(this); //para salvar
+        this.toggleMessagePortugueseBox = this.toggleMessagePortugueseBox.bind(this); //para botao portugues
+        this.toggleMessageMathBox = this.toggleMessageMathBox.bind(this); //para botao matematica
+        
         var todayDate = new Date();
         if (new Date("2019-06-13") <= todayDate && todayDate <= new Date("2019-07-06")) {
             this.props.pollOptionSelectLockMethods.set_poll_1b_lock(false);
@@ -89,9 +97,19 @@ class Poll extends Component {
             showMessageBox: !this.state.showMessageBox,
         })
     }
+    toggleMessagePortugueseBox() {
+        this.setState({
+            showMessagePortugueseBox: !this.state.showMessagePortugueseBox,
+        })
+    }
+
+    toggleMessageMathBox() {
+        this.setState({
+            showMessageMathBox: !this.state.showMessageMathBox,
+        })
+    }
 
     componentDidUpdate() {
-        
         if (this.state.navSelected === "portugues-tab" && document.getElementById("portugues-tab") !== null && document.getElementById("matematica-tab") !== null) {
             document.getElementById("portugues-tab").className = "btn btn-outline-primary btn-sm btn-planning active";
             document.getElementById("matematica-tab").className = "btn btn-outline-primary btn-sm btn-planning";
@@ -507,6 +525,7 @@ class Poll extends Component {
             }
 
         }
+        this.props.dataMethods.set_new_data_state();
     }
 
     savePollStudent() {
@@ -528,6 +547,7 @@ class Poll extends Component {
                 console.log(response);
                 console.log(this.props.poll.pollSelected);
             }
+            this.props.dataMethods.reset_new_data_state();
         } else {
             //alert(this.props.poll.pollSelected);
         }
@@ -539,13 +559,13 @@ class Poll extends Component {
         this.setState({
             navSelected: elementSeleted,
         });
-
-        
-        
     }
 
-    openPortuguesePoll(element) {
-        this.toggleButton(element.currentTarget.id);
+    openPortuguesePoll() {
+        debugger;
+        //this.toggleButton(element.currentTarget.id);//portugues-tab
+        this.props.dataMethods.reset_new_data_state();
+        this.toggleButton("portugues-tab");
         var classRoomMock = this.props.poll.selectedFilter;
 
         this.props.pollMethods.set_poll_list_initial_state();
@@ -553,8 +573,10 @@ class Poll extends Component {
         this.props.pollMethods.get_poll_portuguese_students(classRoomMock);
     }
     
-    openMathPoll(element) {
-        this.toggleButton(element.currentTarget.id);
+    openMathPoll() {
+        //this.toggleButton(element.currentTarget.id);
+        this.props.dataMethods.reset_new_data_state();
+        this.toggleButton("matematica-tab");
         var classRoomMock = this.props.poll.selectedFilter;
 
         this.props.pollMethods.set_poll_list_initial_state();
@@ -579,9 +601,17 @@ class Poll extends Component {
     checkButtonPortuguese() {
         var btn;
         if (this.props.poll.selectedFilter.yearClassroom !== null && parseInt(this.props.poll.selectedFilter.yearClassroom) < 4 && this.props.poll.selectedFilter.yearClassroom !== undefined) {
-            btn = <li className="nav-item">
-                <button className="btn btn-outline-primary btn-sm btn-planning" id="portugues-tab" onClick={this.openPortuguesePoll}>Língua Portuguesa</button>
-            </li>;
+            if (this.props.data.newDataToSave) {
+                btn = <li className="nav-item">
+                    <button className="btn btn-outline-primary btn-sm btn-planning" onClick={this.toggleMessagePortugueseBox}>Língua Portuguesa</button>
+                    <TwoSteps show={this.state.showMessagePortugueseBox} showControl={this.toggleMessagePortugueseBox} runMethod={this.openPortuguesePoll} />
+
+                </li>;
+            } else {
+                btn = <li className="nav-item">
+                    <button className="btn btn-outline-primary btn-sm btn-planning" id="portugues-tab" onClick={this.openPortuguesePoll}>Língua Portuguesa</button>
+                </li>;
+            }
         }
         return (btn);
     }
@@ -589,9 +619,17 @@ class Poll extends Component {
     checkButtonMath() {
         var btn;
         if (this.props.poll.selectedFilter.yearClassroom !== null && parseInt(this.props.poll.selectedFilter.yearClassroom) < 7 && this.props.poll.selectedFilter.yearClassroom !== undefined) {
-            btn = <li className="nav-item">
-                <button className="btn btn-outline-primary btn-sm btn-planning" id="matematica-tab" onClick={this.openMathPoll}>Matem&aacute;tica</button>
-            </li>
+            
+            if (this.props.data.newDataToSave) {
+                btn = <li className="nav-item">
+                    <button className="btn btn-outline-primary btn-sm btn-planning" onClick={this.toggleMessageMathBox}>Matem&aacute;tica</button>
+                    <TwoSteps show={this.state.showMessageMathBox} showControl={this.toggleMessageMathBox} runMethod={this.openMathPoll} />
+                </li>
+            } else {
+                btn = <li className="nav-item">
+                    <button className="btn btn-outline-primary btn-sm btn-planning" id="matematica-tab" onClick={this.openMathPoll}>Matem&aacute;tica</button>
+                </li>
+            }
         }
         return (btn); 
     }
@@ -645,13 +683,15 @@ export default connect(
     state => (
         {
             poll: state.poll,
-            pollOptionSelectLock: state.pollOptionSelectLock
+            pollOptionSelectLock: state.pollOptionSelectLock,
+            data:state.data
         }
     ),
     dispatch => (
         {
             pollMethods: bindActionCreators(actionCreatorsPoll, dispatch),
-            pollOptionSelectLockMethods: bindActionCreators(actionCreatorsPollOptionSelectLock, dispatch)
+            pollOptionSelectLockMethods: bindActionCreators(actionCreatorsPollOptionSelectLock, dispatch),
+            dataMethods: bindActionCreators(actionCreatorsData, dispatch)
         }
     )
 )(Poll);

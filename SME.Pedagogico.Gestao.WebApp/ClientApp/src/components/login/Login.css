@@ -6,8 +6,11 @@
     border-radius: 4px;
     width: 100%;
 }
-#logo-login{
-    width:234px;
+#logo-prefeitura-login {
+    width: 127px;
+}
+#logo-login {
+    width: 234px;
 }
 .text-danger.text-login {
     text-align: right;
