@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SME.Pedagogico.Gestao.Data.DataTransfer;
+using SME.Pedagogico.Gestao.WebApp.Models.Auth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -114,8 +115,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
             return (false);
         }
 
-
-
         public static async Task<bool> LoginUser(string username, string session, string refreshToken)
         {
             using (Data.Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
@@ -208,7 +207,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                     if (role != null)
                     {
-                        Models.Authentication.AccessLevel accessLevel = await
+                        Models.Authentication.AccessLevel accessLevel = await 
                             (from current in db.AccessLevels
                              where current.Value == accessLevelValue
                              select current).FirstOrDefaultAsync();
@@ -256,5 +255,24 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 return (userRoles);
             }
         }
+
+        public static async Task SetRolePrivilegied(CredentialModel credential, Data.DataTransfer.PrivilegedAccessModel userPrivileged)
+        {
+            if (userPrivileged.OccupationPlace == "AMCOM")
+            {
+                var boolean = await SetRole(credential.Username, "Admin", "0");
+            }
+            else if (userPrivileged.OccupationPlace == "SME")
+            {
+                var boolean = await SetRole(credential.Username, "Admin", "2");
+            }
+
+            else if (userPrivileged.OccupationPlaceCode == 3)
+            {
+                await SetRole(credential.Username, "Adm DRE", "21");
+            }
+        }
+
+
     }
 }
