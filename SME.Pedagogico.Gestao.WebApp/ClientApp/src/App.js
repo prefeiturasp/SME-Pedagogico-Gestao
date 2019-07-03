@@ -31,6 +31,7 @@ export default class App extends Component {
                 <AuthenticatedDashboardRoute path="/Usuario/TrocarPerfil" exact component={SelectProfile} />
                 <AuthenticatedDashboardProfileRoute path="/" exact component={Poll} />
                 <AuthenticatedDashboardRoute path="/Relatorios/Sondagem" exact component={PollReport} />
+
                 <Route component={NotFound} />
             </Switch>
         );
