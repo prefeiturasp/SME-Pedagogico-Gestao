@@ -65,7 +65,7 @@ class Poll extends Component {
         this.toggleMessageMathBox = this.toggleMessageMathBox.bind(this); //para botao matematica
         
         var todayDate = new Date();
-        if (new Date("2019-06-13") <= todayDate && todayDate <= new Date("2019-07-06")) {
+        if (new Date("2019-06-13") <= todayDate && todayDate <= new Date("2019-07-27")) {
             this.props.pollOptionSelectLockMethods.set_poll_1b_lock(false);
             this.props.pollOptionSelectLockMethods.set_poll_2b_lock(false);
             this.props.pollOptionSelectLockMethods.set_poll_3b_lock(true);
