@@ -1,0 +1,25 @@
+﻿.btn-erro404 {
+    width: 180px;
+    background-color: #086397;
+    border-color: #086397;
+    font-size:12px;
+}
+
+.btn-erro404:hover {
+    width: 180px;
+    background-color: #064f79;
+    border-color: #064f79;
+    font-size: 12px;
+}
+
+#erro404{
+    width:400px
+}
+
+.message-title{
+    font-size:28px;
+}
+
+.message-text {
+    font-size: 14px;
+}
