@@ -577,14 +577,32 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// Método para resetar a senha do usuário desejado
         /// </summary>
         /// <param name="credential">Objeto contendo nome de usuário, nova senha e "key" para conseguir acessar a funcionalidade</param>
-        /// <returns>Caso erro na validação da senha, retorna array de strings com msgs de erro</returns>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpPost]
-        public ActionResult<string> ResetPassword([FromBody] ResetPasswordDTO credential)
+        public async Task<ActionResult<string>> ResetPassword([FromBody] ResetPassword credential)
         {
             if (credential.Key == "sgp123456789")
             {
-                if (Authentication.ResetPassword(credential, out IEnumerable<string> validationErrors))
+                if (await Data.Business.Authentication.ResetSenha(credential.Username, credential.NewPassword))
+                    return (Ok());
+            }
+
+            return (Forbid());
+        }
+
+        /// <summary>
+        /// Método para resetar a senha padrão do usuário desejado
+        /// </summary>
+        /// <param name="credential">Objeto contendo nome de usuário, nova senha e "key" para conseguir acessar a funcionalidade</param>
+        /// <returns>Caso erro na validação da senha, retorna array de strings com msgs de erro</returns>
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult<string> ResetDefaultPassword([FromBody] ResetPasswordDTO credential)
+        {
+            if (credential.Key == "sgp123456789")
+            {
+                if (Authentication.ResetSenhaPadrão(credential, out IEnumerable<string> validationErrors))
                 {
                     return Ok();
                 } else
