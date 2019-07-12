@@ -350,7 +350,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                                 .ToList();
 
                         CreateIdeaItem(ordem3IdeiaAgrupados, order: "3", ref ideasAndResults, ref ideaCharts);
-                        CreateResultItem(ordem3ResultadoAgrupados, order: "3", ref ideasAndResults, ref resultCharts);
+                        CreateResultItem(ordem3ResultadoAgrupados, order: "3", ref ideasAndResults, ref resultCharts, PollTypeEnum.CM, anoTurma);
                     }
                     else
                     {
@@ -361,7 +361,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             var ordem4ResultadoAgrupados = query.GroupBy(fu => fu.Ordem4Resultado)
                                                         .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() }).ToList();
                             CreateIdeaItem(ordem4IdeiaAgrupados, order: "4", ref ideasAndResults, ref ideaCharts);
-                            CreateResultItem(ordem4ResultadoAgrupados, order: "4", ref ideasAndResults, ref resultCharts);
+                            CreateResultItem(ordem4ResultadoAgrupados, order: "4", ref ideasAndResults, ref resultCharts, PollTypeEnum.CM, anoTurma);
                         }
 
                         if (anoTurma != (int)AnoTurmaEnum.TerceiroAno)
@@ -371,7 +371,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             var ordem5ResultadoAgrupados = query.GroupBy(fu => fu.Ordem5Resultado)
                                                         .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() }).ToList();
                             CreateIdeaItem(ordem5IdeiaAgrupados, order: "5", ref ideasAndResults, ref ideaCharts);
-                            CreateResultItem(ordem5ResultadoAgrupados, order: "5", ref ideasAndResults, ref resultCharts);
+                            CreateResultItem(ordem5ResultadoAgrupados, order: "5", ref ideasAndResults, ref resultCharts, PollTypeEnum.CM, anoTurma);
                         }
 
                         if (anoTurma != (int)AnoTurmaEnum.TerceiroAno)
@@ -381,15 +381,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             var ordem6ResultadoAgrupados = query.GroupBy(fu => fu.Ordem6Resultado)
                                                         .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() }).ToList();
                             CreateIdeaItem(ordem6IdeiaAgrupados, order: "6", ref ideasAndResults, ref ideaCharts);
-                            CreateResultItem(ordem6ResultadoAgrupados, order: "6", ref ideasAndResults, ref resultCharts);
-
+                            CreateResultItem(ordem6ResultadoAgrupados, order: "6", ref ideasAndResults, ref resultCharts, PollTypeEnum.CM, anoTurma);
 
                             var ordem7IdeiaAgrupados = query.GroupBy(fu => fu.Ordem7Ideia)
                                                     .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() }).ToList();
                             var ordem7ResultadoAgrupados = query.GroupBy(fu => fu.Ordem7Resultado)
                                                         .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() }).ToList();
                             CreateIdeaItem(ordem7IdeiaAgrupados, order: "7", ref ideasAndResults, ref ideaCharts);
-                            CreateResultItem(ordem7ResultadoAgrupados, order: "7", ref ideasAndResults, ref resultCharts);
+                            CreateResultItem(ordem7ResultadoAgrupados, order: "7", ref ideasAndResults, ref resultCharts, PollTypeEnum.CM, anoTurma);
                         }
 
 
@@ -400,7 +399,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             var ordem8ResultadoAgrupados = query.GroupBy(fu => fu.Ordem8Resultado)
                                                         .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() }).ToList();
                             CreateIdeaItem(ordem8IdeiaAgrupados, order: "8", ref ideasAndResults, ref ideaCharts);
-                            CreateResultItem(ordem8ResultadoAgrupados, order: "8", ref ideasAndResults, ref resultCharts);
+                            CreateResultItem(ordem8ResultadoAgrupados, order: "8", ref ideasAndResults, ref resultCharts, PollTypeEnum.CM, anoTurma);
                         }
 
                     }
@@ -488,7 +487,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                                     .ToList();
 
                         CreateIdeaItem(ordem3Ideia, order: "3", ref ideasAndResults, ref ideaCharts);
-                        CreateResultItem(ordem3Resultado, order: "3", ref ideasAndResults, ref resultCharts);
+                        CreateResultItem(ordem3Resultado, order: "3", ref ideasAndResults, ref resultCharts, PollTypeEnum.CA, anoTurma);
                         if (anoTurma != (int)AnoTurmaEnum.PrimeiroAno && anoTurma != (int)AnoTurmaEnum.TerceiroAno)
                         {
                             var ordem4Ideia = query.GroupBy(fu => fu.Ordem4Ideia)
@@ -499,17 +498,21 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                                         .ToList();
 
                             CreateIdeaItem(ordem4Ideia, order: "4", ref ideasAndResults, ref ideaCharts);
-                            CreateResultItem(ordem4Resultado, order: "4", ref ideasAndResults, ref resultCharts);
+                            CreateResultItem(ordem4Resultado, order: "4", ref ideasAndResults, ref resultCharts, PollTypeEnum.CA, anoTurma);
                         }
                     }
 
                     CreateIdeaItem(ordem1Ideia, order: "1", ref ideasAndResults, ref ideaCharts);
                     CreateIdeaItem(ordem2Ideia, order: "2", ref ideasAndResults, ref ideaCharts);
-                    CreateResultItem(ordem1Resultado, order: "1", ref ideasAndResults, ref resultCharts);
-                    CreateResultItem(ordem2Resultado, order: "2", ref ideasAndResults, ref resultCharts);
+
+                    CreateResultItem(ordem1Resultado, order: "1", ref ideasAndResults, ref resultCharts,PollTypeEnum.CA, anoTurma);
+                    CreateResultItem(ordem2Resultado, order: "2", ref ideasAndResults, ref resultCharts, PollTypeEnum.CA, anoTurma);
+
 
                     ideasAndResults.IdeaResults = ideasAndResults.IdeaResults.OrderBy(i => Convert.ToInt32(i.OrderName)).ToList();
                     ideasAndResults.ResultResults = ideasAndResults.ResultResults.OrderBy(i => Convert.ToInt32(i.OrderName)).ToList();
+
+                    Console.WriteLine(anoTurma + " ");
 
                     relatorioRetorno.Results = ideasAndResults;
                     relatorioRetorno.ChartIdeaData.AddRange(ideaCharts.OrderBy(i => Convert.ToInt32(i.Order)));
@@ -599,7 +602,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
         private void CreateResultItem(List<MathGroupByDTO> ordemResult,
                                       string order,
                                       ref PollReportMathItem ideasAndResults,
-                                      ref List<MathResultChartDataModel> resultCharts)
+                                      ref List<MathResultChartDataModel> resultCharts,
+                                      PollTypeEnum pollType,
+                                      int classroomYear)
         {
             var resultRetorno = new MathItemResult();
             var resultResults = new List<ResultChartDTO>();
@@ -639,6 +644,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 resultRetorno.NotAnsweredResultPercentage = ((double)resultRetorno.NotAnsweredResultQuantity / resultTotalStudents) * 100;
             }
             resultRetorno.OrderName = order;
+            resultRetorno.OrderTitle = OrderTitle(pollType, classroomYear,int.Parse(order));
 
             ideasAndResults.ResultResults.Add(resultRetorno);
             resultResults.Add(new ResultChartDTO() { Description = "Acertou", Quantity = resultRetorno.CorrectResultQuantity });
@@ -649,7 +655,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
             resultChart.Result.AddRange(resultResults);
             resultCharts.Add(resultChart);
         }
-
 
         private void CreateNumberItem(List<MathGroupByDTO> ordemIdeia,
                                   string grupo,
@@ -701,6 +706,235 @@ namespace SME.Pedagogico.Gestao.Data.Business
             numerosCharts.Add(numeroCharts);
         }
 
+        /// <summary>
+        /// Método para retornar os títulos corretos das ordens da spmdagem de matemática
+        /// </summary>
+        /// <param name="pollType">Tipo da Sondagem de Matemática CA, CM, Numeric</param>
+        /// <param name="classroomYear">Ano da Turma</param>
+        /// <returns></returns>
+        private string OrderTitle(PollTypeEnum pollType, int classroomYear, int orderNumber)
+        {
+            string orderTitle = string.Empty;
+
+            switch (classroomYear)
+            {
+                case 1:
+                    switch(pollType)
+                    {
+                        case PollTypeEnum.CA:
+                            orderTitle = "COMPOSIÇÃO";
+                            break;
+                        default:
+                            orderTitle = string.Empty;
+                            break;
+                    }
+                    break;
+                case 2:
+                    switch (pollType)
+                    {
+                        case PollTypeEnum.CA:
+                            switch (orderNumber)
+                            {
+                                case 1:
+                                    orderTitle = "COMPOSIÇÃO";
+                                    break;
+                                case 2:
+                                    orderTitle = "TRANSFORMAÇÃO";
+                                    break;
+                                default:
+                                    orderTitle = string.Empty;
+                                    break;
+                            }
+                            break;
+                        case PollTypeEnum.CM:
+                            switch (orderNumber)
+                            {
+                                case 3:
+                                    orderTitle = "PROPORCIONALIDADE";
+                                    break;
+                                default:
+                                    orderTitle = string.Empty;
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+                case 3:
+                    switch (pollType)
+                    {
+                        case PollTypeEnum.CA:
+                            switch (orderNumber)
+                            {
+                                case 1:
+                                    orderTitle = "COMPOSIÇÃO";
+                                    break;
+                                case 2:
+                                    orderTitle = "TRANSFORMAÇÃO";
+                                    break;
+                                case 3:
+                                    orderTitle = "COMPARAÇÃO";
+                                    break;
+                                default:
+                                    orderTitle = string.Empty;
+                                    break;
+                            }
+                            break;
+                        case PollTypeEnum.CM:
+                            switch (orderNumber)
+                            {
+                                case 4:
+                                    orderTitle = "CONFIGURAÇÃO RETANGULAR";
+                                    break;
+                                case 5:
+                                    orderTitle = "PROPORCIONALIDADE";
+                                    break;
+                                default:
+                                    orderTitle = string.Empty;
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+                case 4:
+                    switch (pollType)
+                    {
+                        case PollTypeEnum.CA:
+                            switch (orderNumber)
+                            {
+                                case 1:
+                                    orderTitle = "COMPOSIÇÃO";
+                                    break;
+                                case 2:
+                                    orderTitle = "TRANSFORMAÇÃO";
+                                    break;
+                                case 3:
+                                    orderTitle = "COMPOSIÇÃO DE TRANSF.";
+                                    break;
+                                case 4:
+                                    orderTitle = "COMPARAÇÃO";
+                                    break;
+                                default:
+                                    orderTitle = string.Empty;
+                                    break;
+                            }
+                            break;
+                        case PollTypeEnum.CM:
+                            switch (orderNumber)
+                            {
+                                case 5:
+                                    orderTitle = "CONFIGURAÇÃO RETANGULAR";
+                                    break;
+                                case 6:
+                                    orderTitle = "PROPORCIONALIDADE";
+                                    break;
+                                case 7:
+                                    orderTitle = "COMBINATÓRIA";
+                                    break;
+                                default:
+                                    orderTitle = string.Empty;
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+                case 5:
+                    switch (pollType)
+                    {
+                        case PollTypeEnum.CA:
+                            switch (orderNumber)
+                            {
+                                case 1:
+                                    orderTitle = "COMPOSIÇÃO";
+                                    break;
+                                case 2:
+                                    orderTitle = "TRANSFORMAÇÃO";
+                                    break;
+                                case 3:
+                                    orderTitle = "COMPOSIÇÃO DE TRANSF.";
+                                    break;
+                                case 4:
+                                    orderTitle = "COMPARAÇÃO";
+                                    break;
+                                default:
+                                    orderTitle = string.Empty;
+                                    break;
+                            }
+                            break;
+                        case PollTypeEnum.CM:
+                            switch (orderNumber)
+                            {
+                                case 5:
+                                    orderTitle = "COMBINATÓRIA";
+                                    break;
+                                case 6:
+                                    orderTitle = "CONFIGURAÇÃO RETANGULAR";
+                                    break;
+                                case 7:
+                                    orderTitle = "PROPORCIONALIDADE";
+                                    break;
+                                case 8:
+                                    orderTitle = "MULTIPLICAÇÃO COMPARATIVA";
+                                    break;
+                                default:
+                                    orderTitle = string.Empty;
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+                case 6:
+                    switch (pollType)
+                    {
+                        case PollTypeEnum.CA:
+                            switch (orderNumber)
+                            {
+                                case 1:
+                                    orderTitle = "COMPOSIÇÃO";
+                                    break;
+                                case 2:
+                                    orderTitle = "TRANSFORMAÇÃO";
+                                    break;
+                                case 3:
+                                    orderTitle = "COMPOSIÇÃO DE TRANSF.";
+                                    break;
+                                case 4:
+                                    orderTitle = "COMPARAÇÃO";
+                                    break;
+                                default:
+                                    orderTitle = string.Empty;
+                                    break;
+                            }
+                            break;
+                        case PollTypeEnum.CM:
+                            switch (orderNumber)
+                            {
+                                case 5:
+                                    orderTitle = "COMBINATÓRIA";
+                                    break;
+                                case 6:
+                                    orderTitle = "CONFIGURAÇÃO RETANGULAR";
+                                    break;
+                                case 7:
+                                    orderTitle = "PROPORCIONALIDADE";
+                                    break;
+                                case 8:
+                                    orderTitle = "MULTIPLICAÇÃO COMPARATIVA";
+                                    break;
+                                default:
+                                    orderTitle = string.Empty;
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+                default:
+                    break;
+
+            }
+            
+
+            return orderTitle;
+        }
         public async Task<List<SondagemMatematicaOrdemDTO>> ListPoolCAAsync(FiltroSondagemMatematicaDTO filtroSondagem)
         {
             try
