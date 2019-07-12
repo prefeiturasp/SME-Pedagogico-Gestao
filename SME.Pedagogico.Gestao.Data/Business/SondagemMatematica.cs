@@ -362,17 +362,17 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                                         .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() }).ToList();
                             CreateIdeaItem(ordem4IdeiaAgrupados, order: "4", ref ideasAndResults, ref ideaCharts);
                             CreateResultItem(ordem4ResultadoAgrupados, order: "4", ref ideasAndResults, ref resultCharts);
+
                         }
 
-                        if (anoTurma != (int)AnoTurmaEnum.TerceiroAno)
-                        {
-                            var ordem5IdeiaAgrupados = query.GroupBy(fu => fu.Ordem5Ideia)
+                        
+                        var ordem5IdeiaAgrupados = query.GroupBy(fu => fu.Ordem5Ideia)
+                                                .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() }).ToList();
+                        var ordem5ResultadoAgrupados = query.GroupBy(fu => fu.Ordem5Resultado)
                                                     .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() }).ToList();
-                            var ordem5ResultadoAgrupados = query.GroupBy(fu => fu.Ordem5Resultado)
-                                                        .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() }).ToList();
-                            CreateIdeaItem(ordem5IdeiaAgrupados, order: "5", ref ideasAndResults, ref ideaCharts);
-                            CreateResultItem(ordem5ResultadoAgrupados, order: "5", ref ideasAndResults, ref resultCharts);
-                        }
+                        CreateIdeaItem(ordem5IdeiaAgrupados, order: "5", ref ideasAndResults, ref ideaCharts);
+                        CreateResultItem(ordem5ResultadoAgrupados, order: "5", ref ideasAndResults, ref resultCharts);
+                        
 
                         if (anoTurma != (int)AnoTurmaEnum.TerceiroAno)
                         {
