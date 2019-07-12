@@ -1,10 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SME.Pedagogico.Gestao.Data.DataTransfer;
-using SME.Pedagogico.Gestao.WebApp.Models.Auth;
+using SME.Pedagogico.Gestao.Data.DTO;
+using SME.Pedagogico.Gestao.Data.Enums;
+using SME.Pedagogico.Gestao.Models.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Cryptography = SME.Pedagogico.Gestao.Data.Functionalities.Cryptography;
 
 namespace SME.Pedagogico.Gestao.Data.Business
 {
@@ -94,7 +98,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public static async Task<bool> ResetPassword(string username, string newPassword)
+        public static async Task<bool> ResetSenha(string username, string newPassword)
         {
             using (Data.Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
             {
@@ -114,6 +118,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             return (false);
         }
+
+
 
         public static async Task<bool> LoginUser(string username, string session, string refreshToken)
         {

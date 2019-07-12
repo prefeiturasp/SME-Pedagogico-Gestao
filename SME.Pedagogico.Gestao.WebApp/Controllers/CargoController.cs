@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DTO;
+using SME.Pedagogico.Gestao.Data.Functionalities;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
@@ -20,6 +21,13 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             _config = config;
         }
 
+        [HttpGet]
+        public string CriaToken()
+        {
+            var criaToken = new CreateToken(_config);
+
+            return criaToken.CreateTokenProvisorio();
+        }
 
         [HttpGet]
         public async Task<ActionResult> CargosPorRF(string login)
