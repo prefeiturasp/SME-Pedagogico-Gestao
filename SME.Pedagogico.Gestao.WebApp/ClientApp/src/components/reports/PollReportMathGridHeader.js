@@ -95,7 +95,7 @@ export default class PollReportMathGridHeader extends Component {
                                 <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-bold">ORDEM {this.props.orderName}</div>
                             </div>
                             <div className="col-8 sc-gray">
-                                <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center">PROBLEMAS DE COMPOSIÇÃO</div>
+                                <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center">PROBLEMAS DE {this.props.orderTitle}</div>
                             </div>
                         </div>
                         <div className="d-flex poll-report-grid-header border-bottom border-white">

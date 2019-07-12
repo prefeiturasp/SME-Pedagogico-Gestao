@@ -76,6 +76,7 @@ namespace SME.Pedagogico.Gestao.Data.DTO
         public double CorrectResultPercentage { get; set; }
         public double IncorrectResultPercentage { get; set; }
         public double NotAnsweredResultPercentage { get; set; }
+        public string OrderTitle { get; set; }
     }
 
     public class MathNumberResult
@@ -87,5 +88,6 @@ namespace SME.Pedagogico.Gestao.Data.DTO
         public double NaoEscreveConvencionalmentePercentage { get; set; }
         public string EscreveConvencionalmenteText { get; set; }
         public string NaoEscreveConvencionalmenteText { get; set; }
+        public string OrderTitle { get; set; }
     }
 }
