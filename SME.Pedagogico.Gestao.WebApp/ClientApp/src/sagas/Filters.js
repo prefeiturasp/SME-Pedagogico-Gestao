@@ -13,7 +13,6 @@ export default function*() {
 
 function* GetDreAdm({ userName }) {
   try {
-      debugger;
     const data = yield call(getDreAdmApi, userName);
     var listDres = data;
     yield put({ type: Filters.types.LIST_DRES, listDres });
