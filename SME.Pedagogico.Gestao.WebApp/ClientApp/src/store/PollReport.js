@@ -56,7 +56,6 @@ export const actionCreators = {
 
 export const reducer = (state, action) => {
     state = state || initialState;
-
     switch (action.type) {
         case types.SET_POLL_REPORT_FILTER:
             return ({
@@ -73,8 +72,9 @@ export const reducer = (state, action) => {
                 ...state,
                 showReport: false,
             });
-        case types.SET_POLL_REPORT_DATA:
+        case types.SET_POLL_REPORT_DATA: 
             return ({
+               
                 ...state,
                 data: action.pollReportResponse.data,
                 chartData: action.pollReportResponse.chartData

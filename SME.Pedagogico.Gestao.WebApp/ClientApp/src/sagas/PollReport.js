@@ -35,6 +35,7 @@ function* GetPollReportSaga({ parameters }) {
                     }
                 }
             }
+
             else {
                 pollReportResponse = {
                     data: data.results,

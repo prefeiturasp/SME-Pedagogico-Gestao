@@ -45,9 +45,7 @@ export default class PollReportMathGridHeader extends Component {
 
                         <div className="d-flex poll-report-grid-header border-bottom border-white">
                             <div className="col-4 "></div>
-                            {/*orderIndexes.map(item =>
-                                <ClassReportColumnName number={item} />
-                            )*/}
+                            {}
                             {
                                 headers.map(item => <ClassReportColumnName number={item.order} />)
                             }
