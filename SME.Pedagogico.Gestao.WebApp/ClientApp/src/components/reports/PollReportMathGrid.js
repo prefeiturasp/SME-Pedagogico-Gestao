@@ -63,7 +63,7 @@ export default class PollReportMathGrid extends Component {
                 orders = this.props.data[0].poll.length
 
         var { data } = this.props;
-        debugger;
+        
         data.totals = [];
         var indexes = [];
         debugger

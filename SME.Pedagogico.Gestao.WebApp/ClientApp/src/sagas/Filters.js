@@ -67,7 +67,7 @@ function* GetFiltersTeacher({ profileOccupatios }) {
 
 function getDreAdmApi(userName) {
 
-    debugger;
+   
   return fetch("/api/Cargo/RetornaCodigoDREAdm", {
     method: "post",
     headers: { "Content-Type": "application/json" },

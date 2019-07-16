@@ -562,7 +562,7 @@ class Poll extends Component {
     }
 
     openPortuguesePoll() {
-        debugger;
+       
         //this.toggleButton(element.currentTarget.id);//portugues-tab
         this.props.dataMethods.reset_new_data_state();
         this.toggleButton("portugues-tab");
