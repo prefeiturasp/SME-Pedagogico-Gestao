@@ -85,7 +85,6 @@ class PollFilter extends Component {
     }
 
     componentDidMount() {
-
         if(this.props.user.activeRole.roleName === ROLES_ENUM.ADM_DRE) 
         {
             var userName = this.props.user.username;
@@ -228,9 +227,12 @@ class PollFilter extends Component {
     }
 
     getClassroom(event) {
+        this.props.filterMethods.activeClassroom(null);
+
         this.setState({
             classroom: event.target.value,
             selectedClassRoom: "",
+
         });
     }
 
@@ -299,7 +301,7 @@ class PollFilter extends Component {
         if (this.props.pollRouter.activeRoute !== "Sondagem") {
             if (this.props.user.activeRole.roleName === ROLES_ENUM.ADMIN) {
 
-               
+                
                 listDresOptions.push({ label: "Todas", value: "todas" });
             }
         }
@@ -333,7 +335,8 @@ class PollFilter extends Component {
             if (this.props.user.activeRole.roleName === ROLES_ENUM.PROFESSOR) {
 
 
-                if (this.state.classroom !== null)
+                if (this.state.classroom !== null) {
+                    listClassRoomOptions.push({ label: "Todas", value: "todas" })
                     for (var item in this.state.listClassRoomTeacher) {
                         if (this.state.listClassRoomTeacher[item].nome.startsWith(this.state.classroom))
                             listClassRoomOptions.push({
@@ -341,13 +344,18 @@ class PollFilter extends Component {
                                 label: this.state.listClassRoomTeacher[item].nome,
                             });
                     }
-                else
+                }
+
+                else {
+                    listClassRoomOptions.push({ label: "Todas", value: "todas" })
                     for (var item in this.state.listClassRoomTeacher) {
                         listClassRoomOptions.push({
                             value: this.state.listClassRoomTeacher[item].codigo,
                             label: this.state.listClassRoomTeacher[item].nome,
                         });
                     }
+                }
+                   
 
                 selectClassRoom = <SelectChangeColor className="col" value={selectedClassRoom} defaultText="Turma" options={listClassRoomOptions} disabled={hiddenDisabled} onChange={this.SelectedClassRoom} resetColor={selectedClassRoom === "" ? true : false} />
 
@@ -374,7 +382,7 @@ class PollFilter extends Component {
 
                 if (selectedSchool !== "todas") {
                     if (this.props.filters.listClassRoom !== [] && this.props.filters.listClassRoom !== null && this.props.filters.listClassRoom.length > 1) {
-                        if (this.state.classroom !== null)
+                        if (this.state.classroom !== null) {
                             for (var item in this.props.filters.listClassRoom) {
                                 if (this.props.filters.listClassRoom[item].nomeTurma.startsWith(this.state.classroom))
                                     listClassRoomOptions.push({
@@ -382,6 +390,8 @@ class PollFilter extends Component {
                                         label: this.props.filters.listClassRoom[item].nomeTurma,
                                     });
                             }
+                        }
+                            
                         else
                             for (var item in this.props.filters.listClassRoom) {
                                 listClassRoomOptions.push({
@@ -436,12 +446,11 @@ class PollFilter extends Component {
             if (this.props.filters.activeDreCode !== null) {
                 if (this.props.pollRouter.activeRoute !== "Sondagem") {
                     listSchoolOptions.push({ label: "Todas", value: "todas" });
+                    
                 }
             }
-            
             for (var item in this.props.filters.listDres) {
 
-                
                 listDresOptions.push({
                    
                     value: this.props.filters.listDres[item].codigoDRE,
@@ -466,6 +475,7 @@ class PollFilter extends Component {
                         if (this.state.classroom !== null)
                             for (var item in this.props.filters.listClassRoom) {
                                 if (this.props.filters.listClassRoom[item].nomeTurma.startsWith(this.state.classroom))
+
                                     listClassRoomOptions.push({
                                         value: this.props.filters.listClassRoom[item].codigoTurma,
                                         label: this.props.filters.listClassRoom[item].nomeTurma,

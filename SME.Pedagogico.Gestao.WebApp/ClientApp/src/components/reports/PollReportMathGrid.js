@@ -66,27 +66,29 @@ export default class PollReportMathGrid extends Component {
         
         data.totals = [];
         var indexes = [];
+        debugger
+        if (data.ideaResults !== undefined || data.numerosResults !== undefined) {
+            if (this.props.classroomReport === false && data.ideaResults.length > 0)
+                for (var i = 0; i < data.ideaResults.length; i++) {
+                    indexes.push(i);
+                    data.totals.push({
+                        totalStudentIdeaQuantity: data.ideaResults[i].correctIdeaQuantity + data.ideaResults[i].incorrectIdeaQuantity + data.ideaResults[i].notAnsweredIdeaQuantity,
+                        totalStudentIdeaPercentage: data.ideaResults[i].correctIdeaPercentage + data.ideaResults[i].incorrectIdeaPercentage + data.ideaResults[i].notAnsweredIdeaPercentage,
+                        totalStudentResultQuantity: data.resultResults[i].correctResultQuantity + data.resultResults[i].incorrectResultQuantity + data.resultResults[i].notAnsweredResultQuantity,
+                        totalStudentResultPercentage: data.resultResults[i].correctResultPercentage + data.resultResults[i].incorrectResultPercentage + data.resultResults[i].notAnsweredResultPercentage,
+                    });
+                }
+            else if (data.numerosResults !== undefined && data.numerosResults.length > 0)
+                for (var j = 0; j < data.numerosResults.length; j++)
+                    indexes.push(j);
 
-        if (this.props.classroomReport === false && data.ideaResults.length > 0)
-            for (var i = 0; i < data.ideaResults.length; i++) {
-                indexes.push(i);
-                data.totals.push({
-                    totalStudentIdeaQuantity: data.ideaResults[i].correctIdeaQuantity + data.ideaResults[i].incorrectIdeaQuantity + data.ideaResults[i].notAnsweredIdeaQuantity,
-                    totalStudentIdeaPercentage: data.ideaResults[i].correctIdeaPercentage + data.ideaResults[i].incorrectIdeaPercentage + data.ideaResults[i].notAnsweredIdeaPercentage,
-                    totalStudentResultQuantity: data.resultResults[i].correctResultQuantity + data.resultResults[i].incorrectResultQuantity + data.resultResults[i].notAnsweredResultQuantity,
-                    totalStudentResultPercentage: data.resultResults[i].correctResultPercentage + data.resultResults[i].incorrectResultPercentage + data.resultResults[i].notAnsweredResultPercentage,
-                });
-            }
-        else if (data.numerosResults !== undefined && data.numerosResults.length > 0)
-            for (var j = 0; j < data.numerosResults.length; j++)
-                indexes.push(j);
+            var numberTest = false;
 
-        var numberTest = false;
-
-        if (this.props.classroomReport === true && data.length > 0)
-            if (data[0].poll[0].order === 0)
-                numberTest = true;
-
+            if (this.props.classroomReport === true && data.length > 0)
+                if (data[0].poll[0].order === 0)
+                    numberTest = true;
+        }
+        debugger;
         return (
             <div className={className}>
                 {this.props.classroomReport === false ?
@@ -126,7 +128,7 @@ export default class PollReportMathGrid extends Component {
                         else
                             return (
                                 <div key={data.numerosResults[index].groupName}>
-                                    <PollReportMathGridHeader classroomReport={this.props.classroomReport} orderName={data.numerosResults[index].groupName} numbers={true} orderTitle={data.resultResults[index].orderTitle}/>
+                                    <PollReportMathGridHeader classroomReport={this.props.classroomReport} orderName={data.numerosResults[index].groupName} numbers={true} orderTitle={data.resultResults[index].orderTitle} />
                                     <PollReportMathGridItem
                                         numbers={true}
                                         classroomReport={this.props.classroomReport}
