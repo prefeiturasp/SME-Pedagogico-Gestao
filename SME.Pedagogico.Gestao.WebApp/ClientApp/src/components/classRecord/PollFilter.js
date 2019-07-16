@@ -85,7 +85,7 @@ class PollFilter extends Component {
     }
 
     componentDidMount() {
-debugger;
+
         if(this.props.user.activeRole.roleName === ROLES_ENUM.ADM_DRE) 
         {
             var userName = this.props.user.username;
@@ -438,10 +438,10 @@ debugger;
                     listSchoolOptions.push({ label: "Todas", value: "todas" });
                 }
             }
-            debugger;
+            
             for (var item in this.props.filters.listDres) {
 
-                debugger;
+                
                 listDresOptions.push({
                    
                     value: this.props.filters.listDres[item].codigoDRE,
