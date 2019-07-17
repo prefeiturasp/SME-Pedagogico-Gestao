@@ -22,14 +22,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
         [HttpGet]
-        public string CriaToken()
-        {
-            var criaToken = new CreateToken(_config);
-
-            return criaToken.CreateTokenProvisorio();
-        }
-
-        [HttpGet]
         public async Task<ActionResult> CargosPorRF(string login)
         {
             try
