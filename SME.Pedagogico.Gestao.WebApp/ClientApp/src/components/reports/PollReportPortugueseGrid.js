@@ -84,7 +84,6 @@ export default class PollReportPortugueseGrid extends Component {
     }
 
     gridHeader() {
-        debugger;
         var gridHeader;
         if (this.props.data !== undefined && this.props.data.length > 0 && this.props.data[0].optionName!== undefined) {
 
