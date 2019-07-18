@@ -100,6 +100,7 @@ class PollReportFilter extends Component {
     }
 
     setSelectedFilter() {
+        this.props.resetPollReportFilter();
         this.props.setPollReportFilter(this.state.selectedFilter);
 
         var parameters = this.state.selectedFilter;
@@ -108,7 +109,6 @@ class PollReportFilter extends Component {
         parameters.CodigoEscola = this.props.poll.selectedFilter.schoolCodeEol === "todas" ? "" : this.props.poll.selectedFilter.schoolCodeEol;
         parameters.CodigoCurso = this.props.poll.selectedFilter.yearClassroom;
         parameters.CodigoTurmaEol = this.props.poll.selectedFilter.classroomCodeEol === null ? "" : this.props.poll.selectedFilter.classroomCodeEol;
-
         this.props.getPollReport(parameters);
     }
 

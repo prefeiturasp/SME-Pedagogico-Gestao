@@ -26,6 +26,8 @@ class PollReport extends Component {
 
         this.printClick = this.printClick.bind(this);
         this.openPollFilter = this.openPollFilter.bind(this);
+
+        this.props.pollReportMethods.resetPollReportFilter();
     }
 
     printClick() {
@@ -200,5 +202,7 @@ class PollReport extends Component {
 
 export default connect(
     state => ({ pollReport: state.pollReport }),
-    dispatch => bindActionCreators(actionCreators, dispatch)
+    dispatch => ({
+        pollReportMethods:bindActionCreators(actionCreators, dispatch)
+    })
 )(PollReport);

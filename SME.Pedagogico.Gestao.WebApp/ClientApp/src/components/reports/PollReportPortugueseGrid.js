@@ -30,7 +30,7 @@ const PollReportGridHeader = (props) => {
 };
 
 const PollReportGridItem = (props) => {
-    if (props.classroomReport === true)
+    if (props.classroomReport === true && props.code !== undefined)
         return (
             <div className="d-flex poll-report-grid-item border-bottom">
                 <div className="col">
@@ -44,7 +44,7 @@ const PollReportGridItem = (props) => {
                 </div>
             </div>
         );
-    else
+    else if (props.classroomReport === false && props.optionName !== undefined)
         return (
             <div className="d-flex poll-report-grid-item border-bottom">
                 <div className="col">
@@ -77,6 +77,28 @@ const PollReportGridTotal = (props) => {
 }
 
 export default class PollReportPortugueseGrid extends Component {    
+    constructor(props) {
+        super(props);
+        this.gridHeader = this.gridHeader.bind(this);
+        
+    }
+
+    gridHeader() {
+        var gridHeader;
+        if (this.props.data !== undefined && this.props.data.length > 0 && this.props.data[0].optionName !== undefined) {
+
+            gridHeader = this.props.data.map(item =>
+                <PollReportGridItem {...item} classroomReport={this.props.classroomReport} />
+            )
+        } else if (this.props.classroomReport === true) {
+            gridHeader = this.props.data.map(item =>
+                <PollReportGridItem {...item} classroomReport={this.props.classroomReport} />
+            )
+        }
+        return gridHeader;
+    }
+
+
     render() {
         var { className } = this.props;
 
@@ -93,16 +115,12 @@ export default class PollReportPortugueseGrid extends Component {
                 totalStudents += this.props.data[key].studentQuantity;
                 totalPercentage += this.props.data[key].studentPercentage;
             }
-
-
         return (
             <div className={className}>
                 <PollReportGridHeader classroomReport={this.props.classroomReport} />
 
-                {this.props.data.map(item =>
-                    <PollReportGridItem {...item} classroomReport={this.props.classroomReport} />
-                )}
-
+                {this.gridHeader()}
+                
                 {this.props.classroomReport === false &&
                     <PollReportGridTotal studentQuantity={totalStudents} studentPercentage={totalPercentage}/>
                 }
