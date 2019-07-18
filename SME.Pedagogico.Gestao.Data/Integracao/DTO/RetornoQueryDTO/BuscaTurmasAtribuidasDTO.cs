@@ -7,10 +7,10 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO
 {
     public class BuscaTurmasAtribuidasDTO
     {
-        [JsonProperty(PropertyName = "codigoTurma")]
+        [JsonProperty(PropertyName = "codigo")]
         public int CodigoTurma { get; set; }
 
-        [JsonProperty(PropertyName = "nomeTurma")]
+        [JsonProperty(PropertyName = "nome")]
         public string NomeTurma { get; set; }
 
         [JsonProperty(PropertyName = "componenteCurricular")]

@@ -85,6 +85,7 @@ export const reducer = (state, action) => {
             });
         case types.RESET_POLL_FILTERS:
             return ({
+                
                 ...state,
                 ...initialState
             });
