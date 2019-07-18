@@ -55,7 +55,6 @@ export default class PollReportMathGrid extends Component {
     }
 
     mathGridHeader(data,i) {
-        debugger;
         var mathGridHeader;
         mathGridHeader = <PollReportMathGridHeader classroomReport={this.props.classroomReport} orderName={data.numerosResults[i].groupName} numbers={true} orderTitle={""} />
         return mathGridHeader;
@@ -107,6 +106,7 @@ export default class PollReportMathGrid extends Component {
                             return (
                                 <div key={data.ideaResults[index].orderName}>
                                     <PollReportMathGridHeader classroomReport={this.props.classroomReport} orderName={data.ideaResults[index].orderName} orderTitle={data.resultResults[index].orderTitle} />
+                                    
                                     <PollReportMathGridItem
                                         classroomReport={this.props.classroomReport}
                                         testName="Acertou"
@@ -164,8 +164,10 @@ export default class PollReportMathGrid extends Component {
                     })
                     :
                     <div>
-                        <PollReportMathGridHeader classroomReport={this.props.classroomReport} orders={orders} numbers={numberTest} headers={data.length > 0 ? data[0].poll : []} />
-                        {this.props.data.map(item =>
+                        {<PollReportMathGridHeader classroomReport={this.props.classroomReport} orders={orders} numbers={numberTest} headers={data.length > 0 ? data[0].poll : []} />}
+
+                        {
+                            this.props.data.map(item =>
                             <PollReportMathGridItem classroomReport={this.props.classroomReport} item={item} numbers={numberTest} />
                         )}
                     </div>
