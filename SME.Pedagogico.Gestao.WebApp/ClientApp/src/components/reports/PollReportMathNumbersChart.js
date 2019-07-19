@@ -88,8 +88,6 @@ export default class PollReportMathNumbersChart extends Component {
                 default:
                     break;
             }
-      
-
         return (
             <div>
                 <div className="d-flex flex-column">

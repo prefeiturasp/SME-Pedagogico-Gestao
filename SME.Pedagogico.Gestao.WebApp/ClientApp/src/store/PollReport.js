@@ -1,5 +1,6 @@
 ﻿export const types = {
     SET_POLL_REPORT_FILTER: "SET_POLL_REPORT_FILTER",
+    RESET_POLL_REPORT_FILTER: "RESET_POLL_REPORT_FILTER",
     SHOW_POLL_REPORT_REQUEST: "SHOW_POLL_REPORT_REQUEST",
     HIDE_POLL_REPORT_REQUEST: "HIDE_POLL_REPORT_REQUEST",
     GET_POLL_REPORT_REQUEST: "GET_POLL_REPORT_REQUEST",
@@ -49,6 +50,7 @@ const initialState = {
 
 export const actionCreators = {
     setPollReportFilter: (selectedFilter) => ({ type: types.SET_POLL_REPORT_FILTER, selectedFilter }),
+    resetPollReportFilter: () => ({ type: types.RESET_POLL_REPORT_FILTER}),
     showPollReport: () => ({ type: types.SHOW_POLL_REPORT_REQUEST }),
     hidePollReport: () => ({ type: types.HIDE_POLL_REPORT_REQUEST }),
     getPollReport: (parameters) => ({ type: types.GET_POLL_REPORT_REQUEST, parameters }),
@@ -61,6 +63,11 @@ export const reducer = (state, action) => {
             return ({
                 ...state,
                 selectedFilter: action.selectedFilter,
+            });
+        case types.RESET_POLL_REPORT_FILTER:
+            return ({
+                ...state,
+                selectedFilter: initialState.selectedFilter,
             });
         case types.SHOW_POLL_REPORT_REQUEST:
             return ({
