@@ -96,6 +96,13 @@
             <param name="credential">Objeto contendo nome de usuário, nova senha e "key" para conseguir acessar a funcionalidade</param>
             <returns></returns>
         </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.AuthController.ResetDefaultPassword(SME.Pedagogico.Gestao.Data.DTO.ResetPasswordDTO)">
+            <summary>
+            Método para resetar a senha padrão do usuário desejado
+            </summary>
+            <param name="credential">Objeto contendo nome de usuário, nova senha e "key" para conseguir acessar a funcionalidade</param>
+            <returns>Caso erro na validação da senha, retorna array de strings com msgs de erro</returns>
+        </member>
         <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.ClassRoomStudentsController.#ctor(Microsoft.Extensions.Configuration.IConfiguration,SME.Pedagogico.Gestao.WebApp.Contexts.SMEManagementContext)">
             <summary>
             Construtor padrão para o ClassRoomStudents, faz injeção de dependências de IConfiguration e SMEManagementContext.
