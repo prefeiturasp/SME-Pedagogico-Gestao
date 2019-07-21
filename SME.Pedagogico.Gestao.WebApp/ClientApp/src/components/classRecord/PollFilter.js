@@ -228,6 +228,7 @@ debugger;
     }
 
     getClassroom(event) {
+        this.props.filterMethods.activeClassroom("");
         this.setState({
             classroom: event.target.value,
             selectedClassRoom: "",
