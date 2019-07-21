@@ -88,7 +88,6 @@ export default class PollReportMathNumbersChart extends Component {
                 default:
                     break;
             }
-        debugger;
 
         return (
             <div>

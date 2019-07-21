@@ -2,7 +2,9 @@
 import './PollReportGrid.css';
 import PollReportMathGridHeader from './PollReportMathGridHeader';
 import PollReportMathGridItem from './PollReportMathGridItem';
-
+import { actionCreators } from '../../store/PollReport';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 const PollReportGridTotal = (props) => {
     var { className } = props;
 
@@ -47,7 +49,7 @@ const PollReportGridTotal = (props) => {
         );
 }
 
-export default class PollReportMathGrid extends Component {
+class PollReportMathGrid extends Component {
     render() {
         var { className } = this.props;
 
@@ -57,7 +59,7 @@ export default class PollReportMathGrid extends Component {
             className += " d-flex flex-column";
 
         var orders = 0;
-
+        
         if (this.props.classroomReport && this.props.data !== undefined && this.props.data.length > 0)
             if (this.props.data[0].poll !== undefined)
                 orders = this.props.data[0].poll.length
@@ -66,7 +68,8 @@ export default class PollReportMathGrid extends Component {
         data.totals = [];
         var indexes = [];
 
-        if (this.props.classroomReport === false && data.ideaResults.length > 0)
+        if (this.props.classroomReport === false && data.ideaResults !== undefined)
+          if(data.ideaResults.length > 0)
             for (var i = 0; i < data.ideaResults.length; i++) {
                 indexes.push(i);
                 data.totals.push({
@@ -82,10 +85,17 @@ export default class PollReportMathGrid extends Component {
 
         var numberTest = false;
 
-        if (this.props.classroomReport === true && data.length > 0)
-            if (data[0].poll[0].order === 0)
-                numberTest = true;
-
+        if (this.props.classroomReport === true && data !== undefined)
+        if(data !== undefined){
+            if(data.length > 0 && data.poll !== undefined){
+                if (data[0].poll[0].order === 0){
+                    numberTest = true;
+                }
+               
+            }
+            
+        }
+           
         return (
             <div className={className}>
                 {this.props.classroomReport === false ?
@@ -151,8 +161,11 @@ export default class PollReportMathGrid extends Component {
                     })
                     :
                     <div>
+                        
                         <PollReportMathGridHeader classroomReport={this.props.classroomReport} orders={orders} numbers={numberTest} headers={data.length > 0 ? data[0].poll : []} />
-                        {this.props.data.map(item =>
+                        {Array.isArray(this.props.data) &&
+                        
+                        this.props.data.map(item =>
                             <PollReportMathGridItem classroomReport={this.props.classroomReport} item={item} numbers={numberTest} />
                         )}
                     </div>
@@ -161,3 +174,8 @@ export default class PollReportMathGrid extends Component {
         );
     }
 }
+
+export default connect(
+    state => ({ pollReport: state.pollReport }),
+    dispatch => bindActionCreators(actionCreators, dispatch)
+)(PollReportMathGrid);

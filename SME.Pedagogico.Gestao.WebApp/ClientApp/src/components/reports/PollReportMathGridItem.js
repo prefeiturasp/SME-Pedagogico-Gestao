@@ -17,11 +17,12 @@ const PollReportGridItem2 = (props) => {
 }
 
 export default class PollReportMathGridItem extends Component {
-    render() {
+    render() { debugger;
+
         if (this.props.classroomReport === true) {
             if (this.props.numbers === false) {
                 const { item } = this.props;
-
+              if(item !== undefined && item.poll !== undefined) {
                 return (
                     <div className="d-flex poll-report-grid-item border-bottom">
                         <div className="col-1">
@@ -36,6 +37,7 @@ export default class PollReportMathGridItem extends Component {
                     </div>
                 );
             }
+        }
             else {
                 const { item } = this.props;
 

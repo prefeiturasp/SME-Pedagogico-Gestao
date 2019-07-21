@@ -31,6 +31,7 @@ const ClassReportColumn2 = () => {
 }
 
 export default class PollReportMathGridHeader extends Component {
+    
     render() {
         var { orders, headers } = this.props;
         var orderIndexes = [];
@@ -48,7 +49,7 @@ export default class PollReportMathGridHeader extends Component {
                             {/*orderIndexes.map(item =>
                                 <ClassReportColumnName number={item} />
                             )*/}
-                            {
+                            { headers !== undefined &&
                                 headers.map(item => <ClassReportColumnName number={item.order} />)
                             }
                         </div>

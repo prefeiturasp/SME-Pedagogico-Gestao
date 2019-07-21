@@ -24,7 +24,6 @@ export default class PollSelectYesNo extends Component {
     }
 
     onOptionChange(event) {
-        debugger;
         this.props.updatePollStudent(this.props.sequence, this.props.subjectName, this.props.name, event.target.value);
     }
 
