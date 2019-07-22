@@ -87,18 +87,13 @@ class PollReportMathGrid extends Component {
 
         if (this.props.classroomReport === true && data !== undefined)
         if(data !== undefined){
-            if(data.length > 0 && data.poll !== undefined){
-                if (data[0].poll[0].order === 0){
-                    numberTest = true;
+                if(this.props.pollReport.selectedFilter.proficiency ==="Números") {
+                        numberTest = true;
                 }
-               
-            }
-            
         }
-           
         return (
             <div className={className}>
-                {this.props.classroomReport === false ?
+                {this.props.classroomReport === false &&
                     indexes.map(index => {
                         if (data.ideaResults.length > 0)
                             return (
@@ -159,17 +154,19 @@ class PollReportMathGrid extends Component {
                                 </div>
                             );
                     })
-                    :
+                }
+                { 
+                     this.props.data.length > 0 &&
+                    this.props.data[0].poll !== undefined &&
                     <div>
-                        
                         <PollReportMathGridHeader classroomReport={this.props.classroomReport} orders={orders} numbers={numberTest} headers={data.length > 0 ? data[0].poll : []} />
                         {Array.isArray(this.props.data) &&
-                        
                         this.props.data.map(item =>
                             <PollReportMathGridItem classroomReport={this.props.classroomReport} item={item} numbers={numberTest} />
                         )}
                     </div>
-                }
+                    }
+               
             </div>
         );
     }

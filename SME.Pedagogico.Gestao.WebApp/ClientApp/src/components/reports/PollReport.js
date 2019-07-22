@@ -47,6 +47,7 @@ class PollReport extends Component {
     }
 
     render() {
+        
         var reportData = null;
         var chartData = null;
         var mathType = null;
@@ -120,8 +121,6 @@ class PollReport extends Component {
         if (reportData !== [] && reportData.length > 0 && reportData[0].poll !== undefined)
             if (reportData[0].poll[0].order === 0)
                 numbers = true;
-
-
         return (
             <div>
                 <Card className="mb-3">
@@ -160,12 +159,12 @@ class PollReport extends Component {
                                         <div className="mt-4">
                                           {
                                               //Consilidado de Numeros
-                                              this.classroomReport === false  && this.props.pollReport.selectedFilter.proFiciency === "Números" &&
+                                              this.classroomReport === false  && this.props.pollReport.selectedFilter.proficiency === "Números" &&
                                               <PollReportMathNumbersChart data={chartData.chartNumberData} /> 
                                           }
                                           {
                                               //Consilidado de Aditivo e Multiplicativo
-                                              this.classroomReport === false  && this.props.pollReport.selectedFilter.proFiciency !== "Números" &&
+                                              this.classroomReport === false  && this.props.pollReport.selectedFilter.proficiency !== "Números" &&
                                               indexes.map(index => {
                                                 var chartId = "ordem" + chartData.chartIdeaData[index].order;
 
@@ -176,13 +175,15 @@ class PollReport extends Component {
                                           }
                                           {
                                                  // Por Turma de Numeros 
-                                               this.classroomReport === true  && this.props.pollReport.selectedFilter.proFiciency === "Números" &&
-                                              <PollReportMathChartClassroom data={chartData} numbers={numbers} />
+                                               this.classroomReport === true  && this.props.pollReport.selectedFilter.proficiency === "Números" &&
+                                               chartData !== undefined && Array.isArray(chartData) &&
+                                               <PollReportMathChartClassroom data={chartData} numbers={numbers} />
                                           }
                                           {
+                                            
                                               // Por Turma Aditivo e Multiplicativo
-                                              this.classroomReport === true  && this.props.pollReport.selectedFilter.proFiciency !== "Números" &&
-                                              chartData ==! undefined &&
+                                               this.classroomReport === true  && this.props.pollReport.selectedFilter.proficiency !== "Números" &&
+                                              chartData !== undefined && Array.isArray(chartData) &&
                                               (chartData.map(item => {
                                                 var order = item.name !== null ? item.name.replace(" ", "").toLowerCase() : "";
                                                 var chart1Id = order + "-ideaChart";
