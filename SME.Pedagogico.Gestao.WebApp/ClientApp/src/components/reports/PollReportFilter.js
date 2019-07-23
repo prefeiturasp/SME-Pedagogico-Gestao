@@ -104,7 +104,7 @@ class PollReportFilter extends Component {
         this.props.setPollReportFilter(this.state.selectedFilter);
 
         var parameters = this.state.selectedFilter;
-        parameters.classroomReport = this.props.poll.selectedFilter.classroomCodeEol === null ? false : true;
+        parameters.classroomReport = this.props.poll.selectedFilter.classroomCodeEol === "" ? false : true;
         parameters.codigoDRE = this.props.poll.selectedFilter.dreCodeEol;
         parameters.CodigoEscola = this.props.poll.selectedFilter.schoolCodeEol === "todas" ? "" : this.props.poll.selectedFilter.schoolCodeEol;
         parameters.CodigoCurso = this.props.poll.selectedFilter.yearClassroom;

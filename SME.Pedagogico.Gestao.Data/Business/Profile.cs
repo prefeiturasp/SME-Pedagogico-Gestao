@@ -30,16 +30,19 @@ namespace SME.Pedagogico.Gestao.Data.Business
                
                 var profileApi = new PerfilSgpAPI(endPoint);
                 var occupations = await profileApi.GetCargosDeServidor(rf, _token);
+                string codigoCargoAtivo;
                 bool occupationAccess = false; ;
                 if (occupations != null)
                 {
                     foreach (var occupation in occupations.cargos)
                     {
-                        if (occupation.codigoCargo == "3239" ||
-                            occupation.codigoCargo == "3301" ||
-                            occupation.codigoCargo == "3336" ||
-                            occupation.codigoCargo == "3379" ||
-                            occupation.codigoCargo == "3360" )
+                        codigoCargoAtivo = RetornaCargoAtivo(occupation);
+
+                        if (codigoCargoAtivo == "3239" ||
+                            codigoCargoAtivo == "3301" ||
+                            codigoCargoAtivo == "3336" ||
+                            codigoCargoAtivo == "3379" ||
+                            codigoCargoAtivo == "3360")
                         {
                             occupationAccess = true;
                             break;
@@ -63,6 +66,19 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 return null;
             }
+        }
+
+        public  string RetornaCargoAtivo(RetornoCargoDTO occupation)
+        {
+            string codigoCargoAtivo;
+            if (occupation.codigoCargoSobreposto != null)
+                codigoCargoAtivo = occupation.codigoCargoSobreposto;
+            else
+            {
+                codigoCargoAtivo = occupation.codigoCargo;
+            }
+
+            return codigoCargoAtivo;
         }
 
         public async Task<List<SalasPorUEDTO>> GetListClassRoomSchool(string schoolCodeEol, string schooYear)

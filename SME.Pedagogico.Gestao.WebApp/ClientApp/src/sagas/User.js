@@ -35,7 +35,6 @@ function* LoginUserSaga({ credential }) {
                 user.activeRole = data.roles[0];
             yield put({ type: User.types.FINISH_AUTHENTICATION_REQUEST });
             yield put({ type: User.types.SET_USER, user });
-            
         }
     }
     catch (error) {

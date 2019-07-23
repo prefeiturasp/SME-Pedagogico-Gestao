@@ -18,10 +18,11 @@ const PollReportGridItem2 = (props) => {
 
 export default class PollReportMathGridItem extends Component {
     render() {
+
         if (this.props.classroomReport === true) {
             if (this.props.numbers === false) {
                 const { item } = this.props;
-
+              if(item !== undefined && item.poll !== undefined) {
                 return (
                     <div className="d-flex poll-report-grid-item border-bottom">
                         <div className="col-1">
@@ -36,6 +37,7 @@ export default class PollReportMathGridItem extends Component {
                     </div>
                 );
             }
+        }
             else {
                 const { item } = this.props;
 
@@ -76,13 +78,13 @@ export default class PollReportMathGridItem extends Component {
                             <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center text-white font-weight-light">{this.props.testIdeaQuantity} Alunos</div>
                         </div>
                         <div className="col-1 sc-darkgray border-right border-white">
-                            <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center text-white font-weight-light">{this.props.testIdeaPercentage.toFixed(2)}%</div>
+                            <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center text-white font-weight-light">{ this.props.testIdeaPercentage && this.props.testIdeaPercentage.toFixed(2)}%</div>
                         </div>
                         <div className="col-3 sc-darkblue  border-right border-white">
                             <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center text-white font-weight-light">{this.props.testResultQuantity} Alunos</div>
                         </div>
                         <div className="col-1 sc-darkgray border-right border-white">
-                            <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center text-white font-weight-light">{this.props.testResultPercentage.toFixed(2)}%</div>
+                            <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center text-white font-weight-light">{this.props.testIdeaPercentage &&  this.props.testResultPercentage.toFixed(2)}%</div>
                         </div>
                     </div>
                 );

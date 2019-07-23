@@ -2,7 +2,9 @@
 import './PollReportGrid.css';
 import PollReportMathGridHeader from './PollReportMathGridHeader';
 import PollReportMathGridItem from './PollReportMathGridItem';
-
+import { actionCreators } from '../../store/PollReport';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 const PollReportGridTotal = (props) => {
     var { className } = props;
 
@@ -47,19 +49,7 @@ const PollReportGridTotal = (props) => {
         );
 }
 
-export default class PollReportMathGrid extends Component {
-    constructor(props) {
-        super(props);
-        
-        this.mathGridHeader = this.mathGridHeader.bind(this);
-    }
-
-    mathGridHeader(data,i) {
-        var mathGridHeader;
-        mathGridHeader = <PollReportMathGridHeader classroomReport={this.props.classroomReport} orderName={data.numerosResults[i].groupName} numbers={true} orderTitle={""} />
-        return mathGridHeader;
-    }
-
+class PollReportMathGrid extends Component {
     render() {
         var { className } = this.props;
 
@@ -69,44 +59,47 @@ export default class PollReportMathGrid extends Component {
             className += " d-flex flex-column";
 
         var orders = 0;
-
+        
         if (this.props.classroomReport && this.props.data !== undefined && this.props.data.length > 0)
             if (this.props.data[0].poll !== undefined)
                 orders = this.props.data[0].poll.length
 
         var { data } = this.props;
+        
         data.totals = [];
         var indexes = [];
-        if (data.ideaResults !== undefined || data.numerosResults !== undefined) {
-            if (this.props.classroomReport === false && data.ideaResults.length > 0)
-                for (var i = 0; i < data.ideaResults.length; i++) {
-                    indexes.push(i);
-                    data.totals.push({
-                        totalStudentIdeaQuantity: data.ideaResults[i].correctIdeaQuantity + data.ideaResults[i].incorrectIdeaQuantity + data.ideaResults[i].notAnsweredIdeaQuantity,
-                        totalStudentIdeaPercentage: data.ideaResults[i].correctIdeaPercentage + data.ideaResults[i].incorrectIdeaPercentage + data.ideaResults[i].notAnsweredIdeaPercentage,
-                        totalStudentResultQuantity: data.resultResults[i].correctResultQuantity + data.resultResults[i].incorrectResultQuantity + data.resultResults[i].notAnsweredResultQuantity,
-                        totalStudentResultPercentage: data.resultResults[i].correctResultPercentage + data.resultResults[i].incorrectResultPercentage + data.resultResults[i].notAnsweredResultPercentage,
-                    });
+
+        if (this.props.classroomReport === false && data.ideaResults !== undefined)
+          if(data.ideaResults.length > 0)
+            for (var i = 0; i < data.ideaResults.length; i++) {
+                indexes.push(i);
+                data.totals.push({
+                    totalStudentIdeaQuantity: data.ideaResults[i].correctIdeaQuantity + data.ideaResults[i].incorrectIdeaQuantity + data.ideaResults[i].notAnsweredIdeaQuantity,
+                    totalStudentIdeaPercentage: data.ideaResults[i].correctIdeaPercentage + data.ideaResults[i].incorrectIdeaPercentage + data.ideaResults[i].notAnsweredIdeaPercentage,
+                    totalStudentResultQuantity: data.resultResults[i].correctResultQuantity + data.resultResults[i].incorrectResultQuantity + data.resultResults[i].notAnsweredResultQuantity,
+                    totalStudentResultPercentage: data.resultResults[i].correctResultPercentage + data.resultResults[i].incorrectResultPercentage + data.resultResults[i].notAnsweredResultPercentage,
+                });
+            }
+        else if (data.numerosResults !== undefined && data.numerosResults.length > 0)
+            for (var j = 0; j < data.numerosResults.length; j++)
+                indexes.push(j);
+
+        var numberTest = false;
+
+        if (this.props.classroomReport === true && data !== undefined)
+        if(data !== undefined){
+                if(this.props.pollReport.selectedFilter.proficiency ==="Números") {
+                        numberTest = true;
                 }
-            else if (data.numerosResults !== undefined && data.numerosResults.length > 0)
-                for (var j = 0; j < data.numerosResults.length; j++)
-                    indexes.push(j);
-
-            var numberTest = false;
-
-            if (this.props.classroomReport === true && data.length > 0)
-                if (data[0].poll[0].order === 0)
-                    numberTest = true;
         }
         return (
             <div className={className}>
-                {this.props.classroomReport === false ?
+                {this.props.classroomReport === false &&
                     indexes.map(index => {
                         if (data.ideaResults.length > 0)
                             return (
                                 <div key={data.ideaResults[index].orderName}>
                                     <PollReportMathGridHeader classroomReport={this.props.classroomReport} orderName={data.ideaResults[index].orderName} orderTitle={data.resultResults[index].orderTitle} />
-                                    
                                     <PollReportMathGridItem
                                         classroomReport={this.props.classroomReport}
                                         testName="Acertou"
@@ -138,7 +131,7 @@ export default class PollReportMathGrid extends Component {
                         else
                             return (
                                 <div key={data.numerosResults[index].groupName}>
-                                    {this.mathGridHeader(data,index)}
+                                    <PollReportMathGridHeader classroomReport={this.props.classroomReport} orderName={data.numerosResults[index].groupName} numbers={true} orderTitle={data.resultResults[index].orderTitle}/>
                                     <PollReportMathGridItem
                                         numbers={true}
                                         classroomReport={this.props.classroomReport}
@@ -162,17 +155,25 @@ export default class PollReportMathGrid extends Component {
                                 </div>
                             );
                     })
-                    :
+                }
+                { 
+                     this.props.data.length > 0 &&
+                    this.props.data[0].poll !== undefined &&
                     <div>
-                        {<PollReportMathGridHeader classroomReport={this.props.classroomReport} orders={orders} numbers={numberTest} headers={data.length > 0 ? data[0].poll : []} />}
-
-                        {
-                            this.props.data.map(item =>
+                        <PollReportMathGridHeader classroomReport={this.props.classroomReport} orders={orders} numbers={numberTest} headers={data.length > 0 ? data[0].poll : []} />
+                        {Array.isArray(this.props.data) &&
+                        this.props.data.map(item =>
                             <PollReportMathGridItem classroomReport={this.props.classroomReport} item={item} numbers={numberTest} />
                         )}
                     </div>
-                }
+                    }
+               
             </div>
         );
     }
 }
+
+export default connect(
+    state => ({ pollReport: state.pollReport }),
+    dispatch => bindActionCreators(actionCreators, dispatch)
+)(PollReportMathGrid);

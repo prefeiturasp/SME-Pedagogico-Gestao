@@ -259,8 +259,10 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
                 foreach (var occupation in occupations.cargos)
                 {
+
+                   string codigoCargoAtivo = ProfileBusiness.RetornaCargoAtivo(occupation);
                     haveOccupationAccess = false;
-                    switch (occupation.codigoCargo)
+                    switch (codigoCargoAtivo)
                     {
                         case "3239":
                             roleName = "Professor";
@@ -295,7 +297,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     if (haveOccupationAccess)
                     {
                         await Authentication.SetRole(rf, roleName, accessLevel);
-                        ListcodeOcupations.Add(occupation.codigoCargo);
+                        ListcodeOcupations.Add(codigoCargoAtivo);
                     }
 
                 }
