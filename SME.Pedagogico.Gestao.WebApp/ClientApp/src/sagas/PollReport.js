@@ -15,8 +15,7 @@ function* GetPollReportSaga({ parameters }) {
             yield put({ type: PollReport.types.POLL_REPORT_REQUEST_NOT_FOUND });
         else {
             var pollReportResponse = null;
-
-            if (parameters.discipline !== "Matemática")
+               if (parameters.discipline !== "Matemática")
                 pollReportResponse = {
                     data: data.results,
                     chartData: data.chartData
@@ -35,6 +34,7 @@ function* GetPollReportSaga({ parameters }) {
                     }
                 }
             }
+
             else {
                 pollReportResponse = {
                     data: data.results,
