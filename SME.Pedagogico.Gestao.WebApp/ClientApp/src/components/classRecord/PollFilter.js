@@ -159,7 +159,7 @@ class PollFilter extends Component {
     }
 
     SelectedDre(event) {
-
+debugger
       //  this.props.filterMethods.resetPollFilters();
      //  this.props.filterMethods.getDre();
         var index = event.nativeEvent.target.selectedIndex;
@@ -446,7 +446,8 @@ class PollFilter extends Component {
                 });
             }
 
-            if (selectedDre !== "todas") {
+            if (selectedDre !== "todas" && this.props.filters.scholls[0] !== undefined) {
+                debugger
                 for (var item in this.props.filters.scholls) {
                     listSchoolOptions.push({
                         value: this.props.filters.scholls[item].codigoEscola,
