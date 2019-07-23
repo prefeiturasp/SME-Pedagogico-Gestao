@@ -2,7 +2,6 @@
 import CheckInline from '../inputs/CheckInline'
 
 export default class StudentFrequency extends Component {
- 
     render() {
         console.log(this.props.disabled, this.props.numberLessons)
         return (
@@ -18,12 +17,12 @@ export default class StudentFrequency extends Component {
                     <div className="col-sm-12 col-xs-12 form-check form-check-inline">
                         <CheckInline
                             codigoaluno={this.props.student.codigoAluno}
-                            numberLessons={this.props.numberLessons} 
+                            numberLessons={this.props.numberLessons}
                             checkFrequency={this.props.checkFrequency}
                             checkboxChange={this.props.checkboxChange}
                             disabled={this.props.disabled}
-                        /> 
-                       
+                        />
+
                     </div>
                 </td>
                 <td className="text-center" >
@@ -36,10 +35,4 @@ export default class StudentFrequency extends Component {
             </tr >
         );
     }
-
-
 }
-
-
-
-

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.WebApp.Models.Auth
 {
@@ -15,5 +11,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Models.Auth
         public IdentityModel Identity { get; set; }
         public IEnumerable<Cookie> Cookies { get; set; }
         public SMETokenModel SMEToken { get; set; }
+        public List<UserRoleModel> Roles { get; set; } = new List<UserRoleModel>();
     }
 }

@@ -1,7 +1,6 @@
 ﻿import React, { Component } from 'react';
 import PollSelectWrite from './inputs/PollSelectWrite'
-import PollSelectRead from './inputs/PollSelectRead'
-
+import PollSelectReadWriteLevel from './inputs/PollSelectReadWriteLevel'
 
 export default class StudentPollPortuguese extends Component {
     constructor(props) {
@@ -11,37 +10,39 @@ export default class StudentPollPortuguese extends Component {
             selectedClass: "custom-select custom-select-sm poll-select"
         };
     }
-    
+
     render() {
         return (
             <tr>
                 <th className="align-middle">
-                    <small className="ml-2 pr-4"><b>{this.props.student.sequence}</b></small><small>{this.props.student.name}</small>
+
+                    <small className="ml-2 pr-4"><b>{this.props.student.sequenceNumber}</b></small><small>{this.props.student.name}</small>
                 </th>
                 <th className="text-center border poll-select-container 1bim_col">
-                    <PollSelectWrite subjectName="portuguese" sequence={this.props.student.sequence} name="t1e" value={this.props.student.pollresults.portuguese.t1e} updatePollStudent={this.props.updatePollStudent} columnColor="bg-bluescale" />
+                    <PollSelectWrite subjectName="portuguese" sequence={this.props.student.studentCodeEol} name="t1e" value={this.props.student.t1e} updatePollStudent={this.props.updatePollStudent} columnColor="bg-bluescale" disabled={this.props.editLock1b}/>
                 </th>
                 <th className="text-center border poll-select-container 1bim_col">
-                    <PollSelectRead subjectName="portuguese" sequence={this.props.student.sequence} name="t1l" value={this.props.student.pollresults.portuguese.t1l} updatePollStudent={this.props.updatePollStudent} columnColor="bg-lila" />
+                    <PollSelectReadWriteLevel subjectName="portuguese" sequence={this.props.student.studentCodeEol} name="t1l" value={this.props.student.t1l} updatePollStudent={this.props.updatePollStudent} columnColor="bg-lila" disabled={this.props.editLock1b} />
                 </th>
                 <th className="text-center border poll-select-container 2bim_col">
-                    <PollSelectWrite subjectName="portuguese" sequence={this.props.student.sequence} name="t2e" value={this.props.student.pollresults.portuguese.t2e} updatePollStudent={this.props.updatePollStudent} columnColor="bg-bluescale"/>
+                    <PollSelectWrite subjectName="portuguese" sequence={this.props.student.studentCodeEol} name="t2e" value={this.props.student.t2e} updatePollStudent={this.props.updatePollStudent} columnColor="bg-bluescale" disabled={this.props.editLock2b}/>
                 </th>
                 <th className="text-center border poll-select-container 2bim_col">
-                    <PollSelectRead subjectName="portuguese" sequence={this.props.student.sequence} name="t2l" value={this.props.student.pollresults.portuguese.t2l} updatePollStudent={this.props.updatePollStudent} columnColor="bg-lila" />
+                    <PollSelectReadWriteLevel subjectName="portuguese" sequence={this.props.student.studentCodeEol} name="t2l" value={this.props.student.t2l} updatePollStudent={this.props.updatePollStudent} columnColor="bg-lila" disabled={this.props.editLock2b}/>
                 </th>
                 <th className="text-center border poll-select-container 3bim_col">
-                    <PollSelectWrite subjectName="portuguese" sequence={this.props.student.sequence} name="t3e" value={this.props.student.pollresults.portuguese.t3e} updatePollStudent={this.props.updatePollStudent} columnColor="bg-bluescale"/>
+                    <PollSelectWrite subjectName="portuguese" sequence={this.props.student.studentCodeEol} name="t3e" value={this.props.student.t3e} updatePollStudent={this.props.updatePollStudent} columnColor="bg-bluescale" disabled={this.props.editLock3b}/>
                 </th>
                 <th className="text-center border poll-select-container 3bim_col">
-                    <PollSelectRead subjectName="portuguese" sequence={this.props.student.sequence} name="t3l" value={this.props.student.pollresults.portuguese.t3l} updatePollStudent={this.props.updatePollStudent} columnColor="bg-lila" />
+                    <PollSelectReadWriteLevel subjectName="portuguese" sequence={this.props.student.studentCodeEol} name="t3l" value={this.props.student.t3l} updatePollStudent={this.props.updatePollStudent} columnColor="bg-lila" disabled={this.props.editLock3b}/>
                 </th>
                 <th className="text-center border poll-select-container 4bim_col">
-                    <PollSelectWrite subjectName="portuguese" sequence={this.props.student.sequence} name="t4e" value={this.props.student.pollresults.portuguese.t4e} updatePollStudent={this.props.updatePollStudent} columnColor="bg-bluescale"/>
+                    <PollSelectWrite subjectName="portuguese" sequence={this.props.student.studentCodeEol} name="t4e" value={this.props.student.t4e} updatePollStudent={this.props.updatePollStudent} columnColor="bg-bluescale" disabled={this.props.editLock4b}/>
                 </th>
                 <th className="text-center border poll-select-container 4bim_col">
-                    <PollSelectRead subjectName="portuguese" sequence={this.props.student.sequence} name="t4l" value={this.props.student.pollresults.portuguese.t4l} updatePollStudent={this.props.updatePollStudent} columnColor="bg-lila" />
+                    <PollSelectReadWriteLevel subjectName="portuguese" sequence={this.props.student.studentCodeEol} name="t4l" value={this.props.student.t4l} updatePollStudent={this.props.updatePollStudent} columnColor="bg-lila" disabled={this.props.editLock4b}/>
                 </th>
+                
             </tr>
         );
     }

@@ -16,7 +16,6 @@ export default class PollSelectWrite extends Component {
     getColor(value) {
         var defaultColor = "custom-select custom-select-sm ";
 
-
         if (value !== undefined && (value === "PS" || value === "SSV" || value === "SCV" || value === "SA" || value === "A")) {
             return (defaultColor + this.props.columnColor);
         } else {
@@ -28,13 +27,13 @@ export default class PollSelectWrite extends Component {
         this.props.updatePollStudent(this.props.sequence, this.props.subjectName, this.props.name, event.target.value);
     }
 
-    
     render() {
         return (
 
             <div>
-                <select id={"pollItem-" + this.props.name + "-" + this.props.sequence} value={this.props.value} className={this.getColor(this.props.value)} onChange={this.onOptionChange}>
+                <select id={"pollItem-" + this.props.name + "-" + this.props.sequence} value={this.props.value} className={this.getColor(this.props.value)} onChange={this.onOptionChange} disabled={this.props.disabled ? true : null}>
                     <option defaultValue hidden className="text-muted" value=""></option>
+                    <option className={"custom-select custom-select-sm text-white" + this.props.columnColor} value=""></option>
                     <option className={"custom-select custom-select-sm text-white" + this.props.columnColor} value="PS">PS</option>
                     <option className={"custom-select custom-select-sm text-white" + this.props.columnColor} value="SSV">SSV</option>
                     <option className={"custom-select custom-select-sm text-white" + this.props.columnColor} value="SCV">SCV</option>

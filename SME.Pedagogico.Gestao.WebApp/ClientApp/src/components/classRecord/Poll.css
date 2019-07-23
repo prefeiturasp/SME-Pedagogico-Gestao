@@ -1,14 +1,28 @@
-﻿.text-color-purple {
+﻿.btn.btn-save.text-white {
+    background-color: #F39200;
+}
+.btn.btn-save.text-white:hover {
+    background-color: #CC7A00;
+}
+.btn.btn-save.text-white.deactive {
+    background-color: #EEEEEE;
+}
+.testcursor{
+    cursor:pointer;
+}
+.text-color-purple {
     color: #7C4DFF;
 }
+
 th.align-middle.border.text-color-purple {
     width: 250px !important;
 }
-.col-fixed{
-    width:300px;
+
+.col-fixed {
+    width: 300px;
 }
-.column-fixed{
-    
+
+.column-fixed {
 }
 
 .d-flex.flex-column.align-items-end.flexsondagem {
@@ -18,16 +32,19 @@ th.align-middle.border.text-color-purple {
 .d-flex.line {
     border-bottom: 1px solid #DEDEDE;
 }
+
 .p-2.p-2sondagem {
     width: 330px;
 }
+
 .card-header-sondagem {
     margin-bottom: 0;
     background-color: rgba(0,0,0,.03);
     border-bottom: 1px solid rgba(0,0,0,.125);
 }
+
 .btn-planning {
-    margin: 10px;
+    margin: 10px 10px 10px 0px;
 }
 
 .btn.btn-outline-primary.btn-sm.btn-planning {
@@ -46,6 +63,11 @@ th.align-middle.border.text-color-purple {
     border-color: #8458FF;
     color: white;
 }
+.btn.btn-outline-primary.btn-sm.btn-planning.active:hover {
+    background-color: #6933ff;
+    border-color: #6933ff;
+    color: white;
+}
 
 .btn.btn-outline-primary.btn-sm.btn-matematica {
     color: #8458FF;
@@ -62,6 +84,12 @@ th.align-middle.border.text-color-purple {
     color: white;
     background: #8458FF;
     border-color: #8458FF;
+}
+
+.btn.btn-outline-primary.btn-sm.btn-matematica.active:hover {
+    color: white;
+    background: #6933FF;
+    border-color: #6933FF;
 }
 
 .btn.btn-outline-primary.btn-sm.btn-matematica.btn-single {
@@ -84,9 +112,9 @@ th.align-middle.border.text-color-purple {
     margin-top: 20px;
 }
 
-.table.table-sm.table-bordered.table-hover.table-sondagem-matematica thead th {
-    width: 40px;
-}
+    .table.table-sm.table-bordered.table-hover.table-sondagem-matematica thead th {
+        width: 40px;
+    }
 
 .text-center.border.sondagem-matematica-title {
     color: white;
@@ -115,13 +143,13 @@ th.align-middle.border.text-color-purple {
     font-size: 11px;
 }
 
-.table.table-bordered.table-sondagem th {
-    border: 2px solid white;
-}
+    .table.table-bordered.table-sondagem th {
+        border: 2px solid white;
+    }
 
-.table.table-bordered.table-sondagem td {
-    border: 2px solid white;
-}
+    .table.table-bordered.table-sondagem td {
+        border: 2px solid white;
+    }
 
 th.align-middle.border.text-color-purple {
     width: 33% !important;
@@ -130,4 +158,8 @@ th.align-middle.border.text-color-purple {
 .sondagem-matematica-student {
     width: 33%;
     display: inline-flex;
+}
+
+.btn-group.mr-2.btn-group-sm.pills {
+    padding: .5rem 1rem;
 }

@@ -3,9 +3,20 @@ import createSagaMiddleware from 'redux-saga';
 import * as User from './User';
 import UserSaga from '../sagas/User';
 import FrequencySaga from '../sagas/Frequency';
+import ClassRoomStudentsSaga from '../sagas/ClassRoomStudents';
+import PollSaga from '../sagas/Poll';
+import PollReportSaga from '../sagas/PollReport';
+import FilterSaga from '../sagas/Filters';
 import * as LeftMenu from './LeftMenu';
 import * as Calendar from './Calendar';
 import * as Frequency from './Frequency';
+import * as ClassRoomStudents from './ClassRoomStudents';
+import * as Poll from './Poll';
+import * as PollReport from './PollReport';
+import * as Filters from './Filters';
+import * as PollRouter from './PollRouter';
+import * as PollOptionSelectLock from './PollOptionSelectLock'
+import * as Data from './Data'
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web and AsyncStorage for react-native
 import logger from 'redux-logger';
@@ -19,6 +30,13 @@ export default function configureStore(history, initialState) {
         leftMenu: LeftMenu.reducer,
         calendar: Calendar.reducer,
         frequency: Frequency.reducer,
+        classRoomStudents: ClassRoomStudents.reducer,
+        poll: Poll.reducer,
+        pollReport: PollReport.reducer,
+        filters: Filters.reducer,
+        pollRouter: PollRouter.reducer,
+        pollOptionSelectLock: PollOptionSelectLock.reducer,
+        data: Data.reducer,
     };
 
     const reduxSaga = createSagaMiddleware();
@@ -46,9 +64,18 @@ export default function configureStore(history, initialState) {
     if (isDevelopment)
         middleware.push(logger);
 
-    const rootReducer = combineReducers({
+    const appReducer = combineReducers({
         ...reducers
     });
+
+    const rootReducer = (state, action) => {
+        if (action.type === User.types.LOGOUT_USER) {
+            storage.removeItem('persist:root');
+            state = undefined;
+        }
+
+        return appReducer(state, action)
+    };
 
     const persistedReducer = persistReducer(persistConfig, rootReducer);
 
@@ -62,6 +89,10 @@ export default function configureStore(history, initialState) {
 
     reduxSaga.run(UserSaga);
     reduxSaga.run(FrequencySaga);
+    reduxSaga.run(ClassRoomStudentsSaga);
+    reduxSaga.run(PollSaga);
+    reduxSaga.run(PollReportSaga);
+    reduxSaga.run(FilterSaga);
 
     return ({ store, persistor });
 }

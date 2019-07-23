@@ -4,5 +4,66 @@
 
 .clickable {
     cursor: pointer;
-    z-index: 1;
+}
+
+.sc-darkblue-button {
+    background-color: #086397;
+    border-color: #086397;
+}
+
+.sc-darkblue-outline-button {
+    border-color: #086397;
+    color: #086397;
+}
+
+.sc-blue {
+    background-color: #1E90FF;
+}
+
+.sc-darkblue {
+    background-color: #0077BE;
+}
+
+.sc-gray {
+    background-color: #EEEEEE;
+}
+
+.sc-darkgray {
+    background-color: #ADADAE;
+}
+
+.sc-lightpurple {
+    background-color: #9C96F6;
+}
+
+.sc-text-blue {
+    color: #1E90FF;
+}
+
+.sc-text-purple {
+    color: #7C4DFF;
+}
+
+.sc-text-size-000 {
+    font-size: 9px;
+}
+
+.sc-text-size-00 {
+    font-size: 10px;
+}
+
+.sc-text-size-0 {
+    font-size: 12px;
+}
+
+.sc-text-size-1 {
+    font-size: 14px;
+}
+
+.sc-text-size-2 {
+    font-size: 16px;
+}
+
+.sc-text-size-4 {
+    font-size: 24px;
 }

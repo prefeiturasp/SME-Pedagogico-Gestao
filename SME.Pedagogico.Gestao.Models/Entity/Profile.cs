@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SME.Pedagogico.Gestao.Models.Entity
+﻿namespace SME.Pedagogico.Gestao.Models.Entity
 {
     public class Profile : Base.Abstracts.NamedTable
     {
         #region ==================== ATTRIBUTES ====================
+
         public string StudentId { get; set; }
         public virtual Academic.Student Student { get; set; }
 
@@ -17,16 +12,7 @@ namespace SME.Pedagogico.Gestao.Models.Entity
 
         public string UserId { get; set; }
         public virtual Authentication.User User { get; set; }
+
         #endregion ==================== ATTRIBUTES ====================
-
-
-
-        #region ==================== CONSTRUCTORS ====================
-        #endregion ==================== CONSTRUCTORS ====================
-
-
-
-        #region ==================== METHODS ====================
-        #endregion ==================== METHODS ====================
     }
 }

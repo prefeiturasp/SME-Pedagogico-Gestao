@@ -1,10 +1,9 @@
 ﻿import React, { Component } from 'react';
 
-
 export default class LegendsReadWrite extends Component {
     render() {
         return (
-            <div className="d-flex flex-column align-items-end">
+            <div>
                 <div className="card" id="accordionescrita">
                     <div className="card-header-sondagem" role="tab" id="headingescrita">
                         <div data-toggle="collapse" data-parent="#accordionescrita" href="#collapseescrita" aria-expanded="false"
@@ -42,6 +41,7 @@ export default class LegendsReadWrite extends Component {
                         </div>
                     </div>
                 </div>
+                <div className="pb-2"></div>
                 <div className="card" id="accordionleitura">
                     <div className="card-header-sondagem" role="tab" id="headingescrita">
                         <div data-toggle="collapse" data-parent="#accordionleitura" href="#collapseleitura" aria-expanded="false"
@@ -64,7 +64,7 @@ export default class LegendsReadWrite extends Component {
                                     <div className="ml-auto p-2"><small className="text-muted">Nível 2</small></div>
                                 </div>
                                 <div className="d-flex line max-column-size">
-                                    <div className="p-2 p-2sondagem"><small className="text-muted">Não associou nenhum(a) da(s) palavras ou títulos às imagens correspondentes</small></div>
+                                    <div className="p-2 p-2sondagem"><small className="text-muted">Associou 2 ou menos palavras ou títulos às imagens correspondentes</small></div>
                                     <div className="ml-auto p-2"><small className="text-muted">Nível 3</small></div>
                                 </div>
                                 <div className="d-flex max-column-size">

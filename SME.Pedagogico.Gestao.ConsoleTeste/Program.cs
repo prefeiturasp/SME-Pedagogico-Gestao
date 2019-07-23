@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using System;
-using System.Security.Cryptography;
-using System.Text;
+﻿using System;
 
 namespace SME.Pedagogico.Gestao.ConsoleTeste
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.Write("Enter a password: ");
             string password = Console.ReadLine();

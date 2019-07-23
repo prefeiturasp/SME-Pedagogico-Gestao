@@ -5,19 +5,17 @@
 
 #logo-content-top-menu {
     width: 265px;
-    background-color: #FBFBFC;
+    background-color: #626263;
 }
 
 #logo-top-menu {
-    width: 132px;
-    height: 46px;
+    width: 177px;
+    height: 31px;
 }
 
 #top-menu-bar {
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
 }
-
-
 
 .top-menu-button {
     width: 40px;
@@ -29,3 +27,24 @@
 .top-menu-button-icon > i {
     color: #C0C0C0;
 }
+
+.top-navigation-button {
+    cursor: pointer;
+}
+
+    .top-navigation-button:hover {
+        background-color: #EEEEEE;
+    }
+
+    .top-navigation-button > a {
+        text-decoration: none;
+    }
+
+.top-navigation-button-selected {
+    cursor: pointer;
+    background-color: #EEEEEE;
+}
+
+    .top-navigation-button-selected > a {
+        text-decoration: none;
+    }

@@ -47,6 +47,13 @@
             <param name="name">Nome do atributo desejado</param>
             <returns>Valor (value) do atributo desejado</returns>
         </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.AuthController.GetUserRoles(System.String)">
+            <summary>
+            Método para retornar as funções/cargos/perfis do usuário pelo 'username'
+            </summary>
+            <param name="username">Nome de usuário a ser pesquisado</param>
+            <returns>Retorna uma lista de UserRoleModel</returns>
+        </member>
         <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.AuthController.Login(SME.Pedagogico.Gestao.WebApp.Models.Auth.CredentialModel)">
             <summary>
             Método para efetuar o login do usuário utilizando o sistema do Novo SGP para validar o usuário e receber credencial de acesso.
@@ -81,6 +88,95 @@
             </summary>
             <param name="credential">Objeto que contém informações da credencial do usuário, neste caso específico é necessário o atributo username</param>
             <returns>Sucesso (status code 200) caso seja possível deslogar o usuário desejado.</returns>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.AuthController.ResetPassword(SME.Pedagogico.Gestao.WebApp.Models.Auth.ResetPassword)">
+            <summary>
+            Método para resetar a senha do usuário desejado
+            </summary>
+            <param name="credential">Objeto contendo nome de usuário, nova senha e "key" para conseguir acessar a funcionalidade</param>
+            <returns></returns>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.AuthController.ResetDefaultPassword(SME.Pedagogico.Gestao.Data.DTO.ResetPasswordDTO)">
+            <summary>
+            Método para resetar a senha padrão do usuário desejado
+            </summary>
+            <param name="credential">Objeto contendo nome de usuário, nova senha e "key" para conseguir acessar a funcionalidade</param>
+            <returns>Caso erro na validação da senha, retorna array de strings com msgs de erro</returns>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.ClassRoomStudentsController.#ctor(Microsoft.Extensions.Configuration.IConfiguration,SME.Pedagogico.Gestao.WebApp.Contexts.SMEManagementContext)">
+            <summary>
+            Construtor padrão para o ClassRoomStudents, faz injeção de dependências de IConfiguration e SMEManagementContext.
+            </summary>
+            <param name="config">Depêndencia de configurações</param>
+            <param name="db">Depêndencia de dataContext (SMEManagementContext)</param>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.FiltrosController.ListarTurmasPorEscola(SME.Pedagogico.Gestao.Data.DTO.BuscarTurmasPorEscola)">
+            <summary>
+            Lista turma por escola
+            </summary>
+            <param name="classrooms"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.FiltrosController.ListarEscolasPorDre(SME.Pedagogico.Gestao.Data.DTO.BuscarEscolasPorDreDTO)">
+            <summary>
+            Listar escolas por dre
+            </summary>
+            <param name="schoolFilters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.FiltrosController.ListarDres">
+            <summary>
+            Listar todas as dres
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.SondagemMatematicaController.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Construtor padrão para o SondagemMatematicaController, faz injeção de dependências SMEManagementContext.
+            </summary>
+            <param name="db">Depêndencia de dataContext (SMEManagementContext)</param>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.SondagemMatematicaController.GravaSondagemCM(System.Collections.Generic.List{SME.Pedagogico.Gestao.Data.DTO.SondagemMatematicaOrdemDTO})">
+            <summary>
+            Método para fazer a sondagem de matemática de CM.
+            </summary>
+            <param name="dadosSondagem">Objeto que contém informações da sondagem de matemática</param>
+            <returns></returns>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.SondagemMatematicaController.ListaSondagemCM(SME.Pedagogico.Gestao.Data.DTO.FiltroSondagemMatematicaDTO)">
+            <summary>
+            Método para fazer a sondagem de matemática de CM.
+            </summary>
+            <param name="filtroSondagem">Objeto que contém filtro para retorno de sondagem de CM</param>
+            <returns>Dados da sondagem</returns>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.SondagemMatematicaController.ListaSondagemCA(SME.Pedagogico.Gestao.Data.DTO.FiltroSondagemMatematicaDTO)">
+            <summary>
+            Método para fazer a sondagem de matemática de CA.
+            </summary>
+            <param name="filtroSondagem">Objeto que contém filtro para retorno de sondagem de CA</param>
+            <returns>Dados da sondagem</returns>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.SondagemMatematicaController.ListaSondagemNumeros(SME.Pedagogico.Gestao.Data.DTO.FiltroSondagemMatematicaDTO)">
+            <summary>
+            Método para fazer a sondagem de matemática de Numeros.
+            </summary>
+            <param name="filtroSondagem">Objeto que contém filtro para retorno de sondagem de Numeros</param>
+            <returns>Dados da sondagem</returns>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.SondagemMatematicaController.GravaSondagemCA(System.Collections.Generic.List{SME.Pedagogico.Gestao.Data.DTO.SondagemMatematicaOrdemDTO})">
+            <summary>
+            Método para fazer a sondagem de matemática de CA.
+            </summary>
+            <param name="dadosSondagem">Objeto que contém informações da sondagem de matemática</param>
+            <returns></returns>
+        </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.SondagemMatematicaController.GravaSondagemNumeros(System.Collections.Generic.List{SME.Pedagogico.Gestao.Data.DTO.SondagemMatematicaNumerosDTO})">
+            <summary>
+            Método para fazer a sondagem de matemática de Números.
+            </summary>
+            <param name="dadosSondagem">Objeto que contém informações da sondagem de matemática</param>
+            <returns></returns>
         </member>
     </members>
 </doc>

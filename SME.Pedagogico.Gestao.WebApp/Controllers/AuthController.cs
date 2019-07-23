@@ -1,4 +1,14 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using SME.Pedagogico.Gestao.Data.Business;
+using SME.Pedagogico.Gestao.Data.DTO;
+using SME.Pedagogico.Gestao.Data.Integracao.DTO;
+using SME.Pedagogico.Gestao.Models.Authentication;
+using SME.Pedagogico.Gestao.WebApp.Contexts;
+using SME.Pedagogico.Gestao.WebApp.Models.Auth;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
@@ -6,19 +16,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-using SME.Pedagogico.Gestao.Models.Authentication;
-using SME.Pedagogico.Gestao.WebApp.Contexts;
-using SME.Pedagogico.Gestao.WebApp.Models.Auth;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
@@ -29,13 +28,14 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
     public class AuthController : ControllerBase
     {
         #region ==================== ATTRIBUTES ====================
+
         private IConfiguration _config; // Objeto para recuperar informações de configuração do arquivo appsettings.json
         private readonly SMEManagementContext _db; // Objeto context referente ao banco smeCoreDB
+
         #endregion ==================== ATTRIBUTES ====================
 
-
-
         #region ==================== CONSTRUCTORS ====================
+
         /// <summary>
         /// Construtor padrão para o AuthController, faz injeção de dependências de IConfiguration e SMEManagementContext.
         /// </summary>
@@ -46,12 +46,13 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             _config = config;
             _db = db;
         }
+
         #endregion ==================== CONSTRUCTORS ====================
 
-
-
         #region ==================== METHODS ====================
+
         #region -------------------- PRIVATE --------------------
+
         /// <summary>
         /// Método para validar as credenciais de login do usuário.
         /// </summary>
@@ -221,9 +222,93 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
             return (data);
         }
+
+        /// <summary>
+        /// Método para retornar as funções/cargos/perfis do usuário pelo 'username'
+        /// </summary>
+        /// <param name="username">Nome de usuário a ser pesquisado</param>
+        /// <returns>Retorna uma lista de UserRoleModel</returns>
+        private async Task<List<UserRoleModel>> GetUserRoles(string username)
+        {
+            List<UserRoleModel> userRoles =
+                (from current in await Data.Business.Authentication.GetUserRoles(username)
+                 select new UserRoleModel()
+                 {
+                     RoleId = current.RoleId,
+                     RoleName = current.Role.Name,
+                     AccessLevelId = current.AccessLevelId,
+                     AccessLevel = current.AccessLevel.Value,
+                     Description = current.AccessLevel.Description
+                 }).ToList();
+
+            return (userRoles);
+        }
+
+        private async Task<List<string>> SetOccupationsRF(string rf, RetornoCargosServidorDTO occupations)
+        {
+            var ProfileBusiness = new Profile(_config);
+
+            string roleName = "";
+            string accessLevel = "";
+            bool haveOccupationAccess;
+            var ListcodeOcupations = new List<string>();
+
+            if (occupations != null)
+            {
+                //Implementar regra de cargo sobrePosto 
+
+                foreach (var occupation in occupations.cargos)
+                {
+
+                   string codigoCargoAtivo = ProfileBusiness.RetornaCargoAtivo(occupation);
+                    haveOccupationAccess = false;
+                    switch (codigoCargoAtivo)
+                    {
+                        case "3239":
+                            roleName = "Professor";
+                            accessLevel = "32";
+                            haveOccupationAccess = true;
+                            break;
+                        case "3301":
+                            roleName = "Professor";
+                            accessLevel = "32";
+                            haveOccupationAccess = true;
+                            break;
+                        case "3336":
+                            roleName = "Professor";
+                            accessLevel = "32";
+                            haveOccupationAccess = true;
+                            break;
+                        case "3379":
+                            roleName = "CP";
+                            accessLevel = "27";
+                            haveOccupationAccess = true;
+                            break;
+                        case "3360":
+                            roleName = "Diretor";
+                            accessLevel = "27";
+                            haveOccupationAccess = true;
+                            break;
+                        default:
+                            haveOccupationAccess = false;
+                            break;
+                    }
+
+                    if (haveOccupationAccess)
+                    {
+                        await Authentication.SetRole(rf, roleName, accessLevel);
+                        ListcodeOcupations.Add(codigoCargoAtivo);
+                    }
+
+                }
+            }
+            return ListcodeOcupations;
+        }
+
         #endregion -------------------- PRIVATE --------------------
 
         #region -------------------- PUBLIC --------------------
+
         /// <summary>
         /// Método para efetuar o login do usuário utilizando o sistema do Novo SGP para validar o usuário e receber credencial de acesso.
         /// </summary>
@@ -244,7 +329,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 {
                     Token = CreateToken(credential.Username),
                     Session = session,
-                    RefreshToken = refreshToken
+                    RefreshToken = refreshToken,
+                    Roles = await GetUserRoles(credential.Username)
                 }));
             }
 
@@ -308,39 +394,156 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> LoginIdentity([FromBody]CredentialModel credential)
         {
-            if (!Data.Business.Authentication.ValidateUser(credential.Username, credential.Password))
-            {
-                // Executa o método de autenticação pelo CoreSSO.Identity (sistema legado)
-                ClientUserModel user = await Authenticate(credential);
+            var ProfileBusiness = new Profile(_config);
+            var listOccupations = new List<string>();
 
-                if (user != null)
+            // Verifica se ja existe na tabela de usuários
+            if (Authentication.ValidateUser(credential.Username))
+            {   // se já existir verifica se usuário e senha estão corretos
+                if (!Authentication.ValidateUser(credential.Username, credential.Password))
                 {
-                    user.SMEToken = new SMETokenModel();
-                    user.SMEToken.Token = CreateToken(user); // Cria o token de acesso
-                    user.SMEToken.Session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
-                    user.SMEToken.RefreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
-                    await Data.Business.Authentication.RegisterUser(credential.Username, credential.Password); // Cadastra o usuário dentro do banco PostgreSQL (Novo SGP)
-                    await Data.Business.Authentication.LoginUser(credential.Username, user.SMEToken.Session, user.SMEToken.RefreshToken); // Loga o usuário no sistema
+                    // Se não estiver correto  retorna não autorizado
+                    return (Unauthorized());
+                }
+                // se usuário e senha estiverem corretos 
+                else
+                {
+                    // Verifica se possui acesso privilegiado
+                    var userPrivileged = Authentication.ValidatePrivilegedUser(credential.Username);
 
-                    return (Ok(user));
+                    //Se possui acesso privilegiado 
+                    if (userPrivileged != null)
+                    {
+                        var Roles = await GetUserRoles(credential.Username);
+                        bool existsRolePrivilegied = false; ;
+                        foreach (var role in Roles)
+                        {
+                            if (role.RoleName == "Admin" ||
+                               role.RoleName == "Adm DRE")
+                            {
+                                existsRolePrivilegied = true;
+                            }
+                        }
+
+                        if (!existsRolePrivilegied)
+                        {
+                            await SetRolePrivilegied(credential, userPrivileged);
+                        }
+
+                        // Verifica se o cargo dele pode acessar o sistema 
+                        var occupations = await ProfileBusiness.GetOccupationsRF(credential.Username);
+                        if (occupations != null)
+                        {
+                            //  await Authentication.RegisterUser(credential.Username, credential.Password);
+                            listOccupations = await SetOccupationsRF(credential.Username, occupations);
+                        }
+                        string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
+                        string refreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
+                        await Data.Business.Authentication.LoginUser(credential.Username, session, refreshToken); // Loga o usuário no sistema
+
+                        return (Ok(new
+                        {
+                            Token = CreateToken(credential.Username),
+                            Session = session,
+                            RefreshToken = refreshToken,
+                            Roles = await GetUserRoles(credential.Username),
+                            ListOccupations = listOccupations,
+                        }));
+                    }
+
+                    else
+                    {
+                        // Se nao possui acesso privilegiado é Professor ou CP
+                        // Verifica se o cargo dele pode acessar o sistema 
+                        var occupations = await ProfileBusiness.GetOccupationsRF(credential.Username);
+                        if (occupations != null)
+                        {
+                            //  await Authentication.RegisterUser(credential.Username, credential.Password);
+                            listOccupations = await SetOccupationsRF(credential.Username, occupations);
+                            string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
+                            string refreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
+                            await Data.Business.Authentication.LoginUser(credential.Username, session, refreshToken); // Loga o usuário no sistema
+
+                            return (Ok(new
+                            {
+                                Token = CreateToken(credential.Username),
+                                Session = session,
+                                RefreshToken = refreshToken,
+                                Roles = await GetUserRoles(credential.Username),
+                                ListOccupations = listOccupations,
+                            }));
+                        }
+                        else
+                        {
+                            // caso o cargo não possa acessar o sistema retorna não autorizado
+                            return (Unauthorized());
+                        }
+                    }
                 }
             }
+
+            // Se não existir na tabela de usuários é o primeiro login
             else
             {
+                //Verifica se possui acesso privilegiado
+                var userPrivileged = Authentication.ValidatePrivilegedUser(credential.Username);
+                //Se possui acesso privilegiado 
+                if (userPrivileged != null)
+                {
+                    //Registra o usuário no sistema
+                    await Authentication.RegisterUser(credential.Username, credential.Password);
+
+                    await SetRolePrivilegied(credential, userPrivileged);
+                }
+
+                // Se não possui acesso privilegiado é Cp ou professor
+                else
+                {
+                    // verifica se possui algum cargo que possa acesssar o sistema 
+                    var occupations = await ProfileBusiness.GetOccupationsRF(credential.Username);
+                    if (occupations != null)
+                    {
+                        //registra usuario no sistema
+                        await Authentication.RegisterUser(credential.Username, credential.Password);
+                        listOccupations = await SetOccupationsRF(credential.Username, occupations);
+                    }
+                    else
+                    { // se não possui um cargo que possa acessar o sistema retorna nao autorizado
+                        return (Unauthorized());
+                    }
+                }
+
                 string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
                 string refreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
-
+                //await Data.Business.Authentication.RegisterUser(credential.Username, credential.Password);
                 await Data.Business.Authentication.LoginUser(credential.Username, session, refreshToken); // Loga o usuário no sistema
 
                 return (Ok(new
                 {
                     Token = CreateToken(credential.Username),
                     Session = session,
-                    RefreshToken = refreshToken
+                    RefreshToken = refreshToken,
+                    ListOccupations = listOccupations,
+                    Roles = await GetUserRoles(credential.Username)
                 }));
             }
+        }
 
-            return (Unauthorized());
+        private static async Task SetRolePrivilegied(CredentialModel credential, Data.DataTransfer.PrivilegedAccessModel userPrivileged)
+        {
+            if (userPrivileged.OccupationPlace == "AMCOM")
+            {
+                var boolean = await Authentication.SetRole(credential.Username, "Admin", "0");
+            }
+            else if (userPrivileged.OccupationPlace == "SME")
+            {
+                var boolean = await Authentication.SetRole(credential.Username, "Admin", "2");
+            }
+
+            else if (userPrivileged.OccupationPlaceCode == 3)
+            {
+                await Authentication.SetRole(credential.Username, "Adm DRE", "21");
+            }
         }
 
         /// <summary>
@@ -371,7 +574,50 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     return (Ok());
             }
         }
+
+        /// <summary>
+        /// Método para resetar a senha do usuário desejado
+        /// </summary>
+        /// <param name="credential">Objeto contendo nome de usuário, nova senha e "key" para conseguir acessar a funcionalidade</param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<ActionResult<string>> ResetPassword([FromBody] ResetPassword credential)
+        {
+            if (credential.Key == "sgp123456789")
+            {
+                if (await Data.Business.Authentication.ResetSenha(credential.Username, credential.NewPassword))
+                    return (Ok());
+            }
+
+            return (Forbid());
+        }
+
+        /// <summary>
+        /// Método para resetar a senha padrão do usuário desejado
+        /// </summary>
+        /// <param name="credential">Objeto contendo nome de usuário, nova senha e "key" para conseguir acessar a funcionalidade</param>
+        /// <returns>Caso erro na validação da senha, retorna array de strings com msgs de erro</returns>
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult<string> ResetDefaultPassword([FromBody] ResetPasswordDTO credential)
+        {
+            if (credential.Key == "sgp123456789")
+            {
+                if (Authentication.ResetSenhaPadrão(credential, out IEnumerable<string> validationErrors))
+                {
+                    return Ok();
+                } else
+                {
+                    return BadRequest(validationErrors);
+                }
+            }
+
+            return Forbid();
+        }
+
         #endregion -------------------- PUBLIC --------------------
+
         #endregion ==================== METHODS ====================
     }
 }

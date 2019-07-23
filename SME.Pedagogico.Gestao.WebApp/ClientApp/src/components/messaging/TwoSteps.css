@@ -1,0 +1,16 @@
+﻿.block-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(3, 3, 3, 0.3);
+    z-index: 10;
+}
+
+.btn-message{
+    width:109px;
+}
+.btn-message:hover {
+    background-color: #064f79;
+}

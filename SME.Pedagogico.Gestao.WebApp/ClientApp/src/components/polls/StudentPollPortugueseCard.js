@@ -1,20 +1,28 @@
 ﻿import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { actionCreators as actionCreatorsPoll } from '../../store/Poll';
+import { bindActionCreators } from 'redux';
+
 import StudentPollPortuguese from '../polls/StudentPollPortuguese'
+import StudentPollPortuguese3A from '../polls/StudentPollPortuguese3A'
 import LegendsReadWrite from '../polls/component/LegendsReadWrite'
-//Sondagem Portugues
-//verificar novamente as turmas que a sondagem de portugues será aplicada
-//Falta o componente receber a lista de alunos
-export default class StudentPollPortugueseCard extends Component {
+import LegendsReadWrite3A from '../polls/component/LegendsReadWrite3A'
+
+class StudentPollPortugueseCard extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             selectedClass: "custom-select custom-select-sm poll-select",
-            selectedOrdem: "1bim_col"
+            selectedOrdem: "1bim_col",
         };
         this.hideShowOrdem = this.hideShowOrdem.bind(this);
         this.showOneHideAll = this.showOneHideAll.bind(this);
     }
+    componentDidMount() {
+        this.showOneHideAll(this.state.selectedOrdem);
+    }
+
     componentDidUpdate() {
         this.showOneHideAll(this.state.selectedOrdem);
     }
@@ -41,34 +49,39 @@ export default class StudentPollPortugueseCard extends Component {
 
     }
     hideShowOrdem(event) {
-        this.setState({
-            selectedOrdem: event.target.attributes[0].value
+        this.setState({ 
+            selectedOrdem: event.currentTarget.attributes[0].value
         });
-        this.showOneHideAll(event.target.attributes[0].value);
+        this.showOneHideAll(event.currentTarget.attributes[0].value);
     }
     render() {
+        var componentLegendRender, rendererStudentPollPortuguese;
         const pStyle = {
-            color: 'gray'
+            color: '#DADADA'
         };
+
+        if (this.props.poll.pollYear === "3") {
+            componentLegendRender = <LegendsReadWrite3A />
+            rendererStudentPollPortuguese = this.props.students.map(student => (
+                <StudentPollPortuguese3A key={student.sequenceNumber} student={student} updatePollStudent={this.props.updatePollStudent} editLock1b={this.props.editLock1b} editLock2b={this.props.editLock2b} editLock3b={this.props.editLock3b} editLock4b={this.props.editLock4b}/>
+            ));
+        } else {
+            componentLegendRender = <LegendsReadWrite />;
+            rendererStudentPollPortuguese = this.props.students.map(student => (
+                <StudentPollPortuguese key={student.sequenceNumber} student={student} updatePollStudent={this.props.updatePollStudent} editLock1b={this.props.editLock1b} editLock2b={this.props.editLock2b} editLock3b={this.props.editLock3b} editLock4b={this.props.editLock4b}/>
+            ));    
+        }
+
         return (
             <div>
-                <div id="wrapper">
-                    <LegendsReadWrite />
-                    <div>
-                        <div className="btn-group mr-2 btn-group-sm" role="group" aria-label="First group">
-                            <button type="button" className="btn btn-outline-primary btn-sm btn-matematica btn-single active">Português</button>
-                        </div>
-                        
-                    </div>
-                </div>
-             <table className="table table-sm table-bordered table-hover table-sondagem-matematica" style={{ overflow: "hidden", overflowX: "auto" }}>
+                <table className="table table-sm table-bordered table-hover table-sondagem-matematica" style={{ overflow: "hidden", overflowX: "auto" }}>
                     <thead>
                         <tr>
-                            <th rowSpan="2" className="align-middle border text-color-purple"><div className="ml-2"><small><b>Sondagem</b></small></div></th>
-                            <th colSpan="2" id="1bim_col_head" className="text-center border text-color-purple "><span style={pStyle}>&#60;</span><small><b className="p-4">1° Bimestre</b></small><span value="2bim_col" onClick={this.hideShowOrdem}>&#62;</span></th>
-                            <th colSpan="2" id="2bim_col_head" className="text-center border text-color-purple "><span value="1bim_col" onClick={this.hideShowOrdem}>&#60;</span><small><b className="p-4">2° Bimestre</b></small><span value="3bim_col" onClick={this.hideShowOrdem}>&#62;</span></th>
-                            <th colSpan="2" id="3bim_col_head" className="text-center border text-color-purple "><span value="2bim_col" onClick={this.hideShowOrdem}>&#60;</span><small><b className="p-4">3° Bimestre</b></small><span value="4bim_col" onClick={this.hideShowOrdem}>&#62;</span></th>
-                            <th colSpan="2" id="4bim_col_head" className="text-center border text-color-purple "><span value="3bim_col" onClick={this.hideShowOrdem}>&#60;</span><small><b className="p-4">4° Bimestre</b></small><span style={pStyle}>&#62;</span></th>
+                            <th rowSpan="2" className="align-middle border text-color-purple"><div className="ml-2">Sondagem</div></th>
+                            <th colSpan="2" id="1bim_col_head" className="text-center border text-color-purple "><span style={pStyle}><img src="./img/icon_pt_DADADA.svg" alt="seta esquerda inativa" style={{ height: 20 }} /></span><b className="p-4">1° Bimestre</b><span value="2bim_col" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_pt_7C4DFF.svg" alt="seta direita ativa" style={{height:20}}/></span></th>
+                            <th colSpan="2" id="2bim_col_head" className="text-center border text-color-purple "><span value="1bim_col" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_pt_7C4DFF.svg" alt="seta esquerda ativa" style={{ height: 20 }} /></span><b className="p-4">2° Bimestre</b><span value="3bim_col" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_pt_7C4DFF.svg" alt="seta direita ativa" style={{ height: 20 }} /></span></th>
+                            <th colSpan="2" id="3bim_col_head" className="text-center border text-color-purple "><span value="2bim_col" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_pt_7C4DFF.svg" alt="seta esquerda ativa" style={{ height: 20 }} /></span><b className="p-4">3° Bimestre</b><span value="4bim_col" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_pt_7C4DFF.svg" alt="seta direita inativa" style={{ height: 20 }} /></span></th>
+                            <th colSpan="2" id="4bim_col_head" className="text-center border text-color-purple "><span value="3bim_col" onClick={this.hideShowOrdem} className="testcursor"><img src="./img/icon_2_pt_7C4DFF.svg" alt="seta esquerda ativa" style={{ height: 20 }} /></span><b className="p-4">4° Bimestre</b><span style={pStyle}><img src="./img/icon_2_pt_DADADA.svg" alt="seta direita inativa"  style={{height:20}}/></span></th>
                         </tr>
                         <tr>
                             <th className="text-center border poll-select-container 1bim_col"><small className="text-muted">Escrita</small></th>
@@ -84,13 +97,27 @@ export default class StudentPollPortugueseCard extends Component {
 
                     <tbody>
 
-                        {this.props.students.map(student => (
-                            <StudentPollPortuguese key={student.sequence} student={student} updatePollStudent={this.props.updatePollStudent} />
-                        ))}
+                        {rendererStudentPollPortuguese}
 
                     </tbody>
                 </table>
+                
+                {componentLegendRender}
+                    
+                
             </div>
         );
     }
 }
+export default connect(
+    state => (
+        {
+            poll: state.poll
+        }
+    ),
+    dispatch => (
+        {
+            pollMethods: bindActionCreators(actionCreatorsPoll, dispatch)
+        }
+    )
+)(StudentPollPortugueseCard);
