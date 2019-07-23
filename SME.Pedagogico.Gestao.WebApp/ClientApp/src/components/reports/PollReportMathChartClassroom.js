@@ -1,4 +1,7 @@
 ﻿import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { actionCreators } from '../../store/PollReport';
+import { bindActionCreators } from 'redux';
 
 class MathChart extends Component {
     constructor() {
@@ -69,7 +72,7 @@ const ChartLabel = (props) => {
     );
 }
 
-export default class PollReportMathChartClassroom extends Component {
+  class PollReportMathChartClassroom extends Component {
     constructor() {
         super();
 
@@ -77,7 +80,7 @@ export default class PollReportMathChartClassroom extends Component {
     }
 
     updateChart() {
-        if (this.props.numbers === false) {
+       if (this.props.pollReport.selectedFilter.proficiency !== "Números")  {
             var echarts = require('echarts');
 
             // initialize echarts instance with prepared DOM
@@ -130,12 +133,13 @@ export default class PollReportMathChartClassroom extends Component {
     componentDidUpdate() {
         this.updateChart();
     }
-
+   
     render() {
+        debugger
         var { data } = this.props;
 
         if (data !== undefined) {
-            if (this.props.numbers === false)
+            if (this.props.pollReport.selectedFilter.proficiency !== "Números")
                 return (
                     <div className="d-flex flex-column">
                         <ChartTitle title={data.name} />
@@ -151,7 +155,7 @@ export default class PollReportMathChartClassroom extends Component {
                         </div>
                     </div>
                 );
-            else
+            else if(this.props.pollReport.selectedFilter.proficiency === "Números" && Array.isArray(data))
                 return (
                     <div className="d-flex flex-fill justify-content-center flex-wrap">
                         {data.map(item =>
@@ -160,9 +164,10 @@ export default class PollReportMathChartClassroom extends Component {
                     </div>
                 );
         }
-        else
-            return (
-                <div></div>
-            );
+        
     }
 }
+export default connect(
+    state => ({ pollReport: state.pollReport }),
+    dispatch => bindActionCreators(actionCreators, dispatch)
+)(PollReportMathChartClassroom);

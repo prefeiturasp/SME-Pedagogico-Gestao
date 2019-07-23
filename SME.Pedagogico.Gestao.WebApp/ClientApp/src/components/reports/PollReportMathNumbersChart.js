@@ -61,8 +61,8 @@ export default class PollReportMathNumbersChart extends Component {
         var algarismos = null;
         var processoGeneralizacao = null;
         var zeroIntercalado = null;
-
-        for (var i = 0; i < this.props.data.length; i++)
+         if( this.props.data != undefined){
+            for (var i = 0; i < this.props.data.length; i++)
             switch (this.props.data[i].order) {
                 case "Familiares":
                     familiares = { name: "Familiares", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
@@ -88,7 +88,8 @@ export default class PollReportMathNumbersChart extends Component {
                 default:
                     break;
             }
-      
+         }
+       
 
         return (
             <div>

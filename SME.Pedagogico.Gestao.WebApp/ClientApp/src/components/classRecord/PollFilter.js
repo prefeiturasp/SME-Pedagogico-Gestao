@@ -85,7 +85,6 @@ class PollFilter extends Component {
     }
 
     componentDidMount() {
-
         if(this.props.user.activeRole.roleName === ROLES_ENUM.ADM_DRE) 
         {
             var userName = this.props.user.username;
@@ -228,6 +227,7 @@ class PollFilter extends Component {
     }
 
     getClassroom(event) {
+        this.props.filterMethods.activeClassroom("");
         this.setState({
             classroom: event.target.value,
             selectedClassRoom: "",
@@ -438,10 +438,7 @@ class PollFilter extends Component {
                     listSchoolOptions.push({ label: "Todas", value: "todas" });
                 }
             }
-            
             for (var item in this.props.filters.listDres) {
-
-                
                 listDresOptions.push({
                    
                     value: this.props.filters.listDres[item].codigoDRE,

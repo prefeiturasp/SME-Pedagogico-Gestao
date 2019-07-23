@@ -47,6 +47,7 @@ class PollReport extends Component {
     }
 
     render() {
+        
         var reportData = null;
         var chartData = null;
         var mathType = null;
@@ -120,8 +121,6 @@ class PollReport extends Component {
         if (reportData !== [] && reportData.length > 0 && reportData[0].poll !== undefined)
             if (reportData[0].poll[0].order === 0)
                 numbers = true;
-
-
         return (
             <div>
                 <Card className="mb-3">
@@ -154,11 +153,50 @@ class PollReport extends Component {
 
                                     <PollReportBreadcrumb className="mt-5" name="Gráfico" />
 
-                                    {this.props.pollReport.selectedFilter.discipline === "Língua Portuguesa" ?
+                                    {this.props.pollReport.selectedFilter.discipline === "Língua Portuguesa" &&
                                         <PollReportPortugueseChart data={chartData} />
-                                        :
+                                    }    
                                         <div className="mt-4">
-                                            {this.classroomReport === false ?
+                                          {
+                                              //Consilidado de Numeros
+                                              this.classroomReport === false  && this.props.pollReport.selectedFilter.proficiency === "Números" &&
+                                              <PollReportMathNumbersChart data={chartData.chartNumberData} /> 
+                                          }
+                                          {
+                                              //Consilidado de Aditivo e Multiplicativo
+                                              this.classroomReport === false  && this.props.pollReport.selectedFilter.proficiency !== "Números" &&
+                                              indexes.map(index => {
+                                                var chartId = "ordem" + chartData.chartIdeaData[index].order;
+
+                                                return (
+                                                    <PollReportMathChart key={chartId} chartIds={[(chartId + "idea"), (chartId + "result")]} data={chartData.totals[index]} />
+                                                );
+                                            })
+                                          }
+                                          {
+                                                 // Por Turma de Numeros 
+                                               this.classroomReport === true  && this.props.pollReport.selectedFilter.proficiency === "Números" &&
+                                               chartData !== undefined && Array.isArray(chartData) &&
+                                               <PollReportMathChartClassroom data={chartData} numbers={numbers} />
+                                          }
+                                          {
+                                            
+                                              // Por Turma Aditivo e Multiplicativo
+                                               this.classroomReport === true  && this.props.pollReport.selectedFilter.proficiency !== "Números" &&
+                                              chartData !== undefined && Array.isArray(chartData) &&
+                                              (chartData.map(item => {
+                                                var order = item.name !== null ? item.name.replace(" ", "").toLowerCase() : "";
+                                                var chart1Id = order + "-ideaChart";
+                                                var chart2Id = order + "-resultChart"
+
+                                                return (
+                                                    <PollReportMathChartClassroom data={item} chartIds={[chart1Id, chart2Id]} numbers={numbers} />
+                                                );
+                                            }))
+                                          }
+
+
+                                            {/* {this.classroomReport === false ?
                                                 (chartData.chartIdeaData.length > 0 ?
                                                     indexes.map(index => {
                                                         var chartId = "ordem" + chartData.chartIdeaData[index].order;
@@ -183,7 +221,7 @@ class PollReport extends Component {
                                                     }))
                                                     :
                                                     <PollReportMathChartClassroom data={chartData} numbers={numbers} />
-                                            }
+                                            } */}
                                         </div>
                                     }
                                 </div>

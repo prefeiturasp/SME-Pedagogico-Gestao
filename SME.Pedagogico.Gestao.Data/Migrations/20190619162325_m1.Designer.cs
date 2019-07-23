@@ -10,7 +10,7 @@ using SME.Pedagogico.Gestao.Data.Contexts;
 namespace SME.Pedagogico.Gestao.Data.Migrations
 {
     [DbContext(typeof(SMEManagementContext))]
-    [Migration("20190618232749_m1")]
+    [Migration("20190619162325_m1")]
     partial class m1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -173,17 +173,17 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "dde1ef30-fd7d-4bb1-be60-c60540a0d5e8",
+                            Id = "e6c663bd-e496-40b1-af56-76b3b196754c",
                             PollTypeDescription = "Sondagem de Português"
                         },
                         new
                         {
-                            Id = "2da0e938-e030-4dda-aa20-cc20fc10184c",
+                            Id = "f075817d-7493-4d37-9f7f-b9d06b38cbf7",
                             PollTypeDescription = "Sondagem de Matemática"
                         },
                         new
                         {
-                            Id = "fcc9fd55-8c9e-4d6b-a055-9abd7425b593",
+                            Id = "a2c5146c-57c0-4a5e-bb39-fe560598d0eb",
                             PollTypeDescription = "Sondagem de Alfabetização de Matemática"
                         });
                 });
@@ -304,229 +304,229 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "dee1c2e5-b04b-4621-9729-c7b0e7972899",
+                            Id = "368836c2-50ba-4ae6-8d71-d1cf5a7ac694",
                             Description = "Desenvolvedor",
                             Value = "0"
                         },
                         new
                         {
-                            Id = "6e089c2c-2b94-4b16-93be-2c887c3252e5",
+                            Id = "bba3238b-4aa8-4780-9d5b-1fb70d892487",
                             Description = "COTIC",
                             Value = "1"
                         },
                         new
                         {
-                            Id = "11ab3d86-20cf-4f9e-a00e-27a343813208",
+                            Id = "8ba728bc-b54b-4caf-bd22-68b893d3ee1c",
                             Description = "SME",
                             Value = "2"
                         },
                         new
                         {
-                            Id = "b986be3e-dd2f-41d7-b3f2-61c1af77b25c",
+                            Id = "d424c0c4-5fb0-4a66-b148-5c6667892df2",
                             Description = "COPED",
                             Value = "3"
                         },
                         new
                         {
-                            Id = "3890adab-cc3e-446e-9c66-21df25a605fb",
+                            Id = "1bd4e2fc-d1a6-4d64-81c6-cecd16d14131",
                             Description = "DIEFEM",
                             Value = "4"
                         },
                         new
                         {
-                            Id = "d68c57be-01d2-45c3-86cd-31bf79ead9fe",
+                            Id = "b86deaad-efd3-41e7-92a1-27a8ecfc1b9b",
                             Description = "DIEI",
                             Value = "5"
                         },
                         new
                         {
-                            Id = "0997022f-329e-4801-b54c-2b483824390d",
+                            Id = "c3618690-7de2-4ede-8412-54cdbda0143d",
                             Description = "DIEJA",
                             Value = "6"
                         },
                         new
                         {
-                            Id = "b60eb98c-c0ea-4062-82bc-7de3f940d132",
+                            Id = "37dbfa94-adf5-4208-ad24-7cb1a53f13bb",
                             Description = "DIEE",
                             Value = "7"
                         },
                         new
                         {
-                            Id = "46ba752f-d244-45be-933c-5f2a8978bff6",
+                            Id = "48dbac05-c72a-4ab9-9078-d298affdb126",
                             Description = "NTA",
                             Value = "8"
                         },
                         new
                         {
-                            Id = "82f396f3-1d39-4679-bfcf-735972f9d5f8",
+                            Id = "853b1b86-6d8e-47b8-ac23-11533c585b12",
                             Description = "NTC",
                             Value = "9"
                         },
                         new
                         {
-                            Id = "8f2dd730-be30-4898-b14e-e4cea347f569",
+                            Id = "f19f17c8-ea1b-4dbb-ba45-9247278dc157",
                             Description = "NTC-NAAPA",
                             Value = "10"
                         },
                         new
                         {
-                            Id = "c24edc24-1d05-4e37-ba16-8828194589d2",
+                            Id = "91baa561-c938-4e74-83da-a68123a0d7cf",
                             Description = "DIEE-Conveniado",
                             Value = "11"
                         },
                         new
                         {
-                            Id = "36a071cb-08db-4d10-84eb-fc4e0e189590",
+                            Id = "aa9c60a5-5678-40c2-89c3-711505a47ab4",
                             Description = "COPED Básico",
                             Value = "12"
                         },
                         new
                         {
-                            Id = "f0b5ad9b-c8a3-4769-9f73-30846a90dc27",
+                            Id = "4893d962-ee52-4464-bd21-dfd6f17fdd0c",
                             Description = "Regional",
                             Value = "13"
                         },
                         new
                         {
-                            Id = "1e6db09f-64ff-442e-9194-fc817d1b4f11",
+                            Id = "eca031f8-cf7e-45b9-ac5a-2a0b175b2d2d",
                             Description = "Técnico",
                             Value = "14"
                         },
                         new
                         {
-                            Id = "89dbe199-f044-4dea-ac67-16be72dffb54",
+                            Id = "e3a924f4-5d29-40d4-8be1-9b6d02f785eb",
                             Description = "Supervisor DRE",
                             Value = "15"
                         },
                         new
                         {
-                            Id = "bcbe9f61-c8d1-4fc0-bffd-27bdf3274b3e",
+                            Id = "ba1af705-f989-480d-a41f-4e8ead00db9f",
                             Description = "DIPED",
                             Value = "16"
                         },
                         new
                         {
-                            Id = "0eb07de9-1ee7-4192-8a56-da8ad275bef3",
+                            Id = "470587a3-e791-4b7a-b40f-ea4461413810",
                             Description = "NAAPA",
                             Value = "17"
                         },
                         new
                         {
-                            Id = "ec1ecd44-bcb2-4e8a-94d8-963083866510",
+                            Id = "dabe2b26-bb66-4e05-a344-2c8be28be920",
                             Description = "CEFAI",
                             Value = "18"
                         },
                         new
                         {
-                            Id = "2783c0d5-c983-4427-aac6-cf297c3db5c6",
+                            Id = "d3318ed6-5a43-4aa3-a4df-c864f19d0802",
                             Description = "PAAI",
                             Value = "19"
                         },
                         new
                         {
-                            Id = "0445ac25-7dcf-43c9-bdf4-f4d4087a6a58",
+                            Id = "58c6191e-545f-4b44-9c04-097460abbb30",
                             Description = "DIPED DRE",
                             Value = "20"
                         },
                         new
                         {
-                            Id = "c366bfa6-c2d7-47cb-bdec-720a44d642a2",
+                            Id = "3a9e20ee-c32a-42c5-97dd-c0433882daa7",
                             Description = "Adm DRE",
                             Value = "21"
                         },
                         new
                         {
-                            Id = "4214d684-4289-4d09-8947-95ecaec71d5b",
+                            Id = "c169267c-3ccc-4142-b4ff-3a1ea3b2108b",
                             Description = "Básico DRE",
                             Value = "22"
                         },
                         new
                         {
-                            Id = "72af2f07-9909-4726-b096-20c24418414c",
+                            Id = "db11cd19-01f8-484e-979e-722f555d4289",
                             Description = "Básico Escola",
                             Value = "23"
                         },
                         new
                         {
-                            Id = "1586d2ac-4c0f-40b7-9be1-48c32cd0a6bd",
+                            Id = "14b1c27c-74cf-415b-84e1-95547a0e71de",
                             Description = "Infantil",
                             Value = "24"
                         },
                         new
                         {
-                            Id = "269b6c5d-4f8f-48ef-974b-08289836258c",
+                            Id = "6635bf3e-3031-4135-9f1f-eab9a2139313",
                             Description = "UE Parceira",
                             Value = "25"
                         },
                         new
                         {
-                            Id = "ad23c9f3-80ce-4372-bf48-97f204b3db28",
+                            Id = "85ffbfbf-0604-416c-ac09-6f438d531fbe",
                             Description = "AD",
                             Value = "26"
                         },
                         new
                         {
-                            Id = "a7b1b287-5a03-4f56-a074-e65d6babbca2",
+                            Id = "28795439-c54e-47db-8eb1-9e25ef8b66d9",
                             Description = "CP",
                             Value = "27"
                         },
                         new
                         {
-                            Id = "cc90c334-7ac8-4cf5-b24c-f79216e5ac86",
+                            Id = "9ac485b1-1937-4fc6-a058-0c5f792b803b",
                             Description = "Secretário Escola",
                             Value = "28"
                         },
                         new
                         {
-                            Id = "e81af9b7-129c-45d1-bb69-9380dddaa857",
+                            Id = "cbf2b915-a10a-4919-8d52-48d82640ac7a",
                             Description = "COTIC",
                             Value = "29"
                         },
                         new
                         {
-                            Id = "bd3e91c4-89e8-43aa-a532-0cfd2ed313a0",
+                            Id = "c169aa19-e917-4b1a-a8f5-c3b7265a6d5f",
                             Description = "UE",
                             Value = "30"
                         },
                         new
                         {
-                            Id = "21e425bd-567d-4303-8749-4af40a4edfaf",
+                            Id = "cc20d42c-424d-4761-9e76-3e9d1222ebb6",
                             Description = "CJ E Volante (PEI, ADI)",
                             Value = "31"
                         },
                         new
                         {
-                            Id = "a0ebaabd-24d1-4b4e-b584-ccad6994aa9a",
+                            Id = "2cbe13a6-d27a-4987-b8aa-6898f7ccdc4a",
                             Description = "Fund. e Inf.",
                             Value = "32"
                         },
                         new
                         {
-                            Id = "a56ea02e-75d3-4f3e-9382-8f560109a448",
+                            Id = "d9529284-fcf3-47fb-813e-2217df8f85cf",
                             Description = "POA",
                             Value = "33"
                         },
                         new
                         {
-                            Id = "8c4bcc0c-7123-4bad-a38c-cdd74f93049e",
+                            Id = "a9ad61fb-ef73-49fb-a98e-35bbecc59578",
                             Description = "PAP",
                             Value = "34"
                         },
                         new
                         {
-                            Id = "faba9e51-7899-40f8-a6b2-b72cb6c604a4",
+                            Id = "78f8c86b-89bf-42a1-bdac-25660f1aeaa4",
                             Description = "AEE",
                             Value = "35"
                         },
                         new
                         {
-                            Id = "3e06f944-c2e3-4d69-9561-5aa5bf827d2b",
+                            Id = "7ffc0419-07f9-4500-b6a6-27469357fe83",
                             Description = "Readaptado",
                             Value = "36"
                         },
                         new
                         {
-                            Id = "99ab2735-cef2-44f0-965a-2e58615cf2b0",
+                            Id = "5336d36e-06b4-4939-b502-00f0e6bb314c",
                             Description = "ATE",
                             Value = "37"
                         });
@@ -577,7 +577,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "6cd46e22-641c-494d-b5e7-8ea54c4860a7",
+                            Id = "33c4e826-7556-4725-91e9-558558b31e53",
                             DreCodeEol = "",
                             Login = "caique.amcom",
                             Name = "Caique Latorre",
@@ -586,7 +586,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "7a017470-cd6d-4a8d-ab41-463b05d939ba",
+                            Id = "6dbeab1d-9319-4868-bf60-d2db3df6dd13",
                             DreCodeEol = "",
                             Login = "massato.amcom",
                             Name = "Massato Kanno",
@@ -595,7 +595,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "d55f3416-5997-4b97-8725-f5718f30ef20",
+                            Id = "2d3fd050-e2c7-4414-a52c-2240cf2ed3b9",
                             DreCodeEol = "",
                             Login = "daniel.amcom",
                             Name = "Daniel Matsumoto",
@@ -604,7 +604,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "06ef8802-7b2a-4070-9a4d-dffc508c1e9e",
+                            Id = "8ce3a6ac-3306-4a07-8926-c6e5e51e6cd3",
                             DreCodeEol = "",
                             Login = "danielli.amcom",
                             Name = "Danielli",
@@ -613,7 +613,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "93cdc84f-8534-44bf-80ba-767b29170cfe",
+                            Id = "457429e4-7304-47b0-9b9d-591768092aed",
                             DreCodeEol = "",
                             Login = "jeff.amcom",
                             Name = "Jeff",
@@ -622,7 +622,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "b92c2b3b-7b64-4fb8-88a7-3e7fbad23133",
+                            Id = "fa34be50-bed5-4094-9743-0f106469ddfa",
                             DreCodeEol = "",
                             Login = "aline.amcom",
                             Name = "Aline",
@@ -631,7 +631,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "9d7de56a-cb89-4935-996a-77dc15061f7a",
+                            Id = "7c745299-388a-4e16-abf9-436a1c35a3be",
                             DreCodeEol = "",
                             Login = "gabi.sme",
                             Name = "Gabi",
@@ -640,7 +640,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "611b095e-f8af-41d1-9997-5917520844c7",
+                            Id = "9ee58035-bcf7-4654-bbf2-035e79752ed6",
                             DreCodeEol = "",
                             Login = "heloisa.sme",
                             Name = "Heloisa Giannichi",
@@ -649,7 +649,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "67aaca93-8561-443e-92ec-802ed0a2d0ce",
+                            Id = "8c5f1356-89a3-4f9b-b7be-0c821dc5df58",
                             DreCodeEol = "",
                             Login = "7951221",
                             Name = "Karla de Oliveira Queiroz",
@@ -658,7 +658,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "5f283d10-5afc-4d9b-8f21-1d8f39379620",
+                            Id = "22713881-5523-4a00-8ce2-fa1033b07213",
                             DreCodeEol = "",
                             Login = "8016119",
                             Name = "Daniela Harumi Hikawa",
@@ -667,7 +667,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "b8804f3a-c5bb-47da-88e6-34ca22670bce",
+                            Id = "5755a6e8-aed7-4931-8954-b50bea983c0b",
                             DreCodeEol = "",
                             Login = "7937431",
                             Name = "Cintia Anselmo dos Santos",
@@ -676,7 +676,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "b008b61c-9ec6-4267-8dd0-ec2c44f8799c",
+                            Id = "bdaf9c4e-9a3b-4462-bccf-7e14b044851f",
                             DreCodeEol = "",
                             Login = "7906706",
                             Name = "Felipe de Souza Costa",
@@ -685,7 +685,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "a7337a93-3ba2-429c-add5-eab8c4459bed",
+                            Id = "34015653-7941-4262-be6b-990582e57573",
                             DreCodeEol = "",
                             Login = "7944560",
                             Name = "Heloisa Maria de Morais Giannichi",
@@ -694,7 +694,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "eeb5fe04-a8b7-4a76-87c0-7c88d55842da",
+                            Id = "b5171d68-bd26-4de0-8937-b8bcdd51d487",
                             DreCodeEol = "",
                             Login = "7744412",
                             Name = "Carla da Silva Francisco",
@@ -703,7 +703,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "621f5c21-0a27-4da7-b4d5-8bfc9674f92d",
+                            Id = "459231ad-eb6e-4de4-ba25-cad8cf6cbb3d",
                             DreCodeEol = "",
                             Login = "8163740",
                             Name = "Paula Giampietri Franco",
@@ -712,7 +712,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "7ca680f0-16cd-4a29-8a7b-97db3a8e577e",
+                            Id = "41c4abe7-a950-48aa-8ecc-4800e5513c3b",
                             DreCodeEol = "",
                             Login = "6122147",
                             Name = "Humberto Luis de Jesus",
@@ -721,7 +721,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "909099ca-ea78-4c40-b848-21756b4fc9c9",
+                            Id = "1f33cc43-45ee-4b43-ae82-a935d5d2f5c0",
                             DreCodeEol = "",
                             Login = "7727640",
                             Name = "Kátia Gisele Turollo do Nascimento",
@@ -730,7 +730,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "be3dc818-7174-480a-9fc9-99418604098a",
+                            Id = "68238f9f-3982-442b-aefc-f1977682e39a",
                             DreCodeEol = "",
                             Login = "7887337",
                             Name = "Thayrê Marin Alves de Lima",
@@ -739,7 +739,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "0db3df80-84b2-40a5-ad63-68b434bf477f",
+                            Id = "45199d3e-3168-4db9-8a98-57b2cd1b0f3e",
                             DreCodeEol = "",
                             Login = "6888895",
                             Name = "Fernando Jorge Barrios",
@@ -748,7 +748,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "04b86c0b-1d83-4919-8471-1c29bde9221a",
+                            Id = "c269d2c8-8009-40dc-8fcd-9ca6fe99c2a5",
                             DreCodeEol = "",
                             Login = "2994267",
                             Name = "Edna Calvo Leite",
@@ -757,7 +757,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "c424dce4-cb0e-4054-9594-db80ea40a007",
+                            Id = "efaebf73-e387-421a-893b-06a85a71a44d",
                             DreCodeEol = "",
                             Login = "7923490",
                             Name = "Lis Regia Pontedeiro",
@@ -766,7 +766,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "e722bceb-c812-4a63-8425-32d51d2fd090",
+                            Id = "39ca87d8-f0db-4250-9804-42a2340165d5",
                             DreCodeEol = "",
                             Login = "7719086",
                             Name = "Fernando Araujo de Oliveira",
@@ -775,7 +775,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "e87bac47-8d5f-4405-872c-5e0967d53b1d",
+                            Id = "2687305e-59c2-462e-93cf-33d17d2bf293",
                             DreCodeEol = "",
                             Login = "7827067",
                             Name = "Amanda Martins Amaro",
@@ -784,7 +784,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "90e4a3fe-894d-4543-a3f9-feb9cc74841f",
+                            Id = "546369b9-a24a-46f3-a878-b0b96b551b55",
                             DreCodeEol = "",
                             Login = "7705182",
                             Name = "Kátia Sayuri Endo",
@@ -793,7 +793,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "a2597e44-36e7-4ab8-ab3d-b046260ef9a4",
+                            Id = "c39b87e2-7d84-4f63-9a65-5d4133d1782e",
                             DreCodeEol = "",
                             Login = "7716125",
                             Name = "Uyara Vieira Costa de Andrade",
@@ -802,7 +802,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "6691bd4f-602a-4617-a813-40c6839d8e03",
+                            Id = "fd88f50c-6576-43bd-b7dd-c4263c126e85",
                             DreCodeEol = "",
                             Login = "7924488",
                             Name = "Gabriela Manzolli Rowlands Lopes",
@@ -811,7 +811,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "604540a7-ac83-4d84-998d-ce732e821b39",
+                            Id = "fb08025a-5458-4adb-9b55-58efdc19520a",
                             DreCodeEol = "",
                             Login = "6941583",
                             Name = "Ronaldo José da Silveira",
@@ -820,7 +820,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "e3914004-ef74-4903-8f14-5876ae85cd29",
+                            Id = "6f321d3c-516d-4407-a530-6f5b66f75347",
                             DreCodeEol = "",
                             Login = "6946895",
                             Name = "MINEA PASCHOALETO FRATELLI SONOBE",
@@ -829,7 +829,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "6931929e-9370-453c-83cb-a55c3b2d69e5",
+                            Id = "0d1c1ee7-ed51-40b3-9248-50428dfac959",
                             DreCodeEol = "",
                             Login = "6923950",
                             Name = "Rosangela Ferreira de Souza Queiroz",
@@ -838,7 +838,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "52625087-39e6-45bb-a58e-23a0f1cf6d0a",
+                            Id = "6a63035e-94eb-4668-b86c-526796eee22b",
                             DreCodeEol = "108100",
                             Login = "7418078",
                             Name = "Annaa Luisa de Castro",
@@ -847,7 +847,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "6743fa52-bfe4-4dc2-8de3-66879c06f8fd",
+                            Id = "2ea357d7-2406-44a3-899f-86a45703a774",
                             DreCodeEol = "108100",
                             Login = "7936532",
                             Name = "DIEGO BENJAMIM NEVES",
@@ -856,7 +856,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "9c550602-535e-4daa-a961-358ab06be366",
+                            Id = "a1e6ed59-d027-4cbe-b9fe-4b733dce7c12",
                             DreCodeEol = "108100",
                             Login = "8019444",
                             Name = "JULIANO RODRIGO MACIEL FERNANDES",
@@ -865,7 +865,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "ce9d2c45-176e-4d5d-8797-d10487d7b1b8",
+                            Id = "a16bb182-5296-419b-a96a-c21d504360c7",
                             DreCodeEol = "108100",
                             Login = "8019444",
                             Name = "JULIANO RODRIGO MACIEL FERNANDES",
@@ -874,7 +874,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "31a8670a-8506-41f8-b941-ad63718c7f78",
+                            Id = "fd78ca54-3c94-49b1-a70d-8edd63a427ec",
                             DreCodeEol = "108100",
                             Login = "7371489",
                             Name = "ROSANA RODRIGUES DA SILVA",
@@ -883,7 +883,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "257c735a-af54-4974-a93a-330e0f274a8c",
+                            Id = "07b2a182-b94b-4af6-b721-f4967550a906",
                             DreCodeEol = "108100",
                             Login = "6663648",
                             Name = "RUI FRANCISCO DA SILVA",
@@ -892,7 +892,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "df44e04c-7208-4cf7-9038-dfcfd4633b4c",
+                            Id = "e77dfee8-7c15-45c7-929c-e59075046059",
                             DreCodeEol = "108100",
                             Login = "8161828",
                             Name = "DANIEL DAMIAO DA SILVA",
@@ -901,7 +901,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "66e6cdce-b075-4f89-8b40-004cfd3cf01d",
+                            Id = "2425dc81-3ed0-460e-8c8b-ef999c609cd2",
                             DreCodeEol = "108100",
                             Login = "7940726",
                             Name = "Silvana Bastos Pereira Mendes",
@@ -910,7 +910,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "12787f6f-0aae-41cd-9f28-5f427dd9721b",
+                            Id = "43476b2c-7639-49b2-80b8-af3eb9a5e3a7",
                             DreCodeEol = "108200",
                             Login = "6775861",
                             Name = "PATRICIA LACERDA",
@@ -919,7 +919,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "9c085c36-afd6-46a5-88ef-34bde8a1f2d9",
+                            Id = "d5301668-d3a7-43b0-bf2e-4746caaeebdd",
                             DreCodeEol = "108200",
                             Login = "7115571",
                             Name = "ROSANGELA JULIA DE MATOS MONTEIRO",
@@ -928,7 +928,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "19b1f87a-ee0b-4635-9844-ca6be00e13e0",
+                            Id = "265212cb-73c4-4564-b10e-4256d2f00878",
                             DreCodeEol = "108200",
                             Login = "7251297",
                             Name = "CASSIA APARECIDA GUIMARAES",
@@ -937,7 +937,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "e943689f-24aa-42d4-ae46-99e734c52fd9",
+                            Id = "7bced4d5-cbc9-49de-a72d-cf1d206b1667",
                             DreCodeEol = "108200",
                             Login = "7915144",
                             Name = "MARIA LUANA LIMA MENDES DOS SANTOS",
@@ -946,7 +946,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "f2421e4a-5c3b-4e0a-a24e-3cafc13a5a7c",
+                            Id = "a784241d-4365-4224-a0de-2e3b698d35e2",
                             DreCodeEol = "108200",
                             Login = "6204619",
                             Name = "ROSELI HELENA DE SOUZA SALGADO",
@@ -955,7 +955,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "bc86bb33-4675-4aa9-9870-0f4c7c94e11b",
+                            Id = "f77840ee-d161-4e23-ae9e-942dca31af75",
                             DreCodeEol = "108200",
                             Login = "6940145",
                             Name = "REGINA PAULA COLLAZO BERTUCCIOLI",
@@ -964,7 +964,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "2eba33b6-e0fe-4e29-ac5d-3e9b5eaf2f00",
+                            Id = "1af63a67-d240-414b-be61-98746c32d240",
                             DreCodeEol = "108200",
                             Login = "5413010",
                             Name = "CECILIA REGINA CARLINI FERREIRA COELHO",
@@ -973,7 +973,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "00785576-5042-4bea-bfbf-5d7d5379ff7c",
+                            Id = "1428e31b-21ae-4106-8bb2-afaa07712a9d",
                             DreCodeEol = "108200",
                             Login = "7213638",
                             Name = "RICARDO DE SOUZA",
@@ -982,7 +982,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "254de096-ba73-47cb-9ae8-3b3db5a91aeb",
+                            Id = "499d8144-ad16-41c9-9d5d-f535d48840e7",
                             DreCodeEol = "108200",
                             Login = "7550618",
                             Name = "LUANNA OLIVEIRA DE ALMEIDA",
@@ -991,7 +991,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "5adfb8aa-d644-4430-84eb-82427a232170",
+                            Id = "db6b3d5a-1b82-4578-aaf9-b49cc5f4d432",
                             DreCodeEol = "108200",
                             Login = "7731892",
                             Name = "LEANDRO ALVES DOS SANTOS",
@@ -1000,7 +1000,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "313968fd-5a53-48fb-968b-bd440785cf89",
+                            Id = "56281bca-9e2b-4e6d-b05e-e4adc692b724",
                             DreCodeEol = "108200",
                             Login = "7814062",
                             Name = "DEMETRIUS SARAIVA GOMES",
@@ -1009,7 +1009,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "b346be88-3e8e-467f-a644-eb46f3b13a0d",
+                            Id = "3434bd15-022f-400e-b661-0ff3f40a3730",
                             DreCodeEol = "108200",
                             Login = "8044953",
                             Name = "CLEOMAR DE SOUZA LIMA",
@@ -1018,7 +1018,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "d14ac86c-99d5-4056-9470-b51ac4655d4e",
+                            Id = "54b1c385-3e7c-4df4-86e0-020a7f935dec",
                             DreCodeEol = "108200",
                             Login = "5830834",
                             Name = "RITA DE CASSIA GERALDI MENEGON",
@@ -1027,7 +1027,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "795ac90e-edb9-4fe6-9cd6-834353ea2356",
+                            Id = "dad9ec61-733c-4103-ab44-9891a51dbd99",
                             DreCodeEol = "108200",
                             Login = "6062130",
                             Name = "CRISTINA BARROCO MASSEI FERNANDES",
@@ -1036,7 +1036,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "9b50d55a-0531-4a3d-90c1-dced6855c8ac",
+                            Id = "a869f0b9-42e2-4d9b-96f6-105587e1f926",
                             DreCodeEol = "108200",
                             Login = "6604439",
                             Name = "ELISABETE MARTINS DA FONSECA",
@@ -1045,7 +1045,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "baae413b-c45e-4451-9f30-1fdfb191a7f7",
+                            Id = "e3a4c3ed-2972-45ae-a9fe-19cfee94251c",
                             DreCodeEol = "108200",
                             Login = "7373121",
                             Name = "ANGELICA DE ALMEIDA MERLI",
@@ -1054,7 +1054,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "6f1eb78d-6d14-4432-97b7-8e3968f22433",
+                            Id = "b7b57410-07c5-4af7-b874-42339a74897a",
                             DreCodeEol = "108200",
                             Login = "8582416",
                             Name = "KARINA ESTEVES BELMONTE",
@@ -1063,7 +1063,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "f307c66f-18bc-4715-b3d6-7df41c28c118",
+                            Id = "d0e7e973-841e-44fe-910c-99916c552997",
                             DreCodeEol = "108300",
                             Login = "7944527",
                             Name = "JAQUELINE APARECIDA DE LIMA MATOS",
@@ -1072,7 +1072,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "be99d221-b769-44cf-b24f-716c2bc2a68e",
+                            Id = "ed14dc7f-8f94-4331-8742-80c2704ea710",
                             DreCodeEol = "108300",
                             Login = "8022691",
                             Name = "TATIANA FERREIRA COSTA",
@@ -1081,7 +1081,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "a681631e-074f-44fa-b9a3-f69d4dc491fa",
+                            Id = "9338c49e-ad20-4527-a4d2-b7d169329041",
                             DreCodeEol = "108300",
                             Login = "8036080",
                             Name = "Luciene Aparecida Grisolio Cioffi",
@@ -1090,7 +1090,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "610930b5-93d7-49dd-9856-6d8aa47b05e9",
+                            Id = "cdb72015-4231-4781-a554-53ec137a59de",
                             DreCodeEol = "108300",
                             Login = "8094411",
                             Name = "Eduardo  Murakami da Silva",
@@ -1099,7 +1099,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "efd9db96-adef-46e9-a1a4-edbb56ae22b1",
+                            Id = "3eabc7f9-e961-4a3b-a6bf-aab6f355138e",
                             DreCodeEol = "108300",
                             Login = "5929156",
                             Name = "MARIA TERESA FUEYO",
@@ -1108,7 +1108,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "16b14466-cd94-44ad-829d-e4f921130b86",
+                            Id = "32ab4c77-8f5a-486f-b1d5-dc34f20c115c",
                             DreCodeEol = "108300",
                             Login = "5974755",
                             Name = "SANDRA REGINA DE CARVALHO",
@@ -1117,7 +1117,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "b2e3b1b3-c75e-4921-8def-f75f4b41bda7",
+                            Id = "2c6cbb53-6fac-4cb3-a4c7-60f43d6b599c",
                             DreCodeEol = "108300",
                             Login = "6911323",
                             Name = "MARCELA DE PINA BERGAMINE",
@@ -1126,7 +1126,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "3170c6d6-2cf0-453d-9018-af2f21466975",
+                            Id = "c17ca3c0-fbb7-4fff-98b1-7e6345a32dac",
                             DreCodeEol = "108300",
                             Login = "7256795",
                             Name = "ROSANA BUENO",
@@ -1135,7 +1135,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "bd5aba9f-ea35-4a62-87d0-6a57a15cd927",
+                            Id = "427033f4-dfc1-4a10-93d3-0cf8efa89eef",
                             DreCodeEol = "108300",
                             Login = "7510691",
                             Name = "MARINA DAS GRACAS MORAES",
@@ -1144,7 +1144,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "5486198b-32ba-4ed0-8a92-faf7b59aa07e",
+                            Id = "28d2f047-5190-47ec-8260-8e62cec41da1",
                             DreCodeEol = "108300",
                             Login = "6941095",
                             Name = "CAROLINA NOGUEIRA DROGA",
@@ -1153,7 +1153,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "89cd7dc8-8bf1-494f-ba87-e2b5019088cc",
+                            Id = "1509fc87-6c21-4468-9368-758e69af0685",
                             DreCodeEol = "108300",
                             Login = "7721803",
                             Name = "OSMIR SANTOS MACEDO",
@@ -1162,7 +1162,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "323225f7-ba99-4cfe-b843-0eb478bc1fcc",
+                            Id = "0765ab2b-d31b-4fbb-b4dc-fa78aeeaa9cd",
                             DreCodeEol = "108300",
                             Login = "8206597",
                             Name = "MICHELLE BARBOSA FONSECA",
@@ -1171,7 +1171,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "791ca65f-75fb-4072-8bb6-d0c22646e087",
+                            Id = "41ca514a-5185-44b0-a45c-0653431309cc",
                             DreCodeEol = "108400",
                             Login = "6383793",
                             Name = "JOSE ALVES MARTINS FILHO",
@@ -1180,7 +1180,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "5312b90b-911d-4d4d-ae31-6bb275e04393",
+                            Id = "db3d6ba8-74b2-4983-99ea-79f6c881d838",
                             DreCodeEol = "108400",
                             Login = "7953542",
                             Name = "SORAIA APARECIDA INACIO DA CRUZ",
@@ -1189,7 +1189,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "e70e9559-3fb8-4cf4-b704-f158c2049317",
+                            Id = "8a36d222-b0d0-48b4-b2bb-894b54689611",
                             DreCodeEol = "108400",
                             Login = "7456191",
                             Name = "DANIELE LEITE FERREIRA MEMOLI",
@@ -1198,7 +1198,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "4f098494-c818-41e2-98b9-84bfdaf77cfd",
+                            Id = "a386dff7-05fb-4bd5-b58c-5ef7df50b78c",
                             DreCodeEol = "108400",
                             Login = "6751067",
                             Name = "MARCIA REGINA BARRELLI",
@@ -1207,7 +1207,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "e9d151f4-5f7d-46ff-9aa5-239175f1bfce",
+                            Id = "55525053-ba73-4007-b375-6f8ade4e0011",
                             DreCodeEol = "108400",
                             Login = "580553",
                             Name = "SISI MARIA VENTURA",
@@ -1216,7 +1216,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "9176dece-8fc7-4101-8355-36b3080785d3",
+                            Id = "1e15c9a0-c126-40bc-a091-23d85eda06b6",
                             DreCodeEol = "108400",
                             Login = "6383793",
                             Name = "JOSE ALVES MARTINS FILHO",
@@ -1225,7 +1225,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "f01b9f1d-6ac9-4f9d-b17c-ecc886540cc9",
+                            Id = "30a10434-208b-4123-950a-0a25086263cc",
                             DreCodeEol = "108400",
                             Login = "6686362",
                             Name = "ROBERTO ANTONIO MACIEL",
@@ -1234,7 +1234,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "fbb0943e-e822-47e4-bbfd-a516d3bb3f16",
+                            Id = "aea81465-e46a-4f4f-86a3-28d33e8bf9d5",
                             DreCodeEol = "108400",
                             Login = "6719767",
                             Name = "MARTHA LUCIA BRAGA",
@@ -1243,7 +1243,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "27180267-0291-4f8f-ada1-86310879b6e7",
+                            Id = "57fc0ca1-bc22-4554-bb9d-9d8d9aadae86",
                             DreCodeEol = "108400",
                             Login = "7237383",
                             Name = "JULIANA NAGAHAMA",
@@ -1252,7 +1252,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "6b2d7321-5158-4a15-b7b9-4d2609bf57fd",
+                            Id = "280c94a6-e13f-4b4a-8118-39a43fd033e1",
                             DreCodeEol = "108400",
                             Login = "8023999",
                             Name = "ADELINE FERNANDES FERREIRA",
@@ -1261,7 +1261,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "8adfd156-6231-4401-aafc-749267c5ce60",
+                            Id = "39e829d0-4e14-4cba-9777-a07b18c3cb78",
                             DreCodeEol = "108400",
                             Login = "8055327",
                             Name = "THAIS CHARELLI MARTINS",
@@ -1270,7 +1270,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "07d17a9b-1b82-494e-9b29-6b5efae4a711",
+                            Id = "d05f36d6-0933-4948-bc64-65f4ca6954b0",
                             DreCodeEol = "108400",
                             Login = "8160490",
                             Name = "JULIO CESAR DE CARVALHO SANTOS",
@@ -1279,7 +1279,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "86442bc6-4ea1-4c43-938a-555f03b821db",
+                            Id = "8a31ff3b-45b7-4e55-bf10-aae5382ccdcc",
                             DreCodeEol = "108400",
                             Login = "8219532",
                             Name = "ANA CRISTINA PEREIRA",
@@ -1288,7 +1288,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "5d6c0804-eea7-4a80-96a6-375c98c7a24f",
+                            Id = "4ce3a8c9-7864-410f-a29f-e1d5a3c5a648",
                             DreCodeEol = "108500",
                             Login = "5640539",
                             Name = "ROSANA RAIMONDI",
@@ -1297,7 +1297,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "e4b1347d-548d-481e-935f-e672811ae3b2",
+                            Id = "ff9fed57-13f0-44c7-8b7a-0ad9f1ee4539",
                             DreCodeEol = "108500",
                             Login = "6940773",
                             Name = "ROMEU GUIMARAES GUSMAO",
@@ -1306,7 +1306,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "f51bfa45-38b9-4a20-a606-84c30c27c82b",
+                            Id = "d2a3be43-31ab-4bb9-a14a-d83f44a71ee2",
                             DreCodeEol = "108500",
                             Login = "6784011",
                             Name = "ESTER MARQUES DE PAULA DIONISIO",
@@ -1315,7 +1315,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "0cde1820-ac04-4b84-ad70-1941348c42ff",
+                            Id = "0750fca3-650c-46c5-9876-2a93e9de1708",
                             DreCodeEol = "108500",
                             Login = "6767494",
                             Name = "LUCIMEIRE CABRAL DE SANTANA FREITAS",
@@ -1324,7 +1324,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "cc1e2fac-518a-4447-bff6-c3c1572b721e",
+                            Id = "a7331401-706a-41bf-863e-f4526b15dd96",
                             DreCodeEol = "108500",
                             Login = "7705719",
                             Name = "SILVANA DOS SANTOS SILVA",
@@ -1333,7 +1333,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "61b5d13b-7ced-46c6-8807-d13038e80c4b",
+                            Id = "207f8ba0-edcc-4c3e-88b2-30c8efd4182b",
                             DreCodeEol = "108500",
                             Login = "7935897",
                             Name = "BIANCA FREIRE DOS SANTOS",
@@ -1342,7 +1342,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "78bf0590-c22c-4e94-b70e-ce60935bd7af",
+                            Id = "4f12582c-9cdb-4fb8-8a13-91c8a6bf4c90",
                             DreCodeEol = "108500",
                             Login = "5358051",
                             Name = "Rosana Soares Godinho",
@@ -1351,7 +1351,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "21bbdfbe-ffc7-4a2b-9251-fa840a8aa4a9",
+                            Id = "bf48f83d-67c9-471a-ab4b-1c1a6d147d37",
                             DreCodeEol = "108500",
                             Login = "7976445",
                             Name = "Fernanda Moreira Xavier",
@@ -1360,7 +1360,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "fd71b59a-f4a6-4239-bb9e-d4b66da79329",
+                            Id = "54831a56-4898-4482-8b13-8739be100468",
                             DreCodeEol = "108500",
                             Login = "7808208",
                             Name = "Luciano de Brito Leal",
@@ -1369,7 +1369,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "92bb8158-288d-4247-9f1e-b68bcf6a5c01",
+                            Id = "f239f27d-c1c2-4228-8c33-b161084a92e1",
                             DreCodeEol = "108500",
                             Login = "8401918",
                             Name = "MARIA INES ALVES PEREIRA",
@@ -1378,7 +1378,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "e3c12765-8c86-45a2-83d8-0d13a8b70f39",
+                            Id = "16a2de0a-3a7b-4d05-a549-35a536bb5b88",
                             DreCodeEol = "108600",
                             Login = "6002129",
                             Name = "KELLEY CARVALHO MONTEIRO DE OLIVEIRA",
@@ -1387,7 +1387,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "5770d730-6de6-4ee1-b812-3f205aeaf81b",
+                            Id = "6b68ca04-2932-4bda-b69f-d6198d39ff09",
                             DreCodeEol = "108600",
                             Login = "7326238",
                             Name = "IRAIDE SILVA RIBEIRO DOS SANTOS",
@@ -1396,7 +1396,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "abb61fee-8c87-4dbc-8d09-9e8928c3ad5c",
+                            Id = "f10b658e-3d79-4945-9e79-ea8bedf5fae5",
                             DreCodeEol = "108600",
                             Login = "8078734",
                             Name = "FRANCISCO FABIANO DANTAS SANTOS",
@@ -1405,7 +1405,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "55f4ffa4-2e3f-4fe0-8ecc-ddced1fda900",
+                            Id = "def5564e-f222-44c8-a7a2-9c54f810aaa0",
                             DreCodeEol = "108600",
                             Login = "5988861",
                             Name = "MARCELO AUGUSTO MACHADO",
@@ -1414,7 +1414,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "01c86473-8829-4b54-ae17-1e9b2b68c5d4",
+                            Id = "10be533e-a8c9-49be-9697-f97e4cbbd1e1",
                             DreCodeEol = "108600",
                             Login = "6909795",
                             Name = "MARTA MALHEIROS ADRIANO",
@@ -1423,7 +1423,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "26f8869c-e1ba-4ccf-95a4-56f303a6c4c4",
+                            Id = "e3dbcfae-9e03-4917-a8be-705cce5f9a1c",
                             DreCodeEol = "108600",
                             Login = "5996236",
                             Name = "ELAINE CRISTINA RAMOS DE ALMEIDA NUNES",
@@ -1432,7 +1432,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "8962313e-8319-47f3-a153-8af2c85e278d",
+                            Id = "390a984d-bf58-4c35-bda1-2f9b914f863e",
                             DreCodeEol = "108600",
                             Login = "7441487",
                             Name = "ERIKA RENATA DE FREITAS",
@@ -1441,7 +1441,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "401db9b4-7f71-4538-ab72-1f0ba81b9928",
+                            Id = "267336fa-d6f6-40dd-b42c-ef78eb6a8132",
                             DreCodeEol = "108600",
                             Login = "7913788",
                             Name = "ANDERSON ACIOLI MACHADO",
@@ -1450,7 +1450,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "5ad88522-f47d-4f21-b89d-d096087d8d57",
+                            Id = "753bf950-61d9-46a4-b59e-bc6b4c3ff1ea",
                             DreCodeEol = "108700",
                             Login = "7549695",
                             Name = "SELMA ANDREA DOS SANTOS SILVA",
@@ -1459,7 +1459,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "7cee470d-d979-4a2d-82da-5cba5e72c1b3",
+                            Id = "18db0e8a-0618-484e-85bf-ffa0fd18fd6b",
                             DreCodeEol = "108700",
                             Login = "7807350",
                             Name = "REGIANE PEREA CARVALHO",
@@ -1468,7 +1468,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "14dc348e-b738-4867-9b16-f5b030638fad",
+                            Id = "8caca87b-c86e-4826-a624-786477eebed6",
                             DreCodeEol = "108700",
                             Login = "8030910",
                             Name = "DIOGO LAZARO DE ARAUJO",
@@ -1477,7 +1477,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "e222123b-8b71-4889-9e9a-2c02cc3ad68b",
+                            Id = "1274d704-2c97-4162-9b7f-4a6bf74874c7",
                             DreCodeEol = "108700",
                             Login = "7228546",
                             Name = "SIMONE RIBEIRO MANSANO",
@@ -1486,7 +1486,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "07900b45-670a-4150-8bf2-7eda7c6047d0",
+                            Id = "a9de3191-959d-4bf8-9356-a34a1e388d2b",
                             DreCodeEol = "108700",
                             Login = "5908710",
                             Name = "MARCIA MARQUES DOS SANTOS",
@@ -1495,7 +1495,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "b840208a-8076-4103-ba3e-fb5e9796df96",
+                            Id = "6022a2d5-3cf4-4ed7-b5b1-a0ec00da56bd",
                             DreCodeEol = "108700",
                             Login = "5514894",
                             Name = "MARIA TEREZA VIEIRA SCHINZARI",
@@ -1504,7 +1504,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "26b7e596-b098-4dd6-aeda-215ace412f40",
+                            Id = "bf5a1e3a-17e2-48ce-848c-7464b87668fc",
                             DreCodeEol = "108700",
                             Login = "5841704",
                             Name = "ANA REGINA BARBOSA SPINARDI",
@@ -1513,7 +1513,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "df0c1428-3dde-4815-b6a9-5a977a4604b3",
+                            Id = "6ddd6d5b-4501-41c2-a031-38c544c209ca",
                             DreCodeEol = "108700",
                             Login = "6466419",
                             Name = "WANIA MAGALHAES",
@@ -1522,7 +1522,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "f780e21f-55a3-4fe2-b4ee-90ede6e0d21a",
+                            Id = "acf852ce-804d-4c16-9618-ed5f99d55105",
                             DreCodeEol = "108700",
                             Login = "6664962",
                             Name = "ELIANE PRADO FREIRE",
@@ -1531,7 +1531,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "d78ef4a9-9eae-46b9-84ae-df6f29cf771a",
+                            Id = "6601ac5d-d6aa-482f-87e3-0ddc6c13cc2d",
                             DreCodeEol = "108700",
                             Login = "6923968",
                             Name = "LUCIA RAMALHO NUNES MUNIS",
@@ -1540,7 +1540,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "f37af113-fe08-43d6-8f84-f91dcd8f74ed",
+                            Id = "751de089-f1a0-4bf6-b7f9-7ff0b664dc52",
                             DreCodeEol = "108700",
                             Login = "7219253",
                             Name = "ALESSANDRA QUIQUETTO DE OLIVEIRA",
@@ -1549,7 +1549,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "c134e730-1ddc-4c75-90e9-570730a34321",
+                            Id = "56dc76b3-24a7-40e2-94af-f254a9d86097",
                             DreCodeEol = "108700",
                             Login = "7264755",
                             Name = "ESTELA VANESSA DE MENEZES",
@@ -1558,7 +1558,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "b5afbe5f-090d-4261-815d-62b0708c56de",
+                            Id = "0b7fe85a-f0c1-48bc-a6de-1366b0d219bd",
                             DreCodeEol = "108700",
                             Login = "7400853",
                             Name = "ROSA HELENA DE FREITAS ROGERIO CARVALHO",
@@ -1567,7 +1567,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "1f08205f-2436-451f-9f1a-e30af8763635",
+                            Id = "a54d7934-46fd-4ed6-b3ed-52c621e40ae2",
                             DreCodeEol = "108700",
                             Login = "7451016",
                             Name = "MONICA CRISTINA ALBERTINI DOS SANTOS",
@@ -1576,7 +1576,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "782943cf-8cd2-4369-8470-6c01b308359d",
+                            Id = "a5ce8616-0b3d-49d1-8fa8-c9484f29cfb9",
                             DreCodeEol = "108700",
                             Login = "7531907",
                             Name = "KARINA LEITE RENTZ",
@@ -1585,7 +1585,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "f28cf705-f2bb-4906-8c7b-57a33d0e37da",
+                            Id = "016df9b3-4773-4597-856b-05190a140255",
                             DreCodeEol = "108700",
                             Login = "7708980",
                             Name = "CAMILA NETO FERNANDES ANDRADE",
@@ -1594,7 +1594,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "9240d99b-63cf-4107-8fba-2beef99bb448",
+                            Id = "2e0ae575-bc78-4b33-b86f-98c51213f6b8",
                             DreCodeEol = "108700",
                             Login = "7807350",
                             Name = "REGIANE PEREA CARVALHO",
@@ -1603,7 +1603,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "49747555-9d5e-4c41-bd7e-7564c0b03c76",
+                            Id = "5704284e-f256-4c6c-96ca-09de4aedc0f8",
                             DreCodeEol = "108700",
                             Login = "7866518",
                             Name = "DAYANE CAMPOREZE RODRIGUES",
@@ -1612,7 +1612,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "2e84bec9-0731-42db-8eab-46f8e8aba508",
+                            Id = "4c43c37d-ab1e-4be7-b50e-4d3a7ac87b53",
                             DreCodeEol = "108700",
                             Login = "7910649",
                             Name = "DANIELA LOURENCO DOS SANTOS",
@@ -1621,7 +1621,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "2129a5a1-64e9-472c-8784-57bdd2ea7596",
+                            Id = "d23947c2-50a5-4b4c-ad13-64614937d66c",
                             DreCodeEol = "108700",
                             Login = "7950969",
                             Name = "PRISCILA VAZ MAGRINELLI",
@@ -1630,7 +1630,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "7806d41e-7937-4803-94eb-6f59fdddcfcc",
+                            Id = "6f0cce24-a8b1-4dd5-95f7-30d10677b4cc",
                             DreCodeEol = "108700",
                             Login = "8030910",
                             Name = "DIOGO LAZARO DE ARAUJO",
@@ -1639,7 +1639,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "d15baf96-1432-48e0-adef-e98dedde64c5",
+                            Id = "943b5718-9553-48f3-bf57-381d50297842",
                             DreCodeEol = "108700",
                             Login = "8066086",
                             Name = "ANNA FLAVIA SANCHES DE ALMEIDA",
@@ -1648,7 +1648,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "b02af9ff-5216-4666-adbd-73116ee7e644",
+                            Id = "49d669d1-b4e3-4c38-b8db-286e2d4c9ca9",
                             DreCodeEol = "108700",
                             Login = "6911161",
                             Name = "Liliane Aparecida Granzotti",
@@ -1657,7 +1657,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "7dd74068-e2f9-4502-b132-f989596cba17",
+                            Id = "e9ed65e8-8dd5-4142-8b9e-db7527b00160",
                             DreCodeEol = "108700",
                             Login = "8206252",
                             Name = "JUCILENE ALVES GOMES DA SILVA",
@@ -1666,7 +1666,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "0ca2c58d-3fde-45be-9a7d-433b447a50c1",
+                            Id = "9e4c3aca-d1c7-4c2b-92c1-1f83bde3b4ac",
                             DreCodeEol = "108800",
                             Login = "6928161",
                             Name = "SIMONE DA SILVA",
@@ -1675,7 +1675,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "65dad45a-f14c-4308-8e21-76d1827bb426",
+                            Id = "4b1053c0-d1e1-4e03-999f-a730b77f9d89",
                             DreCodeEol = "108800",
                             Login = "8026637",
                             Name = "WAGNER RODRIGUES FLORIANO",
@@ -1684,7 +1684,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "6969a39c-1bb6-4cec-b69b-2842f1bf60b0",
+                            Id = "d20e6776-7e1b-4036-8b83-b710d9389d1f",
                             DreCodeEol = "108800",
                             Login = "7228287",
                             Name = "CAMILA RAMOS FRANCO DE SOUZA",
@@ -1693,7 +1693,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "c50fd30e-a272-4943-92e9-4e05b67e91bf",
+                            Id = "a2d16406-3785-449f-9dc3-cd1bb0ae7396",
                             DreCodeEol = "108800",
                             Login = "7528418",
                             Name = "PATRICIA FERNANDES ROSA",
@@ -1702,7 +1702,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "04fb81bd-a06e-4828-8416-c1a34fa620e0",
+                            Id = "8b6b7d7c-3a64-4746-8141-4dccbe3a528c",
                             DreCodeEol = "108800",
                             Login = "6200877",
                             Name = "PAULA DO NASCIMENTO JULIO AGNELLO",
@@ -1711,7 +1711,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "7144c034-d9ce-4581-9d54-ff10c9420f00",
+                            Id = "b0141395-332f-4527-ab7d-3553004605c3",
                             DreCodeEol = "108800",
                             Login = "6391389",
                             Name = "IVAN VENTURINI",
@@ -1720,7 +1720,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "c25db8bd-21b0-4a37-b9ae-8521c880f15f",
+                            Id = "0ae5df4f-af56-40b9-a2a5-9629149e7ba6",
                             DreCodeEol = "108800",
                             Login = "6751318",
                             Name = "GLAUCIA ESIMIR DE CAMARGO FANTOZZI HADAD",
@@ -1729,7 +1729,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "ca5f7cc8-8abd-4f05-ae42-af3b2f068863",
+                            Id = "e63f90f0-1ba0-4c9a-b3f4-270d038d1a2c",
                             DreCodeEol = "108800",
                             Login = "6777694",
                             Name = "SUMAYA GISELE MARTINS CAVALCANTE",
@@ -1738,7 +1738,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "72792770-7cf3-48f6-b99f-9a963ee6b528",
+                            Id = "4650eef5-e9f0-42d0-8762-1287047bd9f7",
                             DreCodeEol = "108800",
                             Login = "6928161",
                             Name = "SIMONE DA SILVA",
@@ -1747,7 +1747,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "efba0e92-55e5-4488-8722-2e335d2fda21",
+                            Id = "43a629e0-1f2a-4d3a-a2ca-723f233a925b",
                             DreCodeEol = "108800",
                             Login = "7287160",
                             Name = "TATHIANA AUGUSTA RODRIGUES LOURENCO MARTINEZ",
@@ -1756,7 +1756,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "20d9123b-83cc-4169-bfc8-095db411878d",
+                            Id = "33b1c3f8-046d-448c-8c9f-7a0c206c5834",
                             DreCodeEol = "108800",
                             Login = "7298587",
                             Name = "LIVIA LEDIER FELIX VIEIRA",
@@ -1765,7 +1765,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "a3aeeb8e-a5cc-4f6f-a7c9-4413145a53ce",
+                            Id = "bc9d55be-a531-4517-a17c-44d97b438077",
                             DreCodeEol = "108800",
                             Login = "7705620",
                             Name = "LARISSA DE GOUVEIA",
@@ -1774,7 +1774,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "24a7fe35-fb41-4c8b-89c0-e6e976188a97",
+                            Id = "7fce7df5-d46b-4387-aaf7-45178f9abe3a",
                             DreCodeEol = "108800",
                             Login = "7728182",
                             Name = "MARCELO DOS SANTOS DIAS",
@@ -1783,7 +1783,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "effe8cb1-6711-4775-8120-32e6b5c79701",
+                            Id = "e7b8e505-3c2f-493a-9477-0b08cc1dcade",
                             DreCodeEol = "108800",
                             Login = "7987498",
                             Name = "FABIANA LOPES LAURITO",
@@ -1792,7 +1792,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "a9e153e6-4cc2-4506-a864-9b4db72601c9",
+                            Id = "8769315c-2cdc-42d1-aa44-96da86d8563a",
                             DreCodeEol = "108800",
                             Login = "7990375",
                             Name = "ADRIANA SBEGHEN BONAFE ZACHHUBER",
@@ -1801,7 +1801,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "e8464780-13af-40a4-8674-af70e38f2b99",
+                            Id = "2faa651b-8ad2-4e3e-a110-5f4a0cd96147",
                             DreCodeEol = "108800",
                             Login = "8028044",
                             Name = "MARIA CLAUDIA DA SILVA",
@@ -1810,7 +1810,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "5b320a48-5dab-4b43-97c7-e2c230e877d8",
+                            Id = "de70d2a5-9d18-49c5-9c8c-96bc2cf732d8",
                             DreCodeEol = "108800",
                             Login = "8028311",
                             Name = "ROBERTO BELISIARIO SANTOS",
@@ -1819,7 +1819,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "0b690789-93e0-431f-a5d9-f10fb1f0de7e",
+                            Id = "c0bcbd8a-9a96-44d5-b5a9-28913c7e751a",
                             DreCodeEol = "108900",
                             Login = "7706812",
                             Name = "SIMONY DE LENA DOTTO",
@@ -1828,7 +1828,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "1bbbe44d-bddd-4c6e-838e-afbea5d57135",
+                            Id = "9affbf19-b753-4d38-928b-044adfa8b0a8",
                             DreCodeEol = "108900",
                             Login = "7721854",
                             Name = "CINTIA MITSUE KAMURA",
@@ -1837,7 +1837,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "73e8d755-1bfc-4cc5-8d6b-4175bae146ca",
+                            Id = "e54075e2-6d92-453d-8ff7-c62f8a152634",
                             DreCodeEol = "108900",
                             Login = "7761279",
                             Name = "SUSAN QUILES QUISBERT",
@@ -1846,7 +1846,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "3fed35dc-d20d-462d-a122-3732e8245aa6",
+                            Id = "4c914b6e-d1a1-45a8-ada7-23e7ddcb88a4",
                             DreCodeEol = "108900",
                             Login = "6664253",
                             Name = "ELIANA SOUZA DA SILVA DE BENEDETTI",
@@ -1855,7 +1855,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "a7e40741-65bf-4271-a938-6c45263d4b10",
+                            Id = "7786c23c-dc64-4768-8c81-d2f2b65b99d4",
                             DreCodeEol = "108900",
                             Login = "6011365",
                             Name = "LUCI BATISTA COSTA SOARES DE MIRANDA",
@@ -1864,7 +1864,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "d23d7157-0751-41cc-8180-9220c7558528",
+                            Id = "b433905d-56e8-4c9a-8a9d-a405936bda53",
                             DreCodeEol = "108900",
                             Login = "5910935",
                             Name = "WANIA CRISTINA MANOEL",
@@ -1873,7 +1873,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "2f3dd564-d95f-4440-ba6e-817a6f8d7ba9",
+                            Id = "809fede9-c8b5-4063-ab64-5bdccb392ddd",
                             DreCodeEol = "108900",
                             Login = "6033113",
                             Name = "VERA LUCIA CICON HERNANDES",
@@ -1882,7 +1882,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "a7976e6b-9a5c-45a6-87b8-ac13c07a59d6",
+                            Id = "d605cd5d-3fb6-42b2-af77-b6f7ebdf204d",
                             DreCodeEol = "108900",
                             Login = "6306730",
                             Name = "ROSANA BATISTA",
@@ -1891,7 +1891,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "a9289425-618e-4a69-86e6-399ed78a851a",
+                            Id = "c475a202-d43e-41aa-bf8b-b4a194cda537",
                             DreCodeEol = "108900",
                             Login = "6788696",
                             Name = "OLESIA PATRICIA APARECIDA GIANNELLA HENRIQUE",
@@ -1900,7 +1900,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "2fabd104-7a22-40e4-9df1-9f9c5b9bfa44",
+                            Id = "e1efe21b-98d8-4fbe-a5c6-88ce24b95a88",
                             DreCodeEol = "108900",
                             Login = "7220278",
                             Name = "ALESSANDRA SERRA DE ABREU CAMPOS",
@@ -1909,7 +1909,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "d6ae3572-d825-4a26-87f0-f8b615e2e29d",
+                            Id = "b469e937-0faa-4cf0-8486-46bc949be245",
                             DreCodeEol = "108900",
                             Login = "7940645",
                             Name = "NUBIA NOGUEIRA CHINOCA",
@@ -1918,7 +1918,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "78910a2b-d3b8-4885-af24-4a5df9571ca7",
+                            Id = "90b84758-9e7c-44a5-ad00-4a89983a2187",
                             DreCodeEol = "108900",
                             Login = "7986645",
                             Name = "THALITA GARCIA LOPES",
@@ -1927,7 +1927,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "79609f9b-5641-4309-ac0b-50c4ee4bc8be",
+                            Id = "223301ec-db32-4b96-bf13-53e07aa36c71",
                             DreCodeEol = "109000",
                             Login = "7761147",
                             Name = "MONICA GERDULLO SASSI",
@@ -1936,7 +1936,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "c5836473-017b-4bcd-b580-5ffa83c6bac4",
+                            Id = "b41461ca-1296-4557-8fc0-0ce636b017a9",
                             DreCodeEol = "109000",
                             Login = "7279515",
                             Name = "REGINA BRUHNS ROSSINI ANDRADE",
@@ -1945,7 +1945,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "f62687f8-7cb8-492c-b8fc-1e195e886d1f",
+                            Id = "2e3f04f4-a626-4215-af6f-8cf90dfa06f3",
                             DreCodeEol = "109000",
                             Login = "6564283",
                             Name = "RUI DA SILVA LIMA",
@@ -1954,7 +1954,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "066c7ac6-56a0-4f2d-9ddc-bbbfffe99c69",
+                            Id = "07f83897-e884-4c91-a38d-f8c94af937aa",
                             DreCodeEol = "109000",
                             Login = "7283199",
                             Name = "ADRIANA BONIFACIO CALIMAN",
@@ -1963,7 +1963,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "6bbd2153-9c18-4594-881c-13af24d164cc",
+                            Id = "baa4f782-216a-49c2-87b0-bd7f754c8b58",
                             DreCodeEol = "109100",
                             Login = "7767951",
                             Name = "CLAUDIA GONCALVES DA SILVA",
@@ -1972,7 +1972,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "2a02d636-fde7-49ac-b4c9-243e44a97ccf",
+                            Id = "0d40a1b8-0209-40a5-bf6f-80802f48f1d0",
                             DreCodeEol = "109100",
                             Login = "6348564",
                             Name = "LINEIA RUIZ TRIVILIN",
@@ -1981,7 +1981,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "3a2f08ca-18fb-4e38-b4a0-b4c093ca2382",
+                            Id = "9eaf4bea-90e3-4577-9bee-33c4bf2f4a20",
                             DreCodeEol = "109100",
                             Login = "5781027",
                             Name = "CARLOS ANTONIO VIEIRA",
@@ -1990,7 +1990,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "610b0562-fe6a-48ad-9d0e-d985bc29bf3b",
+                            Id = "970ca343-485e-4bdb-9cb4-803c9ec3ce26",
                             DreCodeEol = "109100",
                             Login = "7462131",
                             Name = "Solange Amalia da Cruz",
@@ -1999,7 +1999,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "0b3cb612-cd47-4bbe-ba6f-9c0043768090",
+                            Id = "bcdaf51e-4f8a-4343-b6ef-2ce3518e58b9",
                             DreCodeEol = "109100",
                             Login = "7516100",
                             Name = "Grace Zaggia Utimura",
@@ -2008,7 +2008,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "69d89816-8562-42a2-b4d6-ef50368c2a66",
+                            Id = "c5676feb-3d82-4e79-9d3f-97e11997f3b8",
                             DreCodeEol = "109100",
                             Login = "7725507",
                             Name = "Haroldo Heverton Souza de Arruda",
@@ -2017,7 +2017,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "3c24a5d6-3843-4e77-b3be-3cc157ff7904",
+                            Id = "b1f6752c-9f94-498e-8ff1-048ddb54e13e",
                             DreCodeEol = "109200",
                             Login = "6920951",
                             Name = "JOSE ANTONIO DOS SANTOS",
@@ -2026,7 +2026,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "6eebb01b-1ec3-46c1-852d-bab6883af0e6",
+                            Id = "4136c647-9960-4a3d-84cd-760660be57c0",
                             DreCodeEol = "109200",
                             Login = "7739214",
                             Name = "JOSE HUMBERTO DO NASCIMENTO",
@@ -2035,7 +2035,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "c742d023-cf3d-4449-b487-e4c8feb1217f",
+                            Id = "8a3a2549-19e5-4e1b-841e-393bf8d77909",
                             DreCodeEol = "109200",
                             Login = "7275803",
                             Name = "PAULA CRISTINA CASTRO PINHEIRO BANDLER",
@@ -2044,7 +2044,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "9bf115ac-456a-46f1-8cd3-809aa5812273",
+                            Id = "759960dd-9aa4-4075-b638-ce390376898e",
                             DreCodeEol = "109200",
                             Login = "6389911",
                             Name = "MIRTES INNOCENCIO DA SILVA",
@@ -2053,7 +2053,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "1768baf8-a6d8-4d4e-b17b-aa438bfb05eb",
+                            Id = "403b8308-a983-4cf3-9c45-5967e06a137f",
                             DreCodeEol = "109200",
                             Login = "5589100",
                             Name = "REJANE MARIA BRESSAN",
@@ -2062,7 +2062,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "a9a88fbd-6131-46df-b499-caa97ff54a83",
+                            Id = "30a3209f-3eb4-4751-8670-91caaf0b1dd3",
                             DreCodeEol = "109200",
                             Login = "7230486",
                             Name = "ADRIANA CRISTINA LOURENCO IUPI",
@@ -2071,7 +2071,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "d667ca06-f8b3-4315-af0d-808648fc127b",
+                            Id = "84b69f9c-8626-472f-98ad-3517971119a2",
                             DreCodeEol = "109200",
                             Login = "7231555",
                             Name = "JESSICA NACCARATO DA SILVA",
@@ -2080,7 +2080,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "e08732b0-3071-46b7-9492-c8c4f1c8d87a",
+                            Id = "7c13022e-70dd-48da-b217-42a3d0c24c1c",
                             DreCodeEol = "109200",
                             Login = "7371161",
                             Name = "SERGIO EDUARDO MORENO HAEITMANN",
@@ -2089,7 +2089,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "8eba8501-340e-46dc-862f-5a72b4d06719",
+                            Id = "e8ee71d9-b69b-414c-adf4-ae891489ad00",
                             DreCodeEol = "109200",
                             Login = "7526555",
                             Name = "EDNA RIBEIRO DOS SANTOS",
@@ -2098,7 +2098,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "87a656ec-fa20-4b4a-82ba-6b3f081c7c47",
+                            Id = "b0b29a6d-d740-4c7d-bf1a-b04e40f48c30",
                             DreCodeEol = "109200",
                             Login = "7936095",
                             Name = "RENATA SANTANA DE MIRANDA CARDOSO",
@@ -2107,7 +2107,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "1779e49c-a645-4500-9e82-55c392d13d29",
+                            Id = "ad1b22b0-2ab2-4122-abfc-966ccc82c3f4",
                             DreCodeEol = "109200",
                             Login = "8066736",
                             Name = "GIRSELEY ALEXANDRE GONCALVES SATO",
@@ -2116,7 +2116,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "bd479add-1b5b-4784-ab6d-fb767dd10f37",
+                            Id = "a48eb4c9-242c-42bd-b377-dc666e3581ba",
                             DreCodeEol = "109200",
                             Login = "7357915",
                             Name = "DANIELA PINHEIRO ALVANI TERCIANO",
@@ -2125,7 +2125,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "4f123d0c-61cd-4a9c-9031-1ef075cd5ad9",
+                            Id = "a88c0577-79d5-4261-aa8f-3697b6d0ef62",
                             DreCodeEol = "109200",
                             Login = "8176337",
                             Name = "RENATA LIMA DURAES",
@@ -2134,7 +2134,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "2e6f3d01-0468-48fb-b99e-c57f2e030dcc",
+                            Id = "4c64cd59-7350-46c6-b0c7-2703209b61ca",
                             DreCodeEol = "109300",
                             Login = "6944213",
                             Name = "CRISTIANE NASCIMENTO SILVA GOMES",
@@ -2143,7 +2143,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "7631e2cb-91e9-4918-80da-6da2535948eb",
+                            Id = "f91e4bd6-3986-4059-937a-812cc90b1b52",
                             DreCodeEol = "109300",
                             Login = "7288298",
                             Name = "IVO DOS SANTOS CARVALHO",
@@ -2152,7 +2152,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "c579518e-da31-43af-aecb-ae438473bae4",
+                            Id = "7d940c6b-293c-4108-a934-b7b697a0ecb4",
                             DreCodeEol = "109300",
                             Login = "7499361",
                             Name = "ANDREA ANGELO SOARES DOS SANTOS",
@@ -2161,7 +2161,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "2c0ebfb8-1c94-46eb-bfe0-bc1cf87ab6e7",
+                            Id = "9cf4302c-100b-4d12-ace5-7d8d6f724361",
                             DreCodeEol = "109300",
                             Login = "5518091",
                             Name = "JAIR SIPIONI",
@@ -2170,7 +2170,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "b9fd8ef8-2735-4c12-addd-56897519c380",
+                            Id = "cf6eb78a-2888-4262-ac57-ae71fb884ee7",
                             DreCodeEol = "109300",
                             Login = "5629632",
                             Name = "ARLENE FERREIRA DOS SANTOS",
@@ -2179,7 +2179,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "ddecf7e1-1a99-4cc0-b2ee-29c1e3deeeb5",
+                            Id = "3cf46cc1-97c5-4cbc-95b9-1c8403fdc1a7",
                             DreCodeEol = "109300",
                             Login = "5759129",
                             Name = "MARIA ISABEL VIEIRA DE SOUZA",
@@ -2188,7 +2188,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "04911c66-f4d2-4d8e-bee9-5ae0102785fa",
+                            Id = "76888722-a86d-4299-80bb-7077a3e69693",
                             DreCodeEol = "109300",
                             Login = "6770134",
                             Name = "REGINA CELIA RIBEIRO DA SILVA",
@@ -2197,7 +2197,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "0e3a7471-466f-4d7a-bc21-1790e8e7a01b",
+                            Id = "a2c2ffb5-151b-4823-a30b-8b52a640ca35",
                             DreCodeEol = "109300",
                             Login = "6811361",
                             Name = "JANE CRISTINA DE SOUZA",
@@ -2206,7 +2206,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "0ce65fa0-1b6c-4cb8-9ca7-891ae7bc8421",
+                            Id = "5a0d1a46-6f2f-48a5-8edb-13e5e6c2672a",
                             DreCodeEol = "109300",
                             Login = "6840531",
                             Name = "EUNICE SOUSA DO NASCIMENTO",
@@ -2215,7 +2215,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "b87858f4-31aa-4b48-97b3-23c70eea5b66",
+                            Id = "84fbfdf7-8d54-4a37-a777-d392c613c1fd",
                             DreCodeEol = "109300",
                             Login = "6925961",
                             Name = "KEILA FERREIRA DA SILVA VIANA",
@@ -2224,7 +2224,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "51b8ba83-20a5-4c40-a86e-8340c2ba3017",
+                            Id = "60911bec-8ef3-472d-a245-7f160a8e9611",
                             DreCodeEol = "109300",
                             Login = "7234392",
                             Name = "ROSANA CARLA DE OLIVEIRA",
@@ -2233,7 +2233,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "9331c13c-7988-41ff-a8ef-6a8e64061671",
+                            Id = "3541b0e1-7a15-4803-8673-8c240b1815b5",
                             DreCodeEol = "109300",
                             Login = "7443994",
                             Name = "MARIA APARECIDA DE SOUZA SANTOS",
@@ -2242,7 +2242,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "e71bc614-d588-4837-9d3f-1c51e97f5af9",
+                            Id = "9ff2d871-bd49-487c-8f9e-0d8f021766fe",
                             DreCodeEol = "109300",
                             Login = "7479417",
                             Name = "RINA MARCIA DE ALMEIDA",
@@ -2251,7 +2251,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "7bf869e6-95c9-4689-a97b-4a2b0bc9b5e1",
+                            Id = "a1364689-7cd5-4c30-976f-7019c9ecc659",
                             DreCodeEol = "109300",
                             Login = "7502397",
                             Name = "ANA PAULA MENDES GUARINHO",
@@ -2260,7 +2260,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "9a38a118-495e-49d2-89ea-ab6ba8d4f169",
+                            Id = "745ac7ab-2027-4dda-9513-9732db21743f",
                             DreCodeEol = "109300",
                             Login = "7872241",
                             Name = "PALOMA ROBERTA FERMINO",
@@ -2269,7 +2269,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "bc4a7299-c041-4a11-b40e-855fa5335570",
+                            Id = "2ab02934-9e35-4e6f-860b-f8a20027ef6d",
                             DreCodeEol = "109300",
                             Login = "8013799",
                             Name = "SIMONE APARECIDA SILVA",
@@ -2278,7 +2278,7 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                         },
                         new
                         {
-                            Id = "ad6f7041-4018-433a-84a7-ab57fa8df5f4",
+                            Id = "81906bf8-ae91-4491-891d-2ebaede4e11d",
                             DreCodeEol = "109300",
                             Login = "8063389",
                             Name = "ADRIANA GOIS DE SOUZA",
@@ -2301,52 +2301,52 @@ namespace SME.Pedagogico.Gestao.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "6c13343e-67a8-4f89-a714-e6eefbc80fdc",
+                            Id = "023a52a5-dfb1-4770-914c-6ce2e70a0529",
                             Name = "Admin"
                         },
                         new
                         {
-                            Id = "809457b7-c609-4173-9104-c995b8d55dda",
+                            Id = "9d0c344c-7e23-47a5-8905-1f73c400b4b8",
                             Name = "Diretor"
                         },
                         new
                         {
-                            Id = "57188ff9-1c9c-420c-b7e6-0d094b3456e9",
+                            Id = "aacb2d2a-c070-4a8a-89d4-9ef4f388bac1",
                             Name = "CP"
                         },
                         new
                         {
-                            Id = "c03942cc-8f60-418a-af5b-c440974952b3",
+                            Id = "1e3802a5-d76c-4fb2-98db-1d81be1d7262",
                             Name = "Diretor"
                         },
                         new
                         {
-                            Id = "3bcac4b8-5091-4508-a32a-791fc47f4d0c",
+                            Id = "359f467e-4df4-4572-b8a4-67999711ea97",
                             Name = "Secretario(a)"
                         },
                         new
                         {
-                            Id = "c2f5838c-e7e2-4f23-91fb-58d171cf2f24",
+                            Id = "8dc0247c-04db-45e4-813c-4f8943dce5fa",
                             Name = "Auxiliar"
                         },
                         new
                         {
-                            Id = "2fc4bc01-210e-4d86-978f-42dfb6e713c0",
+                            Id = "03165f0e-0844-44fd-bbbd-b0ac023639cd",
                             Name = "Professor"
                         },
                         new
                         {
-                            Id = "0a95bc7b-d9aa-4b2e-b990-200623dfab35",
+                            Id = "c7e42867-1f14-48fc-8dda-5580a37a8e4e",
                             Name = "Responsavel"
                         },
                         new
                         {
-                            Id = "840c2ace-95e7-4a60-a309-9847198f440a",
+                            Id = "113cd716-9c71-4056-a6d0-3f0b02230359",
                             Name = "Aluno"
                         },
                         new
                         {
-                            Id = "199622d5-99b6-47ce-8da2-ca6cd02422ba",
+                            Id = "892d29db-154d-475a-adf6-e6a7daa2c91e",
                             Name = "Adm DRE"
                         });
                 });
