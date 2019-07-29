@@ -31,9 +31,6 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
         //Funcionarios/cargos/{codigoCargo}
         public string BuscaFuncionario { get; set; } = "Funcionarios/cargos/{0}";
 
-
-
-
         // ******    Métodos da API Escola  **************************************************************************
         //HttpGet("{codigoEol}")]
         public string BuscaEscolasPor { get; set; } = "escolas/{0}";

@@ -178,7 +178,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 throw ex;
             }
 
-        }
+         }
 
         public async Task<List<DREsDTO>> GetCodeDreAdm(string userName)
         {

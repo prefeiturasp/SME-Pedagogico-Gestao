@@ -3,6 +3,7 @@ using SME.Pedagogico.Gestao.Data.DataTransfer;
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.Enums;
 using SME.Pedagogico.Gestao.Models.Authentication;
+using SME.Pedagogico.Gestao.WebApp.Models.Auth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -119,11 +120,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
             return (false);
         }
 
+
         public static bool ResetSenhaPadrão(ResetPasswordDTO credentials, out IEnumerable<string> validationErrors)
         {
             using (Data.Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
             {
-                User user = 
+                User user =
                     (from current in db.Users
                      where current.Name == credentials.Username
                      select current).FirstOrDefault();
@@ -163,7 +165,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 yield return PasswordValidationMsgsEnum.PASSWORDS_CONFIRMATION_DIFF.Text;
             }
 
-            if (credentials.NewPassword.Length < 8 || !(Regex.IsMatch(credentials.NewPassword, anyUpperCaseLetterPattern) && 
+            if (credentials.NewPassword.Length < 8 || !(Regex.IsMatch(credentials.NewPassword, anyUpperCaseLetterPattern) &&
                                                         Regex.IsMatch(credentials.NewPassword, anyDigitPattern) &&
                                                         Regex.IsMatch(credentials.NewPassword, anySpecialCharactertPattern)))
             {
@@ -265,7 +267,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                     if (role != null)
                     {
-                        Models.Authentication.AccessLevel accessLevel = await
+                        Models.Authentication.AccessLevel accessLevel = await 
                             (from current in db.AccessLevels
                              where current.Value == accessLevelValue
                              select current).FirstOrDefaultAsync();
@@ -313,5 +315,24 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 return (userRoles);
             }
         }
+
+        public static async Task SetRolePrivilegied(CredentialModel credential, Data.DataTransfer.PrivilegedAccessModel userPrivileged)
+        {
+            if (userPrivileged.OccupationPlace == "AMCOM")
+            {
+                var boolean = await SetRole(credential.Username, "Admin", "0");
+            }
+            else if (userPrivileged.OccupationPlace == "SME")
+            {
+                var boolean = await SetRole(credential.Username, "Admin", "2");
+            }
+
+            else if (userPrivileged.OccupationPlaceCode == 3)
+            {
+                await SetRole(credential.Username, "Adm DRE", "21");
+            }
+        }
+
+
     }
 }
