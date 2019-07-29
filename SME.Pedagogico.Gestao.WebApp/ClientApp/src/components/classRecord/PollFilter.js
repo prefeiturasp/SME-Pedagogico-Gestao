@@ -372,7 +372,7 @@ debugger
                      this.props.user.activeRole.roleName === ROLES_ENUM.DIRETOR) 
              {
 
-                if (selectedSchool !== "todas") {
+                if (selectedSchool !== "todas" && this.props.filters.listClassRoom !== undefined) {
                     if (this.props.filters.listClassRoom !== [] && this.props.filters.listClassRoom !== null && this.props.filters.listClassRoom.length > 1) {
                         if (this.state.classroom !== null)
                             for (var item in this.props.filters.listClassRoom) {
@@ -394,7 +394,7 @@ debugger
 
                 selectClassRoom = <SelectChangeColor className="col" value={selectedClassRoom} defaultText="Turma" options={listClassRoomOptions} disabled={hiddenDisabled} onChange={this.SelectedClassRoom} resetColor={selectedClassRoom === "" ? true : false} />
 
-                if (this.props.filters.listClassRoom !== null) {
+                if (this.props.filters.listClassRoom !== null && this.props.filters.listClassRoom !== undefined) {
                     var temp = this.props.filters.listClassRoom;
                     var uniques = [];
 
