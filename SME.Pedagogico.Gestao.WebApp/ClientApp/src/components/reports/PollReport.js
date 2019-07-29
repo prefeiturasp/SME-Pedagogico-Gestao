@@ -26,6 +26,8 @@ class PollReport extends Component {
 
         this.printClick = this.printClick.bind(this);
         this.openPollFilter = this.openPollFilter.bind(this);
+
+        this.props.pollReportMethods.resetPollReportFilter();
     }
 
     printClick() {
@@ -50,7 +52,6 @@ class PollReport extends Component {
         var reportData = null;
         var chartData = null;
         var mathType = null;
-
         if (this.props.pollReport.showReport === true) {
             reportData = this.props.pollReport.data;
             chartData = this.props.pollReport.chartData;
@@ -65,6 +66,7 @@ class PollReport extends Component {
         var indexes = [];
 
         if (this.props.pollReport.showReport === true) {
+
             if (chartData.chartIdeaData !== undefined && chartData.chartIdeaData.length > 0) {
                 chartData.totals = [];
                 mathType = "consolidado";
@@ -116,12 +118,9 @@ class PollReport extends Component {
         }
 
         var numbers = false;
-
         if (reportData !== [] && reportData.length > 0 && reportData[0].poll !== undefined)
             if (reportData[0].poll[0].order === 0)
                 numbers = true;
-
-
         return (
             <div>
                 <Card className="mb-3">
@@ -155,10 +154,14 @@ class PollReport extends Component {
                                     <PollReportBreadcrumb className="mt-5" name="Gráfico" />
 
                                     {this.props.pollReport.selectedFilter.discipline === "Língua Portuguesa" ?
-                                        <PollReportPortugueseChart data={chartData} />
+
+                                <PollReportPortugueseChart data={chartData} />
                                         :
                                         <div className="mt-4">
-                                            {this.classroomReport === false ?
+                                            { 
+                                        this.classroomReport === false ? 
+                                           
+                                            (chartData.chartIdeaData !== undefined &&
                                                 (chartData.chartIdeaData.length > 0 ?
                                                     indexes.map(index => {
                                                         var chartId = "ordem" + chartData.chartIdeaData[index].order;
@@ -167,11 +170,12 @@ class PollReport extends Component {
                                                             <PollReportMathChart key={chartId} chartIds={[(chartId + "idea"), (chartId + "result")]} data={chartData.totals[index]} />
                                                         );
                                                     })
-                                                    :
-                                                    <PollReportMathNumbersChart data={chartData.chartNumberData} />
-                                                )
                                                 :
-                                                numbers === false ?
+                                                    <PollReportMathNumbersChart data={chartData.chartNumberData} />
+                                                ))
+                                                :
+                                            numbers === false ? 
+                                                chartData !== undefined &&
                                                     (chartData.map(item => {
                                                         var order = item.name !== null ? item.name.replace(" ", "").toLowerCase() : "";
                                                         var chart1Id = order + "-ideaChart";
@@ -198,5 +202,7 @@ class PollReport extends Component {
 
 export default connect(
     state => ({ pollReport: state.pollReport }),
-    dispatch => bindActionCreators(actionCreators, dispatch)
+    dispatch => ({
+        pollReportMethods:bindActionCreators(actionCreators, dispatch)
+    })
 )(PollReport);

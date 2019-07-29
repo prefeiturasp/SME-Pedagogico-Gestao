@@ -42,9 +42,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 throw ex;
             }
-
         }
-
 
         public async Task<List<EscolasPorDREDTO>> GetListSchoolDre(string dreCodeEol, string schooYear)
         {

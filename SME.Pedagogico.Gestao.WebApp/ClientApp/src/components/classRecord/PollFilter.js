@@ -34,20 +34,47 @@ class PollFilter extends Component {
     }
 
     componentWillMount() {
-        
-       // this.props.filterMethods.resetPollFilters();
+       debugger  
+      // 
         var role = this.props.user;
-        if (role.activeRole.roleName === ROLES_ENUM.PROFESSOR ||
+       
+        if(this.props.user.activeRole.roleName === ROLES_ENUM.ADM_DRE) 
+        {
+            var userName = this.props.user.username;
+            this.props.filterMethods.getDreAdm(userName)
+        }
+
+        else if (this.props.user.activeRole.roleName === ROLES_ENUM.ADMIN){
+            this.props.filterMethods.getListDres();
+        }
+      
+      
+        else if (role.activeRole.roleName === ROLES_ENUM.PROFESSOR ||
             role.activeRole.roleName === ROLES_ENUM.COORDENADOR_PEDAGOGICO ||
             role.activeRole.roleName === ROLES_ENUM.DIRETOR) {
+             
+               if(role.activeRole.roleName === ROLES_ENUM.PROFESSOR)
+               {
+                var codeOccupations = this.props.user.listOccupations.Professor
+               }  
+               
+               else if(role.activeRole.roleName === ROLES_ENUM.COORDENADOR_PEDAGOGICO)
+               {
+                var codeOccupations = this.props.user.listOccupations.CP
+               }
 
-            var codeOccupations = this.props.user.listOccupations[0];
-
+               else if(role.activeRole.roleName === ROLES_ENUM.DIRETOR)
+               {
+                var codeOccupations = this.props.user.listOccupations.Diretor
+               }
+                debugger
+           
             var profileOccupatios = {
                 codigoRF: this.props.user.username,
                 codigoCargo: codeOccupations,
                 anoLetivo: '2019',
             }
+          //         debugger
 
             this.props.filterMethods.getFilters_teacher(profileOccupatios);
             //if (this.props.filters.filterTeachers !== null) {
@@ -85,16 +112,7 @@ class PollFilter extends Component {
     }
 
     componentDidMount() {
-debugger;
-        if(this.props.user.activeRole.roleName === ROLES_ENUM.ADM_DRE) 
-        {
-            var userName = this.props.user.username;
-            this.props.filterMethods.getDreAdm(userName)
-        }
-
-        else {
-            this.props.filterMethods.getListDres();
-        }
+       
     }
 
     selectedDreTeacher(event) {
@@ -228,9 +246,12 @@ debugger;
     }
 
     getClassroom(event) {
+        this.props.filterMethods.activeClassroom(null);
+
         this.setState({
             classroom: event.target.value,
             selectedClassRoom: "",
+
         });
     }
 
@@ -299,7 +320,7 @@ debugger;
         if (this.props.pollRouter.activeRoute !== "Sondagem") {
             if (this.props.user.activeRole.roleName === ROLES_ENUM.ADMIN) {
 
-               
+                
                 listDresOptions.push({ label: "Todas", value: "todas" });
             }
         }
@@ -333,7 +354,8 @@ debugger;
             if (this.props.user.activeRole.roleName === ROLES_ENUM.PROFESSOR) {
 
 
-                if (this.state.classroom !== null)
+                if (this.state.classroom !== null) {
+                  //  listClassRoomOptions.push({ label: "Todas", value: "todas" })
                     for (var item in this.state.listClassRoomTeacher) {
                         if (this.state.listClassRoomTeacher[item].nome.startsWith(this.state.classroom))
                             listClassRoomOptions.push({
@@ -341,13 +363,18 @@ debugger;
                                 label: this.state.listClassRoomTeacher[item].nome,
                             });
                     }
-                else
+                }
+
+                else {
+                   // listClassRoomOptions.push({ label: "Todas", value: "todas" })
                     for (var item in this.state.listClassRoomTeacher) {
                         listClassRoomOptions.push({
                             value: this.state.listClassRoomTeacher[item].codigo,
                             label: this.state.listClassRoomTeacher[item].nome,
                         });
                     }
+                }
+                   
 
                 selectClassRoom = <SelectChangeColor className="col" value={selectedClassRoom} defaultText="Turma" options={listClassRoomOptions} disabled={hiddenDisabled} onChange={this.SelectedClassRoom} resetColor={selectedClassRoom === "" ? true : false} />
 
@@ -373,33 +400,40 @@ debugger;
              {
 
                 if (selectedSchool !== "todas") {
-                    if (this.props.filters.listClassRoom !== [] && this.props.filters.listClassRoom !== null && this.props.filters.listClassRoom.length > 1) {
-                        if (this.state.classroom !== null)
+                    if (this.props.filters.listClassRoom !== [] && this.props.filters.listClassRoom !== null && this.props.filters.listClassRoom !== undefined) {
+                      
+                     
+                        if(this.props.filters.listClassRoom.length > 1){
+                        if (this.state.classroom !== null && this.state.classroom !=='') {
                             for (var item in this.props.filters.listClassRoom) {
-                                if (this.props.filters.listClassRoom[item].nomeTurma.startsWith(this.state.classroom))
+                                debugger
+                                    if (this.props.filters.listClassRoom[item].nome.startsWith(this.state.classroom))
                                     listClassRoomOptions.push({
-                                        value: this.props.filters.listClassRoom[item].codigoTurma,
-                                        label: this.props.filters.listClassRoom[item].nomeTurma,
+                                        value: this.props.filters.listClassRoom[item].codigo,
+                                        label: this.props.filters.listClassRoom[item].nome,
                                     });
                             }
+                        }
+                            
                         else
                             for (var item in this.props.filters.listClassRoom) {
                                 listClassRoomOptions.push({
-                                    value: this.props.filters.listClassRoom[item].codigoTurma,
-                                    label: this.props.filters.listClassRoom[item].nomeTurma,
+                                    value: this.props.filters.listClassRoom[item].codigo,
+                                    label: this.props.filters.listClassRoom[item].nome,
                                 });
                             }
                     }
                 }
+                }
 
                 selectClassRoom = <SelectChangeColor className="col" value={selectedClassRoom} defaultText="Turma" options={listClassRoomOptions} disabled={hiddenDisabled} onChange={this.SelectedClassRoom} resetColor={selectedClassRoom === "" ? true : false} />
 
-                if (this.props.filters.listClassRoom !== null) {
+                if (this.props.filters.listClassRoom !== null  && this.props.filters.listClassRoom !== undefined) {
                     var temp = this.props.filters.listClassRoom;
                     var uniques = [];
-
+debugger
                     for (var i = 0; i < temp.length; i++) {
-                        var classroom = temp[i].nomeTurma.substring(0, 1);
+                        var classroom = temp[i].nome.substring(0, 1);
 
                         if (uniques.indexOf(classroom) === -1) {
                             yearClassrooms.push({ label: classroom, value: classroom });
@@ -430,20 +464,22 @@ debugger;
 
 
         else {
-            selectDre = <SelectChangeColor className="col-4" defaultText="Selecione a DRE"
+
+            if (this.props.filters.listDres !== null)
+            {
+                selectDre = <SelectChangeColor className="col-4" defaultText="Selecione a DRE"
                 value={selectedDre} options={listDresOptions} onChange={this.SelectedDre} />
 
             if (this.props.filters.activeDreCode !== null) {
                 if (this.props.pollRouter.activeRoute !== "Sondagem") {
                     listSchoolOptions.push({ label: "Todas", value: "todas" });
+                    
                 }
             }
-            debugger;
             for (var item in this.props.filters.listDres) {
 
-                debugger;
                 listDresOptions.push({
-                   
+                
                     value: this.props.filters.listDres[item].codigoDRE,
                     label: this.props.filters.listDres[item].nomeDRE.replace("DIRETORIA REGIONAL DE EDUCACAO", "DRE -"),
                 });
@@ -465,17 +501,18 @@ debugger;
                     if (this.props.filters.listClassRoom !== [] && this.props.filters.listClassRoom !== null && this.props.filters.listClassRoom.length > 1) {
                         if (this.state.classroom !== null)
                             for (var item in this.props.filters.listClassRoom) {
-                                if (this.props.filters.listClassRoom[item].nomeTurma.startsWith(this.state.classroom))
+                                if (this.props.filters.listClassRoom[item].nome.startsWith(this.state.classroom))
+
                                     listClassRoomOptions.push({
-                                        value: this.props.filters.listClassRoom[item].codigoTurma,
-                                        label: this.props.filters.listClassRoom[item].nomeTurma,
+                                        value: this.props.filters.listClassRoom[item].codigo,
+                                        label: this.props.filters.listClassRoom[item].nome,
                                     });
                             }
                         else
                             for (var item in this.props.filters.listClassRoom) {
                                 listClassRoomOptions.push({
-                                    value: this.props.filters.listClassRoom[item].codigoTurma,
-                                    label: this.props.filters.listClassRoom[item].nomeTurma,
+                                    value: this.props.filters.listClassRoom[item].codigo,
+                                    label: this.props.filters.listClassRoom[item].nome,
                                 });
                             }
                     }
@@ -488,7 +525,7 @@ debugger;
                     var uniques = [];
 
                     for (var i = 0; i < temp.length; i++) {
-                        var classroom = temp[i].nomeTurma.substring(0, 1);
+                        var classroom = temp[i].nome.substring(0, 1);
 
                         if (uniques.indexOf(classroom) === -1) {
                             yearClassrooms.push({ label: classroom, value: classroom });
@@ -509,6 +546,8 @@ debugger;
                     });
                 }
             }
+            }
+          
         }
 
         return (

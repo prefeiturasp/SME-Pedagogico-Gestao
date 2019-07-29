@@ -48,6 +48,18 @@ const PollReportGridTotal = (props) => {
 }
 
 export default class PollReportMathGrid extends Component {
+    constructor(props) {
+        super(props);
+        
+        this.mathGridHeader = this.mathGridHeader.bind(this);
+    }
+
+    mathGridHeader(data,i) {
+        var mathGridHeader;
+        mathGridHeader = <PollReportMathGridHeader classroomReport={this.props.classroomReport} orderName={data.numerosResults[i].groupName} numbers={true} orderTitle={""} />
+        return mathGridHeader;
+    }
+
     render() {
         var { className } = this.props;
 
@@ -65,27 +77,27 @@ export default class PollReportMathGrid extends Component {
         var { data } = this.props;
         data.totals = [];
         var indexes = [];
+        if (data.ideaResults !== undefined || data.numerosResults !== undefined) {
+            if (this.props.classroomReport === false && data.ideaResults.length > 0)
+                for (var i = 0; i < data.ideaResults.length; i++) {
+                    indexes.push(i);
+                    data.totals.push({
+                        totalStudentIdeaQuantity: data.ideaResults[i].correctIdeaQuantity + data.ideaResults[i].incorrectIdeaQuantity + data.ideaResults[i].notAnsweredIdeaQuantity,
+                        totalStudentIdeaPercentage: data.ideaResults[i].correctIdeaPercentage + data.ideaResults[i].incorrectIdeaPercentage + data.ideaResults[i].notAnsweredIdeaPercentage,
+                        totalStudentResultQuantity: data.resultResults[i].correctResultQuantity + data.resultResults[i].incorrectResultQuantity + data.resultResults[i].notAnsweredResultQuantity,
+                        totalStudentResultPercentage: data.resultResults[i].correctResultPercentage + data.resultResults[i].incorrectResultPercentage + data.resultResults[i].notAnsweredResultPercentage,
+                    });
+                }
+            else if (data.numerosResults !== undefined && data.numerosResults.length > 0)
+                for (var j = 0; j < data.numerosResults.length; j++)
+                    indexes.push(j);
 
-        if (this.props.classroomReport === false && data.ideaResults.length > 0)
-            for (var i = 0; i < data.ideaResults.length; i++) {
-                indexes.push(i);
-                data.totals.push({
-                    totalStudentIdeaQuantity: data.ideaResults[i].correctIdeaQuantity + data.ideaResults[i].incorrectIdeaQuantity + data.ideaResults[i].notAnsweredIdeaQuantity,
-                    totalStudentIdeaPercentage: data.ideaResults[i].correctIdeaPercentage + data.ideaResults[i].incorrectIdeaPercentage + data.ideaResults[i].notAnsweredIdeaPercentage,
-                    totalStudentResultQuantity: data.resultResults[i].correctResultQuantity + data.resultResults[i].incorrectResultQuantity + data.resultResults[i].notAnsweredResultQuantity,
-                    totalStudentResultPercentage: data.resultResults[i].correctResultPercentage + data.resultResults[i].incorrectResultPercentage + data.resultResults[i].notAnsweredResultPercentage,
-                });
-            }
-        else if (data.numerosResults !== undefined && data.numerosResults.length > 0)
-            for (var j = 0; j < data.numerosResults.length; j++)
-                indexes.push(j);
+            var numberTest = false;
 
-        var numberTest = false;
-
-        if (this.props.classroomReport === true && data.length > 0)
-            if (data[0].poll[0].order === 0)
-                numberTest = true;
-
+            if (this.props.classroomReport === true && data.length > 0)
+                if (data[0].poll[0].order === 0)
+                    numberTest = true;
+        }
         return (
             <div className={className}>
                 {this.props.classroomReport === false ?
@@ -93,7 +105,8 @@ export default class PollReportMathGrid extends Component {
                         if (data.ideaResults.length > 0)
                             return (
                                 <div key={data.ideaResults[index].orderName}>
-                                    <PollReportMathGridHeader classroomReport={this.props.classroomReport} orderName={data.ideaResults[index].orderName} />
+                                    <PollReportMathGridHeader classroomReport={this.props.classroomReport} orderName={data.ideaResults[index].orderName} orderTitle={data.resultResults[index].orderTitle} />
+                                    
                                     <PollReportMathGridItem
                                         classroomReport={this.props.classroomReport}
                                         testName="Acertou"
@@ -125,7 +138,7 @@ export default class PollReportMathGrid extends Component {
                         else
                             return (
                                 <div key={data.numerosResults[index].groupName}>
-                                    <PollReportMathGridHeader classroomReport={this.props.classroomReport} orderName={data.numerosResults[index].groupName} numbers={true} />
+                                    {this.mathGridHeader(data,index)}
                                     <PollReportMathGridItem
                                         numbers={true}
                                         classroomReport={this.props.classroomReport}
@@ -151,8 +164,10 @@ export default class PollReportMathGrid extends Component {
                     })
                     :
                     <div>
-                        <PollReportMathGridHeader classroomReport={this.props.classroomReport} orders={orders} numbers={numberTest} headers={data.length > 0 ? data[0].poll : []} />
-                        {this.props.data.map(item =>
+                        {<PollReportMathGridHeader classroomReport={this.props.classroomReport} orders={orders} numbers={numberTest} headers={data.length > 0 ? data[0].poll : []} />}
+
+                        {
+                            this.props.data.map(item =>
                             <PollReportMathGridItem classroomReport={this.props.classroomReport} item={item} numbers={numberTest} />
                         )}
                     </div>

@@ -10,7 +10,6 @@ const AuthenticatedDashboardProfileRoute = ({ component: C, user, ...rest }) => 
       {...rest}
       render={props => {
 
-        debugger;
         if (
           user.isAuthenticated &&
           user.activeRole.roleName !== ROLES_ENUM.ADM_DRE

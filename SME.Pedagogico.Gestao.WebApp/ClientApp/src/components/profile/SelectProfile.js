@@ -2,7 +2,8 @@
 import './SelectProfile.css';
 import Card from '../containers/Card';
 import { connect } from 'react-redux';
-import { actionCreators } from '../../store/User';
+import { actionCreators as actionCreatorsUser } from '../../store/User';
+import { actionCreators as actionCreatorsPoll  } from '../../store/Filters';
 import { bindActionCreators } from 'redux';
 
 const ChangeProfileButton = (props) => {
@@ -27,12 +28,14 @@ class SelectProfile extends Component {
     }
 
     selectRole(event) {
+        debugger
+        this.props.filterMethods.resetPollFilters();
         var roleName = event.target.innerText;
         var roles = this.props.user.roles;
 
         for (var i = 0; i < roles.length; i++)
             if (roles[i].roleName === roleName) {
-                this.props.setActiveRole(roles[i]);
+                this.props.actionCreatorsUser.setActiveRole(roles[i]);
                 break;
             }
 
@@ -61,6 +64,13 @@ class SelectProfile extends Component {
 }
 
 export default connect(
-    state => ({ user: state.user }),
-    dispatch => bindActionCreators(actionCreators, dispatch)
+    state => ({ user: state.user,
+                 filters: state.filters }),
+    dispatch => (
+        {
+            filterMethods: bindActionCreators(actionCreatorsPoll, dispatch),
+            actionCreatorsUser: bindActionCreators(actionCreatorsUser, dispatch),
+          
+        }
+    )
 )(SelectProfile);

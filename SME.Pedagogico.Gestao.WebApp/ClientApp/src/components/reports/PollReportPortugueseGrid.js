@@ -30,7 +30,7 @@ const PollReportGridHeader = (props) => {
 };
 
 const PollReportGridItem = (props) => {
-    if (props.classroomReport === true)
+    if (props.classroomReport === true && props.code !== undefined)
         return (
             <div className="d-flex poll-report-grid-item border-bottom">
                 <div className="col">
@@ -44,7 +44,7 @@ const PollReportGridItem = (props) => {
                 </div>
             </div>
         );
-    else
+    else if (props.classroomReport === false && props.optionName !== undefined)
         return (
             <div className="d-flex poll-report-grid-item border-bottom">
                 <div className="col">
@@ -54,7 +54,7 @@ const PollReportGridItem = (props) => {
                     <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center text-white font-weight-light">{props.studentQuantity} Alunos</div>
                 </div>
                 <div className="col-1 sc-darkblue border-right border-white">
-                    <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center text-white font-weight-light">{props.studentPercentage.toFixed(2)}%</div>
+                    <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center text-white font-weight-light">{props.studentPercentage > 0 && props.studentPercentage.toFixed(2)}%</div>
                 </div>
             </div>
         );
@@ -77,6 +77,28 @@ const PollReportGridTotal = (props) => {
 }
 
 export default class PollReportPortugueseGrid extends Component {    
+    constructor(props) {
+        super(props);
+        this.gridHeader = this.gridHeader.bind(this);
+        
+    }
+
+    gridHeader() {
+        var gridHeader;
+        if (this.props.data !== undefined && this.props.data.length > 0 && this.props.data[0].optionName !== undefined) {
+
+            gridHeader = this.props.data.map(item =>
+                <PollReportGridItem {...item} classroomReport={this.props.classroomReport} />
+            )
+        } else if (this.props.classroomReport === true) {
+            gridHeader = this.props.data.map(item =>
+                <PollReportGridItem {...item} classroomReport={this.props.classroomReport} />
+            )
+        }
+        return gridHeader;
+    }
+
+
     render() {
         var { className } = this.props;
 
@@ -87,22 +109,18 @@ export default class PollReportPortugueseGrid extends Component {
 
         var totalStudents = 0;
         var totalPercentage = 0;
-
-        if (this.props.classroomReport === false)
+        
+        if (this.props.classroomReport === false && this.props.data )
             for (var key in this.props.data) {
                 totalStudents += this.props.data[key].studentQuantity;
                 totalPercentage += this.props.data[key].studentPercentage;
             }
-
-
         return (
             <div className={className}>
                 <PollReportGridHeader classroomReport={this.props.classroomReport} />
 
-                {this.props.data.map(item =>
-                    <PollReportGridItem {...item} classroomReport={this.props.classroomReport} />
-                )}
-
+                {this.gridHeader()}
+                
                 {this.props.classroomReport === false &&
                     <PollReportGridTotal studentQuantity={totalStudents} studentPercentage={totalPercentage}/>
                 }
