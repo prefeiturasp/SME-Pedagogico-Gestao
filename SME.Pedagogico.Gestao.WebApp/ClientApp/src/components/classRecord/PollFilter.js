@@ -469,7 +469,8 @@ debugger
                 });
             }
 
-            if (selectedDre !== "todas" && this.props.filters.scholls !== undefined) {
+            if(selectedDre !== "todas" && this.props.filters.scholls !== undefined)
+                if (this.props.filters.scholls[0] !== undefined) {
                 debugger
                 for (var item in this.props.filters.scholls) {
                     listSchoolOptions.push({

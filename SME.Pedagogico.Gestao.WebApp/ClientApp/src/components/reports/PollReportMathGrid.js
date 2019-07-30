@@ -131,7 +131,7 @@ class PollReportMathGrid extends Component {
                         else
                             return (
                                 <div key={data.numerosResults[index].groupName}>
-                                    <PollReportMathGridHeader classroomReport={this.props.classroomReport} orderName={data.numerosResults[index].groupName} numbers={true}/>
+                                    <PollReportMathGridHeader classroomReport={this.props.classroomReport} orderName={data.numerosResults[index].groupName} numbers={true}  />
                                     <PollReportMathGridItem
                                         numbers={true}
                                         classroomReport={this.props.classroomReport}
