@@ -34,68 +34,86 @@ class PollFilter extends Component {
     }
 
     componentWillMount() {
+        debugger  
+       // 
+         var role = this.props.user;
         
-        debugger
-       // this.props.filterMethods.resetPollFilters();
-        var role = this.props.user;
-        if (role.activeRole.roleName === ROLES_ENUM.PROFESSOR ||
-            role.activeRole.roleName === ROLES_ENUM.COORDENADOR_PEDAGOGICO ||
-            role.activeRole.roleName === ROLES_ENUM.DIRETOR) {
-
-            var codeOccupations = this.props.user.listOccupations[0];
-
-            var profileOccupatios = {
-                codigoRF: this.props.user.username,
-                codigoCargo: codeOccupations,
-                anoLetivo: '2019',
-            }
-
-            this.props.filterMethods.getFilters_teacher(profileOccupatios);
-            //if (this.props.filters.filterTeachers !== null) {
-            //    if (this.props.filters.filterTeachers.drEs.length == 1) {
-            //        var schoolCode = {
-            //            dreCodeEol: this.props.filters.filterTeachers.drEs[0].codigo
-            //        }
-
-            //        this.props.filterMethods.activeDreCode(schoolCode);
-            //        var listSchools = this.props.filters.filterTeachers.escolas.filter(x => x.codigoDRE === this.props.filters.filterTeachers.drEs[0].codigo)
-            //    }
-            //    if (this.props.filters.filterTeachers.escolas.length == 1) {
-            //        var classRoomFilter = {
-            //            schoolCodeEol: this.props.filters.filterTeachers.escolas[0].codigo
-            //        }
-
-            //        this.props.filterMethods.activeSchoolCode(classRoomFilter);
-            //    }
-            //}
-
-
-            //          
-            //this.setState({
-            //    listSchools: listSchools
-            //});
-        }
-        if (role.activeRole.roleName === ROLES_ENUM.DIRETOR ||
-            role.activeRole.roleName === ROLES_ENUM.ADM_DRE) {
-            this.props.pollRouterMethods.setActiveRoute("Relatórios");
-        }
-        //else {
-        //    this.props.pollRouterMethods.setActiveRoute("Sondagem");
-        //}
-      
-    }
-
-    componentDidMount() {
-        if(this.props.user.activeRole.roleName === ROLES_ENUM.ADM_DRE) 
-        {
-            var userName = this.props.user.username;
-            this.props.filterMethods.getDreAdm(userName)
-        }
-
-        else {
-            this.props.filterMethods.getListDres();
-        }
-    }
+         if(this.props.user.activeRole.roleName === ROLES_ENUM.ADM_DRE) 
+         {
+             var userName = this.props.user.username;
+             this.props.filterMethods.getDreAdm(userName)
+         }
+ 
+         else if (this.props.user.activeRole.roleName === ROLES_ENUM.ADMIN){
+             this.props.filterMethods.getListDres();
+         }
+       
+       
+         else if (role.activeRole.roleName === ROLES_ENUM.PROFESSOR ||
+             role.activeRole.roleName === ROLES_ENUM.COORDENADOR_PEDAGOGICO ||
+             role.activeRole.roleName === ROLES_ENUM.DIRETOR) {
+              
+                if(role.activeRole.roleName === ROLES_ENUM.PROFESSOR)
+                {
+                 var codeOccupations = this.props.user.listOccupations.Professor
+                }  
+                
+                else if(role.activeRole.roleName === ROLES_ENUM.COORDENADOR_PEDAGOGICO)
+                {
+                 var codeOccupations = this.props.user.listOccupations.CP
+                }
+ 
+                else if(role.activeRole.roleName === ROLES_ENUM.DIRETOR)
+                {
+                 var codeOccupations = this.props.user.listOccupations.Diretor
+                }
+                 debugger
+            
+             var profileOccupatios = {
+                 codigoRF: this.props.user.username,
+                 codigoCargo: codeOccupations,
+                 anoLetivo: '2019',
+             }
+           //         debugger
+ 
+             this.props.filterMethods.getFilters_teacher(profileOccupatios);
+             //if (this.props.filters.filterTeachers !== null) {
+             //    if (this.props.filters.filterTeachers.drEs.length == 1) {
+             //        var schoolCode = {
+             //            dreCodeEol: this.props.filters.filterTeachers.drEs[0].codigo
+             //        }
+ 
+             //        this.props.filterMethods.activeDreCode(schoolCode);
+             //        var listSchools = this.props.filters.filterTeachers.escolas.filter(x => x.codigoDRE === this.props.filters.filterTeachers.drEs[0].codigo)
+             //    }
+             //    if (this.props.filters.filterTeachers.escolas.length == 1) {
+             //        var classRoomFilter = {
+             //            schoolCodeEol: this.props.filters.filterTeachers.escolas[0].codigo
+             //        }
+ 
+             //        this.props.filterMethods.activeSchoolCode(classRoomFilter);
+             //    }
+             //}
+ 
+ 
+             //          
+             //this.setState({
+             //    listSchools: listSchools
+             //});
+         }
+         if (role.activeRole.roleName === ROLES_ENUM.DIRETOR ||
+             role.activeRole.roleName === ROLES_ENUM.ADM_DRE) {
+             this.props.pollRouterMethods.setActiveRoute("Relatórios");
+         }
+         //else {
+         //    this.props.pollRouterMethods.setActiveRoute("Sondagem");
+         //}
+       
+     }
+ 
+     componentDidMount() {
+        
+     }
 
     selectedDreTeacher(event) {
         var index = event.nativeEvent.target.selectedIndex;

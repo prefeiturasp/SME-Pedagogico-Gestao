@@ -244,14 +244,14 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return (userRoles);
         }
 
-        private async Task<List<string>> SetOccupationsRF(string rf, RetornoCargosServidorDTO occupations)
+        private async Task<Dictionary<string,string>> SetOccupationsRF(string rf, RetornoCargosServidorDTO occupations)
         {
             var ProfileBusiness = new Profile(_config);
 
             string roleName = "";
             string accessLevel = "";
             bool haveOccupationAccess;
-            var ListcodeOcupations = new List<string>();
+            var ListcodeOcupations = new Dictionary<string, string>();
 
             if (occupations != null)
             {
@@ -297,7 +297,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     if (haveOccupationAccess)
                     {
                         await Authentication.SetRole(rf, roleName, accessLevel);
-                        ListcodeOcupations.Add(codigoCargoAtivo);
+                        ListcodeOcupations.Add(roleName, codigoCargoAtivo);
                     }
 
                 }
@@ -395,7 +395,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         public async Task<ActionResult<string>> LoginIdentity([FromBody]CredentialModel credential)
         {
             var ProfileBusiness = new Profile(_config);
-            var listOccupations = new List<string>();
+            var listOccupations = new Dictionary<string,string>();
             var userPrivileged = Authentication.ValidatePrivilegedUser(credential.Username);
 
             var occupationRF = await ProfileBusiness.GetOccupationsRF(credential.Username);
