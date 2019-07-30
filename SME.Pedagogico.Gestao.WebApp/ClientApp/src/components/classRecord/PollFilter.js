@@ -35,6 +35,7 @@ class PollFilter extends Component {
 
     componentWillMount() {
         
+        debugger
        // this.props.filterMethods.resetPollFilters();
         var role = this.props.user;
         if (role.activeRole.roleName === ROLES_ENUM.PROFESSOR ||
@@ -282,6 +283,7 @@ debugger
     }
 
     render() {
+        debugger
         const { selectedDre } = this.state;
         const { selectedSchool } = this.state;
         const { selectedClassRoom } = this.state;
@@ -304,7 +306,7 @@ debugger
             }
         }
 
-        if (this.props.filters.filterTeachers !== null) {
+        if (this.props.filters.filterTeachers !== null && this.props.filters.filterTeachers.drEs !== undefined) {
             var DreSelected;
             var SchoolSelected;
             var enabledDre = false;
@@ -430,6 +432,9 @@ debugger
 
 
         else {
+
+            if (this.props.filters.listDres !== null)
+            {
             selectDre = <SelectChangeColor className="col-4" defaultText="Selecione a DRE"
                 value={selectedDre} options={listDresOptions} onChange={this.SelectedDre} />
 
@@ -446,7 +451,7 @@ debugger
                 });
             }
 
-            if (selectedDre !== "todas" && this.props.filters.scholls[0] !== undefined) {
+            if (selectedDre !== "todas" && this.props.filters.scholls !== undefined) {
                 debugger
                 for (var item in this.props.filters.scholls) {
                     listSchoolOptions.push({
@@ -459,7 +464,7 @@ debugger
                 selectSchool = <SelectChangeColor className="col-4" value={SchoolSelected} defaultText="Escola"
                     options={listSchoolOptions} onChange={this.SelectedSchool} resetColor={SchoolSelected === "" ? true : false} />
 
-                if (selectedSchool !== "todas") {
+                if (selectedSchool !== "todas" && this.props.filters.listClassRoom !== undefined) {
                     if (this.props.filters.listClassRoom !== [] && this.props.filters.listClassRoom !== null && this.props.filters.listClassRoom.length > 1) {
                         if (this.state.classroom !== null)
                             for (var item in this.props.filters.listClassRoom) {
@@ -481,7 +486,7 @@ debugger
 
                 selectClassRoom = <SelectChangeColor className="col" value={selectedClassRoom} defaultText="Turma" options={listClassRoomOptions} disabled={hiddenDisabled} onChange={this.SelectedClassRoom} resetColor={selectedClassRoom === "" ? true : false} />
 
-                if (this.props.filters.listClassRoom !== null) {
+                if (this.props.filters.listClassRoom !== null && this.props.filters.listClassRoom !== undefined) {
                     var temp = this.props.filters.listClassRoom;
                     var uniques = [];
 
@@ -526,6 +531,7 @@ debugger
         );
 
     }
+  }
 }
 export default connect(
     state => (
