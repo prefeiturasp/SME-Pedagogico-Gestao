@@ -532,7 +532,7 @@ debugger
                 }
             }
         }
-
+    }
         return (
             <div className="py-2 px-3 d-flex align-items-center">
                 <SelectChangeColor className="" defaultText="2019" value={ano} disabled="true" />
@@ -549,7 +549,7 @@ debugger
             </div>
         );
 
-    }
+   
   }
 }
 export default connect(
