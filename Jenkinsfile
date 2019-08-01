@@ -9,8 +9,9 @@ pipeline {
     stages {
       stage('CheckOut') {
         steps {
-          git branch: 'homologacao', url: 'https://github.com/prefeiturasp/SME-Pedagogico-Gestao.git'
-            sh 'ls -la'
+          checkout scm
+          sh 'ls -la'
+          sh "echo MINHA BRANCH É ${GIT_BRANCH}"
         }
       }
       
