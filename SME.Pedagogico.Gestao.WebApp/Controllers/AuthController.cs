@@ -244,14 +244,14 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return (userRoles);
         }
 
-        private async Task<List<string>> SetOccupationsRF(string rf, RetornoCargosServidorDTO occupations)
+        private async Task<Dictionary<string,string>> SetOccupationsRF(string rf, RetornoCargosServidorDTO occupations)
         {
             var ProfileBusiness = new Profile(_config);
 
             string roleName = "";
             string accessLevel = "";
             bool haveOccupationAccess;
-            var ListcodeOcupations = new List<string>();
+            var ListcodeOcupations = new Dictionary<string, string>();
 
             if (occupations != null)
             {
@@ -297,7 +297,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     if (haveOccupationAccess)
                     {
                         await Authentication.SetRole(rf, roleName, accessLevel);
-                        ListcodeOcupations.Add(codigoCargoAtivo);
+                        ListcodeOcupations.Add(roleName, codigoCargoAtivo);
                     }
 
                 }
@@ -395,127 +395,44 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         public async Task<ActionResult<string>> LoginIdentity([FromBody]CredentialModel credential)
         {
             var ProfileBusiness = new Profile(_config);
-            var listOccupations = new List<string>();
+            var listOccupations = new Dictionary<string,string>();
+            var userPrivileged = Authentication.ValidatePrivilegedUser(credential.Username);
 
-            // Verifica se ja existe na tabela de usuários
+            var occupationRF = await ProfileBusiness.GetOccupationsRF(credential.Username);
+
+            // Verifica se o usuario é cadastrado
             if (Authentication.ValidateUser(credential.Username))
-            {   // se já existir verifica se usuário e senha estão corretos
+            {
+                // Se sim verifica se usuario e senha estao corretos
                 if (!Authentication.ValidateUser(credential.Username, credential.Password))
                 {
-                    // Se não estiver correto  retorna não autorizado
                     return (Unauthorized());
                 }
-                // se usuário e senha estiverem corretos 
-                else
-                {
-                    // Verifica se possui acesso privilegiado
-                    var userPrivileged = Authentication.ValidatePrivilegedUser(credential.Username);
-
-                    //Se possui acesso privilegiado 
-                    if (userPrivileged != null)
-                    {
-                        var Roles = await GetUserRoles(credential.Username);
-                        bool existsRolePrivilegied = false; ;
-                        foreach (var role in Roles)
-                        {
-                            if (role.RoleName == "Admin" ||
-                               role.RoleName == "Adm DRE")
-                            {
-                                existsRolePrivilegied = true;
-                            }
-                        }
-
-                        if (!existsRolePrivilegied)
-                        {
-                            await SetRolePrivilegied(credential, userPrivileged);
-                        }
-
-                        // Verifica se o cargo dele pode acessar o sistema 
-                        var occupations = await ProfileBusiness.GetOccupationsRF(credential.Username);
-                        if (occupations != null)
-                        {
-                            //  await Authentication.RegisterUser(credential.Username, credential.Password);
-                            listOccupations = await SetOccupationsRF(credential.Username, occupations);
-                        }
-                        string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
-                        string refreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
-                        await Data.Business.Authentication.LoginUser(credential.Username, session, refreshToken); // Loga o usuário no sistema
-
-                        return (Ok(new
-                        {
-                            Token = CreateToken(credential.Username),
-                            Session = session,
-                            RefreshToken = refreshToken,
-                            Roles = await GetUserRoles(credential.Username),
-                            ListOccupations = listOccupations,
-                        }));
-                    }
-
-                    else
-                    {
-                        // Se nao possui acesso privilegiado é Professor ou CP
-                        // Verifica se o cargo dele pode acessar o sistema 
-                        var occupations = await ProfileBusiness.GetOccupationsRF(credential.Username);
-                        if (occupations != null)
-                        {
-                            //  await Authentication.RegisterUser(credential.Username, credential.Password);
-                            listOccupations = await SetOccupationsRF(credential.Username, occupations);
-                            string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
-                            string refreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
-                            await Data.Business.Authentication.LoginUser(credential.Username, session, refreshToken); // Loga o usuário no sistema
-
-                            return (Ok(new
-                            {
-                                Token = CreateToken(credential.Username),
-                                Session = session,
-                                RefreshToken = refreshToken,
-                                Roles = await GetUserRoles(credential.Username),
-                                ListOccupations = listOccupations,
-                            }));
-                        }
-                        else
-                        {
-                            // caso o cargo não possa acessar o sistema retorna não autorizado
-                            return (Unauthorized());
-                        }
-                    }
-                }
             }
-
-            // Se não existir na tabela de usuários é o primeiro login
+            // usuario nao é cadastrado
             else
             {
-                //Verifica se possui acesso privilegiado
-                var userPrivileged = Authentication.ValidatePrivilegedUser(credential.Username);
-                //Se possui acesso privilegiado 
-                if (userPrivileged != null)
+                if (userPrivileged == null && occupationRF == null)
                 {
-                    //Registra o usuário no sistema
-                    await Authentication.RegisterUser(credential.Username, credential.Password);
-
-                    await SetRolePrivilegied(credential, userPrivileged);
+                    // se nao possui acesso a tabela e eol
+                    return (Unauthorized());
                 }
-
-                // Se não possui acesso privilegiado é Cp ou professor
-                else
-                {
-                    // verifica se possui algum cargo que possa acesssar o sistema 
-                    var occupations = await ProfileBusiness.GetOccupationsRF(credential.Username);
-                    if (occupations != null)
-                    {
-                        //registra usuario no sistema
-                        await Authentication.RegisterUser(credential.Username, credential.Password);
-                        listOccupations = await SetOccupationsRF(credential.Username, occupations);
-                    }
-                    else
-                    { // se não possui um cargo que possa acessar o sistema retorna nao autorizado
-                        return (Unauthorized());
-                    }
-                }
-
+                await Authentication.RegisterUser(credential.Username, credential.Password);
+            }
+            // Fluxo 2 
+            if (userPrivileged != null)
+            {
+                await Authentication.SetRolePrivilegied(credential, userPrivileged);
+            }
+            if (occupationRF != null)
+            {
+                listOccupations = await SetOccupationsRF(credential.Username, occupationRF);
+            }
+            var Roles = await GetUserRoles(credential.Username);
+            if (Roles != null)
+            {
                 string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
                 string refreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
-                //await Data.Business.Authentication.RegisterUser(credential.Username, credential.Password);
                 await Data.Business.Authentication.LoginUser(credential.Username, session, refreshToken); // Loga o usuário no sistema
 
                 return (Ok(new
@@ -523,26 +440,13 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     Token = CreateToken(credential.Username),
                     Session = session,
                     RefreshToken = refreshToken,
+                    Roles = await GetUserRoles(credential.Username),
                     ListOccupations = listOccupations,
-                    Roles = await GetUserRoles(credential.Username)
                 }));
             }
-        }
-
-        private static async Task SetRolePrivilegied(CredentialModel credential, Data.DataTransfer.PrivilegedAccessModel userPrivileged)
-        {
-            if (userPrivileged.OccupationPlace == "AMCOM")
+            else
             {
-                var boolean = await Authentication.SetRole(credential.Username, "Admin", "0");
-            }
-            else if (userPrivileged.OccupationPlace == "SME")
-            {
-                var boolean = await Authentication.SetRole(credential.Username, "Admin", "2");
-            }
-
-            else if (userPrivileged.OccupationPlaceCode == 3)
-            {
-                await Authentication.SetRole(credential.Username, "Adm DRE", "21");
+                return (Unauthorized());
             }
         }
 

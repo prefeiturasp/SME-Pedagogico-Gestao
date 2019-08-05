@@ -10,7 +10,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
         private string buscaAlunosNaTurma = "";
 
 
-        public string BaseEndpoint { get; set; } = "http://smeintegracaoapi.sme.prefeitura.sp.gov.br/api/";
+        public string BaseEndpoint { get; set; } = "http://hom-smeintegracaoapi.sme.prefeitura.sp.gov.br/api/";
 
         public string BuscaAlunosNaTurma { get; set; } = "turmas/{0}/alunos/anosLetivos/{1}";
 
@@ -30,9 +30,6 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
 
         //Funcionarios/cargos/{codigoCargo}
         public string BuscaFuncionario { get; set; } = "Funcionarios/cargos/{0}";
-
-
-
 
         // ******    Métodos da API Escola  **************************************************************************
         //HttpGet("{codigoEol}")]
