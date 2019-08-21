@@ -279,6 +279,11 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                             accessLevel = "32";
                             haveOccupationAccess = true;
                             break;
+                        case "3310":
+                            roleName = "Professor";
+                            accessLevel = "32";
+                            haveOccupationAccess = true;
+                            break;
                         case "3379":
                             roleName = "CP";
                             accessLevel = "27";
