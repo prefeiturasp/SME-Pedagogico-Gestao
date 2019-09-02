@@ -74,12 +74,12 @@ class Poll extends Component {
             this.props.pollOptionSelectLockMethods.set_poll_1s_lock(false);
             this.props.pollOptionSelectLockMethods.set_poll_2s_lock(true);
         } else if (new Date("2019-09-02") <= todayDate && todayDate <= new Date("2019-10-12")) {
-            this.props.pollOptionSelectLockMethods.set_poll_1b_lock(true);
-            this.props.pollOptionSelectLockMethods.set_poll_2b_lock(true);
+            this.props.pollOptionSelectLockMethods.set_poll_1b_lock(false);
+            this.props.pollOptionSelectLockMethods.set_poll_2b_lock(false);
             this.props.pollOptionSelectLockMethods.set_poll_3b_lock(false);
             this.props.pollOptionSelectLockMethods.set_poll_4b_lock(true);
 
-            this.props.pollOptionSelectLockMethods.set_poll_1s_lock(true);
+            this.props.pollOptionSelectLockMethods.set_poll_1s_lock(false);
             this.props.pollOptionSelectLockMethods.set_poll_2s_lock(true);
         } else if (new Date("2019-11-15") <= todayDate && todayDate <= new Date("2019-12-15")) {
             this.props.pollOptionSelectLockMethods.set_poll_1b_lock(true);
