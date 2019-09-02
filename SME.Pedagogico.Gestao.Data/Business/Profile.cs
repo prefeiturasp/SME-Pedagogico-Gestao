@@ -41,6 +41,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         if (codigoCargoAtivo == "3239" ||
                             codigoCargoAtivo == "3301" ||
                             codigoCargoAtivo == "3336" ||
+                            codigoCargoAtivo == "3310" ||
                             codigoCargoAtivo == "3379" ||
                             codigoCargoAtivo == "3360")
                         {
