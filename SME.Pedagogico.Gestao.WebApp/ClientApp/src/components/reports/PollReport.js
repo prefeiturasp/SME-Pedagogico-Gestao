@@ -194,8 +194,6 @@ class PollReport extends Component {
                                                 );
                                             }))
                                           }
-
-
                                             {/* {this.classroomReport === false ?
                                                 (chartData.chartIdeaData.length > 0 ?
                                                     indexes.map(index => {
@@ -223,7 +221,7 @@ class PollReport extends Component {
                                                     <PollReportMathChartClassroom data={chartData} numbers={numbers} />
                                             } */}
                                         </div>
-                                    }
+                                    
                                 </div>
                             }
                         </div>

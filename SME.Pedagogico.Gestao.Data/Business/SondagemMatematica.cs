@@ -287,7 +287,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     CreateNumberItem(terminamZeroAgrupados, grupo: "Terminam em zero", ref numbers, ref numberCharts);
                     CreateNumberItem(algarismosAgrupados, grupo: "Algarismos", ref numbers, ref numberCharts);
                     CreateNumberItem(processoAgrupados, grupo: "Processo de generalização", ref numbers, ref numberCharts);
-                    CreateNumberItem(zeroIntercaladosAgrupados, grupo: "Zero intercalados", ref numbers, ref numberCharts);
+                    CreateNumberItem(zeroIntercaladosAgrupados, grupo: "Zero intercalado", ref numbers, ref numberCharts);
 
                     relatorioRetorno.Results = numbers;
                     relatorioRetorno.ChartNumberData.AddRange(numberCharts);

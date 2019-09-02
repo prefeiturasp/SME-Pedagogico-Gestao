@@ -600,7 +600,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         item.Result = new List<int> { listaAlunosTurma.Where(p => p.Processo != null & p.Processo.Equals("N")).Count() };
                         break;
                     case 7:
-                        item.Name = "Zeros Intercalados";
+                        item.Name = "Zero Intercalado";
                         item.Idea = new List<int> { listaAlunosTurma.Where(p => p.ZeroIntercalados != null & p.ZeroIntercalados.Equals("S")).Count() };
                         item.Result = new List<int> { listaAlunosTurma.Where(p => p.ZeroIntercalados != null & p.ZeroIntercalados.Equals("N")).Count() };
                         break;
@@ -683,7 +683,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 pollTotal.Add(item6);
 
                 MathStudentItemNumbersResult item7 = new MathStudentItemNumbersResult();
-                item7.Idea = "Zeros Intercalados";
+                item7.Idea = "Zero Intercalado";
                 item7.Result = ConverteTextoPollMatematica(sondagem.ZeroIntercalados, true);
                 pollTotal.Add(item7);
 
