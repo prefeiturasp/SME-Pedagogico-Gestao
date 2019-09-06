@@ -175,8 +175,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
             catch (System.Exception ex)
             {
-
-                throw ex;
+                return null;
             }
 
         }
