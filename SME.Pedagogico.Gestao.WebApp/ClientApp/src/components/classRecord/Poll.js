@@ -649,7 +649,10 @@ class Poll extends Component {
 
     
     checkPollCard() {
-        if (this.props.poll.selectedFilter.yearClassroom !== null && parseInt(this.props.poll.selectedFilter.yearClassroom) < 7 && this.props.poll.selectedFilter.yearClassroom !== undefined) {
+        if (this.props.poll.selectedFilter.yearClassroom !== null &&
+            this.props.poll.selectedFilter.classroomCodeEol !== "" &&
+            parseInt(this.props.poll.selectedFilter.yearClassroom) < 7 && 
+            this.props.poll.selectedFilter.yearClassroom !== undefined) {
             return "false";
         } else {
             return "true";
