@@ -34,7 +34,7 @@ class PollFilter extends Component {
     }
 
     componentWillMount() {
-        debugger  
+          
        // 
          var role = this.props.user;
         
@@ -67,14 +67,14 @@ class PollFilter extends Component {
                 {
                  var codeOccupations = this.props.user.listOccupations.Diretor
                 }
-                 debugger
+                 
             
              var profileOccupatios = {
                  codigoRF: this.props.user.username,
                  codigoCargo: codeOccupations,
                  anoLetivo: '2019',
              }
-           //         debugger
+           //         
  
              this.props.filterMethods.getFilters_teacher(profileOccupatios);
              //if (this.props.filters.filterTeachers !== null) {
@@ -178,7 +178,7 @@ class PollFilter extends Component {
     }
 
     SelectedDre(event) {
-debugger
+
       //  this.props.filterMethods.resetPollFilters();
      //  this.props.filterMethods.getDre();
         var index = event.nativeEvent.target.selectedIndex;
@@ -192,7 +192,7 @@ debugger
         this.props.filterMethods.getSchool(schoolCode);
         this.setState({
             selectedDre: label,
-            selectedSchool: "",
+           // selectedSchool: "",
             selectedClassRoom: "",
             yearClassroom: null,
             classroom: "",
@@ -207,22 +207,8 @@ debugger
         }
     }
 
-    SelectedClassRoom(event) {
-
-        var index = event.nativeEvent.target.selectedIndex;
-        var label = event.nativeEvent.target[index].value;
-
-        var codeClassRoom = label;
-
-        this.props.filterMethods.activeClassroom(codeClassRoom);
-
-        this.setState({
-            classroom: event.target[index].innerText.substring(0, 1),
-            selectedClassRoom: codeClassRoom,
-        });
-    }
-
     SelectedSchool(event) {
+        debugger
         this.props.filterMethods.getSchool({
             dreCodeEol: this.state.selectedDre,
             schoolYear: "2019",
@@ -244,6 +230,23 @@ debugger
             classroom: "",
         });
     }
+
+    SelectedClassRoom(event) {
+
+        var index = event.nativeEvent.target.selectedIndex;
+        var label = event.nativeEvent.target[index].value;
+
+        var codeClassRoom = label;
+
+        this.props.filterMethods.activeClassroom(codeClassRoom);
+
+        this.setState({
+            classroom: event.target[index].innerText.substring(0, 1),
+            selectedClassRoom: codeClassRoom,
+        });
+    }
+
+    
 
     getClassroom(event) {
         this.props.filterMethods.activeClassroom("");
@@ -301,7 +304,7 @@ debugger
     }
 
     render() {
-        debugger
+        
         const { selectedDre } = this.state;
         const { selectedSchool } = this.state;
         const { selectedClassRoom } = this.state;
@@ -471,7 +474,7 @@ debugger
 
             if(selectedDre !== "todas" && this.props.filters.scholls !== undefined)
                 if (this.props.filters.scholls[0] !== undefined) {
-                debugger
+                
                 for (var item in this.props.filters.scholls) {
                     listSchoolOptions.push({
                         value: this.props.filters.scholls[item].codigoEscola,
