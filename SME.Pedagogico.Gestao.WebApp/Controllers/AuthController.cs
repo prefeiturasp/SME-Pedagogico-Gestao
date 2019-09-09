@@ -244,45 +244,56 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return (userRoles);
         }
 
-        private async Task<Dictionary<string,string>> SetOccupationsRF(string rf, RetornoCargosServidorDTO occupations)
+        private async Task<Dictionary<string, string>> SetOccupationsRF(string rf, RetornoCargosServidorDTO occupations)
         {
             var ProfileBusiness = new Profile(_config);
+
 
             string roleName = "";
             string accessLevel = "";
             bool haveOccupationAccess;
+            bool isTeacher = false;
             var ListcodeOcupations = new Dictionary<string, string>();
+
 
             if (occupations != null)
             {
                 //Implementar regra de cargo sobrePosto 
 
+
                 foreach (var occupation in occupations.cargos)
                 {
 
-                   string codigoCargoAtivo = ProfileBusiness.RetornaCargoAtivo(occupation);
+
+                    string codigoCargoAtivo = ProfileBusiness.RetornaCargoAtivo(occupation);
                     haveOccupationAccess = false;
+
+
                     switch (codigoCargoAtivo)
                     {
                         case "3239":
                             roleName = "Professor";
                             accessLevel = "32";
                             haveOccupationAccess = true;
+                            isTeacher = true;
                             break;
                         case "3301":
                             roleName = "Professor";
                             accessLevel = "32";
                             haveOccupationAccess = true;
+                            isTeacher = true;
                             break;
                         case "3336":
                             roleName = "Professor";
                             accessLevel = "32";
                             haveOccupationAccess = true;
+                            isTeacher = true;
                             break;
                         case "3310":
                             roleName = "Professor";
                             accessLevel = "32";
                             haveOccupationAccess = true;
+                            isTeacher = true;
                             break;
                         case "3379":
                             roleName = "CP";
@@ -299,16 +310,108 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                             break;
                     }
 
+
                     if (haveOccupationAccess)
                     {
-                        await Authentication.SetRole(rf, roleName, accessLevel);
-                        ListcodeOcupations.Add(roleName, codigoCargoAtivo);
-                    }
+                        try
+                        {
+                            if (isTeacher)
+                            {
+                                var profileBusiness = new Profile(_config);
 
+
+                                var profileInformation = await profileBusiness.GetProfileEmployeeInformation(rf, codigoCargoAtivo, "2019");
+                                if (profileInformation != null )
+                                {
+                                    await Authentication.SetRole(rf, roleName, accessLevel);
+                                    ListcodeOcupations.Add(roleName, codigoCargoAtivo);
+                                }
+                            }
+
+                            else
+                            {
+                                await Authentication.SetRole(rf, roleName, accessLevel);
+                                ListcodeOcupations.Add(roleName, codigoCargoAtivo);
+                            }
+
+                        }
+                        catch (Exception ex )
+                        {
+                            throw ex ;
+                        }
+                        //verifica se tem turma atribuida
+                       
+                    }
                 }
             }
             return ListcodeOcupations;
         }
+
+        //private async Task<Dictionary<string,string>> SetOccupationsRF(string rf, RetornoCargosServidorDTO occupations)
+        //{
+        //    var ProfileBusiness = new Profile(_config);
+
+        //    string roleName = "";
+        //    string accessLevel = "";
+        //    bool haveOccupationAccess;
+        //    var ListcodeOcupations = new Dictionary<string, string>();
+
+        //    if (occupations != null)
+        //    {
+        //        //Implementar regra de cargo sobrePosto 
+
+        //        foreach (var occupation in occupations.cargos)
+        //        {
+
+        //           string codigoCargoAtivo = ProfileBusiness.RetornaCargoAtivo(occupation);
+        //            haveOccupationAccess = false;
+        //            switch (codigoCargoAtivo)
+        //            {
+        //                case "3239":
+        //                    roleName = "Professor";
+        //                    accessLevel = "32";
+        //                    haveOccupationAccess = true;
+        //                    break;
+        //                case "3301":
+        //                    roleName = "Professor";
+        //                    accessLevel = "32";
+        //                    haveOccupationAccess = true;
+        //                    break;
+        //                case "3336":
+        //                    roleName = "Professor";
+        //                    accessLevel = "32";
+        //                    haveOccupationAccess = true;
+        //                    break;
+        //                case "3310":
+        //                    roleName = "Professor";
+        //                    accessLevel = "32";
+        //                    haveOccupationAccess = true;
+        //                    break;
+        //                case "3379":
+        //                    roleName = "CP";
+        //                    accessLevel = "27";
+        //                    haveOccupationAccess = true;
+        //                    break;
+        //                case "3360":
+        //                    roleName = "Diretor";
+        //                    accessLevel = "27";
+        //                    haveOccupationAccess = true;
+        //                    break;
+        //                default:
+        //                    haveOccupationAccess = false;
+        //                    break;
+        //            }
+
+        //            if (haveOccupationAccess)
+        //            {
+        //                await Authentication.SetRole(rf, roleName, accessLevel);
+        //                ListcodeOcupations.Add(roleName, codigoCargoAtivo);
+        //            }
+
+        //        }
+        //    }
+        //    return ListcodeOcupations;
+        //}
 
         #endregion -------------------- PRIVATE --------------------
 
