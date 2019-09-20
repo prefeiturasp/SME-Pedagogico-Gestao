@@ -208,7 +208,6 @@ class PollFilter extends Component {
     }
 
     SelectedSchool(event) {
-        debugger
         this.props.filterMethods.getSchool({
             dreCodeEol: this.state.selectedDre,
             schoolYear: "2019",
