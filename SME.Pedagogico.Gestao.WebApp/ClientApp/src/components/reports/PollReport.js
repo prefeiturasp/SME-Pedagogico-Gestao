@@ -333,6 +333,105 @@ if(Disciplina == "Língua Portuguesa" && Proeficiencia  == "Escrita"  &&
               link.parentNode.removeChild(link);
             });
   }
+
+  else if(Disciplina == "Matemática" && Proeficiencia == "Campo Aditivo" && 
+  RelatorioDeClasse == false ) {
+  
+     var itemsIdeia = pollReportData.ideaResults
+     var itemsResults = pollReportData.resultResults
+     var totals   =  pollReportData.totals 
+    
+debugger
+    //   var ideia =  itemsIdeia.map((x) => { 
+    //         x.ideia_Acertou_Percentage = x.correctIdeaPercentage
+    //         delete x.correctIdeaPercentage
+    //         x.ideia_Acertou_Value = x.correctIdeaQuantity
+    //         delete x.correctIdeaQuantity
+    //         x.ideia_Errou_Value = x.incorrectIdeaQuantity
+    //         delete x.incorrectIdeaQuantity
+    //         x.ideia_Errou_Percentage = x.incorrectIdeaPercentage
+    //         delete x.incorrectIdeaPercentage
+    //         x.ideia_NaoResolveu_Value  = x.notAnsweredIdeaQuantity
+    //         delete  x.notAnsweredIdeaQuantity
+    //         x.resultado_NaoResolveu_Percentage = x.notAnsweredIdeaPercentage
+    //         delete x.notAnsweredIdeaPercentage
+    //         return x })
+
+    //         var results =  itemsResults.map((x) => { 
+    //             x.resultado_Acertou_Percentage = x.correctResultPercentage
+    //             delete x.correctResultPercentage
+    //             x.resultado_Acertou_Value = x.correctResultQuantity
+    //             delete x.correctResultQuantity
+    //             x.resultado_Errou_Percentage = x.incorrectResultPercentage
+    //             delete x.incorrectResultPercentage
+    //             x.resultado_Errou_Value = x.incorrectResultQuantity
+    //             delete x.incorrectResultQuantity
+    //             x.resultado_NaoResolveu_Percentage  = x.notAnsweredResultPercentage
+    //             delete  x.notAnsweredResultPercentage
+    //             x.resultado_NaoResolveu_Value = x.notAnsweredResultQuantity
+    //             delete x.notAnsweredResultQuantity
+    //             return x })
+
+
+    
+                 
+                var tables = [];
+             
+                 for(var index in itemsIdeia ) {
+                 
+                    tables.push({
+            "tableName":  itemsResults[index].orderTitle,
+            "ideia_Acertou_Value": itemsIdeia[index].correctIdeaQuantity ,
+            "ideia_Errou_Value": itemsIdeia[index].incorrectIdeaQuantity,
+            "ideia_NaoResolveu_Value":itemsIdeia[index].notAnsweredIdeaQuantity,
+            "ideia_Total_Value": totals[index].totalStudentIdeaQuantity,
+            "resultado_Acertou_Value": itemsResults[index].correctResultQuantity,
+            "resultado_Errou_Value": itemsResults[index].incorrectResultQuantity,
+            "resultado_NaoResolveu_Value": itemsResults[index].notAnsweredResultPercentage,
+            "resultado_Total_Value": totals[index].totalStudentResultQuantity,
+            "ideia_Acertou_Percentage":  itemsIdeia[index].correctIdeaPercentage,
+            "ideia_Errou_Percentage": itemsIdeia[index].incorrectIdeaPercentage,
+            "ideia_NaoResolveu_Percentage":  itemsIdeia[index].notAnsweredIdeaPercentage,
+            "ideia_Total_Percentage": totals[index].totalStudentIdeaPercentage,
+            "resultado_Acertou_Percentage": itemsResults[index].correctResultQuantity,
+            "resultado_Errou_Percentage": itemsResults[index].incorrectResultPercentage,
+            "resultado_NaoResolveu_Percentage": itemsResults[index].notAnsweredResultPercentage,
+            "resultado_Total_Percentage": totals[index].totalStudentResultPercentage
+             
+                })
+            }
+          
+  
+    var report = 
+    {
+        headerFooter: {
+            teacherName: this.props.user.username, // rf do professor
+            dreName: nomeDre, // Nome da Dre pegar nome da DRE
+            schoolName: nomeEscola, // Nome da escola pegar nome da Escola
+            classYear: AnoCurso, // ano da turma
+            className: CodigoTurmaEol, // turma PEgar nome da Turma
+            subject: Disciplina, // Portugues
+            testName: Proeficiencia, // Escrita
+            period: periodo, // 1 BIMESTRES
+            type: RelatorioDeClasse == true ? "Por Turma" : "Consolidado" // cONSOLIDADO
+          },
+        tables ,
+       
+        "charts": [
+          {
+            "chartName": "string",
+            "dataName": "string",
+            "ideia_Acertou_Value": 0,
+            "ideia_Errou_Value": 0,
+            "ideia_NaoResolveu_Value": 0,
+            "resultado_Acertou_Value": 0,
+            "resultado_Errou_Value": 0,
+            "resultado_NaoResolveu_Value": 0
+          }
+        ]
+      }
+       
+  }
 }
     openPollFilter(value) {
         this.setState({
