@@ -36,8 +36,8 @@ class PollReport extends Component {
 
         var userName = this.props.user.username;
     var AnoCurso = this.props.pollReport.selectedFilter.CodigoCurso;
-    var CodigoEscola = this.props.filters.activeSchollsCode;
-    var CodigoTurmaEol = this.props.pollReport.selectedFilter.CodigoTurmaEol;
+    var CodigoEscola = this.props.filters.activeSchollsCode == ""? "todas" :this.props.filters.activeSchollsCode  ;
+    var CodigoTurmaEol = this.props.pollReport.selectedFilter.CodigoTurmaEol == ""? "Todas" : this.props.pollReport.selectedFilter.CodigoTurmaEol ;
     var CodigoDre = this.props.filters.activeDreCode;
     var Disciplina = this.props.pollReport.selectedFilter.discipline;
     var Proeficiencia = this.props.pollReport.selectedFilter.proficiency;
@@ -45,9 +45,10 @@ class PollReport extends Component {
     var RelatorioDeClasse = this.props.pollReport.selectedFilter.classroomReport;
     var Dres = this.props.filters.listDres;
 
-    var nomeDre = Dres.filter(x => x.codigoDRE == CodigoDre)[0].nomeDRE.substring(31);
+    var nomeDre = CodigoDre ==  "todas" ? "Todas" :  Dres.filter(
+        x => x.codigoDRE == CodigoDre)[0].nomeDRE.substring(31);
 
-    var nomeEscola = this.props.filters.scholls.filter(
+    var nomeEscola = CodigoEscola == "todas" ? "Todas" : this.props.filters.scholls.filter(
       x => x.codigoEscola == CodigoEscola
     )[0].nomeEscola;
 
@@ -115,7 +116,7 @@ if(Disciplina == "Língua Portuguesa" && Proeficiencia  == "Escrita"  &&
 
     var report = {
       headerFooter: {
-        teacherName: this.props.user.username, // rf do professor
+        teacherName: "Thatazinha s2", //this.props.user.username, // rf do professor
         dreName: nomeDre, // Nome da Dre pegar nome da DRE
         schoolName: nomeEscola, // Nome da escola pegar nome da Escola
         classYear: AnoCurso, // ano da turma
@@ -123,7 +124,7 @@ if(Disciplina == "Língua Portuguesa" && Proeficiencia  == "Escrita"  &&
         subject: Disciplina, // Portugues
         testName: Proeficiencia, // Escrita
         period: periodo, // 1 BIMESTRES
-        type: RelatorioDeClasse == true ? "Por Turma" : "Consolidado" // cONSOLIDADO
+        type: RelatorioDeClasse == true ? "Por Turma" : "Consolidado" // CONSOLIDADO
       },
       table: {
         pS_Value: preSilabicoValor,
@@ -340,6 +341,7 @@ if(Disciplina == "Língua Portuguesa" && Proeficiencia  == "Escrita"  &&
      var itemsIdeia = pollReportData.ideaResults
      var itemsResults = pollReportData.resultResults
      var totals   =  pollReportData.totals 
+     var itemscharts = chartData
     
 debugger
     //   var ideia =  itemsIdeia.map((x) => { 
@@ -387,7 +389,7 @@ debugger
             "ideia_Total_Value": totals[index].totalStudentIdeaQuantity,
             "resultado_Acertou_Value": itemsResults[index].correctResultQuantity,
             "resultado_Errou_Value": itemsResults[index].incorrectResultQuantity,
-            "resultado_NaoResolveu_Value": itemsResults[index].notAnsweredResultPercentage,
+            "resultado_NaoResolveu_Value": itemsResults[index].notAnsweredResultQuantity,
             "resultado_Total_Value": totals[index].totalStudentResultQuantity,
             "ideia_Acertou_Percentage":  itemsIdeia[index].correctIdeaPercentage,
             "ideia_Errou_Percentage": itemsIdeia[index].incorrectIdeaPercentage,
@@ -400,8 +402,25 @@ debugger
              
                 })
             }
+
+            debugger
+           var charts = [] 
+
+           for (var index in itemscharts.chartIdeaData){
+               charts.push({
+                "chartName": itemscharts.totals[index].name,
+                "dataName": "DataName",
+                "ideia_Acertou_Value": itemscharts.chartIdeaData[index].idea[0].quantity,
+                "ideia_Errou_Value": itemscharts.chartIdeaData[index].idea[1].quantity,
+                "ideia_NaoResolveu_Value": itemscharts.chartIdeaData[index].idea[2].quantity,
+                "resultado_Acertou_Value": itemscharts.chartResultData[index].result[0].quantity,
+                "resultado_Errou_Value": itemscharts.chartResultData[index].result[1].quantity,
+                "resultado_NaoResolveu_Value": itemscharts.chartResultData[index].result[2].quantity
+                   
+               })
+           }
           
-  
+  debugger
     var report = 
     {
         headerFooter: {
@@ -415,24 +434,259 @@ debugger
             period: periodo, // 1 BIMESTRES
             type: RelatorioDeClasse == true ? "Por Turma" : "Consolidado" // cONSOLIDADO
           },
-        tables ,
+        tables,
        
-        "charts": [
-          {
-            "chartName": "string",
-            "dataName": "string",
-            "ideia_Acertou_Value": 0,
-            "ideia_Errou_Value": 0,
-            "ideia_NaoResolveu_Value": 0,
-            "resultado_Acertou_Value": 0,
-            "resultado_Errou_Value": 0,
-            "resultado_NaoResolveu_Value": 0
-          }
-        ]
+        charts,
+          
+        
       }
+
+      return fetch("http://10.50.1.40/api/Recipes/PollReportMathSum", {
+        method: "post",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(report)
+      })
+        .then(response => response.blob())
+        .then(blob => {
+          // 2. Create blob link to download
+          const url = window.URL.createObjectURL(new Blob([blob]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "relatorio.pdf");
+          // 3. Append to html page
+          document.body.appendChild(link);
+          // 4. Force download
+          // link.printClick(url);
+          link.click();
+          //  var w = window.open(link.click());
+          //    w.print();
+          //     w.close();
+          // 5. Clean up and remove the link
+          link.parentNode.removeChild(link);
+        });
        
   }
-}
+
+  else if(Disciplina == "Matemática" && Proeficiencia == "Campo Multiplicativo" && 
+  RelatorioDeClasse == false ){
+
+    var itemsIdeia = pollReportData.ideaResults
+    var itemsResults = pollReportData.resultResults
+    var totals   =  pollReportData.totals 
+    var itemscharts = chartData
+   
+debugger
+   //   var ideia =  itemsIdeia.map((x) => { 
+   //         x.ideia_Acertou_Percentage = x.correctIdeaPercentage
+   //         delete x.correctIdeaPercentage
+   //         x.ideia_Acertou_Value = x.correctIdeaQuantity
+   //         delete x.correctIdeaQuantity
+   //         x.ideia_Errou_Value = x.incorrectIdeaQuantity
+   //         delete x.incorrectIdeaQuantity
+   //         x.ideia_Errou_Percentage = x.incorrectIdeaPercentage
+   //         delete x.incorrectIdeaPercentage
+   //         x.ideia_NaoResolveu_Value  = x.notAnsweredIdeaQuantity
+   //         delete  x.notAnsweredIdeaQuantity
+   //         x.resultado_NaoResolveu_Percentage = x.notAnsweredIdeaPercentage
+   //         delete x.notAnsweredIdeaPercentage
+   //         return x })
+
+   //         var results =  itemsResults.map((x) => { 
+   //             x.resultado_Acertou_Percentage = x.correctResultPercentage
+   //             delete x.correctResultPercentage
+   //             x.resultado_Acertou_Value = x.correctResultQuantity
+   //             delete x.correctResultQuantity
+   //             x.resultado_Errou_Percentage = x.incorrectResultPercentage
+   //             delete x.incorrectResultPercentage
+   //             x.resultado_Errou_Value = x.incorrectResultQuantity
+   //             delete x.incorrectResultQuantity
+   //             x.resultado_NaoResolveu_Percentage  = x.notAnsweredResultPercentage
+   //             delete  x.notAnsweredResultPercentage
+   //             x.resultado_NaoResolveu_Value = x.notAnsweredResultQuantity
+   //             delete x.notAnsweredResultQuantity
+   //             return x })
+
+
+   
+                
+               var tables = [];
+            
+                for(var index in itemsIdeia ) {
+                
+                   tables.push({
+           "tableName":  itemsResults[index].orderTitle,
+           "ideia_Acertou_Value": itemsIdeia[index].correctIdeaQuantity ,
+           "ideia_Errou_Value": itemsIdeia[index].incorrectIdeaQuantity,
+           "ideia_NaoResolveu_Value":itemsIdeia[index].notAnsweredIdeaQuantity,
+           "ideia_Total_Value": totals[index].totalStudentIdeaQuantity,
+           "resultado_Acertou_Value": itemsResults[index].correctResultQuantity,
+           "resultado_Errou_Value": itemsResults[index].incorrectResultQuantity,
+           "resultado_NaoResolveu_Value": itemsResults[index].notAnsweredResultQuantity,
+           "resultado_Total_Value": totals[index].totalStudentResultQuantity,
+           "ideia_Acertou_Percentage":  itemsIdeia[index].correctIdeaPercentage,
+           "ideia_Errou_Percentage": itemsIdeia[index].incorrectIdeaPercentage,
+           "ideia_NaoResolveu_Percentage":  itemsIdeia[index].notAnsweredIdeaPercentage,
+           "ideia_Total_Percentage": totals[index].totalStudentIdeaPercentage,
+           "resultado_Acertou_Percentage": itemsResults[index].correctResultQuantity,
+           "resultado_Errou_Percentage": itemsResults[index].incorrectResultPercentage,
+           "resultado_NaoResolveu_Percentage": itemsResults[index].notAnsweredResultPercentage,
+           "resultado_Total_Percentage": totals[index].totalStudentResultPercentage
+            
+               })
+           }
+
+           debugger
+          var charts = [] 
+
+          for (var index in itemscharts.chartIdeaData){
+              charts.push({
+               "chartName": itemscharts.totals[index].name,
+               "dataName": "DataName",
+               "ideia_Acertou_Value": itemscharts.chartIdeaData[index].idea[0].quantity,
+               "ideia_Errou_Value": itemscharts.chartIdeaData[index].idea[1].quantity,
+               "ideia_NaoResolveu_Value": itemscharts.chartIdeaData[index].idea[2].quantity,
+               "resultado_Acertou_Value": itemscharts.chartResultData[index].result[0].quantity,
+               "resultado_Errou_Value": itemscharts.chartResultData[index].result[1].quantity,
+               "resultado_NaoResolveu_Value": itemscharts.chartResultData[index].result[2].quantity
+                  
+              })
+          }
+         
+ debugger
+   var report = 
+   {
+       headerFooter: {
+           teacherName: this.props.user.username, // rf do professor
+           dreName: nomeDre, // Nome da Dre pegar nome da DRE
+           schoolName: nomeEscola, // Nome da escola pegar nome da Escola
+           classYear: AnoCurso, // ano da turma
+           className: CodigoTurmaEol, // turma PEgar nome da Turma
+           subject: Disciplina, // Portugues
+           testName: Proeficiencia, // Escrita
+           period: periodo, // 1 BIMESTRES
+           type: RelatorioDeClasse == true ? "Por Turma" : "Consolidado" // cONSOLIDADO
+         },
+       tables,
+      
+       charts,
+         
+       
+     }
+
+     return fetch("http://10.50.1.40/api/Recipes/PollReportMathMultiplication", {
+       method: "post",
+       headers: { "Content-Type": "application/json" },
+       body: JSON.stringify(report)
+     })
+       .then(response => response.blob())
+       .then(blob => {
+         // 2. Create blob link to download
+         const url = window.URL.createObjectURL(new Blob([blob]));
+         const link = document.createElement("a");
+         link.href = url;
+         link.setAttribute("download", "relatorio.pdf");
+         // 3. Append to html page
+         document.body.appendChild(link);
+         // 4. Force download
+         // link.printClick(url);
+         link.click();
+         //  var w = window.open(link.click());
+         //    w.print();
+         //     w.close();
+         // 5. Clean up and remove the link
+         link.parentNode.removeChild(link);
+       });
+      
+ }
+
+
+ else if(Disciplina == "Matemática" && Proeficiencia == "Números" && 
+  RelatorioDeClasse == false ){
+ debugger
+    var tables = [];
+             
+    for(var index in  pollReportData.numerosResults ) {
+    
+       tables.push({  
+           
+        "tableName": pollReportData.numerosResults[index].groupName,
+        "true_Value": pollReportData.numerosResults[index].escreveConvencionalmenteResultado,
+        "true_Percentage": pollReportData.numerosResults[index].escreveConvencionalmentePercentage,
+        "false_Value": pollReportData.numerosResults[index].naoEscreveConvencionalmenteResultado,
+        "false_Percentage": pollReportData.numerosResults[index].naoEscreveConvencionalmentePercentage,
+        "total_Value": pollReportData.numerosResults[index].escreveConvencionalmenteResultado +  pollReportData.numerosResults[0].naoEscreveConvencionalmenteResultado,
+        "total_Percentage": pollReportData.numerosResults[index].naoEscreveConvencionalmentePercentage +  pollReportData.numerosResults[0].escreveConvencionalmentePercentage
+  
+    })
+   }  
+
+   var charts = [] 
+
+   for (var index in chartData.chartNumberData){
+       charts.push(  {
+        "dataName": chartData.chartNumberData[index].order,
+        "chart1Name": chartData.chartNumberData[index].numbers[0].description,
+        "true1_Value": chartData.chartNumberData[index].numbers[0].quantity,
+        "false1_Value": 0,
+        "chart2Name": chartData.chartNumberData[index].numbers[1].description,
+        "true2_Value": 0,
+        "false2_Value": chartData.chartNumberData[index].numbers[1].quantity
+      })
+   }
+
+   var report = 
+   {
+       headerFooter: {
+           teacherName: this.props.user.username, // rf do professor
+           dreName: nomeDre, // Nome da Dre pegar nome da DRE
+           schoolName: nomeEscola, // Nome da escola pegar nome da Escola
+           classYear: AnoCurso, // ano da turma
+           className: CodigoTurmaEol, // turma PEgar nome da Turma
+           subject: Disciplina, // Portugues
+           testName: Proeficiencia, // Escrita
+           period: periodo, // 1 BIMESTRES
+           type: RelatorioDeClasse == true ? "Por Turma" : "Consolidado" // cONSOLIDADO
+         },
+       tables,
+      
+       charts,
+       "chart2": {
+        "dataName": "dataName",
+        "chartName": "chartName",
+        "true_Value": 10,
+        "false_Value": 20
+      }       
+       
+     }
+
+     return fetch("http://10.50.1.40/api/Recipes/PollReportMathNumbers", {
+       method: "post",
+       headers: { "Content-Type": "application/json" },
+       body: JSON.stringify(report)
+     })
+       .then(response => response.blob())
+       .then(blob => {
+         // 2. Create blob link to download
+         const url = window.URL.createObjectURL(new Blob([blob]));
+         const link = document.createElement("a");
+         link.href = url;
+         link.setAttribute("download", "relatorio.pdf");
+         // 3. Append to html page
+         document.body.appendChild(link);
+         // 4. Force download
+         // link.printClick(url);
+         link.click();
+         //  var w = window.open(link.click());
+         //    w.print();
+         //     w.close();
+         // 5. Clean up and remove the link
+         link.parentNode.removeChild(link);
+       });
+  }
+
+  }
+    
+
     openPollFilter(value) {
         this.setState({
             showPollFilter: value,
