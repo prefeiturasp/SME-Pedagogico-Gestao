@@ -537,7 +537,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 listOccupations = await SetOccupationsRF(credential.Username, occupationRF);
             }
             var Roles = await GetUserRoles(credential.Username);
-            if (Roles != null)
+            if (Roles != null && Roles.Count>0)
             {
                 string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
                 string refreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
