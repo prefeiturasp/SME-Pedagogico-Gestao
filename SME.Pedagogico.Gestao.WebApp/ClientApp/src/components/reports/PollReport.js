@@ -84,11 +84,16 @@ class PollReport extends Component {
     var pollReportData = this.props.pollReport.data;
     var chartData = this.props.pollReport.chartData;
 
+  var especial = AnoCurso == "3" &&  Proeficiencia == "Escrita" ? true : false
+
+
     if (
       Disciplina == "Língua Portuguesa" &&
       Proeficiencia == "Escrita" &&
-      RelatorioDeClasse == false
+      RelatorioDeClasse == false && !especial
     ) {
+    
+     
       var preSilabicoValor = 0;
       var silabicoComValor = 0;
       var silabicoSemValor = 0;
@@ -181,6 +186,9 @@ class PollReport extends Component {
           a_Value: alfabeticoChart
         }
       };
+  
+
+
       return fetch("http://congo/api/Recipes/PollReportPortugueseWriting", {
         method: "post",
         headers: { "Content-Type": "application/json" },
@@ -204,11 +212,14 @@ class PollReport extends Component {
           // 5. Clean up and remove the link
           link.parentNode.removeChild(link);
         });
-    } else if (
+    }
+
+     else if ((
       Disciplina == "Língua Portuguesa" &&
       Proeficiencia == "Leitura" &&
-      RelatorioDeClasse == false
-    ) {
+      RelatorioDeClasse == false ) || 
+       especial)
+     {
       var nivel1 = 0;
       var nivel2 = 0;
       var nivel3 = 0;
@@ -414,7 +425,7 @@ class PollReport extends Component {
 
       for (var index in itemsIdeia) {
         tables.push({
-          tableName: itemsResults[index].orderTitle,
+          tableName: "ORDEM " + '' + itemsResults[index].orderName,
           ideia_Acertou_Value: itemsIdeia[index].correctIdeaQuantity,
           ideia_Errou_Value: itemsIdeia[index].incorrectIdeaQuantity,
           ideia_NaoResolveu_Value: itemsIdeia[index].notAnsweredIdeaQuantity,
@@ -430,7 +441,7 @@ class PollReport extends Component {
             itemsIdeia[index].notAnsweredIdeaPercentage,
           ideia_Total_Percentage: totals[index].totalStudentIdeaPercentage,
           resultado_Acertou_Percentage:
-            itemsResults[index].correctResultQuantity,
+            itemsResults[index].correctResultPercentage,
           resultado_Errou_Percentage:
             itemsResults[index].incorrectResultPercentage,
           resultado_NaoResolveu_Percentage:
@@ -546,7 +557,7 @@ class PollReport extends Component {
 
       for (var index in itemsIdeia) {
         tables.push({
-          tableName: itemsResults[index].orderTitle,
+          tableName:  "ORDEM " + '' + itemsResults[index].orderName,
           ideia_Acertou_Value: itemsIdeia[index].correctIdeaQuantity,
           ideia_Errou_Value: itemsIdeia[index].incorrectIdeaQuantity,
           ideia_NaoResolveu_Value: itemsIdeia[index].notAnsweredIdeaQuantity,
@@ -562,7 +573,7 @@ class PollReport extends Component {
             itemsIdeia[index].notAnsweredIdeaPercentage,
           ideia_Total_Percentage: totals[index].totalStudentIdeaPercentage,
           resultado_Acertou_Percentage:
-            itemsResults[index].correctResultQuantity,
+            itemsResults[index].correctResultPercentage,
           resultado_Errou_Percentage:
             itemsResults[index].incorrectResultPercentage,
           resultado_NaoResolveu_Percentage:
