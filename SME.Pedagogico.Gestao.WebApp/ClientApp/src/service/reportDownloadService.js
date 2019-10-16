@@ -3,12 +3,16 @@ import React, { Component } from 'react';
 
 const ApiService = {
 
-   RelatorioPortuguesEscrita: () => {
-             
+  urlBase: "http://hom-latexservice.sme.prefeitura.sp.gov.br/api/Recipes/",
+
+   RelatorioPortuguesEscrita: (urlBase) => {
+
+        var endpoint = urlBase + "PollReportPortugueseWriting"
+        return endpoint; 
    },
    
 
-   BaixaPdf: (report) => {
+   BaixaPdf: (endpoint, report) => {
     return fetch("http://congo/api/Recipes/PollReportPortugueseWriting", {
       method: "post",
       headers: { "Content-Type": "application/json" },

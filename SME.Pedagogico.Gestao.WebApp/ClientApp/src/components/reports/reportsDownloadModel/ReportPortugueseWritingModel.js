@@ -1,7 +1,5 @@
 const ReportPortugueseReadingModel =  {
 
-
-
  preSilabicoValor = 0,
  silabicoComValor = 0,
  silabicoSemValor = 0,
@@ -23,8 +21,8 @@ const ReportPortugueseReadingModel =  {
  silabicoAlfabeticoChart = 0,
  alfabeticoChart = 0,
 
-ReportPortuguese: (pollReportData) => {
-
+ReportModel: (pollReportData) => {
+   
 
  if (pollReportData.length > 0) {
   for (var index in pollReportData) {
@@ -59,45 +57,47 @@ ReportPortuguese: (pollReportData) => {
     }
 
     totalStudents += pollReportData[index].studentQuantity;
-    totalPercentage += pollReportData[index].studentPercentage;
-   }
-   var report = {
-    headerFooter: {
-      teacherName: this.props.user.username, //this.props.user.username, // rf do professor
-      dreName: nomeDre, // Nome da Dre pegar nome da DRE
-      schoolName: nomeEscola, // Nome da escola pegar nome da Escola
-      classYear: AnoCurso, // ano da turma
-      className: CodigoTurmaEol, // turma PEgar nome da Turma
-      subject: Disciplina, // Portugues
-      testName: Proeficiencia, // Escrita
-      period: periodo, // 1 BIMESTRES
-      type: RelatorioDeClasse == true ? "Por Turma" : "Consolidado" // CONSOLIDADO
-    },
-    table: {
-      pS_Value: preSilabicoValor,
-      ssV_Value: silabicoSemValor,
-      scV_Value: silabicoComValor,
-      sA_Value: silabicoAlfabeticoValor,
-      a_Value: alfabeticoValor,
-      total_Value: totalStudents,
-      pS_Percentage: preSilabicoPorcentagem,
-      ssV_Percentage: silabicoSemValorPorcentagem,
-      scV_Percentage: silabicoComValorPorcentagem,
-      sA_Percentage: silabicoAlfabeticoPorcentagem,
-      a_Percentage: alfabeticoPorcentagem,
-      total_Percentage: totalPercentage
-    },
-    chart: {
-      pS_Value: preSilabicoChart,
-      ssV_Value: silabicoSemValorChart,
-      scV_Value: silabicoComValorChart,
-      sA_Value: silabicoAlfabeticoChart,
-      a_Value: alfabeticoChart
-    }
-  };
+    totalPercentage += pollReportData[index].studentPercentage
+  }
+   
+    
+    var report = {
+      headerFooter: {
+        teacherName: this.props.user.username, //this.props.user.username, // rf do professor
+        dreName: nomeDre, // Nome da Dre pegar nome da DRE
+        schoolName: nomeEscola, // Nome da escola pegar nome da Escola
+        classYear: AnoCurso, // ano da turma
+        className: CodigoTurmaEol, // turma PEgar nome da Turma
+        subject: Disciplina, // Portugues
+        testName: Proeficiencia, // Escrita
+        period: periodo, // 1 BIMESTRES
+        type: RelatorioDeClasse == true ? "Por Turma" : "Consolidado" // CONSOLIDADO
+      },
+      table: {
+        pS_Value: preSilabicoValor,
+        ssV_Value: silabicoSemValor,
+        scV_Value: silabicoComValor,
+        sA_Value: silabicoAlfabeticoValor,
+        a_Value: alfabeticoValor,
+        total_Value: totalStudents,
+        pS_Percentage: preSilabicoPorcentagem,
+        ssV_Percentage: silabicoSemValorPorcentagem,
+        scV_Percentage: silabicoComValorPorcentagem,
+        sA_Percentage: silabicoAlfabeticoPorcentagem,
+        a_Percentage: alfabeticoPorcentagem,
+        total_Percentage: totalPercentage
+      },
+      chart: {
+        pS_Value: preSilabicoChart,
+        ssV_Value: silabicoSemValorChart,
+        scV_Value: silabicoComValorChart,
+        sA_Value: silabicoAlfabeticoChart,
+        a_Value: alfabeticoChart
+      }
+    };
+ 
+    return report;
 
-} 
-
-
- }
+  }
+ } 
 }

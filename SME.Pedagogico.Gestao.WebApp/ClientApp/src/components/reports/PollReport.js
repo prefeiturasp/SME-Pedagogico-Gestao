@@ -9,6 +9,7 @@ import PollReportPortugueseChart from "./PollReportPortugueseChart";
 import PollReportMathChart from "./PollReportMathChart";
 import PollReportMathNumbersChart from "./PollReportMathNumbersChart";
 import PollReportMathChartClassroom from "./PollReportMathChartClassroom";
+import ReportService from "../../service/ReportService";
 import { connect } from "react-redux";
 import { actionCreators } from "../../store/PollReport";
 import { bindActionCreators } from "redux";
@@ -29,7 +30,6 @@ class PollReport extends Component {
   }
 
   printClick() {
-    debugger;
 
     var userName = this.props.user.username;
     var AnoCurso = this.props.pollReport.selectedFilter.CodigoCurso;
@@ -71,6 +71,14 @@ class PollReport extends Component {
               x => x.codigoEscola == CodigoEscola
             )[0].nomeEscola;
     }
+    else {
+      var nomeEscola =
+      CodigoEscola == "todas"
+        ? "Todas"
+        : this.props.filters.scholls.filter(x => x.codigo == CodigoEscola)[0]
+            .nome;
+    }
+
    }  
     
     else {
@@ -186,10 +194,8 @@ class PollReport extends Component {
           a_Value: alfabeticoChart
         }
       };
-  
 
-
-      return fetch("http://congo/api/Recipes/PollReportPortugueseWriting", {
+      return fetch("http://hom-latexservice.sme.prefeitura.sp.gov.br/api/Recipes/PollReportPortugueseWriting", {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(report)
@@ -296,7 +302,7 @@ class PollReport extends Component {
           }
         };
 
-        return fetch("http://congo/api/Recipes/PollReportPortugueseReading", {
+        return fetch("http://hom-latexservice.sme.prefeitura.sp.gov.br/api/Recipes/PollReportPortugueseReading", {
           method: "post",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(report)
@@ -355,7 +361,7 @@ class PollReport extends Component {
       };
 
       return fetch(
-        "http://congo/api/Recipes/PollReportPortugueseReadingClass",
+        "http://hom-latexservice.sme.prefeitura.sp.gov.br/api/Recipes/PollReportPortugueseReadingClass",
         {
           method: "post",
           headers: { "Content-Type": "application/json" },
@@ -489,7 +495,7 @@ class PollReport extends Component {
         charts
       };
 
-      return fetch("http://congo/api/Recipes/PollReportMathSum", {
+      return fetch("http://hom-latexservice.sme.prefeitura.sp.gov.br/api/Recipes/PollReportMathSum", {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(report)
@@ -621,7 +627,7 @@ class PollReport extends Component {
         charts
       };
 
-      return fetch("http://congo/api/Recipes/PollReportMathMultiplication", {
+      return fetch("http://hom-latexservice.sme.prefeitura.sp.gov.br/api/Recipes/PollReportMathMultiplication", {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(report)
@@ -735,7 +741,7 @@ class PollReport extends Component {
         }
       };
 
-      return fetch("http://congo/api/Recipes/PollReportMathNumbers", {
+      return fetch("http://hom-latexservice.sme.prefeitura.sp.gov.br/api/Recipes/PollReportMathNumbers", {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(report)
@@ -853,7 +859,7 @@ class PollReport extends Component {
     return (
       <div>
         <Card className="mb-3">
-          <PollFilter reports={true} resultClick={this.openPollFilter} />
+                <PollFilter reports={true} resultClick={this.openPollFilter} />
         </Card>
 
         {this.state.showPollFilter && (
@@ -869,7 +875,7 @@ class PollReport extends Component {
                       style={{ width: 109 }}
                       onClick={this.printClick}
                     >
-                      Imprimir | <i className="fas fa-print"></i>
+                      Baixar pdf | <i className="fas fa-print"></i>
                     </button>
                   </div>
                 </div>
