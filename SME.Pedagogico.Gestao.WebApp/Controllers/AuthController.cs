@@ -253,6 +253,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             string accessLevel = "";
             bool haveOccupationAccess;
             bool isTeacher = false;
+            int qtdIsTeacher = 0;
             var ListcodeOcupations = new Dictionary<string, string>();
 
 
@@ -276,24 +277,26 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                             accessLevel = "32";
                             haveOccupationAccess = true;
                             isTeacher = true;
+                            qtdIsTeacher += 1;
                             break;
                         case "3301":
                             roleName = "Professor";
                             accessLevel = "32";
                             haveOccupationAccess = true;
                             isTeacher = true;
+                            qtdIsTeacher += 1;
                             break;
-                        case "3336":
-                            roleName = "Professor";
-                            accessLevel = "32";
-                            haveOccupationAccess = true;
-                            isTeacher = true;
-                            break;
+                        //case "3336":
+                        //    roleName = "Professor";
+                        //    accessLevel = "32";
+                        //    haveOccupationAccess = true;
+                        //    isTeacher = true;
+                        //    break;
                         case "3310":
                             roleName = "Professor";
                             accessLevel = "32";
                             haveOccupationAccess = true;
-                            isTeacher = true;
+                            qtdIsTeacher += 1;
                             break;
                         case "3379":
                             roleName = "CP";
@@ -317,15 +320,20 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                         {
                             if (isTeacher)
                             {
-                                var profileBusiness = new Profile(_config);
 
-
-                                var profileInformation = await profileBusiness.GetProfileEmployeeInformation(rf, codigoCargoAtivo, "2019");
-                                if (profileInformation != null )
+                                if(qtdIsTeacher == 1)
                                 {
-                                    await Authentication.SetRole(rf, roleName, accessLevel);
-                                    ListcodeOcupations.Add(roleName, codigoCargoAtivo);
+                                    var profileBusiness = new Profile(_config);
+
+
+                                    var profileInformation = await profileBusiness.GetProfileEmployeeInformation(rf, codigoCargoAtivo, "2019");
+                                    if (profileInformation != null)
+                                    {
+                                        await Authentication.SetRole(rf, roleName, accessLevel);
+                                        ListcodeOcupations.Add(roleName, codigoCargoAtivo);
+                                    }
                                 }
+                             
                             }
 
                             else
