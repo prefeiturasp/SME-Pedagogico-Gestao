@@ -94,7 +94,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                     var listStudentsClassRoom = await turmApi.GetAlunosNaTurma(Convert.ToInt32(classRoom.classroomCodeEol), Convert.ToInt32(classRoom.schoolYear), _token);
 
-                    listStudentsClassRoom = listStudentsClassRoom.Where(x => x.CodigoSituacaoMatricula == 10 || x.CodigoSituacaoMatricula == 1).ToList(); // 1 ativo e 10 rematriculado
+                    listStudentsClassRoom = listStudentsClassRoom.Where(x => x.CodigoSituacaoMatricula == 10 || x.CodigoSituacaoMatricula == 1 || x.CodigoSituacaoMatricula == 6).ToList(); // 1 ativo,10 rematriculado,6-pendente de rematricula
                     if (listStudentsClassRoom == null)
                     {
                         return null;
