@@ -13,7 +13,7 @@ export const types = {
     GET_FILTERS_TEACHER: "GET_FILTERS_TEACHER",
     SET_FILTERS_TEACHER: "SET_FILTERS_TEACHER",
     GET_DRE_ADM: "GET_DRE_ADM",
-
+    SET_SCHOOLYEAR: "SET_SCHOOLYEAR",
     //UNAUTHORIZED: "UNAUTHORIZED",
     //LOGOUT_REQUEST: "LOGOUT_REQUEST",
     //LOGOUT_USER: "LOGOUT_USER",
@@ -22,7 +22,7 @@ export const types = {
 }
 const initialState = {
     listDres: [],
-    shoolYear: null,
+    setSchoolYear: null,
     scholls: [],
     listClassRoom: null,
     yearClassRoom: null,
@@ -41,6 +41,7 @@ export const actionCreators = {
     getClassroom: (classRoomFilter) => ({ type: types.GET_CLASSROOM, classRoomFilter }),
     listClassRoom: () => ({ type: types.LIST_CLASSROOM }),
     activeClassroom: (codeClass) => ({ type: types.ACTIVECLASSROOMCODE, codeClass }),
+    setSchoolYear: (schoolYear) => ({ type: types.SET_SCHOOLYEAR, schoolYear }),
     resetPollFilters: () => ({ type: types.RESET_POLL_FILTERS }),
     getFilters_teacher: (profileOccupatios) => ({ type: types.GET_FILTERS_TEACHER, profileOccupatios }),
     activeDreCode: (schoolCode) => ({ type: types.ACTIVEDRECODE, schoolCode }),
@@ -50,7 +51,6 @@ export const actionCreators = {
 
 export const reducer = (state, action) => {
     state = state || initialState;
-
     switch (action.type) {
         case types.LIST_DRES:
             return ({
@@ -96,6 +96,11 @@ export const reducer = (state, action) => {
                 listDres: action.filters.drEs,
                 listClassRoom: action.filters.turmas
             });
+            case types.SET_SCHOOLYEAR:
+                    return({
+                        ...state,
+                        setSchoolYear: action.schoolYear
+                    });
           
         default:
             return (state);

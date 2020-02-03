@@ -20,6 +20,7 @@ class PollFilter extends Component {
             classroom: "",
             listSchools: [],
             listClassRoomTeacher: [],
+            schoolYear:"",
         }
 
         this.SelectedDre = this.SelectedDre.bind(this);
@@ -30,14 +31,23 @@ class PollFilter extends Component {
         this.checkDisabledButton = this.checkDisabledButton.bind(this);
         this.selectedDreTeacher = this.selectedDreTeacher.bind(this);
         this.selectedSchoolTeacher = this.selectedSchoolTeacher.bind(this);
+        this.selectedSchoolYear = this.selectedSchoolYear.bind(this);
 
     }
 
     componentWillMount() {
-          
-       // 
+      debugger 
          var role = this.props.user;
-        
+
+         var anoLetivo = new Date();
+         var anoAtual  = anoLetivo.getFullYear();
+         this.setState({
+            schoolYear: anoAtual
+        });
+
+        this.props.filterMethods.setSchoolYear(anoAtual)
+         
+
          if(this.props.user.activeRole.roleName === ROLES_ENUM.ADM_DRE) 
          {
              var userName = this.props.user.username;
@@ -72,7 +82,7 @@ class PollFilter extends Component {
              var profileOccupatios = {
                  codigoRF: this.props.user.username,
                  codigoCargo: codeOccupations,
-                 anoLetivo: '2019',
+                 anoLetivo: this.props.filters.setSchoolYear,
              }
            //         
  
@@ -114,6 +124,19 @@ class PollFilter extends Component {
      componentDidMount() {
         
      }
+
+     selectedSchoolYear(event)
+     {
+         debugger; 
+        var index = event.nativeEvent.target.selectedIndex;
+        var label = event.nativeEvent.target[index].value;
+
+        this.setState({
+            schoolYear: label
+        });
+
+        this.props.filterMethods.setSchoolYear(label);
+    }
 
     selectedDreTeacher(event) {
         var index = event.nativeEvent.target.selectedIndex;
@@ -163,7 +186,7 @@ class PollFilter extends Component {
             this.props.user.activeRole.roleName === ROLES_ENUM.ADM_DRE) {
             var classRoomFilter = {
                 schoolCodeEol: label,
-                schoolYear: "2019",
+                schoolYear: this.props.filters.setSchoolYear,
             }
 
             this.props.filterMethods.getClassroom(classRoomFilter);
@@ -186,7 +209,7 @@ class PollFilter extends Component {
 
         var schoolCode = {
             dreCodeEol: label,
-            schoolYear: "2019",
+            schoolYear: this.props.filters.setSchoolYear,
         }
 
         this.props.filterMethods.getSchool(schoolCode);
@@ -202,15 +225,19 @@ class PollFilter extends Component {
             this.props.filterMethods.activeClassroom("");
             this.props.filterMethods.getClassroom({
                 schoolCodeEol: "",
-                schoolYear: "2019",
+                schoolYear: this.props.filters.setSchoolYear,
             });
         }
+    }
+
+    SelectedYear(event){
+        this.props.filterMethods.getYear()
     }
 
     SelectedSchool(event) {
         this.props.filterMethods.getSchool({
             dreCodeEol: this.state.selectedDre,
-            schoolYear: "2019",
+            schoolYear: this.props.filters.setSchoolYear,
         });
 
         var index = event.nativeEvent.target.selectedIndex;
@@ -218,7 +245,7 @@ class PollFilter extends Component {
 
         var classRoomFilter = {
             schoolCodeEol: label,
-            schoolYear: "2019",
+            schoolYear: this.props.filters.setSchoolYear,
         }
 
         this.props.filterMethods.getClassroom(classRoomFilter);
@@ -260,7 +287,7 @@ class PollFilter extends Component {
             dreCodeEol: this.props.filters.activeDreCode,
             schoolCodeEol: this.props.filters.activeSchollsCode,
             classroomCodeEol: this.props.filters.activeClassRoomCode,
-            schoolYear: "2019",
+            schoolYear: this.props.filters.setSchoolYear,
             yearClassroom: this.state.classroom,
         }
 
@@ -315,8 +342,26 @@ class PollFilter extends Component {
         const listDresOptions = [];
         const listSchoolOptions = [];
         const listClassRoomOptions = [];
-
-        const ano = "2019";
+        const listYearsOptions = [];
+        
+        var dataAtual = new Date();
+        var anoAtual = dataAtual.getFullYear();
+        var aux = anoAtual;
+        listYearsOptions.push({
+            value: anoAtual,
+            label: anoAtual,
+        });
+     
+        for(var i = 2019; i< anoAtual; i++) 
+        {
+             aux = aux - 1
+             listYearsOptions.push({
+                value: aux,
+                label: aux,
+            });
+        }  
+     
+        listYearsOptions.reverse();
 
         if (this.props.pollRouter.activeRoute !== "Sondagem") {
             if (this.props.user.activeRole.roleName === ROLES_ENUM.ADMIN) {
@@ -537,7 +582,7 @@ class PollFilter extends Component {
     }
         return (
             <div className="py-2 px-3 d-flex align-items-center">
-                <SelectChangeColor className="" defaultText="2019" value={ano} disabled="true" />
+                <SelectChangeColor className="col-1"  value={this.state.schoolYear} options={listYearsOptions} onChange={this.selectedSchoolYear}/>
                 <div className="px-2"></div>
                 {selectDre}
                 <div className="px-2"></div>
