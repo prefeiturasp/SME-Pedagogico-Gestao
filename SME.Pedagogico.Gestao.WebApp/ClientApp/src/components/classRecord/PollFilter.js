@@ -81,7 +81,7 @@ class PollFilter extends Component {
              var profileOccupatios = {
                  codigoRF: this.props.user.username,
                  codigoCargo: codeOccupations,
-                 anoLetivo: this.props.filters.setSchoolYear,
+                 anoLetivo: anoAtual,
              }
            //         
  
@@ -120,21 +120,35 @@ class PollFilter extends Component {
        
      }
  
-     componentDidMount() {
-        
-     }
-
      selectedSchoolYear(event)
      {
         var index = event.nativeEvent.target.selectedIndex;
         var label = event.nativeEvent.target[index].value;
 
         this.setState({
-            schoolYear: label
-        });
+            schoolYear: label,
+            listSchools: null,
+            yearClassroom: null,
+            classroom: "",
+            });
+     
 
         this.props.filterMethods.setSchoolYear(label);
-    }
+
+        this.setState({
+            selectedDre: "",
+            selectedClassRoom: "",
+            yearClassroom: null,
+            classroom: "",
+        });
+        
+        this.props.filterMethods.getSchool("");
+        this.props.filterMethods.activeClassroom("");
+        this.props.filterMethods.getClassroom({
+                schoolCodeEol: "",
+                schoolYear: this.props.filters.setSchoolYear,
+            });
+        }
 
     selectedDreTeacher(event) {
         var index = event.nativeEvent.target.selectedIndex;
@@ -487,12 +501,6 @@ class PollFilter extends Component {
             }
 
         }
-
-        //selectClassroom = <> <SelectChangeColor className="" value={this.state.classroom} defaultText="Ano" options={yearClassrooms} onChange={this.getClassroom} activeColor={this.state.classroom === "" ? false : true} resetColor={this.state.classroom === "" ? true : false} />
-        //    <div className="px-2"></div>
-        //    <SelectChangeColor className="" value={selectedClassRoom} defaultText="Turma" options={listClassRoomOptions} onChange={this.SelectedClassRoom} resetColor={selectedClassRoom === "" ? true : false} />
-        //     </>
-
 
         else {
 
