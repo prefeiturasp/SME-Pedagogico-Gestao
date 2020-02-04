@@ -41,7 +41,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 else
                 {
                     PollReportPortugueseResult result = new PollReportPortugueseResult();
-                    result = await BuscarDadosSyncAsync(parameters, "2019", parameters.CodigoDRE, parameters.CodigoEscola, parameters.CodigoCurso);
+                    result = await BuscarDadosSyncAsync(parameters, parameters.SchoolYear, parameters.CodigoDRE, parameters.CodigoEscola, parameters.CodigoCurso);
 
                     return (Ok(result));
                 }
@@ -79,7 +79,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
                 else    // cONSOLIDADO
                 {
-                    var result = await BuscaDadosMathAsync(parameters, "2019", parameters.CodigoDRE, parameters.CodigoEscola, parameters.CodigoCurso);
+                    var result = await BuscaDadosMathAsync(parameters, parameters.SchoolYear , parameters.CodigoDRE, parameters.CodigoEscola, parameters.CodigoCurso);
                     return Ok(result);
                 }
             }

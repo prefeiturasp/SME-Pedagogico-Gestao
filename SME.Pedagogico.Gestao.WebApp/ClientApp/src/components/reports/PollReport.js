@@ -48,7 +48,7 @@ class PollReport extends Component {
     var RelatorioDeClasse = this.props.pollReport.selectedFilter
       .classroomReport;
     var Dres = this.props.filters.listDres;
- debugger
+ 
     if ("codigoDRE" in Dres[0]) {
       var nomeDre =
         CodigoDre == "todas"
@@ -396,7 +396,6 @@ class PollReport extends Component {
       var totals = pollReportData.totals;
       var itemscharts = chartData;
 
-      debugger;
       //   var ideia =  itemsIdeia.map((x) => {
       //         x.ideia_Acertou_Percentage = x.correctIdeaPercentage
       //         delete x.correctIdeaPercentage
@@ -456,7 +455,6 @@ class PollReport extends Component {
         });
       }
 
-      debugger;
       var charts = [];
 
       for (var index in itemscharts.chartIdeaData) {
@@ -477,7 +475,6 @@ class PollReport extends Component {
         });
       }
 
-      debugger;
       var report = {
         headerFooter: {
           teacherName: this.props.user.username, // rf do professor
@@ -528,7 +525,6 @@ class PollReport extends Component {
       var totals = pollReportData.totals;
       var itemscharts = chartData;
 
-      debugger;
       //   var ideia =  itemsIdeia.map((x) => {
       //         x.ideia_Acertou_Percentage = x.correctIdeaPercentage
       //         delete x.correctIdeaPercentage
@@ -588,7 +584,6 @@ class PollReport extends Component {
         });
       }
 
-      debugger;
       var charts = [];
 
       for (var index in itemscharts.chartIdeaData) {
@@ -609,7 +604,6 @@ class PollReport extends Component {
         });
       }
 
-      debugger;
       var report = {
         headerFooter: {
           teacherName: this.props.user.username, // rf do professor
@@ -655,7 +649,6 @@ class PollReport extends Component {
       Proeficiencia == "Números" &&
       RelatorioDeClasse == false
     ) {
-      debugger;
       var tables = [];
 
       for (var index in pollReportData.numerosResults) {

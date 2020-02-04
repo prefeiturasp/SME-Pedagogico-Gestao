@@ -36,7 +36,6 @@ class PollFilter extends Component {
     }
 
     componentWillMount() {
-      debugger 
          var role = this.props.user;
 
          var anoLetivo = new Date();
@@ -127,7 +126,6 @@ class PollFilter extends Component {
 
      selectedSchoolYear(event)
      {
-         debugger; 
         var index = event.nativeEvent.target.selectedIndex;
         var label = event.nativeEvent.target[index].value;
 

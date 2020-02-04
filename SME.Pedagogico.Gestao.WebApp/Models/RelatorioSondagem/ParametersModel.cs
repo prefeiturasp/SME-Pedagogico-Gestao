@@ -16,5 +16,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Models.RelatorioSondagem
         public string CodigoEscola { get; set; }
         public string CodigoCurso { get; set; }
         public string CodigoTurmaEol { get; set; }
+        public string SchoolYear { get; set;}
+
     }
 }
