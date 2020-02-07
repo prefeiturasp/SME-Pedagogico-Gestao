@@ -24,7 +24,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async void InsertPollPortuguese(List<StudentPollPortuguese> ListStudentsModel)
         {
-            using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
 
                 var listStudentsPoll = new List<PortuguesePoll>();
@@ -78,7 +78,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             try
             {
                 var liststudentPollPortuguese = new List<StudentPollPortuguese>();
-                using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+                using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
                 {
                     //Pega alunos daquela turma que possuem sondagem 
                     // ADD ano letivo no where
@@ -162,7 +162,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             try
             {
                 var liststudentPollPortuguese = new List<StudentPollPortuguese>();
-                using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+                using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
                 {
                     var listStudentsPollPortuguese = new List<PortuguesePoll>();
                     switch (bimestre)
@@ -230,11 +230,18 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task<PollReportPortugueseResult> BuscarDadosRelatorioPortugues(string proficiencia, string bimestre, string anoLetivo, string codigoDre, string codigoEscola, string codigoCurso)
         {
+
+            using(Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
+            {
+                var lista = db.PeriodoDeAberturas;
+            }
+
+
             var liststudentPollPortuguese = new List<StudentPollPortuguese>();
 
             var listReturn = new List<PollReportPortugueseItem>();
 
-            using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
                 var listStudentsPollPortuguese = new List<Models.Academic.PortuguesePoll>();
                 IQueryable<PortuguesePoll> query = db.Set<PortuguesePoll>();

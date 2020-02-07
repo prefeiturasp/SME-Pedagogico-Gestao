@@ -18,7 +18,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         // Corrigir esste método
         private static async Task<Models.Authentication.User> GetUserById(string id)
         {
-            using (Data.Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            using (Data.Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
                 Models.Authentication.User user = await
                     (from current in db.Users.Include(".Profile.Roles")
@@ -31,7 +31,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public static async Task<bool> RegisterUser(string username, string password)
         {
-            using (Data.Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            using (Data.Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
                 Models.Authentication.User user = await
                     (from current in db.Users.Include(".Roles")
@@ -66,19 +66,19 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public static bool ValidateUser(string username, string password)
         {
-            using (Data.Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            using (Data.Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
                 return (db.Users.Any(x => x.Name == username && x.Password == Functionalities.Cryptography.HashPassword(password)));
         }
 
         public static bool ValidateUser(string username)
         {
-            using (Data.Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            using (Data.Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
                 return (db.Users.Any(x => x.Name == username));
         }
 
         public static PrivilegedAccessModel ValidatePrivilegedUser(string username)
         {
-            using (Data.Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            using (Data.Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
                 var user = db.PrivilegedAccess.Where(x => x.Login == username).FirstOrDefault();
 
@@ -101,7 +101,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public static async Task<bool> ResetSenha(string username, string newPassword)
         {
-            using (Data.Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            using (Data.Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
                 Models.Authentication.User user = await
                     (from current in db.Users
@@ -123,7 +123,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public static bool ResetSenhaPadrão(ResetPasswordDTO credentials, out IEnumerable<string> validationErrors)
         {
-            using (Data.Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            using (Data.Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
                 User user =
                     (from current in db.Users
@@ -177,7 +177,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public static async Task<bool> LoginUser(string username, string session, string refreshToken)
         {
-            using (Data.Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            using (Data.Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
                 Models.Authentication.LoggedUser loggedUser = await
                     (from current in db.LoggedUsers.Include(".User")
@@ -218,7 +218,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public static async Task<Models.Authentication.LoggedUser> GetLoggedUser(string username, string session, string refreshToken)
         {
-            using (Data.Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            using (Data.Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
                 return (await
                     (from current in db.LoggedUsers.Include(".User")
                      where current.User.Name == username
@@ -229,7 +229,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public static async Task<bool> LogoutUser(string username, string session)
         {
-            using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
                 Models.Authentication.LoggedUser loggedUser = await
                     (from current in db.LoggedUsers.Include(".User")
@@ -251,7 +251,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public static async Task<bool> SetRole(string username, string roleName, string accessLevelValue)
         {
-            using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
                 Models.Authentication.User user = await
                     (from current in db.Users
@@ -305,7 +305,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public static async Task<List<Models.Authentication.UserRole>> GetUserRoles(string username)
         {
-            using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
                 List<Models.Authentication.UserRole> userRoles = await
                         (from current in db.UserRoles.Include(".User").Include(".Role").Include(".AccessLevel")

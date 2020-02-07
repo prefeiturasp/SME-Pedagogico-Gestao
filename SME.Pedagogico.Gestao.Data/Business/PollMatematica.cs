@@ -27,7 +27,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             var liststudentPoll = new List<StudentPollMatematica>();
             var listStudentsPoll = new List<MathPoolCA>();
-            using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
                 switch (term)
                 {
@@ -48,7 +48,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             var liststudentPoll = new List<StudentPollMatematica>();
             var listStudentsPoll = new List<MathPoolCM>();
-            using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
                 switch (term)
                 {
@@ -70,7 +70,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             var liststudentPoll = new List<StudentPollMatematica>();
             var listStudentsPoll = new List<MathPoolNumber>();
-            using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
                 switch (term)
                 {

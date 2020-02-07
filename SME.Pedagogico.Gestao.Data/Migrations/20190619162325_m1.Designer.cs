@@ -9,7 +9,7 @@ using SME.Pedagogico.Gestao.Data.Contexts;
 
 namespace SME.Pedagogico.Gestao.Data.Migrations
 {
-    [DbContext(typeof(SMEManagementContext))]
+    [DbContext(typeof(SMEManagementContextData))]
     [Migration("20190619162325_m1")]
     partial class m1
     {

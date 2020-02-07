@@ -23,6 +23,15 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             _config = config;
         }
 
+        [HttpGet("{schoolYear}")]
+        //[Route("api/[controller]/[action]/[id]")]
+        public async Task<ActionResult<string>> ListarPeriodoDeAberturas(string schoolYear)
+        {
+            var periodoAbertura = new PeriodoAbertura(_config);
+            var lista = await periodoAbertura.GetPeriodoDeAberturas(schoolYear);
+            return (Ok(lista));
+        }
+
         /// <summary>
         /// Lista turma por escola
         /// </summary>

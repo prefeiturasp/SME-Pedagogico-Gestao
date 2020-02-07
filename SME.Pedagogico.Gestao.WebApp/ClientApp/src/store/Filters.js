@@ -14,6 +14,8 @@ export const types = {
     SET_FILTERS_TEACHER: "SET_FILTERS_TEACHER",
     GET_DRE_ADM: "GET_DRE_ADM",
     SET_SCHOOLYEAR: "SET_SCHOOLYEAR",
+    GET_PERIOD: "GET_PERIOD",
+    SET_PERIOD: "SET_PERIOD"
     //UNAUTHORIZED: "UNAUTHORIZED",
     //LOGOUT_REQUEST: "LOGOUT_REQUEST",
     //LOGOUT_USER: "LOGOUT_USER",
@@ -31,6 +33,7 @@ const initialState = {
     activeYearClassRoomCode: null,
     activeClassRoomCode: null,
     filterTeachers: null,
+    period: null,
 };
 
 export const actionCreators = {
@@ -47,6 +50,8 @@ export const actionCreators = {
     activeDreCode: (schoolCode) => ({ type: types.ACTIVEDRECODE, schoolCode }),
     activeSchoolCode: (classRoomFilter) => ({ type: types.ACTIVESCHOOLCODE, classRoomFilter  }),
     getDreAdm: (userName) => ({type: types.GET_DRE_ADM, userName}),
+    getPeriod: (schoolYear) => ({type: types.GET_PERIOD, schoolYear}),
+    setPeriod: () => ({type: types.SET_PERIOD })
 };
 
 export const reducer = (state, action) => {
@@ -101,6 +106,12 @@ export const reducer = (state, action) => {
                         ...state,
                         setSchoolYear: action.schoolYear
                     });
+            case types.SET_PERIOD:
+                return({
+                    ...state,
+                    period: action.listPeriod
+
+                })
           
         default:
             return (state);

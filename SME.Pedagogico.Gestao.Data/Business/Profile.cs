@@ -186,7 +186,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             try
             {
-                using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+                using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
                 {
                     var user = db.PrivilegedAccess.Where(x => x.Login == userName).FirstOrDefault();
 
