@@ -7,7 +7,7 @@ import { actionCreators as actionCreatorsPoll2 } from '../../store/Poll';
 import { actionCreators as actionCreatorsPollRouter } from '../../store/PollRouter';
 import { bindActionCreators } from 'redux';
 import { ROLES_ENUM } from '../../Enums';
-import { debounce } from 'redux-saga/effects';
+
 
 class PollFilter extends Component {
     constructor(props) {
@@ -20,6 +20,7 @@ class PollFilter extends Component {
             classroom: "",
             listSchools: [],
             listClassRoomTeacher: [],
+            schoolYear:"",
         }
 
         this.SelectedDre = this.SelectedDre.bind(this);
@@ -30,14 +31,28 @@ class PollFilter extends Component {
         this.checkDisabledButton = this.checkDisabledButton.bind(this);
         this.selectedDreTeacher = this.selectedDreTeacher.bind(this);
         this.selectedSchoolTeacher = this.selectedSchoolTeacher.bind(this);
-
+        this.selectedSchoolYear = this.selectedSchoolYear.bind(this);
+        this.getProfileInformationProf = this.getProfileInformationProf.bind(this);
+       // this.getPeriod = this.getPeriod.bind(this);
     }
 
+   
+
     componentWillMount() {
-        debugger  
-       // 
-         var role = this.props.user;
-        
+        debugger
+        var role = this.props.user;
+
+         var anoLetivo = new Date();
+         var anoAtual  = anoLetivo.getFullYear();
+         this.setState({
+            schoolYear: anoAtual
+        });
+
+        this.props.filterMethods.getPeriod(anoAtual);
+
+        this.props.filterMethods.setSchoolYear(anoAtual)
+         
+
          if(this.props.user.activeRole.roleName === ROLES_ENUM.ADM_DRE) 
          {
              var userName = this.props.user.username;
@@ -53,67 +68,90 @@ class PollFilter extends Component {
              role.activeRole.roleName === ROLES_ENUM.COORDENADOR_PEDAGOGICO ||
              role.activeRole.roleName === ROLES_ENUM.DIRETOR) {
               
-                if(role.activeRole.roleName === ROLES_ENUM.PROFESSOR)
-                {
-                 var codeOccupations = this.props.user.listOccupations.Professor
-                }  
-                
-                else if(role.activeRole.roleName === ROLES_ENUM.COORDENADOR_PEDAGOGICO)
-                {
-                 var codeOccupations = this.props.user.listOccupations.CP
-                }
- 
-                else if(role.activeRole.roleName === ROLES_ENUM.DIRETOR)
-                {
-                 var codeOccupations = this.props.user.listOccupations.Diretor
-                }
-                 debugger
-            
-             var profileOccupatios = {
-                 codigoRF: this.props.user.username,
-                 codigoCargo: codeOccupations,
-                 anoLetivo: '2019',
-             }
-           //         debugger
- 
-             this.props.filterMethods.getFilters_teacher(profileOccupatios);
-             //if (this.props.filters.filterTeachers !== null) {
-             //    if (this.props.filters.filterTeachers.drEs.length == 1) {
-             //        var schoolCode = {
-             //            dreCodeEol: this.props.filters.filterTeachers.drEs[0].codigo
-             //        }
- 
-             //        this.props.filterMethods.activeDreCode(schoolCode);
-             //        var listSchools = this.props.filters.filterTeachers.escolas.filter(x => x.codigoDRE === this.props.filters.filterTeachers.drEs[0].codigo)
-             //    }
-             //    if (this.props.filters.filterTeachers.escolas.length == 1) {
-             //        var classRoomFilter = {
-             //            schoolCodeEol: this.props.filters.filterTeachers.escolas[0].codigo
-             //        }
- 
-             //        this.props.filterMethods.activeSchoolCode(classRoomFilter);
-             //    }
-             //}
- 
- 
-             //          
-             //this.setState({
-             //    listSchools: listSchools
-             //});
+                this.getProfileInformationProf(anoAtual);
+               
          }
          if (role.activeRole.roleName === ROLES_ENUM.DIRETOR ||
              role.activeRole.roleName === ROLES_ENUM.ADM_DRE) {
              this.props.pollRouterMethods.setActiveRoute("Relatórios");
          }
-         //else {
-         //    this.props.pollRouterMethods.setActiveRoute("Sondagem");
-         //}
+    
        
      }
+
+     getProfileInformationProf(anoAtual)  {
  
-     componentDidMount() {
-        
+      var role = this.props.user;
+ 
+         if(role.activeRole.roleName === ROLES_ENUM.PROFESSOR)
+         {
+          var codeOccupations = this.props.user.listOccupations.Professor
+         }  
+         
+         else if(role.activeRole.roleName === ROLES_ENUM.COORDENADOR_PEDAGOGICO)
+         {
+          var codeOccupations = this.props.user.listOccupations.CP
+         }
+ 
+         else if(role.activeRole.roleName === ROLES_ENUM.DIRETOR)
+         {
+          var codeOccupations = this.props.user.listOccupations.Diretor
+         }
+          
+     
+      var profileOccupatios = {
+          codigoRF: this.props.user.username,
+          codigoCargo: codeOccupations,
+          anoLetivo: anoAtual,
+      }
+     
+ 
+      this.props.filterMethods.getFilters_teacher(profileOccupatios);
+ 
      }
+ 
+     selectedSchoolYear(event)
+     {
+
+
+        this.props.filterMethods.resetPollFilters()
+     
+        var index = event.nativeEvent.target.selectedIndex;
+        var label = event.nativeEvent.target[index].value;
+
+        this.props.filterMethods.setSchoolYear(label)
+
+        this.props.filterMethods.getPeriod(label);
+        this.setState({
+            selectedDre: "",
+            selectedClassRoom: "",
+            schoolYear: label,
+            listSchools: null,
+            yearClassroom: null,
+            classroom: "",
+            });
+     
+        // this.setState({
+        //     selectedDre: "",
+        //     selectedClassRoom: "",
+        //     yearClassroom: null,
+        //     classroom: "",
+        // });
+
+        this.props.filterMethods.getPeriod(label);
+      if (this.props.user.activeRole.roleName === ROLES_ENUM.ADMIN)
+       {
+        this.props.filterMethods.getListDres();
+       }
+       else {
+        this.getProfileInformationProf(label);  
+       }
+      
+
+        
+        
+ 
+        }
 
     selectedDreTeacher(event) {
         var index = event.nativeEvent.target.selectedIndex;
@@ -163,9 +201,8 @@ class PollFilter extends Component {
             this.props.user.activeRole.roleName === ROLES_ENUM.ADM_DRE) {
             var classRoomFilter = {
                 schoolCodeEol: label,
-                schoolYear: "2019",
+                schoolYear: this.props.filters.setSchoolYear,
             }
-
             this.props.filterMethods.getClassroom(classRoomFilter);
             listClassRoomTeacher = this.props.filters.listClassRoom;
         }
@@ -178,7 +215,7 @@ class PollFilter extends Component {
     }
 
     SelectedDre(event) {
-debugger
+
       //  this.props.filterMethods.resetPollFilters();
      //  this.props.filterMethods.getDre();
         var index = event.nativeEvent.target.selectedIndex;
@@ -186,13 +223,13 @@ debugger
 
         var schoolCode = {
             dreCodeEol: label,
-            schoolYear: "2019",
+            schoolYear: this.props.filters.setSchoolYear,
         }
 
         this.props.filterMethods.getSchool(schoolCode);
         this.setState({
             selectedDre: label,
-            selectedSchool: "",
+           // selectedSchool: "",
             selectedClassRoom: "",
             yearClassroom: null,
             classroom: "",
@@ -202,9 +239,35 @@ debugger
             this.props.filterMethods.activeClassroom("");
             this.props.filterMethods.getClassroom({
                 schoolCodeEol: "",
-                schoolYear: "2019",
+                schoolYear: this.props.filters.setSchoolYear,
             });
         }
+    }
+
+    SelectedYear(event){
+        this.props.filterMethods.getYear()
+    }
+
+    SelectedSchool(event) {
+        this.props.filterMethods.getSchool({
+            dreCodeEol: this.state.selectedDre,
+            schoolYear: this.props.filters.setSchoolYear,
+        });
+
+        var index = event.nativeEvent.target.selectedIndex;
+        var label = event.nativeEvent.target[index].value;
+
+        var classRoomFilter = {
+            schoolCodeEol: label,
+            schoolYear: this.props.filters.setSchoolYear,
+        }
+        this.props.filterMethods.getClassroom(classRoomFilter);
+        this.setState({
+            selectedSchool: label,
+            selectedClassRoom: "",
+            yearClassroom: null,
+            classroom: "",
+        });
     }
 
     SelectedClassRoom(event) {
@@ -222,28 +285,7 @@ debugger
         });
     }
 
-    SelectedSchool(event) {
-        this.props.filterMethods.getSchool({
-            dreCodeEol: this.state.selectedDre,
-            schoolYear: "2019",
-        });
-
-        var index = event.nativeEvent.target.selectedIndex;
-        var label = event.nativeEvent.target[index].value;
-
-        var classRoomFilter = {
-            schoolCodeEol: label,
-            schoolYear: "2019",
-        }
-
-        this.props.filterMethods.getClassroom(classRoomFilter);
-        this.setState({
-            selectedSchool: label,
-            selectedClassRoom: "",
-            yearClassroom: null,
-            classroom: "",
-        });
-    }
+    
 
     getClassroom(event) {
         this.props.filterMethods.activeClassroom("");
@@ -258,7 +300,7 @@ debugger
             dreCodeEol: this.props.filters.activeDreCode,
             schoolCodeEol: this.props.filters.activeSchollsCode,
             classroomCodeEol: this.props.filters.activeClassRoomCode,
-            schoolYear: "2019",
+            schoolYear: this.props.filters.setSchoolYear,
             yearClassroom: this.state.classroom,
         }
 
@@ -301,7 +343,7 @@ debugger
     }
 
     render() {
-        debugger
+        
         const { selectedDre } = this.state;
         const { selectedSchool } = this.state;
         const { selectedClassRoom } = this.state;
@@ -313,8 +355,26 @@ debugger
         const listDresOptions = [];
         const listSchoolOptions = [];
         const listClassRoomOptions = [];
-
-        const ano = "2019";
+        const listYearsOptions = [];
+        
+        var dataAtual = new Date();
+        var anoAtual = dataAtual.getFullYear();
+        var aux = anoAtual;
+        listYearsOptions.push({
+            value: anoAtual,
+            label: anoAtual,
+        });
+     
+        for(var i = 2019; i< anoAtual; i++) 
+        {
+             aux = aux - 1
+             listYearsOptions.push({
+                value: aux,
+                label: aux,
+            });
+        }  
+     
+        listYearsOptions.reverse();
 
         if (this.props.pollRouter.activeRoute !== "Sondagem") {
             if (this.props.user.activeRole.roleName === ROLES_ENUM.ADMIN) {
@@ -413,7 +473,7 @@ debugger
                 }
 
                 selectClassRoom = <SelectChangeColor className="col" value={selectedClassRoom} defaultText="Turma" options={listClassRoomOptions} disabled={hiddenDisabled} onChange={this.SelectedClassRoom} resetColor={selectedClassRoom === "" ? true : false} />
-
+               
                 if (this.props.filters.listClassRoom !== null && this.props.filters.listClassRoom !== undefined) {
                     var temp = this.props.filters.listClassRoom;
                     var uniques = [];
@@ -443,12 +503,6 @@ debugger
 
         }
 
-        //selectClassroom = <> <SelectChangeColor className="" value={this.state.classroom} defaultText="Ano" options={yearClassrooms} onChange={this.getClassroom} activeColor={this.state.classroom === "" ? false : true} resetColor={this.state.classroom === "" ? true : false} />
-        //    <div className="px-2"></div>
-        //    <SelectChangeColor className="" value={selectedClassRoom} defaultText="Turma" options={listClassRoomOptions} onChange={this.SelectedClassRoom} resetColor={selectedClassRoom === "" ? true : false} />
-        //     </>
-
-
         else {
 
             if (this.props.filters.listDres !== null)
@@ -471,7 +525,7 @@ debugger
 
             if(selectedDre !== "todas" && this.props.filters.scholls !== undefined)
                 if (this.props.filters.scholls[0] !== undefined) {
-                debugger
+                
                 for (var item in this.props.filters.scholls) {
                     listSchoolOptions.push({
                         value: this.props.filters.scholls[item].codigoEscola,
@@ -535,7 +589,7 @@ debugger
     }
         return (
             <div className="py-2 px-3 d-flex align-items-center">
-                <SelectChangeColor className="" defaultText="2019" value={ano} disabled="true" />
+                <SelectChangeColor className="col-1"  value={this.state.schoolYear} options={listYearsOptions} onChange={this.selectedSchoolYear}/>
                 <div className="px-2"></div>
                 {selectDre}
                 <div className="px-2"></div>

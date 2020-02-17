@@ -2,11 +2,11 @@
 
 namespace SME.Pedagogico.Gestao.Data.Contexts
 {
-    public class SMEManagementContext : DbContext
+    public class SMEManagementContextData : DbContext
     {
         #region ==================== ATTRIBUTES ====================
 
-        private string connectionString = "Server=localhost;Port=5432;Database=smeManagementDB;Username=postgres;Password=39162604;";
+        private string connectionString = "Server=localhost;Port=5432;Database=smeManagementDB;Username=postgres;Password=postgres;";
 
         #region ---------- Academic ----------
 
@@ -30,6 +30,7 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
         public DbSet<Models.Authentication.UserRole> UserRoles { get; set; }
         public DbSet<Models.Authentication.PrivilegedAccess> PrivilegedAccess { get; set; }
 
+
         #endregion ---------- Authentication ----------
 
         #region ---------- Entity ----------
@@ -41,6 +42,7 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
         #region ---------- Organization ----------
         public DbSet<Models.Organization.Code> Codes { get; set; }
         public DbSet<Models.Organization.LogControl> LogControls { get; set; }
+        public DbSet<Models.Organization.PeriodoDeAbertura> PeriodoDeAberturas { get; set; }
 
         #endregion ---------- Organization ----------
 
@@ -48,11 +50,11 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
 
         #region ==================== CONSTRUCTORS ====================
 
-        public SMEManagementContext()
+        public SMEManagementContextData()
             : base()
         { }
 
-        public SMEManagementContext(string connectionString)
+        public SMEManagementContextData(string connectionString)
             : base()
         {
             this.connectionString = connectionString;

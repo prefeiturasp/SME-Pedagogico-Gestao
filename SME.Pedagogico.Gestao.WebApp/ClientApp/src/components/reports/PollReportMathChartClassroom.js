@@ -135,7 +135,6 @@ const ChartLabel = (props) => {
     }
    
     render() {
-        debugger
         var { data } = this.props;
 
         if (data !== undefined) {

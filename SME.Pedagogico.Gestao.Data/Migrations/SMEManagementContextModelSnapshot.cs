@@ -8,7 +8,7 @@ using SME.Pedagogico.Gestao.Data.Contexts;
 
 namespace SME.Pedagogico.Gestao.Data.Migrations
 {
-    [DbContext(typeof(SMEManagementContext))]
+    [DbContext(typeof(SMEManagementContextData))]
     partial class SMEManagementContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

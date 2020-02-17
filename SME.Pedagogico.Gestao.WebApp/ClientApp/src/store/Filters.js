@@ -13,7 +13,9 @@ export const types = {
     GET_FILTERS_TEACHER: "GET_FILTERS_TEACHER",
     SET_FILTERS_TEACHER: "SET_FILTERS_TEACHER",
     GET_DRE_ADM: "GET_DRE_ADM",
-
+    SET_SCHOOLYEAR: "SET_SCHOOLYEAR",
+    GET_PERIOD: "GET_PERIOD",
+    SET_PERIOD: "SET_PERIOD"
     //UNAUTHORIZED: "UNAUTHORIZED",
     //LOGOUT_REQUEST: "LOGOUT_REQUEST",
     //LOGOUT_USER: "LOGOUT_USER",
@@ -22,7 +24,7 @@ export const types = {
 }
 const initialState = {
     listDres: [],
-    shoolYear: null,
+    setSchoolYear: null,
     scholls: [],
     listClassRoom: null,
     yearClassRoom: null,
@@ -31,6 +33,7 @@ const initialState = {
     activeYearClassRoomCode: null,
     activeClassRoomCode: null,
     filterTeachers: null,
+    period: null,
 };
 
 export const actionCreators = {
@@ -41,16 +44,18 @@ export const actionCreators = {
     getClassroom: (classRoomFilter) => ({ type: types.GET_CLASSROOM, classRoomFilter }),
     listClassRoom: () => ({ type: types.LIST_CLASSROOM }),
     activeClassroom: (codeClass) => ({ type: types.ACTIVECLASSROOMCODE, codeClass }),
+    setSchoolYear: (schoolYear) => ({ type: types.SET_SCHOOLYEAR, schoolYear }),
     resetPollFilters: () => ({ type: types.RESET_POLL_FILTERS }),
     getFilters_teacher: (profileOccupatios) => ({ type: types.GET_FILTERS_TEACHER, profileOccupatios }),
     activeDreCode: (schoolCode) => ({ type: types.ACTIVEDRECODE, schoolCode }),
     activeSchoolCode: (classRoomFilter) => ({ type: types.ACTIVESCHOOLCODE, classRoomFilter  }),
     getDreAdm: (userName) => ({type: types.GET_DRE_ADM, userName}),
+    getPeriod: (schoolYear) => ({type: types.GET_PERIOD, schoolYear}),
+    setPeriod: () => ({type: types.SET_PERIOD })
 };
 
 export const reducer = (state, action) => {
     state = state || initialState;
-
     switch (action.type) {
         case types.LIST_DRES:
             return ({
@@ -96,6 +101,17 @@ export const reducer = (state, action) => {
                 listDres: action.filters.drEs,
                 listClassRoom: action.filters.turmas
             });
+            case types.SET_SCHOOLYEAR:
+                    return({
+                        ...state,
+                        setSchoolYear: action.schoolYear
+                    });
+            case types.SET_PERIOD:
+                return({
+                    ...state,
+                    period: action.listPeriod
+
+                })
           
         default:
             return (state);

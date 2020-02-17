@@ -40,7 +40,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                         if (codigoCargoAtivo == "3239" ||
                             codigoCargoAtivo == "3301" ||
-                            codigoCargoAtivo == "3336" ||
+                         // codigoCargoAtivo == "3336" ||
                             codigoCargoAtivo == "3310" ||
                             codigoCargoAtivo == "3379" ||
                             codigoCargoAtivo == "3360")
@@ -158,8 +158,10 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task<RetornoInfoPerfilDTO> GetProfileEmployeeInformation(string codeRF, string codeOccupations, string schoolYear)
         {
+
             try
             {
+
                 var endPoint = new EndpointsAPI();
                 var profileApi = new PerfilSgpAPI(endPoint);
                 var profileInformation = await profileApi.getInformacoesPerfil(codeRF, int.Parse(codeOccupations), int.Parse(schoolYear), _token);
@@ -175,8 +177,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
             catch (System.Exception ex)
             {
-
-                throw ex;
+                return null;
             }
 
         }
@@ -185,7 +186,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             try
             {
-                using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+                using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
                 {
                     var user = db.PrivilegedAccess.Where(x => x.Login == userName).FirstOrDefault();
 

@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.WebApp.Contexts;
-using SME.Pedagogico.Gestao.WebApp.Models.ClassRoom;
-using SME.Pedagogico.Gestao.WebApp.Models.Poll;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {

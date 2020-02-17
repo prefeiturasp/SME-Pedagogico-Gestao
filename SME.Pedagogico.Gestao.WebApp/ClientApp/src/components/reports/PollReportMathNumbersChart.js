@@ -82,8 +82,8 @@ export default class PollReportMathNumbersChart extends Component {
                 case "Processo de generalização":
                     processoGeneralizacao = { name: "Processo de generalização", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
                     break;
-                case "Zero intercalados":
-                    zeroIntercalado = { name: "Zero intercalados", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
+                case "Zero intercalado":
+                    zeroIntercalado = { name: "Zero intercalado", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
                     break;
                 default:
                     break;

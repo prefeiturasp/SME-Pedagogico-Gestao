@@ -25,5 +25,8 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
                       (token, string.Format(url, codigoRF, codigoUE, anoLetivo));
         }
 
+
+
+
     }
 }

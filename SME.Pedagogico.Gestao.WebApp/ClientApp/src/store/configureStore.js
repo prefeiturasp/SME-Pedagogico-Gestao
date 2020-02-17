@@ -43,7 +43,8 @@ export default function configureStore(history, initialState) {
 
     const persistConfig = {
         key: 'root',
-        storage
+        storage,
+        whitelist: ["user"]
     };
 
     const middleware = [

@@ -25,7 +25,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task InsertPoolCMAsync(List<SondagemMatematicaOrdemDTO> dadosSondagem)
         {
-            using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
                 foreach (var student in dadosSondagem)
                 {
@@ -119,7 +119,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 var retornoSondagem = new List<SondagemMatematicaOrdemDTO>();
 
-                using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+                using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
                 {
                     var sondagemDaTurma = db.MathPoolCMs
                                                         .Where(x => x.TurmaEolCode.Equals(filtroSondagem.TurmaEolCode))
@@ -130,7 +130,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                     var classroomStudentsFromAPI = await turmApi.GetAlunosNaTurma(Convert.ToInt32(filtroSondagem.TurmaEolCode), Convert.ToInt32(filtroSondagem.AnoLetivo), _token);
 
-                    classroomStudentsFromAPI = classroomStudentsFromAPI.Where(x => x.CodigoSituacaoMatricula == 1).ToList();
+                    classroomStudentsFromAPI = classroomStudentsFromAPI.Where(x => x.CodigoSituacaoMatricula == 1 || x.CodigoSituacaoMatricula == 10 || x.CodigoSituacaoMatricula == 6 || x.CodigoSituacaoMatricula == 13 || x.CodigoSituacaoMatricula == 5).ToList();
                     if (classroomStudentsFromAPI == null)
                     {
                         return null;
@@ -241,7 +241,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private async Task<PollReportMathResult> BuscaDadosRelatorioMatNumeros(string semestre, string anoLetivo, string codigoDre, string codigoEscola, string anoTurma)
         {
-            using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
                 IQueryable<MathPoolNumber> query = db.Set<MathPoolNumber>();
                 var numbers = new PollReportMathItem();
@@ -287,7 +287,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     CreateNumberItem(terminamZeroAgrupados, grupo: "Terminam em zero", ref numbers, ref numberCharts);
                     CreateNumberItem(algarismosAgrupados, grupo: "Algarismos", ref numbers, ref numberCharts);
                     CreateNumberItem(processoAgrupados, grupo: "Processo de generalização", ref numbers, ref numberCharts);
-                    CreateNumberItem(zeroIntercaladosAgrupados, grupo: "Zero intercalados", ref numbers, ref numberCharts);
+                    CreateNumberItem(zeroIntercaladosAgrupados, grupo: "Zero intercalado", ref numbers, ref numberCharts);
 
                     relatorioRetorno.Results = numbers;
                     relatorioRetorno.ChartNumberData.AddRange(numberCharts);
@@ -323,7 +323,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             var listReturn = new List<PollReportMathItem>();
 
-            using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
                 IQueryable<MathPoolCM> query = db.Set<MathPoolCM>();
                 var ideasAndResults = new PollReportMathItem();
@@ -445,7 +445,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             var listReturn = new List<PollReportMathItem>();
 
-            using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
                 IQueryable<MathPoolCA> query = db.Set<MathPoolCA>();
                 var ideasAndResults = new PollReportMathItem();
@@ -940,7 +940,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 var retornoSondagem = new List<SondagemMatematicaOrdemDTO>();
 
-                using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+                using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
                 {
                     var sondagemDaTurma = db.MathPoolCAs
                                             .Where(x => x.TurmaEolCode.Equals(filtroSondagem.TurmaEolCode))
@@ -951,7 +951,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                     var classroomStudentsFromAPI = await turmApi.GetAlunosNaTurma(Convert.ToInt32(filtroSondagem.TurmaEolCode), Convert.ToInt32(filtroSondagem.AnoLetivo), _token);
 
-                    classroomStudentsFromAPI = classroomStudentsFromAPI.Where(x => x.CodigoSituacaoMatricula == 1).ToList();
+                    classroomStudentsFromAPI = classroomStudentsFromAPI.Where(x => x.CodigoSituacaoMatricula == 1 ||  x.CodigoSituacaoMatricula == 10 ||  x.CodigoSituacaoMatricula == 6 || x.CodigoSituacaoMatricula == 13 || x.CodigoSituacaoMatricula == 5).ToList();
                     if (classroomStudentsFromAPI == null)
                     {
                         return null;
@@ -1036,7 +1036,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 var retornoSondagem = new List<SondagemMatematicaNumerosDTO>();
 
-                using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+                using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
                 {
                     var sondagemDaTurma = db.MathPoolNumbers
                                             .Where(x => x.TurmaEolCode.Equals(filtroSondagem.TurmaEolCode))
@@ -1047,7 +1047,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                     var classroomStudentsFromAPI = await turmApi.GetAlunosNaTurma(Convert.ToInt32(filtroSondagem.TurmaEolCode), Convert.ToInt32(filtroSondagem.AnoLetivo), _token);
 
-                    classroomStudentsFromAPI = classroomStudentsFromAPI.Where(x => x.CodigoSituacaoMatricula == 1).ToList();
+                    classroomStudentsFromAPI = classroomStudentsFromAPI.Where(x => x.CodigoSituacaoMatricula == 1 || x.CodigoSituacaoMatricula == 10 || x.CodigoSituacaoMatricula == 6 || x.CodigoSituacaoMatricula == 13 || x.CodigoSituacaoMatricula == 5).ToList();
                     if (classroomStudentsFromAPI == null)
                     {
                         return null;
@@ -1198,7 +1198,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task InsertPoolNumerosAsync(List<SondagemMatematicaNumerosDTO> dadosSondagem)
         {
-            using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
                 foreach (var student in dadosSondagem)
                 {
@@ -1263,7 +1263,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task InsertPoolCAAsync(List<SondagemMatematicaOrdemDTO> dadosSondagem)
         {
-            using (Contexts.SMEManagementContext db = new Contexts.SMEManagementContext())
+            using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
                 foreach (var student in dadosSondagem)
                 {

@@ -7,7 +7,8 @@ export default function*() {
     takeLatest(Filters.types.GET_SCHOOL, GetSchools),
     takeLatest(Filters.types.GET_CLASSROOM, GetClassRoom),
     takeLatest(Filters.types.GET_FILTERS_TEACHER, GetFiltersTeacher),
-    takeLatest(Filters.types.GET_DRE_ADM, GetDreAdm)
+    takeLatest(Filters.types.GET_DRE_ADM, GetDreAdm),
+    takeLatest(Filters.types.GET_PERIOD, GetPeriod)
   ]);
 }
 
@@ -29,6 +30,17 @@ function* GetDres({}) {
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
   }
+}
+
+function* GetPeriod({schoolYear}) {
+  try {
+    const data = yield call(getPeriodApi, schoolYear);
+    var listPeriod = data;
+    yield put({ type: Filters.types.SET_PERIOD, listPeriod})
+  }catch (error) {
+    yield put({ type: "API_CALL_ERROR" });
+  }
+
 }
 
 function* GetSchools({ schoolCode }) {
@@ -64,6 +76,14 @@ function* GetFiltersTeacher({ profileOccupatios }) {
 }
 
 // Filter Sagas
+
+function getPeriodApi(schoolYear) {
+  var url = `/api/Filtros/ListarPeriodoDeAberturas/${schoolYear}`;
+  return fetch(url, {
+    method: "get", 
+    headers: {"Content-Type": "application/json"} 
+  }).then(response => response.json());
+};
 
 function getDreAdmApi(userName) {
 
