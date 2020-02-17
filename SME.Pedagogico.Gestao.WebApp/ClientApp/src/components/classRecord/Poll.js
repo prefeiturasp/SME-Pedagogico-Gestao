@@ -89,7 +89,6 @@ class Poll extends Component {
   }
 
   componentDidUpdate() {
-   
     if (
       this.state.navSelected === "portugues-tab" &&
       document.getElementById("portugues-tab") !== null &&
@@ -125,7 +124,6 @@ class Poll extends Component {
 
   componentDidMount() {}
   componentWillUpdate() {
-  
     console.log("willUpdate");
     var todayDate = new Date();
     if (this.props.filters !== undefined) {
@@ -133,51 +131,65 @@ class Poll extends Component {
         var period = this.props.filters.period;
         period.forEach(item => {
           if (item.bimestre === 1) {
-            
-            if (this.props.pollOptionSelectLock.poll_1b_lock !== false) {
-           
-
-              console.log(new Date(item.dataInicio) >= todayDate, todayDate <= new Date(item.dataFim))
-
-              if (
-                todayDate >= new Date(item.dataInicio)  &&
-                todayDate <= new Date(item.dataFim)
-              ) {
+            if (
+              todayDate >= new Date(item.dataInicio) &&
+              todayDate <= new Date(item.dataFim)
+            ) {
+              if (this.props.pollOptionSelectLock.poll_1b_lock !== false)
                 this.props.pollOptionSelectLockMethods.set_poll_1b_lock(false);
+            } else {
+              if (this.props.pollOptionSelectLock.poll_1b_lock !== true)
+                this.props.pollOptionSelectLockMethods.set_poll_1b_lock(true);
+            }
+          }
+          if (item.bimestre === 2) {
+            if (
+              todayDate >= new Date(item.dataInicio) &&
+              todayDate <= new Date(item.dataFim)
+            ) {
+              if (this.props.pollOptionSelectLock.poll_2b_lock !== false) {
+                this.props.pollOptionSelectLockMethods.set_poll_2b_lock(false);
+                this.props.pollOptionSelectLockMethods.set_poll_1s_lock(false);
+              } 
+            }
+            else {
+              if (this.props.pollOptionSelectLock.poll_2b_lock !== true) {
+                this.props.pollOptionSelectLockMethods.set_poll_2b_lock(true);
+                this.props.pollOptionSelectLockMethods.set_poll_1s_lock(true);
               }
             }
           }
-          if(item.bimestre === 2) {
-              if(this.props.pollOptionSelectLock.poll_2b_lock !== false) {
-                 
-              if (
-                todayDate >= new Date(item.dataInicio)  &&
-                todayDate <= new Date(item.dataFim)){ 
-                this.props.pollOptionSelectLockMethods.set_poll_2b_lock(false);
-                this.props.pollOptionSelectLockMethods.set_poll_1s_lock(false);
-                console.log(2);  
+          if (item.bimestre === 3) {
+            if (
+              todayDate >= new Date(item.dataInicio) &&
+              todayDate <= new Date(item.dataFim)
+            ) {
+              if (this.props.pollOptionSelectLock.poll_3b_lock !== false) {
+                this.props.pollOptionSelectLockMethods.set_poll_3b_lock(false);
               }
-          }}
-          if(item.bimestre === 3) {
-            if(this.props.pollOptionSelectLock.poll_3b_lock !== false) {
+            } else {
+              if (this.props.pollOptionSelectLock.poll_3b_lock !== true) {
+                this.props.pollOptionSelectLockMethods.set_poll_3b_lock(true);
+              }
+            }
+          }
+          if (item.bimestre === 4) {
               if (
-                todayDate >= new Date(item.dataInicio)  &&
-                todayDate <= new Date(item.dataFim)){ 
-                    console.log(3);  
-                  this.props.pollOptionSelectLockMethods.set_poll_3b_lock(false);
+                todayDate >= new Date(item.dataInicio) &&
+                todayDate <= new Date(item.dataFim)
+              ) {
+                if (this.props.pollOptionSelectLock.poll_4b_lock !== false) {
+                this.props.pollOptionSelectLockMethods.set_poll_4b_lock(false);
+                this.props.pollOptionSelectLockMethods.set_poll_1s_lock(false);
+              }
             }
-        }}
-        if(item.bimestre === 4) {
-            if(this.props.pollOptionSelectLock.poll_4b_lock !== false) {
-                if (
-                    todayDate >= new Date(item.dataInicio)  &&
-                    todayDate <= new Date(item.dataFim)){ 
-                console.log(4);  
-              this.props.pollOptionSelectLockMethods.set_poll_4b_lock(false);
-              this.props.pollOptionSelectLockMethods.set_poll_1s_lock(false);
+            else {
+              if (this.props.pollOptionSelectLock.poll_4b_lock !== true) {
+                this.props.pollOptionSelectLockMethods.set_poll_4b_lock(true);
+                this.props.pollOptionSelectLockMethods.set_poll_1s_lock(true);
+              }
             }
-        }}
-
+          }
         });
       }
     }
