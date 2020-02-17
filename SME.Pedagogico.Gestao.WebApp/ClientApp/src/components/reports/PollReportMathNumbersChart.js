@@ -39,8 +39,9 @@ class MathChart extends Component {
     componentDidUpdate() {
         this.updateChart();
     }
-
+    
     render() {
+
         return (
             <div>
                 <div className="d-flex justify-content-center align-items-center sc-gray mx-4" style={{ height: 35 }} >
@@ -61,11 +62,14 @@ export default class PollReportMathNumbersChart extends Component {
         var algarismos = null;
         var processoGeneralizacao = null;
         var zeroIntercalado = null;
-         if( this.props.data != undefined){
-            for (var i = 0; i < this.props.data.length; i++)
-            switch (this.props.data[i].order) {
-                case "Familiares":
-                    familiares = { name: "Familiares", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
+        if (this.props.data != undefined) {
+          
+             for (var i = 0; i < this.props.data.length; i++)
+                
+                 switch (this.props.data[i].order) {
+              
+                     case "Familiares/Frequentes":
+                    familiares = { name: "Familiares/Frequentes", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
                     break;
                 case "Opacos":
                     opacos = { name: "Opacos", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
@@ -76,8 +80,8 @@ export default class PollReportMathNumbersChart extends Component {
                 case "Terminam em zero":
                     terminamZero = { name: "Terminam em zero", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
                     break;
-                case "Algarismos":
-                    algarismos = { name: "Algarismos", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
+                     case "Algarismos iguais":
+                    algarismos = { name: "Algarismos Iguais", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
                     break;
                 case "Processo de generalização":
                     processoGeneralizacao = { name: "Processo de generalização", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
