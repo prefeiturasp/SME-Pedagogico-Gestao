@@ -522,7 +522,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 // Se sim verifica se usuario e senha estao corretos
                 if (!Authentication.ValidateUser(credential.Username, credential.Password))
                 {
-                    return (Unauthorized());
+                    return (Unauthorized());  
                 }
             }
             // usuario nao é cadastrado

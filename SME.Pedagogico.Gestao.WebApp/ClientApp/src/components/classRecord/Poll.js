@@ -174,7 +174,7 @@ class Poll extends Component {
                     todayDate <= new Date(item.dataFim)){ 
                 console.log(4);  
               this.props.pollOptionSelectLockMethods.set_poll_4b_lock(false);
-              this.props.pollOptionSelectLockMethods.set_poll_2s_lock(false);
+              this.props.pollOptionSelectLockMethods.set_poll_1s_lock(false);
             }
         }}
 
