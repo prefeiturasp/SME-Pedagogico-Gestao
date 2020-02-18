@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DTO;
+using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO;
 using SME.Pedagogico.Gestao.Models.Authentication;
 using SME.Pedagogico.Gestao.WebApp.Contexts;
@@ -510,6 +511,13 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> LoginIdentity([FromBody]CredentialModel credential)
         {
+            //var api = new NovoSGPAPI();
+
+            //var ret = await api.Autenticar(credential.Username, credential.Password);
+
+            //if (ret == null)
+            //    return Unauthorized();
+
             var ProfileBusiness = new Profile(_config);
             var listOccupations = new Dictionary<string,string>();
             var userPrivileged = Authentication.ValidatePrivilegedUser(credential.Username);
