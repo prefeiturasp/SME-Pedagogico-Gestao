@@ -19,7 +19,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-
+using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP;
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
     [Authorize]
@@ -501,6 +501,118 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         {
             return (Ok(await Data.Business.Authentication.LogoutUser(credential.Username, credential.Session)));
         }
+
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<ActionResult<string>> LoginIdentityNovo([FromBody]CredentialModel credential)
+        {
+            var api = new NovoSGPAPI();
+
+            var ret = await api.Autenticar(credential.Username, credential.Password);
+
+            if (ret == null)
+                return Unauthorized();
+
+            
+
+             
+             
+
+            var listProfile = new Dictionary<string, string>();
+            //Escola 
+            listProfile.Add("Professor", "40E1E074-37D6-E911-ABD6-F81654FE895D");
+            listProfile.Add("CP", "44E1E074-37D6-E911-ABD6-F81654FE895D");
+            listProfile.Add("AD", "45E1E074-37D6-E911-ABD6-F81654FE895D");
+            listProfile.Add("Diretor", "46E1E074-37D6-E911-ABD6-F81654FE895D");
+            //DRE
+            listProfile.Add("ADM", "48E1E074-37D6-E911-ABD6-F81654FE895D");
+            listProfile.Add("DIPED", "49E1E074-37D6-E911-ABD6-F81654FE895D");
+            //SME
+            listProfile.Add("DIEFM", "58E1E074-37D6-E911-ABD6-F81654FE895D");
+            listProfile.Add("COPED", "59E1E074-37D6-E911-ABD6-F81654FE895D");
+            listProfile.Add("ADM-Sme", "5AE1E074-37D6-E911-ABD6-F81654FE895D");
+            listProfile.Add("ADM-Cotic", "5BE1E074-37D6-E911-ABD6-F81654FE895D");
+
+            var list = new List<PerfilDto>();
+
+            foreach (var item in listProfile)
+            {
+                var perfil = new PerfilDto();
+                perfil.NomePerfil = item.Key;
+                perfil.CodigoPerfil = Guid.Parse(item.Value);
+                list.Add(perfil);
+            }
+
+            foreach ( var intem in ret.PerfisUsuario.Perfis)
+            {
+
+            
+            var podeAcessar =  ret.PerfisUsuario.Perfis.ToList().Exists(a => a.CodigoPerfil == intem.CodigoPerfil); ;
+               if(!podeAcessar)
+                {
+                    return Forbid(); 
+                }
+
+
+            }
+            var ProfileBusiness = new Profile(_config);
+
+            var listOccupations = new Dictionary<string, string>();
+            var userPrivileged = Authentication.ValidatePrivilegedUser(credential.Username);
+
+            var occupationRF = await ProfileBusiness.GetOccupationsRF(credential.Username);
+
+            // Verifica se o usuario é cadastrado
+            if (Authentication.ValidateUser(credential.Username))
+            {
+                // Se sim verifica se usuario e senha estao corretos
+                if (!Authentication.ValidateUser(credential.Username, credential.Password))
+                {
+                    return (Unauthorized());
+                }
+            }
+            // usuario nao é cadastrado
+            else
+            {
+                if (userPrivileged == null && occupationRF == null)
+                {
+                    // se nao possui acesso a tabela e eol
+                    return (Unauthorized());
+                }
+                await Authentication.RegisterUser(credential.Username, credential.Password);
+            }
+            // Fluxo 2 
+            if (userPrivileged != null)
+            {
+                await Authentication.SetRolePrivilegied(credential, userPrivileged);
+            }
+            if (occupationRF != null)
+            {
+                listOccupations = await SetOccupationsRF(credential.Username, occupationRF);
+            }
+            var Roles = await GetUserRoles(credential.Username);
+            if (Roles != null)
+            {
+                string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
+                string refreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
+                await Data.Business.Authentication.LoginUser(credential.Username, session, refreshToken); // Loga o usuário no sistema
+
+                return (Ok(new
+                {
+                    Token = CreateToken(credential.Username),
+                    Session = session,
+                    RefreshToken = refreshToken,
+                    Roles = await GetUserRoles(credential.Username),
+                    ListOccupations = listOccupations,
+                }));
+            }
+            else
+            {
+                return (Unauthorized());
+            }
+        }
+
 
         /// <summary>
         /// Método para fazer login do usuário utilizando o sistema http://identity.sme.prefeitura.sp.gov.br.
