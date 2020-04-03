@@ -326,7 +326,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 var boolean = await SetRole(credential.Username, "Admin", "2");
             }
-
             else if (userPrivileged.OccupationPlaceCode == 3)
             {
                 await SetRole(credential.Username, "Adm DRE", "21");

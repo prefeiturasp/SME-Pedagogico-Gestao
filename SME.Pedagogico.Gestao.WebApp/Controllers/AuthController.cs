@@ -322,7 +322,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                             if (isTeacher)
                             {
 
-                                if(qtdIsTeacher == 1)
+                                if (qtdIsTeacher == 1)
                                 {
                                     var profileBusiness = new Profile(_config);
 
@@ -334,7 +334,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                                         ListcodeOcupations.Add(roleName, codigoCargoAtivo);
                                     }
                                 }
-                             
+
                             }
 
                             else
@@ -344,12 +344,12 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                             }
 
                         }
-                        catch (Exception ex )
+                        catch (Exception ex)
                         {
-                            throw ex ;
+                            throw ex;
                         }
                         //verifica se tem turma atribuida
-                       
+
                     }
                 }
             }
@@ -514,10 +514,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             if (ret == null)
                 return Unauthorized();
 
-            
-
-             
-             
 
             var listProfile = new Dictionary<string, string>();
             //Escola 
@@ -544,44 +540,49 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 list.Add(perfil);
             }
 
-            foreach ( var intem in ret.PerfisUsuario.Perfis)
+            foreach (var item in ret.PerfisUsuario.Perfis)
             {
-
-            
-            var podeAcessar =  ret.PerfisUsuario.Perfis.ToList().Exists(a => a.CodigoPerfil == intem.CodigoPerfil); ;
-               if(!podeAcessar)
+                var podeAcessar = ret.PerfisUsuario.Perfis.ToList().Exists(a => a.CodigoPerfil == item.CodigoPerfil);
+                if (!podeAcessar)
                 {
-                    return Forbid(); 
+                    return Forbid();
                 }
-
-
             }
+            // Regra professor se for apenas professor é necessário verificar o cargo, pois nem
+            // todos os professores podem acessar o cargo.
             var ProfileBusiness = new Profile(_config);
+          //  var occupationRF = await ProfileBusiness.GetOccupationsRF(credential.Username);
+           
+            
+
+            // pode acessar 
+
+
+
+            //se for apenas professor par aqui 
+
+
+            // Verifica se o usuario é cadastrado se nao for cadastra
+
+
+
+            await CadastraUsuario(credential);
+            /////////////////////////////////////////////////////////
+
+
+            // perfil automatico 
+           // var ProfileBusiness = new Profile(_config);
 
             var listOccupations = new Dictionary<string, string>();
-            var userPrivileged = Authentication.ValidatePrivilegedUser(credential.Username);
+             var userPrivileged = Authentication.ValidatePrivilegedUser(credential.Username);
 
             var occupationRF = await ProfileBusiness.GetOccupationsRF(credential.Username);
+            if (occupationRF != null)
+            {
+                listOccupations = await SetOccupationsRF(credential.Username, occupationRF);
+            }
 
-            // Verifica se o usuario é cadastrado
-            if (Authentication.ValidateUser(credential.Username))
-            {
-                // Se sim verifica se usuario e senha estao corretos
-                if (!Authentication.ValidateUser(credential.Username, credential.Password))
-                {
-                    return (Unauthorized());
-                }
-            }
-            // usuario nao é cadastrado
-            else
-            {
-                if (userPrivileged == null && occupationRF == null)
-                {
-                    // se nao possui acesso a tabela e eol
-                    return (Unauthorized());
-                }
-                await Authentication.RegisterUser(credential.Username, credential.Password);
-            }
+
             // Fluxo 2 
             if (userPrivileged != null)
             {
@@ -613,6 +614,15 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             }
         }
 
+        private static async Task CadastraUsuario(CredentialModel credential)
+        {
+            if (!Authentication.ValidateUser(credential.Username))
+            {
+                // se nao for cadastra
+                await Authentication.RegisterUser(credential.Username, credential.Password);
+            }
+        }
+
 
         /// <summary>
         /// Método para fazer login do usuário utilizando o sistema http://identity.sme.prefeitura.sp.gov.br.
@@ -631,7 +641,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             //    return Unauthorized();
 
             var ProfileBusiness = new Profile(_config);
-            var listOccupations = new Dictionary<string,string>();
+            var listOccupations = new Dictionary<string, string>();
             var userPrivileged = Authentication.ValidatePrivilegedUser(credential.Username);
 
             var occupationRF = await ProfileBusiness.GetOccupationsRF(credential.Username);
@@ -642,7 +652,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 // Se sim verifica se usuario e senha estao corretos
                 if (!Authentication.ValidateUser(credential.Username, credential.Password))
                 {
-                    return (Unauthorized());  
+                    return (Unauthorized());
                 }
             }
             // usuario nao é cadastrado
@@ -747,7 +757,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 if (Authentication.ResetSenhaPadrão(credential, out IEnumerable<string> validationErrors))
                 {
                     return Ok();
-                } else
+                }
+                else
                 {
                     return BadRequest(validationErrors);
                 }

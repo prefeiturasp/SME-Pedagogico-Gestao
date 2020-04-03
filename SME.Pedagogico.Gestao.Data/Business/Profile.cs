@@ -25,8 +25,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             try
             {
-                // Pensar num fluxo para que os perfis da cotic enxerguem com duas visualizações 
-                // já que quem esta na tabela de privilegios atualmente nao passa aqui.
+                
                
                 var profileApi = new PerfilSgpAPI(endPoint);
                 var occupations = await profileApi.GetCargosDeServidor(rf, _token);
