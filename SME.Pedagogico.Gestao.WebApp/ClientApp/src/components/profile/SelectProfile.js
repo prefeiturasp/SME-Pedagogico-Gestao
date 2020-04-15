@@ -27,6 +27,8 @@ class SelectProfile extends Component {
     }
 
     selectRole(event) {
+console.log(event);
+
         var roleName = event.target.innerText;
         var roles = this.props.user.roles;
 

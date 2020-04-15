@@ -97,12 +97,12 @@ class PollFilter extends Component {
          {
           var codeOccupations = this.props.user.listOccupations.Diretor
          }
-          
-     
+ 
       var profileOccupatios = {
           codigoRF: this.props.user.username,
           codigoCargo: codeOccupations,
           anoLetivo: anoAtual,
+          roleId: role.activeRole.roleId
       }
      
  

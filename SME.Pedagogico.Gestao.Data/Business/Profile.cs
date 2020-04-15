@@ -21,45 +21,42 @@ namespace SME.Pedagogico.Gestao.Data.Business
         }
 
         EndpointsAPI endPoint = new EndpointsAPI();
+
         public async Task<RetornoCargosServidorDTO> GetOccupationsRF(string rf)
         {
+            if (string.IsNullOrWhiteSpace(rf))
+                return null;
+
             try
             {
-                
-               
                 var profileApi = new PerfilSgpAPI(endPoint);
                 var occupations = await profileApi.GetCargosDeServidor(rf, _token);
                 string codigoCargoAtivo;
-                bool occupationAccess = false; ;
-                if (occupations != null)
-                {
-                    foreach (var occupation in occupations.cargos)
-                    {
-                        codigoCargoAtivo = RetornaCargoAtivo(occupation);
+                bool occupationAccess = false;
 
-                        if (codigoCargoAtivo == "3239" ||
-                            codigoCargoAtivo == "3301" ||
-                         // codigoCargoAtivo == "3336" ||
-                            codigoCargoAtivo == "3310" ||
-                            codigoCargoAtivo == "3379" ||
-                            codigoCargoAtivo == "3360")
-                        {
-                            occupationAccess = true;
-                            break;
-                        }
-                    }
-
-                    if (occupationAccess)
-                        return occupations;
-                    else
-                    {
-                        return null;
-                    }
-                }
-                else
-                {
+                if (occupations == null)
                     return null;
+
+                foreach (var occupation in occupations.cargos)
+                {
+                    codigoCargoAtivo = RetornaCargoAtivo(occupation);
+
+                    if (codigoCargoAtivo == "3239" ||
+                        codigoCargoAtivo == "3301" ||
+                        // codigoCargoAtivo == "3336" ||
+                        codigoCargoAtivo == "3310" ||
+                        codigoCargoAtivo == "3379" ||
+                        codigoCargoAtivo == "3360")
+                    {
+                        occupationAccess = true;
+                        break;
+                    }
                 }
+
+                if (!occupationAccess)
+                    return null;
+
+                return occupations;
             }
 
             catch (Exception ex)
@@ -68,7 +65,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public  string RetornaCargoAtivo(RetornoCargoDTO occupation)
+        public string RetornaCargoAtivo(RetornoCargoDTO occupation)
         {
             string codigoCargoAtivo;
             if (occupation.codigoCargoSobreposto != null)
@@ -163,7 +160,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 var endPoint = new EndpointsAPI();
                 var profileApi = new PerfilSgpAPI(endPoint);
-                var profileInformation = await profileApi.getInformacoesPerfil(codeRF, int.Parse(codeOccupations), int.Parse(schoolYear), _token);
+                var parseado = int.TryParse(codeOccupations, out int result);
+                var profileInformation = await profileApi.getInformacoesPerfil(codeRF, parseado ? result : 0, int.Parse(schoolYear), _token);
                 if (profileInformation != null)
                 {
                     return profileInformation;
@@ -189,7 +187,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 {
                     var user = db.PrivilegedAccess.Where(x => x.Login == userName).FirstOrDefault();
 
-                    if(!string.IsNullOrEmpty(user.DreCodeEol))
+                    if (user != null && !string.IsNullOrEmpty(user.DreCodeEol))
                     {
                         var dreApi = new DREAPI(endPoint);
                         return await dreApi.GetDresPorCodigo(user.DreCodeEol, _token);

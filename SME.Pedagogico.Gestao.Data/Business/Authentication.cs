@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MoreLinq.Extensions;
+using SME.Pedagogico.Gestao.Data.Contexts;
 using SME.Pedagogico.Gestao.Data.DataTransfer;
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.Enums;
@@ -74,6 +76,39 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             using (Data.Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
                 return (db.Users.Any(x => x.Name == username));
+        }
+
+        public static async Task SetPrivilegedAccess(string login, IEnumerable<PrivilegedAccess> lista)
+        {
+            using (SMEManagementContextData db = new SMEManagementContextData())
+            {
+                var listaBanco = db.PrivilegedAccess.Where(x => x.Login.Equals(login));
+
+                var listaDeletar = listaBanco.Where(x => !lista.Any(y => y.OccupationPlaceCode == x.OccupationPlaceCode));
+
+                var listaAdicionar = lista.Where(x => !listaBanco.Any(y => y.OccupationPlaceCode == x.OccupationPlaceCode));
+
+                if (!listaDeletar.Any() && !listaAdicionar.Any())
+                    return;
+
+                if (listaDeletar.Any())
+                {
+                    foreach (var deletar in listaDeletar)
+                    {
+                        db.PrivilegedAccess.Remove(deletar);
+                    }
+                }
+
+                if (listaAdicionar.Any())
+                {
+                    foreach (var adicionar in listaAdicionar)
+                    {
+                        db.PrivilegedAccess.Add(adicionar);
+                    }
+                }
+
+                await db.SaveChangesAsync();
+            }
         }
 
         public static PrivilegedAccessModel ValidatePrivilegedUser(string username)
@@ -212,7 +247,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 await db.SaveChangesAsync();
 
-                return (true);
+                return true;
             }
         }
 
@@ -249,57 +284,85 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
+        public static async Task setRoleAuthentication(string userName, IEnumerable<RoleAuthenticationDto> roles)
+        {
+            var listaBanco = await GetUserRoles(userName);
+
+            var listaAdicionar = roles.Where(role => !listaBanco.Any(banco => banco.Role.Name.Equals(role.RoleName)));
+
+            var listaRemover = listaBanco.Where(banco => !roles.Any(role => banco.Role.Name.Equals(role.RoleName)));
+
+            if (!listaAdicionar.Any() && !listaRemover.Any())
+                return;
+
+            if (listaAdicionar.Any())
+                foreach (var adicionar in listaAdicionar)
+                    await SetRole(adicionar.UserName, adicionar.RoleName, adicionar.AccessLevelValue);
+
+
+            if (listaRemover.Any())
+                foreach (var remover in listaRemover)
+                    await DeleteRole(remover);
+        }
+
+        public static async Task DeleteRole(UserRole role)
+        {
+            using (SMEManagementContextData db = new SMEManagementContextData())
+            {
+                db.UserRoles.Remove(role);
+                await db.SaveChangesAsync();
+            }
+        }
+
         public static async Task<bool> SetRole(string username, string roleName, string accessLevelValue)
         {
             using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
-                Models.Authentication.User user = await
+                var user = await
                     (from current in db.Users
-                     where current.Name == username
+                     where current.Name.Equals(username)
                      select current).FirstOrDefaultAsync();
 
-                if (user != null)
-                {
-                    Models.Authentication.Role role = await
-                        (from current in db.Roles
-                         where current.Name == roleName
-                         select current).FirstOrDefaultAsync();
+                if (user == null)
+                    return false;
 
-                    if (role != null)
-                    {
-                        Models.Authentication.AccessLevel accessLevel = await 
+                var role = await
+                         (from current in db.Roles
+                          where current.Name.Equals(roleName)
+                          select current).FirstOrDefaultAsync();
+
+                if (role == null)
+                    return false;
+
+                var accessLevel = await
                             (from current in db.AccessLevels
-                             where current.Value == accessLevelValue
+                             where current.Value.Equals(accessLevelValue)
                              select current).FirstOrDefaultAsync();
 
-                        if (accessLevel != null)
-                        {
-                            Models.Authentication.UserRole userRole = await
-                                (from current in db.UserRoles
-                                 where current.AccessLevelId == accessLevel.Id
-                                 && current.RoleId == role.Id
-                                 && current.UserId == user.Id
-                                 select current).FirstOrDefaultAsync();
+                if (accessLevel == null)
+                    return false;
 
-                            if (userRole == null)
-                            {
-                                userRole = new Models.Authentication.UserRole()
-                                {
-                                    User = user,
-                                    Role = role,
-                                    AccessLevel = accessLevel
-                                };
+                var userRole = await
+                        (from current in db.UserRoles
+                         where current.AccessLevelId.Equals(accessLevel.Id)
+                         && current.RoleId.Equals(role.Id)
+                         && current.UserId.Equals(user.Id)
+                         select current).FirstOrDefaultAsync();
 
-                                await db.UserRoles.AddAsync(userRole);
-                                await db.SaveChangesAsync();
-                            }
+                if (userRole != null)
+                    return true;
 
-                            return (true);
-                        }
-                    }
-                }
+                userRole = new Models.Authentication.UserRole()
+                {
+                    User = user,
+                    Role = role,
+                    AccessLevel = accessLevel
+                };
 
-                return (false);
+                await db.UserRoles.AddAsync(userRole);
+                await db.SaveChangesAsync();
+
+                return true;
             }
         }
 

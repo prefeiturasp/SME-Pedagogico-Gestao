@@ -42,7 +42,7 @@ const initialState = {
         dreCodeEol: null,
         schoolCodeEol: null,
         classroomCodeEol: null,
-        schoolYear: "2019",
+        schoolYear: null,
         yearClassroom: null,
     },
     newDataToSave: false,

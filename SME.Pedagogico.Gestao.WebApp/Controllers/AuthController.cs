@@ -20,6 +20,9 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP;
+using SME.Pedagogico.Gestao.Data.DataTransfer;
+using SME.Pedagogico.Gestao.WebApp.Models;
+
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
     [Authorize]
@@ -32,6 +35,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
         private IConfiguration _config; // Objeto para recuperar informações de configuração do arquivo appsettings.json
         private readonly SMEManagementContext _db; // Objeto context referente ao banco smeCoreDB
+        private readonly NovoSGPAPI _apiNovoSgp; //Objeto para comunicação com a API do Novo SGP
+        private readonly Profile _profile;
+        private readonly AbrangenciaAPI _abrangenciaAPI;
 
         #endregion ==================== ATTRIBUTES ====================
 
@@ -46,6 +52,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         {
             _config = config;
             _db = db;
+            _apiNovoSgp = new NovoSGPAPI();
+            _profile = new Profile(config);
+            _abrangenciaAPI = new AbrangenciaAPI();
         }
 
         #endregion ==================== CONSTRUCTORS ====================
@@ -327,7 +336,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                                     var profileBusiness = new Profile(_config);
 
 
-                                    var profileInformation = await profileBusiness.GetProfileEmployeeInformation(rf, codigoCargoAtivo, "2019");
+                                    var profileInformation = await profileBusiness.GetProfileEmployeeInformation(rf, codigoCargoAtivo, DateTime.Now.Year.ToString());
                                     if (profileInformation != null)
                                     {
                                         await Authentication.SetRole(rf, roleName, accessLevel);
@@ -349,7 +358,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                             throw ex;
                         }
                         //verifica se tem turma atribuida
-
                     }
                 }
             }
@@ -551,9 +559,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             // Regra professor se for apenas professor é necessário verificar o cargo, pois nem
             // todos os professores podem acessar o cargo.
             var ProfileBusiness = new Profile(_config);
-          //  var occupationRF = await ProfileBusiness.GetOccupationsRF(credential.Username);
-           
-            
+            //  var occupationRF = await ProfileBusiness.GetOccupationsRF(credential.Username);
+
+
 
             // pode acessar 
 
@@ -571,10 +579,10 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
 
             // perfil automatico 
-           // var ProfileBusiness = new Profile(_config);
+            // var ProfileBusiness = new Profile(_config);
 
             var listOccupations = new Dictionary<string, string>();
-             var userPrivileged = Authentication.ValidatePrivilegedUser(credential.Username);
+            var userPrivileged = Authentication.ValidatePrivilegedUser(credential.Username);
 
             var occupationRF = await ProfileBusiness.GetOccupationsRF(credential.Username);
             if (occupationRF != null)
@@ -633,67 +641,126 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> LoginIdentity([FromBody]CredentialModel credential)
         {
-            //var api = new NovoSGPAPI();
+            var retornoAutenticacao = await _apiNovoSgp.Autenticar(credential.Username, credential.Password);
 
-            //var ret = await api.Autenticar(credential.Username, credential.Password);
+            if (retornoAutenticacao == null || !retornoAutenticacao.Autenticado)
+                return Unauthorized("Usuário e/ou senha invalida");
 
-            //if (ret == null)
-            //    return Unauthorized();
+            var perfilSelecionado = Perfil.ObterPerfis().FirstOrDefault(x => retornoAutenticacao.PerfisUsuario.PerfilSelecionado == x.PerfilGuid);
+
+            if (perfilSelecionado == null)
+                return Unauthorized("Perfil não permitido para acesso");
+
+            if (retornoAutenticacao.ModificarSenha)
+                return Unauthorized("Você deve alterar a sua senha diretamente no Novo SGP");
+
+            //cadastra usuario se não existir
+            await CadastraUsuario(credential);
+
+            var meusDados = await _apiNovoSgp.MeusDados(retornoAutenticacao.Token);
+
+            if (meusDados == null)
+                return Unauthorized("Não foi possivel obter os dados do usuário. Contate a SME");
 
             var ProfileBusiness = new Profile(_config);
+
+            List<UserRoleModel> Roles = await GetRolesAuthentication(credential, retornoAutenticacao);
+
+            var privileged = new List<PrivilegedAccess>();
+
+            if (retornoAutenticacao.PerfisUsuario.PossuiPerfilDre)
+            {
+                var perfisDre = Perfil.ObterPerfis().Where(x => x.IsDre);
+
+                var perfilAbrangencia = perfisDre.FirstOrDefault(x => retornoAutenticacao.PerfisUsuario.Perfis.Any(z => z.CodigoPerfil.ToString().ToUpper().Equals(x.PerfilGuid.ToString().ToUpper())));
+
+                var abrangencia = await _abrangenciaAPI.ObterAbrangenciaCompactaDreDetalhes(retornoAutenticacao.Token, meusDados.CodigoRf, perfilAbrangencia.PerfilGuid);
+
+                if (abrangencia != null && abrangencia.Dres != null && abrangencia.Dres.Any())
+                    privileged = abrangencia.Dres.Select(x => new PrivilegedAccess
+                    {
+                        DreCodeEol = x.CodigoDRE,
+                        Login = credential.Username,
+                        Name = meusDados.Nome,
+                        OccupationPlace = x.NomeDRE,
+                        OccupationPlaceCode = 3
+                    }).ToList();
+
+                await Authentication.SetPrivilegedAccess(credential.Username, privileged);
+
+            }
+
+            if (retornoAutenticacao.PerfisUsuario.PossuiPerfilSme)
+            {
+                privileged.Add(new PrivilegedAccess
+                {
+                    Login = credential.Username,
+                    Name = meusDados.Nome,
+                    OccupationPlace = "SME",
+                    OccupationPlaceCode = 2
+                });
+
+                await Authentication.SetPrivilegedAccess(credential.Username, privileged);
+            }
+
             var listOccupations = new Dictionary<string, string>();
-            var userPrivileged = Authentication.ValidatePrivilegedUser(credential.Username);
+            var occupationRF = await ProfileBusiness.GetOccupationsRF(meusDados.CodigoRf);
 
-            var occupationRF = await ProfileBusiness.GetOccupationsRF(credential.Username);
-
-            // Verifica se o usuario é cadastrado
-            if (Authentication.ValidateUser(credential.Username))
-            {
-                // Se sim verifica se usuario e senha estao corretos
-                if (!Authentication.ValidateUser(credential.Username, credential.Password))
-                {
-                    return (Unauthorized());
-                }
-            }
-            // usuario nao é cadastrado
-            else
-            {
-                if (userPrivileged == null && occupationRF == null)
-                {
-                    // se nao possui acesso a tabela e eol
-                    return (Unauthorized());
-                }
-                await Authentication.RegisterUser(credential.Username, credential.Password);
-            }
-            // Fluxo 2 
-            if (userPrivileged != null)
-            {
-                await Authentication.SetRolePrivilegied(credential, userPrivileged);
-            }
             if (occupationRF != null)
-            {
                 listOccupations = await SetOccupationsRF(credential.Username, occupationRF);
-            }
-            var Roles = await GetUserRoles(credential.Username);
-            if (Roles != null)
-            {
-                string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
-                string refreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
-                await Data.Business.Authentication.LoginUser(credential.Username, session, refreshToken); // Loga o usuário no sistema
 
-                return (Ok(new
-                {
-                    Token = CreateToken(credential.Username),
-                    Session = session,
-                    RefreshToken = refreshToken,
-                    Roles = await GetUserRoles(credential.Username),
-                    ListOccupations = listOccupations,
-                }));
-            }
-            else
+            Roles = await GetUserRoles(credential.Username);
+
+            if (!Roles.Any())
+                return Unauthorized("Usuario não autorizado");
+
+            string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
+            string refreshToken = retornoAutenticacao.Token; // Usa token criado no novo SGP
+            await Data.Business.Authentication.LoginUser(credential.Username, session, refreshToken); // Loga o usuário no sistema
+
+            return Ok(new
             {
-                return (Unauthorized());
+                Token = CreateToken(credential.Username),
+                Session = session,
+                RefreshToken = refreshToken,
+                Roles,
+                ListOccupations = listOccupations,
+            });
+        }
+
+        private async Task<List<UserRoleModel>> GetRolesAuthentication(CredentialModel credential, UsuarioAutenticacaoRetornoDto retornoAutenticacao)
+        {
+            var perfis = new List<Perfil>();
+
+            var perfisPermitidos = Perfil.ObterPerfis().Where(x => !x.haveOccupationAccess);
+
+            foreach (var perfil in retornoAutenticacao.PerfisUsuario.Perfis)
+            {
+                var perfilString = perfil.CodigoPerfil.ToString().ToUpper();
+
+                foreach (var perfilPermitido in perfisPermitidos)
+                {
+                    var perfilPermitidoString = perfilPermitido.PerfilGuid.ToString().ToUpper();
+
+                    var iguais = perfilPermitidoString.Equals(perfilString);
+
+                    if (iguais)
+                        perfis.Add(perfilPermitido);
+                }
             }
+
+            //var perfis = Perfil.ObterPerfis().Where(x => retornoAutenticacao.PerfisUsuario.Perfis.Any(y => x.PerfilGuid.ToString().ToUpper().Equals(y.ToString().ToUpper())));
+
+            var rolesAuthentication = perfis.Select(x => new RoleAuthenticationDto
+            {
+                AccessLevelValue = x.AccessLevel,
+                RoleName = x.RoleName,
+                UserName = credential.Username
+            });
+
+            await Authentication.setRoleAuthentication(credential.Username, rolesAuthentication);
+
+            return await GetUserRoles(credential.Username);
         }
 
         /// <summary>

@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using SME.Pedagogico.Gestao.Models.Base.Abstracts;
+using System.Collections.Generic;
 
 namespace SME.Pedagogico.Gestao.Models.Authentication
 {
-    public class User : Base.Abstracts.NamedTable
+    public class User : NamedTable
     {
         #region ==================== ATTRIBUTES ====================
 

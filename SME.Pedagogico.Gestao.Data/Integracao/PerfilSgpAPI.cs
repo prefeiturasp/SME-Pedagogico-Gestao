@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO;
+using SME.Pedagogico.Gestao.Data.Utilitarios;
 
 namespace SME.Pedagogico.Gestao.Data.Integracao
 {
@@ -16,14 +17,13 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
             this.endpointsAPI = endpointsAPI;
         }
 
-
         public async Task<RetornoCargosServidorDTO> GetCargosDeServidor(string codigoRF, string token)
         {
             var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.BuscaCargosdeServidor);
 
             return await HttpHelper
                 .GetAsync<RetornoCargosServidorDTO>
-                      (token, string.Format(url, codigoRF));
+                      (token, string.Format(url, UtilCriptografia.ConverterBase64(codigoRF)));
         }
 
         public async Task<RetornoInfoPerfilDTO> getInformacoesPerfil(string codigoRF,
