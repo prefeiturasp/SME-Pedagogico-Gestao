@@ -9,6 +9,6 @@ namespace SME.Pedagogico.Gestao.Data.DTO
         public string codigoRF { get; set; }
         public string codigoCargo { get; set; }
         public string anoLetivo { get; set; }
-        public Guid roleId { get; set; }
+        public string roleId { get; set; }
     }
 }

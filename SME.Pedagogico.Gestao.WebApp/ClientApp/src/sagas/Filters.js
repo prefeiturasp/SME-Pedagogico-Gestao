@@ -69,6 +69,7 @@ function* GetFiltersTeacher({ profileOccupatios }) {
   try {
     const data = yield call(getTeacherFiltersApi, profileOccupatios);
     var filters = data;
+	console.log(data);
     yield put({ type: Filters.types.SET_FILTERS_TEACHER, filters });
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });

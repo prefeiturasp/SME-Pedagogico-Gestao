@@ -12,6 +12,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Models
         public string RoleName { get; set; }
         public bool IsTeacher { get; set; }
         public bool IsDre { get; set; }
+        public bool IsSme { get; set; }
         public bool haveOccupationAccess { get; set; }
 
         public static IEnumerable<Perfil> ObterPerfis()
@@ -25,7 +26,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Models
                     RoleName = "Professor",
                     haveOccupationAccess = true,
                     AccessLevel = "32",
-                    IsDre = false
+                    IsDre = false,
+                    IsSme = false
                 },
                 new Perfil
                 {
@@ -34,7 +36,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Models
                     RoleName = "CP",
                     haveOccupationAccess = true,
                     AccessLevel = "27",
-                    IsDre = false
+                    IsDre = false,
+                    IsSme = false
                 },
                 new Perfil
                 {
@@ -43,7 +46,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Models
                     RoleName = "Diretor",
                     haveOccupationAccess = true,
                     AccessLevel = "27",
-                    IsDre = false
+                    IsDre = false,
+                    IsSme = false
                 },
                 new Perfil
                 {
@@ -52,7 +56,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Models
                     RoleName = "AD",
                     haveOccupationAccess = false,
                     AccessLevel = "26",
-                    IsDre = false
+                    IsDre = false,
+                    IsSme = false
                 },
                 new Perfil
                 {
@@ -61,7 +66,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Models
                     RoleName = "Adm DRE",
                     haveOccupationAccess = false,
                     AccessLevel = "21",
-                    IsDre = true
+                    IsDre = true,
+                    IsSme = false
                 },
                 new Perfil
                 {
@@ -70,7 +76,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Models
                     RoleName = "DIPED",
                     haveOccupationAccess = false,
                     AccessLevel = "20",
-                    IsDre = true
+                    IsDre = true,
+                    IsSme = false
                 },
                 new Perfil
                 {
@@ -79,7 +86,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Models
                     RoleName = "DIEFEM",
                     haveOccupationAccess = false,
                     AccessLevel = "4",
-                    IsDre = false
+                    IsDre = false,
+                    IsSme = true
                 },
                 new Perfil
                 {
@@ -88,7 +96,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Models
                     RoleName = "COPED",
                     haveOccupationAccess = false,
                     AccessLevel = "3",
-                    IsDre = false
+                    IsDre = false,
+                    IsSme = true
                 },
                 new Perfil
                 {
@@ -97,7 +106,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Models
                     RoleName = "ADM SME",
                     haveOccupationAccess = false,
                     AccessLevel = "2",
-                    IsDre = false
+                    IsDre = false,
+                    IsSme = true
                 },
                 new Perfil
                 {
@@ -106,7 +116,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Models
                     RoleName = "ADM COTIC",
                     haveOccupationAccess = false,
                     AccessLevel = "1",
-                    IsDre = false
+                    IsDre = false,
+                    IsSme = true
                 }
             };
         }

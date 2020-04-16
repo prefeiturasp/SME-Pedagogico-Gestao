@@ -52,27 +52,24 @@ class PollFilter extends Component {
 
         this.props.filterMethods.setSchoolYear(anoAtual)
          
-
-         if(this.props.user.activeRole.roleName === ROLES_ENUM.ADM_DRE) 
+         if(ROLES_ENUM.IsDRE(this.props.user.activeRole.roleName)) 
          {
              var userName = this.props.user.username;
              this.props.filterMethods.getDreAdm(userName)
          }
  
-         else if (this.props.user.activeRole.roleName === ROLES_ENUM.ADMIN){
+         else if (ROLES_ENUM.IsSME(this.props.user.activeRole.roleName)){
              this.props.filterMethods.getListDres();
          }
        
        
-         else if (role.activeRole.roleName === ROLES_ENUM.PROFESSOR ||
-             role.activeRole.roleName === ROLES_ENUM.COORDENADOR_PEDAGOGICO ||
-             role.activeRole.roleName === ROLES_ENUM.DIRETOR) {
+         else if (ROLES_ENUM.IsUE(role.activeRole.roleName)) {
               
                 this.getProfileInformationProf(anoAtual);
                
          }
-         if (role.activeRole.roleName === ROLES_ENUM.DIRETOR ||
-             role.activeRole.roleName === ROLES_ENUM.ADM_DRE) {
+
+         if (ROLES_ENUM.ApenasRelatorios(role.activeRole.roleName)) {
              this.props.pollRouterMethods.setActiveRoute("Relatórios");
          }
     
@@ -85,24 +82,28 @@ class PollFilter extends Component {
  
          if(role.activeRole.roleName === ROLES_ENUM.PROFESSOR)
          {
-          var codeOccupations = this.props.user.listOccupations.Professor
+          var codeOccupations = this.props.user.listOccupations.Professor;
          }  
          
          else if(role.activeRole.roleName === ROLES_ENUM.COORDENADOR_PEDAGOGICO)
          {
-          var codeOccupations = this.props.user.listOccupations.CP
+          var codeOccupations = this.props.user.listOccupations.CP;
          }
  
          else if(role.activeRole.roleName === ROLES_ENUM.DIRETOR)
          {
-          var codeOccupations = this.props.user.listOccupations.Diretor
+          var codeOccupations = this.props.user.listOccupations.Diretor;
          }
- 
+
+         else if(role.activeRole.roleName === ROLES_ENUM.AD)
+         {
+             var codeOccupations =this.props.user.listOccupations.AD;
+         }
+    
       var profileOccupatios = {
           codigoRF: this.props.user.username,
           codigoCargo: codeOccupations,
           anoLetivo: anoAtual,
-          roleId: role.activeRole.roleId
       }
      
  
@@ -139,19 +140,15 @@ class PollFilter extends Component {
         // });
 
         this.props.filterMethods.getPeriod(label);
-      if (this.props.user.activeRole.roleName === ROLES_ENUM.ADMIN)
+
+      if (ROLES_ENUM.IsSME(this.props.user.activeRole.roleName))
        {
         this.props.filterMethods.getListDres();
        }
        else {
         this.getProfileInformationProf(label);  
        }
-      
-
-        
-        
- 
-        }
+    }
 
     selectedDreTeacher(event) {
         var index = event.nativeEvent.target.selectedIndex;
@@ -196,9 +193,8 @@ class PollFilter extends Component {
             listClassRoomTeacher = this.props.filters.filterTeachers.turmas.filter(x => x.codigoEscola === label)
         }
 
-        else if (this.props.user.activeRole.roleName === ROLES_ENUM.COORDENADOR_PEDAGOGICO ||
-            this.props.user.activeRole.roleName === ROLES_ENUM.DIRETOR ||
-            this.props.user.activeRole.roleName === ROLES_ENUM.ADM_DRE) {
+        else if ( ROLES_ENUM.IsUE(this.props.user.activeRole.roleName)||
+             ROLES_ENUM.IsDRE(this.props.user.activeRole.roleName)) {
             var classRoomFilter = {
                 schoolCodeEol: label,
                 schoolYear: this.props.filters.setSchoolYear,
@@ -377,9 +373,7 @@ class PollFilter extends Component {
         listYearsOptions.reverse();
 
         if (this.props.pollRouter.activeRoute !== "Sondagem") {
-            if (this.props.user.activeRole.roleName === ROLES_ENUM.ADMIN) {
-
-               
+            if (ROLES_ENUM.IsSME(this.props.user.activeRole.roleName)) {               
                 listDresOptions.push({ label: "Todas", value: "todas" });
             }
         }
@@ -448,8 +442,7 @@ class PollFilter extends Component {
                 }
             }
 
-            else if (this.props.user.activeRole.roleName === ROLES_ENUM.COORDENADOR_PEDAGOGICO ||
-                     this.props.user.activeRole.roleName === ROLES_ENUM.DIRETOR) 
+            else if (ROLES_ENUM.IsUE(this.props.user.activeRole.roleName)) 
              {
 
                 if (selectedSchool !== "todas" && this.props.filters.listClassRoom !== undefined) {

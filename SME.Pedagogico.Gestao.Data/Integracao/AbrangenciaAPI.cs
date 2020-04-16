@@ -16,11 +16,20 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
             endpointsAPI = new EndpointsAPI();
         }
 
-        public async Task<AbrangenciaCompactaDTO> ObterAbrangenciaCompactaDreDetalhes(string token,string rf, Guid perfil)
+        public async Task<AbrangenciaCompactaDTO> ObterAbrangenciaCompactaDreDetalhes(string token, string rf, Guid perfil)
         {
             var abranciaUrl = string.Format(endpointsAPI.AbrangenciaCompacta, rf, perfil.ToString());
 
             var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, abranciaUrl);
+
+            return await HttpHelper.GetAsync<AbrangenciaCompactaDTO>(token, url);
+        }
+
+        public async Task<AbrangenciaCompactaDTO> AbrangenciaCompactaSondagem(string token, string rf, Guid perfil)
+        {
+            var abrangenciaUrl = string.Format(endpointsAPI.AbrangenciaCompactaSondagem, rf, perfil.ToString());
+
+            var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, abrangenciaUrl);
 
             return await HttpHelper.GetAsync<AbrangenciaCompactaDTO>(token, url);
         }

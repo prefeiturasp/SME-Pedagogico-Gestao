@@ -366,6 +366,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
+        public static async Task<UserRole> GetUserRoleById(string id)
+        {
+            using (var db = new Contexts.SMEManagementContextData())
+            {
+                return await db.UserRoles.FirstOrDefaultAsync(x => x.Id.ToUpper().Equals(id.ToUpper()));
+            }
+        }
+
         public static async Task<List<Models.Authentication.UserRole>> GetUserRoles(string username)
         {
             using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())

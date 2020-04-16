@@ -6,8 +6,8 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.DTO
 {
     public class TurmaDTO
     {
-        public string codigo { get; set; }
-        public string nome { get; set; }
-        public string codigoEscola { get; set; }
+        public string Codigo { get; set; }
+        public string Nome { get; set; }
+        public string CodigoEscola { get; set; }
     }
 }
