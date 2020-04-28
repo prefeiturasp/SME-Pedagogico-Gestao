@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.Pedagogico.Gestao.Data"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D5DCC25E-21F9-4F88-B682-D3E03233425A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SME.Pedagogico.Gestao.ConsoleTeste", "SME.Pedagogico.Gestao.ConsoleTeste\SME.Pedagogico.Gestao.ConsoleTeste.csproj", "{D11D4C1E-BE70-467A-81AA-8CE288833AF9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.Pedagogico.Gestao.ConsoleTeste", "SME.Pedagogico.Gestao.ConsoleTeste\SME.Pedagogico.Gestao.ConsoleTeste.csproj", "{D11D4C1E-BE70-467A-81AA-8CE288833AF9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

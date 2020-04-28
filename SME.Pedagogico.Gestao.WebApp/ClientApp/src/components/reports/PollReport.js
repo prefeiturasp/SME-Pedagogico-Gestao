@@ -789,7 +789,7 @@ class PollReport extends Component {
       ) {
         chartData.totals = [];
         mathType = "consolidado";
-
+          
         for (var i = 0; i < chartData.chartIdeaData.length; i++) {
           indexes.push(i);
           chartData.totals.push({

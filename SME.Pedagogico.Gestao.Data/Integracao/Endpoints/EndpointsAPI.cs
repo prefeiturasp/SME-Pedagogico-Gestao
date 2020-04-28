@@ -13,6 +13,10 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
 
         public string BuscaAlunosNaTurma { get; set; } = "turmas/{0}/alunos/anosLetivos/{1}";
 
+        public string AbrangenciaCompacta { get; set; } = "abrangencia/compacta-vigente/{0}/perfil/{1}/DreDetalhes";
+
+        public string AbrangenciaCompactaSondagem { get; set; } = "abrangencia/compacta-vigente/{0}/perfil/{1}/Sondagem";
+
         public string BuscaCargos { get; set; } = "cargos";
 
         //professores/{codigoRF}/escolas/{codigoUE}/anos_letivos/{anoLetivo}
@@ -22,7 +26,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
         // Alunos da turma
 
         //perfis/servidores/{codigoRF}/cargos
-        public string BuscaCargosdeServidor { get; set; } = "perfis/servidores/{0}/cargos";
+        public string BuscaCargosdeServidor { get; set; } = "perfis/servidores/{0}/cargos/criptografado";
 
         //servidores/{codigoRF}/{codigoCargo}/{anoLetivo}/informacoes_perfil"
         public string BuscaInformacoesPerfil { get; set; } = "perfis/servidores/{0}/{1}/{2}/informacoes_perfil";

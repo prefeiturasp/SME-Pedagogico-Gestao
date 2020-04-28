@@ -33,7 +33,6 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
                 }
                 catch (Exception ex)
                 {
-
                     throw ex;
                 }
 

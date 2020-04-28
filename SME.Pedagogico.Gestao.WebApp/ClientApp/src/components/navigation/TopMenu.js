@@ -37,9 +37,7 @@ class TopMenu extends Component {
 
     componentWillMount() {
       
-        if (this.props.user.activeRole.roleName === ROLES_ENUM.PROFESSOR ||
-            this.props.user.activeRole.roleName === ROLES_ENUM.COORDENADOR_PEDAGOGICO ||
-            this.props.user.activeRole.roleName === ROLES_ENUM.ADMIN) {
+        if (ROLES_ENUM.EditarEConsultar(this.props.user.activeRole.roleName) || ROLES_ENUM.ApenasConsultas(this.props.user.activeRole.roleName)) {
            this.setVisiblePoll();
            this.changeRoutePoll();
 
@@ -90,7 +88,7 @@ class TopMenu extends Component {
 
                 <div id="logo-content-top-menu" className="d-flex justify-content-center align-items-center clickable">
                     <Link to="/">
-                        <img id="logo-top-menu" src="./img/RegistreSME_V3.svg" alt="Logo" />
+                        <img id="logo-top-menu" src="./img/Logotipo_SondagemSME.svg" alt="Logo" />
                     </Link>
                 </div>
 

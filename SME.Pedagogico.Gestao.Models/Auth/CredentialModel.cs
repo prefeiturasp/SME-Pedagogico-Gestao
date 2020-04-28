@@ -2,7 +2,8 @@
 {
     public class CredentialModel
     {
-        public string Username { get; set; }
+        private string _Username { get; set; }
+        public string Username { get { return _Username.Trim(); } set { _Username = value; } }
         public string Password { get; set; }
         public string Session { get; set; }
         public string RefreshToken { get; set; }

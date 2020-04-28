@@ -12,8 +12,8 @@ const AuthenticatedDashboardProfileRoute = ({ component: C, user, ...rest }) => 
 
         if (
           user.isAuthenticated &&
-          user.activeRole.roleName !== ROLES_ENUM.ADM_DRE && 
-          user.activeRole.roleName !== ROLES_ENUM.DIRETOR
+          (ROLES_ENUM.EditarEConsultar(user.activeRole.roleName) || 
+          ROLES_ENUM.ApenasConsultas(user.activeRole.roleName))
         ) {
           return (
             <Dashboard>
@@ -22,8 +22,7 @@ const AuthenticatedDashboardProfileRoute = ({ component: C, user, ...rest }) => 
           );
         } else if (
           user.isAuthenticated &&
-          ( user.activeRole.roleName === ROLES_ENUM.ADM_DRE |
-          user.activeRole.roleName === ROLES_ENUM.DIRETOR)
+          ROLES_ENUM.ApenasRelatorios(user.activeRole.roleName)
         ) {
           return <Redirect to={`/Relatorios/Sondagem`} />;
         } else if (!user.isAuthenticated)  {

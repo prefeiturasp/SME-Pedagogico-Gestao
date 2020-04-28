@@ -281,11 +281,11 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                             .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
                                             .ToList();
 
-                    CreateNumberItem(familiaresAgrupados, grupo: "Familiares", ref numbers, ref numberCharts);
+                    CreateNumberItem(familiaresAgrupados, grupo: "Familiares/Frequentes", ref numbers, ref numberCharts);
                     CreateNumberItem(opacosAgrupados, grupo: "Opacos", ref numbers, ref numberCharts);
                     CreateNumberItem(transparentesAgrupados, grupo: "Transparentes", ref numbers, ref numberCharts);
                     CreateNumberItem(terminamZeroAgrupados, grupo: "Terminam em zero", ref numbers, ref numberCharts);
-                    CreateNumberItem(algarismosAgrupados, grupo: "Algarismos", ref numbers, ref numberCharts);
+                    CreateNumberItem(algarismosAgrupados, grupo: "Algarismos iguais", ref numbers, ref numberCharts);
                     CreateNumberItem(processoAgrupados, grupo: "Processo de generalização", ref numbers, ref numberCharts);
                     CreateNumberItem(zeroIntercaladosAgrupados, grupo: "Zero intercalado", ref numbers, ref numberCharts);
 

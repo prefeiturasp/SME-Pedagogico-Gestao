@@ -7,7 +7,7 @@ namespace SME.Pedagogico.Gestao.Models.Authentication
 {
   public  class PrivilegedAccess : Table 
     {
-        public string  Name { get; set; }
+        public string Name { get; set; }
         public string Login { get; set; }
         public string OccupationPlace { get; set; }
         public int OccupationPlaceCode { get; set; }
