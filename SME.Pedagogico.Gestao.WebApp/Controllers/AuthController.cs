@@ -646,7 +646,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             if (retornoAutenticacao == null || !retornoAutenticacao.Autenticado)
                 return Unauthorized("Usuário e/ou senha invalida");
 
-            var perfilSelecionado = Perfil.ObterPerfis().FirstOrDefault(x => retornoAutenticacao.PerfisUsuario.PerfilSelecionado == x.PerfilGuid);
+            var perfisElegiveis = Perfil.ObterPerfis().Where(x => retornoAutenticacao.PerfisUsuario.Perfis.Any(y => y.CodigoPerfil.Equals(x.PerfilGuid)));
+
+            var perfilSelecionado = perfisElegiveis.FirstOrDefault(x => x.PerfilGuid.Equals(retornoAutenticacao.PerfisUsuario.PerfilSelecionado)) ?? perfisElegiveis.FirstOrDefault();
 
             if (perfilSelecionado == null)
                 return Unauthorized("Perfil não permitido para acesso");
