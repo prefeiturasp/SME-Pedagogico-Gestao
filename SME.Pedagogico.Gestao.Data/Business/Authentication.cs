@@ -50,10 +50,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                     await db.Users.AddAsync(user);
                     await db.SaveChangesAsync();
-
-                    if (user.Name == "daniel.amcom" || user.Name == "massato.amcom" || user.Name == "caique.amcom")
-                        await SetRole(user.Name, "Admin", "0");
-
+                    
                     return (true);
                 }
 
@@ -288,21 +285,20 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             var listaBanco = await GetUserRoles(userName);
 
-            var listaAdicionar = roles.Where(role => !listaBanco.Any(banco => banco.Role.Name.Equals(role.RoleName)));
+            var listaAdicionar = roles.Where(role => !listaBanco.Any(banco => banco.Role.Name.Equals(role.RoleName) && banco.PerfilId != null));
 
-            var listaRemover = listaBanco.Where(banco => !roles.Any(role => banco.Role.Name.Equals(role.RoleName)));
+            var listaRemover = listaBanco.Where(banco => banco.PerfilId == null || !roles.Any(role => banco.Role.Name.Equals(role.RoleName)));
 
             if (!listaAdicionar.Any() && !listaRemover.Any())
                 return;
 
-            if (listaAdicionar.Any())
-                foreach (var adicionar in listaAdicionar)
-                    await SetRole(adicionar.UserName, adicionar.RoleName, adicionar.AccessLevelValue);
-
-
             if (listaRemover.Any())
                 foreach (var remover in listaRemover)
                     await DeleteRole(remover);
+
+            if (listaAdicionar.Any())
+                foreach (var adicionar in listaAdicionar)
+                    await SetRole(adicionar.UserName, adicionar.RoleName, adicionar.AccessLevelValue, adicionar.Perfil);            
         }
 
         public static async Task DeleteRole(UserRole role)
@@ -314,7 +310,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public static async Task<bool> SetRole(string username, string roleName, string accessLevelValue)
+        public static async Task<bool> SetRole(string username, string roleName, string accessLevelValue, Guid perfil)
         {
             using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
@@ -347,6 +343,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                          where current.AccessLevelId.Equals(accessLevel.Id)
                          && current.RoleId.Equals(role.Id)
                          && current.UserId.Equals(user.Id)
+                         && current.PerfilId.Equals(perfil)
                          select current).FirstOrDefaultAsync();
 
                 if (userRole != null)
@@ -356,7 +353,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 {
                     User = user,
                     Role = role,
-                    AccessLevel = accessLevel
+                    AccessLevel = accessLevel,
+                    PerfilId = perfil
                 };
 
                 await db.UserRoles.AddAsync(userRole);
@@ -391,15 +389,15 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             if (userPrivileged.OccupationPlace == "AMCOM")
             {
-                var boolean = await SetRole(credential.Username, "Admin", "0");
+                var boolean = await SetRole(credential.Username, "Admin", "0", new Guid("5be1e074-37d6-e911-abd6-f81654fe895d"));
             }
             else if (userPrivileged.OccupationPlace == "SME")
             {
-                var boolean = await SetRole(credential.Username, "Admin", "2");
+                var boolean = await SetRole(credential.Username, "Admin", "2", new Guid("5ae1e074-37d6-e911-abd6-f81654fe895d"));
             }
             else if (userPrivileged.OccupationPlaceCode == 3)
             {
-                await SetRole(credential.Username, "Adm DRE", "21");
+                await SetRole(credential.Username, "Adm DRE", "21", new Guid("48e1e074-37d6-e911-abd6-f81654fe895d"));
             }
         }
 

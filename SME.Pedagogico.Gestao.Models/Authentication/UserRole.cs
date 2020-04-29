@@ -1,4 +1,6 @@
-﻿namespace SME.Pedagogico.Gestao.Models.Authentication
+﻿using System;
+
+namespace SME.Pedagogico.Gestao.Models.Authentication
 {
     public class UserRole : Base.Abstracts.Table
     {
@@ -12,6 +14,8 @@
 
         public string UserId { get; set; }
         public virtual User User { get; set; }
+
+        public Guid? PerfilId { get; set; }
 
         #endregion ==================== ATTRIBUTES ====================
     }

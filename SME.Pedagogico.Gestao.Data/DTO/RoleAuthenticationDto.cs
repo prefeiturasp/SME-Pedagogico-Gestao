@@ -9,5 +9,6 @@ namespace SME.Pedagogico.Gestao.Data.DTO
         public string UserName { get; set; }
         public string RoleName { get; set; }
         public string AccessLevelValue { get; set; }
+        public Guid Perfil { get; set; }
     }
 }

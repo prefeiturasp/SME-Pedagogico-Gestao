@@ -248,7 +248,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                      RoleName = current.Role.Name,
                      AccessLevelId = current.AccessLevelId,
                      AccessLevel = current.AccessLevel.Value,
-                     Description = current.AccessLevel.Description
+                     Description = current.AccessLevel.Description,
+                     PerfilId = current.PerfilId
                  }).ToList();
 
             return (userRoles);
@@ -336,10 +337,10 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                                     var profileBusiness = new Profile(_config);
 
 
-                                    var profileInformation = await profileBusiness.GetProfileEmployeeInformation(rf, codigoCargoAtivo, DateTime.Now.Year.ToString());
+                                    var profileInformation = await profileBusiness.GetProfileEmployeeInformation(rf, codigoCargoAtivo, DateTime.Now.Year.ToString(), default);
                                     if (profileInformation != null)
                                     {
-                                        await Authentication.SetRole(rf, roleName, accessLevel);
+                                        await Authentication.SetRole(rf, roleName, accessLevel, Perfil.ObterPerfis().FirstOrDefault(x => x.RoleName.Equals(roleName)).PerfilGuid);
                                         ListcodeOcupations.Add(roleName, codigoCargoAtivo);
                                     }
                                 }
@@ -348,7 +349,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
                             else
                             {
-                                await Authentication.SetRole(rf, roleName, accessLevel);
+                                await Authentication.SetRole(rf, roleName, accessLevel, Perfil.ObterPerfis().FirstOrDefault(x => x.RoleName.Equals(roleName)).PerfilGuid);
                                 ListcodeOcupations.Add(roleName, codigoCargoAtivo);
                             }
 
@@ -757,7 +758,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 AccessLevelValue = x.AccessLevel,
                 RoleName = x.RoleName,
-                UserName = credential.Username
+                UserName = credential.Username,
+                Perfil = x.PerfilGuid
             });
 
             await Authentication.setRoleAuthentication(credential.Username, rolesAuthentication);

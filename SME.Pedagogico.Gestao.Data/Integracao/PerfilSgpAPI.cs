@@ -28,9 +28,12 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
 
         public async Task<RetornoInfoPerfilDTO> getInformacoesPerfil(string codigoRF,
                                                      int codigoCargo,
-                                                     int anoLetivo, string token)
+                                                     int anoLetivo, string token, Guid? Perfil)
         {
             var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.BuscaInformacoesPerfil);
+
+            if (Perfil.HasValue)
+                url += $"?perfil={Perfil.Value}";
 
             return await HttpHelper
                 .GetAsync<RetornoInfoPerfilDTO>

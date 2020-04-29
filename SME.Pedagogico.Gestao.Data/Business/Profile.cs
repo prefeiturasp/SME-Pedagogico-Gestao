@@ -152,7 +152,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public async Task<RetornoInfoPerfilDTO> GetProfileEmployeeInformation(string codeRF, string codeOccupations, string schoolYear)
+        public async Task<RetornoInfoPerfilDTO> GetProfileEmployeeInformation(string codeRF, string codeOccupations, string schoolYear, Guid? Perfil)
         {
 
             try
@@ -161,7 +161,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var endPoint = new EndpointsAPI();
                 var profileApi = new PerfilSgpAPI(endPoint);
                 var parseado = int.TryParse(codeOccupations, out int result);
-                var profileInformation = await profileApi.getInformacoesPerfil(codeRF, parseado ? result : 0, int.Parse(schoolYear), _token);
+                var profileInformation = await profileApi.getInformacoesPerfil(codeRF, parseado ? result : 0, int.Parse(schoolYear), _token, Perfil);
                 if (profileInformation != null)
                 {
                     return profileInformation;
