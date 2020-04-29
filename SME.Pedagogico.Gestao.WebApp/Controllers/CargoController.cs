@@ -64,7 +64,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 //Necessário para gerar o Token temporariamente
                 var profileBusiness = new Profile(_config);
 
-                var profileInformation = await profileBusiness.GetProfileEmployeeInformation(codigoRF, codigoCargo, anoLetivo);
+                var profileInformation = await profileBusiness.GetProfileEmployeeInformation(codigoRF, codigoCargo, anoLetivo, occupationsProfile.activeRole?.PerfilId);
 
                 if (profileInformation != null)
                 {

@@ -18,6 +18,7 @@ function* LoginUserSaga({ credential }) {
             yield put({ type: User.types.FINISH_AUTHENTICATION_REQUEST });
         }
         else {
+
             var user = {
                 name: "",
                 username: credential.username,

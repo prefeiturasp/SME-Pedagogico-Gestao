@@ -248,7 +248,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                      RoleName = current.Role.Name,
                      AccessLevelId = current.AccessLevelId,
                      AccessLevel = current.AccessLevel.Value,
-                     Description = current.AccessLevel.Description
+                     Description = current.AccessLevel.Description,
+                     PerfilId = current.PerfilId
                  }).ToList();
 
             return (userRoles);
@@ -336,10 +337,10 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                                     var profileBusiness = new Profile(_config);
 
 
-                                    var profileInformation = await profileBusiness.GetProfileEmployeeInformation(rf, codigoCargoAtivo, DateTime.Now.Year.ToString());
+                                    var profileInformation = await profileBusiness.GetProfileEmployeeInformation(rf, codigoCargoAtivo, DateTime.Now.Year.ToString(), default);
                                     if (profileInformation != null)
                                     {
-                                        await Authentication.SetRole(rf, roleName, accessLevel);
+                                        await Authentication.SetRole(rf, roleName, accessLevel, Perfil.ObterPerfis().FirstOrDefault(x => x.RoleName.Equals(roleName)).PerfilGuid);
                                         ListcodeOcupations.Add(roleName, codigoCargoAtivo);
                                     }
                                 }
@@ -348,7 +349,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
                             else
                             {
-                                await Authentication.SetRole(rf, roleName, accessLevel);
+                                await Authentication.SetRole(rf, roleName, accessLevel, Perfil.ObterPerfis().FirstOrDefault(x => x.RoleName.Equals(roleName)).PerfilGuid);
                                 ListcodeOcupations.Add(roleName, codigoCargoAtivo);
                             }
 
@@ -646,7 +647,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             if (retornoAutenticacao == null || !retornoAutenticacao.Autenticado)
                 return Unauthorized("Usuário e/ou senha invalida");
 
-            var perfilSelecionado = Perfil.ObterPerfis().FirstOrDefault(x => retornoAutenticacao.PerfisUsuario.PerfilSelecionado == x.PerfilGuid);
+            var perfisElegiveis = Perfil.ObterPerfis().Where(x => retornoAutenticacao.PerfisUsuario.Perfis.Any(y => y.CodigoPerfil.Equals(x.PerfilGuid)));
+
+            var perfilSelecionado = perfisElegiveis.FirstOrDefault(x => x.PerfilGuid.Equals(retornoAutenticacao.PerfisUsuario.PerfilSelecionado)) ?? perfisElegiveis.FirstOrDefault();
 
             if (perfilSelecionado == null)
                 return Unauthorized("Perfil não permitido para acesso");
@@ -755,7 +758,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 AccessLevelValue = x.AccessLevel,
                 RoleName = x.RoleName,
-                UserName = credential.Username
+                UserName = credential.Username,
+                Perfil = x.PerfilGuid
             });
 
             await Authentication.setRoleAuthentication(credential.Username, rolesAuthentication);

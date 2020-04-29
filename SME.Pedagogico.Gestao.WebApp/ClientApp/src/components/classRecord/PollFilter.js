@@ -104,9 +104,9 @@ class PollFilter extends Component {
           codigoRF: this.props.user.username,
           codigoCargo: codeOccupations,
           anoLetivo: anoAtual,
+		  activeRole: this.props.user.activeRole
       }
-     
- 
+      
       this.props.filterMethods.getFilters_teacher(profileOccupatios);
  
      }
