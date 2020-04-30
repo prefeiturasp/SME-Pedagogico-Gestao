@@ -231,7 +231,7 @@ class PollFilter extends Component {
             classroom: "",
         });
 
-        if (label === "todas") {
+        if (label === "todas" || label === "Todas") {
             this.props.filterMethods.activeClassroom("");
             this.props.filterMethods.getClassroom({
                 schoolCodeEol: "",
@@ -373,6 +373,7 @@ class PollFilter extends Component {
         listYearsOptions.reverse();
 
         if (this.props.pollRouter.activeRoute !== "Sondagem") {
+			debugger;
             if (ROLES_ENUM.IsSME(this.props.user.activeRole.roleName)) {               
                 listDresOptions.push({ label: "Todas", value: "todas" });
             }

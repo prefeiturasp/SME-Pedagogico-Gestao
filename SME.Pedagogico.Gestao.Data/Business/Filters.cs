@@ -21,28 +21,19 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task<List<SalasPorUEDTO>> GetListClassRoomSchool(string schoolCodeEol, string schooYear)
         {
-            try
-            {
-                var endPoint = new EndpointsAPI();
-                var schoolApi = new EscolasAPI(endPoint);
-                var eolCodeParseado = int.TryParse(schoolCodeEol, out int result);
-                var listClassRoom = await schoolApi.GetTurmasPorEscola(eolCodeParseado ? result : 0 , schooYear, _token);
-              
-                if (listClassRoom != null)
-                {
-                    return listClassRoom.OrderBy(x=> x.NomeTurma).ToList();
-                }
+            var endPoint = new EndpointsAPI();
+            var schoolApi = new EscolasAPI(endPoint);
+            var eolCodeParseado = int.TryParse(schoolCodeEol, out int result);
 
-                else
-                {
-                    return null;
-                }
-            }
-            catch (System.Exception ex)
-            {
+            if (!eolCodeParseado || schoolCodeEol.Equals("0"))
+                return null;
 
-                throw ex;
-            }
+            var listClassRoom = await schoolApi.GetTurmasPorEscola(eolCodeParseado ? result : 0, schooYear, _token);
+
+            if (listClassRoom == null)
+                return default;
+
+            return listClassRoom.OrderBy(x => x.NomeTurma).ToList();
         }
 
         public async Task<List<EscolasPorDREDTO>> GetListSchoolDre(string dreCodeEol, string schooYear)
@@ -51,6 +42,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 var endPoint = new EndpointsAPI();
                 var schoolApi = new DREAPI(endPoint);
+
+                var parseado = int.TryParse(dreCodeEol, out int result);
+
+                if (!parseado || result == 0)
+                    return default;
+
                 var listSchools = await schoolApi.GetEscolasPorDREPorTipoEscola(dreCodeEol, "1", _token);
                 if (listSchools != null)
                 {
@@ -73,7 +70,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         public async Task<List<DREsDTO>> GetListDre()
         {
             try
-            { 
+            {
                 var endPoint = new EndpointsAPI();
                 var dreApi = new DREAPI(endPoint);
                 var listDres = await dreApi.GetDres(_token);

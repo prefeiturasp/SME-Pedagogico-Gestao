@@ -55,31 +55,58 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult> PerfilServidor(BuscaPerfilServidor occupationsProfile)
         {
-            try
+            string codigoRF = occupationsProfile.codigoRF;
+            string codigoCargo = occupationsProfile.codigoCargo;
+            string anoLetivo = occupationsProfile.anoLetivo;
+
+            //Necessário para gerar o Token temporariamente
+            var profileBusiness = new Profile(_config);
+
+            var profileInformation = await profileBusiness.GetProfileEmployeeInformation(codigoRF, codigoCargo, anoLetivo, occupationsProfile.activeRole?.PerfilId);
+
+            if (profileInformation == null)
+                return NoContent();
+
+            if (occupationsProfile.activeRole?.PerfilId != null)
             {
-                string codigoRF = occupationsProfile.codigoRF;
-                string codigoCargo = occupationsProfile.codigoCargo;
-                string anoLetivo = occupationsProfile.anoLetivo;
+                var perfil = Perfil.ObterPerfis().FirstOrDefault(x => x.PerfilGuid == occupationsProfile.activeRole.PerfilId);
 
-                //Necessário para gerar o Token temporariamente
-                var profileBusiness = new Profile(_config);
+                if (perfil == null || perfil.IsTeacher)
+                    Ok(profileInformation);
 
-                var profileInformation = await profileBusiness.GetProfileEmployeeInformation(codigoRF, codigoCargo, anoLetivo, occupationsProfile.activeRole?.PerfilId);
+                if (perfil.IsSme)
+                    AdicionarTodasDres(occupationsProfile, ref profileInformation);
 
-                if (profileInformation != null)
-                {
-                    return (Ok(profileInformation));
-                }
-                else
-                {
-                    return (NoContent());
-                }
-
+                AdicionarTodasUes(occupationsProfile, ref profileInformation);
             }
-            catch (Exception ex)
+
+            return Ok(profileInformation);
+        }
+
+        private static void AdicionarTodasDres(BuscaPerfilServidor occupationsProfile, ref RetornoInfoPerfilDTO profileInformation)
+        {
+            profileInformation.DREs.ToList().Insert(0, new RetornoDREDTO
             {
-                return StatusCode(500, ex);
-            }
+                Codigo = "todas",
+                Nome = "todas",
+                Sigla = "todas"
+            });
+        }
+
+        private static void AdicionarTodasUes(BuscaPerfilServidor occupationsProfile, ref RetornoInfoPerfilDTO profileInformation)
+        {
+            var escolas = profileInformation.Escolas.ToList();
+            var dres = profileInformation.DREs.ToList();
+
+            escolas.InsertRange(0, dres.Select(x => new RetornoEscolaDTO
+            {
+                Codigo = "todas",
+                CodigoDRE = x.Codigo,
+                Nome = "todas",
+                Sigla = "todas"
+            }));
+
+            profileInformation.Escolas = escolas.ToHashSet();
         }
 
         private async Task<ActionResult> ObterProfileEmployeeInformationSME(BuscaPerfilServidor occupationsProfile, Perfil perfilSelecionado)

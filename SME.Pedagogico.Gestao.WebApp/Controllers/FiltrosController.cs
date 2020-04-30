@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.Integracao;
+using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using System;
 using System.Collections.Generic;
@@ -44,7 +45,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 //Necessário para gerar o Token temporariamente
                 var filterBusiness = new Filters(_config);
-                var listClassRoom =  await filterBusiness.GetListClassRoomSchool(classrooms.schoolCodeEol, classrooms.schoolYear);
+
+                var listClassRoom = await filterBusiness.GetListClassRoomSchool(classrooms.schoolCodeEol, classrooms.schoolYear);
 
                 if (listClassRoom != null)
                 {
@@ -74,8 +76,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 //Necessário para gerar o Token temporariamente
                 var filterBusiness = new Filters(_config);
-                var listSchool =  await filterBusiness.GetListSchoolDre(schoolFilters.dreCodeEol, schoolFilters.schoolYear);
-
+                var listSchool = await filterBusiness.GetListSchoolDre(schoolFilters.dreCodeEol, schoolFilters.schoolYear);
+                
                 if (listSchool != null)
                 {
                     return (Ok(listSchool));
