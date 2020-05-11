@@ -72,12 +72,13 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 var perfil = Perfil.ObterPerfis().FirstOrDefault(x => x.PerfilGuid == occupationsProfile.activeRole.PerfilId);
 
                 if (perfil == null || perfil.IsTeacher)
-                    Ok(profileInformation);
+                    return Ok(profileInformation);
 
-                if (perfil.IsSme)
+                if (perfil.IsSme && profileInformation.DREs.Count > 1)
                     AdicionarTodasDres(occupationsProfile, ref profileInformation);
 
-                AdicionarTodasUes(occupationsProfile, ref profileInformation);
+                if (profileInformation.Escolas.Count > 1)
+                    AdicionarTodasUes(occupationsProfile, ref profileInformation);
             }
 
             return Ok(profileInformation);

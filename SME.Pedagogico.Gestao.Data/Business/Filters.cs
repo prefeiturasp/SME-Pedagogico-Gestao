@@ -33,7 +33,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             if (listClassRoom == null)
                 return default;
 
-            return listClassRoom.OrderBy(x => x.NomeTurma).ToList();
+            return listClassRoom.Distinct().OrderBy(x => x.NomeTurma).ToList();
         }
 
         public async Task<List<EscolasPorDREDTO>> GetListSchoolDre(string dreCodeEol, string schooYear)
