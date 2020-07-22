@@ -9,7 +9,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
         private string baseEndPoint = "";
         private string buscaAlunosNaTurma = "";
 
-        public string BaseEndpoint { get; set; } = "http://dev.smeintegracaoapi.sme.prefeitura.sp.gov.br/api/"; //"https://localhost:44377/api/";
+        public string BaseEndpoint { get; set; } = "http://dev-smeintegracaoapi.sme.prefeitura.sp.gov.br/api/"; //"https://localhost:44377/api/";
 
         public string BuscaAlunosNaTurma { get; set; } = "turmas/{0}/alunos/anosLetivos/{1}";
 
