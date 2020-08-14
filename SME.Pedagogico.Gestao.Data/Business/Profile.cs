@@ -37,14 +37,20 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 if (occupations == null)
                     return null;
 
+                var temAcesso = await profileApi.VerificaSeProfessorTemAcesso(rf, _token);
+                if (occupations != null && temAcesso)
+                {
+                    var cargoProfessor = new RetornoCargoDTO();
+                    cargoProfessor.codigoCargo = "3239";
+                    cargoProfessor.nomeCargo = "Professor";
+                    occupations.cargos.Add(cargoProfessor);
+                }
+
                 foreach (var occupation in occupations.cargos)
                 {
                     codigoCargoAtivo = RetornaCargoAtivo(occupation);
 
-                    if (codigoCargoAtivo == "3239" ||
-                        codigoCargoAtivo == "3301" ||
-                        // codigoCargoAtivo == "3336" ||
-                        codigoCargoAtivo == "3310" ||
+                    if (
                         codigoCargoAtivo == "3379" ||
                         codigoCargoAtivo == "3360")
                     {
@@ -52,10 +58,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         break;
                     }
                 }
-
-                if (!occupationAccess)
-                    return null;
-
                 return occupations;
             }
 
@@ -64,6 +66,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 return null;
             }
         }
+
+
 
         public string RetornaCargoAtivo(RetornoCargoDTO occupation)
         {
