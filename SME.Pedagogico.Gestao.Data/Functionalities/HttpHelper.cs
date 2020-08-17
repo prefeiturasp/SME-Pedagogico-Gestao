@@ -9,6 +9,8 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
 {
     internal static class HttpHelper
     {
+        private const String API_EOL_KEY_ENV = "ApiKeyEolApi";
+        private const String API_EOL_KEY_HEADER = "x-api-eol-key";
         //private readonly HttpClient _httpClient;
         //private Uri BaseEndpoint { get; set; }
 
@@ -57,7 +59,9 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
 
         private static void AddHeaders(string token, HttpClient client)
         {
+            var apiKey = Environment.GetEnvironmentVariable(API_EOL_KEY_ENV);
             client.DefaultRequestHeaders.Add("token", token);
+            client.DefaultRequestHeaders.Add(API_EOL_KEY_HEADER, apiKey);
         }
 
         internal static string ConstroiURL(string baseURL, string endpoint)
