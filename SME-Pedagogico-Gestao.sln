@@ -16,6 +16,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.Pedagogico.Gestao.Data", "SME.Pedagogico.Gestao.Data\SME.Pedagogico.Gestao.Data.csproj", "{2F3C857C-1CE1-4688-9FB1-FEABF0273B8E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D5DCC25E-21F9-4F88-B682-D3E03233425A}"
+	ProjectSection(SolutionItems) = preProject
+		SME.Pedagogico.Gestao.WebApp\Dockerfile.original = SME.Pedagogico.Gestao.WebApp\Dockerfile.original
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.Pedagogico.Gestao.ConsoleTeste", "SME.Pedagogico.Gestao.ConsoleTeste\SME.Pedagogico.Gestao.ConsoleTeste.csproj", "{D11D4C1E-BE70-467A-81AA-8CE288833AF9}"
 EndProject
