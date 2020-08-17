@@ -297,12 +297,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                             isTeacher = true;
                             qtdIsTeacher += 1;
                             break;
-                        //case "3336":
-                        //    roleName = "Professor";
-                        //    accessLevel = "32";
-                        //    haveOccupationAccess = true;
-                        //    isTeacher = true;
-                        //    break;
                         case "3310":
                             roleName = "Professor";
                             accessLevel = "32";
