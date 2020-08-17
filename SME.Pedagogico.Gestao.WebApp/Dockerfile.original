@@ -8,7 +8,7 @@ FROM microsoft/dotnet:2.2-sdk AS build
 COPY ["SME.Pedagogico.Gestao.Data/SME.Pedagogico.Gestao.Data.csproj", "/SME.Pedagogico.Gestao.Data/"]
 COPY ["SME.Pedagogico.Gestao.Models/SME.Pedagogico.Gestao.Models.csproj", "SME.Pedagogico.Gestao.Models/"]
 COPY ["SME.Pedagogico.Gestao.WebApp/SME.Pedagogico.Gestao.WebApp.csproj", "SME.Pedagogico.Gestao.WebApp/"]
-COPY ["SME.Pedagogico.Gestao.ConsoleTeste/SME.Pedagogico.Gestao.ConsoleTeste.csproj", SME.Pedagogico.Gestao.ConsoleTeste/"]
+COPY ["SME.Pedagogico.Gestao.ConsoleTeste/SME.Pedagogico.Gestao.ConsoleTeste.csproj", "SME.Pedagogico.Gestao.ConsoleTeste/"]
 RUN dotnet restore "SME.SGP.Api/SME.SGP.Api.csproj"
 COPY . .
 WORKDIR "/SME.Pedagogico.Gestao.WebApp"
