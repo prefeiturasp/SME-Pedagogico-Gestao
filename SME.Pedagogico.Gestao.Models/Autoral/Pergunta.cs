@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using SME.Pedagogico.Gestao.Models.Base.Abstracts;
 
 namespace SME.Pedagogico.Gestao.Models.Autoral
 {
-    public class Pergunta
+    public class Pergunta : Table
     {
-        public Guid Id   { get; set; }
         public string Descricao { get; set; }
         public int Ordenacao { get; set; }
         public ComponenteCurricular ComponenteCurricular { get; set; }

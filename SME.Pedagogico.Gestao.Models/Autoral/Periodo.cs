@@ -2,12 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using SME.Pedagogico.Gestao.Models.Base.Abstracts;
 
 namespace SME.Pedagogico.Gestao.Models.Autoral
 {
-    public class Periodo
+    public class Periodo : Table
     {
-        public Guid Id { get; set; }
         public string Descricao { get; set; }
         public TipoPeriodoEnum TipoPeriodo { get; set; }
     }
