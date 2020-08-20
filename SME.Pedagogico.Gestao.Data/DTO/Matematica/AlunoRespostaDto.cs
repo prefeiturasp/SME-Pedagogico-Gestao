@@ -6,7 +6,7 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Matematica
 {
     public class AlunoRespostaDto
     {
-        public Guid Pergunta { get; set; }
-        public Guid? Resposta { get; set; }
+        public string Pergunta { get; set; }
+        public string Resposta { get; set; }
     }
 }

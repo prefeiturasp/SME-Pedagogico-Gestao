@@ -7,8 +7,8 @@ namespace SME.Pedagogico.Gestao.Models.Autoral
 {
     public class OrdemPergunta : Table
     {
-        public Ordem Ordem { get; set; }
-        public Pergunta Pergunta { get; set; }
+        public virtual Ordem Ordem { get; set; }
+        public virtual Pergunta Pergunta { get; set; }
         public bool Excluido { get; set; }
     }
 }

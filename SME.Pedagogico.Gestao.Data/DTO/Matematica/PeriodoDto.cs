@@ -8,7 +8,7 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Matematica
 {
     public class PeriodoDto
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Descricao { get; set; }
 
         public static explicit operator PeriodoDto(Periodo periodo) =>

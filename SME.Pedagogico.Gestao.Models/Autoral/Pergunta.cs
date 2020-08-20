@@ -9,7 +9,7 @@ namespace SME.Pedagogico.Gestao.Models.Autoral
     {
         public string Descricao { get; set; }
         public int Ordenacao { get; set; }
-        public ComponenteCurricular ComponenteCurricular { get; set; }
+        public virtual ComponenteCurricular ComponenteCurricular { get; set; }
         public bool Excluido { get; set; }
     }
 }
