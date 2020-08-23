@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SME.Pedagogico.Gestao.Models.Autoral;
 
 namespace SME.Pedagogico.Gestao.Data.Contexts
 {
@@ -18,6 +19,16 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
         public DbSet<Models.Academic.MathPoolCM> MathPoolCMs { get; set; }
         public DbSet<Models.Academic.MathPoolCA> MathPoolCAs { get; set; }
         public DbSet<Models.Academic.MathPoolNumber> MathPoolNumbers { get; set; }
+        public DbSet<ComponenteCurricular> ComponenteCurricular { get; set; }
+        public DbSet<Pergunta> Pergunta { get; set; }
+        public DbSet<Resposta> Resposta { get; set; }
+        public DbSet<PerguntaResposta> PerguntaResposta { get; set; }
+        public DbSet<PerguntaAnoEscolar> PerguntaAnoEscolar { get; set; }
+        public DbSet<Grupo> Grupo { get; set; }
+        public DbSet<Ordem> Ordem { get; set; }
+        public DbSet<OrdemPergunta> OrdemPergunta { get; set; }
+        public DbSet<Periodo> Periodo { get; set; }
+        public DbSet<SondagemAutoral> SondagemAutoral { get; set; }
 
         #endregion ---------- Academic ----------
 
