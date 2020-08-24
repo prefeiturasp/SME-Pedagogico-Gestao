@@ -9,6 +9,7 @@ using SME.Pedagogico.Gestao.WebApp.Models;
 using SME.Pedagogico.Gestao.WebApp.Models.ClassRoom;
 using System.Linq;
 using SME.Pedagogico.Gestao.Data.DataTransfer;
+using SME.Pedagogico.Gestao.Data.Business;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
@@ -22,6 +23,13 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         {
 
             _config = config;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ListarGrupos()
+        {
+            var sondagemAutoralBll = new SondagemAutoralBusiness(_config);
+           return Ok(sondagemAutoralBll.ListarGrupos());
         }
 
 

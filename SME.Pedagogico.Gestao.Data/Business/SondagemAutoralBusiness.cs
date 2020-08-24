@@ -21,13 +21,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
             _token = createToken.CreateTokenProvisorio();
         }
 
+
         public IEnumerable<PerguntaDto> ObterPerguntas(int anoEscolar)
         {
             using (var contexto = new SMEManagementContextData())
             {
                 try
                 {
-                               
+
                     var perguntas = contexto.PerguntaAnoEscolar.Where(perguntaAnoEscolar => perguntaAnoEscolar.AnoEscolar == anoEscolar).Select(x => MapearPergunta(x));
 
                     if (perguntas == null || !perguntas.Any())
@@ -140,6 +141,15 @@ namespace SME.Pedagogico.Gestao.Data.Business
             retorno.Ordenacao = perguntaAnoEscolar.Ordenacao;
 
             return retorno;
+        }
+
+
+        public IEnumerable<Grupo> ListarGrupos()
+        {
+            using (var contexto = new SMEManagementContextData())
+            {
+                return contexto.Grupo.ToList();
+            }
         }
     }
 }
