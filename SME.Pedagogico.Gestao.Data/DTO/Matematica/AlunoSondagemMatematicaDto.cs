@@ -9,7 +9,6 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Matematica
         public string Id { get; set; }
         public string CodigoAluno { get; set; }
         public string NomeAluno { get; set; }
-        public string PeriodoId { get; set; }
         public string CodigoTurma { get; set; }
         public string CodigoDre { get; set; }
         public string CodigoUe { get; set; }

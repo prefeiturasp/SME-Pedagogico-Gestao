@@ -90,7 +90,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     // var listStudentsClassRoom = studentsClassRoom.MockListaChamada();
                     var endpointsAPI = new EndpointsAPI();
 
-                    var turmApi = new TurmasAPI(endpointsAPI);
+                    var 
+                        
+                        = new TurmasAPI(endpointsAPI);
 
                     var listStudentsClassRoom = await turmApi.GetAlunosNaTurma(Convert.ToInt32(classRoom.classroomCodeEol), Convert.ToInt32(classRoom.schoolYear), _token);
 

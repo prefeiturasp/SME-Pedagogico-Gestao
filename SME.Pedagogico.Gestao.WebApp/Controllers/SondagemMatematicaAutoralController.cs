@@ -4,18 +4,40 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.Business;
+using SME.Pedagogico.Gestao.Data.DTO.Matematica;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
     [Produces("application/json")]
-    [Route("api/[controller]/[action]")]
+    [Route("api/SondagemAutoral/[action]")]
     [ApiController]
     public class SondagemMatematicaAutoralController : ControllerBase
     {
-        public IActionResult Teste()
+        private SondagemAutoralBusiness sondagemAutoralBusiness;
+
+        public SondagemMatematicaAutoralController(IConfiguration configuration)
         {
-            //return Ok(SondagemAutoralBusiness.ObterPerguntas(7));
+            sondagemAutoralBusiness = new SondagemAutoralBusiness(configuration);
+        }
+
+        [HttpGet("Matematica/Periodos")]
+        public IActionResult ObterPeriodos()
+        {
+            return Ok(sondagemAutoralBusiness.ObterPeriodoMatematica());
+        }
+
+        [HttpGet("Matematica/Perguntas")]
+        public IActionResult ObterPerguntas([FromQuery]int anoEscolar)
+        {
+            return Ok(sondagemAutoralBusiness.ObterPerguntas(anoEscolar));
+        }
+
+        [HttpGet("Matematica")]
+        public IActionResult ObterSondagemAutoral([FromQuery]FiltrarListagemDto filtrarListagemDto)
+        {
+            return Ok(sondagemAutoralBusiness.ObterListagemAutoral(filtrarListagemDto));
         }
     }
 }
