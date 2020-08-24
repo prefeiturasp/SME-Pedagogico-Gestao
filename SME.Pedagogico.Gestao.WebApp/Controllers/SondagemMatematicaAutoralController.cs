@@ -13,9 +13,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
     [ApiController]
     public class SondagemMatematicaAutoralController : ControllerBase
     {
-        public IActionResult Teste()
-        {
-            //return Ok(SondagemAutoralBusiness.ObterPerguntas(7));
-        }
+     
     }
 }

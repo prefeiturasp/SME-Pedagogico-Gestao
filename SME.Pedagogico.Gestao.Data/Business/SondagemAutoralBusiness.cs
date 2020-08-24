@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using MoreLinq;
 using SME.Pedagogico.Gestao.Data.Contexts;
 using SME.Pedagogico.Gestao.Data.DTO;
@@ -24,32 +25,43 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             using (var contexto = new SMEManagementContextData())
             {
-                var perguntas = contexto.PerguntaAnoEscolar.Where(perguntaAnoEscolar => perguntaAnoEscolar.AnoEscolar == anoEscolar).Select(x => MapearPergunta(x));
-
-                if (perguntas == null || !perguntas.Any())
-                    throw new Exception("Não foi possivel obter as perguntas da sondagem");
-
-                var perguntasResposta = contexto.PerguntaResposta.Where(resposta => perguntas.Any(z => z.Id.Equals(resposta.Pergunta.Id)));
-
-                if (perguntas == null || !perguntas.Any())
-                    throw new Exception("Não foi possivel obter as respostas da sondagem");
-
-                perguntas.ForEach(pergunta =>
+                try
                 {
-                    var respostasDaPergunta = perguntasResposta.Where(perguntaResposta => perguntaResposta.Pergunta.Id.Equals(pergunta.Id));
+                               
+                    var perguntas = contexto.PerguntaAnoEscolar.Where(perguntaAnoEscolar => perguntaAnoEscolar.AnoEscolar == anoEscolar).Select(x => MapearPergunta(x));
 
-                    if (respostasDaPergunta == null || !respostasDaPergunta.Any())
-                        throw new Exception($"Não foi possivel obter as respostas da pergunta '{pergunta.Descricao}'");
+                    if (perguntas == null || !perguntas.Any())
+                        throw new Exception("Não foi possivel obter as perguntas da sondagem");
 
-                    pergunta.Respostas = respostasDaPergunta.Select(perguntaResposta => new RespostaDto
+                    var perguntasResposta = contexto.PerguntaResposta.Where(resposta => perguntas.Any(z => z.Id.Equals(resposta.Pergunta.Id)));
+
+                    if (perguntas == null || !perguntas.Any())
+                        throw new Exception("Não foi possivel obter as respostas da sondagem");
+
+                    perguntas.ForEach(pergunta =>
                     {
-                        Descricao = perguntaResposta.Resposta.Descricao,
-                        Id = perguntaResposta.Resposta.Id,
-                        Ordenacao = perguntaResposta.Ordenacao
-                    });
-                });
+                        var respostasDaPergunta = perguntasResposta.Where(perguntaResposta => perguntaResposta.Pergunta.Id.Equals(pergunta.Id));
 
-                return perguntas;
+                        if (respostasDaPergunta == null || !respostasDaPergunta.Any())
+                            throw new Exception($"Não foi possivel obter as respostas da pergunta '{pergunta.Descricao}'");
+
+                        pergunta.Respostas = respostasDaPergunta.Select(perguntaResposta => new RespostaDto
+                        {
+                            Descricao = perguntaResposta.Resposta.Descricao,
+                            Id = perguntaResposta.Resposta.Id,
+                            Ordenacao = perguntaResposta.Ordenacao
+                        });
+                    });
+
+                    return perguntas;
+                }
+
+
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
             }
         }
 
