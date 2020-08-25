@@ -1,46 +1,47 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using SME.Pedagogico.Gestao.WebApp.Models.ClassRoom;
-using SME.Pedagogico.Gestao.Data.DataTransfer;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.Business;
+using SME.Pedagogico.Gestao.Data.DataTransfer;
+using SME.Pedagogico.Gestao.Data.DataTransfer.Portugues;
+using SME.Pedagogico.Gestao.WebApp.Models.ClassRoom;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
-    [Produces("application/json")]
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class SondagemPortuguesController : ControllerBase
+    public class SondagemPortuguesAutoralController : ControllerBase
     {
-        public IConfiguration _config;
-        public SondagemPortuguesController(IConfiguration config)
-        {
 
+        public readonly IConfiguration _config;
+
+
+        public SondagemPortuguesAutoralController(IConfiguration config)
+        {
             _config = config;
         }
 
-   
 
-        [HttpPost]
-        public async Task<ActionResult> IncluirSondagemPortugues(List<StudentPollPortuguese> ListStudentPollPortuguese)
+        [HttpGet]
+        public async Task<ActionResult> ListarGrupos()
         {
-            try
-            {
-                var BusinessPollPortuguese = new Data.Business.PollPortuguese(_config);
-                BusinessPollPortuguese.InsertPollPortuguese(ListStudentPollPortuguese);
-
-                return (Ok());
-            }
-            catch (System.Exception ex)
-            {
-                return StatusCode(500, ex);
-            }
-
+            var sondagemAutoralBll = new PollPortuguese(_config);
+            return Ok(sondagemAutoralBll.ListarGrupos());
         }
 
+        public async Task<ActionResult> ListarOrdens()
+        {
+            var sondagemAutoralBll = new PollPortuguese(_config);
+            return Ok(sondagemAutoralBll.ListarOrdens());
+        }
+
+        // IncluirSondagemPortugues
         [HttpPost]
-        public async Task<ActionResult> ListarSondagemPortugues(ClassRoomModel classRoomModel)
+        public async Task<ActionResult> ListarSondagemPortugues(FiltrosPortuguesAutoralDTO classRoomModel)
         {
             try
             {
@@ -51,12 +52,13 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     schoolCodeEol = classRoomModel.schoolCodeEol,
                     schoolYear = classRoomModel.schoolYear,
                     yearClassroom = classRoomModel.yearClassroom
+                    
                 };
 
                 var BusinessPoll = new Data.Business.PollPortuguese(_config);
                 var ListStudentPollPortuguese = await BusinessPoll.ListStudentPollPortuguese(classRoomDataTransfer);
 
-                if(ListStudentPollPortuguese != null)
+                if (ListStudentPollPortuguese != null)
                 {
                     return (Ok(ListStudentPollPortuguese));
                 }
@@ -65,7 +67,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 {
                     return NoContent();
                 }
-             
+
             }
             catch (System.Exception ex)
             {
@@ -74,3 +76,5 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
     }
 }
+
+      

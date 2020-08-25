@@ -144,12 +144,5 @@ namespace SME.Pedagogico.Gestao.Data.Business
         }
 
 
-        public IEnumerable<Grupo> ListarGrupos()
-        {
-            using (var contexto = new SMEManagementContextData())
-            {
-                return contexto.Grupo.ToList();
-            }
-        }
     }
 }

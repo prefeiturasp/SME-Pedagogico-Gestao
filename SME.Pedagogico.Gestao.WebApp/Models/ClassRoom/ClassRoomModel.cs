@@ -12,5 +12,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Models.ClassRoom
         public string classroomCodeEol { get; set; }
         public string schoolYear { get; set; }
         public string yearClassroom { get; set; }
+
+        
     }
 }
