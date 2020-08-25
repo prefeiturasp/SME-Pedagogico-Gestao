@@ -35,7 +35,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 try
                 {
-                    var perguntas = contexto.PerguntaAnoEscolar.Where(perguntaAnoEscolar => perguntaAnoEscolar.AnoEscolar == anoEscolar).Select(x => MapearPergunta(x));
+                    var perguntas = contexto.PerguntaAnoEscolar.Include(x => x.Pergunta).Where(perguntaAnoEscolar => perguntaAnoEscolar.AnoEscolar == anoEscolar).Select(x => MapearPergunta(x)).ToListAsync().Result;
 
                     if (perguntas == null || !perguntas.Any())
                         throw new Exception("Não foi possivel obter as perguntas da sondagem");
@@ -214,6 +214,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
         private PerguntaDto MapearPergunta(PerguntaAnoEscolar perguntaAnoEscolar)
         {
             var retorno = (PerguntaDto)perguntaAnoEscolar.Pergunta;
+
+            if (retorno == null)
+                return default;
 
             retorno.Ordenacao = perguntaAnoEscolar.Ordenacao;
 
