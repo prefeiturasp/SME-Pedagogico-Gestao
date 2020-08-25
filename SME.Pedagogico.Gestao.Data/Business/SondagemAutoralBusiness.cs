@@ -29,20 +29,20 @@ namespace SME.Pedagogico.Gestao.Data.Business
             TurmaApi = new TurmasAPI(new EndpointsAPI());
         }
 
-        public IEnumerable<PerguntaDto> ObterPerguntas(int anoEscolar)
+        public async Task<IEnumerable<PerguntaDto>> ObterPerguntas(int anoEscolar)
         {
             using (var contexto = new SMEManagementContextData())
             {
                 try
                 {
-                    var perguntas = contexto.PerguntaAnoEscolar.Where(perguntaAnoEscolar => perguntaAnoEscolar.AnoEscolar == anoEscolar).Select(x => MapearPergunta(x));
+                    var perguntas = await contexto.PerguntaAnoEscolar.Include(x => x.Pergunta).Where(perguntaAnoEscolar => perguntaAnoEscolar.AnoEscolar == anoEscolar).Select(x => MapearPergunta(x)).ToListAsync();
 
                     if (perguntas == null || !perguntas.Any())
                         throw new Exception("Não foi possivel obter as perguntas da sondagem");
 
-                    var perguntasResposta = contexto.PerguntaResposta.Include(x => x.Pergunta).Include(x => x.Resposta).Where(resposta => perguntas.Any(z => z.Id.Equals(resposta.Pergunta.Id)));
+                    var perguntasResposta = await contexto.PerguntaResposta.Include(x => x.Pergunta).Include(x => x.Resposta).Where(resposta => perguntas.Any(z => z.Id.Equals(resposta.Pergunta.Id))).ToListAsync();
 
-                    if (perguntas == null || !perguntas.Any())
+                    if (perguntasResposta == null || !perguntasResposta.Any())
                         throw new Exception("Não foi possivel obter as respostas da sondagem");
 
                     perguntas.ForEach(pergunta =>
