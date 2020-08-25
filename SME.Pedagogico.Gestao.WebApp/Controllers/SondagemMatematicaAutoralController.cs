@@ -23,9 +23,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
         [HttpGet("Matematica/Periodos")]
-        public IActionResult ObterPeriodos()
+        public async Task<IActionResult> ObterPeriodos()
         {
-            return Ok(sondagemAutoralBusiness.ObterPeriodoMatematica());
+            return Ok(await sondagemAutoralBusiness.ObterPeriodoMatematica());
         }
 
         [HttpGet("Matematica/Perguntas")]
@@ -35,15 +35,15 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
         [HttpGet("Matematica")]
-        public IActionResult ObterSondagemAutoral([FromQuery]FiltrarListagemDto filtrarListagemDto)
+        public async Task<IActionResult> ObterSondagemAutoral([FromQuery]FiltrarListagemDto filtrarListagemDto)
         {
-            return Ok(sondagemAutoralBusiness.ObterListagemAutoral(filtrarListagemDto));
+            return Ok(await sondagemAutoralBusiness.ObterListagemAutoral(filtrarListagemDto));
         }
 
         [HttpPost("Matematica")]
         public async Task<IActionResult> SalvarSondagem([FromServices]IEnumerable<AlunoSondagemMatematicaDto> alunoSondagemMatematicaDtos)
         {
-            await sondagemAutoralBusiness.SalvarSondagem(alunoSondagemMatematicaDtos);
+            await await sondagemAutoralBusiness.SalvarSondagem(alunoSondagemMatematicaDtos);
 
             return Ok();
         }
