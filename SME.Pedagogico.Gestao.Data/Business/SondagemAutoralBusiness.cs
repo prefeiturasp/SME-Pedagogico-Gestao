@@ -31,45 +31,26 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task<IEnumerable<PerguntaDto>> ObterPerguntas(int anoEscolar)
         {
+            List<PerguntaDto> perguntas = default;
+            List<PerguntaResposta> perguntasResposta = default;
+
             using (var contexto = new SMEManagementContextData())
             {
-                try
-                {
-                    var perguntas = await contexto.PerguntaAnoEscolar.Include(x => x.Pergunta).Where(perguntaAnoEscolar => perguntaAnoEscolar.AnoEscolar == anoEscolar).Select(x => MapearPergunta(x)).ToListAsync();
+                perguntas = await ObterPerguntas(anoEscolar, perguntas, contexto);
 
-                    if (perguntas == null || !perguntas.Any())
-                        throw new Exception("Não foi possivel obter as perguntas da sondagem");
-
-                    var perguntasResposta = await contexto.PerguntaResposta.Include(x => x.Pergunta).Include(x => x.Resposta).Where(resposta => perguntas.Any(z => z.Id.Equals(resposta.Pergunta.Id))).ToListAsync();
-
-                    if (perguntasResposta == null || !perguntasResposta.Any())
-                        throw new Exception("Não foi possivel obter as respostas da sondagem");
-
-                    perguntas.ForEach(pergunta =>
-                    {
-                        var respostasDaPergunta = perguntasResposta.Where(perguntaResposta => perguntaResposta.Pergunta.Id.Equals(pergunta.Id));
-
-                        if (respostasDaPergunta == null || !respostasDaPergunta.Any())
-                            throw new Exception($"Não foi possivel obter as respostas da pergunta '{pergunta.Descricao}'");
-
-                        pergunta.Respostas = respostasDaPergunta.Select(perguntaResposta => new RespostaDto
-                        {
-                            Descricao = perguntaResposta.Resposta.Descricao,
-                            Id = perguntaResposta.Resposta.Id,
-                            Ordenacao = perguntaResposta.Ordenacao
-                        });
-                    });
-
-                    return perguntas;
-                }
-
-                catch (Exception ex)
-                {
-
-                    throw ex;
-                }
+                perguntasResposta = await ObterPerguntasRespostas(perguntas, perguntasResposta, contexto);
             }
-        }
+
+            perguntas.ForEach(pergunta =>
+            {
+                IEnumerable<PerguntaResposta> respostasDaPergunta = ObterRespostaDaPergunta(pergunta, perguntasResposta);
+
+                MapearRespostas(pergunta, respostasDaPergunta);
+            });
+
+            return perguntas;
+
+        }      
 
         public IEnumerable<PeriodoDto> ObterPeriodoMatematica()
         {
@@ -119,7 +100,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 throw new Exception("É necessário realizar a sondagem de pelo menos 1 aluno");
 
             using (var contexto = new SMEManagementContextData())
-            { 
+            {
                 foreach (var aluno in alunoSondagemMatematicaDto)
                 {
                     var alunoAutoral = (SondagemAutoral)aluno;
@@ -184,6 +165,46 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 Pergunta = aluno.Pergunta.Id,
                 Resposta = aluno.Resposta.Id
             });
+        }
+
+        private static void MapearRespostas(PerguntaDto pergunta, IEnumerable<PerguntaResposta> respostasDaPergunta)
+        {
+            pergunta.Respostas = respostasDaPergunta.Select(perguntaResposta => new RespostaDto
+            {
+                Descricao = perguntaResposta.Resposta.Descricao,
+                Id = perguntaResposta.Resposta.Id,
+                Ordenacao = perguntaResposta.Ordenacao
+            });
+        }
+
+        private static IEnumerable<PerguntaResposta> ObterRespostaDaPergunta(PerguntaDto pergunta, List<PerguntaResposta> perguntasResposta)
+        {
+            var respostasDaPergunta = perguntasResposta.Where(perguntaResposta => perguntaResposta.Pergunta.Id.Equals(pergunta.Id));
+
+            if (respostasDaPergunta == null || !respostasDaPergunta.Any())
+                throw new Exception($"Não foi possivel obter as respostas da pergunta '{pergunta.Descricao}'");
+
+            return respostasDaPergunta;
+        }
+
+        private static async Task<List<PerguntaResposta>> ObterPerguntasRespostas(List<PerguntaDto> perguntas, List<PerguntaResposta> perguntasResposta, SMEManagementContextData contexto)
+        {
+            perguntasResposta = await contexto.PerguntaResposta.Include(x => x.Pergunta).Include(x => x.Resposta).Where(resposta => perguntas.Any(z => z.Id.Equals(resposta.Pergunta.Id))).ToListAsync();
+
+            if (perguntasResposta == null || !perguntasResposta.Any())
+                throw new Exception("Não foi possivel obter as respostas da sondagem");
+
+            return perguntasResposta;
+        }
+
+        private async Task<List<PerguntaDto>> ObterPerguntas(int anoEscolar, List<PerguntaDto> perguntas, SMEManagementContextData contexto)
+        {
+            perguntas = await contexto.PerguntaAnoEscolar.Include(x => x.Pergunta).Where(perguntaAnoEscolar => perguntaAnoEscolar.AnoEscolar == anoEscolar).Select(x => MapearPergunta(x)).ToListAsync();
+
+            if (perguntas == null || !perguntas.Any())
+                throw new Exception("Não foi possivel obter as perguntas da sondagem");
+
+            return perguntas;
         }
 
         private void AdicionarNovoAlunoListagem(List<AlunoSondagemMatematicaDto> listagem, SondagemAutoral aluno)
