@@ -39,5 +39,13 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         {
             return Ok(sondagemAutoralBusiness.ObterListagemAutoral(filtrarListagemDto));
         }
+
+        [HttpPost("Matematica")]
+        public async Task<IActionResult> SalvarSondagem([FromServices]IEnumerable<AlunoSondagemMatematicaDto> alunoSondagemMatematicaDtos)
+        {
+            await sondagemAutoralBusiness.SalvarSondagem(alunoSondagemMatematicaDtos);
+
+            return Ok();
+        }
     }
 }

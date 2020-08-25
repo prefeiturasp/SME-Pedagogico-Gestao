@@ -90,9 +90,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     // var listStudentsClassRoom = studentsClassRoom.MockListaChamada();
                     var endpointsAPI = new EndpointsAPI();
 
-                    var 
-                        
-                        = new TurmasAPI(endpointsAPI);
+                    var turmApi = new TurmasAPI(endpointsAPI);
 
                     var listStudentsClassRoom = await turmApi.GetAlunosNaTurma(Convert.ToInt32(classRoom.classroomCodeEol), Convert.ToInt32(classRoom.schoolYear), _token);
 
@@ -233,7 +231,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         public async Task<PollReportPortugueseResult> BuscarDadosRelatorioPortugues(string proficiencia, string bimestre, string anoLetivo, string codigoDre, string codigoEscola, string codigoCurso)
         {
 
-            using(Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
+            using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
                 var lista = db.PeriodoDeAberturas;
             }
