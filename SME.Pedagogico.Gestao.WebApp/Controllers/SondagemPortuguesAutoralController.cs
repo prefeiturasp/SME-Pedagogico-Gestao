@@ -26,22 +26,11 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
 
-        [HttpGet]
-        public async Task<ActionResult> ListarGrupos()
-        {
-            var sondagemAutoralBll = new PollPortuguese(_config);
-            return Ok(sondagemAutoralBll.ListarGrupos());
-        }
-
-        public async Task<ActionResult> ListarOrdens()
-        {
-            var sondagemAutoralBll = new PollPortuguese(_config);
-            return Ok(sondagemAutoralBll.ListarOrdens());
-        }
+        
 
         // IncluirSondagemPortugues
         [HttpPost]
-        public async Task<ActionResult> ListarSondagemPortugues(FiltrosPortuguesAutoralDTO classRoomModel)
+        public async Task<ActionResult> ListarSondagemPortuguesAutoral(FiltrosPortuguesAutoralDTO classRoomModel)
         {
             try
             {

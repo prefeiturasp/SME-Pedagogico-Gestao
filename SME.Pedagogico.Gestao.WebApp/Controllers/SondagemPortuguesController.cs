@@ -20,7 +20,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             _config = config;
         }
 
-   
+
 
         [HttpPost]
         public async Task<ActionResult> IncluirSondagemPortugues(List<StudentPollPortuguese> ListStudentPollPortuguese)
@@ -56,7 +56,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 var BusinessPoll = new Data.Business.PollPortuguese(_config);
                 var ListStudentPollPortuguese = await BusinessPoll.ListStudentPollPortuguese(classRoomDataTransfer);
 
-                if(ListStudentPollPortuguese != null)
+                if (ListStudentPollPortuguese != null)
                 {
                     return (Ok(ListStudentPollPortuguese));
                 }
@@ -65,12 +65,26 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 {
                     return NoContent();
                 }
-             
+
             }
             catch (System.Exception ex)
             {
                 return StatusCode(500, ex);
             }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ListarGrupos()
+        {
+            var sondagemAutoralBll = new PollPortuguese(_config);
+            return Ok(sondagemAutoralBll.ListarGrupos());
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ListarOrdens()
+        {
+            var sondagemAutoralBll = new PollPortuguese(_config);
+            return Ok(sondagemAutoralBll.ListarOrdens());
         }
     }
 }
