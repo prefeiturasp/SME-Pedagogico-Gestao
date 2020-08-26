@@ -1,93 +1,251 @@
 pipeline {
     agent {
-      node {
-        label 'dockerdotnet'
-              //customWorkspace '/some/other/path'
+      node { 
+        label 'dockerdotnet2'
       }
     }
-          
-    stages {
-      stage('CheckOut') {
+    
+    options {
+      buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
+      disableConcurrentBuilds()
+      skipDefaultCheckout()  
+    }
+    
+        
+  stages {
+    stage('CheckOut') {
         steps {
-          checkout scm
-          sh 'ls -la'
-          sh "echo MINHA BRANCH É ${GIT_BRANCH}"
+          checkout scm  
         }
       }
       
-      stage('Testes') {
-        steps {
-          sh "echo executar testes"  
+    stage('Analise Codigo') {
+          when {
+            branch 'dev'
+          }
+            steps {
+                sh 'echo Analise SonarQube'
+                sh 'dotnet-sonarscanner begin /k:"SME-Pedagogico-Gestao" /d:sonar.host.url="http://sonar.sme.prefeitura.sp.gov.br" /d:sonar.login="801f74ec2567fa5e26c51bbcb61f38829390bc6b"'
+                sh 'dotnet build'
+                //sh 'dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover'
+                sh 'dotnet-sonarscanner end /d:sonar.login="801f74ec2567fa5e26c51bbcb61f38829390bc6b'
             
+            }
+       }
+         
+    stage('Build projeto') {
+            steps {
+              sh "echo executando build de projeto"
+              sh 'dotnet build'
+            }
+        }
+        
+            
+    stage('Testes') {
+      steps {
+        //Executa os testes
+        //sh 'dotnet test'
+        sh 'echo testes'
+      }
+    }
+        
+    stage('Docker build DEV') {
+        when {
+          branch 'dev'
+        }
+          steps {
+          // Start JOB Rundeck para build das imagens Docker
+      
+          script {
+           step([$class: "RundeckNotifier",
+              includeRundeckLogs: true,
+                               
+              //JOB DE BUILD
+              jobId: "c20676f8-749d-4630-8626-ec8dbadbec65",
+              nodeFilters: "",
+              //options: """
+              //     PARAM_1=value1
+               //    PARAM_2=value2
+              //     PARAM_3=
+              //     """,
+              rundeckInstance: "Rundeck-SME",
+              shouldFailTheBuild: true,
+              shouldWaitForRundeckJob: true,
+              tags: "",
+              tailLog: true])
+           }
         }
       }
+
+    stage('Deploy DEV') {
+        when {
+          branch 'dev'
+        }
+          steps {
+            //Start JOB Rundeck para update de deploy Kubernetes DEV
+         
+            script {
+                step([$class: "RundeckNotifier",
+                  includeRundeckLogs: true,
+                  jobId: "a61aaded-a8b3-401f-95e0-73fcf830c7f0",
+                  nodeFilters: "",
+                  //options: """
+                  //     PARAM_1=value1
+                  //    PARAM_2=value2
+                  //     PARAM_3=
+                  //     """,
+                  rundeckInstance: "Rundeck-SME",
+                  shouldFailTheBuild: true,
+                  shouldWaitForRundeckJob: true,
+                  tags: "",
+                  tailLog: true])
+              }
+          }
+      }
+		
+	  stage('Docker build HOM') {
+            when {
+                branch 'release'
+            }
+            steps {
+              // Start build das imagens Docker
       
-      stage('Analise codigo') {
+          script {
+            step([$class: "RundeckNotifier",
+                includeRundeckLogs: true,
+                    
+                
+                //JOB DE BUILD
+                jobId: "9d30fea3-3103-49ce-a292-75f5e0c6274b",
+                nodeFilters: "",
+                //options: """
+                //     PARAM_1=value1
+                //    PARAM_2=value2
+                //     PARAM_3=
+                //     """,
+                rundeckInstance: "Rundeck-SME",
+                shouldFailTheBuild: true,
+                shouldWaitForRundeckJob: true,
+                tags: "",
+                tailLog: true])
+           }
+          }
+        }    
+       
+    stage('Deploy HOM') {
+          when {
+            branch 'release'
+          }
+          steps {
+            
+            timeout(time: 24, unit: "HOURS") {
+               telegramSend("${JOB_NAME}...O Build ${BUILD_DISPLAY_NAME} - Requer uma aprovação para deploy !!!\n Consulte o log para detalhes -> [Job logs](${env.BUILD_URL}console)\n")
+               input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'marlon_goncalves, allan_santos, caique_siqueira, bruno_alevato'
+            }
+            //Start JOB Rundeck para update de imagens no host homologação 
+         
+            script {
+                step([$class: "RundeckNotifier",
+                includeRundeckLogs: true,
+                jobId: "cecd1661-f759-4b35-82b7-4928355aa7ab",
+                nodeFilters: "",
+                //options: """
+                //     PARAM_1=value1
+                //    PARAM_2=value2
+                //     PARAM_3=
+                //     """,
+                rundeckInstance: "Rundeck-SME",
+                shouldFailTheBuild: true,
+                shouldWaitForRundeckJob: true,
+                tags: "",
+                tailLog: true])
+            }
+         }
+        }
+	    
+	  stage('Docker build PROD') {
+        when {
+          branch 'master'
+        }
         steps {
-          sh 'dotnet-sonarscanner begin /k:"SME-Pedagogico-Gestao-DEV" /d:sonar.host.url="http://automation.educacao.intranet:9000" /d:sonar.login="b508b5e2675012bb5077f4dd5e3a8854a4472b77"'
-          sh 'dotnet build'
-          sh 'dotnet-sonarscanner end /d:sonar.login="b508b5e2675012bb5077f4dd5e3a8854a4472b77"'
+            
+            // Start JOB Rundeck para build das imagens Docker
+      
+            script {
+              step([$class: "RundeckNotifier",
+                includeRundeckLogs: true,
+                
+                
+                //JOB DE BUILD
+                jobId: "aa522b9f-7680-448e-b875-727b970bec3e",
+                nodeFilters: "",
+                //options: """
+                //     PARAM_1=value1
+                //    PARAM_2=value2
+                //     PARAM_3=
+                //     """,
+                rundeckInstance: "Rundeck-SME",
+                shouldFailTheBuild: true,
+                shouldWaitForRundeckJob: true,
+                tags: "",
+                tailLog: true])
+            }
+         }
+      }           
+    
+    stage('Deploy PROD') {
+            when {
+                branch 'master'
+            }
+            steps {
+                timeout(time: 24, unit: "HOURS") {
+                telegramSend("${JOB_NAME}...O Build ${BUILD_DISPLAY_NAME} - Requer uma aprovação para deploy !!!\n Consulte o log para detalhes -> [Job logs](${env.BUILD_URL}console)\n")
+                input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'marlon_goncalves, allan_santos, caique_siqueira, bruno_alevato'
+                }
+                    
+            
+                script {
+                    step([$class: "RundeckNotifier",
+                    includeRundeckLogs: true,
+                    jobId: "1759b7ee-2cd6-4e21-b82d-84c5074d08d5",
+                    nodeFilters: "",
+                    //options: """
+                    //     PARAM_1=value1
+                    //    PARAM_2=value2
+                    //     PARAM_3=
+                    //     """,
+                    rundeckInstance: "Rundeck-SME",
+                    shouldFailTheBuild: true,
+                    shouldWaitForRundeckJob: true,
+                    tags: "",
+                    tailLog: true])
+                }
+        
+        
+            }
         }
-      }
-     
-      
-      stage('Build') {
-        steps {
-          //sh 'dotnet-sonarscanner begin /k:"SME-Pedagogico-API-DEV" /d:sonar.host.url="http://automation.educacao.intranet:9000" /d:sonar.login="b5c1bda4c6e9a4cc414d37f3dd9e163cd6e54f92"'
-          sh 'dotnet build'
-          //sh 'dotnet-sonarscanner end /d:sonar.login="d5d0485ee11059d5a9110a9dcce00cb9a098d10b"'
-        }
-      }
-      
-      //stage('Deploy para hom') {
-      //      agent any
-      //      when {
-      //          branch 'homologacao' 
-      //      }
-      //      steps {
-                //sh './jenkins/scripts/deliver-for-development.sh'
-      //          sh "echo entregar homologação"
-      //          input message: 'entregar homologacao??', ok: 'aprovar'
-                //sh './jenkins/scripts/kill.sh'
-      //      }
-      //}
-      
-      
-}
+  }    
 
 
     
 post {
         always {
-            echo 'One way or another, I have finished'
-            deleteDir() /* clean up our workspace */
+          echo 'One way or another, I have finished'
         }
         success {
-            withCredentials([string(credentialsId: 'webhook-teams-gestao', variable: 'WHgestao-Teams')]) {
-              echo ' Sucesso !'
-              office365ConnectorSend color: '008000', message: "O Build ${BUILD_DISPLAY_NAME} - Esta ok !!!  <${env.BUILD_URL}> ", status: 'SUCESSO', webhookUrl: '$WHgestao-Teams'
-             
-            }
-            telegramSend("${JOB_NAME}...O Build ${BUILD_DISPLAY_NAME} - Esta ok !!!  <${env.BUILD_URL}> ")
+          telegramSend("${JOB_NAME}...O Build ${BUILD_DISPLAY_NAME} - Esta ok !!!\n Consulte o log para detalhes -> [Job logs](${env.BUILD_URL}console)\n\n Uma nova versão da aplicação esta disponivel!!!")
         }
         unstable {
-            withCredentials([string(credentialsId: 'webhook-teams-gestao', variable: 'WHgestao-Teams')]) {
-              echo ' Instavel !!! :/'
-              office365ConnectorSend color: 'ffa500', message: "O Build ${BUILD_DISPLAY_NAME} <${env.BUILD_URL}> - Esta instavel ...Verifique os logs para corrigir o problema'", status: 'INSTAVEL', webhookUrl: '$WHgestao-Teams'
-            }
-            telegramSend("O Build ${BUILD_DISPLAY_NAME} <${env.BUILD_URL}> - Esta instavel ...Verifique os logs para corrigir o problema'")
+          telegramSend("O Build ${BUILD_DISPLAY_NAME} <${env.BUILD_URL}> - Esta instavel ...\nConsulte o log para detalhes -> [Job logs](${env.BUILD_URL}console)")
         }
         failure {
-             withCredentials([string(credentialsId: 'webhook-teams-gestao', variable: 'WHgestao-Teams')]) {
-               echo ' Falhou!!! :('
-               office365ConnectorSend color: 'd00000', message: "O Build ${BUILD_DISPLAY_NAME} <${env.BUILD_URL}> - Quebrou. Verifique os logs para corrigir o problema'", status: 'FALHOU', webhookUrl: '$WHgestao-Teams'
-             }
-             telegramSend("O Build ${BUILD_DISPLAY_NAME} <${env.BUILD_URL}> - Quebrou. Verifique os logs para corrigir o problema'")
+          telegramSend("${JOB_NAME}...O Build ${BUILD_DISPLAY_NAME}  - Quebrou. \nConsulte o log para detalhes -> [Job logs](${env.BUILD_URL}console)")
         }
         changed {
-             withCredentials([string(credentialsId: 'webhook-teams-gestao', variable: 'WHgestao-Teams')]) {
-               echo 'Things were different before...'
-             }
+          echo 'Things were different before...'
+        }
+        aborted {
+          telegramSend("O Build ${BUILD_DISPLAY_NAME} - Foi abortado.\nConsulte o log para detalhes -> [Job logs](${env.BUILD_URL}console)")
         }
     }
 }
