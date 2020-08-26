@@ -101,7 +101,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 var alunoAutoral = (SondagemAutoral)aluno;
 
-                if (aluno.Respostas.Any())
+                if (aluno.Respostas != null && aluno.Respostas.Any())
                     await SalvarAlunoComResposta(contexto, aluno, alunoAutoral);
                 else
                     await SalvarAlunoSemResposta(contexto, alunoAutoral);
@@ -167,8 +167,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             alunoLista.Respostas.ToList().Add(new AlunoRespostaDto
             {
-                Pergunta = aluno.Pergunta.Id,
-                Resposta = aluno.Resposta.Id
+                PeriodoId = aluno.PeriodoId,
+                Pergunta = aluno.PerguntaId,
+                Resposta = aluno.RespostaId
             });
         }
 
@@ -189,7 +190,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 return await contexto.SondagemAutoral
                     .Include(x => x.ComponenteCurricular)
                     .Where(x => x.ComponenteCurricular.Id
-                        .Equals(filtrarListagemDto.ComponenteCurricular)
+                        .Equals(filtrarListagemDto.ComponenteCurricular.ToString())
                         && x.AnoTurma == filtrarListagemDto.AnoEscolar
                         && (filtrarListagemDto.CodigoTurma == null ? true : x.CodigoTurma.Equals(filtrarListagemDto.CodigoTurma)))
                     .ToListAsync();
@@ -243,9 +244,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 {
                     new AlunoRespostaDto
                     {
-                        PeriodoId = aluno.Periodo.Id,
-                        Pergunta = aluno.Pergunta.Id,
-                        Resposta = aluno.Resposta.Id
+                        PeriodoId = aluno.PeriodoId,
+                        Pergunta = aluno.PerguntaId,
+                        Resposta = aluno.RespostaId
                     }
                 }
             });

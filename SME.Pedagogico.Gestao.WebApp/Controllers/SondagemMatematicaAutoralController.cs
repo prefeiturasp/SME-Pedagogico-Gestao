@@ -11,7 +11,7 @@ using SME.Pedagogico.Gestao.Data.DTO.Matematica;
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
     [Produces("application/json")]
-    [Route("api/SondagemAutoral/[action]")]
+    [Route("api/SondagemAutoral")]
     [ApiController]
     public class SondagemMatematicaAutoralController : ControllerBase
     {
@@ -41,7 +41,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
         [HttpPost("Matematica")]
-        public async Task<IActionResult> SalvarSondagem([FromServices]IEnumerable<AlunoSondagemMatematicaDto> alunoSondagemMatematicaDtos)
+        public async Task<IActionResult> SalvarSondagem([FromBody]IEnumerable<AlunoSondagemMatematicaDto> alunoSondagemMatematicaDtos)
         {
             await sondagemAutoralBusiness.SalvarSondagem(alunoSondagemMatematicaDtos);
 
