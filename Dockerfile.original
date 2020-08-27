@@ -3,7 +3,7 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM microsoft/dotnet:2.2-sdk AS build
+FROM alevato/dotnet-node:2.2-8.0-sdk AS build
 
 COPY ["SME.Pedagogico.Gestao.Data/SME.Pedagogico.Gestao.Data.csproj", "/SME.Pedagogico.Gestao.Data/"]
 COPY ["SME.Pedagogico.Gestao.Models/SME.Pedagogico.Gestao.Models.csproj", "SME.Pedagogico.Gestao.Models/"]
@@ -15,7 +15,13 @@ WORKDIR "/SME.Pedagogico.Gestao.WebApp"
 RUN dotnet build "SME.Pedagogico.Gestao.WebApp.csproj" -c Release -o /app
 
 FROM build AS publish
-RUN dotnet publish "SME.Pedagogico.Gestao.WebApp.csproj" -c Release -o /app
+RUN dotnet publish "SME.Pedagogico.Gestao.WebApp.csproj" -c Release -o /app \
+    && cd ClientApp \
+    && npm i \
+    && npm run build \ 
+    && cd .. \
+    && mv ClientApp /app/ClientApp \ 
+    && cp SME.Pedagogico.Gestao.WebApp.xml /app/SME.Pedagogico.Gestao.WebApp.xml
 
 FROM base AS final
 WORKDIR /app
