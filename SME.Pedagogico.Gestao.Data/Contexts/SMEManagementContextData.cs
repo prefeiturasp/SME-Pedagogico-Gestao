@@ -7,7 +7,7 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
     {
         #region ==================== ATTRIBUTES ====================
 
-        private string connectionString = "Server=10.50.1.33;Port=5432;Database=db_pedagogicogestao;Username=postgres;Password=postgres;";
+        private string connectionString = "Server=10.50.1.33;Port=30808;Database=db_pedagogicogestao;Username=postgres;Password=postgres;";
 
         #region ---------- Academic ----------
 
