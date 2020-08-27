@@ -71,8 +71,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public static bool ValidateUser(string username)
         {
-            using (Data.Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
-                return (db.Users.Any(x => x.Name == username));
+            try
+            {
+                using (Data.Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
+                    return (db.Users.Any(x => x.Name == username));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
         }
 
         public static async Task SetPrivilegedAccess(string login, IEnumerable<PrivilegedAccess> lista)

@@ -10,7 +10,9 @@
     Class5ACM:"5ACM",
     Class6ACA:"6ACA",
     Class6ACM:"6ACM",
-    ClassPT  :"PT",
+    ClassPT: "PT",
+    ClassPTAutoral: "PTAutoral",
     ClassMT: "MT",
+    ClassMTAutoral:"MTAutoral",
     ClassEmpty:""
 }
