@@ -3,7 +3,13 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM alevato/dotnet-node:2.2-8.0-sdk AS build
+FROM microsoft/dotnet:2.2-sdk AS build
+
+RUN wget https://nodejs.org/dist/v8.17.0/node-v8.17.0-linux-x64.tar.gz \ 
+    && tar -xzf node-v8.17.0-linux-x64.tar.gz \ 
+    && ln -s /node-v8.17.0-linux-x64/bin/node /usr/bin/node \ 
+    && ln -s /node-v8.17.0-linux-x64/bin/npm /usr/bin/npm \ 
+    && ln -s /node-v8.17.0-linux-x64/bin/npx /usr/bin/npx
 
 COPY ["SME.Pedagogico.Gestao.Data/SME.Pedagogico.Gestao.Data.csproj", "/SME.Pedagogico.Gestao.Data/"]
 COPY ["SME.Pedagogico.Gestao.Models/SME.Pedagogico.Gestao.Models.csproj", "SME.Pedagogico.Gestao.Models/"]
@@ -27,3 +33,5 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "SME.Pedagogico.Gestao.WebApp.dll"]
+
+
