@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SME.Pedagogico.Gestao.Models.Autoral;
+using System;
 
 namespace SME.Pedagogico.Gestao.Data.Contexts
 {
@@ -7,7 +8,7 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
     {
         #region ==================== ATTRIBUTES ====================
 
-        private string connectionString = "Server=localhost;Port=5432;Database=smeManagementDB;Username=postgres;Password=postgres;";
+        private string connectionString = Environment.GetEnvironmentVariable("sondagemConnection");
 
         #region ---------- Academic ----------
 
