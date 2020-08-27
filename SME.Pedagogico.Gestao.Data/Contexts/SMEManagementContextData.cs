@@ -83,8 +83,6 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-
             // Seed para os perfis
             Models.Authentication.Role[] roles = new Models.Authentication.Role[]
             {
