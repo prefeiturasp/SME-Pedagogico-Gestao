@@ -1,10 +1,14 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using SME.Pedagogico.Gestao.Data.Contexts;
 using SME.Pedagogico.Gestao.Data.DataTransfer;
+using SME.Pedagogico.Gestao.Data.DataTransfer.Portugues;
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.Functionalities;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using SME.Pedagogico.Gestao.Models.Academic;
+using SME.Pedagogico.Gestao.Models.Autoral;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -145,6 +149,15 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
+        //public async Task<> ListStudentPollPortugueseAutoral(FiltrosPortuguesAutoralDTO classRoom)
+        //{
+        //    using(var context = new Contexts.SMEManagementContextData())
+        //    {
+        //        context.Pe
+        //    }
+
+
+        //}
         private static void AddStudentPollPortuguese(StudentPollPortuguese studentDTO)
         {
             studentDTO.t1e = string.Empty;
@@ -499,6 +512,24 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     return "Alfabético";
                 default:
                     return proficiencia;
+            }
+        }
+
+
+        public IEnumerable<Grupo> ListarGrupos()
+        {
+            using (var contexto = new SMEManagementContextData())
+            {
+                return contexto.Grupo.ToList();
+            }
+
+        }
+
+        public IEnumerable<GrupoOrdem> ListarOrdens()
+        {
+            using (var contexto = new SMEManagementContextData())
+            {
+                return contexto.GrupoOrdem.Include(x => x.Ordem).ToList();
             }
         }
     }

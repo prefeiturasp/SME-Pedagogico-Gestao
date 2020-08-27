@@ -25,6 +25,10 @@ import StudentPollMath5ACMCard from "../polls/StudentPollMath5ACMCard";
 import StudentPollMath6ACACard from "../polls/StudentPollMath6ACACard";
 import StudentPollMath6ACMCard from "../polls/StudentPollMath6ACMCard";
 import StudentPollPortugueseCard from "../polls/StudentPollPortugueseCard";
+import SondagemMatematicaAutoral from "./SondagemMatematicaAutoral";
+import SondagemPortuguesAutoral from "./SondagemPortuguesAutoral";
+
+
 
 import TwoStepsSave from "../messaging/TwoStepsSave";
 import TwoSteps from "../messaging/TwoSteps";
@@ -197,10 +201,21 @@ class Poll extends Component {
 
   componentRender() {
     var componentRender;
+      debugger;
+      var sondagemType = this.props.poll.pollSelected;
 
-    var sondagemType = this.props.poll.pollSelected;
+    if (this.props.poll.pollSelected === ClassRoomEnum.ClassPTAutoral)
+    {
+        componentRender = (<SondagemPortuguesAutoral />)
 
-    if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
+       
+      }
+    else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMTAutoral)
+    {
+        componentRender = (<SondagemMatematicaAutoral/>)
+        
+      }
+    else if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
       componentRender = (
         <StudentPollPortugueseCard
           students={this.props.poll.students}
@@ -211,7 +226,8 @@ class Poll extends Component {
           editLock4b={this.props.pollOptionSelectLock.poll_4b_lock}
         />
       );
-    } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMT) {
+    }
+    else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMT) {
       if (
         this.props.poll.pollTypeSelected === "Numeric" &&
         (this.props.poll.pollYear === "1" ||
@@ -338,7 +354,8 @@ class Poll extends Component {
           );
         }
       }
-    } else {
+    }
+    else {
       componentRender = "";
     }
     console.log(
@@ -726,18 +743,30 @@ class Poll extends Component {
     });
   }
 
-  openPortuguesePoll() {
+    openPortuguesePoll() {
+        debugger;
     //this.toggleButton(element.currentTarget.id);//portugues-tab
     this.props.dataMethods.reset_new_data_state();
     this.toggleButton("portugues-tab");
     var classRoomMock = this.props.poll.selectedFilter;
-
     this.props.pollMethods.set_poll_list_initial_state();
-    this.props.pollMethods.set_poll_info(
-      ClassRoomEnum.ClassPT,
-      "",
-      classRoomMock.yearClassroom
-    ); //passar pollSelected, pollTypeSelected, pollYear
+
+        if (classRoomMock.yearClassroom < 4) {
+
+            this.props.pollMethods.set_poll_info(
+                ClassRoomEnum.ClassPT,
+                "",
+                classRoomMock.yearClassroom
+            ); //passar pollSelected, pollTypeSelected, pollYear
+        }
+
+        else {
+            this.props.pollMethods.set_poll_info(
+                ClassRoomEnum.ClassPTAutoral,
+                "",
+                classRoomMock.yearClassroom);
+        }
+       
     this.props.pollMethods.get_poll_portuguese_students(classRoomMock);
   }
 
@@ -747,8 +776,17 @@ class Poll extends Component {
     this.toggleButton("matematica-tab");
     var classRoomMock = this.props.poll.selectedFilter;
 
-    this.props.pollMethods.set_poll_list_initial_state();
-    if (
+      this.props.pollMethods.set_poll_list_initial_state();
+      if (classRoomMock.yearClassroom > 5)
+      {
+          this.props.pollMethods.set_poll_info(
+              ClassRoomEnum.ClassMTAutoral,
+              "",
+              classRoomMock.yearClassroom
+          );
+      }
+      
+      else if (
       classRoomMock.yearClassroom === "1" ||
       classRoomMock.yearClassroom === "2" ||
       classRoomMock.yearClassroom === "3"
@@ -779,7 +817,7 @@ class Poll extends Component {
     var btn;
     if (
       this.props.poll.selectedFilter.yearClassroom !== null &&
-      parseInt(this.props.poll.selectedFilter.yearClassroom) < 4 &&
+     // parseInt(this.props.poll.selectedFilter.yearClassroom) < 4 &&
       this.props.poll.selectedFilter.yearClassroom !== undefined
     ) {
       if (this.props.data.newDataToSave) {
@@ -788,8 +826,7 @@ class Poll extends Component {
             <button
               className="btn btn-outline-primary btn-sm btn-planning"
               onClick={this.toggleMessagePortugueseBox}
-            >
-              Língua Portuguesa
+            >sdasduesaa
             </button>
             <TwoSteps
               show={this.state.showMessagePortugueseBox}
@@ -811,7 +848,42 @@ class Poll extends Component {
           </li>
         );
       }
-    }
+      }
+
+     else  if (
+          this.props.poll.selectedFilter.yearClassroom !== null &&
+          parseInt(this.props.poll.selectedFilter.yearClassroom) >= 4 &&
+          this.props.poll.selectedFilter.yearClassroom !== undefined
+      ) {
+          if (this.props.data.newDataToSave) {
+              btn = (
+                  <li className="nav-item">
+                      <button
+                          className="btn btn-outline-primary btn-sm btn-planning"
+                          onClick={this.toggleMessagePortugueseBox}
+                      >
+            </button>
+                      <TwoSteps
+                          show={this.state.showMessagePortugueseBox}
+                          showControl={this.toggleMessagePortugueseBox}
+                          runMethod={this.openPortuguesePoll}
+                      />
+                  </li>
+              );
+          } else {
+              btn = (
+                  <li className="nav-item">
+                      <button
+                          className="btn btn-outline-primary btn-sm btn-planning"
+                          id="portugues-tab"
+                          onClick={this.openPortuguesePoll}
+                      >
+                          Língua Portuguesa
+            </button>
+                  </li>
+              );
+          }
+      }
     return btn;
   }
 
@@ -819,7 +891,7 @@ class Poll extends Component {
     var btn;
     if (
       this.props.poll.selectedFilter.yearClassroom !== null &&
-      parseInt(this.props.poll.selectedFilter.yearClassroom) < 7 &&
+      //parseInt(this.props.poll.selectedFilter.yearClassroom) < 7 &&
       this.props.poll.selectedFilter.yearClassroom !== undefined
     ) {
       if (this.props.data.newDataToSave) {
@@ -859,7 +931,7 @@ class Poll extends Component {
     var btn;
     if (
       this.props.poll.selectedFilter.yearClassroom !== null &&
-      parseInt(this.props.poll.selectedFilter.yearClassroom) < 7 &&
+      //parseInt(this.props.poll.selectedFilter.yearClassroom) < 7 &&
       this.props.poll.selectedFilter.yearClassroom !== undefined
     ) {
       btn = (
@@ -890,7 +962,7 @@ class Poll extends Component {
     if (
       this.props.poll.selectedFilter.yearClassroom !== null &&
       this.props.poll.selectedFilter.classroomCodeEol !== "" &&
-      parseInt(this.props.poll.selectedFilter.yearClassroom) < 7 &&
+      // parseInt(this.props.poll.selectedFilter.yearClassroom) < 7 &&
       this.props.poll.selectedFilter.yearClassroom !== undefined
     ) {
       return "false";
