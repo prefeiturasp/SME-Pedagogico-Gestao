@@ -7,7 +7,7 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
     {
         #region ==================== ATTRIBUTES ====================
 
-        private string connectionString = "Server=localhost;Port=5432;Database=smeManagementDB;Username=postgres;Password=39162604;";
+        private string connectionString = "Server=10.50.1.33;Port=30808;Database=db_pedagogicogestao;Username=postgres;Password=postgres;";
 
         #region ---------- Academic ----------
 
@@ -82,8 +82,6 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-
             // Seed para os perfis
             Models.Authentication.Role[] roles = new Models.Authentication.Role[]
             {
