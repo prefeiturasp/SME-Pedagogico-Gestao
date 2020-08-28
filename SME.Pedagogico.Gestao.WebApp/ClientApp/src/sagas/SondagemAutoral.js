@@ -1,12 +1,13 @@
 ﻿import { takeLatest, call, put, all } from "redux-saga/effects";
 import * as Autoral from "../store/SondagemAutoral";
+import * as Filters from "../store/Filters";
 
 export default function* () {
     yield all([
-        takeLatest(Autoral.types.LISTA_PERGUNTAS, ListarPerguntas),
-        takeLatest(Autoral.types.LISTA_PERIODOS, ListarPeriodos),
-        takeLatest(Autoral.types.LISTA_ALUNOS_AUTORAL_MATEMATICA, ListarAlunosAutoralMat),
-        takeLatest(Autoral.types.SALVA_SONDAGEM_AUTORAL_MATEMATICA, SalvaSondagemAutoralMat),
+        takeLatest(Autoral.types.LISTAR_PERGUNTAS, ListarPerguntas),
+        takeLatest(Autoral.types.LISTAR_PERIODOS, ListarPeriodos),
+        takeLatest(Autoral.types.LISTAR_ALUNOS_AUTORAL_MATEMATICA, ListarAlunosAutoralMat),
+        takeLatest(Autoral.types.SALVAR_SONDAGEM_AUTORAL_MATEMATICA, SalvaSondagemAutoralMat),
         takeLatest(Filters.types.GET_PERIOD, GetPeriod)
     ]);
 }
@@ -22,7 +23,7 @@ function* ListarPerguntas({}) {
 }
 
 function listaPerguntasAPI() {
-    var url = `/api/SondagemAutoral/Matematica/Perguntas`;
+    var url = `/api/SondagemAutoral/Matematica/Perguntas?anoEscolar=7`;
     return fetch(url, {
         method: "get",
         headers: { "Content-Type": "application/json" }
@@ -75,8 +76,6 @@ function* SalvaSondagemAutoralMat({ alunos }) {
         }).then(response => response.json());
         return (data);
     } catch (error) {
-        console.log(error);
-
     }
 
 
@@ -128,7 +127,6 @@ function* GetFiltersTeacher({ profileOccupatios }) {
     try {
         const data = yield call(getTeacherFiltersApi, profileOccupatios);
         var filters = data;
-        console.log(data);
         yield put({ type: Filters.types.SET_FILTERS_TEACHER, filters });
     } catch (error) {
         yield put({ type: "API_CALL_ERROR" });

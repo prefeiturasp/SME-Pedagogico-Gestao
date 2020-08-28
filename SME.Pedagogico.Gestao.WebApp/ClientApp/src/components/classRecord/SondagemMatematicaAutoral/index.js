@@ -1,5 +1,7 @@
-﻿import React, { useState, useMemo, memo } from "react";
+﻿import React, { useState, useMemo, memo, useEffect } from "react";
 import AlunoSondagemMatematicaAutoral from "./aluno";
+import { useSelector, useDispatch } from "react-redux";
+import { actionCreators } from "../../../store/SondagemAutoral";
 
 function SondagemMatematicaAutoral() {
   const perguntas = [
@@ -624,21 +626,17 @@ function SondagemMatematicaAutoral() {
     },
   ];
 
-  const periodosLista = [
-    {
-      id: "c93c1c4a-abb9-43a4-a8cd-283e4df365d8",
-      descricao: "1º Semestre",
-    },
-    {
-      id: "8de86d08-b7a1-45df-b775-07550714756b",
-      descricao: "2º Semestre",
-    },
-  ];
-
+  const dispatch = useDispatch();
+  const filtros = useSelector((store) => store.filters);
+  
   const [indexSelecionado, setIndexSelecionado] = useState(1);
+  const periodosLista = useSelector((store) => store.listaPeriodos);
+  const perguntasLista = useSelector((store) => store.listaPerguntas);
+
+  console.log(perguntasLista);
+  console.log(periodosLista);
 
   const itemSelecionado = useMemo(() => {
-    console.log("passou aqui");
     return perguntas.filter((x) => x.ordenacao == indexSelecionado);
   }, [indexSelecionado]);
 
@@ -653,6 +651,11 @@ function SondagemMatematicaAutoral() {
 
     setIndexSelecionado((oldState) => oldState - 1);
   };
+
+  useEffect(() => {
+    dispatch(actionCreators.listarPeriodos());
+    dispatch(actionCreators.listarPerguntas());
+  }, []);
 
   const pStyle = {
     color: "#DADADA",
@@ -706,24 +709,26 @@ function SondagemMatematicaAutoral() {
           ))}
         </tr>
         <tr>
-          {periodosLista.map((periodo) => (
-            <th
-              key={periodo.id}
-              className="text-center border poll-select-container"
-            >
-              <small className="text-muted">{periodo.descricao}</small>
-            </th>
-          ))}
+          {periodosLista &&
+            periodosLista.map((periodo) => (
+              <th
+                key={periodo.id}
+                className="text-center border poll-select-container"
+              >
+                <small className="text-muted">{periodo.descricao}</small>
+              </th>
+            ))}
         </tr>
       </thead>
       <tbody>
-        {alunos.map((aluno) => (
-          <AlunoSondagemMatematicaAutoral
-            aluno={aluno}
-            periodos={periodosLista}
-            perguntaSelecionada={itemSelecionado}
-          />
-        ))}
+        {periodosLista &&
+          alunos.map((aluno) => (
+            <AlunoSondagemMatematicaAutoral
+              aluno={aluno}
+              periodos={periodosLista}
+              perguntaSelecionada={itemSelecionado}
+            />
+          ))}
       </tbody>
     </table>
   );

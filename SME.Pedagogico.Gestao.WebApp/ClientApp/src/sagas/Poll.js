@@ -48,7 +48,6 @@ function* SavePollPortuguese(students) {
         }).then(response => response.json());
         return (data.status);
     } catch (error) {
-        console.log(error);
     }
 } 
 
@@ -76,7 +75,6 @@ function getStudentsPollMathNumbersRequestApi(classRoom) {
             body: JSON.stringify(classRoom)
         }).then(response => response.json())
     } catch (e) {
-        console.log(e);
     }
     
     return (data);
@@ -92,7 +90,6 @@ function* SavePollMathNumbers(students) {
         }).then(response => response.json());
         return (data);
     } catch (error) {
-        console.log(error);
         
     }
 }
@@ -128,7 +125,6 @@ function* SavePollMathCA(students) {
         }).then(response => response.json());
         return (data);
     } catch (error) {
-        console.log(error);
     }
 }
 
@@ -163,6 +159,5 @@ function* SavePollMathCM(students) {
         }).then(response => response.json());
         return (data);
     } catch (error) {
-        console.log(error);
     }
 }

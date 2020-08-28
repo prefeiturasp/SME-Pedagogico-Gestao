@@ -129,7 +129,6 @@ class Poll extends Component {
     componentDidMount() { }
 
     componentWillUpdate() {
-        console.log("willUpdate");
         var todayDate = new Date();
         if (this.props.filters !== undefined) {
             if (this.props.filters.period !== null) {
@@ -202,7 +201,6 @@ class Poll extends Component {
 
     componentRender() {
         var componentRender;
-        debugger;
         var sondagemType = this.props.poll.pollSelected;
 
         if (this.props.poll.pollSelected === ClassRoomEnum.ClassPTAutoral) {
@@ -357,13 +355,6 @@ class Poll extends Component {
         else {
             componentRender = "";
         }
-        console.log(
-            this.props.poll.pollSelected +
-            " " +
-            this.props.poll.pollTypeSelected +
-            " " +
-            this.props.poll.pollYear
-        );
 
         return componentRender;
     }
@@ -711,30 +702,24 @@ class Poll extends Component {
                 );
             } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMT) {
                 if (this.props.poll.pollTypeSelected === "Numeric") {
-                    console.log(this.props.poll.studentsPollMathNumbers);
                     var response = this.props.pollMethods.save_poll_math_numbers_students(
                         this.props.poll.studentsPollMathNumbers
                     );
                 } else if (this.props.poll.pollTypeSelected === "CA") {
-                    console.log(this.props.poll.studentsPollMathCA);
                     var response = this.props.pollMethods.save_poll_math_ca_students(
                         this.props.poll.studentsPollMathCA
                     );
                 } else if (this.props.poll.pollTypeSelected === "CM") {
-                    console.log(this.props.poll.studentsPollMathCM);
                     var response = this.props.pollMethods.save_poll_math_cm_students(
                         this.props.poll.studentsPollMathCM
                     );
                 }
 
-                console.log(response);
-                console.log(this.props.poll.pollSelected);
             }
             this.props.dataMethods.reset_new_data_state();
         } else {
             //alert(this.props.poll.pollSelected);
         }
-        console.log(this.props);
     }
 
     toggleButton(elementSeleted) {
@@ -744,7 +729,7 @@ class Poll extends Component {
     }
 
     openPortuguesePoll() {
-        debugger;
+        
         //this.toggleButton(element.currentTarget.id);//portugues-tab
         this.props.dataMethods.reset_new_data_state();
         this.toggleButton("portugues-tab");

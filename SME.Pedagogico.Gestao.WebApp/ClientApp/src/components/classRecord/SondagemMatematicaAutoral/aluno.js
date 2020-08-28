@@ -8,9 +8,6 @@ function AlunoSondagemMatematicaAutoral({
   aluno,
 }) {
 
-  console.log(`Aluno sondagem Matematia`);
-  console.log(perguntaSelecionada);
-
   return (
     <tr>
       <th className="align-middle">
@@ -25,10 +22,6 @@ function AlunoSondagemMatematicaAutoral({
             var retorno =
               x.periodoId === periodo.id &&
               x.perguntaId === perguntaSelecionada.id;
-
-
-              console.log(perguntaSelecionada);
-              console.log(retorno);
 
               return retorno;
           })
