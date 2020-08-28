@@ -112,7 +112,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             var alunoLista = listagem.FirstOrDefault(x => x.CodigoAluno.Equals(aluno.CodigoAluno));
 
             if (alunoLista != null)
-                AdicionarRespostaAluno(aluno, alunoLista);
+                AdicionarRespostaAluno(aluno, ref alunoLista);
             else
                 AdicionarNovoAlunoListagem(listagem, aluno);
         }
@@ -163,7 +163,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             });
         }
 
-        private void AdicionarRespostaAluno(SondagemAutoral aluno, AlunoSondagemMatematicaDto alunoLista)
+        private void AdicionarRespostaAluno(SondagemAutoral aluno, ref AlunoSondagemMatematicaDto alunoLista)
         {
             alunoLista.Respostas.ToList().Add(new AlunoRespostaDto
             {
