@@ -1,28 +1,31 @@
 ﻿import { takeLatest, call, put, all } from "redux-saga/effects";
 import * as Autoral from "../store/SondagemAutoral";
+import * as Filters from "../store/Filters";
 
 export default function* () {
     yield all([
-        takeLatest(Autoral.types.LISTA_PERGUNTAS, ListarPerguntas),
-        takeLatest(Autoral.types.LISTA_PERIODOS, ListarPeriodos),
-        takeLatest(Autoral.types.LISTA_ALUNOS_AUTORAL_MATEMATICA, ListarAlunosAutoralMat),
-        takeLatest(Autoral.types.SALVA_SONDAGEM_AUTORAL_MATEMATICA, SalvaSondagemAutoralMat),
+        takeLatest(Autoral.types.LISTAR_PERGUNTAS, ListarPerguntas),
+        takeLatest(Autoral.types.LISTAR_PERIODOS, ListarPeriodos),
+        takeLatest(Autoral.types.LISTAR_ALUNOS_AUTORAL_MATEMATICA, ListarAlunosAutoralMat),
+        takeLatest(Autoral.types.SALVAR_SONDAGEM_AUTORAL_MATEMATICA, SalvaSondagemAutoralMat),
         takeLatest(Filters.types.GET_PERIOD, GetPeriod)
     ]);
 }
 
 function* ListarPerguntas({}) {
     try {
+        debugger;
         const data = yield call(listaPerguntasAPI);
         var listaPerguntas = data;
         yield put({ type: Autoral.types.SETAR_PERGUNTAS, listaPerguntas });
     } catch (error) {
-        yield put({ type: "API_CALL_ERROR" });
+        yield put({ type: "API_CALL_ERROR_PERGUNTAS" });
     }
 }
 
 function listaPerguntasAPI() {
-    var url = `/api/SondagemAutoral/Matematica/Perguntas`;
+    debugger;
+    var url = `/api/SondagemAutoral/Matematica/Perguntas?anoEscolar=7`;
     return fetch(url, {
         method: "get",
         headers: { "Content-Type": "application/json" }
@@ -35,7 +38,7 @@ function* ListarPeriodos({ }) {
         var listaPeriodos = data;
         yield put({ type: Autoral.types.SETAR_PERIODOS, listaPeriodos });
     } catch (error) {
-        yield put({ type: "API_CALL_ERROR" });
+        yield put({ type: "API_CALL_ERROR_PERGUNTAS" });
     }
 }
 

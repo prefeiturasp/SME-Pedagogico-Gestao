@@ -1,159 +1,42 @@
-﻿import React, { useState, useMemo } from "react";
-import { useSelector } from 'react-redux';
+﻿import React, { useState, useMemo, useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux';
+import { createStore } from 'redux'
+
+import { actionCreators } from '../../store/SondagemAutoral';
+import { actionCreators as actionCreatorsPoll } from '../../store/Filters';
 
 function SondagemMatematicaAutoral() {
-  const perguntas = [
-    {
-      id: "d53ba946-fb3d-4b20-8883-0f7dbab3bddb",
-      descricao: "Problema de lógica",
-      ordenacao: 1,
-      respostas: [
-        {
-          id: "bc66297b-3f3a-4d8d-b6c4-ceea1696bc11",
-          descricao: "Resolveu corretamente",
-          ordenacao: 1,
-        },
-        {
-          id: "04695943-0abf-4dd7-b8b8-9e850f5d8d2e",
-          descricao: "Resolveu uma parte do problema corretamente",
-          ordenacao: 2,
-        },
-        {
-          id: "53911083-6799-4553-8e5e-3eaadec17a55",
-          descricao: "Resolveu o problema incorretamente",
-          ordenacao: 3,
-        },
-        {
-          id: "a04c7a11-52d7-4fbc-9115-2df00eda1ad2",
-          descricao: "Não registrou",
-          ordenacao: 4,
-        },
-      ],
-    },
-    {
-      id: "9d60c205-9a55-4f17-9254-b1d760d172fd",
-      descricao: "Área e perímetro ",
-      ordenacao: 2,
-      respostas: [
-        {
-          id: "bc66297b-3f3a-4d8d-b6c4-ceea1696bc11",
-          descricao: "Resolveu corretamente",
-          ordenacao: 1,
-        },
-        {
-          id: "aae9c109-bdb5-4391-b513-e5fd68d39d5a",
-          descricao:
-            "Compreende o que é área, mas não compreende o que é perímetro",
-          ordenacao: 2,
-        },
-        {
-          id: "ffa53f05-b71e-4ef8-9b10-7c932ca681db",
-          descricao:
-            "Compreende o que é perímetro, mas não compreende o que é área",
-          ordenacao: 3,
-        },
-        {
-          id: "a04c7a11-52d7-4fbc-9115-2df00eda1ad2",
-          descricao: "Não registrou",
-          ordenacao: 4,
-        },
-      ],
-    },
-    {
-      id: "13eb098b-c9a6-46c5-b5cb-f4549cef94f0",
-      descricao: "Sólidos geométricos",
-      ordenacao: 3,
-      respostas: [
-        {
-          id: "bc66297b-3f3a-4d8d-b6c4-ceea1696bc11",
-          descricao: "Resolveu corretamente",
-          ordenacao: 1,
-        },
-        {
-          id: "7abb0305-441f-4d40-baea-4cc3f13a1a50",
-          descricao:
-            "Identificou os nomes das figuras e não determinou elementos de poliedros corretamente",
-          ordenacao: 2,
-        },
-        {
-          id: "0218ff47-5565-426c-8d12-07090a1b4ec9",
-          descricao:
-            "Não identificou nomes de figuras e não determinou elementos de poliedros corretamente",
-          ordenacao: 3,
-        },
-        {
-          id: "a04c7a11-52d7-4fbc-9115-2df00eda1ad2",
-          descricao: "Não registrou",
-          ordenacao: 4,
-        },
-      ],
-    },
-    {
-      id: "21d6ae6b-f41e-4712-b71f-02cfc709e973",
-      descricao: "Relações entre grandezas e porcentagem",
-      ordenacao: 4,
-      respostas: [
-        {
-          id: "bc66297b-3f3a-4d8d-b6c4-ceea1696bc11",
-          descricao: "Resolveu corretamente",
-          ordenacao: 1,
-        },
-        {
-          id: "80d96e10-6be4-4ba4-8a84-4a7135e09b59",
-          descricao:
-            "Identificou corretamente a proporcionalidade e indicou a porcentagem corretamente, mas errou os cálculos",
-          ordenacao: 2,
-        },
-        {
-          id: "91c73b09-4ae9-4305-92bd-efa68ed9a4db",
-          descricao:
-            "Não identificou corretamente a proporcionalidade e indicou incorretamente a porcentagem",
-          ordenacao: 3,
-        },
-        {
-          id: "a04c7a11-52d7-4fbc-9115-2df00eda1ad2",
-          descricao: "Não registrou",
-          ordenacao: 4,
-        },
-      ],
-    },
-    {
-      id: "ef810828-770d-4fa4-bde2-31f31fb48337",
-      descricao: "Média, moda e mediana",
-      ordenacao: 5,
-      respostas: [
-        {
-          id: "bc66297b-3f3a-4d8d-b6c4-ceea1696bc11",
-          descricao: "Resolveu corretamente",
-          ordenacao: 1,
-        },
-        {
-          id: "22cbd4e4-582f-46c4-a2ee-ff4f387453bc",
-          descricao:
-            "Identificou corretamente as três medidas de tendência central, mas erros os cálculos",
-          ordenacao: 2,
-        },
-        {
-          id: "56da5097-d043-475e-a083-edcec0a94fdc",
-          descricao: "Não identificou uma ou mais medidas de tendência central",
-          ordenacao: 3,
-        },
-        {
-          id: "a04c7a11-52d7-4fbc-9115-2df00eda1ad2",
-          descricao: "Não registrou",
-          ordenacao: 4,
-        },
-      ],
-    },
-    ];
-    debugger;
-    const filtros = useSelector(state => state.filters)
+ 
+    //const store = createStore(actionCreators);
+ //   console.log(store.getState());
+   //const dispatch = useDispatch();
 
-  const [indexSelecionado, setIndexSelecionado] = useState(1);
+    const dispatch = useDispatch();
+    const filtros = useSelector(store => store.filters);
 
-  const itemSelecionado = useMemo(() => {
+ //   listarPerguntas: () => ({ type: types.LISTAR_PERGUNTAS }),
+    console.log(dispatch(actionCreators.listarPerguntas()));
+
+    const perguntas = useSelector(store => store.listaPerguntas);
+
+  const [indexSelecionado, setIndexSelecionado] = useState(0);
+
+    const itemSelecionado = useMemo(() => {
+        return [];
+      if (indexSelecionado == 0) return [];
       return perguntas.filter(x => x.ordenacao == indexSelecionado);
   }, [indexSelecionado]);
+
+
+    //useEffect(() => {
+    //    dispatch(actionCreators.listarPerguntas());
+
+    //}, []);
+
+    useEffect(() => {
+        if (!perguntas || perguntas.length > 0) setIndexSelecionado(1);
+
+    }, [perguntas]);
 
   const avancar = () => {
       if(indexSelecionado == (perguntas.length - 1))
