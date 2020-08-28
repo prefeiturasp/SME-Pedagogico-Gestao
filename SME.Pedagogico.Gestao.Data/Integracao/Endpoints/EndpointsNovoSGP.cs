@@ -6,7 +6,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
 {
     public static class EndpointsNovoSGP
     {
-        public static Func<string, string> BaseSGPEndpoint = (versao) => $"https://dev-novosgp.sme.prefeitura.sp.gov.br/api/{versao}/";
+        public static Func<string, string> BaseSGPEndpoint = (versao) => Environment.GetEnvironmentVariable("urlApiSgp") + versao + "/";
 
         public static Func<string> AutenticacaoEndpoint = () => "autenticacao";
 

@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SME.Pedagogico.Gestao.Models.Autoral;
+using System;
 
 namespace SME.Pedagogico.Gestao.Data.Contexts
 {
@@ -6,7 +8,7 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
     {
         #region ==================== ATTRIBUTES ====================
 
-        private string connectionString = "Server=10.50.1.11;Port=5432;Database=smeManagementDB;Username=postgres;Password=39162604;";
+        private string connectionString = Environment.GetEnvironmentVariable("sondagemConnection");
 
         #region ---------- Academic ----------
 
@@ -18,6 +20,17 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
         public DbSet<Models.Academic.MathPoolCM> MathPoolCMs { get; set; }
         public DbSet<Models.Academic.MathPoolCA> MathPoolCAs { get; set; }
         public DbSet<Models.Academic.MathPoolNumber> MathPoolNumbers { get; set; }
+        public DbSet<ComponenteCurricular> ComponenteCurricular { get; set; }
+        public DbSet<Pergunta> Pergunta { get; set; }
+        public DbSet<Resposta> Resposta { get; set; }
+        public DbSet<PerguntaResposta> PerguntaResposta { get; set; }
+        public DbSet<PerguntaAnoEscolar> PerguntaAnoEscolar { get; set; }
+        public DbSet<Grupo> Grupo { get; set; }
+        public DbSet<Ordem> Ordem { get; set; }
+        public DbSet<OrdemPergunta> OrdemPergunta { get; set; }
+        public DbSet<Periodo> Periodo { get; set; }
+        public DbSet<SondagemAutoral> SondagemAutoral { get; set; }
+        public DbSet<GrupoOrdem> GrupoOrdem { get; set; }
 
         #endregion ---------- Academic ----------
 
@@ -71,6 +84,8 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+
             // Seed para os perfis
             Models.Authentication.Role[] roles = new Models.Authentication.Role[]
             {

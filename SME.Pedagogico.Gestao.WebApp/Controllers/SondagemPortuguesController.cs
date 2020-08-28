@@ -1,14 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using SME.Pedagogico.Gestao.Data.Contexts;
-using SME.Pedagogico.Gestao.WebApp.Models.Poll;
-using SME.Pedagogico.Gestao.Models.Academic;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using SME.Pedagogico.Gestao.WebApp.Models;
 using SME.Pedagogico.Gestao.WebApp.Models.ClassRoom;
-using System.Linq;
 using SME.Pedagogico.Gestao.Data.DataTransfer;
+using SME.Pedagogico.Gestao.Data.Business;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
@@ -23,6 +19,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
             _config = config;
         }
+
 
 
         [HttpPost]
@@ -59,7 +56,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 var BusinessPoll = new Data.Business.PollPortuguese(_config);
                 var ListStudentPollPortuguese = await BusinessPoll.ListStudentPollPortuguese(classRoomDataTransfer);
 
-                if(ListStudentPollPortuguese != null)
+                if (ListStudentPollPortuguese != null)
                 {
                     return (Ok(ListStudentPollPortuguese));
                 }
@@ -68,12 +65,26 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 {
                     return NoContent();
                 }
-             
+
             }
             catch (System.Exception ex)
             {
                 return StatusCode(500, ex);
             }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ListarGrupos()
+        {
+            var sondagemAutoralBll = new PollPortuguese(_config);
+            return Ok(sondagemAutoralBll.ListarGrupos());
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ListarOrdens()
+        {
+            var sondagemAutoralBll = new PollPortuguese(_config);
+            return Ok(sondagemAutoralBll.ListarOrdens());
         }
     }
 }
