@@ -7,6 +7,7 @@ import ClassRoomStudentsSaga from '../sagas/ClassRoomStudents';
 import PollSaga from '../sagas/Poll';
 import PollReportSaga from '../sagas/PollReport';
 import FilterSaga from '../sagas/Filters';
+import SondagemAutoralSaga from '../sagas/SondagemAutoral'
 import * as LeftMenu from './LeftMenu';
 import * as Calendar from './Calendar';
 import * as Frequency from './Frequency';
@@ -15,8 +16,9 @@ import * as Poll from './Poll';
 import * as PollReport from './PollReport';
 import * as Filters from './Filters';
 import * as PollRouter from './PollRouter';
-import * as PollOptionSelectLock from './PollOptionSelectLock'
+import * as PollOptionSelectLock from './PollOptionSelectLock';
 import * as Data from './Data'
+import * as SondagemAutoral from './SondagemAutoral'
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web and AsyncStorage for react-native
 import logger from 'redux-logger';
@@ -37,6 +39,8 @@ export default function configureStore(history, initialState) {
         pollRouter: PollRouter.reducer,
         pollOptionSelectLock: PollOptionSelectLock.reducer,
         data: Data.reducer,
+        autoral: SondagemAutoral.reducer,
+        
     };
 
     const reduxSaga = createSagaMiddleware();
@@ -94,6 +98,7 @@ export default function configureStore(history, initialState) {
     reduxSaga.run(PollSaga);
     reduxSaga.run(PollReportSaga);
     reduxSaga.run(FilterSaga);
+    reduxSaga.run(SondagemAutoralSaga);
 
     return ({ store, persistor });
 }
