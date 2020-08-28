@@ -1,4 +1,5 @@
 ﻿import React, { useState, useMemo } from "react";
+import { useSelector } from 'react-redux';
 
 function SondagemMatematicaAutoral() {
   const perguntas = [
@@ -144,7 +145,9 @@ function SondagemMatematicaAutoral() {
         },
       ],
     },
-  ];
+    ];
+    debugger;
+    const filtros = useSelector(state => state.filters)
 
   const [indexSelecionado, setIndexSelecionado] = useState(1);
 
