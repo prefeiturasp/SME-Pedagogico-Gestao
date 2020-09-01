@@ -1,11 +1,13 @@
-import React, { useEffect, memo } from "react";
-
+import React, { useEffect, memo, useMemo } from "react";
+import AutoralSelect from "./select";
 
 function AlunoSondagemMatematicaAutoral({
   perguntaSelecionada,
   periodos,
   aluno,
+  onChangeAluno
 }) {
+
   return (
     <tr>
       <th className="align-middle">
@@ -21,10 +23,25 @@ function AlunoSondagemMatematicaAutoral({
                 x.periodoId === periodo.id &&
                 x.pergunta === perguntaSelecionada.id
             )
-          : [];
+          : null;
+
+        const respostaSelect =
+          resposta && resposta.resposta && resposta.resposta !== {}
+            ? resposta.resposta
+            : "";
+
         return (
-          <th>
-            <small>{resposta && resposta.resposta ? resposta.resposta : "Vazio"}</small>
+          <th className="text-center align-center">
+            <AutoralSelect
+              lista={perguntaSelecionada.respostas}
+              valor={respostaSelect}
+              perguntaId={perguntaSelecionada.id}
+              alunoId={aluno.codigoAluno}
+              sondagemId={aluno.id}
+              periodoId={periodo.id}
+              onChange={onChangeAluno}
+              disabled={false}
+            ></AutoralSelect>
           </th>
         );
       })}
@@ -32,4 +49,4 @@ function AlunoSondagemMatematicaAutoral({
   );
 }
 
-export default memo(AlunoSondagemMatematicaAutoral);
+export default AlunoSondagemMatematicaAutoral;
