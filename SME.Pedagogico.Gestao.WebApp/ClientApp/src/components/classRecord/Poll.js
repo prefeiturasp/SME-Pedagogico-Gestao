@@ -9,6 +9,7 @@ import { actionCreators as actionCreatorsPoll } from "../../store/Poll";
 import { actionCreators as actionCreatorsPollOptionSelectLock } from "../../store/PollOptionSelectLock";
 import { actionCreators as actionCreatorsData } from "../../store/Data";
 import { actionCreators as actionCreatorsPollFilters } from "../../store/Filters";
+import { actionCreators as actionCreatorAutoral } from "../../store/SondagemAutoral";
 
 import { bindActionCreators } from "redux";
 
@@ -695,7 +696,15 @@ class Poll extends Component {
     }
 
     savePollStudent() {
-        if (this.props.poll.pollSelected !== null) {
+        if (this.props.pollStudents.pollSelected == ClassRoomEnum.ClassPTAutoral) {
+            this.props.autoralMethods.salvaSondagemAutoralMatematica(this.props.autoral.listaAlunosAutoralMatematica)
+        }
+
+        else if (this.props.pollStudents.pollSelected == ClassRoomEnum.ClassMTAutoral) {
+
+        }
+
+        else if (this.props.poll.pollSelected !== null) {
             if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
                 var response = this.props.pollMethods.save_poll_portuguese_student(
                     this.props.poll.students
@@ -729,7 +738,7 @@ class Poll extends Component {
     }
 
     openPortuguesePoll() {
-        
+
         //this.toggleButton(element.currentTarget.id);//portugues-tab
         this.props.dataMethods.reset_new_data_state();
         this.toggleButton("portugues-tab");
@@ -810,7 +819,7 @@ class Poll extends Component {
                         <button
                             className="btn btn-outline-primary btn-sm btn-planning"
                             onClick={this.toggleMessagePortugueseBox}
-                        >sdasduesaa
+                        >Língua Portuguesa
             </button>
                         <TwoSteps
                             show={this.state.showMessagePortugueseBox}
@@ -980,7 +989,8 @@ export default connect(
         poll: state.poll,
         pollOptionSelectLock: state.pollOptionSelectLock,
         data: state.data,
-        filters: state.filters
+        filters: state.filters,
+        autoral: state.autoral
     }),
     dispatch => ({
         pollMethods: bindActionCreators(actionCreatorsPoll, dispatch),
@@ -989,6 +999,7 @@ export default connect(
             dispatch
         ),
         dataMethods: bindActionCreators(actionCreatorsData, dispatch),
-        filterMethods: bindActionCreators(actionCreatorsPollFilters, dispatch)
+        filterMethods: bindActionCreators(actionCreatorsPollFilters, dispatch),
+        autoralMethods: bindActionCreators(actionCreatorAutoral, dispatch)
     })
 )(Poll);
