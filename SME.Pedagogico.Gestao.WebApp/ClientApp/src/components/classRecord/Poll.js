@@ -696,11 +696,11 @@ class Poll extends Component {
     }
 
     savePollStudent() {
-        if (this.props.pollStudents.pollSelected == ClassRoomEnum.ClassPTAutoral) {
+        if (this.props.pollStudents.pollSelected == ClassRoomEnum.ClassMTAutoral) {
             this.props.autoralMethods.salvaSondagemAutoralMatematica(this.props.autoral.listaAlunosAutoralMatematica)
         }
 
-        else if (this.props.pollStudents.pollSelected == ClassRoomEnum.ClassMTAutoral) {
+        else if (this.props.pollStudents.pollSelected == ClassRoomEnum.ClassPTAutoral) {
 
         }
 
