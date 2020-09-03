@@ -6,7 +6,7 @@ import { actionCreators } from "../../../store/SondagemAutoral";
 function SondagemMatematicaAutoral() {
   const dispatch = useDispatch();
 
-  const filtros = useSelector((store) => store.filters);
+  const filtros = useSelector((store) => store.poll.selectedFilter);
 
   const [indexSelecionado, setIndexSelecionado] = useState(1);
 
@@ -14,10 +14,20 @@ function SondagemMatematicaAutoral() {
 
   const perguntas = useSelector((store) => store.autoral.listaPerguntas);
 
-  const alunosStore = useSelector(
+  const alunos = useSelector(
     (store) => store.autoral.listaAlunosAutoralMatematica
   );
-  const [alunos, setAlunos] = useState(alunosStore);
+
+  const filtrosBusca = useMemo(() => {
+    return {
+      anoLetivo: filtros.schoolYear,
+      anoEscolar: filtros.yearClassroom,
+      codigoDre: filtros.dreCodeEol,
+      codigoUe: filtros.schoolCodeEol,
+      codigoTurma: filtros.classroomCodeEol,
+      componenteCurricular: "9f3d8467-2f6e-4bcb-a8e9-12e840426aba",
+    };
+  },filtros)
 
   const anoEscolar = useSelector(
     (store) => store.poll.selectedFilter.yearClassroom
@@ -44,13 +54,45 @@ function SondagemMatematicaAutoral() {
   const avancar = () => {
     if (indexSelecionado == ultimaOrdenacao) return;
 
-    setIndexSelecionado((oldState) => oldState + 1);
+    salvar().then((x) => setIndexSelecionado((oldState) => oldState + 1));
   };
 
   const recuar = () => {
     if (indexSelecionado == primeiraOrdenacao) return;
 
-    setIndexSelecionado((oldState) => oldState - 1);
+    salvar().then((x) => setIndexSelecionado((oldState) => oldState - 1));
+  };
+
+  const salvar = async () => {
+    let alunosMutaveis = Object.assign([], alunos);
+
+    alunosMutaveis.forEach((aluno) => {
+      perguntas.forEach((pergunta) => {
+        periodosLista.forEach((periodo) => {
+          const resposta = {
+            periodoId: periodo.id,
+            pergunta: pergunta.id,
+            resposta: null,
+          };
+
+          if (!aluno.respostas || aluno.respostas.length === 0) {
+            aluno.respostas = [];
+            aluno.respostas.push(resposta);
+          }
+
+          var indexResposta = aluno.respostas.findIndex(
+            (resposta) =>
+              resposta.pergunta === pergunta.id &&
+              resposta.periodoId === periodo.id
+          );
+          if (indexResposta < 0) {
+            aluno.respostas.push(resposta);
+          }
+        });
+      });
+    });
+
+    dispatch(actionCreators.salvaSondagemAutoralMatematica(alunos, filtrosBusca));
   };
 
   const obterIndexAlunoAlteracao = (alunoIdState) => {
@@ -61,7 +103,7 @@ function SondagemMatematicaAutoral() {
     if (!aluno.respostas || aluno.respostas.length === 0) return null;
 
     return aluno.respostas.findIndex(
-      (x) => x.pergunta === perguntaId && x.periodo === periodoId
+      (x) => x.pergunta === perguntaId && x.periodoId === periodoId
     );
   };
 
@@ -72,42 +114,56 @@ function SondagemMatematicaAutoral() {
     alunoIdState,
     sondagemIdState
   ) => {
+    let alunosMutaveis = Object.assign([], alunos);
+
     const indexAluno = obterIndexAlunoAlteracao(alunoIdState);
+
+    console.log(indexAluno);
+    console.log(alunosMutaveis[indexAluno]);
 
     if (indexAluno < 0) return;
 
     const indexResposta = obterIndexRespostasAluno(
-      alunoIdState,
+      alunosMutaveis[indexAluno],
       perguntaIdState,
       periodoIdState
     );
 
-    if (!indexResposta || indexResposta <= -1) {
-      if (!alunos[indexAluno].respostas) {
-        alunos[indexAluno].respostas = [];
+    if (
+      indexResposta === null ||
+      indexResposta === undefined ||
+      indexResposta <= -1
+    ) {
+      console.log(alunosMutaveis[indexAluno].respostas);
+      if (!alunosMutaveis[indexAluno].respostas) {
+        alunosMutaveis[indexAluno].respostas = [];
       }
 
-      alunos[indexAluno].respostas.push({
+      alunosMutaveis[indexAluno].respostas.push({
         periodoId: periodoIdState,
         pergunta: perguntaIdState,
         resposta: novoValor,
       });
     } else {
-      alunos[indexAluno].respostas[indexResposta].resposta = novoValor;
+      console.log(alunosMutaveis[indexAluno].respostas[indexResposta]);
+      alunosMutaveis[indexAluno].respostas[indexResposta].resposta = novoValor;
     }
 
-    setAlunos(alunos);
+    dispatch(
+      actionCreators.setarAlunosAutoralmatematicaPreSalvar(alunosMutaveis)
+    );
+
+    //dispatch(actionCreators.salvaSondagemAutoralMatematica(alunosMutaveis));
   };
 
   useEffect(() => {
     dispatch(actionCreators.listarPeriodos());
     dispatch(actionCreators.listarPerguntas());
-    dispatch(actionCreators.listaAlunosAutoralMatematica());
-  }, []);
+    dispatch(actionCreators.listaAlunosAutoralMatematica(filtrosBusca));
 
-  useEffect(() => {
-    setAlunos(alunosStore);
-  }, [alunosStore]);
+    return () =>
+      dispatch(actionCreators.setarAlunosAutoralmatematicaPreSalvar([]));
+  }, []);
 
   useEffect(() => {
     setIndexSelecionado(primeiraOrdenacao);
@@ -172,6 +228,7 @@ function SondagemMatematicaAutoral() {
       </thead>
       <tbody>
         {periodosLista &&
+          alunos &&
           alunos.map((aluno) => (
             <AlunoSondagemMatematicaAutoral
               aluno={aluno}
@@ -185,4 +242,4 @@ function SondagemMatematicaAutoral() {
   );
 }
 
-export default memo(SondagemMatematicaAutoral);
+export default SondagemMatematicaAutoral;

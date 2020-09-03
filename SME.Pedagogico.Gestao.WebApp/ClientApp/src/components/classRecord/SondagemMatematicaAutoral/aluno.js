@@ -12,7 +12,7 @@ function AlunoSondagemMatematicaAutoral({
     <tr>
       <th className="align-middle">
         <small className="ml-2 pr-4">
-          <b>{0}</b>
+          <b>{aluno.numeroChamada}</b>
         </small>
         <small>{aluno.nomeAluno}</small>
       </th>

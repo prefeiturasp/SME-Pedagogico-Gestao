@@ -8,6 +8,8 @@ export const types = {
   SETAR_ALUNOS_AUTORAL_MATEMATICA: "SETAR_ALUNOS_AUTORAL_MATEMATICA",
   SALVAR_SONDAGEM_AUTORAL_MATEMATICA: "SALVAR_SONDAGEM_AUTORAL_MATEMATICA",
   SETAR_SONDAGEM_AUTORAL_MATEMATICA: "SETAR_SONDAGEM_AUTORAL_MATEMATICA",
+  SETAR_ALUNOS_AUTORAL_MATEMATICA_PRE_SALVAR:
+    "SETAR_ALUNOS_AUTORAL_MATEMATICA_PRE_SALVAR",
 };
 const initialState = {
   listaPeriodos: [],
@@ -23,12 +25,16 @@ export const actionCreators = {
     type: types.LISTAR_ALUNOS_AUTORAL_MATEMATICA,
     filtro,
   }),
-  salvaSondagemAutoralMatematica: (alunos) => ({
+  salvaSondagemAutoralMatematica: (alunos, filtro) => ({
     type: types.SALVAR_SONDAGEM_AUTORAL_MATEMATICA,
-    alunos,
+    payload: { alunos, filtro },
   }),
   setarSondagemAutoralMatematica: () => ({
     type: types.SETAR_SONDAGEM_AUTORAL_MATEMATICA,
+  }),
+  setarAlunosAutoralmatematicaPreSalvar: (alunos) => ({
+    type: types.SETAR_ALUNOS_AUTORAL_MATEMATICA_PRE_SALVAR,
+    alunos,
   }),
 };
 
@@ -45,6 +51,12 @@ export const reducer = (state, action) => {
         ...state,
         listaPerguntas: action.listaPerguntas,
       };
+    case types.SETAR_ALUNOS_AUTORAL_MATEMATICA_PRE_SALVAR: {
+      return {
+        ...state,
+        listaAlunosAutoralMatematica: action.alunos,
+      };
+    }
     case types.SETAR_ALUNOS_AUTORAL_MATEMATICA:
       return {
         ...state,

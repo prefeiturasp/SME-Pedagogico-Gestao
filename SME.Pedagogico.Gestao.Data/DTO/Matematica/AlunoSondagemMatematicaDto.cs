@@ -33,8 +33,10 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Matematica
 
         [Required(ErrorMessage = "O Componente curricular é Obrigátorio")]        
         public string ComponenteCurricular { get; set; }
+
+        public int NumeroChamada { get; set; }
         
-        public IEnumerable<AlunoRespostaDto> Respostas { get; set; }
+        public List<AlunoRespostaDto> Respostas { get; set; }
 
 
         public static explicit operator SondagemAutoral(AlunoSondagemMatematicaDto alunoSondagemMatematicaDto) =>
