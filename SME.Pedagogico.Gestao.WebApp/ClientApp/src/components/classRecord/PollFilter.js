@@ -39,7 +39,6 @@ class PollFilter extends Component {
    
 
     componentWillMount() {
-        debugger
         var role = this.props.user;
 
          var anoLetivo = new Date();
