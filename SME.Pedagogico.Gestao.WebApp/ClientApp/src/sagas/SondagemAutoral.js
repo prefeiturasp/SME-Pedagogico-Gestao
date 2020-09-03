@@ -68,39 +68,24 @@ function* ListarAlunosAutoralMat({ filtro }) {
 }
 
 function listarAlunosMatApi(filtro) {
-  var url = `/api/SondagemAutoral/Matematica?AnoEscolar=7&AnoLetivo=2020&CodigoDre=10800&CodigoUe=108200&CodigoTurma=2117803&ComponenteCurricular=9f3d8467-2f6e-4bcb-a8e9-12e840426aba`; //Passar filtros na url
+  var url = `/api/SondagemAutoral/Matematica?${new URLSearchParams(filtro)}`;
   return fetch(url, {
     method: "get",
     headers: { "Content-Type": "application/json" },
   }).then((response) => response.json());
 }
 
-function* SalvaSondagemAutoralMat({ alunos }) {
-  try {
-    const alunosJson = JSON.stringify(alunos);
-
-    console.log(alunosJson);
-
-    var data = yield fetch("/api/SondagemAutoral/Matematica", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: alunosJson,
-    }).then((response) => response.json());
-    return data;
-  } catch (error) {
-    console.error(error);
-  }
-
-  try {
-    const data = yield call(listarAlunosMatApi, alunos);
-    var listaAlunosAutoralMatematica = data;
-    yield put({
-      type: Autoral.types.SETAR_ALUNOS_AUTORAL_MATEMATICA,
-      listaAlunosAutoralMatematica,
-    });
-  } catch (error) {
-    yield put({ type: "API_CALL_ERROR" });
-  }
+function* SalvaSondagemAutoralMat({ payload }) {
+  yield fetch("/api/SondagemAutoral/Matematica", {
+    method: "post",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload.alunos),
+  });
+  
+  yield put({
+    type: Autoral.types.LISTAR_ALUNOS_AUTORAL_MATEMATICA,
+    filtro: payload.filtro,
+  });
 }
 
 function* GetPeriod({ schoolYear }) {

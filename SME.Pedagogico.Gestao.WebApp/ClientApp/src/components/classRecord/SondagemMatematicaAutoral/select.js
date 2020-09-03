@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState, useEffect } from "react";
 import "../../polls/inputs/Common.css";
 import shortid from "shortid";
 
@@ -26,6 +26,7 @@ const AutoralSelect = ({
       sondagemIdState
     );
   }
+
 
   return (
     <div>
