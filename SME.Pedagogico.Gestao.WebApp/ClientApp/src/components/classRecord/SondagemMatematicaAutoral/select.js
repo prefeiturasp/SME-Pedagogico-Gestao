@@ -12,21 +12,9 @@ const AutoralSelect = ({
   alunoId,
   sondagemId,
 }) => {
-  const [perguntaIdState] = useState(perguntaId);
-  const [periodoIdState] = useState(periodoId);
-  const [alunoIdState] = useState(alunoId);
-  const [sondagemIdState] = useState(sondagemId);
-
   function onOptionChange(event) {
-    onChange(
-      event.target.value,
-      perguntaIdState,
-      periodoIdState,
-      alunoIdState,
-      sondagemIdState
-    );
+    onChange(event.target.value, perguntaId, periodoId, alunoId, sondagemId);
   }
-
 
   return (
     <div>

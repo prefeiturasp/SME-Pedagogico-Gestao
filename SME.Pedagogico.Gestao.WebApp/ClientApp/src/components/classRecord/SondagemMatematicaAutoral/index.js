@@ -24,12 +24,12 @@ function SondagemMatematicaAutoral() {
   const setarModoEdicao = () => {
     dispatch(dataStore.set_new_data_state());
     dispatch(pollStore.setDataToSaveTrue());
-  }
+  };
 
   const sairModoEdicao = () => {
     dispatch(dataStore.reset_new_data_state());
     dispatch(pollStore.set_poll_data_saved_state());
-  }
+  };
 
   const filtrosBusca = useMemo(() => {
     return {
@@ -83,13 +83,19 @@ function SondagemMatematicaAutoral() {
   };
 
   const salvar = async () => {
-    console.log("passou aqui");   
+    await persistencia(alunos, perguntas, periodosLista);
+  };
 
-    let alunosMutaveis = Object.assign([], alunos);
+  const persistencia = async (
+    listaAlunosRedux,
+    perguntasRedux,
+    periodosRedux
+  ) => {
+    let alunosMutaveis = Object.assign([], listaAlunosRedux);
 
     alunosMutaveis.forEach((aluno) => {
-      perguntas.forEach((pergunta) => {
-        periodosLista.forEach((periodo) => {
+      perguntasRedux.forEach((pergunta) => {
+        periodosRedux.forEach((periodo) => {
           const resposta = {
             periodoId: periodo.id,
             pergunta: pergunta.id,
@@ -114,8 +120,12 @@ function SondagemMatematicaAutoral() {
     });
 
     dispatch(
-      actionCreators.salvaSondagemAutoralMatematica(alunos, filtrosBusca)
+      actionCreators.salvaSondagemAutoralMatematica(
+        alunosMutaveis,
+        filtrosBusca
+      )
     );
+
     sairModoEdicao();
   };
 
@@ -144,9 +154,6 @@ function SondagemMatematicaAutoral() {
 
     const indexAluno = obterIndexAlunoAlteracao(alunoIdState);
 
-    console.log(indexAluno);
-    console.log(alunosMutaveis[indexAluno]);
-
     if (indexAluno < 0) return;
 
     const indexResposta = obterIndexRespostasAluno(
@@ -171,7 +178,6 @@ function SondagemMatematicaAutoral() {
         resposta: novoValor,
       });
     } else {
-      console.log(alunosMutaveis[indexAluno].respostas[indexResposta]);
       alunosMutaveis[indexAluno].respostas[indexResposta].resposta = novoValor;
     }
 
@@ -184,12 +190,17 @@ function SondagemMatematicaAutoral() {
     dispatch(actionCreators.listarPeriodos());
     dispatch(actionCreators.listarPerguntas());
     dispatch(actionCreators.listaAlunosAutoralMatematica(filtrosBusca));
-    dispatch(pollStore.setFunctionButtonSave(salvar));
+    dispatch(
+      pollStore.setFunctionButtonSave(
+        (alunosRedux, perguntasRedux, periodosRedux) => {
+          persistencia(alunosRedux, perguntasRedux, periodosRedux);
+        }
+      )
+    );
 
     return () => {
       dispatch(actionCreators.setarAlunosAutoralmatematicaPreSalvar([]));
       sairModoEdicao();
-      dispatch(actionCreators.setFunctionButtonSave(null));
     };
   }, []);
 

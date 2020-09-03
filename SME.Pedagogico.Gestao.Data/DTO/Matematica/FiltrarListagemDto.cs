@@ -10,5 +10,6 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Matematica
         public string CodigoUe { get; set; }
         public string CodigoTurma { get; set; }
         public Guid ComponenteCurricular { get; set; }
+        public string PerguntaId { get; set; }
     }
 }

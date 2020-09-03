@@ -220,7 +220,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     .Where(x => x.ComponenteCurricular.Id
                         .Equals(filtrarListagemDto.ComponenteCurricular.ToString())
                         && x.AnoTurma == filtrarListagemDto.AnoEscolar
-                        && (filtrarListagemDto.CodigoTurma == null ? true : x.CodigoTurma.Equals(filtrarListagemDto.CodigoTurma)))
+                        // && x.PerguntaId == filtrarListagemDto.PerguntaId
+                        && (filtrarListagemDto.CodigoTurma == null ? true : x.CodigoTurma.Equals(filtrarListagemDto.CodigoTurma)))                        
                     .ToListAsync();
             }
         }
