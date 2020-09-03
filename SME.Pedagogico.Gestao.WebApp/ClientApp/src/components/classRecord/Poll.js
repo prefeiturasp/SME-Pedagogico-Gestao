@@ -9,6 +9,7 @@ import { actionCreators as actionCreatorsPoll } from "../../store/Poll";
 import { actionCreators as actionCreatorsPollOptionSelectLock } from "../../store/PollOptionSelectLock";
 import { actionCreators as actionCreatorsData } from "../../store/Data";
 import { actionCreators as actionCreatorsPollFilters } from "../../store/Filters";
+import { actionCreators as actionCreatorAutoral } from "../../store/SondagemAutoral";
 
 import { bindActionCreators } from "redux";
 
@@ -688,6 +689,34 @@ class Poll extends Component {
       this.props.poll.onClickButtonSave();
       return;
     }
+    savePollStudent() {
+        if (this.props.pollStudents.pollSelected == ClassRoomEnum.ClassMTAutoral) {
+            this.props.autoralMethods.salvaSondagemAutoralMatematica(this.props.autoral.listaAlunosAutoralMatematica)
+        }
+
+        else if (this.props.pollStudents.pollSelected == ClassRoomEnum.ClassPTAutoral) {
+
+        }
+
+        else if (this.props.poll.pollSelected !== null) {
+            if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
+                var response = this.props.pollMethods.save_poll_portuguese_student(
+                    this.props.poll.students
+                );
+            } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMT) {
+                if (this.props.poll.pollTypeSelected === "Numeric") {
+                    var response = this.props.pollMethods.save_poll_math_numbers_students(
+                        this.props.poll.studentsPollMathNumbers
+                    );
+                } else if (this.props.poll.pollTypeSelected === "CA") {
+                    var response = this.props.pollMethods.save_poll_math_ca_students(
+                        this.props.poll.studentsPollMathCA
+                    );
+                } else if (this.props.poll.pollTypeSelected === "CM") {
+                    var response = this.props.pollMethods.save_poll_math_cm_students(
+                        this.props.poll.studentsPollMathCM
+                    );
+                }
 
     if (this.props.poll.pollSelected !== null) {
       if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
@@ -962,19 +991,21 @@ class Poll extends Component {
   }
 }
 export default connect(
-  (state) => ({
-    poll: state.poll,
-    pollOptionSelectLock: state.pollOptionSelectLock,
-    data: state.data,
-    filters: state.filters,
-  }),
-  (dispatch) => ({
-    pollMethods: bindActionCreators(actionCreatorsPoll, dispatch),
-    pollOptionSelectLockMethods: bindActionCreators(
-      actionCreatorsPollOptionSelectLock,
-      dispatch
-    ),
-    dataMethods: bindActionCreators(actionCreatorsData, dispatch),
-    filterMethods: bindActionCreators(actionCreatorsPollFilters, dispatch),
-  })
+    state => ({
+        poll: state.poll,
+        pollOptionSelectLock: state.pollOptionSelectLock,
+        data: state.data,
+        filters: state.filters,
+        autoral: state.autoral
+    }),
+    dispatch => ({
+        pollMethods: bindActionCreators(actionCreatorsPoll, dispatch),
+        pollOptionSelectLockMethods: bindActionCreators(
+            actionCreatorsPollOptionSelectLock,
+            dispatch
+        ),
+        dataMethods: bindActionCreators(actionCreatorsData, dispatch),
+        filterMethods: bindActionCreators(actionCreatorsPollFilters, dispatch),
+        autoralMethods: bindActionCreators(actionCreatorAutoral, dispatch)
+    })
 )(Poll);
