@@ -1,27 +1,31 @@
 ﻿{
-    "iisSettings": {
-        "windowsAuthentication": false,
-        "anonymousAuthentication": true,
-        "iisExpress": {
-            "applicationUrl": "http://localhost:61540",
-            "sslPort": 0
-        }
-    },
-    "profiles": {
-        "IIS Express": {
-            "commandName": "IISExpress",
-            "launchBrowser": true,
-            "environmentVariables": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
-            }
-        },
-        "SME.Pedagogico.Gestao.WebApp": {
-            "commandName": "Project",
-            "launchBrowser": true,
-            "applicationUrl": "http://localhost:5000",
-            "environmentVariables": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
-            }
-        }
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:61540",
+      "sslPort": 0
     }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "API_EOL_KEY_ENV": "074c047807a16c06fe78966214ba533244e4ca6d",
+        "urlApiEol": "http://dev-smeintegracaoapi.sme.prefeitura.sp.gov.br/api/",
+        "urlApiSgp": "https://dev-novosgp.sme.prefeitura.sp.gov.br/api/",
+        "sondagemConnection": "Server=10.50.1.33;Port=30808;Database=db_pedagogicogestao;Username=usr_pedagogicogestao;Password=39162604;"
+      }
+    },
+    "SME.Pedagogico.Gestao.WebApp": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "http://localhost:5000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
 }

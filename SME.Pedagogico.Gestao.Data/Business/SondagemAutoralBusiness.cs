@@ -157,22 +157,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 await context.SondagemAutoral.AddAsync(sondagemAutoral);
             else
             {
-
-                var alunoAutoral = context.SondagemAutoral.FirstOrDefault(x => x.Id.Equals(sondagemAutoral.Id));
-                if(alunoAutoral != null)
-                {
-                    alunoAutoral.PerguntaId = sondagemAutoral.PerguntaId;
-                    alunoAutoral.RespostaId = sondagemAutoral.RespostaId;
-                    alunoAutoral.PeriodoId = sondagemAutoral.PeriodoId;
-                    context.SondagemAutoral.Update(alunoAutoral);
-                }
-
-                else
-                {
-                    await context.SondagemAutoral.AddAsync(sondagemAutoral);
-                }
-               
-
+                context.SondagemAutoral.Update(sondagemAutoral);
             }
                 
         }
