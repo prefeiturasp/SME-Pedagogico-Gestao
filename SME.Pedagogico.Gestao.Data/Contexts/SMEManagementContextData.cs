@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SME.Pedagogico.Gestao.Models.Autoral;
+using System;
 
 namespace SME.Pedagogico.Gestao.Data.Contexts
 {
@@ -7,7 +8,7 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
     {
         #region ==================== ATTRIBUTES ====================
 
-        private string connectionString = "Server=10.50.1.33;Port=30808;Database=db_pedagogicogestao;Username=postgres;Password=postgres;";
+        private string connectionString = Environment.GetEnvironmentVariable("sondagemConnection");
 
         #region ---------- Academic ----------
 
@@ -83,6 +84,8 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+
             // Seed para os perfis
             Models.Authentication.Role[] roles = new Models.Authentication.Role[]
             {

@@ -21,14 +21,14 @@ pipeline {
       
     stage('Analise Codigo') {
           when {
-            branch 'dev'
+            branch 'release'
           }
             steps {
                 sh 'echo Analise SonarQube'
                 sh 'dotnet-sonarscanner begin /k:"SME-Pedagogico-Gestao" /d:sonar.host.url="http://sonar.sme.prefeitura.sp.gov.br" /d:sonar.login="801f74ec2567fa5e26c51bbcb61f38829390bc6b"'
                 sh 'dotnet build'
                 //sh 'dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover'
-                sh 'dotnet-sonarscanner end /d:sonar.login="801f74ec2567fa5e26c51bbcb61f38829390bc6b'
+                sh 'dotnet-sonarscanner end /d:sonar.login="801f74ec2567fa5e26c51bbcb61f38829390bc6b"'
             
             }
        }

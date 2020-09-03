@@ -86,13 +86,21 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             if (alunoSondagemMatematicaDto == null || !alunoSondagemMatematicaDto.Any())
                 throw new Exception("É necessário realizar a sondagem de pelo menos 1 aluno");
-
-            using (var contexto = new SMEManagementContextData())
+            try
             {
-                await SalvarAluno(alunoSondagemMatematicaDto, contexto);
+                using (var contexto = new SMEManagementContextData())
+                {
+                    await SalvarAluno(alunoSondagemMatematicaDto, contexto);
 
-                await contexto.SaveChangesAsync();
+                    await contexto.SaveChangesAsync();
+                }
             }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+           
         }
 
         private async Task SalvarAluno(IEnumerable<AlunoSondagemMatematicaDto> alunoSondagemMatematicaDto, SMEManagementContextData contexto)
@@ -148,7 +156,25 @@ namespace SME.Pedagogico.Gestao.Data.Business
             if (string.IsNullOrWhiteSpace(sondagemAutoral.Id))
                 await context.SondagemAutoral.AddAsync(sondagemAutoral);
             else
-                context.SondagemAutoral.Update(sondagemAutoral);
+            {
+
+                var alunoAutoral = context.SondagemAutoral.FirstOrDefault(x => x.Id.Equals(sondagemAutoral.Id));
+                if(alunoAutoral != null)
+                {
+                    alunoAutoral.PerguntaId = sondagemAutoral.PerguntaId;
+                    alunoAutoral.RespostaId = sondagemAutoral.RespostaId;
+                    alunoAutoral.PeriodoId = sondagemAutoral.PeriodoId;
+                    context.SondagemAutoral.Update(alunoAutoral);
+                }
+
+                else
+                {
+                    await context.SondagemAutoral.AddAsync(sondagemAutoral);
+                }
+               
+
+            }
+                
         }
 
         private void AdicionarAlunosEOL(int anoEscolar, int anoLetivo, string codigoDre, string codigoUe, string codigoTurma, Guid componenteCurricular, List<AlunosNaTurmaDTO> alunos, List<AlunoSondagemMatematicaDto> listagem)

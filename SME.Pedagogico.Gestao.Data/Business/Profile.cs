@@ -37,14 +37,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 if (occupations == null)
                     return null;
 
-               // var temAcesso = await profileApi.VerificaSeProfessorTemAcesso(rf, _token);
-                //if (occupations != null && temAcesso)
-                //{
-                //    var cargoProfessor = new RetornoCargoDTO();
-                //    cargoProfessor.codigoCargo = "3239";
-                //    cargoProfessor.nomeCargo = "Professor";
-                //    occupations.cargos.Add(cargoProfessor);
-                //}
+                var temAcesso = await profileApi.VerificaSeProfessorTemAcesso(rf, _token);
+                if (occupations != null && temAcesso)
+                {
+                    var cargoProfessor = new RetornoCargoDTO();
+                    cargoProfessor.codigoCargo = "3239";
+                    cargoProfessor.nomeCargo = "Professor";
+                    occupations.cargos.Add(cargoProfessor);
+                }
 
                 foreach (var occupation in occupations.cargos)
                 {
