@@ -18,9 +18,9 @@ export default function* () {
   ]);
 }
 
-function* ListarPerguntas({}) {
+function* ListarPerguntas({ anoEscolar }) {
   try {
-    const data = yield call(listaPerguntasAPI);
+    const data = yield call(listaPerguntasAPI, anoEscolar);
     var listaPerguntas = data;
     yield put({ type: Autoral.types.SETAR_PERGUNTAS, listaPerguntas });
   } catch (error) {
@@ -28,8 +28,8 @@ function* ListarPerguntas({}) {
   }
 }
 
-function listaPerguntasAPI() {
-  var url = `/api/SondagemAutoral/Matematica/Perguntas?anoEscolar=7`;
+function listaPerguntasAPI(anoEscolar) {
+  var url = `/api/SondagemAutoral/Matematica/Perguntas?anoEscolar=${anoEscolar}`;
   return fetch(url, {
     method: "get",
     headers: { "Content-Type": "application/json" },

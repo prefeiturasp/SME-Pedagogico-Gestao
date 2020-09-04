@@ -20,7 +20,10 @@ const initialState = {
 
 export const actionCreators = {
   listarPeriodos: () => ({ type: types.LISTAR_PERIODOS }),
-  listarPerguntas: () => ({ type: types.LISTAR_PERGUNTAS }),
+  listarPerguntas: (anoEscolar) => ({
+    type: types.LISTAR_PERGUNTAS,
+    anoEscolar,
+  }),
   listaAlunosAutoralMatematica: (filtro) => ({
     type: types.LISTAR_ALUNOS_AUTORAL_MATEMATICA,
     filtro,
