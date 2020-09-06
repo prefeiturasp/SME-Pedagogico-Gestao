@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.WebApp.Contexts;
 using System;
 using System.IO;
@@ -84,6 +86,14 @@ namespace SME.Pedagogico.Gestao.WebApp
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 options.IncludeXmlComments(xmlPath);
             });
+
+            var config = new AutoMapper.MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Data.DTO.Portugues.GrupoDTO, Gestao.Models.Autoral.Grupo>();
+                cfg.CreateMap<Data.DTO.Portugues.OrdemDTO, Gestao.Models.Autoral.Ordem>();
+            });
+            IMapper mapper = config.CreateMapper();
+            services.AddSingleton(mapper);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

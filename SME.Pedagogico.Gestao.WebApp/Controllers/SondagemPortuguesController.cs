@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using SME.Pedagogico.Gestao.WebApp.Models.ClassRoom;
 using SME.Pedagogico.Gestao.Data.DataTransfer;
 using SME.Pedagogico.Gestao.Data.Business;
+using AutoMapper;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
@@ -14,6 +15,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
     public class SondagemPortuguesController : ControllerBase
     {
         public IConfiguration _config;
+    
         public SondagemPortuguesController(IConfiguration config)
         {
 
@@ -53,7 +55,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     yearClassroom = classRoomModel.yearClassroom
                 };
 
-                var BusinessPoll = new Data.Business.PollPortuguese(_config);
+                var BusinessPoll = new PollPortuguese(_config);
                 var ListStudentPollPortuguese = await BusinessPoll.ListStudentPollPortuguese(classRoomDataTransfer);
 
                 if (ListStudentPollPortuguese != null)

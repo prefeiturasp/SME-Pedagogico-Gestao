@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.Contexts;
 using SME.Pedagogico.Gestao.Data.DataTransfer;
 using SME.Pedagogico.Gestao.Data.DataTransfer.Portugues;
 using SME.Pedagogico.Gestao.Data.DTO;
+using SME.Pedagogico.Gestao.Data.DTO.Portugues;
 using SME.Pedagogico.Gestao.Data.Functionalities;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
@@ -19,11 +21,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
 {
     public class PollPortuguese
     {
+
+
+        IMapper _mapper;
+
         private string _token;
         public PollPortuguese(IConfiguration config)
         {
             var createToken = new CreateToken(config);
             _token = createToken.CreateTokenProvisorio();
+
         }
 
         public async void InsertPollPortuguese(List<StudentPollPortuguese> ListStudentsModel)
@@ -516,13 +523,39 @@ namespace SME.Pedagogico.Gestao.Data.Business
         }
 
 
-        public IEnumerable<Grupo> ListarGrupos()
+        public IEnumerable<DTO.Portugues.GrupoDTO> ListarGrupos()
         {
             using (var contexto = new SMEManagementContextData())
             {
-                return contexto.Grupo.ToList();
-            }
+                var grupos = contexto.Grupo.Include(x => x.Ordem).ToList();
 
+                var ListaGrupos = new List<DTO.Portugues.GrupoDTO>();
+
+                foreach (var grupo in grupos)
+                {
+                    var grupoDto = new DTO.Portugues.GrupoDTO();
+                    grupoDto.Ordem = new List<OrdemDTO>();
+                    grupoDto.Id = grupo.Id;
+                    grupoDto.Descricao = grupo.Descricao;
+
+                    foreach (var ordem in grupo.Ordem)
+                    {
+                        var ordemDto = new OrdemDTO()
+                        {
+                            Id = ordem.Id,
+                            Descricao = ordem.Descricao
+
+                        };
+                        grupoDto.Ordem.Add(ordemDto);
+                    }
+
+                    ListaGrupos.Add(grupoDto);
+                }
+
+                return ListaGrupos;
+
+
+            }
         }
 
         public IEnumerable<GrupoOrdem> ListarOrdens()
