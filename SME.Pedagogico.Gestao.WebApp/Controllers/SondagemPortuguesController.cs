@@ -6,6 +6,7 @@ using SME.Pedagogico.Gestao.WebApp.Models.ClassRoom;
 using SME.Pedagogico.Gestao.Data.DataTransfer;
 using SME.Pedagogico.Gestao.Data.Business;
 using AutoMapper;
+using SME.Pedagogico.Gestao.Data.DTO.Portugues;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
@@ -101,7 +102,27 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             var sondagemAutoralBll = new PollPortuguese(_config);
             return Ok(sondagemAutoralBll.RetornaPeriodosBimestres());
         }
+        [HttpPost]
+        public async Task<IActionResult> SondagemPortuguesAutoral([FromBody]IEnumerable<AlunoSondagemPortuguesDTO> ListaAlunosSondagemDto)
+        {
+            var sondagemAutoralBll = new PollPortuguese(_config);
+            sondagemAutoralBll.SalvarSondagemAutoralPortugues(ListaAlunosSondagemDto);
 
-        
+            return Ok();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ListarSondagemPortuguesAutoral([FromBody]IEnumerable<AlunoSondagemPortuguesDTO> ListaAlunosSondagemDto)
+        {
+            var sondagemAutoralBll = new PollPortuguese(_config);
+            sondagemAutoralBll.SalvarSondagemAutoralPortugues(ListaAlunosSondagemDto);
+
+            return Ok();
+        }
+
+
+
+
+
     }
 }

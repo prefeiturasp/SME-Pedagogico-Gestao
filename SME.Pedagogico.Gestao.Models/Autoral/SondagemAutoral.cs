@@ -31,9 +31,12 @@ namespace SME.Pedagogico.Gestao.Models.Autoral
             AnoLetivo = sondagemAutoral.AnoLetivo;
             Periodo = sondagemAutoral.Periodo;
             PeriodoId = sondagemAutoral.PeriodoId;
-        }
+            SequenciaOrdemSalva = sondagemAutoral.SequenciaOrdemSalva;
+            
 
-        public virtual ComponenteCurricular ComponenteCurricular { get; set; }
+    }
+
+    public virtual ComponenteCurricular ComponenteCurricular { get; set; }
         public string ComponenteCurricularId { get; set; }
         public virtual Pergunta Pergunta { get; set; }
         public string PerguntaId { get; set; }
@@ -52,5 +55,7 @@ namespace SME.Pedagogico.Gestao.Models.Autoral
         public int AnoLetivo { get; set; }
         public virtual Periodo Periodo { get; set; }
         public string PeriodoId { get; set; }
+        public int SequenciaOrdemSalva { get; set; }
+
     }
 }

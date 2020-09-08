@@ -577,16 +577,15 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             using (var contexto = new SMEManagementContextData())
             {
-                return contexto.ComponenteCurricular.Where(x => x.Descricao == "Língua portuguesa").FirstOrDefault() ;
+                return contexto.ComponenteCurricular.Where(x => x.Descricao == "Língua portuguesa").FirstOrDefault();
             }
         }
-
 
         public IEnumerable<PeriodoDto> RetornaPeriodosBimestres()
         {
             using (var contexto = new SMEManagementContextData())
             {
-                var peridos =  contexto.Periodo.Where(x => x.TipoPeriodo == Models.Enums.TipoPeriodoEnum.Bimestre).ToList();
+                var peridos = contexto.Periodo.Where(x => x.TipoPeriodo == Models.Enums.TipoPeriodoEnum.Bimestre).ToList();
                 var ListaPeriodos = new List<PeriodoDto>();
                 foreach (var periodo in peridos)
                 {
@@ -596,7 +595,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         Descricao = periodo.Descricao
                     };
 
-                   ListaPeriodos.Add(periodoDto);
+                    ListaPeriodos.Add(periodoDto);
                 }
 
                 return ListaPeriodos;
@@ -606,5 +605,91 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         }
 
+        public void ListarAlunosPortuguesAutoral()
+        {
+            // IList<SondagemAutoral> autoral = await ObterSondagemAutoral(filtrarListagemDto);
+            var turmApi = new TurmasAPI(endpointsAPI);
+            var alunos = await turmApi.GetAlunosNaTurma(Convert.ToInt32(filtrarListagemDto.CodigoTurma), filtrarListagemDto.AnoLetivo, _token);
+
+            if (alunos == null || !alunos.Any())
+                throw new Exception($"Não encontrado alunos para a turma {filtrarListagemDto.CodigoTurma} do ano letivo {filtrarListagemDto.AnoLetivo}");
+
+            var listagem = new List<AlunoSondagemMatematicaDto>();
+
+            foreach (var aluno in autoral)
+                MapearAlunosListagem(listagem, aluno);
+
+            AdicionarAlunosEOL(filtrarListagemDto.AnoEscolar, filtrarListagemDto.AnoLetivo, filtrarListagemDto.CodigoDre, filtrarListagemDto.CodigoUe, filtrarListagemDto.CodigoTurma, filtrarListagemDto.ComponenteCurricular, alunos, listagem);
+
+            return listagem.OrderBy(x => x.NumeroChamada);
+        }
+
+        public void SalvarSondagemAutoralPortugues(IEnumerable<AlunoSondagemPortuguesDTO> ListaAlunosSondagemDto)
+        {
+            if (ListaAlunosSondagemDto == null || !ListaAlunosSondagemDto.Any())
+                throw new Exception("É necessário realizar a sondagem de pelo menos 1 aluno");
+            using (var contexto = new SMEManagementContextData())
+            {
+                SalvarAluno(ListaAlunosSondagemDto, contexto);
+
+                contexto.SaveChanges();
+            }            
+        }
+        private void SalvarAluno(IEnumerable<AlunoSondagemPortuguesDTO> ListaAlunoSondagemPortuguesDTO, SMEManagementContextData contexto)
+        {
+            foreach (var aluno in ListaAlunoSondagemPortuguesDTO)
+            {
+                var alunoAutoral = (SondagemAutoral)aluno;
+
+                if (aluno.Respostas != null && aluno.Respostas.Any())
+                    SalvarAlunoComResposta(contexto, aluno, alunoAutoral);
+            }
+        }
+
+        private void SalvarAlunoComResposta(SMEManagementContextData contexto, AlunoSondagemPortuguesDTO aluno, SondagemAutoral alunoAutoral)
+        {
+            foreach (var resposta in aluno.Respostas)
+            {
+                var alunoSalvar = MapSalvar(contexto, resposta, alunoAutoral, aluno);
+
+                AdicicionarOuAlterar(contexto, alunoSalvar);
+            }
+        }
+
+        private SondagemAutoral MapSalvar(SMEManagementContextData contexto, AlunoRespostaDto resposta, SondagemAutoral alunoAutoral, AlunoSondagemPortuguesDTO aluno)
+        {
+            var alunoBanco = contexto.SondagemAutoral
+                .FirstOrDefault(sondagem => sondagem.PerguntaId == resposta.Pergunta
+                                                && sondagem.PeriodoId == resposta.PeriodoId
+                                                && sondagem.CodigoAluno == alunoAutoral.CodigoAluno
+                                                && sondagem.CodigoTurma == alunoAutoral.CodigoTurma
+                                                && sondagem.ComponenteCurricularId == alunoAutoral.ComponenteCurricularId
+                                                && sondagem.GrupoId == alunoAutoral.GrupoId
+                                                && sondagem.OrdemId == alunoAutoral.OrdemId
+                                                );
+
+            if (alunoBanco == null)
+                alunoBanco = new SondagemAutoral(alunoAutoral);
+
+            alunoBanco.PerguntaId = resposta.Pergunta;
+            alunoBanco.RespostaId = resposta.Resposta;
+            alunoBanco.PeriodoId = resposta.PeriodoId;
+
+            return alunoBanco;
+        }
+
+        private void AdicicionarOuAlterar(SMEManagementContextData context, SondagemAutoral sondagemAutoral)
+        {
+            if (string.IsNullOrWhiteSpace(sondagemAutoral.Id))
+                 context.SondagemAutoral.Add(sondagemAutoral);
+            else
+            {
+                context.SondagemAutoral.Update(sondagemAutoral);
+            }
+
+        }
     }
+
+
 }
+
