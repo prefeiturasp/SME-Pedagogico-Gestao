@@ -6,6 +6,9 @@ using System.Linq;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using SME.Pedagogico.Gestao.Models.Autoral;
+using SME.Pedagogico.Gestao.Data.Contexts;
 
 namespace SME.Pedagogico.Gestao.Data.Business
 {
@@ -26,11 +29,11 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var endPoint = new EndpointsAPI();
                 var schoolApi = new EscolasAPI(endPoint);
                 var eolCodeParseado = int.TryParse(schoolCodeEol, out int result);
-                var listClassRoom = await schoolApi.GetTurmasPorEscola(eolCodeParseado ? result : 0 , schooYear, _token);
-              
+                var listClassRoom = await schoolApi.GetTurmasPorEscola(eolCodeParseado ? result : 0, schooYear, _token);
+
                 if (listClassRoom != null)
                 {
-                    return listClassRoom.OrderBy(x=> x.NomeTurma).ToList();
+                    return listClassRoom.OrderBy(x => x.NomeTurma).ToList();
                 }
 
                 else
@@ -73,7 +76,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         public async Task<List<DREsDTO>> GetListDre()
         {
             try
-            { 
+            {
                 var endPoint = new EndpointsAPI();
                 var dreApi = new DREAPI(endPoint);
                 var listDres = await dreApi.GetDres(_token);
@@ -94,3 +97,4 @@ namespace SME.Pedagogico.Gestao.Data.Business
         }
     }
 }
+

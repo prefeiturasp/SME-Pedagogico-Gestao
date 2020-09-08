@@ -95,5 +95,13 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             var sondagemAutoralBll = new PollPortuguese(_config);
             return Ok(sondagemAutoralBll.RetornaComponenteCurricularPortugues());
         }
+        [HttpGet]
+        public async Task<ActionResult> Bimestres()
+        {
+            var sondagemAutoralBll = new PollPortuguese(_config);
+            return Ok(sondagemAutoralBll.RetornaPeriodosBimestres());
+        }
+
+        
     }
 }

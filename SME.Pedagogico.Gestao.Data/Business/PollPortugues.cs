@@ -5,6 +5,7 @@ using SME.Pedagogico.Gestao.Data.Contexts;
 using SME.Pedagogico.Gestao.Data.DataTransfer;
 using SME.Pedagogico.Gestao.Data.DataTransfer.Portugues;
 using SME.Pedagogico.Gestao.Data.DTO;
+using SME.Pedagogico.Gestao.Data.DTO.Matematica;
 using SME.Pedagogico.Gestao.Data.DTO.Portugues;
 using SME.Pedagogico.Gestao.Data.Functionalities;
 using SME.Pedagogico.Gestao.Data.Integracao;
@@ -579,5 +580,31 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 return contexto.ComponenteCurricular.Where(x => x.Descricao == "Língua portuguesa").FirstOrDefault() ;
             }
         }
+
+
+        public IEnumerable<PeriodoDto> RetornaPeriodosBimestres()
+        {
+            using (var contexto = new SMEManagementContextData())
+            {
+                var peridos =  contexto.Periodo.Where(x => x.TipoPeriodo == Models.Enums.TipoPeriodoEnum.Bimestre).ToList();
+                var ListaPeriodos = new List<PeriodoDto>();
+                foreach (var periodo in peridos)
+                {
+                    var periodoDto = new PeriodoDto()
+                    {
+                        Id = periodo.Id,
+                        Descricao = periodo.Descricao
+                    };
+
+                   ListaPeriodos.Add(periodoDto);
+                }
+
+                return ListaPeriodos;
+
+
+            }
+
+        }
+
     }
 }
