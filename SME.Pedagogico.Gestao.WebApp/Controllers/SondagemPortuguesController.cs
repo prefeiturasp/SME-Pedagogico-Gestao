@@ -15,7 +15,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
     public class SondagemPortuguesController : ControllerBase
     {
         public IConfiguration _config;
-    
+
         public SondagemPortuguesController(IConfiguration config)
         {
 
@@ -76,7 +76,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> ListarGrupos()
+        public async Task<ActionResult> Grupos()
         {
             var sondagemAutoralBll = new PollPortuguese(_config);
             return Ok(sondagemAutoralBll.ListarGrupos());
@@ -87,6 +87,13 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         {
             var sondagemAutoralBll = new PollPortuguese(_config);
             return Ok(sondagemAutoralBll.ListarOrdens());
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ComponenteCurricular()
+        {
+            var sondagemAutoralBll = new PollPortuguese(_config);
+            return Ok(sondagemAutoralBll.RetornaComponenteCurricularPortugues());
         }
     }
 }

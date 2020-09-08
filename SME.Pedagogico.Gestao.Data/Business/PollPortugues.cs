@@ -13,6 +13,7 @@ using SME.Pedagogico.Gestao.Models.Academic;
 using SME.Pedagogico.Gestao.Models.Autoral;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -537,22 +538,27 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     grupoDto.Ordem = new List<OrdemDTO>();
                     grupoDto.Id = grupo.Id;
                     grupoDto.Descricao = grupo.Descricao;
+                    grupoDto.OrdemVisivel = grupo.OrdemVisivel;
 
                     foreach (var ordem in grupo.Ordem)
                     {
                         var ordemDto = new OrdemDTO()
                         {
                             Id = ordem.Id,
-                            Descricao = ordem.Descricao
-
+                            Descricao = ordem.Descricao,
+                            Ordenacao = ordem.Ordenacao
                         };
                         grupoDto.Ordem.Add(ordemDto);
                     }
 
+                    if (grupoDto.Ordem.Count > 0)
+                        grupoDto.Ordem.OrderBy(x => x.Ordenacao);
+
                     ListaGrupos.Add(grupoDto);
+
                 }
 
-                return ListaGrupos;
+                return ListaGrupos.OrderBy(x => x.Descricao);
 
 
             }
@@ -563,6 +569,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
             using (var contexto = new SMEManagementContextData())
             {
                 return contexto.GrupoOrdem.Include(x => x.Ordem).ToList();
+            }
+        }
+
+        public ComponenteCurricular RetornaComponenteCurricularPortugues()
+        {
+            using (var contexto = new SMEManagementContextData())
+            {
+                return contexto.ComponenteCurricular.Where(x => x.Descricao == "Língua portuguesa").FirstOrDefault() ;
             }
         }
     }
