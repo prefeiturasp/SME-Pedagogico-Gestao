@@ -690,10 +690,10 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 CodigoDre = aluno.CodigoDre,
                 CodigoTurma = aluno.CodigoTurma,
                 CodigoUe = aluno.CodigoUe,
-                ComponenteCurricular = aluno.ComponenteCurricular.Id,
+                ComponenteCurricular = aluno.ComponenteCurricularId,
                 GrupoId = aluno.GrupoId,
                 OrdermId = aluno.OrdemId,
-                SequenciaOrdemSalva = aluno.SequenciaOrdemSalva,
+                SequenciaOrdemSalva = aluno.SequenciaDeOrdemSalva,
                 Respostas = new List<AlunoRespostaDto>()
                 {
                     new AlunoRespostaDto
@@ -710,17 +710,24 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             using (var contexto = new SMEManagementContextData())
             {
-                return await contexto.SondagemAutoral.Where(x => x.ComponenteCurricular.Id
-                        .Equals(filtrarListagemDto.ComponenteCurricular.ToString())
-                        && x.AnoTurma == filtrarListagemDto.AnoEscolar
-                        && x.OrdemId == filtrarListagemDto.OrdemId
-                        && x.CodigoDre == filtrarListagemDto.CodigoDre
-                        && x.CodigoUe == filtrarListagemDto.CodigoUe
-                        && x.AnoLetivo == filtrarListagemDto.AnoLetivo
-                        
-                        // && x.PerguntaId == filtrarListagemDto.PerguntaId
-                        && (filtrarListagemDto.CodigoTurma == null ? true : x.CodigoTurma.Equals(filtrarListagemDto.CodigoTurma)))
-                    .ToListAsync();
+                try
+                {
+                    return await contexto.SondagemAutoral.Where(x => x.ComponenteCurricular.Id
+                   .Equals(filtrarListagemDto.ComponenteCurricular.ToString())
+                   && x.AnoTurma == filtrarListagemDto.AnoEscolar
+                   && x.OrdemId == filtrarListagemDto.OrdemId
+                   && x.CodigoDre == filtrarListagemDto.CodigoDre
+                   && x.CodigoUe == filtrarListagemDto.CodigoUe
+                   && x.AnoLetivo == filtrarListagemDto.AnoLetivo
+                   && (filtrarListagemDto.CodigoTurma == null ? true : x.CodigoTurma.Equals(filtrarListagemDto.CodigoTurma)))
+               .ToListAsync();
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+           
             }
         }
 

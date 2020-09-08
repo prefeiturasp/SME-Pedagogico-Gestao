@@ -42,7 +42,7 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Portugues
         [Required(ErrorMessage = "O Grupo é Obrigatório")]
         public string GrupoId { get; set; }
 
-        public int SequenciaOrdemSalva { get; set; }
+        public int ? SequenciaOrdemSalva { get; set; }
 
         public int NumeroChamada { get; set; }
         public List<AlunoRespostaDto> Respostas { get; set; }
@@ -61,7 +61,7 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Portugues
              ComponenteCurricularId = alunoSondagemPortuguesDto.ComponenteCurricular,
              Id = alunoSondagemPortuguesDto.Id,
              NomeAluno = alunoSondagemPortuguesDto.NomeAluno,
-             SequenciaOrdemSalva = alunoSondagemPortuguesDto.SequenciaOrdemSalva
+             SequenciaDeOrdemSalva = alunoSondagemPortuguesDto.SequenciaOrdemSalva
              
          };
     }

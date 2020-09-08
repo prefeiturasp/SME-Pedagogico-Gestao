@@ -215,14 +215,22 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             using (var contexto = new SMEManagementContextData())
             {
-                return await contexto.SondagemAutoral
-                    .Include(x => x.ComponenteCurricular)
-                    .Where(x => x.ComponenteCurricular.Id
-                        .Equals(filtrarListagemDto.ComponenteCurricular.ToString())
-                        && x.AnoTurma == filtrarListagemDto.AnoEscolar
-                        // && x.PerguntaId == filtrarListagemDto.PerguntaId
-                        && (filtrarListagemDto.CodigoTurma == null ? true : x.CodigoTurma.Equals(filtrarListagemDto.CodigoTurma)))                        
-                    .ToListAsync();
+                try
+                {
+                    return await contexto.SondagemAutoral
+                   .Include(x => x.ComponenteCurricular)
+                   .Where(x => x.ComponenteCurricular.Id
+                       .Equals(filtrarListagemDto.ComponenteCurricular.ToString())
+                       && x.AnoTurma == filtrarListagemDto.AnoEscolar
+                       // && x.PerguntaId == filtrarListagemDto.PerguntaId
+                       && (filtrarListagemDto.CodigoTurma == null ? true : x.CodigoTurma.Equals(filtrarListagemDto.CodigoTurma)))
+                   .ToListAsync();
+                }
+                catch (Exception ex )
+                {
+                    throw ex;
+                }
+               
             }
         }
 

@@ -113,12 +113,11 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ListarSondagemPortuguesAutoral(FiltrarListagemDto filtrarListagemDto)
+        public async Task<IActionResult> ListarSondagemPortuguesAutoral([FromQuery] FiltrarListagemDto filtrarListagemDto)
         {
             var sondagemAutoralBll = new PollPortuguese(_config);
-            sondagemAutoralBll.ListarAlunosPortuguesAutoral(filtrarListagemDto);
 
-            return Ok();
+            return Ok(await sondagemAutoralBll.ListarAlunosPortuguesAutoral(filtrarListagemDto));
         }
 
 
