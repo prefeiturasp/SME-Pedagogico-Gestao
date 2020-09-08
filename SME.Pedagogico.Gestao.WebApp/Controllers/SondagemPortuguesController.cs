@@ -7,6 +7,7 @@ using SME.Pedagogico.Gestao.Data.DataTransfer;
 using SME.Pedagogico.Gestao.Data.Business;
 using AutoMapper;
 using SME.Pedagogico.Gestao.Data.DTO.Portugues;
+using SME.Pedagogico.Gestao.Data.DTO.Matematica;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
@@ -112,10 +113,10 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ListarSondagemPortuguesAutoral([FromBody]IEnumerable<AlunoSondagemPortuguesDTO> ListaAlunosSondagemDto)
+        public async Task<IActionResult> ListarSondagemPortuguesAutoral(FiltrarListagemDto filtrarListagemDto)
         {
             var sondagemAutoralBll = new PollPortuguese(_config);
-            sondagemAutoralBll.SalvarSondagemAutoralPortugues(ListaAlunosSondagemDto);
+            sondagemAutoralBll.ListarAlunosPortuguesAutoral(filtrarListagemDto);
 
             return Ok();
         }

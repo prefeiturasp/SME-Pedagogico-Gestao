@@ -44,6 +44,7 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Portugues
 
         public int SequenciaOrdemSalva { get; set; }
 
+        public int NumeroChamada { get; set; }
         public List<AlunoRespostaDto> Respostas { get; set; }
 
         public static explicit operator SondagemAutoral(AlunoSondagemPortuguesDTO alunoSondagemPortuguesDto) =>
