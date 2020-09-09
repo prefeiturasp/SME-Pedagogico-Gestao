@@ -116,6 +116,7 @@ namespace SME.Pedagogico.Gestao.WebApp
             app.UseCors("CorsPolicy");
             app.UseSwagger();
 
+
             app.UseSwaggerUI(options =>
             {
                 options.SwaggerEndpoint("/swagger/documentation/swagger.json", "SME.Pedagogico.Gestao.WebApp");
