@@ -188,7 +188,7 @@ function SondagemMatematicaAutoral() {
 
   useEffect(() => {
     dispatch(actionCreators.listarPeriodos());
-    dispatch(actionCreators.listarPerguntas());
+    dispatch(actionCreators.listarPerguntas(filtros.yearClassroom));
     dispatch(actionCreators.listaAlunosAutoralMatematica(filtrosBusca));
     dispatch(
       pollStore.setFunctionButtonSave(
