@@ -628,6 +628,19 @@ namespace SME.Pedagogico.Gestao.Data.Business
             return listagem.OrderBy(x => x.NumeroChamada);
         }
 
+
+        public async Task<bool> ListarPerguntas(int sequenciaOrdem)
+        {
+            using (var contexto = new SMEManagementContextData())
+            {
+               
+                
+                var pr =  contexto.PerguntaResposta.Include(x => x.Pergunta).ThenInclude(xe => xe.OrdemPergunta).Include(y => y.Resposta);
+                var pr1 = pr.Where(x => x.Pergunta.ComponenteCurricularId == "c65b2c0a-7a58-4d40-b474-23f0982f14b1");
+                var pr2 = pr1.Where(x => x.Pergunta.OrdemPergunta.Any(y => y.SequenciaOrdem == sequenciaOrdem));
+                return true;
+            }
+        }
         private void AdicionarAlunosEOL(int anoEscolar, int anoLetivo, string codigoDre, string codigoUe, string codigoTurma, Guid componenteCurricular, List<AlunosNaTurmaDTO> alunos, List<AlunoSondagemPortuguesDTO> listagem)
         {
             alunos.ForEach(aluno =>
@@ -668,68 +681,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 AdicionarNovoAlunoListagem(listagem, aluno);
         }
 
-        private void AdicionarRespostaAluno(SondagemAutoral aluno, List<AlunoSondagemPortuguesDTO> listagem, int index)
-        {
-            listagem[index].Respostas.Add(new AlunoRespostaDto
-            {
-                PeriodoId = aluno.PeriodoId,
-                Pergunta = aluno.PerguntaId,
-                Resposta = aluno.RespostaId
-            });
-        }
-
-        private void AdicionarNovoAlunoListagem(List<AlunoSondagemPortuguesDTO> listagem, SondagemAutoral aluno)
-        {
-            listagem.Add(new AlunoSondagemPortuguesDTO
-            {
-                Id = aluno.Id,
-                CodigoAluno = aluno.CodigoAluno,
-                NomeAluno = aluno.NomeAluno,
-                AnoLetivo = aluno.AnoLetivo,
-                AnoTurma = aluno.AnoTurma,
-                CodigoDre = aluno.CodigoDre,
-                CodigoTurma = aluno.CodigoTurma,
-                CodigoUe = aluno.CodigoUe,
-                ComponenteCurricular = aluno.ComponenteCurricularId,
-                GrupoId = aluno.GrupoId,
-                OrdermId = aluno.OrdemId,
-                SequenciaOrdemSalva = aluno.SequenciaDeOrdemSalva,
-                Respostas = new List<AlunoRespostaDto>()
-                {
-                    new AlunoRespostaDto
-                    {
-                        PeriodoId = aluno.PeriodoId,
-                        Pergunta = aluno.PerguntaId,
-                        Resposta = aluno.RespostaId
-                    }
-                }
-            });
-        }
-
-        private static async Task<IList<SondagemAutoral>> ObterSondagemPortuguesAutoral(FiltrarListagemDto filtrarListagemDto)
-        {
-            using (var contexto = new SMEManagementContextData())
-            {
-                try
-                {
-                    return await contexto.SondagemAutoral.Where(x => x.ComponenteCurricular.Id
-                   .Equals(filtrarListagemDto.ComponenteCurricular.ToString())
-                   && x.AnoTurma == filtrarListagemDto.AnoEscolar
-                   && x.OrdemId == filtrarListagemDto.OrdemId
-                   && x.CodigoDre == filtrarListagemDto.CodigoDre
-                   && x.CodigoUe == filtrarListagemDto.CodigoUe
-                   && x.AnoLetivo == filtrarListagemDto.AnoLetivo
-                   && (filtrarListagemDto.CodigoTurma == null ? true : x.CodigoTurma.Equals(filtrarListagemDto.CodigoTurma)))
-               .ToListAsync();
-                }
-                catch (Exception ex)
-                {
-
-                    throw ex;
-                }
-           
-            }
-        }
 
         public void SalvarSondagemAutoralPortugues(IEnumerable<AlunoSondagemPortuguesDTO> ListaAlunosSondagemDto)
         {
@@ -781,6 +732,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             alunoBanco.PerguntaId = resposta.Pergunta;
             alunoBanco.RespostaId = resposta.Resposta;
             alunoBanco.PeriodoId = resposta.PeriodoId;
+            alunoBanco.SequenciaDeOrdemSalva = aluno.SequenciaOrdemSalva;
 
             return alunoBanco;
         }
@@ -795,6 +747,73 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
 
         }
+
+
+        private void AdicionarRespostaAluno(SondagemAutoral aluno, List<AlunoSondagemPortuguesDTO> listagem, int index)
+        {
+            listagem[index].Respostas.Add(new AlunoRespostaDto
+            {
+                PeriodoId = aluno.PeriodoId,
+                Pergunta = aluno.PerguntaId,
+                Resposta = aluno.RespostaId
+            });
+        }
+
+        private void AdicionarNovoAlunoListagem(List<AlunoSondagemPortuguesDTO> listagem, SondagemAutoral aluno)
+        {
+            listagem.Add(new AlunoSondagemPortuguesDTO
+            {
+                Id = aluno.Id,
+                CodigoAluno = aluno.CodigoAluno,
+                NomeAluno = aluno.NomeAluno,
+                AnoLetivo = aluno.AnoLetivo,
+                AnoTurma = aluno.AnoTurma,
+                CodigoDre = aluno.CodigoDre,
+                CodigoTurma = aluno.CodigoTurma,
+                CodigoUe = aluno.CodigoUe,
+                ComponenteCurricular = aluno.ComponenteCurricularId,
+                GrupoId = aluno.GrupoId,
+                OrdermId = aluno.OrdemId,
+                SequenciaOrdemSalva = aluno.SequenciaDeOrdemSalva,
+                Respostas = new List<AlunoRespostaDto>()
+                {
+                    new AlunoRespostaDto
+                    {
+                        PeriodoId = aluno.PeriodoId,
+                        Pergunta = aluno.PerguntaId,
+                        Resposta = aluno.RespostaId
+                    }
+                }
+            });
+        }
+
+        private static async Task<IList<SondagemAutoral>> ObterSondagemPortuguesAutoral(FiltrarListagemDto filtrarListagemDto)
+        {
+            using (var contexto = new SMEManagementContextData())
+            {
+                try
+                {
+                    return await contexto.SondagemAutoral.Where(x => x.ComponenteCurricular.Id
+                   .Equals(filtrarListagemDto.ComponenteCurricular.ToString())
+                   && x.AnoTurma == filtrarListagemDto.AnoEscolar
+                   && x.OrdemId == filtrarListagemDto.OrdemId
+                   && x.PeriodoId == filtrarListagemDto.PeriodoId
+                   && x.CodigoDre == filtrarListagemDto.CodigoDre
+                   && x.CodigoUe == filtrarListagemDto.CodigoUe
+                   && x.AnoLetivo == filtrarListagemDto.AnoLetivo
+                   && (filtrarListagemDto.CodigoTurma == null ? true : x.CodigoTurma.Equals(filtrarListagemDto.CodigoTurma)))
+               .ToListAsync();
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+
+            }
+        }
+
+
     }
 
 

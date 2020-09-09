@@ -120,6 +120,14 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return Ok(await sondagemAutoralBll.ListarAlunosPortuguesAutoral(filtrarListagemDto));
         }
 
+        [HttpGet]
+        public async Task<ActionResult> Perguntas([FromQuery] int sequenciaOrdemTela)
+        {
+            var sondagemAutoralBll = new PollPortuguese(_config);
+
+            return Ok(await sondagemAutoralBll.ListarPerguntas(sequenciaOrdemTela));
+        }
+
 
 
 
