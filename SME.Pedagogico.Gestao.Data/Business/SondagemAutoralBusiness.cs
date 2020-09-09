@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MoreLinq;
+using MoreLinq.Extensions;
 using SME.Pedagogico.Gestao.Data.Contexts;
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.DTO.Matematica;
@@ -48,7 +49,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 MapearRespostas(pergunta, respostasDaPergunta);
             });
 
-            return perguntas;
+            return perguntas.OrderBy(x=> x.Ordenacao);
 
         }
 
