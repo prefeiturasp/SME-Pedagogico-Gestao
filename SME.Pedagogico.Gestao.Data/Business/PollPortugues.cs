@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using MoreLinq;
 using SME.Pedagogico.Gestao.Data.Contexts;
@@ -629,13 +630,52 @@ namespace SME.Pedagogico.Gestao.Data.Business
             return listagem.OrderBy(x => x.NumeroChamada);
         }
 
+        public async Task<IEnumerable<SequenciaOrdemSalvaDTO>> ListaSequenciaOrdensSalva(FiltrarListagemDto filtrarListagemDto)
+        { 
+            using (var contexto = new SMEManagementContextData())
+            {
+                try
+                {
+                    var lista = contexto.SondagemAutoral.Where(x => x.ComponenteCurricular.Id
+                   .Equals(filtrarListagemDto.ComponenteCurricular.ToString())
+                   && x.AnoTurma == filtrarListagemDto.AnoEscolar
+                   && x.PeriodoId == filtrarListagemDto.PeriodoId
+                   && x.CodigoDre == filtrarListagemDto.CodigoDre
+                   && x.CodigoUe == filtrarListagemDto.CodigoUe
+                   && x.AnoLetivo == filtrarListagemDto.AnoLetivo
+                   && (filtrarListagemDto.CodigoTurma == null ? true : x.CodigoTurma.Equals(filtrarListagemDto.CodigoTurma)))
+               .ToList();
 
-        public async Task<IEnumerable<PerguntaDto>> ListarPerguntas(int sequenciaOrdem)
+                    if(lista.Count == 0)
+                    {
+                        var listaVazia = new List<SequenciaOrdemSalvaDTO>();
+                        return listaVazia;
+                    }
+
+                    var listaSequenciaOrdemSalva = lista.GroupBy(x => x.SequenciaDeOrdemSalva).Select(item => new SequenciaOrdemSalvaDTO
+                    {
+                        OrdemId = item.First().OrdemId,
+                        SequenciaOrdemSalva = item.First().SequenciaDeOrdemSalva
+                    }).ToList();
+
+                    listaSequenciaOrdemSalva.Distinct();
+
+                    return listaSequenciaOrdemSalva;
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+
+            }
+        }
+
+
+            public async Task<IEnumerable<PerguntaDto>> ListarPerguntas(int sequenciaOrdem)
         {
             using (var contexto = new SMEManagementContextData())
             {
-
-
                 var listaOrdemPergunta = contexto.OrdemPergunta.Include(x => x.Pergunta).Where(x => x.SequenciaOrdem == sequenciaOrdem).ToList();
                 var perguntaResposta = contexto.PerguntaResposta.Include(x => x.Pergunta).Include(y => y.Resposta).ToList();
                 var listaPerguntaDto = new List<PerguntaDto>();
