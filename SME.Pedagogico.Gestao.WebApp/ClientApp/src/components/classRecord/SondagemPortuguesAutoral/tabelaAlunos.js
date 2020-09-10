@@ -50,7 +50,7 @@ function TabelaAlunos({ filtros, periodos }) {
     }
 
     useEffect(() => {
-        dispatch(PortuguesStore.setar_perguntas(Mocks.perguntas));
+        dispatch(PortuguesStore.listarPerguntasPortugues(1));
     }, [])
 
     return periodoSelecionado ? <table

@@ -30,6 +30,7 @@ function Aluno({ aluno, perguntas, periodo, onChangeAluno }) {
 
             return <th className="align-middle">
                 <Select lista={pergunta.respostas} valorId={alunoResposta && alunoResposta.resposta} onChangeSelect={onChange} dados={pergunta.id} />
+
             </th>
         })}
     </tr>;

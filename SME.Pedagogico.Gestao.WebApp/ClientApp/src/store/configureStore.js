@@ -7,6 +7,7 @@ import ClassRoomStudentsSaga from '../sagas/ClassRoomStudents';
 import PollSaga from '../sagas/Poll';
 import PollReportSaga from '../sagas/PollReport';
 import FilterSaga from '../sagas/Filters';
+import SondagemPortuguesSaga from '../sagas/SondagemPortugues'
 import SondagemAutoralSaga from '../sagas/SondagemAutoral'
 import * as LeftMenu from './LeftMenu';
 import * as Calendar from './Calendar';
@@ -100,6 +101,7 @@ export default function configureStore(history, initialState) {
     reduxSaga.run(PollReportSaga);
     reduxSaga.run(FilterSaga);
     reduxSaga.run(SondagemAutoralSaga);
+    reduxSaga.run(SondagemPortuguesSaga);
 
     return ({ store, persistor });
 }
