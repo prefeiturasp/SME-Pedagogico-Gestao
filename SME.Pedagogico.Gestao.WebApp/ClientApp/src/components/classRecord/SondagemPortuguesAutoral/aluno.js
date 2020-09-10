@@ -1,10 +1,21 @@
 import React, { useEffect } from 'react';
 import Select from './select';
+import { actionCreators as PortuguesStore } from "../../../store/SondagemPortuguesStore";
+import { useDispatch } from 'react-redux';
 
-function Aluno({ aluno, perguntas, periodo }) {
+function Aluno({ aluno, perguntas, periodo, onChangeAluno }) {
+    const dispatch = useDispatch();
 
-    const onChange = (respostaId) => {
+    const onChange = (respostaId, perguntaId) => {
 
+        const dadosSalvar = {
+            respostaId: respostaId,
+            perguntaId: perguntaId,
+            alunoId: aluno.codigoAluno,
+            periodoId: periodo.id
+        };
+
+        dispatch(PortuguesStore.atualizar_resposta(dadosSalvar));
     };
 
     return <tr>
@@ -18,7 +29,7 @@ function Aluno({ aluno, perguntas, periodo }) {
             const alunoResposta = aluno.respostas && aluno.respostas.find(resposta => resposta.pergunta == pergunta.id && resposta.periodoId === periodo.id);
 
             return <th className="align-middle">
-                <Select lista={pergunta.respostas} valorId={alunoResposta && alunoResposta.resposta} onChangeSelect={onChange} />
+                <Select lista={pergunta.respostas} valorId={alunoResposta && alunoResposta.resposta} onChangeSelect={onChange} dados={pergunta.id} />
             </th>
         })}
     </tr>;

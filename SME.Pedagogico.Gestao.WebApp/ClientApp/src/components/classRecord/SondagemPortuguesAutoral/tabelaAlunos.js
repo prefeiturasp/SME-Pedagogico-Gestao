@@ -33,7 +33,7 @@ function TabelaAlunos({ filtros, periodos }) {
         if (!periodos) return;
 
         return periodos[ordenacaoAtual];
-    }, [ordenacaoAtual]);
+    }, [ordenacaoAtual, periodos]);
 
     const avancar = () => {
         if (ordenacaoAtual == ultimaOrdenacao)
@@ -53,7 +53,7 @@ function TabelaAlunos({ filtros, periodos }) {
         dispatch(PortuguesStore.setar_perguntas(Mocks.perguntas));
     }, [])
 
-    return <table
+    return periodoSelecionado ? <table
         className="table table-sm table-bordered table-hover table-sondagem-matematica"
         style={{ overflow: "hidden", overflowX: "auto" }}
     >
@@ -110,7 +110,7 @@ function TabelaAlunos({ filtros, periodos }) {
                 return <Aluno aluno={alunoObjeto} perguntas={perguntas} periodo={periodoSelecionado} />
             })}
         </tbody>
-    </table>;
+    </table> : <div></div>;
 }
 
 export default TabelaAlunos;
