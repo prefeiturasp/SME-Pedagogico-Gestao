@@ -1,6 +1,3 @@
-import { type } from "jquery";
-import { isGetAccessor } from "typescript";
-
 export const types = {
   SELECIONAR_GRUPO: "SELECIONAR_GRUPO",
   SETAR_GRUPOS: "SETAR_GRUPOS",
