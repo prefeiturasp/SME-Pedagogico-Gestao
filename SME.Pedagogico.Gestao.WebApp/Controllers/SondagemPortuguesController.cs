@@ -8,6 +8,7 @@ using SME.Pedagogico.Gestao.Data.Business;
 using AutoMapper;
 using SME.Pedagogico.Gestao.Data.DTO.Portugues;
 using SME.Pedagogico.Gestao.Data.DTO.Matematica;
+using System;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
@@ -121,11 +122,15 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Perguntas([FromQuery] int sequenciaOrdemTela)
+
+        public async Task<ActionResult> Perguntas([FromQuery] int sequenciaOrdem)
         {
+            if (sequenciaOrdem < 1 || sequenciaOrdem > 3)
+                return BadRequest("O valor do parametro sequenciaOrdem deve estar entre 1 e 3");
+
             var sondagemAutoralBll = new PollPortuguese(_config);
 
-            return Ok(await sondagemAutoralBll.ListarPerguntas(sequenciaOrdemTela));
+            return Ok(await sondagemAutoralBll.ListarPerguntas(sequenciaOrdem));
         }
 
 

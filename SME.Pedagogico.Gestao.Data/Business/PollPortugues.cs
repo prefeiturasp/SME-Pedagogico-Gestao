@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using MoreLinq;
 using SME.Pedagogico.Gestao.Data.Contexts;
 using SME.Pedagogico.Gestao.Data.DataTransfer;
 using SME.Pedagogico.Gestao.Data.DataTransfer.Portugues;
@@ -608,7 +609,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task<IEnumerable<AlunoSondagemPortuguesDTO>> ListarAlunosPortuguesAutoral(FiltrarListagemDto filtrarListagemDto)
         {
-             IList<SondagemAutoral> autoral = await ObterSondagemPortuguesAutoral(filtrarListagemDto);
+            IList<SondagemAutoral> autoral = await ObterSondagemPortuguesAutoral(filtrarListagemDto);
             var endpointsAPI = new EndpointsAPI();
 
             var turmApi = new TurmasAPI(endpointsAPI);
@@ -629,18 +630,39 @@ namespace SME.Pedagogico.Gestao.Data.Business
         }
 
 
-        public async Task<bool> ListarPerguntas(int sequenciaOrdem)
+        public async Task<IEnumerable<PerguntaDto>> ListarPerguntas(int sequenciaOrdem)
         {
             using (var contexto = new SMEManagementContextData())
             {
-               
-                
-                var pr =  contexto.PerguntaResposta.Include(x => x.Pergunta).ThenInclude(xe => xe.OrdemPergunta).Include(y => y.Resposta);
-                var pr1 = pr.Where(x => x.Pergunta.ComponenteCurricularId == "c65b2c0a-7a58-4d40-b474-23f0982f14b1");
-                var pr2 = pr1.Where(x => x.Pergunta.OrdemPergunta.Any(y => y.SequenciaOrdem == sequenciaOrdem));
-                return true;
+
+
+                var listaOrdemPergunta = contexto.OrdemPergunta.Include(x => x.Pergunta).Where(x => x.SequenciaOrdem == sequenciaOrdem).ToList();
+                var perguntaResposta = contexto.PerguntaResposta.Include(x => x.Pergunta).Include(y => y.Resposta).ToList();
+                var listaPerguntaDto = new List<PerguntaDto>();
+
+                foreach (var ordem in listaOrdemPergunta)
+                {
+                    var perguntaDto = new PerguntaDto();
+                    perguntaDto.Id = ordem.Pergunta.Id;
+                    perguntaDto.Descricao = ordem.Pergunta.Descricao;
+                    perguntaDto.Ordenacao = ordem.OrdenacaoNaTela;
+                    perguntaDto.SequenciaOrdem = ordem.SequenciaOrdem;
+
+                    var lresposta = perguntaResposta.Where(x => x.Pergunta.Id == ordem.PerguntaId);
+                    perguntaDto.Respostas = lresposta.Select(item => new RespostaDto
+                    {
+                        Descricao = item.Resposta.Descricao,
+                        Id = item.Resposta.Id,
+                        Ordenacao = item.Ordenacao
+                    }).ToList();
+
+                    listaPerguntaDto.Add(perguntaDto);
+                }
+
+                return listaPerguntaDto.OrderBy(x => x.Ordenacao);
             }
-        }
+        } 
+    
         private void AdicionarAlunosEOL(int anoEscolar, int anoLetivo, string codigoDre, string codigoUe, string codigoTurma, Guid componenteCurricular, List<AlunosNaTurmaDTO> alunos, List<AlunoSondagemPortuguesDTO> listagem)
         {
             alunos.ForEach(aluno =>
@@ -664,8 +686,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     NumeroChamada = aluno.NumeroAlunoChamada,
                     ComponenteCurricular = componenteCurricular.ToString(),
                     NomeAluno = aluno.NomeAluno,
-                    
-                });;
+
+                }); ;
 
                 listagem.OrderBy(x => x.NumeroChamada);
             });
@@ -691,7 +713,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 SalvarAluno(ListaAlunosSondagemDto, contexto);
 
                 contexto.SaveChanges();
-            }            
+            }
         }
         private void SalvarAluno(IEnumerable<AlunoSondagemPortuguesDTO> ListaAlunoSondagemPortuguesDTO, SMEManagementContextData contexto)
         {
@@ -740,7 +762,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         private void AdicicionarOuAlterar(SMEManagementContextData context, SondagemAutoral sondagemAutoral)
         {
             if (string.IsNullOrWhiteSpace(sondagemAutoral.Id))
-                 context.SondagemAutoral.Add(sondagemAutoral);
+                context.SondagemAutoral.Add(sondagemAutoral);
             else
             {
                 context.SondagemAutoral.Update(sondagemAutoral);
