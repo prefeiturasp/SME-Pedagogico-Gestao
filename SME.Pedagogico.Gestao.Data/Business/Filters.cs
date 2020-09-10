@@ -6,9 +6,6 @@ using System.Linq;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using SME.Pedagogico.Gestao.Models.Autoral;
-using SME.Pedagogico.Gestao.Data.Contexts;
 
 namespace SME.Pedagogico.Gestao.Data.Business
 {
