@@ -10,6 +10,7 @@ namespace SME.Pedagogico.Gestao.Data.DTO
         public string Id { get; set; }
         public string Descricao { get; set; }
         public int Ordenacao { get; set; }
+        public int? SequenciaOrdem { get; set; }
         public IEnumerable<RespostaDto> Respostas { get; set; }
 
         public static explicit operator PerguntaDto(Pergunta pergunta) =>
