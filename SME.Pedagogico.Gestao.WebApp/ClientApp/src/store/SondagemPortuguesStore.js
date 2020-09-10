@@ -13,7 +13,7 @@ export const types = {
     LISTAR_GRUPOS: "LISTAR_GRUPOS",
     LISTAR_COMPONENTE_CURRICULAR: "LISTAR_COMPONENTE_CURRICULAR",
     LISTAR_BIMESTRES: "LISTAR_BIMESTRES",
-    LISTAR_PERGUNTAS: "LISTAR_PERGUNTAS",
+    LISTAR_PERGUNTAS_PORTUGUES: "LISTAR_PERGUNTAS_PORTUGUES",
     LISTAR_SEQUENCIA_ORDENS: "LISTAR_SEQUENCIA_ORDENS",
     LISTAR_ALUNOS_PORTUGUES: "LISTAR_ALUNOS_PORTUGUES",
     SALVAR_SONDAGEM_PORTUGUES: "SALVAR_SONDAGEM_PORTUGUES"
@@ -34,8 +34,8 @@ export const actionCreators = {
     listarGrupos: () => ({ type: types.LISTAR_GRUPOS }),
     listarComponenteCurricular: () => ({ type: types.LISTAR_COMPONENTE_CURRICULAR }),
     listarBimestres: () => ({ type: types.LISTAR_BIMESTRES }),
-    listarPerguntas: (sequenciaOrdem) => ({
-        type: types.LISTAR_PERGUNTAS,
+    listarPerguntasPortugues: (sequenciaOrdem) => ({
+        type: types.LISTAR_PERGUNTAS_PORTUGUES,
         payload: sequenciaOrdem,
     }),
     listarSequenciaOrdens: (filtros) => ({
@@ -53,7 +53,7 @@ export const actionCreators = {
         payload: { alunos, filtro },
     }),
 
-    //
+    
     selecionar_grupo: (grupo) => ({
         type: types.SELECIONAR_GRUPO,
         payload: grupo,

@@ -7,7 +7,7 @@ export default function* () {
         takeLatest(Autoral.types.LISTAR_GRUPOS, ListarGrupos),
         takeLatest(Autoral.types.LISTAR_COMPONENTE_CURRICULAR, ListarComponenteCurricular),
         takeLatest(Autoral.types.LISTAR_BIMESTRES, ListarBimestres),
-        takeLatest(Autoral.types.LISTAR_PERGUNTAS, ListarPerguntas),
+        takeLatest(Autoral.types.LISTAR_PERGUNTAS_PORTUGUES, ListarPerguntas),
         takeLatest(Autoral.types.LISTAR_SEQUENCIA_ORDENS, ListarSequenciaOrdens),
         takeLatest(
             Autoral.types.LISTAR_ALUNOS_PORTUGUES,
@@ -79,11 +79,12 @@ function* ListarPerguntas({ payload }) {
         const data = yield call(listaPerguntasAPI, payload);
         yield put({ type: Autoral.types.SETAR_PERGUNTAS, payload: data });
     } catch (error) {
-        yield put({ type: "API_CALL_ERROR" });
+        yield put({ type: "API_CALL_ERROR_PERGUNTAS" });
     }
 }
 
 function listaPerguntasAPI(sequenciaOrdem) {
+    debugger
     var url = `/api/SondagemPortugues/Perguntas?sequenciaOrdem=${sequenciaOrdem}`;
     return fetch(url, {
         method: "get",
