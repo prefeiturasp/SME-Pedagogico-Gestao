@@ -531,6 +531,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 return contexto.GrupoOrdem.Include(x => x.Ordem).ToList();
             }
+
         }
     }
 }
