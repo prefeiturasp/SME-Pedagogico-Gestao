@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.Functionalities;
 using SME.Pedagogico.Gestao.Models.Organization;
 using System.Collections.Generic;
@@ -18,7 +17,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
             _token = createToken.CreateTokenProvisorio();
         }
 
-        [HttpGet]
         public async Task<List<PeriodoDeAbertura>> GetPeriodoDeAberturas(string  schoolYear)
         {
             try
