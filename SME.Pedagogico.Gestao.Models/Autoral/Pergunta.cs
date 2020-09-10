@@ -10,6 +10,7 @@ namespace SME.Pedagogico.Gestao.Models.Autoral
         public string  Id { get; set; }
         public string Descricao { get; set; }
         //public int Ordenacao { get; set; }
+        public virtual List<OrdemPergunta> OrdemPergunta { get; set; }
         public string ComponenteCurricularId { get; set; }
         public virtual ComponenteCurricular ComponenteCurricular { get; set; }
         public bool Excluido { get; set; }
