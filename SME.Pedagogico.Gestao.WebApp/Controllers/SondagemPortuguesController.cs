@@ -122,14 +122,16 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Perguntas([FromQuery] int sequenciaOrdem)
+        public async Task<ActionResult> Perguntas([FromQuery] int sequenciaOrdem, string grupoId)
         {
             if (sequenciaOrdem < 1 || sequenciaOrdem > 3)
                 return BadRequest("O valor do parametro sequenciaOrdem deve estar entre 1 e 3");
+            if (string.IsNullOrEmpty(grupoId))
+                return BadRequest("O valor do parametro grupId é obrigatorio");
 
             var sondagemAutoralBll = new PollPortuguese(_config);
 
-            return Ok(await sondagemAutoralBll.ListarPerguntas(sequenciaOrdem));
+            return Ok(await sondagemAutoralBll.ListarPerguntas(sequenciaOrdem, grupoId));
         }
 
         [HttpGet]
