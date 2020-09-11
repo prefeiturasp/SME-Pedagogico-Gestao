@@ -17,7 +17,7 @@ export default function* () {
             Autoral.types.SALVAR_SONDAGEM_PORTUGUES,
             SalvaSondagemPortugues
         ),
-        
+
     ]);
 }
 
@@ -67,7 +67,7 @@ function* ListarBimestres({ }) {
 }
 
 function listarBimestresAPI() {
-    var url = `/api/SondagemPortugues/ComponenteCurricular`;
+    var url = `/api/SondagemPortugues/Bimestres`;
     return fetch(url, {
         method: "get",
         headers: { "Content-Type": "application/json" },
@@ -77,6 +77,7 @@ function listarBimestresAPI() {
 function* ListarPerguntas({ payload }) {
     try {
         const data = yield call(listaPerguntasAPI, payload);
+        console.log("data", data);
         yield put({ type: Autoral.types.SETAR_PERGUNTAS, payload: data });
     } catch (error) {
         yield put({ type: "API_CALL_ERROR_PERGUNTAS" });
@@ -84,12 +85,12 @@ function* ListarPerguntas({ payload }) {
 }
 
 function listaPerguntasAPI(sequenciaOrdem) {
-    debugger
     var url = `/api/SondagemPortugues/Perguntas?sequenciaOrdem=${sequenciaOrdem}`;
     return fetch(url, {
         method: "get",
         headers: { "Content-Type": "application/json" },
-    }).then((response) => response.json());
+    }).then((response) => response.json())
+        .catch((error) => console.log(error));
 }
 
 
@@ -98,7 +99,7 @@ function* ListarSequenciaOrdens({ payload }) {
         const data = yield call(listarSequenciaOrdensApi, payload);
         yield put({
             type: Autoral.types.SETAR_SEQUENCIA_ORDENS,
-            payload:data,
+            payload: data,
         });
     } catch (error) {
         yield put({ type: "API_CALL_ERROR" });
@@ -117,10 +118,10 @@ function listarSequenciaOrdensApi(filtro) {
 function* ListarAlunosPortugues({ payload }) {
     try {
         const data = yield call(listarAlunosPortuguesApi, payload);
-       
+
         yield put({
             type: Autoral.types.SETAR_ALUNOS_PORTUGUES,
-            payload:data,
+            payload: data,
         });
     } catch (error) {
         yield put({ type: "API_CALL_ERROR" });

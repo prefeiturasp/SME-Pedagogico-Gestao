@@ -6,7 +6,7 @@ import Mocks from './mocks';
 
 // import { Container } from './styles';
 
-function TabelaAlunos({ filtros, periodos }) {
+function TabelaAlunos({ filtros, periodos, idOrdemSelecionada }) {
     const dispatch = useDispatch();
 
     const [ordenacaoAtual, setOrdenacaoAtual] = useState(0);
@@ -15,7 +15,18 @@ function TabelaAlunos({ filtros, periodos }) {
 
     const perguntas = useSelector(store => store.sondagemPortugues.perguntas);
 
-    console.log(alunos)
+    const sequenciaOrdens = useSelector((store) => store.sondagemPortugues.sequenciaOrdens);
+
+    const sequenciaOrdemAtual = useMemo(() => {
+        if (!sequenciaOrdens || sequenciaOrdens.length <= 0)
+            return 0;
+
+        const index = sequenciaOrdens.findIndex(ordem => ordem === idOrdemSelecionada);
+
+        return index + 1;
+
+    }, [sequenciaOrdens, idOrdemSelecionada])
+   
 
     const ultimaOrdenacao = useMemo(() => {
         if (!periodos) return;
@@ -50,7 +61,14 @@ function TabelaAlunos({ filtros, periodos }) {
     }
 
     useEffect(() => {
-        dispatch(PortuguesStore.listarPerguntasPortugues(1));
+        if (sequenciaOrdemAtual === 0)
+            return;
+
+        dispatch(PortuguesStore.listarPerguntasPortugues(sequenciaOrdemAtual));
+    }, [sequenciaOrdemAtual])
+
+    useEffect(() => {
+        dispatch(PortuguesStore.listarBimestres());
     }, [])
 
     return periodoSelecionado ? <table
