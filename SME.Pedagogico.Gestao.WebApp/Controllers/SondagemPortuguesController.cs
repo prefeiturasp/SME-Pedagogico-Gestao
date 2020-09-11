@@ -131,7 +131,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
             var sondagemAutoralBll = new PollPortuguese(_config);
 
-            return Ok(await sondagemAutoralBll.ListarPerguntas(sequenciaOrdem));
+            return Ok(await sondagemAutoralBll.ListarPerguntas(sequenciaOrdem, grupoId));
         }
 
         [HttpGet]
