@@ -37,3 +37,7 @@
 .text-color-purple {
     color: #7C4DFF !important;
 }
+
+.custom-control{
+    width:100%;
+}
