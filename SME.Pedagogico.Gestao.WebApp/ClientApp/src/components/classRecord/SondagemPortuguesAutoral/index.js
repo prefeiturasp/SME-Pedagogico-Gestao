@@ -51,13 +51,21 @@ function SondagemPortuguesAutoral() {
   };
 
   const onClickOrdem = (id) => {
-    dispatch(PortuguesStore.setar_ordem_selecionada(id));
+    dispatch(PortuguesStore.inserir_sequencia_ordem(id));
   };
 
   useEffect(() => {
-    dispatch(PortuguesStore.setar_grupos(Mocks.grupos));
-    dispatch(PortuguesStore.setar_periodos(Mocks.periodos));
+    dispatch(PortuguesStore.listarGrupos());    
     dispatch(PortuguesStore.setar_alunos(Mocks.alunos));
+
+    return () => {
+      dispatch(PortuguesStore.setar_alunos([]));
+      dispatch(PortuguesStore.setar_periodos([]));
+      dispatch(PortuguesStore.setar_grupos([]));
+      dispatch(PortuguesStore.setar_ordem_selecionada(null));
+      dispatch(PortuguesStore.limpar_todas_ordens_selecionadas());
+      dispatch(PortuguesStore.selecionar_grupo(null));
+    };
   }, []);
 
   useEffect(() => {
@@ -79,7 +87,7 @@ function SondagemPortuguesAutoral() {
       </div>
       <div className="row container-fluid">
         {
-          idOrdemSelecionada && idOrdemSelecionada !== "" && <TabelaAlunos periodos={periodos} filtros={filtrosBusca}></TabelaAlunos>
+          idOrdemSelecionada && idOrdemSelecionada !== "" && <TabelaAlunos periodos={periodos} filtros={filtrosBusca} idOrdemSelecionada={idOrdemSelecionada}></TabelaAlunos>
         }
       </div>
     </div>

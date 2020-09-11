@@ -79,7 +79,7 @@ class Poll extends Component {
       showMessageBox: !this.state.showMessageBox,
     });
   }
-  
+
   toggleMessagePortugueseBox() {
     this.setState({
       showMessagePortugueseBox: !this.state.showMessagePortugueseBox,
@@ -126,7 +126,7 @@ class Poll extends Component {
     }
   }
 
-  componentDidMount() {}
+  componentDidMount() { }
 
   componentWillUpdate() {
     var todayDate = new Date();
@@ -928,7 +928,12 @@ class Poll extends Component {
             >
               Salvar
             </button>
-          </div>          
+            <TwoStepsSave
+              show={this.state.showMessageBox}
+              showControl={this.toggleMessageBox}
+              runMethod={this.savePollStudent}
+            />
+          </div>
         </li>
       );
     }
