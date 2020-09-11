@@ -631,7 +631,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         }
 
         public async Task<IEnumerable<SequenciaOrdemSalvaDTO>> ListaSequenciaOrdensSalva(FiltrarListagemDto filtrarListagemDto)
-        { 
+        {
             using (var contexto = new SMEManagementContextData())
             {
                 try
@@ -646,7 +646,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                    && (filtrarListagemDto.CodigoTurma == null ? true : x.CodigoTurma.Equals(filtrarListagemDto.CodigoTurma)))
                .ToList();
 
-                    if(lista.Count == 0)
+                    if (lista.Count == 0)
                     {
                         var listaVazia = new List<SequenciaOrdemSalvaDTO>();
                         return listaVazia;
@@ -672,37 +672,47 @@ namespace SME.Pedagogico.Gestao.Data.Business
         }
 
 
-            public async Task<IEnumerable<PerguntaDto>> ListarPerguntas(int sequenciaOrdem)
+        public async Task<IEnumerable<PerguntaDto>> ListarPerguntas(int sequenciaOrdem, string grupoId)
         {
-            using (var contexto = new SMEManagementContextData())
+            try
             {
-                var listaOrdemPergunta = contexto.OrdemPergunta.Include(x => x.Pergunta).Where(x => x.SequenciaOrdem == sequenciaOrdem).ToList();
-                var perguntaResposta = contexto.PerguntaResposta.Include(x => x.Pergunta).Include(y => y.Resposta).ToList();
-                var listaPerguntaDto = new List<PerguntaDto>();
-
-                foreach (var ordem in listaOrdemPergunta)
+                using (var contexto = new SMEManagementContextData())
                 {
-                    var perguntaDto = new PerguntaDto();
-                    perguntaDto.Id = ordem.Pergunta.Id;
-                    perguntaDto.Descricao = ordem.Pergunta.Descricao;
-                    perguntaDto.Ordenacao = ordem.OrdenacaoNaTela;
-                    perguntaDto.SequenciaOrdem = ordem.SequenciaOrdem;
+                   
+                    var listaOrdemPergunta = contexto.OrdemPergunta.Include(x=>x.Grupo).Include(x => x.Pergunta).Where(x => x.SequenciaOrdem == sequenciaOrdem).Where(y=> y.GrupoId == grupoId).ToList();
+                    var perguntaResposta = contexto.PerguntaResposta.Include(x => x.Pergunta).Include(y => y.Resposta).ToList();
+                    var listaPerguntaDto = new List<PerguntaDto>();
 
-                    var lresposta = perguntaResposta.Where(x => x.Pergunta.Id == ordem.PerguntaId);
-                    perguntaDto.Respostas = lresposta.Select(item => new RespostaDto
+                    foreach (var ordem in listaOrdemPergunta)
                     {
-                        Descricao = item.Resposta.Descricao,
-                        Id = item.Resposta.Id,
-                        Ordenacao = item.Ordenacao
-                    }).ToList();
+                        var perguntaDto = new PerguntaDto();
+                        perguntaDto.Id = ordem.Pergunta.Id;
+                        perguntaDto.Descricao = ordem.Pergunta.Descricao;
+                        perguntaDto.Ordenacao = ordem.OrdenacaoNaTela;
+                        perguntaDto.SequenciaOrdem = ordem.SequenciaOrdem;
 
-                    listaPerguntaDto.Add(perguntaDto);
+                        var lresposta = perguntaResposta.Where(x => x.Pergunta.Id == ordem.PerguntaId);
+                        perguntaDto.Respostas = lresposta.Select(item => new RespostaDto
+                        {
+                            Descricao = item.Resposta.Descricao,
+                            Id = item.Resposta.Id,
+                            Ordenacao = item.Ordenacao
+                        }).ToList();
+
+                        listaPerguntaDto.Add(perguntaDto);
+                    }
+
+                    return listaPerguntaDto.OrderBy(x => x.Ordenacao);
                 }
 
-                return listaPerguntaDto.OrderBy(x => x.Ordenacao);
             }
-        } 
-    
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
         private void AdicionarAlunosEOL(int anoEscolar, int anoLetivo, string codigoDre, string codigoUe, string codigoTurma, Guid componenteCurricular, List<AlunosNaTurmaDTO> alunos, List<AlunoSondagemPortuguesDTO> listagem)
         {
             alunos.ForEach(aluno =>
