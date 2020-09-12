@@ -13,7 +13,7 @@ function SondagemPortuguesAutoral() {
   const grupoSelecionado = useSelector(
     (store) => store.sondagemPortugues.grupoSelecionado
   );
-  
+
   const idOrdemSelecionada = useSelector((store) => store.sondagemPortugues.ordemSelecionada);
 
   const filtros = useSelector((store) => store.poll.selectedFilter);
@@ -79,7 +79,7 @@ function SondagemPortuguesAutoral() {
 
     const sequenciaOrdemSelecionada = sequenciasOrdens ? sequenciasOrdens.findIndex(sequencia => sequencia === idOrdemSelecionada) : 0;
 
-    executarSalvamento({ perguntasSalvar: perguntas, alunosMutaveis, filtrosMutaveis, sequenciaOrdemSelecionada, novaOrdem, novoPeriodoId, idOrdemSelecionada, grupoSelecionado });
+    executarSalvamento({ perguntasSalvar: perguntas, alunosMutaveis, filtrosMutaveis, sequenciaOrdemSelecionada, novaOrdem, periodoSelecionadoSalvar: periodoSelecionado, novoPeriodoId, idOrdem: idOrdemSelecionada, grupo: grupoSelecionado });
   }
 
   const executarSalvamento = ({ perguntasSalvar, alunosMutaveis, filtrosMutaveis, sequenciaOrdemSelecionada, novaOrdem, novoPeriodoId, periodoSelecionadoSalvar, grupo, idOrdem }) => {
@@ -88,7 +88,7 @@ function SondagemPortuguesAutoral() {
       const respostaSalvar = {
         resposta: null,
         pergunta: pergunta.id,
-        periodoId: periodoSelecionadoSalvar.id
+        periodoId: periodoSelecionadoSalvar && periodoSelecionadoSalvar.id
       };
 
       alunosMutaveis.forEach(aluno => {
