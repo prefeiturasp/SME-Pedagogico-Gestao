@@ -638,10 +638,10 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     var lista = contexto.SondagemAutoral.Where(x => x.ComponenteCurricular.Id
                    .Equals(filtrarListagemDto.ComponenteCurricular.ToString())
                    && x.AnoTurma == filtrarListagemDto.AnoEscolar
-                   && x.PeriodoId == filtrarListagemDto.PeriodoId
                    && x.CodigoDre == filtrarListagemDto.CodigoDre
                    && x.CodigoUe == filtrarListagemDto.CodigoUe
                    && x.AnoLetivo == filtrarListagemDto.AnoLetivo
+                   && x.GrupoId == filtrarListagemDto.GrupoId
                    && (filtrarListagemDto.CodigoTurma == null ? true : x.CodigoTurma.Equals(filtrarListagemDto.CodigoTurma)))
                .ToList();
 
