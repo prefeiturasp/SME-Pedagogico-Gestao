@@ -18,7 +18,7 @@ const AutoralSelect = ({
 
   return (
     <div>
-      <select
+          <select className={"col-10 custom-select"}
         perguntaId={perguntaId}
         value={valor}
         onChange={onOptionChange}
