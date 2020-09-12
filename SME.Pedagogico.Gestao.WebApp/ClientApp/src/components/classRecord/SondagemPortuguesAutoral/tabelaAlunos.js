@@ -6,27 +6,39 @@ import Mocks from './mocks';
 
 // import { Container } from './styles';
 
-function TabelaAlunos({ filtros, periodos, idOrdemSelecionada }) {
+function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado, salvar }) {
     const dispatch = useDispatch();
 
     const [ordenacaoAtual, setOrdenacaoAtual] = useState(0);
 
     const alunos = useSelector(store => store.sondagemPortugues.alunos);
 
+    const emEdicao = useSelector(store => store.sondagemPortugues.emEdicao);
+
     const perguntas = useSelector(store => store.sondagemPortugues.perguntas);
+
+    const periodoSelecionado = useSelector(store => store.sondagemPortugues.periodoSelecionado);
 
     const sequenciaOrdens = useSelector((store) => store.sondagemPortugues.sequenciaOrdens);
 
     const sequenciaOrdemAtual = useMemo(() => {
         if (!sequenciaOrdens || sequenciaOrdens.length <= 0)
-            return 0;
+            return 1;
 
         const index = sequenciaOrdens.findIndex(ordem => ordem === idOrdemSelecionada);
 
-        return index + 1;
+        if (index >= 0)
+            return index + 1;
+
+        if (sequenciaOrdens.length < 3) {
+            return sequenciaOrdens.length + 1;
+        }
+
+        let indexNull = sequenciaOrdens.findIndex(ordem => ordem === null);
+
+        return indexNull === -1 ? 0 : indexNull + 1;
 
     }, [sequenciaOrdens, idOrdemSelecionada])
-   
 
     const ultimaOrdenacao = useMemo(() => {
         if (!periodos) return;
@@ -39,12 +51,6 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada }) {
 
         return periodos.length - periodos.length;
     }, [periodos]);
-
-    const periodoSelecionado = useMemo(() => {
-        if (!periodos) return;
-
-        return periodos[ordenacaoAtual];
-    }, [ordenacaoAtual, periodos]);
 
     const avancar = () => {
         if (ordenacaoAtual == ultimaOrdenacao)
@@ -64,8 +70,39 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada }) {
         if (sequenciaOrdemAtual === 0)
             return;
 
-        dispatch(PortuguesStore.listarPerguntasPortugues(sequenciaOrdemAtual));
+        dispatch(PortuguesStore.listarPerguntasPortugues(sequenciaOrdemAtual, grupoSelecionado));
     }, [sequenciaOrdemAtual])
+
+    useEffect(() => {
+        if (ordenacaoAtual < 0)
+            return;
+
+        if (emEdicao) {
+            console.log(alunos);
+            salvar({ novoPeriodoId: periodos[ordenacaoAtual] });
+            return;
+        }
+
+
+        dispatch(PortuguesStore.setar_periodo_selecionado(periodos[ordenacaoAtual]));
+    }, [ordenacaoAtual])
+
+    useEffect(() => {
+        if (!periodoSelecionado)
+            return;
+
+        filtros.periodoId = periodoSelecionado.id;
+
+        dispatch(PortuguesStore.listarAlunosPortugues(filtros));
+
+    }, [periodoSelecionado])
+
+    useEffect(() => {
+        if (!idOrdemSelecionada && periodoSelecionado)
+            return;
+
+        dispatch(PortuguesStore.setar_periodo_selecionado(periodos[0]));
+    }, [idOrdemSelecionada, periodos])
 
     useEffect(() => {
         dispatch(PortuguesStore.listarBimestres());
@@ -125,7 +162,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada }) {
         </thead>
         <tbody>
             {alunos && perguntas && perguntas.length > 0 && alunos.length > 0 && alunos.map(alunoObjeto => {
-                return <Aluno aluno={alunoObjeto} perguntas={perguntas} periodo={periodoSelecionado} />
+                return <Aluno aluno={alunoObjeto} perguntas={perguntas} periodo={periodoSelecionado} idOrdemSelecionada={idOrdemSelecionada} />
             })}
         </tbody>
     </table> : <div></div>;

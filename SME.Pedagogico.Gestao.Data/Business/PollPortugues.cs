@@ -757,6 +757,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             if (ListaAlunosSondagemDto == null || !ListaAlunosSondagemDto.Any())
                 throw new Exception("É necessário realizar a sondagem de pelo menos 1 aluno");
+
             using (var contexto = new SMEManagementContextData())
             {
                 SalvarAluno(ListaAlunosSondagemDto, contexto);
@@ -844,7 +845,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 CodigoUe = aluno.CodigoUe,
                 ComponenteCurricular = aluno.ComponenteCurricularId,
                 GrupoId = aluno.GrupoId,
-                OrdermId = aluno.OrdemId,
+                OrdemId = aluno.OrdemId,
                 SequenciaOrdemSalva = aluno.SequenciaDeOrdemSalva,
                 Respostas = new List<AlunoRespostaDto>()
                 {

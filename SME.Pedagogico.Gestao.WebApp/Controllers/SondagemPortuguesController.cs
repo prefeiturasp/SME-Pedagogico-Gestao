@@ -104,6 +104,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             var sondagemAutoralBll = new PollPortuguese(_config);
             return Ok(sondagemAutoralBll.RetornaPeriodosBimestres());
         }
+
         [HttpPost]
         public async Task<IActionResult> SondagemPortuguesAutoral([FromBody]IEnumerable<AlunoSondagemPortuguesDTO> ListaAlunosSondagemDto)
         {
@@ -141,11 +142,5 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
             return Ok(await sondagemAutoralBll.ListaSequenciaOrdensSalva(filtrarListagemDto));
         }
-
-
-
-
-
-
     }
 }
