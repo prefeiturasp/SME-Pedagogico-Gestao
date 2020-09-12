@@ -7,6 +7,7 @@ export const types = {
   SETAR_PERGUNTAS: "SETAR_PERGUNTAS",
   ATUALIZAR_RESPOSTA: "ATUALIZAR_RESPOSTA",
   SETAR_BIMESTRES: "SETAR_BIMESTRES",
+  SETAR_ALUNOS_PORTUGUES: "SETAR_ALUNOS_PORTUGUES",
   //
   LISTAR_GRUPOS: "LISTAR_GRUPOS",
   LISTAR_COMPONENTE_CURRICULAR: "LISTAR_COMPONENTE_CURRICULAR",
@@ -19,6 +20,10 @@ export const types = {
   REMOVER_SEQUENCIA_ORDENS: "REMOVER_SEQUENCIA_ORDENS",
   OBTER_SEQUENCIA_ORDEM: "OBTER_SEQUENCIA_ORDEM",
   LIMPAR_TODAS_ORDENS_SELECIONADAS: "LIMPAR_TODAS_ORDENS_SELECIONADAS",
+  SETAR_PERIODO_SELECIONADO: "SETAR_PERIODO_SELECIONADO",
+  SETAR_EM_EDICAO: "SETAR_EM_EDICAO",
+  SALVAR_FUNCAO_SALVAMENTO: "SALVAR_FUNCAO_SALVAMENTO",
+  SALVAR_FILTROS_CONSULTA_SALVAMENTO: "SALVAR_FILTROS_CONSULTA_SALVAMENTO",
 }
 
 const initialState = {
@@ -31,15 +36,19 @@ const initialState = {
   sequenciaOrdens: [],
   componenteCurricular: null,
   sequenciaOrdem: [],
+  emEdicao: false,
+  periodoSelecionado: null,
+  salvar: null,
+  filtros: {},
 };
 
 export const actionCreators = {
   listarGrupos: () => ({ type: types.LISTAR_GRUPOS }),
   listarComponenteCurricular: () => ({ type: types.LISTAR_COMPONENTE_CURRICULAR }),
   listarBimestres: () => ({ type: types.LISTAR_BIMESTRES }),
-  listarPerguntasPortugues: (sequenciaOrdem) => ({
+  listarPerguntasPortugues: (sequenciaOrdem, grupoId) => ({
     type: types.LISTAR_PERGUNTAS_PORTUGUES,
-    payload: sequenciaOrdem,
+    payload: { sequenciaOrdem, grupoId },
   }),
   listarSequenciaOrdens: (filtros) => ({
     type: types.LISTAR_SEQUENCIA_ORDENS,
@@ -49,9 +58,9 @@ export const actionCreators = {
     type: types.LISTAR_ALUNOS_PORTUGUES,
     payload: filtros,
   }),
-  salvarSondagemPortugues: (alunos, filtro) => ({
+  salvarSondagemPortugues: ({ alunos, filtro, novaOrdem, novoPeriodoId }) => ({
     type: types.SALVAR_SONDAGEM_PORTUGUES,
-    payload: { alunos, filtro },
+    payload: { alunos, filtro, novaOrdem, novoPeriodoId },
   }),
   selecionar_grupo: (grupo) => ({
     type: types.SELECIONAR_GRUPO,
@@ -69,6 +78,10 @@ export const actionCreators = {
     type: types.SETAR_ALUNOS,
     payload: alunos,
   }),
+  setar_emEdicao: (emEdicao) => ({
+    type: types.SETAR_EM_EDICAO,
+    payload: emEdicao,
+  }),
   setar_periodos: (periodos) => ({
     type: types.SETAR_PERIODOS,
     payload: periodos,
@@ -83,6 +96,18 @@ export const actionCreators = {
   }),
   limpar_todas_ordens_selecionadas: () => ({
     type: types.LIMPAR_TODAS_ORDENS_SELECIONADAS
+  }),
+  setar_periodo_selecionado: (periodoSelecionado) => ({
+    type: types.SETAR_PERIODO_SELECIONADO,
+    payload: periodoSelecionado,
+  }),
+  salvar_funcao_salvamento: (salvar) => ({
+    type: types.SALVAR_FUNCAO_SALVAMENTO,
+    payload: salvar
+  }),
+  salvar_filtros_consulta_salvamento: (filtros) => ({
+    type: types.SALVAR_FILTROS_CONSULTA_SALVAMENTO,
+    payload: filtros,
   })
 };
 
@@ -109,18 +134,26 @@ export const reducer = (state, action) => {
     case types.SETAR_ALUNOS:
       return { ...state, alunos: action.payload };
     case types.LIMPAR_TODAS_ORDENS_SELECIONADAS:
-      return { ...state, sequenciaOrdens: [], ordemSelecionada: null }
+      return { ...state, sequenciaOrdens: [], ordemSelecionada: null };
+    case types.SETAR_PERIODO_SELECIONADO:
+      return { ...state, periodoSelecionado: action.payload };
+    case types.SETAR_EM_EDICAO:
+      return { ...state, emEdicao: action.payload };
+    case types.SALVAR_FUNCAO_SALVAMENTO:
+      return { ...state, salvar: action.payload };
+    case types.SALVAR_FILTROS_CONSULTA_SALVAMENTO:
+      return { ...state, filtros: action.payload };
     case types.INSERIR_SEQUENCIA_ORDENS:
       let sequenciaOrdem = Object.assign([], state.sequenciaOrdens)
 
       const naLista = sequenciaOrdem.findIndex(ordem => ordem === action.payload);
       if (naLista !== -1)
-        return { ...state, ordemSelecionada: action.payload };
+        return { ...state, ordemSelecionada: action.payload, emEdicao: true };
 
       if (sequenciaOrdem === null || sequenciaOrdem.length === 0) {
         sequenciaOrdem = [];
         sequenciaOrdem.push(action.payload);
-        return { ...state, sequenciaOrdens: sequenciaOrdem, ordemSelecionada: action.payload };
+        return { ...state, sequenciaOrdens: sequenciaOrdem, ordemSelecionada: action.payload, emEdicao: true };
       }
 
       for (let i = 0; i < 3; i++) {
@@ -131,7 +164,7 @@ export const reducer = (state, action) => {
         break;
       }
 
-      return { ...state, sequenciaOrdens: sequenciaOrdem, ordemSelecionada: action.payload }
+      return { ...state, sequenciaOrdens: sequenciaOrdem, ordemSelecionada: action.payload, emEdicao: true }
     case types.ATUALIZAR_RESPOSTA:
       let alunos = Object.assign([], state.alunos);
 

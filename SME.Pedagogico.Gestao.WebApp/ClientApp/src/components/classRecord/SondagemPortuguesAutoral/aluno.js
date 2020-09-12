@@ -3,10 +3,13 @@ import Select from './select';
 import { actionCreators as PortuguesStore } from "../../../store/SondagemPortuguesStore";
 import { useDispatch } from 'react-redux';
 
-function Aluno({ aluno, perguntas, periodo, onChangeAluno }) {
+function Aluno({ aluno, perguntas, periodo, idOrdemSelecionada }) {
     const dispatch = useDispatch();
 
     const onChange = (respostaId, perguntaId) => {
+
+        console.log(idOrdemSelecionada);
+        dispatch(PortuguesStore.inserir_sequencia_ordem(idOrdemSelecionada));
 
         const dadosSalvar = {
             respostaId: respostaId,
@@ -30,7 +33,6 @@ function Aluno({ aluno, perguntas, periodo, onChangeAluno }) {
 
             return <th className="align-middle">
                 <Select lista={pergunta.respostas} valorId={alunoResposta && alunoResposta.resposta} onChangeSelect={onChange} dados={pergunta.id} />
-
             </th>
         })}
     </tr>;

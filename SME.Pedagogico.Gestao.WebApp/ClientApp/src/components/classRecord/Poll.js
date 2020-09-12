@@ -695,6 +695,24 @@ class Poll extends Component {
       return;
     }
 
+    if (this.props.sondagemPortugues.salvar) {
+      const sequenciasOrdens = this.props.sondagemPortugues.sequenciaOrdens;
+      const idOrdemSelecionada = this.props.sondagemPortugues.ordemSelecionada;
+      const periodoSelecionadoSalvar = this.props.sondagemPortugues.periodoSelecionado;
+      const grupo = this.props.sondagemPortugues.grupoSelecionado;
+      const idOrdem = this.props.sondagemPortugues.ordemSelecionada;
+
+      let alunosMutaveis = Object.assign([], this.props.sondagemPortugues.alunos);
+      let filtrosMutaveis = Object.assign({}, this.props.sondagemPortugues.filtros);
+
+      const sequenciaOrdemSelecionada = sequenciasOrdens ? sequenciasOrdens.findIndex(sequencia => sequencia === idOrdemSelecionada) : 0;
+
+      this.props.sondagemPortugues.salvar({ perguntasSalvar: this.props.sondagemPortugues.perguntas, alunosMutaveis, filtrosMutaveis, periodoSelecionadoSalvar, grupo, idOrdem, sequenciaOrdemSelecionada })
+
+      return;
+    }
+
+
     if (this.props.pollStudents.pollSelected == ClassRoomEnum.ClassMTAutoral) {
       this.props.autoralMethods.salvaSondagemAutoralMatematica(
         this.props.autoral.listaAlunosAutoralMatematica
@@ -980,6 +998,7 @@ export default connect(
     data: state.data,
     filters: state.filters,
     autoral: state.autoral,
+    sondagemPortugues: state.sondagemPortugues,
   }),
   (dispatch) => ({
     pollMethods: bindActionCreators(actionCreatorsPoll, dispatch),

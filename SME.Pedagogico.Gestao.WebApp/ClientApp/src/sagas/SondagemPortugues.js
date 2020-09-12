@@ -84,8 +84,8 @@ function* ListarPerguntas({ payload }) {
     }
 }
 
-function listaPerguntasAPI(sequenciaOrdem) {
-    var url = `/api/SondagemPortugues/Perguntas?sequenciaOrdem=${sequenciaOrdem}`;
+function listaPerguntasAPI({ sequenciaOrdem, grupoId }) {
+    var url = `/api/SondagemPortugues/Perguntas?sequenciaOrdem=${sequenciaOrdem}&grupoId=${grupoId}`;
     return fetch(url, {
         method: "get",
         headers: { "Content-Type": "application/json" },
@@ -137,15 +137,34 @@ function listarAlunosPortuguesApi(filtro) {
 }
 
 function* SalvaSondagemPortugues({ payload }) {
+
     yield fetch("/api/SondagemPortugues/SondagemPortuguesAutoral", {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload.alunos),
     });
 
+    if (payload.novaOrdem) {
+        yield put({
+            type: Autoral.types.SETAR_ORDEM_SELECIONADA,
+            payload: payload.novaOrdem,
+        });
+
+        payload.filtro.ordemId = payload.novaOrdem;
+    }
+
+    if (payload.novoPeriodoId) {
+        yield put({
+            type: Autoral.types.SETAR_PERIODO_SELECIONADO,
+            payload: payload.novoPeriodoId,
+        })
+
+        payload.filtro.periodoId = payload.novoPeriodoId.id;
+    }
+
     yield put({
         type: Autoral.types.LISTAR_ALUNOS_PORTUGUES,
-        filtro: payload.filtro,
+        payload: payload.filtro,
     });
 }
 
