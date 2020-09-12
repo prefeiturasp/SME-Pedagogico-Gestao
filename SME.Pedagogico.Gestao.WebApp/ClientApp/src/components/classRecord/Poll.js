@@ -705,7 +705,7 @@ class Poll extends Component {
       let alunosMutaveis = Object.assign([], this.props.sondagemPortugues.alunos);
       let filtrosMutaveis = Object.assign({}, this.props.sondagemPortugues.filtros);
 
-      const sequenciaOrdemSelecionada = sequenciasOrdens ? sequenciasOrdens.findIndex(sequencia => sequencia === idOrdemSelecionada) : 0;
+      const sequenciaOrdemSelecionada = sequenciasOrdens ? sequenciasOrdens.findIndex(sequencia => sequencia.ordemId === idOrdemSelecionada) : 0;
 
       this.props.sondagemPortugues.salvar({ perguntasSalvar: this.props.sondagemPortugues.perguntas, alunosMutaveis, filtrosMutaveis, periodoSelecionadoSalvar, grupo, idOrdem, sequenciaOrdemSelecionada })
 

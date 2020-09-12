@@ -21,11 +21,15 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
 
     const sequenciaOrdens = useSelector((store) => store.sondagemPortugues.sequenciaOrdens);
 
+    console.log(sequenciaOrdens);
+
     const sequenciaOrdemAtual = useMemo(() => {
         if (!sequenciaOrdens || sequenciaOrdens.length <= 0)
             return 1;
 
-        const index = sequenciaOrdens.findIndex(ordem => ordem === idOrdemSelecionada);
+        const index = sequenciaOrdens.findIndex(ordem => {
+            return ordem.ordemId === idOrdemSelecionada;
+        });
 
         if (index >= 0)
             return index + 1;
@@ -34,7 +38,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
             return sequenciaOrdens.length + 1;
         }
 
-        let indexNull = sequenciaOrdens.findIndex(ordem => ordem === null);
+        let indexNull = sequenciaOrdens.findIndex(ordem => ordem.ordemId === null);
 
         return indexNull === -1 ? 0 : indexNull + 1;
 

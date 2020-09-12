@@ -24,6 +24,7 @@ export const types = {
   SETAR_EM_EDICAO: "SETAR_EM_EDICAO",
   SALVAR_FUNCAO_SALVAMENTO: "SALVAR_FUNCAO_SALVAMENTO",
   SALVAR_FILTROS_CONSULTA_SALVAMENTO: "SALVAR_FILTROS_CONSULTA_SALVAMENTO",
+  SETAR_SEQUENCIA_ORDENS: "SETAR_SEQUENCIA_ORDENS",
 }
 
 const initialState = {
@@ -86,6 +87,10 @@ export const actionCreators = {
     type: types.SETAR_PERIODOS,
     payload: periodos,
   }),
+  setar_sequencia_ordens: (sequencias) => ({
+    type: types.SETAR_SEQUENCIA_ORDENS,
+    payload: sequencias,
+  }),
   atualizar_resposta: (atualizarDto) => ({
     type: types.ATUALIZAR_RESPOSTA,
     payload: atualizarDto,
@@ -146,13 +151,13 @@ export const reducer = (state, action) => {
     case types.INSERIR_SEQUENCIA_ORDENS:
       let sequenciaOrdem = Object.assign([], state.sequenciaOrdens)
 
-      const naLista = sequenciaOrdem.findIndex(ordem => ordem === action.payload);
+      const naLista = sequenciaOrdem.findIndex(ordem => ordem.ordemId === action.payload);
       if (naLista !== -1)
         return { ...state, ordemSelecionada: action.payload, emEdicao: true };
 
       if (sequenciaOrdem === null || sequenciaOrdem.length === 0) {
         sequenciaOrdem = [];
-        sequenciaOrdem.push(action.payload);
+        sequenciaOrdem.push({ ordemId: action.payload });
         return { ...state, sequenciaOrdens: sequenciaOrdem, ordemSelecionada: action.payload, emEdicao: true };
       }
 
@@ -160,7 +165,7 @@ export const reducer = (state, action) => {
         if (sequenciaOrdem[i])
           continue;
 
-        sequenciaOrdem[i] = action.payload;
+        sequenciaOrdem[i] = { ordemId: action.payload };
         break;
       }
 

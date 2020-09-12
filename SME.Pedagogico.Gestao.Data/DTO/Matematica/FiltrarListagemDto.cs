@@ -12,5 +12,6 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Matematica
         public Guid ComponenteCurricular { get; set; }
         public string PeriodoId { get; set; }
         public string OrdemId { get; set; }
+        public string GrupoId { get; set; }
     }
 }

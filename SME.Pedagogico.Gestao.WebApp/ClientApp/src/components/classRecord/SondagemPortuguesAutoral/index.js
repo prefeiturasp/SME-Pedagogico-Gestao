@@ -77,7 +77,7 @@ function SondagemPortuguesAutoral() {
     let alunosMutaveis = Object.assign([], alunos);
     let filtrosMutaveis = Object.assign({}, filtrosBusca);
 
-    const sequenciaOrdemSelecionada = sequenciasOrdens ? sequenciasOrdens.findIndex(sequencia => sequencia === idOrdemSelecionada) : 0;
+    const sequenciaOrdemSelecionada = sequenciasOrdens ? sequenciasOrdens.findIndex(sequencia => sequencia.ordemId === idOrdemSelecionada) : 0;
 
     executarSalvamento({ perguntasSalvar: perguntas, alunosMutaveis, filtrosMutaveis, sequenciaOrdemSelecionada, novaOrdem, periodoSelecionadoSalvar: periodoSelecionado, novoPeriodoId, idOrdem: idOrdemSelecionada, grupo: grupoSelecionado });
   }
@@ -128,6 +128,10 @@ function SondagemPortuguesAutoral() {
   }, [emEdicao])
 
   useEffect(() => {
+    dispatch(PortuguesStore.listarSequenciaOrdens({ ...filtrosBusca, grupoId: grupoSelecionado }));
+  }, [grupoSelecionado])
+
+  useEffect(() => {
     dispatch(PortuguesStore.salvar_filtros_consulta_salvamento({
       anoLetivo: filtros.schoolYear,
       anoEscolar: filtros.yearClassroom,
@@ -137,8 +141,9 @@ function SondagemPortuguesAutoral() {
       componenteCurricular: "c65b2c0a-7a58-4d40-b474-23f0982f14b1",
       ordemId: idOrdemSelecionada,
       periodoId: periodoSelecionado && periodoSelecionado.id,
+      grupoId: grupoSelecionado,
     }));
-  }, [filtros, idOrdemSelecionada, periodoSelecionado]);
+  }, [filtros, idOrdemSelecionada, periodoSelecionado, grupoSelecionado]);
 
   useEffect(() => {
     dispatch(PortuguesStore.listarGrupos());
@@ -152,7 +157,7 @@ function SondagemPortuguesAutoral() {
       dispatch(PortuguesStore.limpar_todas_ordens_selecionadas());
       dispatch(PortuguesStore.selecionar_grupo(null));
       dispatch(PortuguesStore.salvar_funcao_salvamento(null));
-
+      dispatch(PortuguesStore.setar_sequencia_ordens([]));
     };
   }, []);
 
