@@ -6,7 +6,6 @@ import SeletorDeOrdem from "./seletorDeordem";
 import TabelaAlunos from "./tabelaAlunos";
 import { actionCreators as dataStore } from "../../../store/Data";
 import { actionCreators as pollStore } from "../../../store/Poll";
-import { Tooltip } from "reactstrap";
 
 function SondagemPortuguesAutoral() {
   const dispatch = useDispatch();
@@ -84,9 +83,13 @@ function SondagemPortuguesAutoral() {
   }
 
   const executarSalvamento = ({ perguntasSalvar, alunosMutaveis, filtrosMutaveis, sequenciaOrdemSelecionada, novaOrdem, novoPeriodoId, periodoSelecionadoSalvar, grupo, idOrdem }) => {
+    console.log(perguntasSalvar);
+
     perguntasSalvar.forEach((pergunta) => {
 
-      const respostaSalvar = {
+      console.log(pergunta);
+
+      let respostaSalvar = {
         resposta: null,
         pergunta: pergunta.id,
         periodoId: periodoSelecionadoSalvar && periodoSelecionadoSalvar.id
@@ -104,9 +107,12 @@ function SondagemPortuguesAutoral() {
           return;
         }
 
-        const index = aluno.respostas.findIndex(resposta => {
-          return resposta => resposta.perguntaId === pergunta.id && resposta.periodoId === periodoSelecionadoSalvar.id;
-        });
+        const index = aluno.respostas.findIndex(resposta =>
+          resposta.pergunta === pergunta.id && resposta.periodoId === periodoSelecionadoSalvar.id
+        );
+
+        console.log(aluno.respostas);
+        console.log(index, "index");
 
         if (index !== -1)
           return;
@@ -174,7 +180,7 @@ function SondagemPortuguesAutoral() {
     };
   }, []);
 
-  return (    
+  return (
     <div className="container-fluid">
       <div className="row container-fluid">
         <Select
@@ -183,10 +189,11 @@ function SondagemPortuguesAutoral() {
           className="col-md-2"
           onChangeSelect={onChangeGrupos}
         />
+        <div className="col-md-10 d-flex justify-content-center">
+          <SeletorDeOrdem ordens={ordens} onClick={onClickOrdem} ordemSelecionada={idOrdemSelecionada} />
+        </div>
       </div>
-      <div className="row d-flex justify-content-center">
-        <SeletorDeOrdem ordens={ordens} onClick={onClickOrdem} ordemSelecionada={idOrdemSelecionada} />
-      </div>
+
       <div className="row container-fluid">
         {
           idOrdemSelecionada && idOrdemSelecionada !== "" && <TabelaAlunos periodos={periodos} grupoSelecionado={grupoSelecionado} filtros={filtrosBusca} salvar={salvar} idOrdemSelecionada={idOrdemSelecionada}></TabelaAlunos>
