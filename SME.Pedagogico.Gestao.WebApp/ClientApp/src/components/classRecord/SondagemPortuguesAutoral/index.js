@@ -6,6 +6,7 @@ import SeletorDeOrdem from "./seletorDeordem";
 import TabelaAlunos from "./tabelaAlunos";
 import { actionCreators as dataStore } from "../../../store/Data";
 import { actionCreators as pollStore } from "../../../store/Poll";
+import { Tooltip } from "reactstrap";
 
 function SondagemPortuguesAutoral() {
   const dispatch = useDispatch();
@@ -128,8 +129,19 @@ function SondagemPortuguesAutoral() {
   }, [emEdicao])
 
   useEffect(() => {
+    dispatch(PortuguesStore.setar_ordem_selecionada(null));
+    dispatch(PortuguesStore.limpar_todas_ordens_selecionadas());
     dispatch(PortuguesStore.listarSequenciaOrdens({ ...filtrosBusca, grupoId: grupoSelecionado }));
   }, [grupoSelecionado])
+
+  useEffect(() => {
+    const grupo = grupos && grupoSelecionado && grupos.find(g => g.id === grupoSelecionado);
+
+    if (grupo && !grupo.ordemVisivel) {
+      dispatch(PortuguesStore.setar_ordem_selecionada(ordens[0]));
+      dispatch(PortuguesStore.listarPerguntasPortugues(1, grupoSelecionado));
+    }
+  }, [ordens])
 
   useEffect(() => {
     dispatch(PortuguesStore.salvar_filtros_consulta_salvamento({
@@ -158,10 +170,11 @@ function SondagemPortuguesAutoral() {
       dispatch(PortuguesStore.selecionar_grupo(null));
       dispatch(PortuguesStore.salvar_funcao_salvamento(null));
       dispatch(PortuguesStore.setar_sequencia_ordens([]));
+      sairModoEdicaoPoll();
     };
   }, []);
 
-  return (
+  return (    
     <div className="container-fluid">
       <div className="row container-fluid">
         <Select

@@ -19,9 +19,9 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
 
     const periodoSelecionado = useSelector(store => store.sondagemPortugues.periodoSelecionado);
 
-    const sequenciaOrdens = useSelector((store) => store.sondagemPortugues.sequenciaOrdens);
+    const grupos = useSelector(store => store.sondagemPortugues.grupos);
 
-    console.log(sequenciaOrdens);
+    const sequenciaOrdens = useSelector((store) => store.sondagemPortugues.sequenciaOrdens);
 
     const sequenciaOrdemAtual = useMemo(() => {
         if (!sequenciaOrdens || sequenciaOrdens.length <= 0)
@@ -82,7 +82,6 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
             return;
 
         if (emEdicao) {
-            console.log(alunos);
             salvar({ novoPeriodoId: periodos[ordenacaoAtual] });
             return;
         }
@@ -105,6 +104,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
         if (!idOrdemSelecionada && periodoSelecionado)
             return;
 
+        setOrdenacaoAtual(0);
         dispatch(PortuguesStore.setar_periodo_selecionado(periodos[0]));
     }, [idOrdemSelecionada, periodos])
 
@@ -122,7 +122,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
                     <div className="ml-2">Sondagem - {filtros.anoEscolar}º ano</div>
                 </th>
                 <th
-                    colSpan="2"
+                    colSpan="4"
                     key=""
                     id=""
                     className="text-center border text-color-purple"
