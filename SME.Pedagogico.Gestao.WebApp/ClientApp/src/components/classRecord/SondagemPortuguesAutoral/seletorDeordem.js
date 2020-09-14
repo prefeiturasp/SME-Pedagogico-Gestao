@@ -25,7 +25,7 @@ function SeletorDeOrdem({ ordens, ordemSelecionada, onClick }) {
   }, [sequenciaOrdens])
 
   const obterSequenciaOrdem = (ordemId) => {
-    return sequenciaOrdens.findIndex(ordem => ordem.ordemId === ordemId);
+    return sequenciaOrdens ? sequenciaOrdens.findIndex(ordem => ordem && ordem.ordemId === ordemId) : -1;
   }
 
   const ordensLista = useMemo(() => {

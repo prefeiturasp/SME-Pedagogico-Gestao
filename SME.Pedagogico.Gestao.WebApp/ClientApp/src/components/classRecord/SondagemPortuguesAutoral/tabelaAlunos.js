@@ -23,7 +23,13 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
 
     const sequenciaOrdens = useSelector((store) => store.sondagemPortugues.sequenciaOrdens);
 
+    const ehEdicao = useMemo(() => {
+        return alunos && alunos.findIndex(aluno => aluno.id !== null) >= 0;
+    }, [alunos]);
+
     const sequenciaOrdemAtual = useMemo(() => {
+        console.log(sequenciaOrdens);
+
         if (!sequenciaOrdens || sequenciaOrdens.length <= 0)
             return 1;
 
@@ -68,6 +74,16 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
             return;
 
         setOrdenacaoAtual(oldState => oldState - 1);
+    }
+
+    const limparSelecao = () => {
+        dispatch(PortuguesStore.limpar_respostas_alunos());
+
+        if (!ehEdicao) {
+            dispatch(PortuguesStore.remover_sequencia_ordens(idOrdemSelecionada));
+        } else {
+            dispatch(PortuguesStore.inserir_sequencia_ordem(idOrdemSelecionada));
+        }
     }
 
     useEffect(() => {
@@ -150,6 +166,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
                             style={{ height: 20 }}
                         />
                     </span>
+                    <a href="#" disabled={!emEdicao} onClick={limparSelecao} className="float-right pr-3">Limpar seleções</a>
                 </th>
             </tr>
             <tr>

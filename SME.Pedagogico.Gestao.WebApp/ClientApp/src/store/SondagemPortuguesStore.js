@@ -25,6 +25,7 @@ export const types = {
   SALVAR_FUNCAO_SALVAMENTO: "SALVAR_FUNCAO_SALVAMENTO",
   SALVAR_FILTROS_CONSULTA_SALVAMENTO: "SALVAR_FILTROS_CONSULTA_SALVAMENTO",
   SETAR_SEQUENCIA_ORDENS: "SETAR_SEQUENCIA_ORDENS",
+  LIMPAR_RESPOSTAS_ALUNOS: "LIMPAR_RESPOSTAS_ALUNOS",
 }
 
 const initialState = {
@@ -113,6 +114,13 @@ export const actionCreators = {
   salvar_filtros_consulta_salvamento: (filtros) => ({
     type: types.SALVAR_FILTROS_CONSULTA_SALVAMENTO,
     payload: filtros,
+  }),
+  limpar_respostas_alunos: () => ({
+    type: types.LIMPAR_RESPOSTAS_ALUNOS
+  }),
+  remover_sequencia_ordens: (ordemId) => ({
+    type: types.REMOVER_SEQUENCIA_ORDENS,
+    payload: ordemId
   })
 };
 
@@ -148,6 +156,15 @@ export const reducer = (state, action) => {
       return { ...state, salvar: action.payload };
     case types.SALVAR_FILTROS_CONSULTA_SALVAMENTO:
       return { ...state, filtros: action.payload };
+    case types.LIMPAR_RESPOSTAS_ALUNOS:
+      const alunosSemResposta = state.alunos.map(aluno => { return { ...aluno, respostas: [] } });
+
+      return { ...state, alunos: alunosSemResposta };
+
+    case types.REMOVER_SEQUENCIA_ORDENS:
+      const sequenciaOrdemNova = state.sequenciaOrdens.filter(sequencia => sequencia.ordemId !== action.payload);
+
+      return { ...state, sequenciaOrdens: sequenciaOrdemNova, emEdicao: false };
     case types.INSERIR_SEQUENCIA_ORDENS:
       let sequenciaOrdem = Object.assign([], state.sequenciaOrdens)
 
