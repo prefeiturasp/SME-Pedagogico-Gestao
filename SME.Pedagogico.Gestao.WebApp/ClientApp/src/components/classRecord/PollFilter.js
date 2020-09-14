@@ -47,7 +47,9 @@ class PollFilter extends Component {
       schoolYear: anoAtual,
     });
 
-    this.props.filterMethods.getPeriod(anoAtual);
+      this.props.filterMethods.getPeriod(anoAtual);
+    
+
 
     this.props.filterMethods.setSchoolYear(anoAtual);
 
