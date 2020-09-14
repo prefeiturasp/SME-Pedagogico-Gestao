@@ -15,7 +15,8 @@ export const types = {
     GET_DRE_ADM: "GET_DRE_ADM",
     SET_SCHOOLYEAR: "SET_SCHOOLYEAR",
     GET_PERIOD: "GET_PERIOD",
-    SET_PERIOD: "SET_PERIOD"
+    SET_PERIOD: "SET_PERIOD",
+    PERIODO_ABERTURA_MAT: "PERIODO_ABERTURA_MAT"
     //UNAUTHORIZED: "UNAUTHORIZED",
     //LOGOUT_REQUEST: "LOGOUT_REQUEST",
     //LOGOUT_USER: "LOGOUT_USER",
@@ -34,6 +35,8 @@ const initialState = {
     activeClassRoomCode: null,
     filterTeachers: null,
     period: null,
+    abertura1Semestre: false,
+    abertura2Semestre: false
 };
 
 export const actionCreators = {
@@ -48,10 +51,13 @@ export const actionCreators = {
     resetPollFilters: () => ({ type: types.RESET_POLL_FILTERS }),
     getFilters_teacher: (profileOccupatios) => ({ type: types.GET_FILTERS_TEACHER, profileOccupatios }),
     activeDreCode: (schoolCode) => ({ type: types.ACTIVEDRECODE, schoolCode }),
-    activeSchoolCode: (classRoomFilter) => ({ type: types.ACTIVESCHOOLCODE, classRoomFilter  }),
-    getDreAdm: (userName) => ({type: types.GET_DRE_ADM, userName}),
-    getPeriod: (schoolYear) => ({type: types.GET_PERIOD, schoolYear}),
-    setPeriod: () => ({type: types.SET_PERIOD })
+    activeSchoolCode: (classRoomFilter) => ({ type: types.ACTIVESCHOOLCODE, classRoomFilter }),
+    getDreAdm: (userName) => ({ type: types.GET_DRE_ADM, userName }),
+    getPeriod: (schoolYear) => ({ type: types.GET_PERIOD, schoolYear }),
+    setPeriod: () => ({ type: types.SET_PERIOD }),
+    verificaPeriodosMatematica: () => ({ type: types.PERIODO_ABERTURA_MAT }),
+
+
 };
 
 export const reducer = (state, action) => {
@@ -101,17 +107,46 @@ export const reducer = (state, action) => {
                 listDres: action.filters.drEs,
                 listClassRoom: action.filters.turmas
             });
-            case types.SET_SCHOOLYEAR:
-                    return({
-                        ...state,
-                        setSchoolYear: action.schoolYear
-                    });
-            case types.SET_PERIOD:
-                return({
-                    ...state,
-                    period: action.listPeriod
+        case types.SET_SCHOOLYEAR:
+            return ({
+                ...state,
+                setSchoolYear: action.schoolYear
+            });
+        case types.SET_PERIOD:
+            return ({
+                ...state,
+                period: action.listPeriod
 
-                })
+            });
+        case types.PERIODO_ABERTURA_MAT:
+            var todayDate = new Date();
+            let estadoRetorno = { state};
+            state.period.forEach((item) => {
+                debugger;
+                if (item.bimestre === 2) {
+                    if (todayDate >= new Date(item.dataInicio) && todayDate <= new Date(item.dataFim)) {
+
+                        estadoRetorno = {
+                            ...state,
+                            abertura1Semestre: true,
+                        }
+                    }
+                }
+                if (item.bimestre === 4) {
+                   
+                    if (todayDate >= new Date(item.dataInicio) && todayDate <= new Date(item.dataFim)) {
+                       
+                        estadoRetorno = {
+                            ...state,
+                            ...estadoRetorno,
+                            abertura2Semestre: true
+                        }
+
+                    }
+
+                }
+            });
+            return estadoRetorno;
           
         default:
             return (state);

@@ -58,7 +58,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             using (var contexto = new SMEManagementContextData())
             {
                 var periodos = await contexto.Periodo.Where(x => x.TipoPeriodo == Models.Enums.TipoPeriodoEnum.Semestre).ToListAsync();
-
+                 
                 return periodos.Select(x => (PeriodoDto)x);
             }
         }
