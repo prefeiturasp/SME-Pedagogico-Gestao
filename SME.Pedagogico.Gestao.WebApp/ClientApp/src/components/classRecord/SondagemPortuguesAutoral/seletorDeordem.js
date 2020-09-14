@@ -1,9 +1,13 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import shortid from "shortid";
 
 function SeletorDeOrdem({ ordens, ordemSelecionada, onClick }) {
   const sequenciaOrdens = useSelector((store) => store.sondagemPortugues.sequenciaOrdens);
+
+  const style = useMemo(() => {
+    return { display: !ordens || ordens.length <= 1 ? "none" : "" }
+  }, [ordens])
 
   const limiteOrdens = useMemo(() => {
     if (!sequenciaOrdens || sequenciaOrdens.length !== 3)
@@ -36,8 +40,12 @@ function SeletorDeOrdem({ ordens, ordemSelecionada, onClick }) {
     return "border-left-0 border-right-0";
   };
 
+  useEffect(() => {
+    if (ordens && ordens.length === 1)
+      onClick(ordens[0].id);
+  }, [ordens])
+
   const onClickOrdem = (event) => {
-    console.log(event.target.sequenciaOrdem);
     onClick(event.target.id)
   };
 
@@ -50,6 +58,7 @@ function SeletorDeOrdem({ ordens, ordemSelecionada, onClick }) {
       className="btn-group mr-2 btn-group-sm pills"
       role="group"
       aria-label="Second group"
+      style={style}
     >
       {ordensLista &&
         ordensLista.length > 0 &&
