@@ -19,11 +19,17 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
 
     const periodoSelecionado = useSelector(store => store.sondagemPortugues.periodoSelecionado);
 
+    const grupos = useSelector(store => store.sondagemPortugues.grupos);
+
     const sequenciaOrdens = useSelector((store) => store.sondagemPortugues.sequenciaOrdens);
 
-    console.log(sequenciaOrdens);
+    const ehEdicao = useMemo(() => {
+        return alunos && alunos.findIndex(aluno => aluno.id !== null) >= 0;
+    }, [alunos]);
 
     const sequenciaOrdemAtual = useMemo(() => {
+        console.log(sequenciaOrdens);
+
         if (!sequenciaOrdens || sequenciaOrdens.length <= 0)
             return 1;
 
@@ -70,6 +76,16 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
         setOrdenacaoAtual(oldState => oldState - 1);
     }
 
+    const limparSelecao = () => {
+        dispatch(PortuguesStore.limpar_respostas_alunos());
+
+        if (!ehEdicao) {
+            dispatch(PortuguesStore.remover_sequencia_ordens(idOrdemSelecionada));
+        } else {
+            dispatch(PortuguesStore.inserir_sequencia_ordem(idOrdemSelecionada));
+        }
+    }
+
     useEffect(() => {
         if (sequenciaOrdemAtual === 0)
             return;
@@ -82,7 +98,6 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
             return;
 
         if (emEdicao) {
-            console.log(alunos);
             salvar({ novoPeriodoId: periodos[ordenacaoAtual] });
             return;
         }
@@ -105,6 +120,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
         if (!idOrdemSelecionada && periodoSelecionado)
             return;
 
+        setOrdenacaoAtual(0);
         dispatch(PortuguesStore.setar_periodo_selecionado(periodos[0]));
     }, [idOrdemSelecionada, periodos])
 
@@ -122,7 +138,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
                     <div className="ml-2">Sondagem - {filtros.anoEscolar}º ano</div>
                 </th>
                 <th
-                    colSpan="2"
+                    colSpan="4"
                     key=""
                     id=""
                     className="text-center border text-color-purple"
@@ -150,6 +166,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
                             style={{ height: 20 }}
                         />
                     </span>
+                    <a href="#" disabled={!emEdicao} onClick={limparSelecao} className="float-right pr-3">Limpar seleções</a>
                 </th>
             </tr>
             <tr>
