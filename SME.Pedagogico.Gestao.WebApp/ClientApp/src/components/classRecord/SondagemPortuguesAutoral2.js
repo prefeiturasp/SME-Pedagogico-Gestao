@@ -80,7 +80,7 @@ class SondagemPortuguesAutoral extends Component {
                         <tr>
                             <th className="text-center border poll-select-container 1bim_col"><small className="text-muted">Escrita</small></th>
                             <th className="text-center border poll-select-container 1bim_col"><small className="text-muted">Leitura</small></th>
-                            <th className="text-center border poll-select-container 2bim_col"><small className="text-muted">Escrita</small></th>
+                            <th className="text-center border poll-select-container 2bim_col"><small className="text-muted">Escrita2</small></th>
                             <th className="text-center border poll-select-container 2bim_col"><small className="text-muted">Leitura</small></th>
                             <th className="text-center border poll-select-container 3bim_col"><small className="text-muted">Escrita</small></th>
                             <th className="text-center border poll-select-container 3bim_col"><small className="text-muted">Leitura</small></th>

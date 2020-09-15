@@ -11,7 +11,6 @@
 // const ReportService   {
    
 //     CriaRelatorio: () =>  {
-//          debugger
 //         var pollReportData = lala.props.pollReport.data;
 //         var chartData = lala.props.pollReport.chartData;
 //         //CriaHeader 

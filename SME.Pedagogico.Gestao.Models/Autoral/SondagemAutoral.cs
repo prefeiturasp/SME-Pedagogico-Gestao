@@ -7,7 +7,36 @@ namespace SME.Pedagogico.Gestao.Models.Autoral
 {
     public class SondagemAutoral : Table
     {
-        public virtual ComponenteCurricular ComponenteCurricular { get; set; }
+        public SondagemAutoral() { }
+
+        public SondagemAutoral(SondagemAutoral sondagemAutoral)
+        {
+            ComponenteCurricular = sondagemAutoral.ComponenteCurricular;
+            ComponenteCurricularId = sondagemAutoral.ComponenteCurricularId;
+            Pergunta = sondagemAutoral.Pergunta;
+            PerguntaId = sondagemAutoral.PerguntaId;
+            Resposta = sondagemAutoral.Resposta;
+            Id = null;
+            RespostaId = sondagemAutoral.RespostaId;
+            CodigoAluno = sondagemAutoral.CodigoAluno;
+            NomeAluno = sondagemAutoral.NomeAluno;
+            CodigoDre = sondagemAutoral.CodigoDre;
+            CodigoUe = sondagemAutoral.CodigoUe;
+            CodigoTurma = sondagemAutoral.CodigoTurma;
+            Grupo = sondagemAutoral.Grupo;
+            GrupoId = sondagemAutoral.GrupoId;
+            Ordem = sondagemAutoral.Ordem;
+            OrdemId = sondagemAutoral.OrdemId;
+            AnoTurma = sondagemAutoral.AnoTurma;
+            AnoLetivo = sondagemAutoral.AnoLetivo;
+            Periodo = sondagemAutoral.Periodo;
+            PeriodoId = sondagemAutoral.PeriodoId;
+            SequenciaDeOrdemSalva = sondagemAutoral.SequenciaDeOrdemSalva;
+            
+
+    }
+
+    public virtual ComponenteCurricular ComponenteCurricular { get; set; }
         public string ComponenteCurricularId { get; set; }
         public virtual Pergunta Pergunta { get; set; }
         public string PerguntaId { get; set; }
@@ -26,7 +55,7 @@ namespace SME.Pedagogico.Gestao.Models.Autoral
         public int AnoLetivo { get; set; }
         public virtual Periodo Periodo { get; set; }
         public string PeriodoId { get; set; }
-
+        public int? SequenciaDeOrdemSalva { get; set; }
 
     }
 }

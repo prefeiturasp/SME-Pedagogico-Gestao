@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 using SME.Pedagogico.Gestao.WebApp.Models.ClassRoom;
 using SME.Pedagogico.Gestao.Data.DataTransfer;
 using SME.Pedagogico.Gestao.Data.Business;
+using AutoMapper;
+using SME.Pedagogico.Gestao.Data.DTO.Portugues;
+using SME.Pedagogico.Gestao.Data.DTO.Matematica;
+using System;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
@@ -14,6 +18,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
     public class SondagemPortuguesController : ControllerBase
     {
         public IConfiguration _config;
+
         public SondagemPortuguesController(IConfiguration config)
         {
 
@@ -53,7 +58,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     yearClassroom = classRoomModel.yearClassroom
                 };
 
-                var BusinessPoll = new Data.Business.PollPortuguese(_config);
+                var BusinessPoll = new PollPortuguese(_config);
                 var ListStudentPollPortuguese = await BusinessPoll.ListStudentPollPortuguese(classRoomDataTransfer);
 
                 if (ListStudentPollPortuguese != null)
@@ -74,7 +79,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> ListarGrupos()
+        public async Task<ActionResult> Grupos()
         {
             var sondagemAutoralBll = new PollPortuguese(_config);
             return Ok(sondagemAutoralBll.ListarGrupos());
@@ -85,6 +90,58 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         {
             var sondagemAutoralBll = new PollPortuguese(_config);
             return Ok(sondagemAutoralBll.ListarOrdens());
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ComponenteCurricular()
+        {
+            var sondagemAutoralBll = new PollPortuguese(_config);
+            return Ok(sondagemAutoralBll.RetornaComponenteCurricularPortugues());
+        }
+        [HttpGet]
+        public async Task<ActionResult> Bimestres()
+        {
+            var sondagemAutoralBll = new PollPortuguese(_config);
+            return Ok(sondagemAutoralBll.RetornaPeriodosBimestres());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SondagemPortuguesAutoral([FromBody]IEnumerable<AlunoSondagemPortuguesDTO> ListaAlunosSondagemDto)
+        {
+            var sondagemAutoralBll = new PollPortuguese(_config);
+            sondagemAutoralBll.SalvarSondagemAutoralPortugues(ListaAlunosSondagemDto);
+
+            return Ok();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ListarSondagemPortuguesAutoral([FromQuery] FiltrarListagemDto filtrarListagemDto)
+        {
+            var sondagemAutoralBll = new PollPortuguese(_config);
+
+            return Ok(await sondagemAutoralBll.ListarAlunosPortuguesAutoral(filtrarListagemDto));
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Perguntas([FromQuery] int sequenciaOrdem, string grupoId)
+        {
+            if (sequenciaOrdem < 1 || sequenciaOrdem > 3)
+                return BadRequest("O valor do parametro sequenciaOrdem deve estar entre 1 e 3");
+
+            if (string.IsNullOrEmpty(grupoId))
+                return BadRequest("O valor do parametro grupId é obrigatorio");
+
+            var sondagemAutoralBll = new PollPortuguese(_config);
+
+            return Ok(await sondagemAutoralBll.ListarPerguntas(sequenciaOrdem, grupoId));
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> SequenciaDeOrdens([FromQuery] FiltrarListagemDto filtrarListagemDto)
+        {
+            var sondagemAutoralBll = new PollPortuguese(_config);
+
+            return Ok(await sondagemAutoralBll.ListaSequenciaOrdensSalva(filtrarListagemDto));
         }
     }
 }

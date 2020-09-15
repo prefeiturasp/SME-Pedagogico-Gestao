@@ -4,7 +4,6 @@ using SME.Pedagogico.Gestao.Models.Organization;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 
 namespace SME.Pedagogico.Gestao.Data.Business
 {
@@ -18,7 +17,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
             _token = createToken.CreateTokenProvisorio();
         }
 
-        [HttpGet]
         public async Task<List<PeriodoDeAbertura>> GetPeriodoDeAberturas(string  schoolYear)
         {
             try
