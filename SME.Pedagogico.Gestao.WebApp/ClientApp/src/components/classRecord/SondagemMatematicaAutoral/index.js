@@ -13,9 +13,7 @@ function SondagemMatematicaAutoral() {
   const [indexSelecionado, setIndexSelecionado] = useState(1);
 
   const periodosLista = useSelector((store) => store.autoral.listaPeriodos);
-
-  const sequenciaOrdemAtual = useSelector(store => store.sondagemPor)
-
+  
   const perguntas = useSelector((store) => store.autoral.listaPerguntas);
 
   const alunos = useSelector(

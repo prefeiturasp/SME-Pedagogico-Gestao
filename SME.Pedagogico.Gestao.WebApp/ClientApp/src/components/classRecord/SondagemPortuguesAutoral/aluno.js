@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import Select from './select';
 import { actionCreators as PortuguesStore } from "../../../store/SondagemPortuguesStore";
 import { useDispatch } from 'react-redux';
 import RadioButtonGroup from './radioButton';
 
-function Aluno({ aluno, perguntas, periodo, idOrdemSelecionada }) {
+function Aluno({ aluno, perguntas, periodo, idOrdemSelecionada, grupoSelecionado }) {
     const dispatch = useDispatch();
+
+    const ehRadioButton = useMemo(() => grupoSelecionado === "6a3d323a-2c44-4052-ba68-13a8dead299a")
 
     const onChange = (respostaId, perguntaId) => {
 
@@ -29,13 +31,15 @@ function Aluno({ aluno, perguntas, periodo, idOrdemSelecionada }) {
             </small>
             <small>{aluno.nomeAluno}</small>
         </td>
-        {perguntas && perguntas.map(pergunta => {
-            const alunoResposta = aluno.respostas && aluno.respostas.find(resposta => resposta.pergunta == pergunta.id && resposta.periodoId === periodo.id);
+        {ehRadioButton ? (<RadioButtonGroup lista={perguntas} valor={aluno && aluno.respostas} periodoId={periodo.id} codigoAluno={aluno.codigoAluno} />)
+            : perguntas && perguntas.map(pergunta => {
+                const alunoResposta = aluno.respostas && aluno.respostas.find(resposta => resposta.pergunta == pergunta.id && resposta.periodoId === periodo.id);
 
-            return <td className="align-middle">
-                <Select lista={pergunta.respostas} valorId={alunoResposta && alunoResposta.resposta} onChangeSelect={onChange} dados={pergunta.id} />
-            </td>
-        })}
+                return <td className="align-middle">
+                    <Select lista={pergunta.respostas} valorId={alunoResposta && alunoResposta.resposta} onChangeSelect={onChange} dados={pergunta.id} />
+                </td>
+            })
+        }
     </tr>;
 }
 

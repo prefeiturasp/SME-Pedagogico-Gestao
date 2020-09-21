@@ -31,6 +31,7 @@ import SondagemPortuguesAutoral from "./SondagemPortuguesAutoral";
 
 import TwoStepsSave from "../messaging/TwoStepsSave";
 import TwoSteps from "../messaging/TwoSteps";
+import MensagemConfirmacaoAutoral from "./SondagemPortuguesAutoral/mensagemConfirmacaoAutoral";
 class Poll extends Component {
   constructor(props) {
     super(props);
@@ -685,7 +686,7 @@ class Poll extends Component {
     this.props.dataMethods.set_new_data_state();
   }
 
-  savePollStudent() {
+  async savePollStudent() {
     if (this.props.poll.onClickButtonSave) {
       this.props.poll.onClickButtonSave(
         this.props.autoral.listaAlunosAutoralMatematica,
@@ -904,11 +905,11 @@ class Poll extends Component {
             >
               Matem&aacute;tica
             </button>
-            <TwoSteps
-              show={this.state.showMessageMathBox}
-              showControl={this.toggleMessageMathBox}
-              runMethod={this.openMathPoll}
-            />
+            <MensagemConfirmacaoAutoral
+              controleExibicao={this.toggleMessageMathBox}
+              acaoPrincipal={async () => { this.savePollStudent().then(() => setTimeout(() => this.openMathPoll(), 1000)); }}
+              acaoSecundaria={async () => { this.openMathPoll(); }}
+              exibir={this.state.showMessageMathBox} />
           </li>
         );
       } else {

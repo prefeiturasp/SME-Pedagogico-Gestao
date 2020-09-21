@@ -28,7 +28,6 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
     }, [alunos]);
 
     const sequenciaOrdemAtual = useMemo(() => {
-        console.log(sequenciaOrdens);
 
         if (!sequenciaOrdens || sequenciaOrdens.length <= 0)
             return 1;
@@ -183,7 +182,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
         </thead>
         <tbody>
             {alunos && perguntas && perguntas.length > 0 && alunos.length > 0 && alunos.map(alunoObjeto => {
-                return <Aluno aluno={alunoObjeto} perguntas={perguntas} periodo={periodoSelecionado} idOrdemSelecionada={idOrdemSelecionada} />
+                return <Aluno aluno={alunoObjeto} perguntas={perguntas} periodo={periodoSelecionado} grupoSelecionado={grupoSelecionado} idOrdemSelecionada={idOrdemSelecionada} />
             })}
         </tbody>
     </table> : <div></div>;

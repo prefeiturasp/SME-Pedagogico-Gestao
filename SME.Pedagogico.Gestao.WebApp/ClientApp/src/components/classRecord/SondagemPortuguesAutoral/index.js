@@ -10,9 +10,7 @@ import { actionCreators as pollStore } from "../../../store/Poll";
 function SondagemPortuguesAutoral() {
   const dispatch = useDispatch();
 
-  const grupoSelecionado = useSelector(
-    (store) => store.sondagemPortugues.grupoSelecionado
-  );
+  const grupoSelecionado = useSelector((store) => store.sondagemPortugues.grupoSelecionado);
 
   const idOrdemSelecionada = useSelector((store) => store.sondagemPortugues.ordemSelecionada);
 
@@ -60,6 +58,7 @@ function SondagemPortuguesAutoral() {
   const sairModoEdicaoPoll = () => {
     dispatch(dataStore.reset_new_data_state());
     dispatch(pollStore.set_poll_data_saved_state());
+    dispatch(PortuguesStore.setar_emEdicao(false));
   };
 
 
@@ -83,43 +82,11 @@ function SondagemPortuguesAutoral() {
   }
 
   const executarSalvamento = ({ perguntasSalvar, alunosMutaveis, filtrosMutaveis, sequenciaOrdemSelecionada, novaOrdem, novoPeriodoId, periodoSelecionadoSalvar, grupo, idOrdem }) => {
-    console.log(perguntasSalvar);
 
-    perguntasSalvar.forEach((pergunta) => {
-
-      console.log(pergunta);
-
-      let respostaSalvar = {
-        resposta: null,
-        pergunta: pergunta.id,
-        periodoId: periodoSelecionadoSalvar && periodoSelecionadoSalvar.id
-      };
-
-      alunosMutaveis.forEach(aluno => {
-
-        aluno.grupoId = grupo;
-        aluno.ordemId = idOrdem;
-        aluno.sequenciaOrdemSalva = sequenciaOrdemSelecionada + 1;
-
-        if (!aluno.respostas || aluno.respostas.length === 0) {
-          aluno.respostas = [];
-          aluno.respostas.push(respostaSalvar);
-          return;
-        }
-
-        const index = aluno.respostas.findIndex(resposta =>
-          resposta.pergunta === pergunta.id && resposta.periodoId === periodoSelecionadoSalvar.id
-        );
-
-        console.log(aluno.respostas);
-        console.log(index, "index");
-
-        if (index !== -1)
-          return;
-
-        aluno.respostas.push(respostaSalvar);
-      });
-
+    alunosMutaveis.forEach(aluno => {
+      aluno.grupoId = grupo;
+      aluno.ordemId = idOrdem;
+      aluno.sequenciaOrdemSalva = sequenciaOrdemSelecionada + 1;
     });
 
     dispatch(PortuguesStore.salvarSondagemPortugues({ alunos: alunosMutaveis, filtro: filtrosMutaveis, novaOrdem, novoPeriodoId }));
@@ -144,7 +111,7 @@ function SondagemPortuguesAutoral() {
     const grupo = grupos && grupoSelecionado && grupos.find(g => g.id === grupoSelecionado);
 
     if (grupo && !grupo.ordemVisivel) {
-      dispatch(PortuguesStore.setar_ordem_selecionada(ordens[0]));
+      dispatch(PortuguesStore.setar_ordem_selecionada(ordens[0].id));
       dispatch(PortuguesStore.listarPerguntasPortugues(1, grupoSelecionado));
     }
   }, [ordens])
@@ -171,6 +138,7 @@ function SondagemPortuguesAutoral() {
       dispatch(PortuguesStore.setar_alunos([]));
       dispatch(PortuguesStore.setar_periodos([]));
       dispatch(PortuguesStore.setar_grupos([]));
+      dispatch(PortuguesStore.setar_emEdicao(false));
       dispatch(PortuguesStore.setar_ordem_selecionada(null));
       dispatch(PortuguesStore.limpar_todas_ordens_selecionadas());
       dispatch(PortuguesStore.selecionar_grupo(null));
