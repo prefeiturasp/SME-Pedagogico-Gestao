@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import shortid from "shortid";
 
-function SeletorDeOrdem({ ordens, ordemSelecionada, onClick }) {
+function SeletorDeOrdem({ ordens, ordemSelecionada, onClick, ordensSalvas }) {
   const sequenciaOrdens = useSelector((store) => store.sondagemPortugues.sequenciaOrdens);
 
   const style = useMemo(() => {
@@ -77,6 +77,9 @@ function SeletorDeOrdem({ ordens, ordemSelecionada, onClick }) {
               )} ${obterBordas(index)}`}
             >
               {ordem.descricao}
+              {ordensSalvas && ordensSalvas.find(a => a.ordemId === ordem.id)?
+              <i className="fas fa-check-circle ml-2"/>
+              :null}
             </button>
           );
         })}
