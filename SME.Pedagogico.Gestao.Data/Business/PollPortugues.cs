@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using MoreLinq;
@@ -568,11 +569,23 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public IEnumerable<GrupoOrdem> ListarOrdens()
+        public IEnumerable<Sondagem> ListarOrdens()
         {
             using (var contexto = new SMEManagementContextData())
             {
-                return contexto.GrupoOrdem.Include(x => x.Ordem).ToList();
+
+                try
+                {
+                    var ss = contexto.Sondagem.ToList();
+                    var s = contexto.Sondagem.Include(x => x.AlunosSondagem).ThenInclude(xx => xx.ListaRespostas).ToList();
+                    return s;
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+
             }
         }
 
@@ -677,8 +690,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 using (var contexto = new SMEManagementContextData())
                 {
-                   
-                    var listaOrdemPergunta = contexto.OrdemPergunta.Include(x=>x.Grupo).Include(x => x.Pergunta).Where(x => x.SequenciaOrdem == sequenciaOrdem).Where(y=> y.GrupoId == grupoId).ToList();
+
+                    var listaOrdemPergunta = contexto.OrdemPergunta.Include(x => x.Grupo).Include(x => x.Pergunta).Where(x => x.SequenciaOrdem == sequenciaOrdem).Where(y => y.GrupoId == grupoId).ToList();
                     var perguntaResposta = contexto.PerguntaResposta.Include(x => x.Pergunta).Include(y => y.Resposta).ToList();
                     var listaPerguntaDto = new List<PerguntaDto>();
 
@@ -752,11 +765,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 AdicionarNovoAlunoListagem(listagem, aluno);
         }
 
-
-        public void SalvarSondagemAutoralPortugues(IEnumerable<AlunoSondagemPortuguesDTO> ListaAlunosSondagemDto)
+        public void SalvarSondagemPortugues(IEnumerable<AlunoSondagemPortuguesDTO> ListaAlunosSondagemDto)
         {
-            if (ListaAlunosSondagemDto == null || !ListaAlunosSondagemDto.Any())
-                throw new Exception("É necessário realizar a sondagem de pelo menos 1 aluno");
 
             using (var contexto = new SMEManagementContextData())
             {
@@ -765,6 +775,139 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 contexto.SaveChanges();
             }
         }
+
+
+        public void SalvarSondagemAutoralPortugues(IEnumerable<AlunoSondagemPortuguesDTO2> ListaAlunosSondagemDto)
+        {
+            try
+            {
+
+                if (ListaAlunosSondagemDto == null || !ListaAlunosSondagemDto.Any())
+                    throw new Exception("É necessário realizar a sondagem de pelo menos 1 aluno");
+
+                using (var contexto = new SMEManagementContextData())
+                {
+                    var item = ListaAlunosSondagemDto.FirstOrDefault();
+
+                    if (string.IsNullOrEmpty(item.SondagemId))
+                    {
+                        // SondagemNaoExiste Cria uma nova e cadastra tudo
+
+                        var sondagem = (Sondagem)item;
+                        sondagem.AlunosSondagem = new List<SondagemAluno>();
+                        string periodoId;
+                        foreach (var alunoDto in ListaAlunosSondagemDto)
+                        {
+
+                            var aluno = new SondagemAluno()
+                            {
+                                Id = Guid.NewGuid(),
+                                CodigoAluno = alunoDto.CodigoAluno,
+                                SondagemId = sondagem.Id,
+                                NomeAluno = alunoDto.NomeAluno
+                            };
+
+                            //  aluno = ListaRespostas(alunoDto, aluno, out periodoId);
+                            //foreach (var resposta in aluno.ListaRespostas)
+                            //{
+                            //    contexto.SondagemAlunoRespostas.Add(resposta);
+                            //}
+
+                            sondagem.AlunosSondagem.Add(aluno);
+
+                            aluno.ListaRespostas = new List<SondagemAlunoRespostas>();
+                          
+
+                            foreach (var respostaDto in alunoDto.Respostas)
+                            {
+                                var resposta = new SondagemAlunoRespostas();
+                                resposta.Id = Guid.NewGuid();
+                                resposta.PerguntaId = respostaDto.Pergunta;
+                                resposta.RespostaId = respostaDto.Resposta;
+                                resposta.SondagemAlunoId = aluno.Id;
+
+                                aluno.ListaRespostas.Add(resposta);
+                            }
+
+                            periodoId = alunoDto.Respostas.First().PeriodoId;
+
+
+                            sondagem.PeriodoId = periodoId;
+                        };
+
+                        //foreach (var alunoItem in sondagem.AlunosSondagem)
+                        //{
+                        //    contexto.SondagemAluno.Add(alunoItem);
+                        //}
+
+
+                        contexto.Sondagem.Add(sondagem);
+                        DisplayStates(contexto.ChangeTracker.Entries());
+
+                        var a = contexto.ChangeTracker.Entries();
+                        contexto.SaveChanges();
+
+
+                    }
+
+                    else
+                    {
+                        // Recupera a nova sondagem 
+                        // Pega aluno por aluno
+                        // Exclui os alunos que nao possuem resposta
+                        // 
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            //foreach (var aluno in ListaAlunosSondagemDto)
+            //{
+            //    var alunoAutoral = (SondagemAutoral)aluno;
+
+            //    if (aluno.Respostas != null && aluno.Respostas.Any())
+            //        SalvarAlunoComResposta(contexto, aluno, alunoAutoral);
+            //}
+
+            //SalvarAluno(ListaAlunosSondagemDto, contexto);
+
+
+        }
+
+        private static void DisplayStates(IEnumerable<EntityEntry> entries)
+        {
+            foreach (var entry in entries)
+            {
+                Console.WriteLine($"Entity: {entry.Entity.GetType().Name}, State: { entry.State.ToString()} ");
+            }
+        }
+
+
+        private static SondagemAluno ListaRespostas(AlunoSondagemPortuguesDTO2 alunoDto, SondagemAluno aluno, out string periodoId)
+        {
+            aluno.ListaRespostas = new List<SondagemAlunoRespostas>();
+            var resposta = new SondagemAlunoRespostas();
+
+            foreach (var respostaDto in alunoDto.Respostas)
+            {
+
+                resposta.Id = Guid.NewGuid();
+                resposta.PerguntaId = respostaDto.Pergunta;
+                resposta.RespostaId = respostaDto.Resposta;
+                resposta.SondagemAlunoId = aluno.Id;
+
+                aluno.ListaRespostas.Add(resposta);
+            }
+
+            periodoId = alunoDto.Respostas.First().PeriodoId;
+            return aluno;
+        }
+
         private void SalvarAluno(IEnumerable<AlunoSondagemPortuguesDTO> ListaAlunoSondagemPortuguesDTO, SMEManagementContextData contexto)
         {
             foreach (var aluno in ListaAlunoSondagemPortuguesDTO)
