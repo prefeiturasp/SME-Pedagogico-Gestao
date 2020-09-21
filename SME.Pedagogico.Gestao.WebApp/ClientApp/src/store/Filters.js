@@ -122,7 +122,6 @@ export const reducer = (state, action) => {
             var todayDate = new Date();
             let estadoRetorno = { state};
             state.period.forEach((item) => {
-                debugger;
                 if (item.bimestre === 2) {
                     if (todayDate >= new Date(item.dataInicio) && todayDate <= new Date(item.dataFim)) {
 
