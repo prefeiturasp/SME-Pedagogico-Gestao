@@ -2,7 +2,6 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Aluno from './aluno';
 import { actionCreators as PortuguesStore } from "../../../store/SondagemPortuguesStore";
-import Mocks from './mocks';
 
 // import { Container } from './styles';
 
@@ -28,7 +27,6 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
     }, [alunos]);
 
     const sequenciaOrdemAtual = useMemo(() => {
-        console.log(sequenciaOrdens);
 
         if (!sequenciaOrdens || sequenciaOrdens.length <= 0)
             return 1;
@@ -128,6 +126,9 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
         dispatch(PortuguesStore.listarBimestres());
     }, [])
 
+    const ehPrimeiraOrdenacao = ordenacaoAtual === 0;
+    const ehUltimaOrdenacao = ordenacaoAtual === ultimaOrdenacao;
+
     return periodoSelecionado ? <table
         className="table table-sm table-bordered table-hover table-sondagem-matematica"
         style={{ overflow: "hidden", overflowX: "auto" }}
@@ -147,10 +148,11 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
                         value="opacos_col"
                         onClick={() => { recuar() }}
                         className="testcursor"
+                        disabled={ehPrimeiraOrdenacao}
                     >
                         <img
-                            src="./img/icon_2_pt_7C4DFF.svg"
-                            alt="seta esquerda ativa" z
+                            src={ehPrimeiraOrdenacao?`./img/icon_pt_DADADA.svg`:`./img/icon_2_pt_7C4DFF.svg`}
+                            alt={`seta esquerda ${ehPrimeiraOrdenacao?'inativa':'ativa'}`}
                             style={{ height: 20 }}
                         />
                     </span>
@@ -159,10 +161,11 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
                         value="zero_col"
                         onClick={() => { avancar() }}
                         className="testcursor"
+                        disabled={ehUltimaOrdenacao}
                     >
                         <img
-                            src="./img/icon_pt_7C4DFF.svg"
-                            alt="seta direita ativa"
+                            src={ehUltimaOrdenacao?`./img/icon_2_pt_DADADA.svg`:`./img/icon_pt_7C4DFF.svg`}
+                            alt={`seta direita${ehUltimaOrdenacao?'inativa':'ativa'}`}
                             style={{ height: 20 }}
                         />
                     </span>
