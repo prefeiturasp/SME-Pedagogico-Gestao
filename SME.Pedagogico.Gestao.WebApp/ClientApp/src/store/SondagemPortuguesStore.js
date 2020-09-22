@@ -255,7 +255,7 @@ export const reducer = (state, action) => {
 
       alunosM[index].respostas = respostas;
 
-      return { ...state, alunos: alunosM };
+      return { ...state, alunos: alunosM, emEdicao: true };
 
     case types.ATUALIZAR_RESPOSTA:
       let alunosMutaveis = Object.assign([], state.alunos);
