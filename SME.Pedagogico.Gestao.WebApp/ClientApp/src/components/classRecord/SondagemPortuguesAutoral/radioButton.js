@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 
 // import { Container } from './styles';
 
-function RadioButtonGroup({ lista, valor, codigoAluno, periodoId }) {
+function RadioButtonGroup({ lista, valor, codigoAluno, bloqueado, periodoId }) {
     const dispatch = useDispatch();
 
     const respostaVerdadeira = (perguntaId) => {
@@ -64,7 +64,7 @@ function RadioButtonGroup({ lista, valor, codigoAluno, periodoId }) {
                     return (
                         <td className="justify-content-center">
                             <div class="form-check justify-content-center justify-items-center justify-self-center">
-                                <input class="form-check-input justify-self-center" perguntaid={pergunta.id} checked={verificaSeChecado(pergunta.id)} onClick={onClick} type="radio" name={codigoAluno} value={pergunta.id} />
+                                <input class="form-check-input justify-self-center" perguntaid={pergunta.id} disabled={bloqueado} checked={verificaSeChecado(pergunta.id)} onClick={onClick} type="radio" name={codigoAluno} value={pergunta.id} />
                             </div>
                         </td>
                     );

@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { actionCreators as PortuguesStore } from "../../../store/SondagemPortuguesStore";
 import { useDispatch } from 'react-redux';
 
-function CheckBox({ lista, valor, codigoAluno, periodoId }) {
+function CheckBox({ lista, valor, codigoAluno, periodoId, bloqueado }) {
   const dispatch = useDispatch();
 
   const respostaVerdadeira = (perguntaId) => {
@@ -76,7 +76,7 @@ function CheckBox({ lista, valor, codigoAluno, periodoId }) {
           return (
             <td className="justify-content-center">
               <div class="form-check justify-content-center justify-items-center justify-self-center">
-                <input class="form-check-input justify-self-center" checked={verificaSeChecado(pergunta.id)} perguntaid={pergunta.id} onClick={onClick} type="checkbox" name={codigoAluno} value={pergunta.id} />
+                <input class="form-check-input justify-self-center" disabled={bloqueado} checked={verificaSeChecado(pergunta.id)} perguntaid={pergunta.id} onClick={onClick} type="checkbox" name={codigoAluno} value={pergunta.id} />
               </div>
             </td>
           );
