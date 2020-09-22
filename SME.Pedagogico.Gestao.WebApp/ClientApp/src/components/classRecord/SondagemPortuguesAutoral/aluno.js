@@ -11,7 +11,7 @@ function Aluno({ aluno, perguntas, periodo, idOrdemSelecionada, grupoSelecionado
     const ehRadioButton = useMemo(() => grupoSelecionado === "6a3d323a-2c44-4052-ba68-13a8dead299a")
 
     const periodosAbertura = useSelector(store => store.filters.period);
-
+    
     const verificarPeriodoAberto = (bimestre) => {
         var todayDate = new Date();
 
