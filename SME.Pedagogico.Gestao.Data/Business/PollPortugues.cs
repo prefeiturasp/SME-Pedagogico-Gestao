@@ -564,8 +564,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 }
 
                 return ListaGrupos.OrderBy(x => x.Descricao);
-
-
             }
         }
 
@@ -741,7 +739,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         {
                             Descricao = item.Resposta.Descricao,
                             Id = item.Resposta.Id,
-                            Ordenacao = item.Ordenacao
+                            Ordenacao = item.Ordenacao,
+                            Verdadeiro = item.Resposta.Verdadeiro,
                         }).ToList();
 
                         listaPerguntaDto.Add(perguntaDto);

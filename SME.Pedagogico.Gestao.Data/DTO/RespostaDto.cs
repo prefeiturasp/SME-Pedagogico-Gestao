@@ -10,6 +10,7 @@ namespace SME.Pedagogico.Gestao.Data.DTO
         public string Id { get; set; }
         public string Descricao { get; set; }
         public int Ordenacao { get; set; }
+        public bool Verdadeiro { get; set; }
 
         public static explicit operator RespostaDto(Resposta resposta) =>
             resposta == null ? null : new RespostaDto
