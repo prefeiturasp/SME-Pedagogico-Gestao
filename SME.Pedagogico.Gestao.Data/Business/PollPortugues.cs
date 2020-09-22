@@ -635,7 +635,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     throw new Exception($"Não encontrado alunos para a turma {filtrarListagemDto.CodigoTurma} do ano letivo {filtrarListagemDto.AnoLetivo}");
 
                 var listagem = new List<AlunoSondagemPortuguesDTO2>();
-                
+
                 if (sondagem != null)
                     foreach (var aluno in sondagem.AlunosSondagem)
                         MapearAlunosListagem2(listagem, aluno, sondagem);
@@ -649,7 +649,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 throw ex;
             }
-           
+
         }
 
 
@@ -789,7 +789,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             });
         }
 
-        private void AdicionarAlunosEOL(FiltrarListagemDto filtrarListagemDto, List<AlunosNaTurmaDTO> alunos, List<AlunoSondagemPortuguesDTO2> listagem, Sondagem sondagem )
+        private void AdicionarAlunosEOL(FiltrarListagemDto filtrarListagemDto, List<AlunosNaTurmaDTO> alunos, List<AlunoSondagemPortuguesDTO2> listagem, Sondagem sondagem)
         {
             alunos.ForEach(aluno =>
             {
@@ -1026,13 +1026,22 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private static SondagemAluno CriaNovoAlunoSondagem(Sondagem sondagem, AlunoSondagemPortuguesDTO2 alunoDto)
         {
-            return new SondagemAluno()
+            var aluno = new SondagemAluno()
             {
                 Id = Guid.NewGuid(),
                 CodigoAluno = alunoDto.CodigoAluno,
                 SondagemId = sondagem.Id,
-                NomeAluno = alunoDto.NomeAluno
+                NomeAluno = alunoDto.NomeAluno,
+                ListaRespostas = new List<SondagemAlunoRespostas>()
             };
+
+            foreach (var respostaDto in alunoDto.Respostas)
+            {
+                var resposta = CriaNovaRespostaAluno(aluno, respostaDto);
+                aluno.ListaRespostas.Add(resposta);
+            }
+
+            return aluno;
         }
 
         private static void DisplayStates(IEnumerable<EntityEntry> entries)
@@ -1170,7 +1179,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private void AdicionarNovoAlunoListagem(List<AlunoSondagemPortuguesDTO2> listagem, SondagemAluno aluno, Sondagem sondagem)
         {
-          var alunoDto =  new AlunoSondagemPortuguesDTO2
+            var alunoDto = new AlunoSondagemPortuguesDTO2
             {
                 Id = aluno.Id.ToString(),
                 SondagemId = aluno.SondagemId.ToString(),
@@ -1186,10 +1195,10 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 OrdemId = sondagem.OrdemId,
                 SequenciaOrdemSalva = sondagem.SequenciaDeOrdemSalva,
                 Respostas = new List<AlunoRespostaDto>()
-               
+
             };
 
-           foreach(var resp  in aluno.ListaRespostas)
+            foreach (var resp in aluno.ListaRespostas)
             {
                 var alunoRespDto = new AlunoRespostaDto()
                 {
