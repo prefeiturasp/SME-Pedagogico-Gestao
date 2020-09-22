@@ -137,9 +137,9 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
                     <div className="ml-2">Sondagem - {filtros.anoEscolar}º ano</div>
                 </th>
                 <th
-                    colSpan="4"
-                    key=""
-                    id=""
+                    colSpan={perguntas && perguntas.length > 0 ? perguntas.length + 1 : 6 }
+                    key="sdadsadasd"
+                    id="sdadsadasd"
                     className="text-center border text-color-purple"
                 >
                     <span

@@ -26,7 +26,8 @@ export const types = {
   SALVAR_FILTROS_CONSULTA_SALVAMENTO: "SALVAR_FILTROS_CONSULTA_SALVAMENTO",
   SETAR_SEQUENCIA_ORDENS: "SETAR_SEQUENCIA_ORDENS",
   LIMPAR_RESPOSTAS_ALUNOS: "LIMPAR_RESPOSTAS_ALUNOS",
-  ATUALIZAR_RESPOSTA_RADIO: "ATUALIZAR_RESPOSTA_RADIO"
+  ATUALIZAR_RESPOSTA_RADIO: "ATUALIZAR_RESPOSTA_RADIO",
+  ATUALIZAR_RESPOSTA_CHECKBOX: "ATUALIZAR_RESPOSTA_CHECKBOX"
 }
 
 const initialState = {
@@ -96,6 +97,10 @@ export const actionCreators = {
   atualizar_resposta_radio_button: (atualizarDto) => ({
     type: types.ATUALIZAR_RESPOSTA_RADIO,
     payload: atualizarDto
+  }),
+  atualizar_resposta_checkbox: (atualizarDto) => ({
+    type: types.ATUALIZAR_RESPOSTA_CHECKBOX,
+    payload: atualizarDto,
   }),
   atualizar_resposta: (atualizarDto) => ({
     type: types.ATUALIZAR_RESPOSTA,
@@ -207,6 +212,28 @@ export const reducer = (state, action) => {
       }];
 
       return { ...state, alunos, emEdicao: true };
+    case types.ATUALIZAR_RESPOSTA_CHECKBOX:
+      let alunosM = Object.assign([], state.alunos);
+
+      const index = alunosM.findIndex(a => a.codigoAluno === aluno.alunoId);
+
+      if (index < 0)
+        return;
+
+      let respostas = [];
+
+      action.payload.forEach(aluno => {
+        respostas.push({
+          periodoId: aluno.periodoId,
+          pergunta: aluno.perguntaId,
+          resposta: aluno.respostaId,
+        });
+      });
+
+      alunosM[index].respostas = respostas;
+
+      return { ...state, alunos: alunosM };
+
     case types.ATUALIZAR_RESPOSTA:
       let alunosMutaveis = Object.assign([], state.alunos);
 

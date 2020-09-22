@@ -64,7 +64,7 @@ function RadioButtonGroup({ lista, valor, codigoAluno, periodoId }) {
                     return (
                         <td className="justify-content-center">
                             <div class="form-check justify-content-center justify-items-center justify-self-center">
-                                <input class="form-check-input  justify-self-center" perguntaid={pergunta.id} checked={verificaSeChecado(pergunta.id)} onClick={onClick} type="radio" name={codigoAluno} value={pergunta.id} />
+                                <input class="form-check-input justify-self-center" perguntaid={pergunta.id} checked={verificaSeChecado(pergunta.id)} onClick={onClick} type="radio" name={codigoAluno} value={pergunta.id} />
                             </div>
                         </td>
                     );
