@@ -563,8 +563,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 }
 
                 return ListaGrupos.OrderBy(x => x.Descricao);
-
-
             }
         }
 
@@ -677,8 +675,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 using (var contexto = new SMEManagementContextData())
                 {
-                   
-                    var listaOrdemPergunta = contexto.OrdemPergunta.Include(x=>x.Grupo).Include(x => x.Pergunta).Where(x => x.SequenciaOrdem == sequenciaOrdem).Where(y=> y.GrupoId == grupoId).ToList();
+
+                    var listaOrdemPergunta = contexto.OrdemPergunta.Include(x => x.Grupo).Include(x => x.Pergunta).Where(x => x.SequenciaOrdem == sequenciaOrdem).Where(y => y.GrupoId == grupoId).ToList();
                     var perguntaResposta = contexto.PerguntaResposta.Include(x => x.Pergunta).Include(y => y.Resposta).ToList();
                     var listaPerguntaDto = new List<PerguntaDto>();
 
@@ -695,7 +693,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         {
                             Descricao = item.Resposta.Descricao,
                             Id = item.Resposta.Id,
-                            Ordenacao = item.Ordenacao
+                            Ordenacao = item.Ordenacao,
+                            Verdadeiro = item.Resposta.Verdadeiro,
                         }).ToList();
 
                         listaPerguntaDto.Add(perguntaDto);

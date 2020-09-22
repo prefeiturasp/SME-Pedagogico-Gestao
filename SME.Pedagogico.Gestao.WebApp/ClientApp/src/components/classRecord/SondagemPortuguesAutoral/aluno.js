@@ -1,11 +1,42 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import Select from './select';
 import { actionCreators as PortuguesStore } from "../../../store/SondagemPortuguesStore";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import RadioButtonGroup from './radioButton';
+import CheckBox from './checkbox';
 
-function Aluno({ aluno, perguntas, periodo, idOrdemSelecionada }) {
+function Aluno({ aluno, perguntas, periodo, idOrdemSelecionada, grupoSelecionado }) {
     const dispatch = useDispatch();
+
+    const ehRadioButton = useMemo(() => grupoSelecionado === "6a3d323a-2c44-4052-ba68-13a8dead299a")
+
+    const periodosAbertura = useSelector(store => store.filters.period);
+
+    const verificarPeriodoAberto = (bimestre) => {
+        var todayDate = new Date();
+
+        const aberto = periodosAbertura.find(p => p.bimestre === bimestre);
+
+        if (!aberto)
+            return false;
+
+        return new Date(aberto.dataInicio) <= todayDate && new Date(aberto.dataFim) >= todayDate;
+    }
+
+    const bloqueadoPeriodoAbertura = useMemo(() => {
+        switch (periodo.id) {
+            case "fbd8b833-d7dc-4d04-9af6-50c1aaa2f8c0":
+                return !verificarPeriodoAberto(1);
+            case "05ce183c-cb37-44fb-9c30-dac5ae5b8d37":
+                return !verificarPeriodoAberto(2);
+            case "a8d3311a-b71e-45ce-8667-cef062334949":
+                return !verificarPeriodoAberto(3);
+            case "aa7f39fc-3b50-4aea-bd05-4bbe7cba687c":
+                return !verificarPeriodoAberto(4);
+            default:
+                return true;
+        }
+    }, [periodo])
 
     const onChange = (respostaId, perguntaId) => {
 
@@ -22,6 +53,28 @@ function Aluno({ aluno, perguntas, periodo, idOrdemSelecionada }) {
         dispatch(PortuguesStore.atualizar_resposta(dadosSalvar));
     };
 
+    const obterComponentesResposta = () => {
+        switch (grupoSelecionado) {
+            case 'e27b99a3-789d-43fb-a962-7df8793622b1':
+                return perguntas && perguntas.map(pergunta => {
+                    const alunoResposta = aluno.respostas && aluno.respostas.find(resposta => resposta.pergunta == pergunta.id && resposta.periodoId === periodo.id);
+
+                    return <td className="align-middle">
+                        <Select lista={pergunta.respostas} valorId={alunoResposta && alunoResposta.resposta} bloqueado={bloqueadoPeriodoAbertura} onChangeSelect={onChange} dados={pergunta.id} />
+                    </td>
+                });
+
+            case "6a3d323a-2c44-4052-ba68-13a8dead299a":
+                return (<RadioButtonGroup lista={perguntas} valor={aluno && aluno.respostas} periodoId={periodo.id} bloqueado={bloqueadoPeriodoAbertura} codigoAluno={aluno.codigoAluno} />);
+
+            case "263b55b8-efa2-480c-80ad-f4e8f0935e12":
+                return (<CheckBox lista={perguntas} valor={aluno && aluno.respostas} periodoId={periodo.id} bloqueado={bloqueadoPeriodoAbertura} codigoAluno={aluno.codigoAluno} />)
+
+            default:
+                return (<div></div>)
+        };
+    };
+
     return <tr>
         <td className="align-middle">
             <small className="ml-2 pr-4">
@@ -29,13 +82,7 @@ function Aluno({ aluno, perguntas, periodo, idOrdemSelecionada }) {
             </small>
             <small>{aluno.nomeAluno}</small>
         </td>
-        {perguntas && perguntas.map(pergunta => {
-            const alunoResposta = aluno.respostas && aluno.respostas.find(resposta => resposta.pergunta == pergunta.id && resposta.periodoId === periodo.id);
-
-            return <td className="align-middle">
-                <Select lista={pergunta.respostas} valorId={alunoResposta && alunoResposta.resposta} onChangeSelect={onChange} dados={pergunta.id} />
-            </td>
-        })}
+        {obterComponentesResposta()}
     </tr>;
 }
 

@@ -139,9 +139,9 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
                     <div className="ml-2">Sondagem - {filtros.anoEscolar}º ano</div>
                 </th>
                 <th
-                    colSpan="4"
-                    key=""
-                    id=""
+                    colSpan={perguntas && perguntas.length > 0 ? perguntas.length + 1 : 6 }
+                    key="sdadsadasd"
+                    id="sdadsadasd"
                     className="text-center border text-color-purple"
                 >
                     <span
@@ -186,7 +186,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
         </thead>
         <tbody>
             {alunos && perguntas && perguntas.length > 0 && alunos.length > 0 && alunos.map(alunoObjeto => {
-                return <Aluno aluno={alunoObjeto} perguntas={perguntas} periodo={periodoSelecionado} idOrdemSelecionada={idOrdemSelecionada} />
+                return <Aluno aluno={alunoObjeto} perguntas={perguntas} periodo={periodoSelecionado} grupoSelecionado={grupoSelecionado} idOrdemSelecionada={idOrdemSelecionada} />
             })}
         </tbody>
     </table> : <div></div>;
