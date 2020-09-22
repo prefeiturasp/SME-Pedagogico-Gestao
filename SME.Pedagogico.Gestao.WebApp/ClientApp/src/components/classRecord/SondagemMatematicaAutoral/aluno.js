@@ -16,7 +16,7 @@ function AlunoSondagemMatematicaAutoral({
         </small>
         <small>{aluno.nomeAluno}</small>
       </th>
-      {periodos.map((periodo) => {
+      {periodos.map((periodo, i) => {
         const resposta = aluno.respostas
           ? aluno.respostas.find(
               (x) =>
@@ -38,9 +38,12 @@ function AlunoSondagemMatematicaAutoral({
               perguntaId={perguntaSelecionada.id}
               alunoId={aluno.codigoAluno}
               sondagemId={aluno.id}
-              periodoId={periodo.id}
+                    periodoId={periodo.id}
+                    key={i}
+                    id={i}
               onChange={onChangeAluno}
               disabled={false}
+              mostraToolTipItens
             ></AutoralSelect>
           </th>
         );

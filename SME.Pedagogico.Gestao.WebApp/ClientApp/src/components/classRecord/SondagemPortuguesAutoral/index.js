@@ -44,7 +44,7 @@ function SondagemPortuguesAutoral() {
     const grupo = grupos.find((grupo) => grupo.id === grupoSelecionado);
 
     return grupo.ordem;
-  }, [grupoSelecionado, grupos]);
+  }, [grupoSelecionado, grupos,]);
 
   const onChangeGrupos = (grupoId) => {
     dispatch(PortuguesStore.selecionar_grupo(grupoId));
@@ -158,7 +158,7 @@ function SondagemPortuguesAutoral() {
           onChangeSelect={onChangeGrupos}
         />
         <div className="col-md-10 d-flex justify-content-center">
-          <SeletorDeOrdem ordens={ordens} onClick={onClickOrdem} ordemSelecionada={idOrdemSelecionada} />
+          <SeletorDeOrdem ordens={ordens} onClick={onClickOrdem} ordemSelecionada={idOrdemSelecionada} ordensSalvas={sequenciasOrdens} />
         </div>
       </div>
 
