@@ -63,9 +63,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public async Task<IEnumerable<AlunoSondagemMatematicaDto>> ObterListagemAutoral(FiltrarListagemDto filtrarListagemDto)
+        public async Task<IEnumerable<AlunoSondagemMatematicaDto>> ObterListagemAutoral(FiltrarListagemMatematicaDTO filtrarListagemDto)
         {
-            IList<SondagemAutoral> autoral = await ObterSondagemAutoral(filtrarListagemDto);
+            IList<Sondagem> autoral = await ObterSondagemAutoralMatematica(filtrarListagemDto);
 
             var listaAlunos = await TurmaApi.GetAlunosNaTurma(Convert.ToInt32(filtrarListagemDto.CodigoTurma), filtrarListagemDto.AnoLetivo, _token);
             var alunos = listaAlunos.Where(x => x.CodigoSituacaoMatricula == 10 || x.CodigoSituacaoMatricula == 1 || x.CodigoSituacaoMatricula == 6 || x.CodigoSituacaoMatricula == 13 || x.CodigoSituacaoMatricula == 5).ToList();
@@ -213,22 +213,22 @@ namespace SME.Pedagogico.Gestao.Data.Business
             });
         }
 
-        private static async Task<IList<SondagemAutoral>> ObterSondagemAutoral(FiltrarListagemDto filtrarListagemDto)
+        private static async Task<IList<Sondagem>> ObterSondagemAutoralMatematica(FiltrarListagemMatematicaDTO filtrarListagemDto)
         {
             using (var contexto = new SMEManagementContextData())
             {
                 try
                 {
-                    return await contexto.SondagemAutoral
-                   .Include(x => x.ComponenteCurricular)
-                   .Where(x => x.ComponenteCurricular.Id
-                       .Equals(filtrarListagemDto.ComponenteCurricular.ToString())
-                       && x.AnoTurma == filtrarListagemDto.AnoEscolar
-                       // && x.PerguntaId == filtrarListagemDto.PerguntaId
-                       && (filtrarListagemDto.CodigoTurma == null ? true : x.CodigoTurma.Equals(filtrarListagemDto.CodigoTurma)))
-                   .ToListAsync();
+                    return await contexto.Sondagem.Where(s => s.AnoLetivo == filtrarListagemDto.AnoLetivo &&
+                                                              s.AnoTurma == filtrarListagemDto.AnoEscolar &&
+                                                              s.CodigoDre == filtrarListagemDto.CodigoDre &&
+                                                              s.CodigoUe == filtrarListagemDto.CodigoUe &&
+                                                              s.ComponenteCurricularId == filtrarListagemDto.ComponenteCurricular &&
+                                                              s.CodigoTurma == filtrarListagemDto.CodigoTurma).
+                                                              Include(x => x.AlunosSondagem).ThenInclude(x => x.ListaRespostas).
+                                                              Where(s => s.AlunosSondagem.Any(a => a.ListaRespostas.Any(lr => lr.PerguntaId == filtrarListagemDto.PerguntaId))).ToListAsync();
                 }
-                catch (Exception ex )
+                catch (Exception ex)
                 {
                     throw ex;
                 }
