@@ -29,7 +29,15 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
         public DbSet<Ordem> Ordem { get; set; }
         public DbSet<OrdemPergunta> OrdemPergunta { get; set; }
         public DbSet<Periodo> Periodo { get; set; }
+
         public DbSet<SondagemAutoral> SondagemAutoral { get; set; }
+
+        public DbSet<Sondagem> Sondagem { get; set; }
+
+        public DbSet<SondagemAluno> SondagemAluno { get; set; }
+
+        public DbSet<SondagemAlunoRespostas> SondagemAlunoRespostas { get; set; }
+
         public DbSet<GrupoOrdem> GrupoOrdem { get; set; }
 
         #endregion ---------- Academic ----------

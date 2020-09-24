@@ -1,3 +1,5 @@
+import { type } from "jquery";
+
 export const types = {
   SELECIONAR_GRUPO: "SELECIONAR_GRUPO",
   SETAR_GRUPOS: "SETAR_GRUPOS",
@@ -27,7 +29,8 @@ export const types = {
   SETAR_SEQUENCIA_ORDENS: "SETAR_SEQUENCIA_ORDENS",
   LIMPAR_RESPOSTAS_ALUNOS: "LIMPAR_RESPOSTAS_ALUNOS",
   ATUALIZAR_RESPOSTA_RADIO: "ATUALIZAR_RESPOSTA_RADIO",
-  ATUALIZAR_RESPOSTA_CHECKBOX: "ATUALIZAR_RESPOSTA_CHECKBOX"
+  ATUALIZAR_RESPOSTA_CHECKBOX: "ATUALIZAR_RESPOSTA_CHECKBOX",
+  LIMPAR_RESPOSTA_ALUNO_ESPECIFICO: "LIMPAR_RESPOSTA_ALUNO_ESPECIFICO"
 }
 
 const initialState = {
@@ -125,6 +128,10 @@ export const actionCreators = {
     type: types.SALVAR_FILTROS_CONSULTA_SALVAMENTO,
     payload: filtros,
   }),
+  limpar_respostas_aluno_especifico: codigoAluno => ({
+    type: types.LIMPAR_RESPOSTA_ALUNO_ESPECIFICO,
+    payload: codigoAluno
+  }),
   limpar_respostas_alunos: () => ({
     type: types.LIMPAR_RESPOSTAS_ALUNOS
   }),
@@ -212,13 +219,29 @@ export const reducer = (state, action) => {
       }];
 
       return { ...state, alunos, emEdicao: true };
+    case types.LIMPAR_RESPOSTA_ALUNO_ESPECIFICO:
+      const alunosReset = Object.assign([], state.alunos);
+
+      const indexAlunoReset = alunosReset.findIndex(aluno => aluno.codigoAluno === action.payload)
+
+      console.log(indexAlunoReset);
+
+      if (indexAlunoReset === null || indexAlunoReset === undefined || indexAlunoReset < 0)
+        return { ...state };
+
+      alunosReset[indexAlunoReset].respostas = [];
+
+      return { ...state, alunos: alunosReset };
     case types.ATUALIZAR_RESPOSTA_CHECKBOX:
       let alunosM = Object.assign([], state.alunos);
 
-      const index = alunosM.findIndex(a => a.codigoAluno === aluno.alunoId);
+      if (!action.payload || action.payload.length === 0)
+        return state;
+
+      const index = alunosM.findIndex(a => a.codigoAluno === action.payload[0].alunoId);
 
       if (index < 0)
-        return;
+        return state;
 
       let respostas = [];
 
@@ -232,7 +255,7 @@ export const reducer = (state, action) => {
 
       alunosM[index].respostas = respostas;
 
-      return { ...state, alunos: alunosM };
+      return { ...state, alunos: alunosM, emEdicao: true };
 
     case types.ATUALIZAR_RESPOSTA:
       let alunosMutaveis = Object.assign([], state.alunos);
