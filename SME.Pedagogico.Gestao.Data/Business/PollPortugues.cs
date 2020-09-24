@@ -679,7 +679,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 try
                 {
-                    var lista = contexto.SondagemAutoral.Where(x => x.ComponenteCurricular.Id
+                    var lista = contexto.Sondagem.Where(x => x.ComponenteCurricular.Id
                    .Equals(filtrarListagemDto.ComponenteCurricular.ToString())
                    && x.AnoTurma == filtrarListagemDto.AnoEscolar
                    && x.CodigoDre == filtrarListagemDto.CodigoDre

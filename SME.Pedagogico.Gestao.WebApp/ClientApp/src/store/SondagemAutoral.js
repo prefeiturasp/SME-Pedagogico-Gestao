@@ -8,6 +8,7 @@ export const types = {
   SETAR_ALUNOS_AUTORAL_MATEMATICA: "SETAR_ALUNOS_AUTORAL_MATEMATICA",
   SALVAR_SONDAGEM_AUTORAL_MATEMATICA: "SALVAR_SONDAGEM_AUTORAL_MATEMATICA",
   SETAR_SONDAGEM_AUTORAL_MATEMATICA: "SETAR_SONDAGEM_AUTORAL_MATEMATICA",
+  SETAR_EM_EDICAO: "SETAR_EM_EDICAO",
   SETAR_ALUNOS_AUTORAL_MATEMATICA_PRE_SALVAR:
     "SETAR_ALUNOS_AUTORAL_MATEMATICA_PRE_SALVAR",
 };
@@ -15,6 +16,7 @@ const initialState = {
   listaPeriodos: [],
   listaPerguntas: null,
   listaAlunosAutoralMatematica: [],
+  emEdicao: false,
   period: null,
 };
 
@@ -31,6 +33,10 @@ export const actionCreators = {
   salvaSondagemAutoralMatematica: (alunos, filtro) => ({
     type: types.SALVAR_SONDAGEM_AUTORAL_MATEMATICA,
     payload: { alunos, filtro },
+  }),
+  setarEmEdicao: (emEdicao) => ({
+    type: types.SETAR_EM_EDICAO,
+    payload: emEdicao,
   }),
   setarSondagemAutoralMatematica: () => ({
     type: types.SETAR_SONDAGEM_AUTORAL_MATEMATICA,
@@ -60,6 +66,11 @@ export const reducer = (state, action) => {
         listaAlunosAutoralMatematica: action.alunos,
       };
     }
+    case types.SETAR_EM_EDICAO:
+      return {
+        ...state,
+        emEdicao: action.payload,
+      }
     case types.SETAR_ALUNOS_AUTORAL_MATEMATICA:
       return {
         ...state,
