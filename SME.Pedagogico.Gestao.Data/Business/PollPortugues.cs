@@ -636,7 +636,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 if (sondagem != null)
                     foreach (var aluno in sondagem.AlunosSondagem)
-                        MapearAlunosListagem2(listagem, aluno, sondagem);
+                        MapearAlunosListagem(listagem, aluno, sondagem);
 
                 AdicionarAlunosEOL(filtrarListagemDto, alunos, listagem, sondagem);
 
@@ -652,26 +652,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
 
 
-        public async Task<IEnumerable<AlunoSondagemPortuguesDTO>> ListarAlunosPortuguesAutoral(FiltrarListagemDto filtrarListagemDto)
-        {
-            IList<SondagemAutoral> autoral = await ObterSondagemPortuguesAutoral(filtrarListagemDto);
-            var endpointsAPI = new EndpointsAPI();
-
-            var turmApi = new TurmasAPI(endpointsAPI);
-            var listaAlunos = await turmApi.GetAlunosNaTurma(Convert.ToInt32(filtrarListagemDto.CodigoTurma), filtrarListagemDto.AnoLetivo, _token);
-            var alunos = listaAlunos.Where(x => x.CodigoSituacaoMatricula == 10 || x.CodigoSituacaoMatricula == 1 || x.CodigoSituacaoMatricula == 6 || x.CodigoSituacaoMatricula == 13 || x.CodigoSituacaoMatricula == 5).ToList();
-            if (alunos == null || !alunos.Any())
-                throw new Exception($"Não encontrado alunos para a turma {filtrarListagemDto.CodigoTurma} do ano letivo {filtrarListagemDto.AnoLetivo}");
-
-            var listagem = new List<AlunoSondagemPortuguesDTO>();
-
-            foreach (var aluno in autoral)
-                MapearAlunosListagem(listagem, aluno);
-
-            AdicionarAlunosEOL(filtrarListagemDto.AnoEscolar, filtrarListagemDto.AnoLetivo, filtrarListagemDto.CodigoDre, filtrarListagemDto.CodigoUe, filtrarListagemDto.CodigoTurma, filtrarListagemDto.ComponenteCurricular, alunos, listagem);
-
-            return listagem.OrderBy(x => x.NumeroChamada);
-        }
+       
 
         public async Task<IEnumerable<SequenciaOrdemSalvaDTO>> ListaSequenciaOrdensSalva(FiltrarListagemDto filtrarListagemDto)
         {
@@ -850,17 +831,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
             });
         }
 
-        private void MapearAlunosListagem(List<AlunoSondagemPortuguesDTO> listagem, SondagemAutoral aluno)
-        {
-            var indexAluno = listagem.FindIndex(x => x.CodigoAluno.Equals(aluno.CodigoAluno.ToString()));
 
-            if (indexAluno >= 0)
-                AdicionarRespostaAluno(aluno, listagem, indexAluno);
-            else
-                AdicionarNovoAlunoListagem(listagem, aluno);
-        }
-
-        private void MapearAlunosListagem2(List<AlunoSondagemPortuguesDTO2> listagem, SondagemAluno aluno, Sondagem sondagem)
+        private void MapearAlunosListagem(List<AlunoSondagemPortuguesDTO2> listagem, SondagemAluno aluno, Sondagem sondagem)
         {
             var indexAluno = listagem.FindIndex(x => x.CodigoAluno.Equals(aluno.CodigoAluno.ToString()));
 
