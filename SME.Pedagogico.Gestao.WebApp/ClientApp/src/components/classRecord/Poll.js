@@ -32,6 +32,7 @@ import SondagemPortuguesAutoral from "./SondagemPortuguesAutoral";
 import TwoStepsSave from "../messaging/TwoStepsSave";
 import TwoSteps from "../messaging/TwoSteps";
 import MensagemConfirmacaoAutoral from "./SondagemPortuguesAutoral/mensagemConfirmacaoAutoral";
+import Loader from "../loader/Loader";
 class Poll extends Component {
   constructor(props) {
     super(props);
@@ -977,17 +978,19 @@ class Poll extends Component {
       <>
         <Card className="mb-3">
           <PollFilter reports={false} />
-        </Card>
-        <Card id="classRecord-poll" hide={this.checkPollCard()}>
-          <nav className="container-tabpanel navbar">
-            <ul className="nav" role="tablist">
-              {this.checkButtonPortuguese()}
-              {this.checkButtonMath()}
-            </ul>
-            <ul className="nav navbar-nav ml-auto">{this.checkButtonSave()}</ul>
-          </nav>
-          {this.componentRender()}
-        </Card>
+        </Card>       
+          <Card id="classRecord-poll" hide={this.checkPollCard()}>          
+            <nav className="container-tabpanel navbar">
+              <ul className="nav" role="tablist">
+                {this.checkButtonPortuguese()}
+                {this.checkButtonMath()}
+              </ul>
+              <ul className="nav navbar-nav ml-auto">{this.checkButtonSave()}</ul>
+            </nav>
+            <Loader>
+              {this.componentRender()}
+            </Loader>
+          </Card>
       </>
     );
   }
