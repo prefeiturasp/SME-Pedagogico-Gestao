@@ -106,11 +106,11 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SondagemPortuguesAutoral([FromBody]IEnumerable<AlunoSondagemPortuguesDTO> ListaAlunosSondagemDto)
+        public async Task<IActionResult> SondagemPortuguesAutoral([FromBody]IEnumerable<AlunoSondagemPortuguesDTO2> ListaAlunosSondagemDto)
         {
             var sondagemAutoralBll = new PollPortuguese(_config);
             sondagemAutoralBll.SalvarSondagemAutoralPortugues(ListaAlunosSondagemDto);
-
+           
             return Ok();
         }
 
@@ -119,7 +119,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         {
             var sondagemAutoralBll = new PollPortuguese(_config);
 
-            return Ok(await sondagemAutoralBll.ListarAlunosPortuguesAutoral(filtrarListagemDto));
+            // return Ok(await sondagemAutoralBll.ListarAlunosPortuguesAutoral(filtrarListagemDto));
+            return Ok(await sondagemAutoralBll.ListarAlunosPortugues(filtrarListagemDto));
         }
 
         [HttpGet]
