@@ -83,8 +83,6 @@ function SondagemPortuguesAutoral() {
 
   const executarSalvamento = ({ perguntasSalvar, alunosMutaveis, filtrosMutaveis, sequenciaOrdemSelecionada, novaOrdem, novoPeriodoId, periodoSelecionadoSalvar, grupo, idOrdem }) => {
 
-    alunosMutaveis = alunosMutaveis.filter(aluno => aluno.respostas && aluno.respostas.length > 0);
-
     alunosMutaveis.forEach(aluno => {
       aluno.grupoId = grupo;
       aluno.ordemId = idOrdem;

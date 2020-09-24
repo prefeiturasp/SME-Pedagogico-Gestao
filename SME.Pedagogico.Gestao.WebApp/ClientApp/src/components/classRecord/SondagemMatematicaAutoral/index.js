@@ -112,8 +112,6 @@ function SondagemMatematicaAutoral() {
     ) => {
         let alunosMutaveis = Object.assign([], listaAlunosRedux);
 
-        alunosMutaveis = alunosMutaveis.filter(aluno => aluno.respostas && aluno.respostas.length > 0);
-
         dispatch(
             actionCreators.salvaSondagemAutoralMatematica(
                 alunosMutaveis,
