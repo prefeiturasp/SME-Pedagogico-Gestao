@@ -160,7 +160,6 @@ function SondagemMatematicaAutoral() {
             indexResposta === undefined ||
             indexResposta <= -1
         ) {
-            console.log(alunosMutaveis[indexAluno].respostas);
             if (!alunosMutaveis[indexAluno].respostas) {
                 alunosMutaveis[indexAluno].respostas = [];
             }
@@ -203,6 +202,7 @@ function SondagemMatematicaAutoral() {
         return () => {
             dispatch(actionCreators.setarAlunosAutoralmatematicaPreSalvar([]));
             sairModoEdicao();
+            dispatch(pollStore.setFunctionButtonSave(null));
         };
     }, []);
 
