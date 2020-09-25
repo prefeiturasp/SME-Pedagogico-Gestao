@@ -912,12 +912,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                         foreach (var aluno in ListaAlunosSondagemDto)
                         {
-                            if (string.IsNullOrEmpty(aluno.Id))
+                            if (string.IsNullOrEmpty(aluno.Id) && aluno.Respostas != null)
                             {
                                 var alunoNovoSondagem = CriaNovoAlunoSondagem(sondagem, aluno);
                                 sondagem.AlunosSondagem.Add(alunoNovoSondagem);
                             }
-                            else
+                            else if (!string.IsNullOrEmpty(aluno.Id))
                             {
                                 var alunoSondagem = sondagem.AlunosSondagem.Where(a => a.Id.ToString() == aluno.Id).FirstOrDefault();
                                 if (aluno.Respostas == null || aluno.Respostas.Count == 0)
@@ -927,8 +927,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                 else
                                 {
                                     AtualizaNovasRespostas(aluno, alunoSondagem);
-                                    var ListaRespostasRemovidas = VerificaRespostasRemovidas(aluno, alunoSondagem);
-                                    contexto.SondagemAlunoRespostas.RemoveRange(ListaRespostasRemovidas);
+                                    RemoveRespostasSemValor(contexto, aluno, alunoSondagem);
+
                                 }
                             }
                         }
@@ -957,20 +957,33 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         }
 
-        private static List<SondagemAlunoRespostas> VerificaRespostasRemovidas(AlunoSondagemPortuguesDTO2 aluno, SondagemAluno alunoSondagem)
+        private static void RemoveRespostasSemValor(SMEManagementContextData contexto, AlunoSondagemPortuguesDTO2 aluno, SondagemAluno alunoSondagem)
         {
             var ListaRespostasRemovidas = new List<SondagemAlunoRespostas>();
-            foreach (var alunoResposta in alunoSondagem.ListaRespostas)
+
+            if (alunoSondagem.ListaRespostas.Any(x => x.RespostaId != ""))
             {
-                var respostaSondagem = aluno.Respostas.Where(x => x.Pergunta == alunoResposta.PerguntaId).FirstOrDefault();
-                if (respostaSondagem == null)
+                foreach (var alunoResposta in alunoSondagem.ListaRespostas)
                 {
-                    ListaRespostasRemovidas.Add(alunoResposta);
+                    var respostaSondagem = aluno.Respostas.Where(x => x.Pergunta == alunoResposta.PerguntaId && x.Resposta != "").FirstOrDefault();
+                    if (respostaSondagem == null)
+                    {
+                        ListaRespostasRemovidas.Add(alunoResposta);
+                    }
                 }
+                contexto.SondagemAlunoRespostas.RemoveRange(ListaRespostasRemovidas);
+            }
+            else
+            {
+                contexto.SondagemAluno.Remove(alunoSondagem);
             }
 
-            return ListaRespostasRemovidas;
+
+
+
+
         }
+
 
         private static void AtualizaNovasRespostas(AlunoSondagemPortuguesDTO2 aluno, SondagemAluno alunoSondagem)
         {
@@ -1000,7 +1013,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             var sondagem = (Sondagem)item;
             sondagem.AlunosSondagem = new List<SondagemAluno>();
 
-            var listaAlunosComRespostaDto = ListaAlunosSondagemDto.Where(x => x.Respostas != null || x.Respostas.Count > 0).ToList();
+            var listaAlunosComRespostaDto = ListaAlunosSondagemDto.Where(x => x.Respostas != null).ToList();
 
             if (listaAlunosComRespostaDto == null || listaAlunosComRespostaDto.Count == 0)
                 return null;
