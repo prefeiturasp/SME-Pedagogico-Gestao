@@ -846,11 +846,11 @@ class Poll extends Component {
             >
               Língua portuguesa
             </button>
-            <TwoSteps
-              show={this.state.showMessagePortugueseBox}
-              showControl={this.toggleMessagePortugueseBox}
-              runMethod={this.openPortuguesePoll}
-            />
+            <MensagemConfirmacaoAutoral
+              controleExibicao={this.toggleMessagePortugueseBox}
+              acaoPrincipal={async () => { this.savePollStudent().then(() => setTimeout(() => this.openPortuguesePoll(), 1000)); }}
+              acaoSecundaria={async () => { this.openPortuguesePoll(); }}
+              exibir={this.state.showMessagePortugueseBox} />
           </li>
         );
       } else {
@@ -878,11 +878,11 @@ class Poll extends Component {
               className="btn btn-outline-primary btn-sm btn-planning"
               onClick={this.toggleMessagePortugueseBox}
             ></button>
-            <TwoSteps
-              show={this.state.showMessagePortugueseBox}
-              showControl={this.toggleMessagePortugueseBox}
-              runMethod={this.openPortuguesePoll}
-            />
+            <MensagemConfirmacaoAutoral
+              controleExibicao={this.toggleMessagePortugueseBox}
+              acaoPrincipal={async () => { this.savePollStudent().then(() => setTimeout(() => this.openPortuguesePoll(), 1000)); }}
+              acaoSecundaria={async () => { this.openPortuguesePoll(); }}
+              exibir={this.state.showMessagePortugueseBox} />
           </li>
         );
       } else {
@@ -989,20 +989,20 @@ class Poll extends Component {
     return (
       <>
         <Card className="mb-3">
-          <PollFilter reports={false} />
-        </Card>       
-          <Card id="classRecord-poll" hide={this.checkPollCard()}>          
-            <nav className="container-tabpanel navbar">
-              <ul className="nav" role="tablist">
-                {this.checkButtonPortuguese()}
-                {this.checkButtonMath()}
-              </ul>
-              <ul className="nav navbar-nav ml-auto">{this.checkButtonSave()}</ul>
-            </nav>
-            <Loader loading={this.props.poll.loadingSalvar}>
+          <PollFilter reports={false} savePollStudent={this.savePollStudent} />
+        </Card>
+        <Card id="classRecord-poll" hide={this.checkPollCard()}>
+          <nav className="container-tabpanel navbar">
+            <ul className="nav" role="tablist">
+              {this.checkButtonPortuguese()}
+              {this.checkButtonMath()}
+            </ul>
+            <ul className="nav navbar-nav ml-auto">{this.checkButtonSave()}</ul>
+          </nav>
+          <Loader loading={this.props.poll.loadingSalvar}>
               {this.componentRender()}
             </Loader>
-          </Card>
+        </Card>
       </>
     );
   }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SME.Pedagogico.Gestao.Data.DTO.Matematica
+namespace SME.Pedagogico.Gestao.Data.DTO
 {
     public class FiltrarListagemDto
     {

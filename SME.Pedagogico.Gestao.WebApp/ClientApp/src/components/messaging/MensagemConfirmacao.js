@@ -40,6 +40,13 @@ function MesangemConfirmacao(props) {
         acaoPrincial().then(() => proximoPasso());
     }
 
+    useEffect(() => {
+        return () => {
+            if (exibir)
+                controleExibicao();
+        }
+    }, [])
+
     return (
         <div>
             <Spring
@@ -53,7 +60,7 @@ function MesangemConfirmacao(props) {
                 }}>
                 {props =>
                     <animated.div style={props}>
-                        <div id="block-screen" className="block-screen d-flex justify-content-center align-items-center" onClick={acaoSecundaria}>
+                        <div id="block-screen" className="block-screen d-flex justify-content-center align-items-center">
                             {passo === 1 ?
                                 <Card className="col-5 p-4">
                                     <div className="border-bottom sc-text-size-4">
