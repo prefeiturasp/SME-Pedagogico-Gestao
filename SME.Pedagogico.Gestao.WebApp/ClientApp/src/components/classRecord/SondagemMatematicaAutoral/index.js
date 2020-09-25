@@ -123,12 +123,18 @@ function SondagemMatematicaAutoral() {
             });
         });
 
-        dispatch(
-            actionCreators.salvaSondagemAutoralMatematica(
-                alunosMutaveis,
-                filtrosBusca
-            )
-        );
+        try{
+            dispatch(pollStore.setLoadingSalvar(true));
+            dispatch(
+                actionCreators.salvaSondagemAutoralMatematica(
+                    alunosMutaveis,
+                    filtrosBusca
+                )
+            );
+            setTimeout(()=> {dispatch(pollStore.setLoadingSalvar(false));}, 1000);            
+        }catch(e){        
+            dispatch(pollStore.setLoadingSalvar(false));
+        }
 
         sairModoEdicao();
     };

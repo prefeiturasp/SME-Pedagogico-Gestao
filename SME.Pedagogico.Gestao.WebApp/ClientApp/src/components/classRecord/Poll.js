@@ -709,8 +709,13 @@ class Poll extends Component {
 
       const sequenciaOrdemSelecionada = sequenciasOrdens ? sequenciasOrdens.findIndex(sequencia => sequencia.ordemId === idOrdemSelecionada) : 0;
 
-      this.props.sondagemPortugues.salvar({ perguntasSalvar: this.props.sondagemPortugues.perguntas, alunosMutaveis, filtrosMutaveis, periodoSelecionadoSalvar, grupo, idOrdem, sequenciaOrdemSelecionada })
-
+      try{
+        this.props.pollMethods.setLoadingSalvar(true);
+        this.props.sondagemPortugues.salvar({ perguntasSalvar: this.props.sondagemPortugues.perguntas, alunosMutaveis, filtrosMutaveis, periodoSelecionadoSalvar, grupo, idOrdem, sequenciaOrdemSelecionada });        
+        setTimeout(()=> {this.props.pollMethods.setLoadingSalvar(false)}, 1000);
+      }catch(e){
+        this.props.pollMethods.setLoadingSalvar(false);
+      }
       return;
     }
 
@@ -987,7 +992,7 @@ class Poll extends Component {
               </ul>
               <ul className="nav navbar-nav ml-auto">{this.checkButtonSave()}</ul>
             </nav>
-            <Loader>
+            <Loader loading={this.props.poll.loadingSalvar}>
               {this.componentRender()}
             </Loader>
           </Card>

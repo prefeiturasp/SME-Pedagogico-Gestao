@@ -4,7 +4,7 @@ export const LoaderWrapper = styled.div`
   width: 100%;
   height: 100%;
   position: absolute;
-  z-index: 4;
+  z-index: 29;
   background-color: #fff;
   opacity: 50%;
 `;
@@ -13,7 +13,7 @@ export const DivLoading = styled.div`
   top: 20%;
   left: 50%;
   position: absolute;
-  z-index: 5;
+  z-index: 30;
   display: inline-grid;
   vertical-align: middle;
   align-items: center;

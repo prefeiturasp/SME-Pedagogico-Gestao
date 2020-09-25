@@ -29,6 +29,7 @@
   SET_DATA_TO_SAVE_TRUE: "SET_DATA_TO_SAVE_TRUE",
 
   SET_FUNCTION_BUTTON_SAVE: "SET_FUNCTION_BUTTON_SAVE",
+  SET_LOADING_SALVAR: "SET_LOADING_SALVAR",
 };
 
 const initialState = {
@@ -49,6 +50,7 @@ const initialState = {
     yearClassroom: null,
   },
   newDataToSave: false,
+  loadingSalvar: false,
 };
 
 export const actionCreators = {
@@ -149,6 +151,11 @@ export const actionCreators = {
   setFunctionButtonSave: (payload) => ({
     type: types.SET_FUNCTION_BUTTON_SAVE,
     payload,
+  }),
+
+  setLoadingSalvar: (payload) => ({
+    type: types.SET_LOADING_SALVAR,
+    payload
   }),
 };
 
@@ -256,6 +263,11 @@ export const reducer = (state, action) => {
         studentsPollMathCM: initialState.studentsPollMathCM,
         newDataToSave: false,
       };
+      case types.SET_LOADING_SALVAR:
+        return {
+          ...state,
+          loadingSalvar: action.payload,
+        };
     default:
       return state;
   }
