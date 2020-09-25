@@ -1,5 +1,6 @@
 ﻿import { takeLatest, call, put, all } from "redux-saga/effects";
 import * as Autoral from "../store/SondagemPortuguesStore";
+import * as Poll from '../store/Poll';
 
 
 export default function* () {
@@ -138,11 +139,21 @@ function listarAlunosPortuguesApi(filtro) {
 
 function* SalvaSondagemPortugues({ payload }) {
 
+    yield put({
+        type: Poll.types.SET_LOADING_SALVAR,
+        filters: true,
+      });
+
     yield fetch("/api/SondagemPortugues/SondagemPortuguesAutoral", {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload.alunos),
     });
+
+    yield put({
+        type: Poll.types.SET_LOADING_SALVAR,
+        filters: false,
+      });
 
     if (payload.novaOrdem) {
         yield put({

@@ -124,14 +124,12 @@ function SondagemMatematicaAutoral() {
         });
 
         try{
-            dispatch(pollStore.setLoadingSalvar(true));
-            dispatch(
-                actionCreators.salvaSondagemAutoralMatematica(
+            await dispatch(
+                 actionCreators.salvaSondagemAutoralMatematica(
                     alunosMutaveis,
                     filtrosBusca
                 )
-            );
-            setTimeout(()=> {dispatch(pollStore.setLoadingSalvar(false));}, 1000);            
+            );    
         }catch(e){        
             dispatch(pollStore.setLoadingSalvar(false));
         }

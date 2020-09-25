@@ -710,9 +710,16 @@ class Poll extends Component {
       const sequenciaOrdemSelecionada = sequenciasOrdens ? sequenciasOrdens.findIndex(sequencia => sequencia.ordemId === idOrdemSelecionada) : 0;
 
       try{
-        this.props.pollMethods.setLoadingSalvar(true);
-        this.props.sondagemPortugues.salvar({ perguntasSalvar: this.props.sondagemPortugues.perguntas, alunosMutaveis, filtrosMutaveis, periodoSelecionadoSalvar, grupo, idOrdem, sequenciaOrdemSelecionada });        
-        setTimeout(()=> {this.props.pollMethods.setLoadingSalvar(false)}, 1000);
+          this.props.sondagemPortugues.salvar(
+            { 
+              perguntasSalvar: this.props.sondagemPortugues.perguntas, 
+              alunosMutaveis, 
+              filtrosMutaveis, 
+              periodoSelecionadoSalvar, 
+              grupo, 
+              idOrdem, 
+              sequenciaOrdemSelecionada 
+            })    
       }catch(e){
         this.props.pollMethods.setLoadingSalvar(false);
       }

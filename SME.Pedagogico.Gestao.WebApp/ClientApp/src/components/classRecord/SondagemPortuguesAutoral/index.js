@@ -90,8 +90,11 @@ function SondagemPortuguesAutoral() {
       aluno.ordemId = idOrdem;
       aluno.sequenciaOrdemSalva = sequenciaOrdemSelecionada + 1;
     });
-
-    dispatch(PortuguesStore.salvarSondagemPortugues({ alunos: alunosMutaveis, filtro: filtrosMutaveis, novaOrdem, novoPeriodoId }));
+    try{   
+      dispatch(PortuguesStore.salvarSondagemPortugues({ alunos: alunosMutaveis, filtro: filtrosMutaveis, novaOrdem, novoPeriodoId }));  
+    }catch(e){
+      dispatch(pollStore.setLoadingSalvar(false));
+    }
     dispatch(PortuguesStore.setar_emEdicao(false));
   }
 

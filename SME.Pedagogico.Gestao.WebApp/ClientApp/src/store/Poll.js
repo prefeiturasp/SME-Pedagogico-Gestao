@@ -266,7 +266,7 @@ export const reducer = (state, action) => {
       case types.SET_LOADING_SALVAR:
         return {
           ...state,
-          loadingSalvar: action.payload,
+          loadingSalvar: action.filters,
         };
     default:
       return state;
