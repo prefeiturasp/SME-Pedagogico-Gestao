@@ -116,8 +116,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         public async Task<IActionResult> ListarSondagemPortuguesAutoral([FromQuery] FiltrarListagemDto filtrarListagemDto)
         {
             var sondagemAutoralBll = new PollPortuguese(_config);
-
-            // return Ok(await sondagemAutoralBll.ListarAlunosPortuguesAutoral(filtrarListagemDto));
             return Ok(await sondagemAutoralBll.ListarAlunosPortugues(filtrarListagemDto));
         }
 

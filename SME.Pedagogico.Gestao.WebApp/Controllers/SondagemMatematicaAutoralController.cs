@@ -37,15 +37,16 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpGet("Matematica")]
         public async Task<IActionResult> ObterSondagemAutoral([FromQuery]FiltrarListagemMatematicaDTO filtrarListagemDto)
         {
-            filtrarListagemDto.PerguntaId = "d53ba946-fb3d-4b20-8883-0f7dbab3bddb";
             return Ok(await sondagemAutoralBusiness.ObterListagemAutoral(filtrarListagemDto));
         }
 
         [HttpPost("Matematica")]
         public async Task<IActionResult> SalvarSondagem([FromBody]IEnumerable<AlunoSondagemMatematicaDto> alunoSondagemMatematicaDtos)
         {
-            await sondagemAutoralBusiness.SalvarSondagem(alunoSondagemMatematicaDtos);
+            //await sondagemAutoralBusiness.SalvarSondagem(alunoSondagemMatematicaDtos);
 
+           await sondagemAutoralBusiness.SalvarSondagemMatematica(alunoSondagemMatematicaDtos);
+            
             return Ok();
         }
     }
