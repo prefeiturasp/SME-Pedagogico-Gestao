@@ -39,7 +39,10 @@ export default class TwoStepsSave extends Component {
         if (runMethod === undefined)
             runMethod = this.nextStep;
         else
-            runMethod = (event) => { this.props.runMethod(); this.nextStep(); };
+            runMethod = (event) => { 
+                this.props.runMethod()
+                .finally(() => this.nextStep());
+            };
 
         return (
             <div>

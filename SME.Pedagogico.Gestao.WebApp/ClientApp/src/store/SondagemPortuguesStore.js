@@ -224,14 +224,12 @@ export const reducer = (state, action) => {
 
       const indexAlunoReset = alunosReset.findIndex(aluno => aluno.codigoAluno === action.payload)
 
-      console.log(indexAlunoReset);
-
       if (indexAlunoReset === null || indexAlunoReset === undefined || indexAlunoReset < 0)
         return { ...state };
 
       alunosReset[indexAlunoReset].respostas = [];
 
-      return { ...state, alunos: alunosReset };
+      return { ...state, alunos: alunosReset, emEdicao: true };
     case types.ATUALIZAR_RESPOSTA_CHECKBOX:
       let alunosM = Object.assign([], state.alunos);
 

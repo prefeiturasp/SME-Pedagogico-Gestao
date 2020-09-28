@@ -32,6 +32,7 @@ import SondagemPortuguesAutoral from "./SondagemPortuguesAutoral";
 import TwoStepsSave from "../messaging/TwoStepsSave";
 import TwoSteps from "../messaging/TwoSteps";
 import MensagemConfirmacaoAutoral from "./SondagemPortuguesAutoral/mensagemConfirmacaoAutoral";
+import Loader from "../loader/Loader";
 class Poll extends Component {
   constructor(props) {
     super(props);
@@ -708,8 +709,20 @@ class Poll extends Component {
 
       const sequenciaOrdemSelecionada = sequenciasOrdens ? sequenciasOrdens.findIndex(sequencia => sequencia.ordemId === idOrdemSelecionada) : 0;
 
-      this.props.sondagemPortugues.salvar({ perguntasSalvar: this.props.sondagemPortugues.perguntas, alunosMutaveis, filtrosMutaveis, periodoSelecionadoSalvar, grupo, idOrdem, sequenciaOrdemSelecionada })
-
+      try{
+          this.props.sondagemPortugues.salvar(
+            { 
+              perguntasSalvar: this.props.sondagemPortugues.perguntas, 
+              alunosMutaveis, 
+              filtrosMutaveis, 
+              periodoSelecionadoSalvar, 
+              grupo, 
+              idOrdem, 
+              sequenciaOrdemSelecionada 
+            })    
+      }catch(e){
+        this.props.pollMethods.setLoadingSalvar(false);
+      }
       return;
     }
 
@@ -986,7 +999,9 @@ class Poll extends Component {
             </ul>
             <ul className="nav navbar-nav ml-auto">{this.checkButtonSave()}</ul>
           </nav>
-          {this.componentRender()}
+          <Loader loading={this.props.poll.loadingSalvar}>
+              {this.componentRender()}
+            </Loader>
         </Card>
       </>
     );
