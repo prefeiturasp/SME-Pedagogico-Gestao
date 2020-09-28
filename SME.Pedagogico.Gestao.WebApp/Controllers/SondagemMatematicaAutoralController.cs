@@ -43,7 +43,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost("Matematica")]
         public async Task<IActionResult> SalvarSondagem([FromBody]IEnumerable<AlunoSondagemMatematicaDto> alunoSondagemMatematicaDtos)
         {
-            //await sondagemAutoralBusiness.SalvarSondagem(alunoSondagemMatematicaDtos);
 
            await sondagemAutoralBusiness.SalvarSondagemMatematica(alunoSondagemMatematicaDtos);
             
