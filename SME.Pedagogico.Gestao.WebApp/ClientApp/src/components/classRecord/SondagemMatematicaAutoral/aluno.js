@@ -8,9 +8,6 @@ function AlunoSondagemMatematicaAutoral({
   onChangeAluno
 }) {
 
-  
-
-
   return (
     <tr>
       <th className="align-middle">
@@ -46,6 +43,7 @@ function AlunoSondagemMatematicaAutoral({
                     id={i}
               onChange={onChangeAluno}
               disabled={false}
+              mostraToolTipItens
             ></AutoralSelect>
           </th>
         );

@@ -8,6 +8,7 @@ import { actionCreators as actionCreatorsPollRouter } from "../../store/PollRout
 import { bindActionCreators } from "redux";
 import { ROLES_ENUM } from "../../Enums";
 import TwoSteps from "../messaging/TwoSteps";
+import MensagemConfirmacaoAutoral from "./SondagemPortuguesAutoral/mensagemConfirmacaoAutoral";
 
 class PollFilter extends Component {
   constructor(props) {
@@ -47,8 +48,8 @@ class PollFilter extends Component {
       schoolYear: anoAtual,
     });
 
-      this.props.filterMethods.getPeriod(anoAtual);
-    
+    this.props.filterMethods.getPeriod(anoAtual);
+
 
 
     this.props.filterMethods.setSchoolYear(anoAtual);
@@ -672,11 +673,11 @@ class PollFilter extends Component {
           onClick={this.toggleMessageBox}
           disabled={!this.checkDisabledButton()}
         />
-        <TwoSteps
-          show={this.state.showMessageBox}
-          showControl={this.toggleMessageBox}
-          runMethod={this.setSelectedFilter}
-        />
+        <MensagemConfirmacaoAutoral
+          controleExibicao={this.toggleMessageBox}
+          acaoPrincipal={async () => { this.props.savePollStudent().then(() => setTimeout(() => this.setSelectedFilter(), 1000)); }}
+          acaoSecundaria={async () => { this.setSelectedFilter(); }}
+          exibir={this.state.showMessageBox} />
       </div>
     );
   }

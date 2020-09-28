@@ -35,7 +35,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
         [HttpGet("Matematica")]
-        public async Task<IActionResult> ObterSondagemAutoral([FromQuery]FiltrarListagemDto filtrarListagemDto)
+        public async Task<IActionResult> ObterSondagemAutoral([FromQuery]FiltrarListagemMatematicaDTO filtrarListagemDto)
         {
             return Ok(await sondagemAutoralBusiness.ObterListagemAutoral(filtrarListagemDto));
         }

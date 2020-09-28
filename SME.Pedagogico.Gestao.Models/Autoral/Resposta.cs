@@ -9,5 +9,6 @@ namespace SME.Pedagogico.Gestao.Models.Autoral
     {
         public string Descricao { get; set; }
         public bool Excluido { get; set; }
+        public bool Verdadeiro { get; set; }
     }
 }

@@ -31,6 +31,8 @@ import SondagemPortuguesAutoral from "./SondagemPortuguesAutoral";
 
 import TwoStepsSave from "../messaging/TwoStepsSave";
 import TwoSteps from "../messaging/TwoSteps";
+import MensagemConfirmacaoAutoral from "./SondagemPortuguesAutoral/mensagemConfirmacaoAutoral";
+import Loader from "../loader/Loader";
 class Poll extends Component {
   constructor(props) {
     super(props);
@@ -685,7 +687,7 @@ class Poll extends Component {
     this.props.dataMethods.set_new_data_state();
   }
 
-  savePollStudent() {
+  async savePollStudent() {
     if (this.props.poll.onClickButtonSave) {
       this.props.poll.onClickButtonSave(
         this.props.autoral.listaAlunosAutoralMatematica,
@@ -707,8 +709,20 @@ class Poll extends Component {
 
       const sequenciaOrdemSelecionada = sequenciasOrdens ? sequenciasOrdens.findIndex(sequencia => sequencia.ordemId === idOrdemSelecionada) : 0;
 
-      this.props.sondagemPortugues.salvar({ perguntasSalvar: this.props.sondagemPortugues.perguntas, alunosMutaveis, filtrosMutaveis, periodoSelecionadoSalvar, grupo, idOrdem, sequenciaOrdemSelecionada })
-
+      try{
+          this.props.sondagemPortugues.salvar(
+            { 
+              perguntasSalvar: this.props.sondagemPortugues.perguntas, 
+              alunosMutaveis, 
+              filtrosMutaveis, 
+              periodoSelecionadoSalvar, 
+              grupo, 
+              idOrdem, 
+              sequenciaOrdemSelecionada 
+            })    
+      }catch(e){
+        this.props.pollMethods.setLoadingSalvar(false);
+      }
       return;
     }
 
@@ -832,11 +846,11 @@ class Poll extends Component {
             >
               Língua portuguesa
             </button>
-            <TwoSteps
-              show={this.state.showMessagePortugueseBox}
-              showControl={this.toggleMessagePortugueseBox}
-              runMethod={this.openPortuguesePoll}
-            />
+            <MensagemConfirmacaoAutoral
+              controleExibicao={this.toggleMessagePortugueseBox}
+              acaoPrincipal={async () => { this.savePollStudent().then(() => setTimeout(() => this.openPortuguesePoll(), 1000)); }}
+              acaoSecundaria={async () => { this.openPortuguesePoll(); }}
+              exibir={this.state.showMessagePortugueseBox} />
           </li>
         );
       } else {
@@ -864,11 +878,11 @@ class Poll extends Component {
               className="btn btn-outline-primary btn-sm btn-planning"
               onClick={this.toggleMessagePortugueseBox}
             ></button>
-            <TwoSteps
-              show={this.state.showMessagePortugueseBox}
-              showControl={this.toggleMessagePortugueseBox}
-              runMethod={this.openPortuguesePoll}
-            />
+            <MensagemConfirmacaoAutoral
+              controleExibicao={this.toggleMessagePortugueseBox}
+              acaoPrincipal={async () => { this.savePollStudent().then(() => setTimeout(() => this.openPortuguesePoll(), 1000)); }}
+              acaoSecundaria={async () => { this.openPortuguesePoll(); }}
+              exibir={this.state.showMessagePortugueseBox} />
           </li>
         );
       } else {
@@ -904,11 +918,11 @@ class Poll extends Component {
             >
               Matem&aacute;tica
             </button>
-            <TwoSteps
-              show={this.state.showMessageMathBox}
-              showControl={this.toggleMessageMathBox}
-              runMethod={this.openMathPoll}
-            />
+            <MensagemConfirmacaoAutoral
+              controleExibicao={this.toggleMessageMathBox}
+              acaoPrincipal={async () => { this.savePollStudent().then(() => setTimeout(() => this.openMathPoll(), 1000)); }}
+              acaoSecundaria={async () => { this.openMathPoll(); }}
+              exibir={this.state.showMessageMathBox} />
           </li>
         );
       } else {
@@ -975,7 +989,7 @@ class Poll extends Component {
     return (
       <>
         <Card className="mb-3">
-          <PollFilter reports={false} />
+          <PollFilter reports={false} savePollStudent={this.savePollStudent} />
         </Card>
         <Card id="classRecord-poll" hide={this.checkPollCard()}>
           <nav className="container-tabpanel navbar">
@@ -985,7 +999,9 @@ class Poll extends Component {
             </ul>
             <ul className="nav navbar-nav ml-auto">{this.checkButtonSave()}</ul>
           </nav>
-          {this.componentRender()}
+          <Loader loading={this.props.poll.loadingSalvar}>
+              {this.componentRender()}
+            </Loader>
         </Card>
       </>
     );

@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 using SME.Pedagogico.Gestao.WebApp.Models.ClassRoom;
 using SME.Pedagogico.Gestao.Data.DataTransfer;
 using SME.Pedagogico.Gestao.Data.Business;
-using AutoMapper;
+using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.DTO.Portugues;
-using SME.Pedagogico.Gestao.Data.DTO.Matematica;
-using System;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
@@ -106,11 +104,11 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SondagemPortuguesAutoral([FromBody]IEnumerable<AlunoSondagemPortuguesDTO> ListaAlunosSondagemDto)
+        public async Task<IActionResult> SondagemPortuguesAutoral([FromBody]IEnumerable<AlunoSondagemPortuguesDTO2> ListaAlunosSondagemDto)
         {
             var sondagemAutoralBll = new PollPortuguese(_config);
             sondagemAutoralBll.SalvarSondagemAutoralPortugues(ListaAlunosSondagemDto);
-
+           
             return Ok();
         }
 
@@ -119,7 +117,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         {
             var sondagemAutoralBll = new PollPortuguese(_config);
 
-            return Ok(await sondagemAutoralBll.ListarAlunosPortuguesAutoral(filtrarListagemDto));
+            // return Ok(await sondagemAutoralBll.ListarAlunosPortuguesAutoral(filtrarListagemDto));
+            return Ok(await sondagemAutoralBll.ListarAlunosPortugues(filtrarListagemDto));
         }
 
         [HttpGet]

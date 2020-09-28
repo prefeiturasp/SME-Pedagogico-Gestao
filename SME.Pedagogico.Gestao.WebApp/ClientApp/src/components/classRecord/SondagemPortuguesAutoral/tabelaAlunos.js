@@ -2,7 +2,6 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Aluno from './aluno';
 import { actionCreators as PortuguesStore } from "../../../store/SondagemPortuguesStore";
-import Mocks from './mocks';
 
 // import { Container } from './styles';
 
@@ -21,6 +20,13 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
 
     const grupos = useSelector(store => store.sondagemPortugues.grupos);
 
+    const exibirLimparCampos = useMemo(() => {
+        if (!periodoSelecionado)
+            return false;
+
+        return grupoSelecionado === "fbd8b833-d7dc-4d04-9af6-50c1aaa2f8c0";
+    }, [periodoSelecionado])
+
     const sequenciaOrdens = useSelector((store) => store.sondagemPortugues.sequenciaOrdens);
 
     const ehEdicao = useMemo(() => {
@@ -28,7 +34,6 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
     }, [alunos]);
 
     const sequenciaOrdemAtual = useMemo(() => {
-        console.log(sequenciaOrdens);
 
         if (!sequenciaOrdens || sequenciaOrdens.length <= 0)
             return 1;
@@ -128,6 +133,9 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
         dispatch(PortuguesStore.listarBimestres());
     }, [])
 
+    const ehPrimeiraOrdenacao = ordenacaoAtual === 0;
+    const ehUltimaOrdenacao = ordenacaoAtual === ultimaOrdenacao;
+
     return periodoSelecionado ? <table
         className="table table-sm table-bordered table-hover table-sondagem-matematica"
         style={{ overflow: "hidden", overflowX: "auto" }}
@@ -138,19 +146,20 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
                     <div className="ml-2">Sondagem - {filtros.anoEscolar}º ano</div>
                 </th>
                 <th
-                    colSpan="4"
-                    key=""
-                    id=""
+                    colSpan={perguntas && perguntas.length > 0 ? perguntas.length + 1 : 6}
+                    key="sdadsadasd"
+                    id="sdadsadasd"
                     className="text-center border text-color-purple"
                 >
                     <span
                         value="opacos_col"
                         onClick={() => { recuar() }}
                         className="testcursor"
+                        disabled={ehPrimeiraOrdenacao}
                     >
                         <img
-                            src="./img/icon_2_pt_7C4DFF.svg"
-                            alt="seta esquerda ativa" z
+                            src={ehPrimeiraOrdenacao ? `./img/icon_pt_DADADA.svg` : `./img/icon_2_pt_7C4DFF.svg`}
+                            alt={`seta esquerda ${ehPrimeiraOrdenacao ? 'inativa' : 'ativa'}`}
                             style={{ height: 20 }}
                         />
                     </span>
@@ -159,14 +168,17 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
                         value="zero_col"
                         onClick={() => { avancar() }}
                         className="testcursor"
+                        disabled={ehUltimaOrdenacao}
                     >
                         <img
-                            src="./img/icon_pt_7C4DFF.svg"
-                            alt="seta direita ativa"
+                            src={ehUltimaOrdenacao ? `./img/icon_2_pt_DADADA.svg` : `./img/icon_pt_7C4DFF.svg`}
+                            alt={`seta direita${ehUltimaOrdenacao ? 'inativa' : 'ativa'}`}
                             style={{ height: 20 }}
                         />
                     </span>
-                    <a href="#" disabled={!emEdicao} onClick={limparSelecao} className="float-right pr-3">Limpar seleções</a>
+                    {
+                        exibirLimparCampos ? <a href="#" disabled={!emEdicao} onClick={limparSelecao} className="float-right pr-3">Limpar seleções</a> : <></>
+                    }
                 </th>
             </tr>
             <tr>
@@ -183,7 +195,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
         </thead>
         <tbody>
             {alunos && perguntas && perguntas.length > 0 && alunos.length > 0 && alunos.map(alunoObjeto => {
-                return <Aluno aluno={alunoObjeto} perguntas={perguntas} periodo={periodoSelecionado} idOrdemSelecionada={idOrdemSelecionada} />
+                return <Aluno aluno={alunoObjeto} perguntas={perguntas} periodo={periodoSelecionado} grupoSelecionado={grupoSelecionado} idOrdemSelecionada={idOrdemSelecionada} />
             })}
         </tbody>
     </table> : <div></div>;

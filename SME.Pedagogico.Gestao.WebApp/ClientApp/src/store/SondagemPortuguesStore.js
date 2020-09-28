@@ -1,3 +1,5 @@
+import { type } from "jquery";
+
 export const types = {
   SELECIONAR_GRUPO: "SELECIONAR_GRUPO",
   SETAR_GRUPOS: "SETAR_GRUPOS",
@@ -26,6 +28,9 @@ export const types = {
   SALVAR_FILTROS_CONSULTA_SALVAMENTO: "SALVAR_FILTROS_CONSULTA_SALVAMENTO",
   SETAR_SEQUENCIA_ORDENS: "SETAR_SEQUENCIA_ORDENS",
   LIMPAR_RESPOSTAS_ALUNOS: "LIMPAR_RESPOSTAS_ALUNOS",
+  ATUALIZAR_RESPOSTA_RADIO: "ATUALIZAR_RESPOSTA_RADIO",
+  ATUALIZAR_RESPOSTA_CHECKBOX: "ATUALIZAR_RESPOSTA_CHECKBOX",
+  LIMPAR_RESPOSTA_ALUNO_ESPECIFICO: "LIMPAR_RESPOSTA_ALUNO_ESPECIFICO"
 }
 
 const initialState = {
@@ -92,6 +97,14 @@ export const actionCreators = {
     type: types.SETAR_SEQUENCIA_ORDENS,
     payload: sequencias,
   }),
+  atualizar_resposta_radio_button: (atualizarDto) => ({
+    type: types.ATUALIZAR_RESPOSTA_RADIO,
+    payload: atualizarDto
+  }),
+  atualizar_resposta_checkbox: (atualizarDto) => ({
+    type: types.ATUALIZAR_RESPOSTA_CHECKBOX,
+    payload: atualizarDto,
+  }),
   atualizar_resposta: (atualizarDto) => ({
     type: types.ATUALIZAR_RESPOSTA,
     payload: atualizarDto,
@@ -114,6 +127,10 @@ export const actionCreators = {
   salvar_filtros_consulta_salvamento: (filtros) => ({
     type: types.SALVAR_FILTROS_CONSULTA_SALVAMENTO,
     payload: filtros,
+  }),
+  limpar_respostas_aluno_especifico: codigoAluno => ({
+    type: types.LIMPAR_RESPOSTA_ALUNO_ESPECIFICO,
+    payload: codigoAluno
   }),
   limpar_respostas_alunos: () => ({
     type: types.LIMPAR_RESPOSTAS_ALUNOS
@@ -187,15 +204,66 @@ export const reducer = (state, action) => {
       }
 
       return { ...state, sequenciaOrdens: sequenciaOrdem, ordemSelecionada: action.payload, emEdicao: true }
-    case types.ATUALIZAR_RESPOSTA:
+    case types.ATUALIZAR_RESPOSTA_RADIO:
       let alunos = Object.assign([], state.alunos);
 
-      const alunoIndex = alunos.findIndex(aluno => aluno.codigoAluno === action.payload.alunoId);
+      const Indexaluno = alunos.findIndex(aluno => aluno.codigoAluno === action.payload.alunoId);
+
+      if (Indexaluno < 0)
+        return state;
+
+      alunos[Indexaluno].respostas = [{
+        periodoId: action.payload.periodoId,
+        pergunta: action.payload.perguntaId,
+        resposta: action.payload.respostaId,
+      }];
+
+      return { ...state, alunos, emEdicao: true };
+    case types.LIMPAR_RESPOSTA_ALUNO_ESPECIFICO:
+      const alunosReset = Object.assign([], state.alunos);
+
+      const indexAlunoReset = alunosReset.findIndex(aluno => aluno.codigoAluno === action.payload)
+
+      if (indexAlunoReset === null || indexAlunoReset === undefined || indexAlunoReset < 0)
+        return { ...state };
+
+      alunosReset[indexAlunoReset].respostas = [];
+
+      return { ...state, alunos: alunosReset, emEdicao: true };
+    case types.ATUALIZAR_RESPOSTA_CHECKBOX:
+      let alunosM = Object.assign([], state.alunos);
+
+      if (!action.payload || action.payload.length === 0)
+        return state;
+
+      const index = alunosM.findIndex(a => a.codigoAluno === action.payload[0].alunoId);
+
+      if (index < 0)
+        return state;
+
+      let respostas = [];
+
+      action.payload.forEach(aluno => {
+        respostas.push({
+          periodoId: aluno.periodoId,
+          pergunta: aluno.perguntaId,
+          resposta: aluno.respostaId,
+        });
+      });
+
+      alunosM[index].respostas = respostas;
+
+      return { ...state, alunos: alunosM, emEdicao: true };
+
+    case types.ATUALIZAR_RESPOSTA:
+      let alunosMutaveis = Object.assign([], state.alunos);
+
+      const alunoIndex = alunosMutaveis.findIndex(aluno => aluno.codigoAluno === action.payload.alunoId);
 
       if (alunoIndex < 0)
         return state;
 
-      const aluno = alunos[alunoIndex];
+      const aluno = alunosMutaveis[alunoIndex];
 
       const respostaIndex = aluno.respostas ? aluno.respostas
         .findIndex(resposta => resposta.pergunta === action.payload.perguntaId
@@ -210,14 +278,14 @@ export const reducer = (state, action) => {
       resposta.resposta = action.payload.respostaId;
 
       if (!aluno.respostas)
-        alunos[alunoIndex].respostas = [];
+        alunosMutaveis[alunoIndex].respostas = [];
 
       if (respostaIndex < 0)
-        alunos[alunoIndex].respostas.push(resposta);
+        alunosMutaveis[alunoIndex].respostas.push(resposta);
       else
-        alunos[alunoIndex].respostas[respostaIndex] = resposta;
+        alunosMutaveis[alunoIndex].respostas[respostaIndex] = resposta;
 
-      return { ...state, alunos };
+      return { ...state, alunos: alunosMutaveis };
     default:
       return state;
   }
