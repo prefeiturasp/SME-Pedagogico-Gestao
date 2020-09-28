@@ -30,7 +30,8 @@ export const types = {
   LIMPAR_RESPOSTAS_ALUNOS: "LIMPAR_RESPOSTAS_ALUNOS",
   ATUALIZAR_RESPOSTA_RADIO: "ATUALIZAR_RESPOSTA_RADIO",
   ATUALIZAR_RESPOSTA_CHECKBOX: "ATUALIZAR_RESPOSTA_CHECKBOX",
-  LIMPAR_RESPOSTA_ALUNO_ESPECIFICO: "LIMPAR_RESPOSTA_ALUNO_ESPECIFICO"
+  LIMPAR_RESPOSTA_ALUNO_ESPECIFICO: "LIMPAR_RESPOSTA_ALUNO_ESPECIFICO",
+  EXCLUIR_SONDAGEM_PORTUGUES: "EXCLUIR_SONDAGEM_PORTUGUES",
 }
 
 const initialState = {
@@ -138,7 +139,11 @@ export const actionCreators = {
   remover_sequencia_ordens: (ordemId) => ({
     type: types.REMOVER_SEQUENCIA_ORDENS,
     payload: ordemId
-  })
+  }),
+  excluir_sondagem_portugues: (filtro) => ({
+    type: types.EXCLUIR_SONDAGEM_PORTUGUES,
+    payload: filtro,
+  }),
 };
 
 export const reducer = (state, action) => {

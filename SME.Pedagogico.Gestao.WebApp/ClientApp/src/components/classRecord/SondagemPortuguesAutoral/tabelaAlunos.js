@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Aluno from './aluno';
 import { actionCreators as PortuguesStore } from "../../../store/SondagemPortuguesStore";
 import MensagemConfirmacaoAutoral from './mensagemConfirmacaoAutoral';
+import MensagemLimparSelecao from './mensagemLimparSelecao';
 
 // import { Container } from './styles';
 
@@ -87,16 +88,15 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
     }
 
     const solicitarLimparSelecao = () => {
-
+        trocarExibirConfirmacaoExclusao();
     }
 
     const limparSelecao = () => {
-        dispatch(PortuguesStore.limpar_respostas_alunos());
-
         if (!ehEdicao) {
+            dispatch(PortuguesStore.limpar_respostas_alunos());
             dispatch(PortuguesStore.remover_sequencia_ordens(idOrdemSelecionada));
         } else {
-            dispatch(PortuguesStore.inserir_sequencia_ordem(idOrdemSelecionada));
+            dispatch(PortuguesStore.excluir_sondagem_portugues(filtros));
         }
     }
 
@@ -188,7 +188,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
                             </span>
                             {
                                 exibirLimparCampos ? (
-                                    <><a href="#" disabled={!emEdicao} onClick={trocarExibirConfirmacaoExclusao} className="float-right pr-3">Limpar seleções</a>
+                                    <><a href="#" disabled={!emEdicao} onClick={solicitarLimparSelecao} className="float-right pr-3">Limpar seleções</a>
 
                                     </>) :
                                     <></>
@@ -213,7 +213,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
                     })}
                 </tbody>
             </table>
-            <MensagemConfirmacaoAutoral
+            <MensagemLimparSelecao
                 controleExibicao={trocarExibirConfirmacaoExclusao}
                 acaoPrincipal={async () => { limparSelecao() }}
                 exibir={exibirConfirmacaoExclusao} />
