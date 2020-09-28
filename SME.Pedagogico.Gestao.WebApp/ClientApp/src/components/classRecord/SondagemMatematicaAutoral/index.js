@@ -38,7 +38,16 @@ function SondagemMatematicaAutoral() {
         dispatch(actionCreators.setarEmEdicao(false));
     };
 
+    const itemSelecionado = useMemo(() => {
+        if (!perguntas || perguntas.length === 0) return {};
+
+        return perguntas.find((x) => x.ordenacao == indexSelecionado);
+    }, [indexSelecionado]);
+
     const filtrosBusca = useMemo(() => {
+        if (!filtros || !itemSelecionado)
+            return;
+
         return {
             anoLetivo: filtros.schoolYear,
             anoEscolar: filtros.yearClassroom,
@@ -46,18 +55,14 @@ function SondagemMatematicaAutoral() {
             codigoUe: filtros.schoolCodeEol,
             codigoTurma: filtros.classroomCodeEol,
             componenteCurricular: "9f3d8467-2f6e-4bcb-a8e9-12e840426aba",
+            perguntaId: itemSelecionado.id,
         };
-    }, filtros);
+
+    }, [filtros, itemSelecionado]);
 
     const anoEscolar = useSelector(
         (store) => store.poll.selectedFilter.yearClassroom
     );
-
-    const itemSelecionado = useMemo(() => {
-        if (!perguntas || perguntas.length === 0) return {};
-
-        return perguntas.find((x) => x.ordenacao == indexSelecionado);
-    }, [indexSelecionado]);
 
     const ultimaOrdenacao = useMemo(() => {
         if (!perguntas || perguntas.length === 0) return 0;
@@ -75,7 +80,6 @@ function SondagemMatematicaAutoral() {
         if (indexSelecionado == ultimaOrdenacao) return;
 
         if (!emEdicao) {
-            dispatch(actionCreators.listaAlunosAutoralMatematica(filtrosBusca));
             setIndexSelecionado((oldState) => oldState + 1);
             return;
         }
@@ -90,7 +94,6 @@ function SondagemMatematicaAutoral() {
         if (indexSelecionado == primeiraOrdenacao) return;
 
         if (!emEdicao) {
-            dispatch(actionCreators.listaAlunosAutoralMatematica(filtrosBusca));
             setIndexSelecionado((oldState) => oldState - 1);
             return;
         }
@@ -192,9 +195,15 @@ function SondagemMatematicaAutoral() {
     }, [periodosAbertura]);
 
     useEffect(() => {
+        if (!filtrosBusca || !filtrosBusca.perguntaId)
+            return;
+
+        dispatch(actionCreators.listaAlunosAutoralMatematica(filtrosBusca));
+    }, [filtrosBusca])
+
+    useEffect(() => {
         dispatch(actionCreators.listarPeriodos());
         dispatch(actionCreators.listarPerguntas(filtros.yearClassroom));
-        dispatch(actionCreators.listaAlunosAutoralMatematica(filtrosBusca));
         dispatch(
             pollStore.setFunctionButtonSave(
                 (alunosRedux, perguntasRedux, periodosRedux) => {
