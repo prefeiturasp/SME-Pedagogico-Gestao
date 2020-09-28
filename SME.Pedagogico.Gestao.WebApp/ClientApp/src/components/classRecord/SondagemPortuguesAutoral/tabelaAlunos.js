@@ -24,7 +24,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
         if (!periodoSelecionado)
             return false;
 
-        return grupoSelecionado === "fbd8b833-d7dc-4d04-9af6-50c1aaa2f8c0";
+        return grupoSelecionado === "e27b99a3-789d-43fb-a962-7df8793622b1";
     }, [periodoSelecionado])
 
     const sequenciaOrdens = useSelector((store) => store.sondagemPortugues.sequenciaOrdens);
@@ -106,7 +106,6 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
             salvar({ novoPeriodoId: periodos[ordenacaoAtual] });
             return;
         }
-
 
         dispatch(PortuguesStore.setar_periodo_selecionado(periodos[ordenacaoAtual]));
     }, [ordenacaoAtual])
