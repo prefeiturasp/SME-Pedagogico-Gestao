@@ -1,6 +1,7 @@
 ﻿import { takeLatest, call, put, all } from "redux-saga/effects";
 import * as Autoral from "../store/SondagemAutoral";
 import * as Filters from "../store/Filters";
+import * as Poll from '../store/Poll';
 
 export default function* () {
   yield all([
@@ -76,10 +77,20 @@ function listarAlunosMatApi(filtro) {
 }
 
 function* SalvaSondagemAutoralMat({ payload }) {
+  yield put({
+    type: Poll.types.SET_LOADING_SALVAR,
+    filters: true,
+  });
+
   yield fetch("/api/SondagemAutoral/Matematica", {
     method: "post",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload.alunos),
+  })
+
+  yield put({
+    type: Poll.types.SET_LOADING_SALVAR,
+    filters: false,
   });
   
   yield put({

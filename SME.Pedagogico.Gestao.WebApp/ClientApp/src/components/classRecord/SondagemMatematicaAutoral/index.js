@@ -115,14 +115,14 @@ function SondagemMatematicaAutoral() {
     ) => {
         let alunosMutaveis = Object.assign([], listaAlunosRedux);
 
-        try {
+        try{
             await dispatch(
-                actionCreators.salvaSondagemAutoralMatematica(
+                 actionCreators.salvaSondagemAutoralMatematica(
                     alunosMutaveis,
                     filtrosBusca
                 )
-            );
-        } catch (e) {
+            );    
+        }catch(e){        
             dispatch(pollStore.setLoadingSalvar(false));
         }
 
