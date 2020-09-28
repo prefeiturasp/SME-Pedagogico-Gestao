@@ -75,7 +75,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             var listagem = new List<AlunoSondagemMatematicaDto>();
             if (listaSondagem.Count > 0)
-                MapearAlunosListagemMatematica2(listagem, listaSondagem);
+                MapearAlunosListagemMatematica(listagem, listaSondagem);
 
             AdicionarAlunosEOL(filtrarListagemDto, alunos, listagem);
             return listagem.OrderBy(x => x.NumeroChamada);
@@ -115,10 +115,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
         }
 
 
-        private void MapearAlunosListagemMatematica2(List<AlunoSondagemMatematicaDto> listagem, List<Sondagem> lsondagem)
+        private void MapearAlunosListagemMatematica(List<AlunoSondagemMatematicaDto> listagem, List<Sondagem> lsondagem)
         {
 
-            var sondagem = lsondagem.First();
             var listaAunosDto = new List<AlunoSondagemMatematicaDto>();
             var listCodigoAlunoEol = new List<string>();
             lsondagem.ForEach(s =>
@@ -159,16 +158,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        private void MapearAlunosListagemMatematica(List<AlunoSondagemMatematicaDto> listagem, SondagemAluno aluno, Sondagem sondagem)
-        {
-            var indexAluno = listagem.FindIndex(x => x.CodigoAluno.Equals(aluno.CodigoAluno.ToString()));
-
-            if (indexAluno >= 0)
-                foreach (var resposta in aluno.ListaRespostas)
-                    AdicionarRespostaAluno(resposta, listagem, indexAluno, sondagem.PeriodoId);
-            else
-                AdicionarNovoAlunoListagem(listagem, aluno, sondagem);
-        }
+        
 
         private async Task SalvarAlunoComResposta(SMEManagementContextData contexto, AlunoSondagemMatematicaDto aluno, SondagemAutoral alunoAutoral)
         {
@@ -239,16 +229,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
 
 
-        private void AdicionarRespostaAluno(SondagemAlunoRespostas alunoResposta, List<AlunoSondagemMatematicaDto> listagem, int index, string periodoId)
-        {
-            listagem[index].Respostas.Add(new AlunoRespostaDto
-            {
-                PeriodoId = periodoId,
-                Pergunta = alunoResposta.PerguntaId,
-                Resposta = alunoResposta.RespostaId
-            });
-        }
-
         private static void MapearRespostas(PerguntaDto pergunta, IEnumerable<PerguntaResposta> respostasDaPergunta)
         {
             pergunta.Respostas = respostasDaPergunta.Select(perguntaResposta => new RespostaDto
@@ -313,63 +293,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             return perguntas;
         }
 
-        private void AdicionarNovoAlunoListagem(List<AlunoSondagemMatematicaDto> listagem, SondagemAutoral aluno)
-        {
-            listagem.Add(new AlunoSondagemMatematicaDto
-            {
-                Id = aluno.Id,
-                CodigoAluno = aluno.CodigoAluno,
-                NomeAluno = aluno.NomeAluno,
-                AnoLetivo = aluno.AnoLetivo,
-                AnoTurma = aluno.AnoTurma,
-                CodigoDre = aluno.CodigoDre,
-                CodigoTurma = aluno.CodigoTurma,
-                CodigoUe = aluno.CodigoUe,
-                ComponenteCurricular = aluno.ComponenteCurricular.Id,
-                Respostas = new List<AlunoRespostaDto>()
-                {
-                    new AlunoRespostaDto
-                    {
-                        PeriodoId = aluno.PeriodoId,
-                        Pergunta = aluno.PerguntaId,
-                        Resposta = aluno.RespostaId
-                    }
-                }
-            });
-        }
-
-
-
-        private void AdicionarNovoAlunoListagem(List<AlunoSondagemMatematicaDto> listagem, SondagemAluno aluno, Sondagem sondagem)
-        {
-            var alunoDto = new AlunoSondagemMatematicaDto
-            {
-                Id = aluno.Id.ToString(),
-                CodigoAluno = aluno.CodigoAluno,
-                NomeAluno = aluno.NomeAluno,
-                AnoLetivo = sondagem.AnoLetivo,
-                AnoTurma = sondagem.AnoTurma,
-                CodigoDre = sondagem.CodigoDre,
-                CodigoTurma = sondagem.CodigoTurma,
-                CodigoUe = sondagem.CodigoUe,
-                ComponenteCurricular = sondagem.ComponenteCurricularId,
-                Respostas = new List<AlunoRespostaDto>()
-
-            };
-
-            foreach (var resp in aluno.ListaRespostas)
-            {
-                var alunoRespDto = new AlunoRespostaDto()
-                {
-                    Pergunta = resp.PerguntaId,
-                    Resposta = resp.RespostaId,
-                    PeriodoId = sondagem.PeriodoId
-                };
-                alunoDto.Respostas.Add(alunoRespDto);
-            }
-
-            listagem.Add(alunoDto);
-        }
+      
 
         private PerguntaDto MapearPergunta(PerguntaAnoEscolar perguntaAnoEscolar)
         {
