@@ -689,10 +689,26 @@ class Poll extends Component {
 
   async savePollStudent() {
     if (this.props.poll.onClickButtonSave) {
+      const filtros = this.props.poll.selectedFilter;
+      const itemSelecionado = this.props.autoral.perguntaSelecionada;
+
+      const filtroSalvar = {
+        anoLetivo: filtros.schoolYear,
+        anoEscolar: filtros.yearClassroom,
+        codigoDre: filtros.dreCodeEol,
+        codigoUe: filtros.schoolCodeEol,
+        codigoTurma: filtros.classroomCodeEol,
+        componenteCurricular: "9f3d8467-2f6e-4bcb-a8e9-12e840426aba",
+        perguntaId: itemSelecionado && itemSelecionado.id,
+      }
+
+      console.log(filtroSalvar);
+
       this.props.poll.onClickButtonSave(
         this.props.autoral.listaAlunosAutoralMatematica,
         this.props.autoral.listaPerguntas,
-        this.props.autoral.listaPeriodos
+        this.props.autoral.listaPeriodos,
+        filtroSalvar,
       );
       return;
     }
@@ -709,18 +725,18 @@ class Poll extends Component {
 
       const sequenciaOrdemSelecionada = sequenciasOrdens ? sequenciasOrdens.findIndex(sequencia => sequencia.ordemId === idOrdemSelecionada) : 0;
 
-      try{
-          this.props.sondagemPortugues.salvar(
-            { 
-              perguntasSalvar: this.props.sondagemPortugues.perguntas, 
-              alunosMutaveis, 
-              filtrosMutaveis, 
-              periodoSelecionadoSalvar, 
-              grupo, 
-              idOrdem, 
-              sequenciaOrdemSelecionada 
-            })    
-      }catch(e){
+      try {
+        this.props.sondagemPortugues.salvar(
+          {
+            perguntasSalvar: this.props.sondagemPortugues.perguntas,
+            alunosMutaveis,
+            filtrosMutaveis,
+            periodoSelecionadoSalvar,
+            grupo,
+            idOrdem,
+            sequenciaOrdemSelecionada
+          })
+      } catch (e) {
         this.props.pollMethods.setLoadingSalvar(false);
       }
       return;
@@ -1000,8 +1016,8 @@ class Poll extends Component {
             <ul className="nav navbar-nav ml-auto">{this.checkButtonSave()}</ul>
           </nav>
           <Loader loading={this.props.poll.loadingSalvar}>
-              {this.componentRender()}
-            </Loader>
+            {this.componentRender()}
+          </Loader>
         </Card>
       </>
     );
