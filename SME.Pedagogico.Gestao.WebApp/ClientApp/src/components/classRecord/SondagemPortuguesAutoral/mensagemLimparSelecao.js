@@ -4,7 +4,7 @@ import MesangemConfirmacao from '../../messaging/MensagemConfirmacao';
 function MensagemLimparSelecao({ controleExibicao, acaoPrincipal, acaoSecundaria, exibir, tituloFeedBackOp, feedBackOp }) {
 
   const tituloPrincipal = "Atenção";
-  const mensagem = "Você deseja descartar os dados digitados nesta ordem?";
+  const mensagem = " Você deseja excluir os dados digitados nesta ordem? Não será possível recuperá-los.";
   const botaoPrincipal = "Sim";
   const botaoSecundario = "Não";
   const tituloFeedBack = "Informações Removidas";
