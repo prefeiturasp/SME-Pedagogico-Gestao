@@ -528,6 +528,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
+      
 
         public IEnumerable<DTO.Portugues.GrupoDTO> ListarGrupos()
         {
@@ -738,36 +739,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        private void AdicionarAlunosEOL(int anoEscolar, int anoLetivo, string codigoDre, string codigoUe, string codigoTurma, Guid componenteCurricular, List<AlunosNaTurmaDTO> alunos, List<AlunoSondagemPortuguesDTO2> listagem)
-        {
-            alunos.ForEach(aluno =>
-            {
-                var alunoBanco = listagem.FirstOrDefault(x => x.CodigoAluno.Equals(aluno.CodigoAluno.ToString()));
-
-                if (alunoBanco != null)
-                {
-                    alunoBanco.NumeroChamada = aluno.NumeroAlunoChamada;
-                    return;
-                }
-
-                listagem.Add(new AlunoSondagemPortuguesDTO2
-                {
-
-                    CodigoAluno = aluno.CodigoAluno.ToString(),
-                    AnoLetivo = anoLetivo,
-                    AnoTurma = anoEscolar,
-                    CodigoDre = codigoDre,
-                    CodigoTurma = codigoTurma,
-                    CodigoUe = codigoUe,
-                    NumeroChamada = aluno.NumeroAlunoChamada,
-                    ComponenteCurricular = componenteCurricular.ToString(),
-                    NomeAluno = aluno.NomeAluno,
-
-                }); ;
-
-                listagem.OrderBy(x => x.NumeroChamada);
-            });
-        }
+   
 
         private void AdicionarAlunosEOL(FiltrarListagemDto filtrarListagemDto, List<AlunosNaTurmaDTO> alunos, List<AlunoSondagemPortuguesDTO2> listagem, Sondagem sondagem)
         {
@@ -801,37 +773,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 listagem.OrderBy(x => x.NumeroChamada);
             });
         }
-        private void AdicionarAlunosEOL(int anoEscolar, int anoLetivo, string codigoDre, string codigoUe, string codigoTurma, Guid componenteCurricular, List<AlunosNaTurmaDTO> alunos, List<AlunoSondagemPortuguesDTO> listagem)
-        {
-            alunos.ForEach(aluno =>
-            {
-                var alunoBanco = listagem.FirstOrDefault(x => x.CodigoAluno.Equals(aluno.CodigoAluno.ToString()));
-
-                if (alunoBanco != null)
-                {
-                    alunoBanco.NumeroChamada = aluno.NumeroAlunoChamada;
-                    return;
-                }
-
-                listagem.Add(new AlunoSondagemPortuguesDTO
-                {
-                    CodigoAluno = aluno.CodigoAluno.ToString(),
-                    AnoLetivo = anoLetivo,
-                    AnoTurma = anoEscolar,
-                    CodigoDre = codigoDre,
-                    CodigoTurma = codigoTurma,
-                    CodigoUe = codigoUe,
-                    NumeroChamada = aluno.NumeroAlunoChamada,
-                    ComponenteCurricular = componenteCurricular.ToString(),
-                    NomeAluno = aluno.NomeAluno,
-
-                }); ;
-
-                listagem.OrderBy(x => x.NumeroChamada);
-            });
-        }
-
-
+      
         private void MapearAlunosListagem(List<AlunoSondagemPortuguesDTO2> listagem, SondagemAluno aluno, Sondagem sondagem)
         {
             var indexAluno = listagem.FindIndex(x => x.CodigoAluno.Equals(aluno.CodigoAluno.ToString()));
@@ -843,18 +785,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 AdicionarNovoAlunoListagem(listagem, aluno, sondagem);
         }
 
-        public void SalvarSondagemPortugues(IEnumerable<AlunoSondagemPortuguesDTO> ListaAlunosSondagemDto)
-        {
-
-            using (var contexto = new SMEManagementContextData())
-            {
-                SalvarAluno(ListaAlunosSondagemDto, contexto);
-
-                contexto.SaveChanges();
-            }
-        }
-
-
+      
         public void SalvarSondagemAutoralPortugues(IEnumerable<AlunoSondagemPortuguesDTO2> ListaAlunosSondagemDto)
         {
             try
@@ -1146,33 +1077,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             });
         }
 
-        private void AdicionarNovoAlunoListagem(List<AlunoSondagemPortuguesDTO> listagem, SondagemAutoral aluno)
-        {
-            listagem.Add(new AlunoSondagemPortuguesDTO
-            {
-                Id = aluno.Id,
-                CodigoAluno = aluno.CodigoAluno,
-                NomeAluno = aluno.NomeAluno,
-                AnoLetivo = aluno.AnoLetivo,
-                AnoTurma = aluno.AnoTurma,
-                CodigoDre = aluno.CodigoDre,
-                CodigoTurma = aluno.CodigoTurma,
-                CodigoUe = aluno.CodigoUe,
-                ComponenteCurricular = aluno.ComponenteCurricularId,
-                GrupoId = aluno.GrupoId,
-                OrdemId = aluno.OrdemId,
-                SequenciaOrdemSalva = aluno.SequenciaDeOrdemSalva,
-                Respostas = new List<AlunoRespostaDto>()
-                {
-                    new AlunoRespostaDto
-                    {
-                        PeriodoId = aluno.PeriodoId,
-                        Pergunta = aluno.PerguntaId,
-                        Resposta = aluno.RespostaId
-                    }
-                }
-            });
-        }
+   
 
         private void AdicionarNovoAlunoListagem(List<AlunoSondagemPortuguesDTO2> listagem, SondagemAluno aluno, Sondagem sondagem)
         {
@@ -1209,8 +1114,17 @@ namespace SME.Pedagogico.Gestao.Data.Business
             listagem.Add(alunoDto);
         }
 
+        public  void ExcluirSondagem(Sondagem sondagem)
+        {
+            using (var contexto = new SMEManagementContextData())
+            {
+                contexto.Sondagem.Remove(sondagem);
+                contexto.SaveChanges();
+            }
+        }           
 
-        private static async Task<Sondagem> ObterSondagemPortugues(FiltrarListagemDto filtrarListagemDto)
+
+        public  async Task<Sondagem> ObterSondagemPortugues(FiltrarListagemDto filtrarListagemDto)
         {
             using (var contexto = new SMEManagementContextData())
             {

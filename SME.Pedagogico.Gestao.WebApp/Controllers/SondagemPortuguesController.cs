@@ -112,6 +112,21 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return Ok();
         }
 
+
+        [HttpDelete]
+        public async Task<IActionResult> ExcluirSondagemPortugues([FromQuery] FiltrarListagemDto filtrarListagemDto)
+        {
+            var sondagemAutoralBll = new PollPortuguese(_config);
+            var sondagem = await sondagemAutoralBll.ObterSondagemPortugues(filtrarListagemDto);
+            if (sondagem != null)
+            {
+                sondagemAutoralBll.ExcluirSondagem(sondagem);
+                return Ok();
+            }
+            return BadRequest("Sondagem não encontrada");
+          
+        }
+
         [HttpGet]
         public async Task<IActionResult> ListarSondagemPortuguesAutoral([FromQuery] FiltrarListagemDto filtrarListagemDto)
         {
