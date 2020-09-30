@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using SME.Pedagogico.Gestao.Data.DTO;
+using SME.Pedagogico.Gestao.IoC;
 using SME.Pedagogico.Gestao.WebApp.Contexts;
 using System;
 using System.IO;
@@ -32,6 +33,8 @@ namespace SME.Pedagogico.Gestao.WebApp
             services.AddResponseCaching();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            RegistrarDependencias.Registrar(services);
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
