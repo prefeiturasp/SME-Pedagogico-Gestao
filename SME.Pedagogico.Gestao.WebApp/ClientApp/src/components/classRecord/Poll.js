@@ -128,7 +128,7 @@ class Poll extends Component {
     }
   }
 
-  componentDidMount() { }
+  componentDidMount() {}
 
   componentWillUpdate() {
     var todayDate = new Date();
@@ -700,7 +700,7 @@ class Poll extends Component {
         codigoTurma: filtros.classroomCodeEol,
         componenteCurricular: "9f3d8467-2f6e-4bcb-a8e9-12e840426aba",
         perguntaId: itemSelecionado && itemSelecionado.id,
-      }
+      };
 
       console.log(filtroSalvar);
 
@@ -708,7 +708,7 @@ class Poll extends Component {
         this.props.autoral.listaAlunosAutoralMatematica,
         this.props.autoral.listaPerguntas,
         this.props.autoral.listaPeriodos,
-        filtroSalvar,
+        filtroSalvar
       );
       return;
     }
@@ -716,32 +716,41 @@ class Poll extends Component {
     if (this.props.sondagemPortugues.salvar) {
       const sequenciasOrdens = this.props.sondagemPortugues.sequenciaOrdens;
       const idOrdemSelecionada = this.props.sondagemPortugues.ordemSelecionada;
-      const periodoSelecionadoSalvar = this.props.sondagemPortugues.periodoSelecionado;
+      const periodoSelecionadoSalvar = this.props.sondagemPortugues
+        .periodoSelecionado;
       const grupo = this.props.sondagemPortugues.grupoSelecionado;
       const idOrdem = this.props.sondagemPortugues.ordemSelecionada;
 
-      let alunosMutaveis = Object.assign([], this.props.sondagemPortugues.alunos);
-      let filtrosMutaveis = Object.assign({}, this.props.sondagemPortugues.filtros);
+      let alunosMutaveis = Object.assign(
+        [],
+        this.props.sondagemPortugues.alunos
+      );
+      let filtrosMutaveis = Object.assign(
+        {},
+        this.props.sondagemPortugues.filtros
+      );
 
-      const sequenciaOrdemSelecionada = sequenciasOrdens ? sequenciasOrdens.findIndex(sequencia => sequencia.ordemId === idOrdemSelecionada) : 0;
+      const sequenciaOrdemSelecionada = sequenciasOrdens
+        ? sequenciasOrdens.findIndex(
+            (sequencia) => sequencia.ordemId === idOrdemSelecionada
+          )
+        : 0;
 
       try {
-        this.props.sondagemPortugues.salvar(
-          {
-            perguntasSalvar: this.props.sondagemPortugues.perguntas,
-            alunosMutaveis,
-            filtrosMutaveis,
-            periodoSelecionadoSalvar,
-            grupo,
-            idOrdem,
-            sequenciaOrdemSelecionada
-          })
+        this.props.sondagemPortugues.salvar({
+          perguntasSalvar: this.props.sondagemPortugues.perguntas,
+          alunosMutaveis,
+          filtrosMutaveis,
+          periodoSelecionadoSalvar,
+          grupo,
+          idOrdem,
+          sequenciaOrdemSelecionada,
+        });
       } catch (e) {
         this.props.pollMethods.setLoadingSalvar(false);
       }
       return;
     }
-
 
     if (this.props.pollStudents.pollSelected == ClassRoomEnum.ClassMTAutoral) {
       this.props.autoralMethods.salvaSondagemAutoralMatematica(
@@ -862,11 +871,6 @@ class Poll extends Component {
             >
               Língua portuguesa
             </button>
-            <MensagemConfirmacaoAutoral
-              controleExibicao={this.toggleMessagePortugueseBox}
-              acaoPrincipal={async () => { this.savePollStudent().then(() => setTimeout(() => this.openPortuguesePoll(), 1000)); }}
-              acaoSecundaria={async () => { this.openPortuguesePoll(); }}
-              exibir={this.state.showMessagePortugueseBox} />
           </li>
         );
       } else {
@@ -894,11 +898,6 @@ class Poll extends Component {
               className="btn btn-outline-primary btn-sm btn-planning"
               onClick={this.toggleMessagePortugueseBox}
             ></button>
-            <MensagemConfirmacaoAutoral
-              controleExibicao={this.toggleMessagePortugueseBox}
-              acaoPrincipal={async () => { this.savePollStudent().then(() => setTimeout(() => this.openPortuguesePoll(), 1000)); }}
-              acaoSecundaria={async () => { this.openPortuguesePoll(); }}
-              exibir={this.state.showMessagePortugueseBox} />
           </li>
         );
       } else {
@@ -934,11 +933,6 @@ class Poll extends Component {
             >
               Matem&aacute;tica
             </button>
-            <MensagemConfirmacaoAutoral
-              controleExibicao={this.toggleMessageMathBox}
-              acaoPrincipal={async () => { this.savePollStudent().then(() => setTimeout(() => this.openMathPoll(), 1000)); }}
-              acaoSecundaria={async () => { this.openMathPoll(); }}
-              exibir={this.state.showMessageMathBox} />
           </li>
         );
       } else {
@@ -1004,6 +998,28 @@ class Poll extends Component {
   render() {
     return (
       <>
+        <MensagemConfirmacaoAutoral
+          controleExibicao={this.toggleMessagePortugueseBox}
+          acaoPrincipal={this.savePollStudent}
+          acaoSecundaria={async () => {
+            this.openPortuguesePoll();
+          }}
+          exibir={this.state.showMessagePortugueseBox}
+          acaoFeedBack={async () => {
+            this.openPortuguesePoll();
+          }}
+        />
+        <MensagemConfirmacaoAutoral
+          controleExibicao={this.toggleMessageMathBox}
+          acaoPrincipal={this.savePollStudent}
+          acaoSecundaria={async () => {
+            this.openMathPoll();
+          }}
+          exibir={this.state.showMessageMathBox}
+          acaoFeedBack={async () => {
+            this.openMathPoll();
+          }}
+        />
         <Card className="mb-3">
           <PollFilter reports={false} savePollStudent={this.savePollStudent} />
         </Card>

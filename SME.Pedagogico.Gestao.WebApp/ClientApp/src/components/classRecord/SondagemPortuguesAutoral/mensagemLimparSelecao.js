@@ -8,8 +8,7 @@ function MensagemLimparSelecao({ controleExibicao, acaoPrincipal, acaoSecundaria
   const botaoPrincipal = "Sim";
   const botaoSecundario = "Não";
   const tituloFeedBack = "Informações Removidas";
-    const feedBack = "Seus dados de sondagem foram removidos com sucesso.";
-    const mensagemInclusao = "Você deseja descartar os dados digitados nesta ordem? Não será possível recuperá-los.";
+  const feedBack = "Seus dados de sondagem foram removidos com sucesso.";
 
   return <MesangemConfirmacao
     exibir={exibir}
