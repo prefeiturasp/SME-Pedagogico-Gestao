@@ -205,10 +205,14 @@ export const reducer = (state, action) => {
         return { ...state, sequenciaOrdens: sequenciaOrdem, ordemSelecionada: action.payload, emEdicao: true };
       }
 
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < 3; i++) {        
+        console.log(i + 1);
+
         const ordemIndex = sequenciaOrdem.findIndex(x => x.sequenciaOrdemSalva === i + 1)
 
-        if (ordemIndex > 0)
+        console.log(ordemIndex);
+
+        if (ordemIndex > -1)
           continue;
 
         sequenciaOrdem.push({ ordemId: action.payload, sequenciaOrdemSalva: i + 1 });
