@@ -195,20 +195,23 @@ export const reducer = (state, action) => {
       let sequenciaOrdem = Object.assign([], state.sequenciaOrdens)
 
       const naLista = sequenciaOrdem.findIndex(ordem => ordem.ordemId === action.payload);
+
       if (naLista !== -1)
         return { ...state, ordemSelecionada: action.payload, emEdicao: true };
 
       if (sequenciaOrdem === null || sequenciaOrdem.length === 0) {
         sequenciaOrdem = [];
-        sequenciaOrdem.push({ ordemId: action.payload });
+        sequenciaOrdem.push({ ordemId: action.payload, sequenciaOrdemSalva: 1 });
         return { ...state, sequenciaOrdens: sequenciaOrdem, ordemSelecionada: action.payload, emEdicao: true };
       }
 
       for (let i = 0; i < 3; i++) {
-        if (sequenciaOrdem[i])
+        const ordemIndex = sequenciaOrdem.findIndex(x => x.sequenciaOrdemSalva === i + 1)
+
+        if (ordemIndex > 0)
           continue;
 
-        sequenciaOrdem[i] = { ordemId: action.payload };
+        sequenciaOrdem.push({ ordemId: action.payload, sequenciaOrdemSalva: i + 1 });
         break;
       }
 

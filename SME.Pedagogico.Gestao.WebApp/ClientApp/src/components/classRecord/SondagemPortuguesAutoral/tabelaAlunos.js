@@ -42,20 +42,21 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
         if (!sequenciaOrdens || sequenciaOrdens.length <= 0)
             return 1;
 
-        const index = sequenciaOrdens.findIndex(ordem => {
+        const ordem = sequenciaOrdens.find(ordem => {
             return ordem.ordemId === idOrdemSelecionada;
         });
 
-        if (index >= 0)
-            return index + 1;
+        if (ordem)
+            return ordem.sequenciaOrdemSalva;
 
-        if (sequenciaOrdens.length < 3) {
-            return sequenciaOrdens.length + 1;
+        for (let index = 1; index < 4; index++) {
+            const ordem = sequenciaOrdens.find(seq => seq.sequenciaOrdemSalva === index)
+
+            if (ordem)
+                continue;
+
+            return index;
         }
-
-        let indexNull = sequenciaOrdens.findIndex(ordem => ordem.ordemId === null);
-
-        return indexNull === -1 ? 0 : indexNull + 1;
 
     }, [sequenciaOrdens, idOrdemSelecionada])
 
