@@ -114,6 +114,10 @@ export const actionCreators = {
     type: types.INSERIR_SEQUENCIA_ORDENS,
     payload: ordemId,
   }),
+  setar_perguntas: (perguntas) => ({
+    type: types.SETAR_PERGUNTAS,
+    payload: perguntas,
+  }),
   limpar_todas_ordens_selecionadas: () => ({
     type: types.LIMPAR_TODAS_ORDENS_SELECIONADAS
   }),

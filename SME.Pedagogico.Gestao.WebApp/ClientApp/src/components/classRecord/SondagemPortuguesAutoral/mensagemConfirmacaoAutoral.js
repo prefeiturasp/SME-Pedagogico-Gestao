@@ -1,7 +1,7 @@
 import React from 'react';
 import MesangemConfirmacao from '../../messaging/MensagemConfirmacao';
 
-function MensagemConfirmacaoAutoral({ controleExibicao, acaoPrincipal, acaoSecundaria, exibir }) {
+function MensagemConfirmacaoAutoral({ controleExibicao, acaoPrincipal, acaoSecundaria, exibir, acaoFeedBack }) {
 
   const tituloPrincipal = "Atenção";
   const mensagem = "Existem alterações que não foram salvas! Deseja salvar agora?";
@@ -20,7 +20,9 @@ function MensagemConfirmacaoAutoral({ controleExibicao, acaoPrincipal, acaoSecun
     feedBack={feedBack}
     controleExibicao={controleExibicao}
     acaoPrincial={acaoPrincipal}
-    acaoSecundaria={acaoSecundaria} />
+    acaoSecundaria={acaoSecundaria} 
+    acaoFeedBack={acaoFeedBack}
+    />
 
 }
 

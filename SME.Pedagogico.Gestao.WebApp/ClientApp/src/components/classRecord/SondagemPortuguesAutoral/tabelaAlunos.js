@@ -188,7 +188,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
                             </span>
                             {
                                 exibirLimparCampos ? (
-                                    <><button disabled={!emEdicao} onClick={solicitarLimparSelecao} className="btn btn-link float-right pr-3">Limpar seleções</button>
+                                    <><button disabled={!(emEdicao || ehEdicao)} onClick={solicitarLimparSelecao} className="btn btn-link float-right pr-3">Limpar seleções</button>
 
                                     </>) :
                                     <></>

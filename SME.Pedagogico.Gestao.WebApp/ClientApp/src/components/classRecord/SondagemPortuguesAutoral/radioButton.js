@@ -10,8 +10,6 @@ function RadioButtonGroup({ lista, valor, codigoAluno, bloqueado, periodoId }) {
     const respostaVerdadeira = (perguntaId) => {
         var pergunta = lista.find(x => x.id === perguntaId);
 
-        console.log(pergunta);
-
         if (!pergunta)
             return;
 
@@ -29,7 +27,9 @@ function RadioButtonGroup({ lista, valor, codigoAluno, bloqueado, periodoId }) {
         if (!resposta || resposta.length === 0)
             return false;
 
-        const respostaDaPergunta = resposta.pergunta === perguntaId && resposta.periodoId === periodoId && resposta.resposta === respostaVerdadeira(perguntaId).id;
+        const respVerdadeira = respostaVerdadeira(perguntaId);
+
+        const respostaDaPergunta = resposta.pergunta === perguntaId && resposta.periodoId === periodoId && respVerdadeira && resposta.resposta === respVerdadeira.id;
 
         return respostaDaPergunta;
     }

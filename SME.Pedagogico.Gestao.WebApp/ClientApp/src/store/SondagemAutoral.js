@@ -28,6 +28,10 @@ export const actionCreators = {
     type: types.LISTAR_PERGUNTAS,
     anoEscolar,
   }),
+  setarPerguntas: (perguntas) => ({
+    type: types.SETAR_PERGUNTAS,
+    payload: perguntas,
+  }),
   listaAlunosAutoralMatematica: (filtro) => ({
     type: types.LISTAR_ALUNOS_AUTORAL_MATEMATICA,
     filtro,
