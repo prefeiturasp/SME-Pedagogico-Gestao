@@ -10,6 +10,7 @@ function MesangemConfirmacao(props) {
     exibir,
     acaoPrincial,
     acaoSecundaria,
+    acaoFeedBack,
     tituloPrincipal,
     mensagemPrincipal,
     tituloFeedBack,
@@ -20,20 +21,16 @@ function MesangemConfirmacao(props) {
 
   const [passo, setPasso] = useState(1);
 
-  const proximoPasso = () => {
-    return new Promise((resolve, reject) => {
-      setPasso((oldState) => (oldState > 1 ? 1 : 2));
-      controleExibicao();
-      resolve();
-    });
-  };
+  const proximoPasso = () => setPasso((oldState) => (oldState > 1 ? 1 : 2));
 
   const resetarPasso = () => {
+    console.log("resetarPasso");
     controleExibicao();
     setPasso(1);
   };
 
   const onBotaoSecundarioClick = () => {
+    console.log("onBotaoSecundarioClick");
     if (acaoSecundaria) {
       acaoSecundaria().then(() => resetarPasso());
       return;
@@ -43,7 +40,19 @@ function MesangemConfirmacao(props) {
   };
 
   const onBotaoPrincipalClick = () => {
-    acaoPrincial().then(() => proximoPasso());
+    console.log("onBotaoPrincipalClick");
+    acaoPrincial().then(() => {
+      proximoPasso();
+    });
+  };
+
+  const onBotaoFeedBackClick = () => {
+    console.log("onBotaoFeedBackClick");
+    if (acaoFeedBack) {
+      acaoFeedBack().then(() => resetarPasso());
+      return;
+    }
+    resetarPasso();
   };
 
   useEffect(() => {
@@ -107,7 +116,7 @@ function MesangemConfirmacao(props) {
                     <button
                       type="button"
                       className="col-3 btn btn-primary btn-sm sc-darkblue-button"
-                      onClick={resetarPasso}
+                      onClick={onBotaoFeedBackClick}
                     >
                       Ok
                     </button>
