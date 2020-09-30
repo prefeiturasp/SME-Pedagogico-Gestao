@@ -119,6 +119,7 @@ function listaPerguntasAPI({ sequenciaOrdem, grupoId }) {
 function* ListarSequenciaOrdens({ payload }) {
     try {
         const data = yield call(listarSequenciaOrdensApi, payload);
+
         yield put({
             type: Autoral.types.SETAR_SEQUENCIA_ORDENS,
             payload: data,
