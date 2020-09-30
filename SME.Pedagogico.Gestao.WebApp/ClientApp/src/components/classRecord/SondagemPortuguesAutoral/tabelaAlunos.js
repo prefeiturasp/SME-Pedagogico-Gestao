@@ -188,7 +188,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
                             </span>
                             {
                                 exibirLimparCampos ? (
-                                    <><a href="#" disabled={!emEdicao} onClick={solicitarLimparSelecao} className="float-right pr-3">Limpar seleções</a>
+                                    <><button disabled={!emEdicao} onClick={solicitarLimparSelecao} className="btn btn-link float-right pr-3">Limpar seleções</button>
 
                                     </>) :
                                     <></>
@@ -216,7 +216,10 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
             <MensagemLimparSelecao
                 controleExibicao={trocarExibirConfirmacaoExclusao}
                 acaoPrincipal={async () => { limparSelecao() }}
-                exibir={exibirConfirmacaoExclusao} />
+                exibir={exibirConfirmacaoExclusao}
+                ehEdicao={ehEdicao}
+            />
+                
         </>
         : <div></div>;
 }
