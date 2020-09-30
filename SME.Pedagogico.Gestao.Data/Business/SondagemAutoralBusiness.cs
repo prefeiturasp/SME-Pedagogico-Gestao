@@ -491,7 +491,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             });
         }
 
-        private static async Task<List<Sondagem>> ObterSondagemAutoralMatematica(FiltrarListagemMatematicaDTO filtrarListagemDto)
+        private static async Task<List<Sondagem>> ObterSondagemAutoralMatematicaTela(FiltrarListagemMatematicaDTO filtrarListagemDto)
         {
             using (var contexto = new SMEManagementContextData())
             {
@@ -506,6 +506,31 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                                               s.CodigoTurma == filtrarListagemDto.CodigoTurma).
                                                               Include(x => x.AlunosSondagem).ThenInclude(x => x.ListaRespostas).
                                                               Where(s => s.AlunosSondagem.Any(a => a.ListaRespostas.Any(lr => lr.PerguntaId == filtrarListagemDto.PerguntaId))).ToListAsync();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+            }
+        }
+
+
+        private static async Task<List<Sondagem>> ObterSondagemAutoralMatematica(FiltrarListagemMatematicaDTO filtrarListagemDto)
+        {
+            using (var contexto = new SMEManagementContextData())
+            {
+                try
+                {
+
+                    return await contexto.Sondagem.Where(s => s.AnoLetivo == filtrarListagemDto.AnoLetivo &&
+                                                              s.AnoTurma == filtrarListagemDto.AnoEscolar &&
+                                                              s.CodigoDre == filtrarListagemDto.CodigoDre &&
+                                                              s.CodigoUe == filtrarListagemDto.CodigoUe &&
+                                                              s.ComponenteCurricularId.Equals(filtrarListagemDto.ComponenteCurricular.ToString()) &&
+                                                              s.CodigoTurma == filtrarListagemDto.CodigoTurma).
+                                                              Include(x => x.AlunosSondagem).ThenInclude(x => x.ListaRespostas).ToListAsync();
+              
                 }
                 catch (Exception ex)
                 {
