@@ -30,7 +30,8 @@ export const types = {
   LIMPAR_RESPOSTAS_ALUNOS: "LIMPAR_RESPOSTAS_ALUNOS",
   ATUALIZAR_RESPOSTA_RADIO: "ATUALIZAR_RESPOSTA_RADIO",
   ATUALIZAR_RESPOSTA_CHECKBOX: "ATUALIZAR_RESPOSTA_CHECKBOX",
-  LIMPAR_RESPOSTA_ALUNO_ESPECIFICO: "LIMPAR_RESPOSTA_ALUNO_ESPECIFICO"
+  LIMPAR_RESPOSTA_ALUNO_ESPECIFICO: "LIMPAR_RESPOSTA_ALUNO_ESPECIFICO",
+  EXCLUIR_SONDAGEM_PORTUGUES: "EXCLUIR_SONDAGEM_PORTUGUES",
 }
 
 const initialState = {
@@ -113,6 +114,10 @@ export const actionCreators = {
     type: types.INSERIR_SEQUENCIA_ORDENS,
     payload: ordemId,
   }),
+  setar_perguntas: (perguntas) => ({
+    type: types.SETAR_PERGUNTAS,
+    payload: perguntas,
+  }),
   limpar_todas_ordens_selecionadas: () => ({
     type: types.LIMPAR_TODAS_ORDENS_SELECIONADAS
   }),
@@ -138,7 +143,11 @@ export const actionCreators = {
   remover_sequencia_ordens: (ordemId) => ({
     type: types.REMOVER_SEQUENCIA_ORDENS,
     payload: ordemId
-  })
+  }),
+  excluir_sondagem_portugues: (filtro) => ({
+    type: types.EXCLUIR_SONDAGEM_PORTUGUES,
+    payload: filtro,
+  }),
 };
 
 export const reducer = (state, action) => {
@@ -186,20 +195,27 @@ export const reducer = (state, action) => {
       let sequenciaOrdem = Object.assign([], state.sequenciaOrdens)
 
       const naLista = sequenciaOrdem.findIndex(ordem => ordem.ordemId === action.payload);
+
       if (naLista !== -1)
         return { ...state, ordemSelecionada: action.payload, emEdicao: true };
 
       if (sequenciaOrdem === null || sequenciaOrdem.length === 0) {
         sequenciaOrdem = [];
-        sequenciaOrdem.push({ ordemId: action.payload });
+        sequenciaOrdem.push({ ordemId: action.payload, sequenciaOrdemSalva: 1 });
         return { ...state, sequenciaOrdens: sequenciaOrdem, ordemSelecionada: action.payload, emEdicao: true };
       }
 
-      for (let i = 0; i < 3; i++) {
-        if (sequenciaOrdem[i])
+      for (let i = 0; i < 3; i++) {        
+        console.log(i + 1);
+
+        const ordemIndex = sequenciaOrdem.findIndex(x => x.sequenciaOrdemSalva === i + 1)
+
+        console.log(ordemIndex);
+
+        if (ordemIndex > -1)
           continue;
 
-        sequenciaOrdem[i] = { ordemId: action.payload };
+        sequenciaOrdem.push({ ordemId: action.payload, sequenciaOrdemSalva: i + 1 });
         break;
       }
 
@@ -224,14 +240,12 @@ export const reducer = (state, action) => {
 
       const indexAlunoReset = alunosReset.findIndex(aluno => aluno.codigoAluno === action.payload)
 
-      console.log(indexAlunoReset);
-
       if (indexAlunoReset === null || indexAlunoReset === undefined || indexAlunoReset < 0)
         return { ...state };
 
       alunosReset[indexAlunoReset].respostas = [];
 
-      return { ...state, alunos: alunosReset };
+      return { ...state, alunos: alunosReset, emEdicao: true };
     case types.ATUALIZAR_RESPOSTA_CHECKBOX:
       let alunosM = Object.assign([], state.alunos);
 

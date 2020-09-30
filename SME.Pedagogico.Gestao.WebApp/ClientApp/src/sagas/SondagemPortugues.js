@@ -1,5 +1,6 @@
 ﻿import { takeLatest, call, put, all } from "redux-saga/effects";
 import * as Autoral from "../store/SondagemPortuguesStore";
+import * as Poll from '../store/Poll';
 
 
 export default function* () {
@@ -8,17 +9,38 @@ export default function* () {
         takeLatest(Autoral.types.LISTAR_COMPONENTE_CURRICULAR, ListarComponenteCurricular),
         takeLatest(Autoral.types.LISTAR_BIMESTRES, ListarBimestres),
         takeLatest(Autoral.types.LISTAR_PERGUNTAS_PORTUGUES, ListarPerguntas),
+        takeLatest(Autoral.types.EXCLUIR_SONDAGEM_PORTUGUES, ExcluirSondagemPortugues),
         takeLatest(Autoral.types.LISTAR_SEQUENCIA_ORDENS, ListarSequenciaOrdens),
-        takeLatest(
-            Autoral.types.LISTAR_ALUNOS_PORTUGUES,
-            ListarAlunosPortugues
-        ),
-        takeLatest(
-            Autoral.types.SALVAR_SONDAGEM_PORTUGUES,
-            SalvaSondagemPortugues
-        ),
-
+        takeLatest(Autoral.types.LISTAR_ALUNOS_PORTUGUES, ListarAlunosPortugues),
+        takeLatest(Autoral.types.SALVAR_SONDAGEM_PORTUGUES, SalvaSondagemPortugues),
     ]);
+}
+
+function* ExcluirSondagemPortugues({ payload }) {
+    try {
+        yield call(ExcluirSondagemPortuguesApi, payload);
+
+        yield put({
+            type: Autoral.types.LISTAR_SEQUENCIA_ORDENS,
+            payload: payload,
+        });
+
+        yield put({
+            type: Autoral.types.LISTAR_ALUNOS_PORTUGUES,
+            payload: payload,
+        });
+    } catch (error) {
+        yield put({ type: "API_CALL_ERROR" });
+    }
+}
+
+function ExcluirSondagemPortuguesApi(filtro) {
+    const url = `/api/SondagemPortugues/ExcluirSondagemPortugues?${new URLSearchParams(filtro)}`;
+
+    return fetch(url, {
+        method: "delete",
+        headers: { "Content-Type": "application/json" },
+    });
 }
 
 function* ListarGrupos({ }) {
@@ -97,6 +119,7 @@ function listaPerguntasAPI({ sequenciaOrdem, grupoId }) {
 function* ListarSequenciaOrdens({ payload }) {
     try {
         const data = yield call(listarSequenciaOrdensApi, payload);
+
         yield put({
             type: Autoral.types.SETAR_SEQUENCIA_ORDENS,
             payload: data,
@@ -138,11 +161,21 @@ function listarAlunosPortuguesApi(filtro) {
 
 function* SalvaSondagemPortugues({ payload }) {
 
+    yield put({
+        type: Poll.types.SET_LOADING_SALVAR,
+        filters: true,
+      });
+
     yield fetch("/api/SondagemPortugues/SondagemPortuguesAutoral", {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload.alunos),
     });
+
+    yield put({
+        type: Poll.types.SET_LOADING_SALVAR,
+        filters: false,
+      });
 
     if (payload.novaOrdem) {
         yield put({

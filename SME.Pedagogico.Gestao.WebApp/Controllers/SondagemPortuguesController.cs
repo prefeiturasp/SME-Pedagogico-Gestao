@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 using SME.Pedagogico.Gestao.WebApp.Models.ClassRoom;
 using SME.Pedagogico.Gestao.Data.DataTransfer;
 using SME.Pedagogico.Gestao.Data.Business;
-using AutoMapper;
+using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.DTO.Portugues;
-using SME.Pedagogico.Gestao.Data.DTO.Matematica;
-using System;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
@@ -112,6 +110,21 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             sondagemAutoralBll.SalvarSondagemAutoralPortugues(ListaAlunosSondagemDto);
            
             return Ok();
+        }
+
+
+        [HttpDelete]
+        public async Task<IActionResult> ExcluirSondagemPortugues([FromQuery] FiltrarListagemDto filtrarListagemDto)
+        {
+            var sondagemAutoralBll = new PollPortuguese(_config);
+            var sondagem = await sondagemAutoralBll.ObterSondagemPortugues(filtrarListagemDto);
+            if (sondagem != null)
+            {
+                sondagemAutoralBll.ExcluirSondagem(sondagem);
+                return Ok();
+            }
+            return BadRequest("Sondagem não encontrada");
+          
         }
 
         [HttpGet]

@@ -2,6 +2,8 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Aluno from './aluno';
 import { actionCreators as PortuguesStore } from "../../../store/SondagemPortuguesStore";
+import MensagemConfirmacaoAutoral from './mensagemConfirmacaoAutoral';
+import MensagemLimparSelecao from './mensagemLimparSelecao';
 
 // import { Container } from './styles';
 
@@ -9,6 +11,8 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
     const dispatch = useDispatch();
 
     const [ordenacaoAtual, setOrdenacaoAtual] = useState(0);
+
+    const [exibirConfirmacaoExclusao, setExibirConfirmacaoExclusao] = useState(false);
 
     const alunos = useSelector(store => store.sondagemPortugues.alunos);
 
@@ -24,7 +28,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
         if (!periodoSelecionado)
             return false;
 
-        return grupoSelecionado === "fbd8b833-d7dc-4d04-9af6-50c1aaa2f8c0";
+        return grupoSelecionado === "e27b99a3-789d-43fb-a962-7df8793622b1";
     }, [periodoSelecionado])
 
     const sequenciaOrdens = useSelector((store) => store.sondagemPortugues.sequenciaOrdens);
@@ -38,20 +42,21 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
         if (!sequenciaOrdens || sequenciaOrdens.length <= 0)
             return 1;
 
-        const index = sequenciaOrdens.findIndex(ordem => {
+        const ordem = sequenciaOrdens.find(ordem => {
             return ordem.ordemId === idOrdemSelecionada;
         });
 
-        if (index >= 0)
-            return index + 1;
+        if (ordem)
+            return ordem.sequenciaOrdemSalva;
 
-        if (sequenciaOrdens.length < 3) {
-            return sequenciaOrdens.length + 1;
+        for (let index = 1; index < 4; index++) {
+            const ordem = sequenciaOrdens.find(seq => seq.sequenciaOrdemSalva === index)
+
+            if (ordem)
+                continue;
+
+            return index;
         }
-
-        let indexNull = sequenciaOrdens.findIndex(ordem => ordem.ordemId === null);
-
-        return indexNull === -1 ? 0 : indexNull + 1;
 
     }, [sequenciaOrdens, idOrdemSelecionada])
 
@@ -67,6 +72,8 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
         return periodos.length - periodos.length;
     }, [periodos]);
 
+    const trocarExibirConfirmacaoExclusao = () => setExibirConfirmacaoExclusao((oldState) => !oldState);
+
     const avancar = () => {
         if (ordenacaoAtual == ultimaOrdenacao)
             return;
@@ -81,13 +88,16 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
         setOrdenacaoAtual(oldState => oldState - 1);
     }
 
-    const limparSelecao = () => {
-        dispatch(PortuguesStore.limpar_respostas_alunos());
+    const solicitarLimparSelecao = () => {
+        trocarExibirConfirmacaoExclusao();
+    }
 
+    const limparSelecao = () => {
         if (!ehEdicao) {
+            dispatch(PortuguesStore.limpar_respostas_alunos());
             dispatch(PortuguesStore.remover_sequencia_ordens(idOrdemSelecionada));
         } else {
-            dispatch(PortuguesStore.inserir_sequencia_ordem(idOrdemSelecionada));
+            dispatch(PortuguesStore.excluir_sondagem_portugues(filtros));
         }
     }
 
@@ -106,7 +116,6 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
             salvar({ novoPeriodoId: periodos[ordenacaoAtual] });
             return;
         }
-
 
         dispatch(PortuguesStore.setar_periodo_selecionado(periodos[ordenacaoAtual]));
     }, [ordenacaoAtual])
@@ -136,69 +145,84 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
     const ehPrimeiraOrdenacao = ordenacaoAtual === 0;
     const ehUltimaOrdenacao = ordenacaoAtual === ultimaOrdenacao;
 
-    return periodoSelecionado ? <table
-        className="table table-sm table-bordered table-hover table-sondagem-matematica"
-        style={{ overflow: "hidden", overflowX: "auto" }}
-    >
-        <thead>
-            <tr>
-                <th rowSpan="2" className="align-middle border text-color-purple">
-                    <div className="ml-2">Sondagem - {filtros.anoEscolar}º ano</div>
-                </th>
-                <th
-                    colSpan={perguntas && perguntas.length > 0 ? perguntas.length + 1 : 6}
-                    key="sdadsadasd"
-                    id="sdadsadasd"
-                    className="text-center border text-color-purple"
-                >
-                    <span
-                        value="opacos_col"
-                        onClick={() => { recuar() }}
-                        className="testcursor"
-                        disabled={ehPrimeiraOrdenacao}
-                    >
-                        <img
-                            src={ehPrimeiraOrdenacao ? `./img/icon_pt_DADADA.svg` : `./img/icon_2_pt_7C4DFF.svg`}
-                            alt={`seta esquerda ${ehPrimeiraOrdenacao ? 'inativa' : 'ativa'}`}
-                            style={{ height: 20 }}
-                        />
-                    </span>
-                    <b className="p-4">{periodoSelecionado.descricao}</b>
-                    <span
-                        value="zero_col"
-                        onClick={() => { avancar() }}
-                        className="testcursor"
-                        disabled={ehUltimaOrdenacao}
-                    >
-                        <img
-                            src={ehUltimaOrdenacao ? `./img/icon_2_pt_DADADA.svg` : `./img/icon_pt_7C4DFF.svg`}
-                            alt={`seta direita${ehUltimaOrdenacao ? 'inativa' : 'ativa'}`}
-                            style={{ height: 20 }}
-                        />
-                    </span>
-                    {
-                        exibirLimparCampos ? <a href="#" disabled={!emEdicao} onClick={limparSelecao} className="float-right pr-3">Limpar seleções</a> : <></>
-                    }
-                </th>
-            </tr>
-            <tr>
-                {perguntas &&
-                    perguntas.map((pergunta) => (
-                        <th
-                            key={pergunta.id}
-                            className="text-center border poll-select-container"
-                        >
-                            <small className="text-muted">{pergunta.descricao}</small>
+    return periodoSelecionado ?
+        <>
+            <table
+                className="table table-sm table-bordered table-hover table-sondagem-matematica"
+                style={{ overflow: "hidden", overflowX: "auto" }}
+            >
+                <thead>
+                    <tr>
+                        <th rowSpan="2" className="align-middle border text-color-purple">
+                            <div className="ml-2">Sondagem - {filtros.anoEscolar}º ano</div>
                         </th>
-                    ))}
-            </tr>
-        </thead>
-        <tbody>
-            {alunos && perguntas && perguntas.length > 0 && alunos.length > 0 && alunos.map(alunoObjeto => {
-                return <Aluno aluno={alunoObjeto} perguntas={perguntas} periodo={periodoSelecionado} grupoSelecionado={grupoSelecionado} idOrdemSelecionada={idOrdemSelecionada} />
-            })}
-        </tbody>
-    </table> : <div></div>;
+                        <th
+                            colSpan={perguntas && perguntas.length > 0 ? perguntas.length + 1 : 6}
+                            key="sdadsadasd"
+                            id="sdadsadasd"
+                            className="text-center border text-color-purple"
+                        >
+                            <span
+                                value="opacos_col"
+                                onClick={() => { recuar() }}
+                                className="testcursor"
+                                disabled={ehPrimeiraOrdenacao}
+                            >
+                                <img
+                                    src={ehPrimeiraOrdenacao ? `./img/icon_pt_DADADA.svg` : `./img/icon_2_pt_7C4DFF.svg`}
+                                    alt={`seta esquerda ${ehPrimeiraOrdenacao ? 'inativa' : 'ativa'}`}
+                                    style={{ height: 20 }}
+                                />
+                            </span>
+                            <b className="p-4">{periodoSelecionado.descricao}</b>
+                            <span
+                                value="zero_col"
+                                onClick={() => { avancar() }}
+                                className="testcursor"
+                                disabled={ehUltimaOrdenacao}
+                            >
+                                <img
+                                    src={ehUltimaOrdenacao ? `./img/icon_2_pt_DADADA.svg` : `./img/icon_pt_7C4DFF.svg`}
+                                    alt={`seta direita${ehUltimaOrdenacao ? 'inativa' : 'ativa'}`}
+                                    style={{ height: 20 }}
+                                />
+                            </span>
+                            {
+                                exibirLimparCampos ? (
+                                    <><button disabled={!(emEdicao || ehEdicao)} onClick={solicitarLimparSelecao} className="btn btn-link float-right pr-3">Limpar seleções</button>
+
+                                    </>) :
+                                    <></>
+                            }
+                        </th>
+                    </tr>
+                    <tr>
+                        {perguntas &&
+                            perguntas.map((pergunta) => (
+                                <th
+                                    key={pergunta.id}
+                                    className="text-center border poll-select-container"
+                                >
+                                    <small className="text-muted">{pergunta.descricao}</small>
+                                </th>
+                            ))}
+                    </tr>
+                </thead>
+                <tbody>
+                    {alunos && perguntas && perguntas.length > 0 && alunos.length > 0 && alunos.map(alunoObjeto => {
+                        return <Aluno aluno={alunoObjeto} perguntas={perguntas} periodo={periodoSelecionado} grupoSelecionado={grupoSelecionado} idOrdemSelecionada={idOrdemSelecionada} />
+                    })}
+                </tbody>
+            </table>
+            <MensagemLimparSelecao
+                controleExibicao={trocarExibirConfirmacaoExclusao}
+                acaoPrincipal={async () => { limparSelecao() }}
+                exibir={exibirConfirmacaoExclusao}
+                ehEdicao={ehEdicao}
+            />
+                
+        </>
+        : <div></div>;
 }
 
 export default TabelaAlunos;

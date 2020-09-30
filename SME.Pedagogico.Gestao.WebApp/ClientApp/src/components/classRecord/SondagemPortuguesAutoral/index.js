@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Select from "./select";
 import { actionCreators as PortuguesStore } from "../../../store/SondagemPortuguesStore";
 import { useSelector, useDispatch } from "react-redux";
@@ -6,6 +6,7 @@ import SeletorDeOrdem from "./seletorDeordem";
 import TabelaAlunos from "./tabelaAlunos";
 import { actionCreators as dataStore } from "../../../store/Data";
 import { actionCreators as pollStore } from "../../../store/Poll";
+import MensagemConfirmacaoAutoral from "./mensagemConfirmacaoAutoral";
 
 function SondagemPortuguesAutoral() {
   const dispatch = useDispatch();
@@ -32,6 +33,10 @@ function SondagemPortuguesAutoral() {
 
   const grupos = useSelector((store) => store.sondagemPortugues.grupos);
 
+  const [visibilidadeConfirmacao, setVisibilidadeConfirmacao] = useState();
+
+  const [grupoIdConfirmacao, setGrupoIdConfirmacao] = useState();
+
   const ordens = useMemo(() => {
     if (
       !grupoSelecionado ||
@@ -47,7 +52,13 @@ function SondagemPortuguesAutoral() {
   }, [grupoSelecionado, grupos,]);
 
   const onChangeGrupos = (grupoId) => {
-    dispatch(PortuguesStore.selecionar_grupo(grupoId));
+    if (!emEdicao) {
+      dispatch(PortuguesStore.selecionar_grupo(grupoId));
+      return;
+    }
+
+    setGrupoIdConfirmacao(grupoId);
+    mudarVisibilidadeConfirmacao();
   };
 
   const setarModoEdicaoPoll = () => {
@@ -61,6 +72,9 @@ function SondagemPortuguesAutoral() {
     dispatch(PortuguesStore.setar_emEdicao(false));
   };
 
+  const mudarVisibilidadeConfirmacao = () => {
+    setVisibilidadeConfirmacao(oldState => !oldState);
+  };
 
   const onClickOrdem = (id) => {
     if (emEdicao) {
@@ -72,7 +86,7 @@ function SondagemPortuguesAutoral() {
     dispatch(PortuguesStore.listarAlunosPortugues({ ...filtrosBusca, ordemId: id }));
   };
 
-  const salvar = ({ novaOrdem, novoPeriodoId }) => {
+  const salvar = async ({ novaOrdem, novoPeriodoId }) => {
     let alunosMutaveis = Object.assign([], alunos);
     let filtrosMutaveis = Object.assign({}, filtrosBusca);
 
@@ -83,15 +97,16 @@ function SondagemPortuguesAutoral() {
 
   const executarSalvamento = ({ perguntasSalvar, alunosMutaveis, filtrosMutaveis, sequenciaOrdemSelecionada, novaOrdem, novoPeriodoId, periodoSelecionadoSalvar, grupo, idOrdem }) => {
 
-    alunosMutaveis = alunosMutaveis.filter(aluno => aluno.respostas && aluno.respostas.length > 0);
-
     alunosMutaveis.forEach(aluno => {
       aluno.grupoId = grupo;
       aluno.ordemId = idOrdem;
       aluno.sequenciaOrdemSalva = sequenciaOrdemSelecionada + 1;
     });
-
-    dispatch(PortuguesStore.salvarSondagemPortugues({ alunos: alunosMutaveis, filtro: filtrosMutaveis, novaOrdem, novoPeriodoId }));
+    try {
+      dispatch(PortuguesStore.salvarSondagemPortugues({ alunos: alunosMutaveis, filtro: filtrosMutaveis, novaOrdem, novoPeriodoId }));
+    } catch (e) {
+      dispatch(pollStore.setLoadingSalvar(false));
+    }
     dispatch(PortuguesStore.setar_emEdicao(false));
   }
 
@@ -105,6 +120,7 @@ function SondagemPortuguesAutoral() {
 
   useEffect(() => {
     dispatch(PortuguesStore.setar_ordem_selecionada(null));
+    dispatch(PortuguesStore.setar_perguntas(null));
     dispatch(PortuguesStore.limpar_todas_ordens_selecionadas());
     dispatch(PortuguesStore.listarSequenciaOrdens({ ...filtrosBusca, grupoId: grupoSelecionado }));
   }, [grupoSelecionado])
@@ -159,6 +175,11 @@ function SondagemPortuguesAutoral() {
           className="col-md-2"
           onChangeSelect={onChangeGrupos}
         />
+        <MensagemConfirmacaoAutoral
+          controleExibicao={mudarVisibilidadeConfirmacao}
+          acaoPrincipal={async () => { salvar({ novaOrdem: null, novoPeriodoId: null }).then(() => setTimeout(() => { dispatch(PortuguesStore.selecionar_grupo(grupoIdConfirmacao)); setGrupoIdConfirmacao(""); dispatch(PortuguesStore.setar_emEdicao(false)); }, 1000)); }}
+          acaoSecundaria={async () => { dispatch(PortuguesStore.selecionar_grupo(grupoIdConfirmacao)); setGrupoIdConfirmacao(""); dispatch(PortuguesStore.setar_emEdicao(false)); }}
+          exibir={visibilidadeConfirmacao} />
         <div className="col-md-10 d-flex justify-content-center">
           <SeletorDeOrdem ordens={ordens} onClick={onClickOrdem} ordemSelecionada={idOrdemSelecionada} ordensSalvas={sequenciasOrdens} />
         </div>
