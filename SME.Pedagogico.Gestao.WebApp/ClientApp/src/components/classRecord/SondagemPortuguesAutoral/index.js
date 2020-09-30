@@ -102,9 +102,9 @@ function SondagemPortuguesAutoral() {
       aluno.ordemId = idOrdem;
       aluno.sequenciaOrdemSalva = sequenciaOrdemSelecionada + 1;
     });
-    try{   
-      dispatch(PortuguesStore.salvarSondagemPortugues({ alunos: alunosMutaveis, filtro: filtrosMutaveis, novaOrdem, novoPeriodoId }));  
-    }catch(e){
+    try {
+      dispatch(PortuguesStore.salvarSondagemPortugues({ alunos: alunosMutaveis, filtro: filtrosMutaveis, novaOrdem, novoPeriodoId }));
+    } catch (e) {
       dispatch(pollStore.setLoadingSalvar(false));
     }
     dispatch(PortuguesStore.setar_emEdicao(false));
@@ -120,6 +120,7 @@ function SondagemPortuguesAutoral() {
 
   useEffect(() => {
     dispatch(PortuguesStore.setar_ordem_selecionada(null));
+    dispatch(PortuguesStore.setar_perguntas(null));
     dispatch(PortuguesStore.limpar_todas_ordens_selecionadas());
     dispatch(PortuguesStore.listarSequenciaOrdens({ ...filtrosBusca, grupoId: grupoSelecionado }));
   }, [grupoSelecionado])
