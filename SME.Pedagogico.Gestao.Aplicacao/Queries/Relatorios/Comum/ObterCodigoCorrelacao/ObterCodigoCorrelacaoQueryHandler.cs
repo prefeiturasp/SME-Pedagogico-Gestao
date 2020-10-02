@@ -20,7 +20,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
             var guidRelatorio = Guid.NewGuid();
             var mensagem = new MensagemInserirCodigoCorrelacaoDto(request.TipoRelatorio);
 
-            await mediator.Send(new InserirFilaRabbitCommand(new PublicaFilaRelatoriosDto(RotasRabbit.FilaSgp, mensagem, RotasRabbit.RotaRelatorioCorrelacaoInserir.Replace(".", "/"), guidRelatorio, request.UsuarioRf)));
+            await mediator.Send(new InserirFilaRabbitCommand(new PublicaFilaRelatoriosDto(RotasRabbit.FilaSgp, RotasRabbit.ExchangeSgp, mensagem, RotasRabbit.RotaRelatorioCorrelacaoInserir, guidRelatorio, request.UsuarioRf)));
 
             return guidRelatorio;
         }

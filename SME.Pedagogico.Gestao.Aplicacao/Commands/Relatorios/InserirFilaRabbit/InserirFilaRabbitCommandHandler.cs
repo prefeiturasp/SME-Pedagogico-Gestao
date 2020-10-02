@@ -22,15 +22,15 @@ namespace SME.Pedagogico.Gestao.Aplicacao
         {
             byte[] body = FormataBodyWorker(request.AdicionarFilaDto);
 
-            rabbitChannel.QueueBind(RotasRabbit.WorkerRelatoriosSgp, RotasRabbit.ExchangeServidorRelatorios, RotasRabbit.RotaRelatoriosSolicitados);
-            rabbitChannel.BasicPublish(RotasRabbit.ExchangeServidorRelatorios, request.AdicionarFilaDto.Fila, null, body);
+            rabbitChannel.QueueBind(request.AdicionarFilaDto.Fila, request.AdicionarFilaDto.Exchange, request.AdicionarFilaDto.Rota);
+            rabbitChannel.BasicPublish(request.AdicionarFilaDto.Exchange, request.AdicionarFilaDto.Rota, null, body);
 
             return Task.FromResult(true);
         }
 
         private static byte[] FormataBodyWorker(PublicaFilaRelatoriosDto adicionaFilaDto)
         {
-            var request = new MensagemRabbit(adicionaFilaDto.Endpoint, adicionaFilaDto.Mensagem, adicionaFilaDto.CodigoCorrelacao, adicionaFilaDto.UsuarioLogadoRF, adicionaFilaDto.NotificarErroUsuario, adicionaFilaDto.PerfilUsuario);
+            var request = new MensagemRabbit(adicionaFilaDto.Rota, adicionaFilaDto.Mensagem, adicionaFilaDto.CodigoCorrelacao, adicionaFilaDto.UsuarioLogadoRF, adicionaFilaDto.NotificarErroUsuario);
             var mensagem = JsonConvert.SerializeObject(request);
             var body = Encoding.UTF8.GetBytes(mensagem);
             return body;

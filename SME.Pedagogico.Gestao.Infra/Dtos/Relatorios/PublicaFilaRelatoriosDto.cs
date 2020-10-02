@@ -6,23 +6,23 @@ namespace SME.Pedagogico.Gestao.Infra
 {
     public class PublicaFilaRelatoriosDto
     {
-        public PublicaFilaRelatoriosDto(string fila, object mensagem, string endpoint, Guid codigoCorrelacao, string codigoRfUsuario, bool notificarErroUsuario = false, string perfilUsuario = null)
+        public PublicaFilaRelatoriosDto(string fila, string exchange, object mensagem, string rota, Guid codigoCorrelacao, string codigoRfUsuario, bool notificarErroUsuario = false)
         {
             Fila = fila;
+            Exchange = exchange;
             Mensagem = mensagem;
-            Endpoint = endpoint;
+            Rota = rota;
             CodigoCorrelacao = codigoCorrelacao;
             NotificarErroUsuario = notificarErroUsuario;
             UsuarioLogadoRF = codigoRfUsuario;
-            PerfilUsuario = perfilUsuario;
         }
 
         public string Fila { get; set; }
+        public string Exchange { get; set; }
         public object Mensagem { get; set; }
-        public string Endpoint { get; set; }
+        public string Rota { get; set; }
         public Guid CodigoCorrelacao { get; set; }
         public bool NotificarErroUsuario { get; set; }
         public string UsuarioLogadoRF { get; }
-        public string PerfilUsuario { get; }
     }
 }

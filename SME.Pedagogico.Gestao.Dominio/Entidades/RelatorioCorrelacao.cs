@@ -1,7 +1,4 @@
-﻿using SME.Pedagogico.Gestao.Dominio.Enumerados;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace SME.Pedagogico.Gestao.Dominio.Entidades
 {
