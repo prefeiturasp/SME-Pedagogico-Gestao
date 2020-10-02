@@ -16,8 +16,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
         }
         public async Task<bool> Executar(FiltroRelatorioGamesDto filtroRelatorioGamesDto)
         {
-            var usuarioLogado = await mediator.Send(new ObterUsuarioLogadoQuery());
-            var retorno = await mediator.Send(new GerarRelatorioCommand(TipoRelatorio.RelatorioExemplo, filtroRelatorioGamesDto, usuarioLogado));
+            var retorno = await mediator.Send(new GerarRelatorioCommand(TipoRelatorio.RelatorioExemplo, filtroRelatorioGamesDto, filtroRelatorioGamesDto.UsuarioRf));
             return retorno;
         }
     }

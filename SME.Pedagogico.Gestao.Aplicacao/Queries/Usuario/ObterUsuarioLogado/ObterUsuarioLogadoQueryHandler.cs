@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SME.Pedagogico.Gestao.Aplicacao.Queries.Usuario.ObterUsuarioLogado
+namespace SME.Pedagogico.Gestao.Aplicacao
 {
-    class ObterUsuarioLogadoQueryHandler
+    public class ObterUsuarioLogadoQueryHandler
     {
     }
 }

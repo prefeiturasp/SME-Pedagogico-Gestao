@@ -18,9 +18,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao.Commands.Relatorios.GerarRelatorio
         {
             var codigoCorrelacao = await mediator.Send(new ObterCodigoCorrelacaoQuery(request.TipoRelatorio, request.UsuarioLogadoRf));
 
-            await mediator.Send(new InserirFilaRabbitCommand(new PublicaFilaRelatoriosDto(RotasRabbit.RotaRelatoriosSolicitados, request.Filtros, request.TipoRelatorio.Name(), codigoCorrelacao, request.UsuarioLogadoRf)));
-
-            return true;
+            return await mediator.Send(new InserirFilaRabbitCommand(new PublicaFilaRelatoriosDto(RotasRabbit.RotaRelatoriosSolicitados, request.Filtros, request.TipoRelatorio.Name(), codigoCorrelacao, request.UsuarioLogadoRf)));
         }
     }
 }

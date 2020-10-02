@@ -1,11 +1,8 @@
-﻿using SME.Pedagogico.Gestao.Infra;
-using SME.Pedagogico.Gestao.Infra.Dtos;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace SME.Pedagogico.Gestao.Infra
 {

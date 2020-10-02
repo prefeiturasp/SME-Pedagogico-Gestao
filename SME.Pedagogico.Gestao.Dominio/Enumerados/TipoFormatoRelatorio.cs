@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace SME.Pedagogico.Gestao.Dominio.Enumerados
+namespace SME.Pedagogico.Gestao.Dominio
 {
     public enum TipoFormatoRelatorio
     {
