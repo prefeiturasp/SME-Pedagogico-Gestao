@@ -1,14 +1,14 @@
 import React from 'react';
 import MesangemConfirmacao from '../../messaging/MensagemConfirmacao';
 
-function MensagemLimparSelecao({ controleExibicao, acaoPrincipal, acaoSecundaria, exibir, tituloFeedBackOp, feedBackOp }) {
+function MensagemLimparSelecao({ controleExibicao, acaoPrincipal, acaoSecundaria, exibir, tituloFeedBackOp, feedBackOp, ehEdicao }) {
 
   const tituloPrincipal = "Atenção";
-  const mensagem = " Você deseja excluir os dados digitados nesta ordem? Não será possível recuperá-los.";
+  let mensagem = `Você deseja ${ehEdicao ? 'excluir' : 'descartar'} os dados digitados nesta ordem? Não será possível recuperá-los`;
   const botaoPrincipal = "Sim";
   const botaoSecundario = "Não";
   const tituloFeedBack = "Informações Removidas";
-  const feedBack = "Seus dados de sondagem foram removidos com sucesso."
+  const feedBack = "Seus dados de sondagem foram removidos com sucesso.";
 
   return <MesangemConfirmacao
     exibir={exibir}

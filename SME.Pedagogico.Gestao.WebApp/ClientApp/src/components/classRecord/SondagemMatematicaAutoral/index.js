@@ -19,7 +19,7 @@ function SondagemMatematicaAutoral() {
 
     const periodosLista = useSelector((store) => store.autoral.listaPeriodos);
 
-    const sequenciaOrdemAtual = useSelector(store => store.sondagemPor);
+    const itemSelecionado = useSelector(store => store.autoral.perguntaSelecionada);
 
     const perguntas = useSelector((store) => store.autoral.listaPerguntas);
 
@@ -38,11 +38,16 @@ function SondagemMatematicaAutoral() {
         dispatch(actionCreators.setarEmEdicao(false));
     };
 
-    const itemSelecionado = useMemo(() => {
-        if (!perguntas || perguntas.length === 0) return {};
+    useEffect(() => {
+        if (!perguntas || perguntas.length === 0) return;
 
-        return perguntas.find((x) => x.ordenacao == indexSelecionado);
-    }, [indexSelecionado]);
+        const pergunta = perguntas.find((x) => x.ordenacao == indexSelecionado);
+
+        if (!pergunta)
+            return;
+
+        dispatch(actionCreators.setarPerguntaSelecionada(pergunta))
+    }, [indexSelecionado])
 
     const filtrosBusca = useMemo(() => {
         if (!filtros || !itemSelecionado)
@@ -55,7 +60,7 @@ function SondagemMatematicaAutoral() {
             codigoUe: filtros.schoolCodeEol,
             codigoTurma: filtros.classroomCodeEol,
             componenteCurricular: "9f3d8467-2f6e-4bcb-a8e9-12e840426aba",
-            perguntaId: itemSelecionado.id,
+            perguntaId: itemSelecionado && itemSelecionado.id,
         };
 
     }, [filtros, itemSelecionado]);
@@ -105,24 +110,28 @@ function SondagemMatematicaAutoral() {
     };
 
     const salvar = async () => {
-        await persistencia(alunos, perguntas, periodosLista);
+        await persistencia(alunos, perguntas, periodosLista, filtrosBusca);
     };
 
     const persistencia = async (
         listaAlunosRedux,
         perguntasRedux,
-        periodosRedux
+        periodosRedux,
+        filtrosBuscaPersistencia
     ) => {
+
+        console.log(filtrosBuscaPersistencia);
+
         let alunosMutaveis = Object.assign([], listaAlunosRedux);
 
-        try{
+        try {
             await dispatch(
-                 actionCreators.salvaSondagemAutoralMatematica(
+                actionCreators.salvaSondagemAutoralMatematica(
                     alunosMutaveis,
-                    filtrosBusca
+                    filtrosBuscaPersistencia
                 )
-            );    
-        }catch(e){        
+            );
+        } catch (e) {
             dispatch(pollStore.setLoadingSalvar(false));
         }
 
@@ -206,8 +215,8 @@ function SondagemMatematicaAutoral() {
         dispatch(actionCreators.listarPerguntas(filtros.yearClassroom));
         dispatch(
             pollStore.setFunctionButtonSave(
-                (alunosRedux, perguntasRedux, periodosRedux) => {
-                    persistencia(alunosRedux, perguntasRedux, periodosRedux);
+                (alunosRedux, perguntasRedux, periodosRedux, filtrosSelecionadosSalvar) => {
+                    persistencia(alunosRedux, perguntasRedux, periodosRedux, filtrosSelecionadosSalvar);
                 }
             )
         );
@@ -239,8 +248,8 @@ function SondagemMatematicaAutoral() {
                     </th>
                     <th
                         colSpan="2"
-                        key={itemSelecionado.id}
-                        id={`col_head_${itemSelecionado.id}`}
+                        key={itemSelecionado && itemSelecionado.id}
+                        id={`col_head_${itemSelecionado && itemSelecionado.id}`}
                         className="text-center border text-color-purple"
                     >
                         <span
@@ -254,7 +263,7 @@ function SondagemMatematicaAutoral() {
                                 style={{ height: 20 }}
                             />
                         </span>
-                        <b className="p-4">{itemSelecionado.descricao}</b>
+                        <b className="p-4">{itemSelecionado && itemSelecionado.descricao}</b>
                         <span
                             value="zero_col"
                             onClick={() => avancar()}

@@ -37,7 +37,7 @@ function listaPerguntasAPI(anoEscolar) {
   }).then((response) => response.json());
 }
 
-function* ListarPeriodos({}) {
+function* ListarPeriodos({ }) {
   try {
     const data = yield call(listarPeriodosAPI);
     var listaPeriodos = data;
@@ -57,6 +57,8 @@ function listarPeriodosAPI() {
 
 function* ListarAlunosAutoralMat({ filtro }) {
   try {
+    console.log("ListarAlunosAutoralMat",filtro);
+
     const data = yield call(listarAlunosMatApi, filtro);
     var listaAlunosAutoralMatematica = data;
     yield put({
@@ -92,7 +94,7 @@ function* SalvaSondagemAutoralMat({ payload }) {
     type: Poll.types.SET_LOADING_SALVAR,
     filters: false,
   });
-  
+
   yield put({
     type: Autoral.types.LISTAR_ALUNOS_AUTORAL_MATEMATICA,
     filtro: payload.filtro,

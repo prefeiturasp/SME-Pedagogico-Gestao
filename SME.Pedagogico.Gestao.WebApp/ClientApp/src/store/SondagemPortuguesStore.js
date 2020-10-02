@@ -114,6 +114,10 @@ export const actionCreators = {
     type: types.INSERIR_SEQUENCIA_ORDENS,
     payload: ordemId,
   }),
+  setar_perguntas: (perguntas) => ({
+    type: types.SETAR_PERGUNTAS,
+    payload: perguntas,
+  }),
   limpar_todas_ordens_selecionadas: () => ({
     type: types.LIMPAR_TODAS_ORDENS_SELECIONADAS
   }),
@@ -191,20 +195,27 @@ export const reducer = (state, action) => {
       let sequenciaOrdem = Object.assign([], state.sequenciaOrdens)
 
       const naLista = sequenciaOrdem.findIndex(ordem => ordem.ordemId === action.payload);
+
       if (naLista !== -1)
         return { ...state, ordemSelecionada: action.payload, emEdicao: true };
 
       if (sequenciaOrdem === null || sequenciaOrdem.length === 0) {
         sequenciaOrdem = [];
-        sequenciaOrdem.push({ ordemId: action.payload });
+        sequenciaOrdem.push({ ordemId: action.payload, sequenciaOrdemSalva: 1 });
         return { ...state, sequenciaOrdens: sequenciaOrdem, ordemSelecionada: action.payload, emEdicao: true };
       }
 
-      for (let i = 0; i < 3; i++) {
-        if (sequenciaOrdem[i])
+      for (let i = 0; i < 3; i++) {        
+        console.log(i + 1);
+
+        const ordemIndex = sequenciaOrdem.findIndex(x => x.sequenciaOrdemSalva === i + 1)
+
+        console.log(ordemIndex);
+
+        if (ordemIndex > -1)
           continue;
 
-        sequenciaOrdem[i] = { ordemId: action.payload };
+        sequenciaOrdem.push({ ordemId: action.payload, sequenciaOrdemSalva: i + 1 });
         break;
       }
 

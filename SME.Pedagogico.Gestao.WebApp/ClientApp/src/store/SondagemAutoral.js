@@ -4,6 +4,7 @@ export const types = {
   SETAR_PERIODOS: "SETAR_PERIODOS",
   LISTAR_PERGUNTAS: "LISTAR_PERGUNTAS",
   SETAR_PERGUNTAS: "SETAR_PERGUNTAS",
+  SETAR_PERGUNTA_SELECIONADA: "SETAR_PERGUNTA_SELECIONADA",
   LISTAR_ALUNOS_AUTORAL_MATEMATICA: "LISTAR_ALUNOS_AUTORAL_MATEMATICA",
   SETAR_ALUNOS_AUTORAL_MATEMATICA: "SETAR_ALUNOS_AUTORAL_MATEMATICA",
   SALVAR_SONDAGEM_AUTORAL_MATEMATICA: "SALVAR_SONDAGEM_AUTORAL_MATEMATICA",
@@ -17,6 +18,7 @@ const initialState = {
   listaPerguntas: null,
   listaAlunosAutoralMatematica: [],
   emEdicao: false,
+  perguntaSelecionada: null,
   period: null,
 };
 
@@ -25,6 +27,10 @@ export const actionCreators = {
   listarPerguntas: (anoEscolar) => ({
     type: types.LISTAR_PERGUNTAS,
     anoEscolar,
+  }),
+  setarPerguntas: (perguntas) => ({
+    type: types.SETAR_PERGUNTAS,
+    payload: perguntas,
   }),
   listaAlunosAutoralMatematica: (filtro) => ({
     type: types.LISTAR_ALUNOS_AUTORAL_MATEMATICA,
@@ -45,6 +51,10 @@ export const actionCreators = {
     type: types.SETAR_ALUNOS_AUTORAL_MATEMATICA_PRE_SALVAR,
     alunos,
   }),
+  setarPerguntaSelecionada: (pergunta) => ({
+    type: types.SETAR_PERGUNTA_SELECIONADA,
+    payload: pergunta,
+  })
 };
 
 export const reducer = (state, action) => {
@@ -81,7 +91,11 @@ export const reducer = (state, action) => {
         ...state,
         period: action.listPeriod,
       };
-
+    case types.SETAR_PERGUNTA_SELECIONADA:
+      return {
+        ...state,
+        perguntaSelecionada: action.payload,
+      }
     default:
       return state;
   }

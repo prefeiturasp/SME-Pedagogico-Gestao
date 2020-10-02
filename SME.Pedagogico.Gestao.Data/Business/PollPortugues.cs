@@ -528,7 +528,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-      
+
 
         public IEnumerable<DTO.Portugues.GrupoDTO> ListarGrupos()
         {
@@ -653,7 +653,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
 
 
-       
+
 
         public async Task<IEnumerable<SequenciaOrdemSalvaDTO>> ListaSequenciaOrdensSalva(FiltrarListagemDto filtrarListagemDto)
         {
@@ -739,7 +739,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-   
+
 
         private void AdicionarAlunosEOL(FiltrarListagemDto filtrarListagemDto, List<AlunosNaTurmaDTO> alunos, List<AlunoSondagemPortuguesDTO2> listagem, Sondagem sondagem)
         {
@@ -773,7 +773,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 listagem.OrderBy(x => x.NumeroChamada);
             });
         }
-      
+
         private void MapearAlunosListagem(List<AlunoSondagemPortuguesDTO2> listagem, SondagemAluno aluno, Sondagem sondagem)
         {
             var indexAluno = listagem.FindIndex(x => x.CodigoAluno.Equals(aluno.CodigoAluno.ToString()));
@@ -785,7 +785,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 AdicionarNovoAlunoListagem(listagem, aluno, sondagem);
         }
 
-      
+
         public void SalvarSondagemAutoralPortugues(IEnumerable<AlunoSondagemPortuguesDTO2> ListaAlunosSondagemDto)
         {
             try
@@ -794,47 +794,27 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     throw new Exception("É necessário realizar a sondagem de pelo menos 1 aluno");
                 using (var contexto = new SMEManagementContextData())
                 {
+
+                    Sondagem sondagem = null;
                     var item = ListaAlunosSondagemDto.FirstOrDefault();
 
-                    if (string.IsNullOrEmpty(item.SondagemId))
+                    if(!string.IsNullOrEmpty(item.SondagemId))
+                        sondagem = BuscaSondagem(contexto, item);
+
+                    if (sondagem == null)
                     {
 
-                        var sondagem = CriaNovaSondagem(ListaAlunosSondagemDto, item);
-                        if (sondagem != null)
+                        var novaSondagem = CriaNovaSondagem(ListaAlunosSondagemDto, item);
+                        if (novaSondagem != null)
                         {
-                            contexto.Sondagem.Add(sondagem);
+                            contexto.Sondagem.Add(novaSondagem);
                             contexto.SaveChanges();
                         }
                     }
 
                     else
                     {
-                        var sondagem = contexto.Sondagem.Where(s => s.Id == Guid.Parse(item.SondagemId))
-                            .Include(ss => ss.AlunosSondagem)
-                            .ThenInclude(x => x.ListaRespostas).FirstOrDefault();
-
-                        foreach (var aluno in ListaAlunosSondagemDto)
-                        {
-                            if (string.IsNullOrEmpty(aluno.Id) && aluno.Respostas != null)
-                            {
-                                var alunoNovoSondagem = CriaNovoAlunoSondagem(sondagem, aluno);
-                                sondagem.AlunosSondagem.Add(alunoNovoSondagem);
-                            }
-                            else if (!string.IsNullOrEmpty(aluno.Id))
-                            {
-                                var alunoSondagem = sondagem.AlunosSondagem.Where(a => a.Id.ToString() == aluno.Id).FirstOrDefault();
-                                if (aluno.Respostas == null || aluno.Respostas.Count == 0)
-                                {
-                                    contexto.SondagemAluno.Remove(alunoSondagem);
-                                }
-                                else
-                                {
-                                    AtualizaNovasRespostas(aluno, alunoSondagem);
-                                    RemoveRespostasSemValor(contexto, aluno, alunoSondagem);
-
-                                }
-                            }
-                        }
+                        EditaSondagem(ListaAlunosSondagemDto, contexto, sondagem);
 
                         contexto.Sondagem.Update(sondagem);
                         contexto.SaveChanges();
@@ -846,18 +826,39 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 throw ex;
             }
+        }
 
-            //foreach (var aluno in ListaAlunosSondagemDto)
-            //{
-            //    var alunoAutoral = (SondagemAutoral)aluno;
+        private static Sondagem BuscaSondagem(SMEManagementContextData contexto, AlunoSondagemPortuguesDTO2 item)
+        {
+            return contexto.Sondagem.Where(s => s.Id == Guid.Parse(item.SondagemId))
+                  .Include(ss => ss.AlunosSondagem)
+                  .ThenInclude(x => x.ListaRespostas).FirstOrDefault();
+        }
 
-            //    if (aluno.Respostas != null && aluno.Respostas.Any())
-            //        SalvarAlunoComResposta(contexto, aluno, alunoAutoral);
-            //}
+        private static void EditaSondagem(IEnumerable<AlunoSondagemPortuguesDTO2> ListaAlunosSondagemDto, SMEManagementContextData contexto, Sondagem sondagem)
+        {
+            foreach (var aluno in ListaAlunosSondagemDto)
+            {
+                if (string.IsNullOrEmpty(aluno.Id) && aluno.Respostas != null)
+                {
+                    var alunoNovoSondagem = CriaNovoAlunoSondagem(sondagem, aluno);
+                    sondagem.AlunosSondagem.Add(alunoNovoSondagem);
+                }
+                else if (!string.IsNullOrEmpty(aluno.Id))
+                {
+                    var alunoSondagem = sondagem.AlunosSondagem.Where(a => a.Id.ToString() == aluno.Id).FirstOrDefault();
+                    if (aluno.Respostas == null || aluno.Respostas.Count == 0)
+                    {
+                        contexto.SondagemAluno.Remove(alunoSondagem);
+                    }
+                    else
+                    {
+                        AtualizaNovasRespostas(aluno, alunoSondagem);
+                        RemoveRespostasSemValor(contexto, aluno, alunoSondagem);
 
-            //SalvarAluno(ListaAlunosSondagemDto, contexto);
-
-
+                    }
+                }
+            }
         }
 
         private static void RemoveRespostasSemValor(SMEManagementContextData contexto, AlunoSondagemPortuguesDTO2 aluno, SondagemAluno alunoSondagem)
@@ -916,7 +917,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             var sondagem = (Sondagem)item;
             sondagem.AlunosSondagem = new List<SondagemAluno>();
 
-            var listaAlunosComRespostaDto = ListaAlunosSondagemDto.Where(x => x.Respostas != null).ToList();
+            var listaAlunosComRespostaDto = ListaAlunosSondagemDto.Where(x => x.Respostas != null && x.Respostas.Count > 0).ToList();
 
             if (listaAlunosComRespostaDto == null || listaAlunosComRespostaDto.Count == 0)
                 return null;
@@ -1077,7 +1078,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             });
         }
 
-   
+
 
         private void AdicionarNovoAlunoListagem(List<AlunoSondagemPortuguesDTO2> listagem, SondagemAluno aluno, Sondagem sondagem)
         {
@@ -1114,17 +1115,17 @@ namespace SME.Pedagogico.Gestao.Data.Business
             listagem.Add(alunoDto);
         }
 
-        public  void ExcluirSondagem(Sondagem sondagem)
+        public void ExcluirSondagem(Sondagem sondagem)
         {
             using (var contexto = new SMEManagementContextData())
             {
                 contexto.Sondagem.Remove(sondagem);
                 contexto.SaveChanges();
             }
-        }           
+        }
 
 
-        public  async Task<Sondagem> ObterSondagemPortugues(FiltrarListagemDto filtrarListagemDto)
+        public async Task<Sondagem> ObterSondagemPortugues(FiltrarListagemDto filtrarListagemDto)
         {
             using (var contexto = new SMEManagementContextData())
             {
