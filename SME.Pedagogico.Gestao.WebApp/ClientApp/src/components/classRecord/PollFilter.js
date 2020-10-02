@@ -223,7 +223,8 @@ class PollFilter extends Component {
       schoolCodeEol: label,
       schoolYear: this.props.filters.setSchoolYear,
     };
-    this.props.filterMethods.getClassroom(classRoomFilter);
+    if (label !== "todas")
+      this.props.filterMethods.getClassroom(classRoomFilter);
     this.setState({
       selectedSchool: label,
       selectedClassRoom: "",
