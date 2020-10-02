@@ -13,7 +13,8 @@ namespace SME.Pedagogico.Gestao.IoC
             {
                 HostName = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__HostName"),
                 UserName = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__UserName"),
-                Password = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__Password")
+                Password = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__Password"),
+                VirtualHost = Environment.GetEnvironmentVariable("ConfiguracaoRabbit__Virtualhost")
             };
 
             var conexaoRabbit = factory.CreateConnection();
