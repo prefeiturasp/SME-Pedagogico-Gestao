@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SME.Pedagogico.Gestao.Infra.Fila
+﻿namespace SME.Pedagogico.Gestao.Infra
 {
     public static class RotasRabbit
     {
@@ -24,5 +20,6 @@ namespace SME.Pedagogico.Gestao.Infra.Fila
         public static string RotaSincronizarAulasInfatil => "aulas.infantil.sincronizar";
         public static string RotaRelatorioComErro => "relatorios.erro";
         public static string RotaRelatorioCorrelacaoCopiar => "relatorios.correlacao.copiar";
+        public static string RotaRelatorioCorrelacaoInserir => "relatorios.correlacao.inserir";
     }
 }

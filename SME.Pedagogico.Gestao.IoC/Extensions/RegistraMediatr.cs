@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using SME.Pedagogico.Gestao.Aplicacao.Pipelines;
+using SME.Pedagogico.Gestao.Aplicacao;
 using System;
 
-namespace SME.Pedagogico.Gestao.IoC.Extensions
+namespace SME.Pedagogico.Gestao.IoC
 {
     public static class RegistraMediatr
     {
