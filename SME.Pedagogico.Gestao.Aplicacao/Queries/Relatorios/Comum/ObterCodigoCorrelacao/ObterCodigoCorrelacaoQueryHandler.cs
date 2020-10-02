@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using SME.Pedagogico.Gestao.Infra;
-using SME.Pedagogico.Gestao.Infra.Fila;
 using System;
 using System.Threading;
 using System.Threading.Tasks;

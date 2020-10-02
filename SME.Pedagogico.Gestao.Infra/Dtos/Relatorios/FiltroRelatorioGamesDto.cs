@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SME.Pedagogico.Gestao.Infra.Dtos.Relatorios
+﻿namespace SME.Pedagogico.Gestao.Infra
 {
     public class FiltroRelatorioGamesDto
     {

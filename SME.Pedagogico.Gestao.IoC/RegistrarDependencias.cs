@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using SME.Pedagogico.Gestao.Aplicacao;
 
 namespace SME.Pedagogico.Gestao.IoC
 {
@@ -43,7 +45,7 @@ namespace SME.Pedagogico.Gestao.IoC
 
         private static void RegistrarCasosDeUso(IServiceCollection services)
         {
-           
+            services.TryAddScoped<IGamesUseCase, GamesUseCase>();
         }
     }
 }

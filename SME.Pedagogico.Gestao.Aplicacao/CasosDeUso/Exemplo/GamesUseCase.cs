@@ -1,14 +1,10 @@
 ﻿using MediatR;
-using SME.Pedagogico.Gestao.Aplicacao.Commands.Relatorios.NewFolder;
-using SME.Pedagogico.Gestao.Aplicacao.Interfaces.CasosDeUso.ExemploGames;
-using SME.Pedagogico.Gestao.Aplicacao.Queries.Usuario.ObterUsuarioLogado;
-using SME.Pedagogico.Gestao.Dominio.Enumerados;
-using SME.Pedagogico.Gestao.Infra.Dtos.Relatorios;
-using SME.Pedagogico.Gestao.Models.Enums;
+using SME.Pedagogico.Gestao.Dominio;
+using SME.Pedagogico.Gestao.Infra;
 using System;
 using System.Threading.Tasks;
 
-namespace SME.Pedagogico.Gestao.Aplicacao.CasosDeUso.Exemplo
+namespace SME.Pedagogico.Gestao.Aplicacao
 {
     public class GamesUseCase : IGamesUseCase
     {

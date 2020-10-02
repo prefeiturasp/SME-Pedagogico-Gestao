@@ -1,13 +1,11 @@
 ﻿using MediatR;
+using SME.Pedagogico.Gestao.Dominio;
 using SME.Pedagogico.Gestao.Dominio.Entidades;
 using SME.Pedagogico.Gestao.Dominio.Enumerados;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace SME.Pedagogico.Gestao.Aplicacao.Commands.Relatorios.NewFolder
+namespace SME.Pedagogico.Gestao.Aplicacao
 {
-   public class GerarRelatorioCommand : IRequest<bool>
+    public class GerarRelatorioCommand : IRequest<bool>
     {
         /// <summary>
         /// 
@@ -21,7 +19,6 @@ namespace SME.Pedagogico.Gestao.Aplicacao.Commands.Relatorios.NewFolder
             IdUsuarioLogado = usuario.Id;
             UsuarioLogadoRf = usuario.CodigoRf;
             Formato = formato;
-            PerfilUsuario = usuario.PerfilAtual.ToString();
         }
 
         /// <summary>
@@ -32,6 +29,5 @@ namespace SME.Pedagogico.Gestao.Aplicacao.Commands.Relatorios.NewFolder
         public long IdUsuarioLogado { get; set; }
         public string UsuarioLogadoRf { get; }
         public TipoFormatoRelatorio Formato { get; set; }
-        public string PerfilUsuario { get; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using SME.Pedagogico.Gestao.Dominio.Enumerados;
+using SME.Pedagogico.Gestao.Dominio;
 using System;
 
 namespace SME.Pedagogico.Gestao.Aplicacao

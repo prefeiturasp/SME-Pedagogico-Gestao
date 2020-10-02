@@ -1,13 +1,5 @@
 ﻿using MediatR;
-using SME.Pedagogico.Gestao.Aplicacao.Commands.Relatorios.NewFolder;
-using SME.Pedagogico.Gestao.Dominio.Entidades;
-using SME.Pedagogico.Gestao.Infra.Dtos.Relatorios;
-using SME.Pedagogico.Gestao.Infra.Extensoes;
-using SME.Pedagogico.Gestao.Infra.Fila;
-using SME.Pedagogico.Gestao.Infra.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using SME.Pedagogico.Gestao.Infra;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,17 +7,20 @@ namespace SME.Pedagogico.Gestao.Aplicacao.Commands.Relatorios.GerarRelatorio
 {
     public class GerarRelatorioCommandHandler : IRequestHandler<GerarRelatorioCommand, bool>
     {
-        private readonly IServicoFila servicoFila;
+        private readonly IMediator mediator;
 
-        public GerarRelatorioCommandHandler(IServicoFila servicoFila)
+        public GerarRelatorioCommandHandler(IMediator mediator)
         {
-            this.servicoFila = servicoFila ?? throw new System.ArgumentNullException(nameof(servicoFila));
+            this.mediator = mediator ?? throw new System.ArgumentNullException(nameof(mediator));
         }
 
-        public Task<bool> Handle(GerarRelatorioCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(GerarRelatorioCommand request, CancellationToken cancellationToken)
         {
-         
-            return Task.FromResult(true);
+            var codigoCorrelacao = await mediator.Send(new ObterCodigoCorrelacaoQuery(request.TipoRelatorio, request.UsuarioLogadoRf));
+
+            await mediator.Send(new InserirFilaRabbitCommand(new PublicaFilaRelatoriosDto(RotasRabbit.RotaRelatoriosSolicitados, request.Filtros, request.TipoRelatorio.Name(), codigoCorrelacao, request.UsuarioLogadoRf)));
+
+            return true;
         }
     }
 }

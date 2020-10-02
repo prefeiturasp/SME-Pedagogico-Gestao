@@ -1,10 +1,7 @@
-﻿using SME.Pedagogico.Gestao.Infra.Dtos.Relatorios;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using SME.Pedagogico.Gestao.Infra;
 using System.Threading.Tasks;
 
-namespace SME.Pedagogico.Gestao.Aplicacao.Interfaces.CasosDeUso.ExemploGames
+namespace SME.Pedagogico.Gestao.Aplicacao
 {
     public interface IGamesUseCase
     {

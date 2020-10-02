@@ -1,4 +1,5 @@
-﻿using SME.Pedagogico.Gestao.Dominio.Enumerados;
+﻿using SME.Pedagogico.Gestao.Dominio;
+using SME.Pedagogico.Gestao.Dominio.Enumerados;
 using System;
 using System.Collections.Generic;
 using System.Text;

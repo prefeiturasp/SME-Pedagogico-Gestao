@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using SME.Pedagogico.Gestao.Infra;
-using SME.Pedagogico.Gestao.Infra.Fila;
 using System;
 using System.Text;
 using System.Threading;

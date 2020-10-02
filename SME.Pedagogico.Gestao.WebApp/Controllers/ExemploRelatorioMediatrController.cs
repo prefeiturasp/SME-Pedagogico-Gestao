@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SME.Pedagogico.Gestao.Aplicacao.Interfaces.CasosDeUso.ExemploGames;
-using SME.Pedagogico.Gestao.Infra.Dtos.Relatorios;
+using SME.Pedagogico.Gestao.Aplicacao;
+using SME.Pedagogico.Gestao.Infra;
 using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
