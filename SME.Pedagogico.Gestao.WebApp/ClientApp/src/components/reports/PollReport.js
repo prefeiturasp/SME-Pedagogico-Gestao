@@ -13,6 +13,7 @@ import ReportService from "../../service/ReportService";
 import { connect } from "react-redux";
 import { actionCreators } from "../../store/PollReport";
 import { bindActionCreators } from "redux";
+import RelatorioMatematicaConsolidado from "./RelatorioMatematicaConsolidado";
 
 class PollReport extends Component {
   constructor(props) {
@@ -886,6 +887,26 @@ class PollReport extends Component {
                       data={reportData}
                     />
                   ) : (
+                    Number(this.props.pollReport.selectedFilter.CodigoCurso) >= 7?
+                    <RelatorioMatematicaConsolidado dados={
+                       {
+                        nome: "Área e perímetro",
+                        total: { quantidade: 59, porcentagem: "100" },
+                        respostas: [
+                          {
+                            nome: "Resolveu Corretamente",
+                            quantidade: 56,
+                            porcentagem: "94.92"
+                          },
+                          {
+                            nome: "Não Resolveu",
+                            quantidade: 12,
+                            porcentagem: "10"
+                          }
+                        ]
+                      }
+                    }/>
+                    :
                     <PollReportMathGrid
                       className="mt-3"
                       classroomReport={this.classroomReport}
