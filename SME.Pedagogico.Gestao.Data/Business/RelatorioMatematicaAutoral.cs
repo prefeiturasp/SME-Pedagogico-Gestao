@@ -7,16 +7,29 @@ using MoreLinq;
 using SME.Pedagogico.Gestao.WebApp.Models;
 using SME.Pedagogico.Gestao.Data.DTO.Matematica.Relatorio;
 using System.Text;
+using SME.Pedagogico.Gestao.Data.Contexts;
+using SME.Pedagogico.Gestao.Models.Autoral;
+using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.Data.Business
 {
     public class RelatorioMatematicaAutoral
     {
-        public async void ObterPeriodoMatematica(filtrosRelatorioDTO filtro)
+        public async Task<List<PerguntaDTO>>  ObterPeriodoMatematica(filtrosRelatorioDTO filtro)
         {
+	
 
+			using (var contexto = new SMEManagementContextData()) 
+			{ 
 
-            var queryTeste = @"SELECT
+				var componenteCurricular = contexto.ComponenteCurricular.Where(x => x.Descricao == filtro.DescricaoDisciplina).FirstOrDefault();
+
+				filtro.ComponenteCurricularId = componenteCurricular.Id;
+				var periodo = contexto.Periodo.Where(x => x.Descricao == filtro.DescricaoPeriodo).FirstOrDefault();
+				filtro.PeriodoId = periodo.Id;
+			}
+
+				var queryTeste = @"SELECT
 								p.""Id"" as ""PerguntaId"",
 							    p.""Descricao"" as ""PerguntaDescricao"",
 								r.""Id"" as ""RespostaId"",
@@ -64,9 +77,11 @@ namespace SME.Pedagogico.Gestao.Data.Business
 									from
 										""Sondagem""
 									where
-										""ComponenteCurricularId"" = '9f3d8467-2f6e-4bcb-a8e9-12e840426aba'
+									   ""ComponenteCurricularId"" = @ComponenteCurricularId
 										";
-            var query = new StringBuilder();
+         
+			
+			var query = new StringBuilder();
             query.Append(queryTeste);
             if (!string.IsNullOrEmpty(filtro.CodigoDRE))
                 query.AppendLine(@" and ""CodigoDre"" =  @CodigoDRE");
@@ -74,9 +89,10 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 query.AppendLine(@"and ""CodigoUe"" =  @CodigoEscola");
 
             query.Append(@" and ""AnoLetivo"" = @AnoLetivo
-										and ""AnoTurma"" =  @AnoDaTurma
-							         -- and ""CodigoTurma"" = '2135826'
-                                                                       ) ) as tabela on
+			                and ""AnoTurma"" =  @AnoDaTurma
+                            and ""PeriodoId"" = @PeriodoId
+				         -- and ""CodigoTurma"" = '2135826'
+                                                    ) ) as tabela on
 								p.""Id"" = tabela.""PerguntaId"" and
 								r.""Id""= tabela.""RespostaId""
 							group by
@@ -98,8 +114,11 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         AnoDaTurma = filtro.AnoDaTurma,
                         CodigoEscola = filtro.CodigoEscola,
                         CodigoDRE = filtro.CodigoDRE,
-                        AnoLetivo = filtro.AnoLetivo
-                    });
+                        AnoLetivo = filtro.AnoLetivo,
+						PeriodoId = filtro.PeriodoId,
+						ComponenteCurricularId = filtro.ComponenteCurricularId
+
+					});
 
                 var obj2 = obj.GroupBy(p => p.PerguntaId).ToList();
 
@@ -130,6 +149,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                     lista.Add(pergunta);
                 });
+
+			
+
+
+
+
+
+				return lista;
             }
 
 

@@ -33,7 +33,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
             if (int.Parse(parameters.CodigoCurso) >= 7 && parameters.Discipline == "Matemática")
             {
-
                 var filtro = new filtrosRelatorioDTO()
                 {
                     AnoDaTurma = int.Parse(parameters.CodigoCurso),
@@ -41,10 +40,12 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     CodigoDRE = parameters.CodigoDRE,
                     CodigoEscola = parameters.CodigoEscola,
                     CodigoTurmaEol = parameters.CodigoTurmaEol,
-                    NomeDisciplina = parameters.Discipline
+                    DescricaoDisciplina = parameters.Discipline,
+                    DescricaoPeriodo = parameters.Term,
                 };
                 var obj = new RelatorioMatematicaAutoral();
-                obj.ObterPeriodoMatematica(filtro);
+                var retorno = await obj.ObterPeriodoMatematica(filtro);
+               return  (Ok(retorno));
             }
 
 
