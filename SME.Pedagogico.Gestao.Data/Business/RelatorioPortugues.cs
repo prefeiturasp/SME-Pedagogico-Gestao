@@ -2,6 +2,9 @@
 using Npgsql;
 using SME.Pedagogico.Gestao.Data.Contexts;
 using SME.Pedagogico.Gestao.Data.DTO.Portugues.Relatorio;
+using SME.Pedagogico.Gestao.Data.Integracao;
+using SME.Pedagogico.Gestao.Data.Integracao.DTO;
+using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using SME.Pedagogico.Gestao.Models.Autoral;
 using System;
 using System.Collections.Generic;
@@ -14,6 +17,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
 {
     public class RelatorioPortugues
     {
+        private AlunoAPI alunoAPI;
+
+        public RelatorioPortugues()
+        {
+            alunoAPI = new AlunoAPI(new EndpointsAPI());
+        }
+
         public async Task<IEnumerable<RelatorioPortuguesPerguntasDto>> ObterRelatorioPortugues(RelatorioPortuguesFiltroDto filtroRelatorioSondagem)
         {
             var dados = new List<SondagemAlunoRespostas>();
@@ -27,6 +37,18 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             if (dados == null || !dados.Any())
                 return null;
+
+            var filtro = new FiltroTotalAlunosAtivos
+            {
+                AnoLetivo = filtroRelatorioSondagem.AnoLetivo,
+                AnoTurma = filtroRelatorioSondagem.AnoEscolar,
+                DreId = filtroRelatorioSondagem.CodigoDre,
+                UeId = filtroRelatorioSondagem.CodigoUe,
+                DataInicio = new DateTime(2020, 01, 01),
+                DataFim = new DateTime(2020, 12, 01),
+            };
+
+            var quantidade = await alunoAPI.ObterTotalAlunosAtivosPorPeriodo(filtro, string.Empty);
 
             var perguntas = dados.GroupBy(x => x.Pergunta).Select(x => x.Key);
 
@@ -71,10 +93,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
             parametros.Add(new NpgsqlParameter("periodoId", filtroRelatorioSondagem.PeriodoId));
             parametros.Add(new NpgsqlParameter("grupoId", filtroRelatorioSondagem.GrupoId));
             parametros.Add(new NpgsqlParameter("anoTurma", filtroRelatorioSondagem.AnoEscolar));
-            parametros.Add(new NpgsqlParameter("codigoTurma", filtroRelatorioSondagem.CodigoTurma));
-            parametros.Add(new NpgsqlParameter("codigoUe", filtroRelatorioSondagem.CodigoUe));
-            parametros.Add(new NpgsqlParameter("codigoDre", filtroRelatorioSondagem.CodigoDre));
             parametros.Add(new NpgsqlParameter("componenteCurricularId", filtroRelatorioSondagem.ComponenteCurricularId));
+
+            if (!string.IsNullOrWhiteSpace(filtroRelatorioSondagem.CodigoTurma))
+                parametros.Add(new NpgsqlParameter("codigoTurma", filtroRelatorioSondagem.CodigoTurma));
+
+            if (!string.IsNullOrWhiteSpace(filtroRelatorioSondagem.CodigoUe))
+                parametros.Add(new NpgsqlParameter("codigoUe", filtroRelatorioSondagem.CodigoUe));
+
+            if (!string.IsNullOrWhiteSpace(filtroRelatorioSondagem.CodigoDre))
+                parametros.Add(new NpgsqlParameter("codigoDre", filtroRelatorioSondagem.CodigoDre));
 
             return parametros.ToArray();
         }

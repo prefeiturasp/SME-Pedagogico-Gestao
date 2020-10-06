@@ -30,7 +30,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
 
             var parametrosString = string.Join('&', parametros);
 
-            var urlCompleta = string.Format(url, filtro.AnoTurma, filtro.AnoLetivo, filtro.DataInicio, filtro.DataFim);
+            var urlCompleta = string.Format(url, filtro.AnoTurma, filtro.AnoLetivo, filtro.DataInicio.ToString("yyyy-MM-dd"), filtro.DataFim.ToString("yyyy-MM-dd"));
 
             if (!string.IsNullOrWhiteSpace(parametrosString))
                 urlCompleta += $"?{parametrosString}";
