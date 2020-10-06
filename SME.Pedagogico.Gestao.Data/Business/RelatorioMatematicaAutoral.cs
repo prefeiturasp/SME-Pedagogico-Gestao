@@ -6,14 +6,16 @@ using System.Linq;
 using MoreLinq;
 using SME.Pedagogico.Gestao.WebApp.Models;
 using SME.Pedagogico.Gestao.Data.DTO.Matematica.Relatorio;
-
+using System.Text;
 
 namespace SME.Pedagogico.Gestao.Data.Business
 {
     public class RelatorioMatematicaAutoral
     {
-        public async void ObterPeriodoMatematica(filtrosRelatorioDTO filtro )
+        public async void ObterPeriodoMatematica(filtrosRelatorioDTO filtro)
         {
+
+
             var queryTeste = @"SELECT
 								p.""Id"" as ""PerguntaId"",
 							    p.""Descricao"" as ""PerguntaDescricao"",
@@ -25,7 +27,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 								inner join ""PerguntaAnoEscolar"" pa on
 							    pa.""PerguntaId"" = p.""Id""
 
-								and pa.""AnoEscolar"" = 7
+								and pa.""AnoEscolar"" = @AnoDaTurma
 								inner join ""PerguntaResposta"" pr on
 								pr.""PerguntaId"" = p.""Id""
 								inner join ""Resposta"" r on
@@ -63,10 +65,18 @@ namespace SME.Pedagogico.Gestao.Data.Business
 										""Sondagem""
 									where
 										""ComponenteCurricularId"" = '9f3d8467-2f6e-4bcb-a8e9-12e840426aba'
-										and ""CodigoUe"" = '019303'
-										and ""AnoLetivo"" = 2020
-										and ""AnoTurma"" = 7
-										and ""CodigoTurma"" = '2135826') ) as tabela on
+										";
+            var query = new StringBuilder();
+            query.Append(queryTeste);
+            if (!string.IsNullOrEmpty(filtro.CodigoDRE))
+                query.AppendLine(@" and ""CodigoDre"" =  @CodigoDRE");
+            if (!string.IsNullOrEmpty(filtro.CodigoEscola))
+                query.AppendLine(@"and ""CodigoUe"" =  @CodigoEscola");
+
+            query.Append(@" and ""AnoLetivo"" = @AnoLetivo
+										and ""AnoTurma"" =  @AnoDaTurma
+							         -- and ""CodigoTurma"" = '2135826'
+                                                                       ) ) as tabela on
 								p.""Id"" = tabela.""PerguntaId"" and
 								r.""Id""= tabela.""RespostaId""
 							group by
@@ -76,13 +86,20 @@ namespace SME.Pedagogico.Gestao.Data.Business
 								p.""Descricao""
 							order by
 								p.""Descricao"",
-								r.""Descricao"" ";
+								r.""Descricao"" ");
 
             try
             {
 
                 var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection"));
-                var obj = await conexao.QueryAsync<PerguntasRespostasDTO>(queryTeste);
+                var obj = await conexao.QueryAsync<PerguntasRespostasDTO>(query.ToString(),
+                    new
+                    {
+                        AnoDaTurma = filtro.AnoDaTurma,
+                        CodigoEscola = filtro.CodigoEscola,
+                        CodigoDRE = filtro.CodigoDRE,
+                        AnoLetivo = filtro.AnoLetivo
+                    });
 
                 var obj2 = obj.GroupBy(p => p.PerguntaId).ToList();
 
@@ -102,12 +119,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                     foreach (var item in listaPr)
                     {
-						var resposta = new RespostaDTO();
+                        var resposta = new RespostaDTO();
 
-						resposta.Nome = item.RespostaDescricao;
-						resposta.quantidade = item.QtdRespostas;
-						resposta.porcentagem = pergunta.Total.Quantidade > 0  ?  (item.QtdRespostas * 100) / pergunta.Total.Quantidade : 0;
-                        
+                        resposta.Nome = item.RespostaDescricao;
+                        resposta.quantidade = item.QtdRespostas;
+                        resposta.porcentagem = pergunta.Total.Quantidade > 0 ? (item.QtdRespostas * 100) / pergunta.Total.Quantidade : 0;
+
                         pergunta.Respostas.Add(resposta);
                     }
 
