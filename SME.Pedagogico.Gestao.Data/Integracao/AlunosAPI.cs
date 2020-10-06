@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.Data.Integracao
 {
-    public class AlunoAPI
+    public class AlunosAPI
     {
         private readonly EndpointsAPI endpointsAPI;
 
-        public AlunoAPI(EndpointsAPI endpointsAPI)
+        public AlunosAPI(EndpointsAPI endpointsAPI)
         {
             this.endpointsAPI = endpointsAPI ?? throw new ArgumentNullException(nameof(endpointsAPI));
         }
 
-        public async Task<int> ObterTotalAlunosAtivosPorPeriodo(FiltroTotalAlunosAtivos filtro, string token)
+        public async Task<int> ObterTotalAlunosAtivosPorPeriodo(FiltroTotalAlunosAtivos filtro)
         {
             var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.ObterTotalAlunosAtivosPorPeriodo);
 
@@ -35,7 +35,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
             if (!string.IsNullOrWhiteSpace(parametrosString))
                 urlCompleta += $"?{parametrosString}";
 
-            return await HttpHelper.GetAsync<int>(token, urlCompleta);
+            return await HttpHelper.GetAsync<int>(urlCompleta);
         }
     }
 }
