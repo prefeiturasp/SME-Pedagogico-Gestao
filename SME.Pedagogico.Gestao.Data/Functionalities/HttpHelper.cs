@@ -20,6 +20,11 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
         //    _httpClient = new HttpClient();
         //}
 
+        internal static async Task<T> GetAsync<T>(string url)
+        {
+            return await GetAsync<T>(url);
+        }
+
         internal static async Task<T> GetAsync<T>(string token, string url)
         {
 
