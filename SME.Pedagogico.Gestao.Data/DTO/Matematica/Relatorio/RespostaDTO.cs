@@ -8,6 +8,6 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Matematica.Relatorio
     {
         public string Nome { get; set; }
         public int quantidade { get; set; }
-        public Double porcentagem { get; set; }
+        public string porcentagem { get; set; }
     }
 }

@@ -4,32 +4,161 @@ using Npgsql;
 using System.Collections.Generic;
 using System.Linq;
 using MoreLinq;
-using SME.Pedagogico.Gestao.WebApp.Models;
 using SME.Pedagogico.Gestao.Data.DTO.Matematica.Relatorio;
 using System.Text;
 using SME.Pedagogico.Gestao.Data.Contexts;
-using SME.Pedagogico.Gestao.Models.Autoral;
+using SME.Pedagogico.Gestao.Data.Integracao.DTO;
 using System.Threading.Tasks;
+using SME.Pedagogico.Gestao.Data.Integracao;
+using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 
 namespace SME.Pedagogico.Gestao.Data.Business
 {
     public class RelatorioMatematicaAutoral
     {
-        public async Task<List<PerguntaDTO>>  ObterPeriodoMatematica(filtrosRelatorioDTO filtro)
+        private const string QueryPeriodoFixoAnual = @"select
+										     ""DataInicio"",
+											 ""DataFim""
+										      from
+										     ""PeriodoFixoAnual""
+											  where
+											""PeriodoId"" = @PeriodoId
+											and ""Ano"" = @AnoLetivo";
+
+        public async Task<List<PerguntaDTO>> ObterPeriodoMatematica(filtrosRelatorioDTO filtro)
         {
-	
+            IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
+            using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
+            {
+                var query = QueryRelatorioMatematicaAutoral(filtro);
+                var DatasPeriodo = await BuscaDatasPeriodoFixoAnual(filtro, conexao);
+                int totalDeAlunos = await BuscaTotalDeAlunosEOl(filtro, DatasPeriodo);
+                return await RetornaRelatorioMatematica(filtro, conexao, query, totalDeAlunos);
+            }
 
-			using (var contexto = new SMEManagementContextData()) 
-			{ 
+        }
 
-				var componenteCurricular = contexto.ComponenteCurricular.Where(x => x.Descricao == filtro.DescricaoDisciplina).FirstOrDefault();
+        private  async Task<List<PerguntaDTO>> RetornaRelatorioMatematica(filtrosRelatorioDTO filtro, NpgsqlConnection conexao, string query, int totalDeAlunos)
+        {
+            var ListaPerguntaEhRespostasRelatorio = await conexao.QueryAsync<PerguntasRespostasDTO>(query.ToString(),
+                new
+                {
+                    AnoDaTurma = filtro.AnoDaTurma,
+                    CodigoEscola = filtro.CodigoEscola,
+                    CodigoDRE = filtro.CodigoDRE,
+                    AnoLetivo = filtro.AnoLetivo,
+                    PeriodoId = filtro.PeriodoId,
+                    ComponenteCurricularId = filtro.ComponenteCurricularId
 
-				filtro.ComponenteCurricularId = componenteCurricular.Id;
-				var periodo = contexto.Periodo.Where(x => x.Descricao == filtro.DescricaoPeriodo).FirstOrDefault();
-				filtro.PeriodoId = periodo.Id;
-			}
+                });
 
-				var queryTeste = @"SELECT
+            var relatorioAgrupado = ListaPerguntaEhRespostasRelatorio.GroupBy(p => p.PerguntaId).ToList();
+
+            var lista = new List<PerguntaDTO>();
+
+            relatorioAgrupado.ForEach(x =>
+            {
+                var pergunta = new PerguntaDTO();
+                CalculaPercentualTotalPergunta(totalDeAlunos, x, pergunta);
+
+                var listaPr = x.Where(y => y.PerguntaId == x.Key).ToList();
+
+                CalculaPercentualRespostas(totalDeAlunos, pergunta, listaPr);
+                lista.Add(pergunta);
+            });
+
+
+            return lista;
+        }
+
+        private static void CalculaPercentualTotalPergunta(int totalDeAlunos, IGrouping<string, PerguntasRespostasDTO> x, PerguntaDTO pergunta)
+        {
+            pergunta.Nome = x.Where(y => y.PerguntaId == x.Key).First().PerguntaDescricao;
+            pergunta.Total = new TotalDTO()
+            {
+                Quantidade = x.Where(y => y.PerguntaId == x.Key).Sum(q => q.QtdRespostas)
+            };
+
+            pergunta.Total.Porcentagem = (pergunta.Total.Quantidade > 0 ? (pergunta.Total.Quantidade * 100) / (Double)totalDeAlunos : 0).ToString("0.00");
+            pergunta.Respostas = new List<RespostaDTO>();
+        }
+
+        private void CalculaPercentualRespostas(int totalDeAlunos, PerguntaDTO pergunta, List<PerguntasRespostasDTO> listaPr)
+        {
+            foreach (var item in listaPr)
+            {
+                var resposta = new RespostaDTO();
+                resposta.Nome = item.RespostaDescricao;
+                resposta.quantidade = item.QtdRespostas;
+                resposta.porcentagem = (item.QtdRespostas > 0 ? (item.QtdRespostas * 100) / (Double)totalDeAlunos : 0).ToString("0.00");
+                pergunta.Respostas.Add(resposta);
+            }
+
+            var respostaSempreenchimento = CriaRespostaSemPreenchimento(totalDeAlunos, pergunta.Total.Quantidade);
+            pergunta.Respostas.Add(respostaSempreenchimento);
+
+        }
+
+        private RespostaDTO CriaRespostaSemPreenchimento(int totalDeAlunos, int quantidadeTotalRespostasPergunta)
+        {
+            var respostaSemPreenchimento = new RespostaDTO();
+            respostaSemPreenchimento.Nome = "Sem preenchimento";
+            respostaSemPreenchimento.quantidade = totalDeAlunos - quantidadeTotalRespostasPergunta;
+            respostaSemPreenchimento.porcentagem = (respostaSemPreenchimento.quantidade > 0 ? (respostaSemPreenchimento.quantidade * 100) / (Double)totalDeAlunos : 0).ToString("0.00");
+            respostaSemPreenchimento.porcentagem = respostaSemPreenchimento.porcentagem;
+            return respostaSemPreenchimento;
+        }
+
+        private static void IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtrosRelatorioDTO filtro)
+        {
+            using (var contexto = new SMEManagementContextData())
+            {
+
+                var componenteCurricular = contexto.ComponenteCurricular.Where(x => x.Descricao == filtro.DescricaoDisciplina).FirstOrDefault();
+
+                filtro.ComponenteCurricularId = componenteCurricular.Id;
+                var periodo = contexto.Periodo.Where(x => x.Descricao == filtro.DescricaoPeriodo).FirstOrDefault();
+                filtro.PeriodoId = periodo.Id;
+            }
+        }
+
+        private static async Task<int> BuscaTotalDeAlunosEOl(filtrosRelatorioDTO filtro, IEnumerable<DatasPeriodoFixoAnualDTO> DatasPeriodo)
+        {
+            var endpointsApi = new EndpointsAPI();
+            var alunoApi = new AlunosAPI(endpointsApi);
+
+            var filtroAlunos = new FiltroTotalAlunosAtivos()
+            {
+                AnoLetivo = filtro.AnoLetivo,
+                AnoTurma = filtro.AnoDaTurma,
+                DreId = filtro.CodigoDRE,
+                UeId = filtro.CodigoEscola,
+                DataInicio = DatasPeriodo.First().DataInicio,
+                DataFim = DatasPeriodo.First().DataFim
+            };
+
+
+            var totalDeAlunos = await alunoApi.ObterTotalAlunosAtivosPorPeriodo(filtroAlunos);
+            return totalDeAlunos;
+        }
+
+        private static async Task<IEnumerable<DatasPeriodoFixoAnualDTO>> BuscaDatasPeriodoFixoAnual(filtrosRelatorioDTO filtro, NpgsqlConnection conexao)
+        {
+            var queryPeriodoFixoAnual = QueryPeriodoFixoAnual;
+
+            var DatasPeriodo = await conexao.QueryAsync<DatasPeriodoFixoAnualDTO>(queryPeriodoFixoAnual.ToString(),
+              new
+              {
+                  PeriodoId = filtro.PeriodoId,
+                  AnoLetivo = filtro.AnoLetivo,
+
+              });
+            return DatasPeriodo;
+        }
+
+        private static string QueryRelatorioMatematicaAutoral(filtrosRelatorioDTO filtro)
+        {
+            var queryRelatorio = @"SELECT
 								p.""Id"" as ""PerguntaId"",
 							    p.""Descricao"" as ""PerguntaDescricao"",
 								r.""Id"" as ""RespostaId"",
@@ -79,10 +208,10 @@ namespace SME.Pedagogico.Gestao.Data.Business
 									where
 									   ""ComponenteCurricularId"" = @ComponenteCurricularId
 										";
-         
-			
-			var query = new StringBuilder();
-            query.Append(queryTeste);
+
+
+            var query = new StringBuilder();
+            query.Append(queryRelatorio);
             if (!string.IsNullOrEmpty(filtro.CodigoDRE))
                 query.AppendLine(@" and ""CodigoDre"" =  @CodigoDRE");
             if (!string.IsNullOrEmpty(filtro.CodigoEscola))
@@ -103,88 +232,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 							order by
 								p.""Descricao"",
 								r.""Descricao"" ");
-
-            try
-            {
-
-                var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection"));
-                var obj = await conexao.QueryAsync<PerguntasRespostasDTO>(query.ToString(),
-                    new
-                    {
-                        AnoDaTurma = filtro.AnoDaTurma,
-                        CodigoEscola = filtro.CodigoEscola,
-                        CodigoDRE = filtro.CodigoDRE,
-                        AnoLetivo = filtro.AnoLetivo,
-						PeriodoId = filtro.PeriodoId,
-						ComponenteCurricularId = filtro.ComponenteCurricularId
-
-					});
-
-                var obj2 = obj.GroupBy(p => p.PerguntaId).ToList();
-
-                var lista = new List<PerguntaDTO>();
-
-                obj2.ForEach(x =>
-                {
-                    var pergunta = new PerguntaDTO();
-                    pergunta.Nome = x.Where(y => y.PerguntaId == x.Key).First().PerguntaDescricao;
-                    pergunta.Total = new TotalDTO()
-                    {
-                        Quantidade = x.Where(y => y.PerguntaId == x.Key).Sum(q => q.QtdRespostas)
-                    };
-                    pergunta.Respostas = new List<RespostaDTO>();
-
-                    var listaPr = x.Where(y => y.PerguntaId == x.Key).ToList();
-
-                    foreach (var item in listaPr)
-                    {
-                        var resposta = new RespostaDTO();
-
-                        resposta.Nome = item.RespostaDescricao;
-                        resposta.quantidade = item.QtdRespostas;
-                        resposta.porcentagem = pergunta.Total.Quantidade > 0 ? (item.QtdRespostas * 100) / pergunta.Total.Quantidade : 0;
-
-                        pergunta.Respostas.Add(resposta);
-                    }
-
-                    lista.Add(pergunta);
-                });
-
-				var queryPeriodoFixoAnual = @"select
-										     ""DataInicio"",
-											 ""DataFim""
-										      from
-										     ""PeriodoFixoAnual""
-											  where
-											""PeriodoId"" = @PeriodoId
-											and ""Ano"" = @AnoLetivo"
-;
-
-				var DatasPeriodo = await conexao.QueryAsync<DatasPeriodoFixoAnualDTO>(queryPeriodoFixoAnual.ToString(),
-				  new
-				  {
-					  PeriodoId = filtro.PeriodoId,
-					  AnoLetivo = filtro.AnoLetivo,
-
-				  });
-
-
-
-
-
-				return lista;
-            }
-
-
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-
-
-
-
+            return query.ToString();
         }
     }
 }

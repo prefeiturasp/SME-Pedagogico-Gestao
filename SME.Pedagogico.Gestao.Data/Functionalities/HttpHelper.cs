@@ -22,7 +22,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
 
         internal static async Task<T> GetAsync<T>(string url)
         {
-            return await GetAsync<T>(url);
+            return await GetAsync<T>(string.Empty, url);
         }
 
         internal static async Task<T> GetAsync<T>(string token, string url)
