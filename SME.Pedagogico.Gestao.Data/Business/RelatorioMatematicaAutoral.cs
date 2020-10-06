@@ -150,7 +150,23 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     lista.Add(pergunta);
                 });
 
-			
+				var queryPeriodoFixoAnual = @"select
+										     ""DataInicio"",
+											 ""DataFim""
+										      from
+										     ""PeriodoFixoAnual""
+											  where
+											""PeriodoId"" = @PeriodoId
+											and ""Ano"" = @AnoLetivo"
+;
+
+				var DatasPeriodo = await conexao.QueryAsync<DatasPeriodoFixoAnualDTO>(queryPeriodoFixoAnual.ToString(),
+				  new
+				  {
+					  PeriodoId = filtro.PeriodoId,
+					  AnoLetivo = filtro.AnoLetivo,
+
+				  });
 
 
 
