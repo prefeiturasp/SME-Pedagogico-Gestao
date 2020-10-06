@@ -59,30 +59,27 @@ class PollReport extends Component {
       (item) => item.label === this.props.pollReport.selectedFilter.proficiency
     );
 
-    console.log("===> disc", discipline);
-    console.log("===> prof", proficiencia);
     const { username: usuarioRf } = this.props.user;
     const {
-      SchoolYear: anoLetivo,
-      codigoDRE: dre,
-      CodigoEscola: ue,
-      CodigoCurso: ano,
-      CodigoTurmaEol: turma,
-      term: semestre,
+      SchoolYear,
+      codigoDRE,
+      CodigoEscola,
+      CodigoTurmaEol,
+      term,
     } = this.props.pollReport.selectedFilter;
+    const semestre = term === "1° Semestre" ? 1 : 2;
 
     const payload = {
-      anoLetivo,
-      dre,
-      ue,
-      ano,
-      turma,
+      anoLetivo: parseInt(SchoolYear),
+      dreCodigo: parseInt(codigoDRE),
+      ueCodigo: parseInt(CodigoEscola),
+      turmaCodigo: parseInt(CodigoTurmaEol),
       componenteCurricularId: discipline[0].id,
       proficienciaId: proficiencia[0].id,
       semestre,
       usuarioRf,
     };
-    console.log(`payload`, payload);
+
     this.props.pollReportMethods.printPollReport(payload);
   };
 

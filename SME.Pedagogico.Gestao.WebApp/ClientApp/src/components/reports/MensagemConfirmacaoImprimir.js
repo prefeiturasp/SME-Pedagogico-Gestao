@@ -2,7 +2,7 @@ import React from "react";
 import MensagemInformacao from "../messaging/MensagemInformacao";
 
 function MensagemConfirmacaoImprimir({ exibir, acaoFeedBack }) {
-  const titulo = "Informações Salvas";
+  const titulo = "Geração de relatório";
   const mesagemPrincipal =
     "Solicitação de geração do relatório gerada com sucesso. Em breve você receberá uma notificação no ";
   const palavraEmNegrito = "SGP";
