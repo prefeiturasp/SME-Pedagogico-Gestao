@@ -50,9 +50,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 {
                     codigoCargoAtivo = RetornaCargoAtivo(occupation);
 
-                    if (
-                        codigoCargoAtivo == "3379" ||
-                        codigoCargoAtivo == "3360")
+                    if (codigoCargoAtivo == "3379" || codigoCargoAtivo == "3360" || codigoCargoAtivo == "3085")
                     {
                         occupationAccess = true;
                         break;
@@ -66,8 +64,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 return null;
             }
         }
-
-
 
         public string RetornaCargoAtivo(RetornoCargoDTO occupation)
         {
