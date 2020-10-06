@@ -1,10 +1,8 @@
 import React from "react";
-import styled from "styled-components";
+import { CabecalhoRelatorio, TotalRelatorio } from "./RelatorioMatematicaConsolidado.css";
 
 const RelatorioMatematicaConsolidado = (props) => {
   const { dados } = props;
-  const TotalRelatorio = styled.div``;
-  const CabecalhoRelatorio = styled.div``;
 
   const ItemRelatorio = (nome, quantidade, porcentagem) => {
     return (
