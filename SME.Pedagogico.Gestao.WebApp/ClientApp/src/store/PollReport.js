@@ -7,6 +7,7 @@
   SET_POLL_REPORT_DATA: "SET_POLL_REPORT_DATA",
   POLL_REPORT_API_REQUEST_FAIL: "POLL_REPORT_API_REQUEST_FAIL",
   POLL_REPORT_REQUEST_NOT_FOUND: "POLL_REPORT_REQUEST_NOT_FOUND",
+  PRINT_POLL_REPORT: "PRINT_POLL_REPORT",
 };
 
 const initialState = {
@@ -60,6 +61,10 @@ export const actionCreators = {
   hidePollReport: () => ({ type: types.HIDE_POLL_REPORT_REQUEST }),
   getPollReport: (parameters) => ({
     type: types.GET_POLL_REPORT_REQUEST,
+    parameters,
+  }),
+  printPollReport: (parameters) => ({
+    type: types.PRINT_POLL_REPORT,
     parameters,
   }),
 };
