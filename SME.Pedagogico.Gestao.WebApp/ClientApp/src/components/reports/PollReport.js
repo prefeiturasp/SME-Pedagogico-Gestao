@@ -65,6 +65,7 @@ class PollReport extends Component {
       codigoDRE,
       CodigoEscola,
       CodigoTurmaEol,
+      CodigoCurso,
       term,
     } = this.props.pollReport.selectedFilter;
     const semestre = term === "1° Semestre" ? 1 : 2;
@@ -73,6 +74,7 @@ class PollReport extends Component {
       anoLetivo: parseInt(SchoolYear),
       dreCodigo: parseInt(codigoDRE),
       ueCodigo: parseInt(CodigoEscola),
+      ano: CodigoCurso,
       turmaCodigo: parseInt(CodigoTurmaEol),
       componenteCurricularId: discipline[0].id,
       proficienciaId: proficiencia[0].id,
