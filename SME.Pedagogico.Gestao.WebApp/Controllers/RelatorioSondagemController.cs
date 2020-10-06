@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.Business;
-using SME.Pedagogico.Gestao.Data.DataTransfer;
+using SME.Pedagogico.Gestao.Data.DTO.Matematica.Relatorio;
+
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Models.Academic;
 using SME.Pedagogico.Gestao.WebApp.Models.RelatorioSondagem;
@@ -29,6 +30,25 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> ObterDados([FromBody]ParametersModel parameters)
         {
+
+            if (int.Parse(parameters.CodigoCurso) >= 7 && parameters.Discipline == "Matemática")
+            {
+                var filtro = new filtrosRelatorioDTO()
+                {
+                    AnoDaTurma = int.Parse(parameters.CodigoCurso),
+                    AnoLetivo = int.Parse(parameters.SchoolYear),
+                    CodigoDRE = parameters.CodigoDRE,
+                    CodigoEscola = parameters.CodigoEscola,
+                    CodigoTurmaEol = parameters.CodigoTurmaEol,
+                    DescricaoDisciplina = parameters.Discipline,
+                    DescricaoPeriodo = parameters.Term,
+                };
+                var obj = new RelatorioMatematicaAutoral();
+                var retorno = await obj.ObterPeriodoMatematica(filtro);
+               return  (Ok(retorno));
+            }
+
+
             if (parameters.Discipline == "Língua Portuguesa")
             {
                 if (parameters.ClassroomReport)
@@ -79,7 +99,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
                 else    // cONSOLIDADO
                 {
-                    var result = await BuscaDadosMathAsync(parameters, parameters.SchoolYear , parameters.CodigoDRE, parameters.CodigoEscola, parameters.CodigoCurso);
+                    var result = await BuscaDadosMathAsync(parameters, parameters.SchoolYear, parameters.CodigoDRE, parameters.CodigoEscola, parameters.CodigoCurso);
                     return Ok(result);
                 }
             }
