@@ -57,7 +57,7 @@ function SeletorDeOrdem({ ordens, ordemSelecionada, onClick, ordensSalvas }) {
 
   return (
     <div
-      className="btn-group mr-2 btn-group-sm pills"
+      className="btn-group mr-2 btn-group-sm pills w-100 ml-2 mr-2"
       role="group"
       aria-label="Second group"
       style={style}
@@ -80,8 +80,31 @@ function SeletorDeOrdem({ ordens, ordemSelecionada, onClick, ordensSalvas }) {
             >
               {ordem.descricao}
               {ordensSalvas && ordensSalvas.find(a => a.ordemId === ordem.id)?
-              <i className="fas fa-check-circle ml-2"/>
-              :null}
+                <i
+                  className="fas fa-check-circle ml-2"
+                  data-toggle="tooltip" 
+                  data-placement="top" 
+                  title="Ordem salva"
+                  style={{
+                    color: "#72BC17",
+                    border: "1px solid white",
+                    borderRadius: "50%",
+                    backgroundColor: "white"
+                  }}
+                />
+                :<i 
+                  className="fas fa-exclamation-circle ml-2"
+                  data-toggle="tooltip" 
+                  data-placement="top" 
+                  title="Ordem não salva"
+                  style={{
+                    color: "#DE9524",
+                    border: "1px solid white",
+                    borderRadius: "50%",
+                    backgroundColor: "white"
+                  }}
+                />
+              }
             </button>
           );
         })}

@@ -200,6 +200,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
                         {perguntas &&
                             perguntas.map((pergunta) => (
                                 <th
+                                    style={{width: '10%'}}
                                     key={pergunta.id}
                                     className="text-center border poll-select-container"
                                 >
