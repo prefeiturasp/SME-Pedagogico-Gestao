@@ -785,7 +785,7 @@ class PollReport extends Component {
 
     if (this.props.pollReport.showReport === true) {
       if (
-        chartData.chartIdeaData !== undefined &&
+        chartData && chartData.chartIdeaData !== undefined &&
         chartData.chartIdeaData.length > 0
       ) {
         chartData.totals = [];
@@ -845,6 +845,7 @@ class PollReport extends Component {
     var numbers = false;
 
     if (
+      reportData &&
       reportData !== [] &&
       reportData.length > 0 &&
       reportData[0].poll !== undefined
@@ -888,24 +889,9 @@ class PollReport extends Component {
                     />
                   ) : (
                     Number(this.props.pollReport.selectedFilter.CodigoCurso) >= 7?
-                    <RelatorioMatematicaConsolidado dados={
-                       {
-                        nome: "Área e perímetro",
-                        total: { quantidade: 59, porcentagem: "100" },
-                        respostas: [
-                          {
-                            nome: "Resolveu Corretamente",
-                            quantidade: 56,
-                            porcentagem: "94.92"
-                          },
-                          {
-                            nome: "Não Resolveu",
-                            quantidade: 12,
-                            porcentagem: "10"
-                          }
-                        ]
-                      }
-                    }/>
+                    reportData.map(dados => {
+                      return <RelatorioMatematicaConsolidado dados={dados}/>
+                    })
                     :
                     <PollReportMathGrid
                       className="mt-3"
