@@ -44,21 +44,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
         }
 
-        [HttpGet]
-        public async Task<ActionResult> ObterRelatorioPortugues([FromQuery]RelatorioPortuguesFiltroDto relatorioPortuguesFiltroDto)
-        {
-            try
-            {
-                var relatorio = new RelatorioPortugues();
-
-                return Ok(await relatorio.ObterRelatorioPortugues(relatorioPortuguesFiltroDto));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex);
-            }
-        }
-
         [HttpPost]
         public async Task<ActionResult> ListarSondagemPortugues(ClassRoomModel classRoomModel)
         {
