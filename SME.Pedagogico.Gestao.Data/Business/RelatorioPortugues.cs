@@ -17,46 +17,64 @@ namespace SME.Pedagogico.Gestao.Data.Business
 {
     public class RelatorioPortugues
     {
-        private AlunoAPI alunoAPI;
+        private AlunosAPI alunoAPI;
 
         public RelatorioPortugues()
         {
-            alunoAPI = new AlunoAPI(new EndpointsAPI());
+            alunoAPI = new AlunosAPI(new EndpointsAPI());
         }
 
         public async Task<IEnumerable<RelatorioPortuguesPerguntasDto>> ObterRelatorioPortugues(RelatorioPortuguesFiltroDto filtroRelatorioSondagem)
         {
             var dados = new List<SondagemAlunoRespostas>();
+            PeriodoFixoAnual periodo = null;
 
             using (var contexto = new SMEManagementContextData())
             {
-                dados = await contexto.SondagemAlunoRespostas.Include(x => x.Pergunta).Include(x => x.Resposta)
+                dados = await contexto.SondagemAlunoRespostas.Include(x => x.SondagemAluno).Include(x => x.Pergunta).Include(x => x.Resposta)
                                                               .FromSql(ObterConsultaCompleta(filtroRelatorioSondagem),
                                                                         ObterParametros(filtroRelatorioSondagem)).ToListAsync();
+
+                periodo = await contexto.PeriodoFixoAnual.FirstOrDefaultAsync(x => x.PeriodoId == filtroRelatorioSondagem.PeriodoId);
             }
 
             if (dados == null || !dados.Any())
                 return null;
 
+            int quantidade = await ObterQuantidadeAlunosAtivos(filtroRelatorioSondagem, periodo);
+
+            if (quantidade == 0)
+                throw new Exception("Não foi possivel obter os alunos ativos para o filtro especificado");
+
+            var perguntas = dados.GroupBy(x => x.Pergunta).Select(x => x.Key);
+
+            var listaRetorno = new List<RelatorioPortuguesPerguntasDto>();
+
+            PopularListaRetorno(dados, quantidade, perguntas, listaRetorno);
+
+            return listaRetorno;
+        }       
+
+        private async Task<int> ObterQuantidadeAlunosAtivos(RelatorioPortuguesFiltroDto filtroRelatorioSondagem, PeriodoFixoAnual periodo)
+        {
             var filtro = new FiltroTotalAlunosAtivos
             {
                 AnoLetivo = filtroRelatorioSondagem.AnoLetivo,
                 AnoTurma = filtroRelatorioSondagem.AnoEscolar,
                 DreId = filtroRelatorioSondagem.CodigoDre,
                 UeId = filtroRelatorioSondagem.CodigoUe,
-                DataInicio = new DateTime(2020, 01, 01),
-                DataFim = new DateTime(2020, 12, 01),
+                DataInicio = periodo.DataInicio,
+                DataFim = periodo.DataFim,
             };
 
-            var quantidade = await alunoAPI.ObterTotalAlunosAtivosPorPeriodo(filtro, string.Empty);
+            return await alunoAPI.ObterTotalAlunosAtivosPorPeriodo(filtro);            
+        }
 
-            var perguntas = dados.GroupBy(x => x.Pergunta).Select(x => x.Key);
-
-            var listaRetorno = new List<RelatorioPortuguesPerguntasDto>();
-
+        private void PopularListaRetorno(List<SondagemAlunoRespostas> dados, int alunosAtivos, IEnumerable<Pergunta> perguntas, List<RelatorioPortuguesPerguntasDto> listaRetorno)
+        {
             foreach (var pergunta in perguntas)
             {
-                AdicionarPerguntaSeNaoExistir(listaRetorno, pergunta);
+                AdicionarPerguntaSeNaoExistir(listaRetorno, pergunta, dados, alunosAtivos);
 
                 var respostas = dados.Where(x => x.PerguntaId == pergunta.Id).Select(x => x.Resposta).GroupBy(x => x.Id);
 
@@ -67,21 +85,31 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     Id = resp.Key,
                     Nome = resp.FirstOrDefault().Descricao,
                     Quantidade = resp.Count(),
+                    Porcentagem = ((double)resp.Count() / (double)alunosAtivos) * 100
                 }));
             }
-
-            return listaRetorno;
         }
 
-        private void AdicionarPerguntaSeNaoExistir(List<RelatorioPortuguesPerguntasDto> retorno, Pergunta pergunta)
+        private void AdicionarPerguntaSeNaoExistir(List<RelatorioPortuguesPerguntasDto> retorno, Pergunta pergunta, List<SondagemAlunoRespostas> dados, int alunosAtivos)
         {
             if (retorno.Any(x => x.Id.Equals(pergunta.Id)))
                 return;
+
+            var AlunosPergunta = dados.Where(x => x.PerguntaId == pergunta.Id)
+                                                .Select(x => x.SondagemAluno.CodigoAluno)
+                                                .GroupBy(x => x).OrderBy(x => x.Key);
+
+            var quantidadeAlunosPergunta = AlunosPergunta.Select(x => x.Key).Count();
 
             retorno.Add(new RelatorioPortuguesPerguntasDto
             {
                 Id = pergunta.Id,
                 Nome = pergunta.Descricao,
+                Total = new RelatorioPortuguesTotalizadores
+                {
+                    Quantidade = quantidadeAlunosPergunta,
+                    Porcentagem = ((double)quantidadeAlunosPergunta / (double)alunosAtivos) * 100
+                }
             });
         }
 

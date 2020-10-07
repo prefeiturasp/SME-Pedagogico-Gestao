@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DataTransfer;
 using SME.Pedagogico.Gestao.Data.DTO;
+using SME.Pedagogico.Gestao.Data.DTO.Portugues.Relatorio;
 using SME.Pedagogico.Gestao.Models.Academic;
 using SME.Pedagogico.Gestao.WebApp.Models.RelatorioSondagem;
 
@@ -40,10 +41,22 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 }
                 else
                 {
-                    PollReportPortugueseResult result = new PollReportPortugueseResult();
-                    result = await BuscarDadosSyncAsync(parameters, parameters.SchoolYear, parameters.CodigoDRE, parameters.CodigoEscola, parameters.CodigoCurso);
+                    var businessPoll = new Data.Business.PollPortuguese(_config);
 
-                    return (Ok(result));
+                    if (Convert.ToInt32(parameters.CodigoCurso) < 4)
+                    {
+                        PollReportPortugueseResult result = new PollReportPortugueseResult();
+                        result = await BuscarDadosSyncAsync(parameters, parameters.SchoolYear, parameters.CodigoDRE, parameters.CodigoEscola, parameters.CodigoCurso, businessPoll);
+
+                        return (Ok(result));
+                    }
+
+                    var periodo = await businessPoll.ObterPeriodoRelatorioPorDescricao(parameters.Term);
+
+                    if (periodo == null)
+                        return StatusCode(500, $"Não foi possivel encontrar o périodo com descrição {parameters.Term}");
+
+                    return Ok(await BuscarDadosAutoralAsync(parameters, periodo.Id));
                 }
             }
             else if (parameters.Discipline == "Matemática")
@@ -58,9 +71,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                                                                                                   parameters.CodigoEscola,
                                                                                                   parameters.CodigoTurmaEol, parameters.CodigoCurso);
 
-
-
-
                         return (Ok(result));
                     }
                     else
@@ -70,8 +80,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                                                                                                       parameters.CodigoDRE,
                                                                                                       parameters.CodigoEscola,
                                                                                                       parameters.CodigoTurmaEol, parameters.CodigoCurso);
-
-
                         return (Ok(result));
                     }
 
@@ -79,7 +87,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
                 else    // cONSOLIDADO
                 {
-                    var result = await BuscaDadosMathAsync(parameters, parameters.SchoolYear , parameters.CodigoDRE, parameters.CodigoEscola, parameters.CodigoCurso);
+                    var result = await BuscaDadosMathAsync(parameters, parameters.SchoolYear, parameters.CodigoDRE, parameters.CodigoEscola, parameters.CodigoCurso);
                     return Ok(result);
                 }
             }
@@ -116,12 +124,31 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                                                      anoTurma);
         }
 
-        private async Task<PollReportPortugueseResult> BuscarDadosSyncAsync(ParametersModel parameters, string anoLetivo, string codigoDre, string codigoEscola, string codigoCurso)
+        private async Task<IEnumerable<RelatorioPortuguesPerguntasDto>> BuscarDadosAutoralAsync(ParametersModel parametersModel, string periodoId)
         {
-            var BusinessPoll = new Data.Business.PollPortuguese(_config);
+            if (parametersModel.GrupoId.Equals("e27b99a3-789d-43fb-a962-7df8793622b1"))
+            {
+                // Adicionar implementação do consolidado de capacidade de Leitura
+                return null;
+            }
 
-            return await BusinessPoll.BuscarDadosRelatorioPortugues(parameters.Proficiency, parameters.Term, anoLetivo, codigoDre, codigoEscola, codigoCurso);
-            ;
+            var relatorioPortugues = new RelatorioPortugues();
+
+            return await relatorioPortugues.ObterRelatorioPortugues(new RelatorioPortuguesFiltroDto
+            {
+                AnoEscolar = Convert.ToInt32(parametersModel.CodigoCurso),
+                AnoLetivo = Convert.ToInt32(parametersModel.SchoolYear),
+                CodigoDre = parametersModel.CodigoDRE,
+                CodigoUe = parametersModel.CodigoEscola,
+                ComponenteCurricularId = "c65b2c0a-7a58-4d40-b474-23f0982f14b1",
+                GrupoId = parametersModel.GrupoId,
+                PeriodoId = periodoId
+            });
+        }
+
+        private async Task<PollReportPortugueseResult> BuscarDadosSyncAsync(ParametersModel parameters, string anoLetivo, string codigoDre, string codigoEscola, string codigoCurso, PollPortuguese businessPoll)
+        {
+            return await businessPoll.BuscarDadosRelatorioPortugues(parameters.Proficiency, parameters.Term, anoLetivo, codigoDre, codigoEscola, codigoCurso);
         }
 
         private async Task<PollReportPortugueseStudentResult> BuscarDadosPorTurmaAsync(ParametersModel parameters)
