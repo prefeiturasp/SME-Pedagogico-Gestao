@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static SME.Pedagogico.Gestao.Data.Constantes;
 
 namespace SME.Pedagogico.Gestao.Data.Business
 {
@@ -40,8 +41,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var temAcesso = await profileApi.VerificaSeProfessorTemAcesso(rf, _token);
                 if (occupations != null && temAcesso)
                 {
-                    var cargoProfessor = new RetornoCargoDTO();
-                    cargoProfessor.codigoCargo = "3239";
+                    var cargoProfessor = new RetornoCargoDTO();                    
+                    cargoProfessor.codigoCargo = CODIGO_CARGO_PROFESSOR;
                     cargoProfessor.nomeCargo = "Professor";
                     occupations.cargos.Add(cargoProfessor);
                 }
@@ -50,7 +51,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 {
                     codigoCargoAtivo = RetornaCargoAtivo(occupation);
 
-                    if (codigoCargoAtivo == "3379" || codigoCargoAtivo == "3360" || codigoCargoAtivo == "3085")
+                    if (codigoCargoAtivo == CODIGO_CARGO_CP || codigoCargoAtivo == CODIGO_CARGO_DIRETOR || codigoCargoAtivo == CODIGO_CARGO_AD)
                     {
                         occupationAccess = true;
                         break;
@@ -154,29 +155,21 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task<RetornoInfoPerfilDTO> GetProfileEmployeeInformation(string codeRF, string codeOccupations, string schoolYear, Guid? Perfil)
         {
-
             try
             {
-
                 var endPoint = new EndpointsAPI();
                 var profileApi = new PerfilSgpAPI(endPoint);
                 var parseado = int.TryParse(codeOccupations, out int result);
                 var profileInformation = await profileApi.getInformacoesPerfil(codeRF, parseado ? result : 0, int.Parse(schoolYear), _token, Perfil);
                 if (profileInformation != null)
-                {
                     return profileInformation;
-                }
-
                 else
-                {
                     return null;
-                }
             }
             catch (System.Exception ex)
             {
                 return null;
             }
-
         }
 
         public async Task<List<DREsDTO>> GetCodeDreAdm(string userName)
