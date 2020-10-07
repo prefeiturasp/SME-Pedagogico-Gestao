@@ -52,15 +52,15 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 return StatusCode(500, ex);
             }
         }
+
         [HttpGet]
         public async Task<ActionResult> Teste()
         {
             var autoral = new SondagemAutoralBusiness(_config);
           var teste =  autoral.ObterPerguntas(2020);
             return Ok();
-
-
         }
+
         [HttpPost]
         public async Task<ActionResult> PerfilServidor(BuscaPerfilServidor occupationsProfile)
         {
@@ -73,7 +73,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 //Necessário para gerar o Token temporariamente
                 var profileBusiness = new Profile(_config);
 
-                var profileInformation = await profileBusiness.GetProfileEmployeeInformation(codigoRF, codigoCargo, anoLetivo, occupationsProfile.activeRole?.PerfilId);
+                var profileInformation = await profileBusiness
+                    .GetProfileEmployeeInformation(codigoRF, codigoCargo, anoLetivo, occupationsProfile.activeRole?.PerfilId);
 
                 if (profileInformation != null)
                 {
