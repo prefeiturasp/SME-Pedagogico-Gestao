@@ -51,30 +51,37 @@ class PollReport extends Component {
   imprimir = () => {
     this.setState({ showMessage: true });
 
+    const discipline = Object.values(this.props.pollReport.filters).filter(
+      (item) => item.name === this.props.pollReport.selectedFilter.discipline
+    );
+
+    const proficiencia = discipline[0].proficiencies.filter(
+      (item) => item.label === this.props.pollReport.selectedFilter.proficiency
+    );
+
     const { username: usuarioRf } = this.props.user;
     const {
-      SchoolYear: anoLetivo,
-      codigoDRE: dre,
-      CodigoEscola: ue,
-      CodigoCurso: ano,
-      CodigoTurmaEol: turma,
-      discipline: componenteCurricular,
-      proficiency: proficiencia,
-      term: semestre,
+      SchoolYear,
+      codigoDRE,
+      CodigoEscola,
+      CodigoTurmaEol,
+      CodigoCurso,
+      term,
     } = this.props.pollReport.selectedFilter;
+    const semestre = term === "1° Semestre" ? 1 : 2;
 
     const payload = {
-      anoLetivo,
-      dre,
-      ue,
-      ano,
-      turma,
-      componenteCurricular,
-      proficiencia,
+      anoLetivo: parseInt(SchoolYear),
+      dreCodigo: parseInt(codigoDRE),
+      ueCodigo: parseInt(CodigoEscola),
+      ano: CodigoCurso,
+      turmaCodigo: parseInt(CodigoTurmaEol),
+      componenteCurricularId: discipline[0].id,
+      proficienciaId: proficiencia[0].id,
       semestre,
       usuarioRf,
     };
-    console.log(`payload`, payload);
+
     this.props.pollReportMethods.printPollReport(payload);
   };
 

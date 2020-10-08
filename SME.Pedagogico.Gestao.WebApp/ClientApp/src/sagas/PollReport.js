@@ -63,7 +63,11 @@ function getPollReportData(parameters) {
 
 function* PrintPollReportSaga({ parameters }) {
   try {
-    console.log("params", parameters);
+    yield fetch("api/v1/relatorios", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(parameters),
+    });
   } catch (error) {
     yield put({ type: PollReport.types.POLL_REPORT_API_REQUEST_FAIL });
   }

@@ -13,11 +13,12 @@
 const initialState = {
   filters: {
     math: {
+      id: 1,
       name: "Matemática",
       proficiencies: [
-        { label: "Campo Aditivo", value: "campoAditivo" },
-        { label: "Campo Multiplicativo", value: "campoMultiplicativo" },
-        { label: "Números", value: "numeros" },
+        { id: 1, label: "Campo Aditivo", value: "campoAditivo" },
+        { id: 2, label: "Campo Multiplicativo", value: "campoMultiplicativo" },
+        { id: 3, label: "Números", value: "numeros" },
       ],
       terms: [
         { label: "1° Semestre", value: "semestre1" },
@@ -25,10 +26,11 @@ const initialState = {
       ],
     },
     port: {
+      id: 2,
       name: "Língua Portuguesa",
       proficiencies: [
-        { label: "Leitura", value: "leitura" },
-        { label: "Escrita", value: "escrita" },
+        { id: 4, label: "Leitura", value: "leitura" },
+        { id: 5, label: "Escrita", value: "escrita" },
       ],
       terms: [
         { label: "1° Bimestre", value: "bimestre1" },
