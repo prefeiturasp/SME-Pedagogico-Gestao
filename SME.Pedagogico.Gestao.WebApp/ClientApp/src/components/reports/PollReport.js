@@ -9,7 +9,6 @@ import PollReportPortugueseChart from "./PollReportPortugueseChart";
 import PollReportMathChart from "./PollReportMathChart";
 import PollReportMathNumbersChart from "./PollReportMathNumbersChart";
 import PollReportMathChartClassroom from "./PollReportMathChartClassroom";
-import ReportService from "../../service/ReportService";
 import { connect } from "react-redux";
 import { actionCreators } from "../../store/PollReport";
 import { bindActionCreators } from "redux";
@@ -887,6 +886,7 @@ class PollReport extends Component {
                       classroomReport={this.classroomReport}
                       data={reportData}
                     />
+                    /** TODO - Ajustar aqui para construir o componente RelatorioConsolidadoCapacidadeLeitura*/
                   ) : (
                     Number(this.props.pollReport.selectedFilter.CodigoCurso) >= 7?
                     reportData.map(dados => {
