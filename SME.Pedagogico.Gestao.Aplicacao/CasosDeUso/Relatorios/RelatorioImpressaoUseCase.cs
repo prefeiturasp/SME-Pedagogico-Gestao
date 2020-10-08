@@ -16,9 +16,9 @@ namespace SME.Pedagogico.Gestao.Aplicacao
         public async Task Executar(RelatorioImpressaoFiltroDto filtros)
         {
 
-            if (filtros.ComponenteCurricular == ComponenteCurricularEnum.Matematica)
+            if (filtros.ComponenteCurricularId == ComponenteCurricularEnum.Matematica)
             {
-                if (filtros.Proficiencia == ProficienciaEnum.CampoAditivo || filtros.Proficiencia == ProficienciaEnum.CampoMultiplicativo)
+                if (filtros.ProficienciaId == ProficienciaEnum.CampoAditivo || filtros.ProficienciaId == ProficienciaEnum.CampoMultiplicativo)
                 {
                     await mediator.Send(new GerarRelatorioCommand(TipoRelatorio.RelatorioMatetimaticaPorTurma, filtros, filtros.UsuarioRF));
                 }
