@@ -7,6 +7,8 @@ using SME.Pedagogico.Gestao.Data.DataTransfer;
 using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.DTO.Portugues;
+using SME.Pedagogico.Gestao.Data.DTO.Portugues.Relatorio;
+using System;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
@@ -108,7 +110,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         {
             var sondagemAutoralBll = new PollPortuguese(_config);
             sondagemAutoralBll.SalvarSondagemAutoralPortugues(ListaAlunosSondagemDto);
-           
+
             return Ok();
         }
 
@@ -124,7 +126,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 return Ok();
             }
             return BadRequest("Sondagem não encontrada");
-          
+
         }
 
         [HttpGet]

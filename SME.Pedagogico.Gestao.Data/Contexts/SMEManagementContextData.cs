@@ -29,6 +29,7 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
         public DbSet<Ordem> Ordem { get; set; }
         public DbSet<OrdemPergunta> OrdemPergunta { get; set; }
         public DbSet<Periodo> Periodo { get; set; }
+        public DbSet<PeriodoFixoAnual> PeriodoFixoAnual { get; set; }
 
         public DbSet<SondagemAutoral> SondagemAutoral { get; set; }
 
