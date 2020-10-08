@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SME.Pedagogico.Gestao.Dominio
+namespace SME.Pedagogico.Gestao.Infra
 {
     public enum TipoFormatoRelatorio
     {

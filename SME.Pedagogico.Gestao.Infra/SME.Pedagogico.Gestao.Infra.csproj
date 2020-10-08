@@ -13,4 +13,8 @@
     <ProjectReference Include="..\SME.Pedagogico.Gestao.Dominio\SME.Pedagogico.Gestao.Dominio.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
+  </ItemGroup>
+
 </Project>

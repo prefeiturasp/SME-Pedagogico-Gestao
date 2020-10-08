@@ -1,12 +1,12 @@
 ﻿using MediatR;
-using SME.Pedagogico.Gestao.Dominio;
+using SME.Pedagogico.Gestao.Infra;
 using System;
 
 namespace SME.Pedagogico.Gestao.Aplicacao
 {
     public class ObterCodigoCorrelacaoQuery : IRequest<Guid>
     {
-        public TipoRelatorio TipoRelatorio{ get; set; }
+        public TipoRelatorio TipoRelatorio { get; set; }
 
         public string UsuarioRf { get; set; }
 

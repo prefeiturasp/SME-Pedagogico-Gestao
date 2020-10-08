@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SME.Pedagogico.Gestao.Dominio;
+using SME.Pedagogico.Gestao.Infra;
 
 namespace SME.Pedagogico.Gestao.Aplicacao
 {

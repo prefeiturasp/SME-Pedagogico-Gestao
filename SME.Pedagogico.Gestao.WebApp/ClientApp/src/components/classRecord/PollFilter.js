@@ -50,8 +50,6 @@ class PollFilter extends Component {
 
     this.props.filterMethods.getPeriod(anoAtual);
 
-
-
     this.props.filterMethods.setSchoolYear(anoAtual);
 
     if (ROLES_ENUM.IsDRE(this.props.user.activeRole.roleName)) {
@@ -675,9 +673,16 @@ class PollFilter extends Component {
         />
         <MensagemConfirmacaoAutoral
           controleExibicao={this.toggleMessageBox}
-          acaoPrincipal={async () => { this.props.savePollStudent().then(() => setTimeout(() => this.setSelectedFilter(), 1000)); }}
-          acaoSecundaria={async () => { this.setSelectedFilter(); }}
-          exibir={this.state.showMessageBox} />
+          acaoPrincipal={async () => {
+            this.props
+              .savePollStudent()
+              .then(() => setTimeout(() => this.setSelectedFilter(), 1000));
+          }}
+          acaoSecundaria={async () => {
+            this.setSelectedFilter();
+          }}
+          exibir={this.state.showMessageBox}
+        />
       </div>
     );
   }
