@@ -57,7 +57,7 @@ class PollFilter extends Component {
   }
 
   applyRole(ano) {
-    if (ROLES_ENUM.IsDRE((this.props.user.activeRole.roleName)))
+    if (ROLES_ENUM.IsDRE(this.props.user.activeRole.roleName))
       this.props.filterMethods.getDreAdm(this.props.user.username);
     else if (ROLES_ENUM.IsSME(this.props.user.activeRole.roleName))
       this.props.filterMethods.getListDres();
@@ -668,9 +668,16 @@ class PollFilter extends Component {
         />
         <MensagemConfirmacaoAutoral
           controleExibicao={this.toggleMessageBox}
-          acaoPrincipal={async () => { this.props.savePollStudent().then(() => setTimeout(() => this.setSelectedFilter(), 1000)); }}
-          acaoSecundaria={async () => { this.setSelectedFilter(); }}
-          exibir={this.state.showMessageBox} />
+          acaoPrincipal={async () => {
+            this.props
+              .savePollStudent()
+              .then(() => setTimeout(() => this.setSelectedFilter(), 1000));
+          }}
+          acaoSecundaria={async () => {
+            this.setSelectedFilter();
+          }}
+          exibir={this.state.showMessageBox}
+        />
       </div>
     );
   }
