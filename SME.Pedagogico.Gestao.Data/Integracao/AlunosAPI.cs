@@ -22,15 +22,22 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
 
             var parametros = new List<string>();
 
-            if (!string.IsNullOrWhiteSpace(filtro.DreId))
-                parametros.Add($"dreId={filtro.DreId}");
 
             if (!string.IsNullOrWhiteSpace(filtro.UeId))
                 parametros.Add($"ueId={filtro.UeId}");
 
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(filtro.DreId))
+                    parametros.Add($"dreId={filtro.DreId}");
+            }
+          
+
+           
+
             var parametrosString = string.Join('&', parametros);
 
-            var urlCompleta = string.Format(url, filtro.AnoTurma, filtro.AnoLetivo, filtro.DataInicio, filtro.DataFim);
+            var urlCompleta = string.Format(url, filtro.AnoTurma, filtro.AnoLetivo, filtro.DataInicio.ToString("yyyy-MM-dd"), filtro.DataFim.ToString("yyyy-MM-dd"));
 
             if (!string.IsNullOrWhiteSpace(parametrosString))
                 urlCompleta += $"?{parametrosString}";

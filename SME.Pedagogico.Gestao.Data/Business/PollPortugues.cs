@@ -6,7 +6,6 @@ using Microsoft.Extensions.Configuration;
 using MoreLinq;
 using SME.Pedagogico.Gestao.Data.Contexts;
 using SME.Pedagogico.Gestao.Data.DataTransfer;
-using SME.Pedagogico.Gestao.Data.DataTransfer.Portugues;
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.DTO.Matematica;
 using SME.Pedagogico.Gestao.Data.DTO.Portugues;
@@ -18,9 +17,7 @@ using SME.Pedagogico.Gestao.Models.Academic;
 using SME.Pedagogico.Gestao.Models.Autoral;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.Data.Business
@@ -557,8 +554,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         grupoDto.Ordem.Add(ordemDto);
                     }
 
-                    if (grupoDto.Ordem.Count > 0)
-                        grupoDto.Ordem.OrderBy(x => x.Ordenacao);
+                    grupoDto.Ordem = grupoDto.Ordem?.OrderBy(x => x.Ordenacao).ToList();
 
                     ListaGrupos.Add(grupoDto);
 
@@ -659,40 +655,31 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             using (var contexto = new SMEManagementContextData())
             {
-                try
+                var lista = await contexto.Sondagem.Where(x => x.ComponenteCurricular.Id
+               .Equals(filtrarListagemDto.ComponenteCurricular.ToString())
+               && x.AnoTurma == filtrarListagemDto.AnoEscolar
+               && x.CodigoDre == filtrarListagemDto.CodigoDre
+               && x.CodigoUe == filtrarListagemDto.CodigoUe
+               && x.AnoLetivo == filtrarListagemDto.AnoLetivo
+               && x.GrupoId == filtrarListagemDto.GrupoId
+               && (filtrarListagemDto.CodigoTurma == null ? true : x.CodigoTurma.Equals(filtrarListagemDto.CodigoTurma)))
+           .ToListAsync();
+
+                if (lista.Count == 0)
                 {
-                    var lista = await contexto.Sondagem.Where(x => x.ComponenteCurricular.Id
-                   .Equals(filtrarListagemDto.ComponenteCurricular.ToString())
-                   && x.AnoTurma == filtrarListagemDto.AnoEscolar
-                   && x.CodigoDre == filtrarListagemDto.CodigoDre
-                   && x.CodigoUe == filtrarListagemDto.CodigoUe
-                   && x.AnoLetivo == filtrarListagemDto.AnoLetivo
-                   && x.GrupoId == filtrarListagemDto.GrupoId
-                   && (filtrarListagemDto.CodigoTurma == null ? true : x.CodigoTurma.Equals(filtrarListagemDto.CodigoTurma)))
-               .ToListAsync();
-
-                    if (lista.Count == 0)
-                    {
-                        var listaVazia = new List<SequenciaOrdemSalvaDTO>();
-                        return listaVazia;
-                    }
-
-                    var listaSequenciaOrdemSalva = lista.GroupBy(x => x.SequenciaDeOrdemSalva).Select(item => new SequenciaOrdemSalvaDTO
-                    {
-                        OrdemId = item.First().OrdemId,
-                        SequenciaOrdemSalva = item.First().SequenciaDeOrdemSalva
-                    }).ToList();
-
-                    listaSequenciaOrdemSalva.Distinct();
-
-                    return listaSequenciaOrdemSalva;
-                }
-                catch (Exception ex)
-                {
-
-                    throw ex;
+                    var listaVazia = new List<SequenciaOrdemSalvaDTO>();
+                    return listaVazia;
                 }
 
+                var listaSequenciaOrdemSalva = lista.GroupBy(x => x.SequenciaDeOrdemSalva).Select(item => new SequenciaOrdemSalvaDTO
+                {
+                    OrdemId = item.First().OrdemId,
+                    SequenciaOrdemSalva = item.First().SequenciaDeOrdemSalva
+                }).ToList();
+
+                listaSequenciaOrdemSalva.Distinct();
+
+                return listaSequenciaOrdemSalva;
             }
         }
 
@@ -704,7 +691,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 using (var contexto = new SMEManagementContextData())
                 {
 
-                    var listaOrdemPergunta = contexto.OrdemPergunta.Include(x => x.Grupo).Include(x => x.Pergunta).Where(x => x.SequenciaOrdem == sequenciaOrdem).Where(y => y.GrupoId == grupoId).ToList();
+                    var listaOrdemPergunta = contexto.OrdemPergunta.Include(x => x.Grupo).Include(x => x.Pergunta).Where(y => y.GrupoId == grupoId).ToList();
                     var perguntaResposta = contexto.PerguntaResposta.Include(x => x.Pergunta).Include(y => y.Resposta).ToList();
                     var listaPerguntaDto = new List<PerguntaDto>();
 
@@ -798,7 +785,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     Sondagem sondagem = null;
                     var item = ListaAlunosSondagemDto.FirstOrDefault();
 
-                    if(!string.IsNullOrEmpty(item.SondagemId))
+                    if (!string.IsNullOrEmpty(item.SondagemId))
                         sondagem = BuscaSondagem(contexto, item);
 
                     if (sondagem == null)
