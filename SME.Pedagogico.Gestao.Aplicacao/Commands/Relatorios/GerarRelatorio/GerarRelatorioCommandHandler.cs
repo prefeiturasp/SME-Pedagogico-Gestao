@@ -16,7 +16,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao.Commands.Relatorios.GerarRelatorio
 
         public async Task<bool> Handle(GerarRelatorioCommand request, CancellationToken cancellationToken)
         {
-            var codigoCorrelacao = await mediator.Send(new ObterCodigoCorrelacaoQuery(request.TipoRelatorio, request.UsuarioLogadoRf));
+            var codigoCorrelacao = await mediator.Send(new ObterCodigoCorrelacaoQuery(request.TipoRelatorio, request.UsuarioLogadoRf, TipoFormatoRelatorio.Pdf));
 
             return await mediator.Send(new InserirFilaRabbitCommand(new PublicaFilaRelatoriosDto(RotasRabbit.WorkerRelatoriosSgp, RotasRabbit.ExchangeServidorRelatorios, request.Filtros,  request.TipoRelatorio.Name(), codigoCorrelacao, request.UsuarioLogadoRf)));
         }
