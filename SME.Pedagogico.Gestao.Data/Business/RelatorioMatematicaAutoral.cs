@@ -25,7 +25,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 											""PeriodoId"" = @PeriodoId
 											and ""Ano"" = @AnoLetivo";
 
-        public async Task<List<PerguntaDTO>> ObterPeriodoMatematica(filtrosRelatorioDTO filtro)
+        public async Task<List<PerguntaDTO>> ObterRelatorioMatematicaAutoral(filtrosRelatorioDTO filtro)
         {
             IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
             using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
