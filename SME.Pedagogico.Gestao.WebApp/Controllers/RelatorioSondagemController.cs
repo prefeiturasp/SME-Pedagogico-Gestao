@@ -36,10 +36,10 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 var filtro = new filtrosRelatorioDTO()
                 {
-                    AnoDaTurma = int.Parse(parameters.CodigoCurso),
+                    AnoEscolar = int.Parse(parameters.CodigoCurso),
                     AnoLetivo = int.Parse(parameters.SchoolYear),
-                    CodigoDRE = parameters.CodigoDRE,
-                    CodigoEscola = parameters.CodigoEscola,
+                    CodigoDre = parameters.CodigoDRE,
+                    CodigoUe = parameters.CodigoEscola,
                     CodigoTurmaEol = parameters.CodigoTurmaEol,
                     DescricaoDisciplina = parameters.Discipline,
                     DescricaoPeriodo = parameters.Term,

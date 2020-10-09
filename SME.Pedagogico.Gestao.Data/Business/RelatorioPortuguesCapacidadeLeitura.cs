@@ -13,6 +13,8 @@ using Npgsql;
 using Dapper;
 using SME.Pedagogico.Gestao.Data.DTO.Portugues.Relatorio.CapacidadeLeitura;
 using SME.Pedagogico.Gestao.Data.Business;
+using SME.Pedagogico.Gestao.Data.Relatorios.Querys;
+using SME.Pedagogico.Gestao.Data.Relatorios;
 
 public class RelatorioPortuguesCapacidadeLeitura
 {
@@ -21,16 +23,20 @@ public class RelatorioPortuguesCapacidadeLeitura
     public RelatorioPortuguesCapacidadeLeitura()
     {
         alunoAPI = new AlunosAPI(new EndpointsAPI());
+
     }
+
+    
 
     public async Task<List<OrdemDTO>> ObterRelatorioCapacidadeLeitura(RelatorioPortuguesFiltroDto filtro)
     {
+
+        var filtrosRelatorio = CriaMapFiltroRelatorio(filtro);
+        int totalDeAlunos = await ConsultaTotalDeAlunos.BuscaTotalDeAlunosEOl(filtrosRelatorio);
+        var query = ConsultasRelatorios.MontaQueryConsolidadoCapacidadeLeitura(filtro);
+       
         using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
         {
-            var query = MontaQueryConsolidadoCapacidadeLeitura(filtro);
-            var DatasPeriodo = await BuscaDatasPeriodoFixoAnual(filtro, conexao);
-            int totalDeAlunos = await BuscaTotalDeAlunosEOl(filtro, DatasPeriodo);
-
             var ListaPerguntaEhRespostasRelatorio = await conexao.QueryAsync<OrdemPerguntaRespostaDTO>(query.ToString(),
          new
          {
@@ -42,7 +48,7 @@ public class RelatorioPortuguesCapacidadeLeitura
              ComponenteCurricularId = filtro.ComponenteCurricularId,
              GrupoId = filtro.GrupoId
 
-         }); ;
+         });
 
             var relatorioAgrupado = ListaPerguntaEhRespostasRelatorio.GroupBy(p => p.OrdermId).ToList();
 
@@ -62,12 +68,13 @@ public class RelatorioPortuguesCapacidadeLeitura
                     pergunta.Nome = x.Where(y => y.PerguntaId == x.Key).First().PerguntaDescricao;
                     pergunta.Total = new TotalDTO()
                     {
-                        Quantidade = x.Where(y => y.PerguntaId == x.Key).Sum(q => q.QtdRespostas)
+                        Quantidade = totalDeAlunos,
+                        
                     };
 
                     pergunta.Total.Porcentagem = (pergunta.Total.Quantidade > 0 ? (pergunta.Total.Quantidade * 100) / (Double)totalDeAlunos : 0).ToString("0.00");
                     pergunta.Respostas = new List<RespostaDTO>();
-
+                    var totalRespostas = x.Where(y => y.PerguntaId == x.Key).Sum(q => q.QtdRespostas);
                     var listaPr = x.Where(y => y.PerguntaId == x.Key).ToList();
 
                     foreach (var item in listaPr)
@@ -79,7 +86,8 @@ public class RelatorioPortuguesCapacidadeLeitura
                         pergunta.Respostas.Add(resposta);
                     }
 
-                    var respostaSempreenchimento = CriaRespostaSemPreenchimento(totalDeAlunos, pergunta.Total.Quantidade);
+
+                    var respostaSempreenchimento = CriaRespostaSemPreenchimento(totalDeAlunos, totalRespostas);
                     pergunta.Respostas.Add(respostaSempreenchimento);
 
 
@@ -101,140 +109,20 @@ public class RelatorioPortuguesCapacidadeLeitura
         return respostaSemPreenchimento;
     }
 
-    private static async Task<int> BuscaTotalDeAlunosEOl(RelatorioPortuguesFiltroDto filtro, IEnumerable<DatasPeriodoFixoAnualDTO> DatasPeriodo)
+    private filtrosRelatorioDTO CriaMapFiltroRelatorio(RelatorioPortuguesFiltroDto filtro)
     {
-        var endpointsApi = new EndpointsAPI();
-        var alunoApi = new AlunosAPI(endpointsApi);
-
-        var filtroAlunos = new FiltroTotalAlunosAtivos()
+        var filtroRelatorio = new filtrosRelatorioDTO()
         {
+            AnoEscolar = filtro.AnoEscolar,
             AnoLetivo = filtro.AnoLetivo,
-            AnoTurma = filtro.AnoEscolar,
-            DreId = filtro.CodigoDre,
-            UeId = filtro.CodigoUe,
-            DataInicio = DatasPeriodo.First().DataInicio,
-            DataFim = DatasPeriodo.First().DataFim
+            CodigoDre = filtro.CodigoDre,
+            CodigoUe = filtro.CodigoUe,
+            ComponenteCurricularId = filtro.ComponenteCurricularId,
+            PeriodoId = filtro.PeriodoId
+
         };
 
-
-        var totalDeAlunos = await alunoApi.ObterTotalAlunosAtivosPorPeriodo(filtroAlunos);
-        return totalDeAlunos;
+        return filtroRelatorio;
     }
-    private static string MontaQueryConsolidadoCapacidadeLeitura(RelatorioPortuguesFiltroDto filtro)
-    {
-        var queryRelatorio = @"
-    select
-    o.""Id"" as ""OrdermId"",
-    o.""Descricao"" as ""Ordem"",
-    p.""Id"" as ""PerguntaId"",
-	p.""Descricao"" as ""PerguntaDescricao"",
-	r.""Id"" as ""RespostaId"", 
-	r.""Descricao"" as ""RespostaDescricao"" ,
-	gp.""Ordenacao"",
-	count(tabela.""RespostaId"") as ""QtdRespostas""
-from
-    ""Ordem""  as o 
-   inner join ""GrupoOrdem"" gp on 
-   gp.""OrdemId"" = o.""Id"" and 
-   gp.""GrupoId"" = @GrupoId
-   inner join ""OrdemPergunta"" op on
-    op.""GrupoId"" = @GrupoId
-   inner join ""Pergunta"" p on
-	 p.""Id"" = op.""PerguntaId"" 
-inner join ""PerguntaResposta"" pr on
-	pr.""PerguntaId"" = p.""Id""
-inner join ""Resposta"" r on
-	r.""Id"" = pr.""RespostaId""
-left join (
-	select
-	    s.""OrdemId"",
-		s.""AnoLetivo"",
-		s.""AnoTurma"",
-		per.""Descricao"",
-		c.""Descricao"",
-		sa.""NomeAluno"",
-		p.""Id"" as ""PerguntaId"",
-		p.""Descricao"" as ""PerguntaDescricao"",
-		r.""Id"" as ""RespostaId"",
-		r.""Descricao"" as ""RespostaDescricao""
-	from
-		""SondagemAlunoRespostas"" sar
-	inner join ""SondagemAluno"" sa on
-		sa.""Id"" = ""SondagemAlunoId""
-	inner join ""Sondagem"" s on
-		s.""Id"" = sa.""SondagemId""
-	inner join ""Pergunta"" p on
-		p.""Id"" = sar.""PerguntaId""
-	inner join ""Resposta"" r on
-		r.""Id"" = sar.""RespostaId""
-	inner join ""Periodo"" per on
-		per.""Id"" = s.""PeriodoId""
-	inner join ""ComponenteCurricular"" c on
-		c.""Id"" = s.""ComponenteCurricularId""
-    
-	where
-		s.""Id"" in (
-		select
-			s.""Id""
-		from
-			""Sondagem"" s
-		where
-		        s.""GrupoId"" = @GrupoId
-		    and s.""ComponenteCurricularId"" = @ComponenteCurricularId";
-        var query = new StringBuilder();
-        query.Append(queryRelatorio);
-        if (!string.IsNullOrEmpty(filtro.CodigoDre))
-            query.AppendLine(@" and ""CodigoDre"" =  @CodigoDRE");
-        if (!string.IsNullOrEmpty(filtro.CodigoUe))
-            query.AppendLine(@"and ""CodigoUe"" =  @CodigoEscola");
-
-        query.Append(@"
-			and s.""AnoLetivo"" = @AnoLetivo
-			and s.""AnoTurma"" = @AnoTurma
-		        ) ) as tabela on
-	p.""Id"" = tabela.""PerguntaId"" and
-	r.""Id""= tabela.""RespostaId"" and
-    o.""Id"" = tabela.""OrdemId""
-group by
-	o.""Id"",
-    o.""Descricao"",
-    r.""Id"",
-	r.""Descricao"",
-	p.""Id"",
-	p.""Descricao"",
-	gp.""Ordenacao""
-order by
-   gp.""Ordenacao"",
-   o.""Descricao"",
-   p.""Descricao"",
-   r.""Descricao""");
-
-        return query.ToString();
-    }
-
-    private static async Task<IEnumerable<DatasPeriodoFixoAnualDTO>> BuscaDatasPeriodoFixoAnual(RelatorioPortuguesFiltroDto filtro, NpgsqlConnection conexao)
-    {
-        var queryPeriodoFixoAnual = QueryPeriodoFixoAnual;
-
-
-        var DatasPeriodo = await conexao.QueryAsync<DatasPeriodoFixoAnualDTO>(queryPeriodoFixoAnual.ToString(),
-          new
-          {
-              PeriodoId = filtro.PeriodoId,
-              AnoLetivo = filtro.AnoLetivo,
-
-          });
-        return DatasPeriodo;
-    }
-
-
-    private const string QueryPeriodoFixoAnual = @"select
-										     ""DataInicio"",
-											 ""DataFim""
-										      from
-										     ""PeriodoFixoAnual""
-											  where
-											""PeriodoId"" = @PeriodoId
-											and ""Ano"" = @AnoLetivo";
 }
 
