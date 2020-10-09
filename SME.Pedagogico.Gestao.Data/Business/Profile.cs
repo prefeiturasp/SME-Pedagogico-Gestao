@@ -46,7 +46,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var temAcesso = await profileApi.VerificaSeProfessorTemAcesso(rf, _token);
                 if (occupations != null && temAcesso)
                 {
-                    var cargoProfessor = new RetornoCargoDTO();                    
+                    var cargoProfessor = new RetornoCargoDTO();
                     cargoProfessor.codigoCargo = CODIGO_CARGO_PROFESSOR;
                     cargoProfessor.nomeCargo = "Professor";
                     occupations.cargos.Add(cargoProfessor);
@@ -166,10 +166,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var profileApi = new PerfilSgpAPI(endPoint);
                 var parseado = int.TryParse(codeOccupations, out int result);
 
-                var profileInformation = await profileApi
-                    .getInformacoesPerfil(codeRF, parseado ? result : 0, int.Parse(schoolYear), _token, Perfil);
+                var profileInformation = new RetornoInfoPerfilDTO();
 
-                profileInformation = await ObterAbrangencia(codeRF, Convert.ToInt32(schoolYear), roleName, profileInformation);
+                // Para coordenador pedagógico, assitente de diretor, diretor busca a abrangência no SGP
+                if (!string.IsNullOrWhiteSpace(roleName) && (roleName.Equals("CP") || roleName.Equals("AD") || roleName.Equals("Diretor")))
+                    profileInformation = await ObterAbrangencia(codeRF, Convert.ToInt32(schoolYear), roleName, profileInformation);
+                else
+                    profileInformation = await profileApi
+                        .getInformacoesPerfil(codeRF, parseado ? result : 0, int.Parse(schoolYear), _token, Perfil);
 
                 if (profileInformation != null)
                     return profileInformation;
@@ -184,32 +188,26 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private async Task<RetornoInfoPerfilDTO> ObterAbrangencia(string codeRF, int schoolYear, string roleName, RetornoInfoPerfilDTO profileInformation)
         {
-            // Para coordenador pedagógico, assitente de diretor busca a abrangência no SGP
-            if (!string.IsNullOrWhiteSpace(roleName) && (roleName.Equals("CP") || roleName.Equals("AD")))
-            {
-                profileInformation = new RetornoInfoPerfilDTO();
+            var novoSgpApi = new NovoSGPAPI();
+            var dres = await novoSgpApi.AbrangenciaDres(codeRF, Convert.ToInt32(schoolYear));
 
-                var novoSgpApi = new NovoSGPAPI();
-                var dres = await novoSgpApi.AbrangenciaDres(codeRF, Convert.ToInt32(schoolYear));
-
-                dres.ForEach(dre =>
+            dres.ForEach(dre =>
+               {
+                   profileInformation.DREs.Add(new RetornoDREDTO()
                    {
-                       profileInformation.DREs.Add(new RetornoDREDTO()
-                       {
-                           Codigo = dre.Codigo,
-                           Nome = dre.Nome,
-                           Sigla = dre.Abreviacao
-                       });
-                       var ues = novoSgpApi.AbrangenciaUes(codeRF, schoolYear, dre.Codigo).Result;
-                       ues.ForEach(ue => profileInformation.Escolas.Add(new RetornoEscolaDTO()
-                       {
-                           Codigo = ue.Codigo,
-                           CodigoDRE = dre.Codigo,
-                           Nome = ue.Nome,
-                           Sigla = ue.NomeSimples
-                       }));
+                       Codigo = dre.Codigo,
+                       Nome = dre.Nome,
+                       Sigla = dre.Abreviacao
                    });
-            }
+                   var ues = novoSgpApi.AbrangenciaUes(codeRF, schoolYear, dre.Codigo).Result;
+                   ues.ForEach(ue => profileInformation.Escolas.Add(new RetornoEscolaDTO()
+                   {
+                       Codigo = ue.Codigo,
+                       CodigoDRE = dre.Codigo,
+                       Nome = ue.Nome,
+                       Sigla = ue.NomeSimples
+                   }));
+               });
 
             return profileInformation;
         }
