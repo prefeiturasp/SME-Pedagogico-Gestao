@@ -73,7 +73,7 @@ class PollReport extends Component {
 
     const payload = {
       anoLetivo: parseInt(SchoolYear),
-      dreCodigo: parseInt(codigoDRE),
+      dreCodigo: parseInt(codigoDRE || 0),
       ueCodigo: CodigoEscola,
       ano: CodigoCurso,
       turmaCodigo: parseInt(CodigoTurmaEol || 0),
