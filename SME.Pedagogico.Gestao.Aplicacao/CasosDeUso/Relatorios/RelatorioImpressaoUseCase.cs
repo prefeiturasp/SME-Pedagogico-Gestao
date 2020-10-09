@@ -17,9 +17,9 @@ namespace SME.Pedagogico.Gestao.Aplicacao
         {
             TipoRelatorio? tipoRelatorio = null;
 
-            if (filtros.ComponenteCurricular == ComponenteCurricularEnum.Matematica)
+            if (filtros.ComponenteCurricularId == ComponenteCurricularEnum.Matematica)
             {
-                if (filtros.Proficiencia == ProficienciaEnum.CampoAditivo || filtros.Proficiencia == ProficienciaEnum.CampoMultiplicativo)
+                if (filtros.ProficienciaId == ProficienciaEnum.CampoAditivo || filtros.ProficienciaId == ProficienciaEnum.CampoMultiplicativo)
                 {
                     tipoRelatorio = TipoRelatorio.RelatorioMatetimaticaPorTurma;
                 }
