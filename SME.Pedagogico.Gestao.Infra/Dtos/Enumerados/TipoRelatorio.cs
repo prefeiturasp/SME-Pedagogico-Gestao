@@ -11,7 +11,7 @@ namespace SME.Pedagogico.Gestao.Infra
         RelatorioMatetimaticaPorTurma = 16,
 
         [Display(Name = "relatorios/sondagem/matematica-consolidado", ShortName = "MatematicaConsolidado", Description = "Matematica Consolidado")]
-        RelatorioMatetimaticaConsolidado = 3
+        RelatorioMatetimaticaConsolidado = 17
 
     }
 }
