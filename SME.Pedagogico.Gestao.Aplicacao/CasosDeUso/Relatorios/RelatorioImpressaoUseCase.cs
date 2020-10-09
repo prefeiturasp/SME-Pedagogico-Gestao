@@ -23,7 +23,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 {
                     tipoRelatorio = TipoRelatorio.RelatorioMatetimaticaPorTurma;
                 }
-                else  if (!string.IsNullOrEmpty(filtros.TurmaCodigo) && filtros.Proficiencia == ProficienciaEnum.Numeros)
+                else  if (filtros.TurmaCodigo > 0 && filtros.ProficienciaId == ProficienciaEnum.Numeros)
                 {
                     tipoRelatorio = TipoRelatorio.RelatorioMatetimaticaConsolidado;
                 }
