@@ -73,17 +73,16 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 //Necessário para gerar o Token temporariamente
                 var profileBusiness = new Profile(_config);
 
-                var profileInformation = await profileBusiness.GetProfileEmployeeInformation(codigoRF, codigoCargo, anoLetivo, occupationsProfile.activeRole?.PerfilId);
+                var roleName = Perfil.ObterPerfis()
+                    .SingleOrDefault(p => p.PerfilGuid.Equals(occupationsProfile.activeRole?.PerfilId))?.RoleName;
+
+                var profileInformation = await profileBusiness
+                    .GetProfileEmployeeInformation(codigoRF, codigoCargo, anoLetivo, occupationsProfile.activeRole?.PerfilId, roleName);
 
                 if (profileInformation != null)
-                {
                     return (Ok(profileInformation));
-                }
                 else
-                {
                     return (NoContent());
-                }
-
             }
             catch (Exception ex)
             {
