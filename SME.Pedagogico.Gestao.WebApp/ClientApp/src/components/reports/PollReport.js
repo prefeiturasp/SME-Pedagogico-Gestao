@@ -76,7 +76,7 @@ class PollReport extends Component {
       dreCodigo: parseInt(codigoDRE),
       ueCodigo: CodigoEscola,
       ano: CodigoCurso,
-      turmaCodigo: parseInt(CodigoTurmaEol),
+      turmaCodigo: parseInt(CodigoTurmaEol || 0),
       componenteCurricularId: discipline[0].id,
       proficienciaId: proficiencia[0].id,
       semestre,
