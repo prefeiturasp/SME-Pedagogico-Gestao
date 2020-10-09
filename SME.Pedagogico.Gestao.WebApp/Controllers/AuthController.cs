@@ -259,7 +259,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         {
             var ProfileBusiness = new Profile(_config);
 
-
             string roleName = "";
             string accessLevel = "";
             bool haveOccupationAccess;
@@ -267,36 +266,24 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             int qtdIsTeacher = 0;
             var ListcodeOcupations = new Dictionary<string, string>();
 
-
             if (occupations != null)
             {
                 //Implementar regra de cargo sobrePosto 
-
-
                 foreach (var occupation in occupations.cargos)
                 {
-
-
                     string codigoCargoAtivo = ProfileBusiness.RetornaCargoAtivo(occupation);
                     haveOccupationAccess = false;
-
 
                     switch (codigoCargoAtivo)
                     {
                         case "3239":
-                            roleName = "Professor";
-                            accessLevel = "32";
-                            haveOccupationAccess = true;
-                            isTeacher = true;
-                            qtdIsTeacher += 1;
-                            break;
                         case "3301":
                             roleName = "Professor";
                             accessLevel = "32";
                             haveOccupationAccess = true;
                             isTeacher = true;
                             qtdIsTeacher += 1;
-                            break;
+                            break;                            
                         case "3310":
                             roleName = "Professor";
                             accessLevel = "32";
@@ -313,11 +300,15 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                             accessLevel = "27";
                             haveOccupationAccess = true;
                             break;
+                        case "3085":
+                            roleName = "AD";
+                            accessLevel = "26";
+                            haveOccupationAccess = true;
+                            break;
                         default:
                             haveOccupationAccess = false;
                             break;
                     }
-
 
                     if (haveOccupationAccess)
                     {
@@ -330,7 +321,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                                 {
                                     var profileBusiness = new Profile(_config);
 
-
                                     var profileInformation = await profileBusiness.GetProfileEmployeeInformation(rf, codigoCargoAtivo, DateTime.Now.Year.ToString(), default);
                                     if (profileInformation != null)
                                     {
@@ -338,9 +328,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                                         ListcodeOcupations.Add(roleName, codigoCargoAtivo);
                                     }
                                 }
-
                             }
-
                             else
                             {
                                 await Authentication.SetRole(rf, roleName, accessLevel, Perfil.ObterPerfis().FirstOrDefault(x => x.RoleName.Equals(roleName)).PerfilGuid);
@@ -659,9 +647,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             if (meusDados == null)
                 return Unauthorized("Não foi possivel obter os dados do usuário. Contate a SME");
 
-            var ProfileBusiness = new Profile(_config);
-
-            List<UserRoleModel> Roles = await GetRolesAuthentication(credential, retornoAutenticacao);
+            var ProfileBusiness = new Profile(_config);            
 
             var privileged = new List<PrivilegedAccess>();
 
@@ -684,7 +670,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     }).ToList();
 
                 await Authentication.SetPrivilegedAccess(credential.Username, privileged);
-
             }
 
             if (retornoAutenticacao.PerfisUsuario.PossuiPerfilSme)
@@ -706,9 +691,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             if (occupationRF != null)
                 listOccupations = await SetOccupationsRF(credential.Username, occupationRF);
 
-            Roles = await GetUserRoles(credential.Username);
+            var roles = await GetUserRoles(credential.Username);
 
-            if (!Roles.Any())
+            if (!roles.Any())
                 return Unauthorized("Usuario não autorizado");
 
             string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
@@ -720,7 +705,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 Token = CreateToken(credential.Username),
                 Session = session,
                 RefreshToken = refreshToken,
-                Roles,
+                roles,
                 ListOccupations = listOccupations,
             });
         }

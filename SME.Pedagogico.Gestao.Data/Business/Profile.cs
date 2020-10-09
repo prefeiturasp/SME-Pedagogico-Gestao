@@ -13,6 +13,7 @@ using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP;
 using Remotion.Linq.Clauses.ResultOperators;
 using Microsoft.EntityFrameworkCore;
 using MoreLinq;
+using static SME.Pedagogico.Gestao.Data.Constantes;
 
 namespace SME.Pedagogico.Gestao.Data.Business
 {
@@ -45,8 +46,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var temAcesso = await profileApi.VerificaSeProfessorTemAcesso(rf, _token);
                 if (occupations != null && temAcesso)
                 {
-                    var cargoProfessor = new RetornoCargoDTO();
-                    cargoProfessor.codigoCargo = "3239";
+                    var cargoProfessor = new RetornoCargoDTO();                    
+                    cargoProfessor.codigoCargo = CODIGO_CARGO_PROFESSOR;
                     cargoProfessor.nomeCargo = "Professor";
                     occupations.cargos.Add(cargoProfessor);
                 }
@@ -55,9 +56,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 {
                     codigoCargoAtivo = RetornaCargoAtivo(occupation);
 
-                    if (
-                        codigoCargoAtivo == "3379" ||
-                        codigoCargoAtivo == "3360")
+                    if (codigoCargoAtivo == CODIGO_CARGO_CP || codigoCargoAtivo == CODIGO_CARGO_DIRETOR || codigoCargoAtivo == CODIGO_CARGO_AD)
                     {
                         occupationAccess = true;
                         break;
@@ -71,8 +70,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 return null;
             }
         }
-
-
 
         public string RetornaCargoAtivo(RetornoCargoDTO occupation)
         {
@@ -187,8 +184,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private async Task<RetornoInfoPerfilDTO> ObterAbrangencia(string codeRF, int schoolYear, string roleName, RetornoInfoPerfilDTO profileInformation)
         {
-            // Para coordenador pedagógico busca a abrangência no SGP
-            if (!string.IsNullOrWhiteSpace(roleName) && roleName.Equals("CP"))
+            // Para coordenador pedagógico, assitente de diretor busca a abrangência no SGP
+            if (!string.IsNullOrWhiteSpace(roleName) && (roleName.Equals("CP") || roleName.Equals("AD")))
             {
                 profileInformation = new RetornoInfoPerfilDTO();
 
