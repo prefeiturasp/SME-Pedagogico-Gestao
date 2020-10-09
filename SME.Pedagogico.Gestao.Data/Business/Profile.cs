@@ -13,6 +13,7 @@ using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP;
 using Remotion.Linq.Clauses.ResultOperators;
 using Microsoft.EntityFrameworkCore;
 using MoreLinq;
+using static SME.Pedagogico.Gestao.Data.Constantes;
 
 namespace SME.Pedagogico.Gestao.Data.Business
 {
@@ -183,8 +184,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private async Task<RetornoInfoPerfilDTO> ObterAbrangencia(string codeRF, int schoolYear, string roleName, RetornoInfoPerfilDTO profileInformation)
         {
-            // Para coordenador pedagógico busca a abrangência no SGP
-            if (!string.IsNullOrWhiteSpace(roleName) && roleName.Equals("CP"))
+            // Para coordenador pedagógico, assitente de diretor busca a abrangência no SGP
+            if (!string.IsNullOrWhiteSpace(roleName) && (roleName.Equals("CP") || roleName.Equals("AD")))
             {
                 profileInformation = new RetornoInfoPerfilDTO();
 
