@@ -2,11 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DTO;
-using SME.Pedagogico.Gestao.Data.Integracao;
-using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
@@ -44,7 +40,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 //Necessário para gerar o Token temporariamente
                 var filterBusiness = new Filters(_config);
-                var listClassRoom =  await filterBusiness.GetListClassRoomSchool(classrooms.schoolCodeEol, classrooms.schoolYear);
+                var listClassRoom = await filterBusiness.GetListClassRoomSchool(classrooms.schoolCodeEol, classrooms.schoolYear);
 
                 if (listClassRoom != null)
                 {
@@ -74,7 +70,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 //Necessário para gerar o Token temporariamente
                 var filterBusiness = new Filters(_config);
-                var listSchool =  await filterBusiness.GetListSchoolDre(schoolFilters.dreCodeEol, schoolFilters.schoolYear);
+                var listSchool = await filterBusiness.GetListSchoolDre(schoolFilters.dreCodeEol, schoolFilters.schoolYear);
 
                 if (listSchool != null)
                 {
@@ -120,9 +116,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 return StatusCode(500, ex);
             }
         }
-
-
     }
-
 }
 

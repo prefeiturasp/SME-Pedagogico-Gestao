@@ -426,12 +426,12 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> Login([FromBody]CredentialModel credential)
         {
-            if (Data.Business.Authentication.ValidateUser(credential.Username, credential.Password))
+            if (Authentication.ValidateUser(credential.Username, credential.Password))
             {
                 string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
                 string refreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
 
-                await Data.Business.Authentication.LoginUser(credential.Username, session, refreshToken); // Loga o usuário no sistema
+                await Authentication.LoginUser(credential.Username, session, refreshToken, DateTime.Now.AddMinutes(30)); // Loga o usuário no sistema
 
                 return (Ok(new
                 {
@@ -455,7 +455,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         public async Task<ActionResult<string>> RefreshLoginJWT([FromBody]CredentialModel credential)
         {
             // Faz a pesquisa no banco de dados (smeManagementDB/LoggedUsers) se o usuário está listado como logado possuindo a mesma sessão e o mesmo refresh token
-            LoggedUser loggedUser = await Data.Business.Authentication.GetLoggedUser(credential.Username, credential.Session, credential.RefreshToken);
+            LoggedUser loggedUser = await Authentication.GetLoggedUser(credential.Username, credential.Session, credential.RefreshToken);
 
             // Caso seja encontrado algum usuário com a combinação de username, sessão e refreshToken, verifica se o refresh token ainda é valido
             if (loggedUser != null)
@@ -464,7 +464,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     string newSession = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
                     string newRefreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
 
-                    await Data.Business.Authentication.LoginUser(credential.Username, newSession, newRefreshToken); // Salva as informações na tabela correspondente (LoggedUsers)
+                    await Authentication.LoginUser(credential.Username, newSession, newRefreshToken, DateTime.Now.AddMinutes(30)); // Salva as informações na tabela correspondente (LoggedUsers)
 
                     return (Ok(new
                     {
@@ -475,7 +475,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 }
                 else // Caso não seja válido, remove o usuário da lista de usuários logados
                 {
-                    await Data.Business.Authentication.LogoutUser(credential.Username, credential.Session); // Desloga o usuário
+                    await Authentication.LogoutUser(credential.Username, credential.Session); // Desloga o usuário
                 }
 
             return (Unauthorized());
@@ -588,7 +588,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
                 string refreshToken = Data.Functionalities.Cryptography.CreateHashKey(); // Cria o refresh token
-                await Data.Business.Authentication.LoginUser(credential.Username, session, refreshToken); // Loga o usuário no sistema
+                await Authentication.LoginUser(credential.Username, session, refreshToken, ret.DataHoraExpiracao); // Loga o usuário no sistema
 
                 return (Ok(new
                 {
@@ -698,7 +698,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
             string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
             string refreshToken = retornoAutenticacao.Token; // Usa token criado no novo SGP
-            await Authentication.LoginUser(credential.Username, session, refreshToken); // Loga o usuário no sistema
+            await Authentication.LoginUser(credential.Username, session, refreshToken, retornoAutenticacao.DataHoraExpiracao); // Loga o usuário no sistema
 
             return Ok(new
             {
