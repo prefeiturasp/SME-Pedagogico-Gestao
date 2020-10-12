@@ -8,6 +8,6 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Portugues.Relatorio.CapacidadeLeitura
   public  class OrdemDTO
     {
         public string Ordem { get; set; }
-        public List<PerguntaDTO> Pergunta { get; set; }
+        public List<PerguntaDTO> Perguntas { get; set; }
     }
 }

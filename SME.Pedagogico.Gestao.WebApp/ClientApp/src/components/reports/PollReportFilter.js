@@ -27,9 +27,11 @@ class PollReportFilter extends Component {
 
         this.initialFilterChange = this.initialFilterChange.bind(this);
         this.onChangeProficiency = this.onChangeProficiency.bind(this);
+        this.onChangeGrupo = this.onChangeGrupo.bind(this);
         this.onChangeTerm = this.onChangeTerm.bind(this);
         this.setSelectedFilter = this.setSelectedFilter.bind(this);
         this.checkButton = this.checkButton.bind(this);
+        this.limparDadosFiltro = this.limparDadosFiltro.bind(this);
     }
 
     componentDidMount() {
@@ -38,28 +40,32 @@ class PollReportFilter extends Component {
 
         for (var key in this.props.pollReport.filters)
             this.initialFilter.push({ value: key, label: this.props.pollReport.filters[key].name });
+    } 
+
+    componentDidUpdate(){
+        if((this.ehMatematicaAcimaDoSetimoAnoConsolidado()) && 
+            (this.state.selectedFilter.proficiency || this.state.selectedFilter.grupoId)){
+            this.limparDadosFiltro();         
+        }else if(this.ehPortuguesAcimaDoQuartoAnoConsolidado() && this.state.selectedFilter.proficiency){
+            this.limparDadosFiltro();
+        }
     }
 
-    
-    componentDidUpdate(){
-        if((this.ehMatematicaAcimaDoSetimoAnoConsolidado() || this.ehPortuguesAcimaDoQuartoAnoConsolidado()) && 
-            (this.state.selectedFilter.proficiency != null || this.state.selectedFilter.grupoId != null)){
-            var novoFiltro = this.state.selectedFilter;
-            novoFiltro.proficiency = null;
-            novoFiltro.grupoId = null;
+    limparDadosFiltro(){
+        var novoFiltro = this.state.selectedFilter;
+            novoFiltro.proficiency = "";
+            novoFiltro.grupoId = "";
             this.setState({
                 selectedFilter: novoFiltro, 
-                selectedProficiency: null, 
-                grupoSelecionado:null
-            });            
-        }
+                selectedProficiency: "",
+            }); 
     }
 
     initialFilterChange(event) {
         var filters = this.props.pollReport.filters;
         var index = event.nativeEvent.target.selectedIndex;
         var label = event.nativeEvent.target[index].text;
-        var grupos = this.props.sondagemPortugues.grupos ? 
+        var grupos = [{value:"", label:""}].concat(this.props.sondagemPortugues.grupos) ? 
             this.props.sondagemPortugues.grupos.map(grupo => {
                 return ({
                     value: grupo.id, 
@@ -103,7 +109,8 @@ class PollReportFilter extends Component {
                 term: selectedFilter.term,
                 grupoId: selectedFilter.grupoId
             },
-            selectedProficiency: selectedProficiency
+            selectedProficiency: selectedProficiency,
+            grupoSelecionado: "",
         });
     }
 
@@ -155,7 +162,8 @@ class PollReportFilter extends Component {
         parameters.CodigoCurso = this.props.poll.selectedFilter.yearClassroom;
         parameters.CodigoTurmaEol = this.props.poll.selectedFilter.classroomCodeEol === null ? "" : this.props.poll.selectedFilter.classroomCodeEol;
         parameters.SchoolYear = this.props.poll.selectedFilter.schoolYear;
-        parameters.grupoId = this.props.poll.selectedFilter.grupoId;
+        parameters.grupoId = this.ehPortuguesAcimaDoQuartoAnoConsolidado()? this.state.grupoSelecionado: null;
+        this.props.pollReportsMethods.resetData();
         this.props.pollReportsMethods.getPollReport(parameters);
     }
 
@@ -166,19 +174,20 @@ class PollReportFilter extends Component {
 
     ehPortuguesAcimaDoQuartoAnoConsolidado(){
        return !this.props.poll.selectedFilter.classroomCodeEol && 
-       Number(this.props.poll.selectedFilter.schoolYear) >=4 &&
+       Number(this.props.poll.selectedFilter.yearClassroom) >=4 &&
        this.state.selectedFilter.discipline === "Língua Portuguesa"
     }
 
     checkButton() {
         var parameters = this.state.selectedFilter;
 
-        if (parameters.discipline != null && 
-            (parameters.proficiency != null || this.ehMatematicaAcimaDoSetimoAnoConsolidado()) && 
-            parameters.term != null)
-            return (false);
-
-        return (true);
+        if(this.ehMatematicaAcimaDoSetimoAnoConsolidado()){
+            return !parameters.discipline || !parameters.term
+        } else if (this.ehPortuguesAcimaDoQuartoAnoConsolidado()){
+            return !parameters.discipline || !parameters.term || !parameters.grupoId
+        }else{
+            return !parameters.discipline || !parameters.term || !parameters.proficiency
+        }
     }
 
     render() {
@@ -201,19 +210,21 @@ class PollReportFilter extends Component {
                 options={this.state.proficiencies}
                 onChange={this.onChangeProficiency}
                 value={this.state.selectedProficiency}
-                resetColor={this.state.selectedProficiency === "" ? true : false}
+                resetColor={!this.state.selectedProficiency}
                 disabled={this.ehMatematicaAcimaDoSetimoAnoConsolidado() || this.ehPortuguesAcimaDoQuartoAnoConsolidado()}
               />
-               <div className="px-2"/>
-               <SelectChangeColor
-                   className="custom-select-sm"
-                   defaultText="Grupo"
-                   options={this.state.grupos}
-                   onChange={this.onChangeGrupo}
-                   value={this.props.grupoSelecionado}
-                   resetColor={!this.state.grupoSelecionado}
-                   disabled={!this.ehPortuguesAcimaDoQuartoAnoConsolidado()}
-               />
+              {this.ehPortuguesAcimaDoQuartoAnoConsolidado() &&<>
+                <div className="px-2"/>
+                <SelectChangeColor
+                    className="custom-select-sm"
+                    defaultText="Grupo"
+                    options={this.state.grupos}
+                    onChange={this.onChangeGrupo}
+                    value={this.props.grupoSelecionado}
+                    resetColor={!this.state.grupoSelecionado}
+                />
+                </>
+              }
               <div className="px-2"></div>
               <SelectChangeColor
                 className="custom-select-sm"
