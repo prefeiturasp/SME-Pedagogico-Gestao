@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
+using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -64,6 +66,41 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
             var resposta = await httpClient.PostAsync(EndpointsNovoSGP.AutenticacaoEndpoint(), new StringContent(JsonConvert.SerializeObject(valoresParaEnvio), Encoding.UTF8, "application/json-patch+json"));
 
             return await TrataRetorno<UsuarioAutenticacaoRetornoDto>(resposta);
+        }
+
+        public async Task<AutenticacaoRevalidarRetornoDto> RevalidarAutenticacao(string token)
+        {
+            ResetarCabecalhoAutenticado(token);
+
+            var resposta = await httpClient.PostAsync(EndpointsNovoSGP.RevalidarAutenticacao(), null);
+
+            return await TrataRetorno<AutenticacaoRevalidarRetornoDto>(resposta);
+        }        
+
+        public async Task<IList<AbrangenciaDreRetornoDto>> AbrangenciaDres(string userName, int anoLetivo)
+        {
+            var loggedUser = await Authentication.GetLoggedUser(userName);
+            
+            ResetarCabecalhoAutenticado(loggedUser.RefreshToken);
+
+            var consideraHistorico = !DateTime.Now.Year.Equals(anoLetivo);
+
+            var resposta = await httpClient.GetAsync(EndpointsNovoSGP.AbrangenciaDres(consideraHistorico, anoLetivo));
+
+            return await TrataRetorno<IList<AbrangenciaDreRetornoDto>>(resposta);
+        }
+
+        public async Task<IList<AbrangenciaUeRetornoDto>> AbrangenciaUes(string userName, int anoLetivo, string codigoDre)
+        {
+            var loggedUser = await Authentication.GetLoggedUser(userName);
+
+            ResetarCabecalhoAutenticado(loggedUser.RefreshToken);
+
+            var consideraHistorico = !DateTime.Now.Year.Equals(anoLetivo);
+
+            var resposta = await httpClient.GetAsync(EndpointsNovoSGP.AbrangenciaUes(consideraHistorico, anoLetivo, codigoDre));
+
+            return await TrataRetorno<IList<AbrangenciaUeRetornoDto>>(resposta);
         }
 
         private async Task<T> TrataRetorno<T>(HttpResponseMessage response)

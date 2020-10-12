@@ -8,6 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper.Configuration.Annotations;
+using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP;
+using Remotion.Linq.Clauses.ResultOperators;
+using Microsoft.EntityFrameworkCore;
+using MoreLinq;
+using static SME.Pedagogico.Gestao.Data.Constantes;
 
 namespace SME.Pedagogico.Gestao.Data.Business
 {
@@ -40,8 +46,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var temAcesso = await profileApi.VerificaSeProfessorTemAcesso(rf, _token);
                 if (occupations != null && temAcesso)
                 {
-                    var cargoProfessor = new RetornoCargoDTO();
-                    cargoProfessor.codigoCargo = "3239";
+                    var cargoProfessor = new RetornoCargoDTO();                    
+                    cargoProfessor.codigoCargo = CODIGO_CARGO_PROFESSOR;
                     cargoProfessor.nomeCargo = "Professor";
                     occupations.cargos.Add(cargoProfessor);
                 }
@@ -50,9 +56,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 {
                     codigoCargoAtivo = RetornaCargoAtivo(occupation);
 
-                    if (
-                        codigoCargoAtivo == "3379" ||
-                        codigoCargoAtivo == "3360")
+                    if (codigoCargoAtivo == CODIGO_CARGO_CP || codigoCargoAtivo == CODIGO_CARGO_DIRETOR || codigoCargoAtivo == CODIGO_CARGO_AD)
                     {
                         occupationAccess = true;
                         break;
@@ -66,8 +70,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 return null;
             }
         }
-
-
 
         public string RetornaCargoAtivo(RetornoCargoDTO occupation)
         {
@@ -156,31 +158,60 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public async Task<RetornoInfoPerfilDTO> GetProfileEmployeeInformation(string codeRF, string codeOccupations, string schoolYear, Guid? Perfil)
+        public async Task<RetornoInfoPerfilDTO> GetProfileEmployeeInformation(string codeRF, string codeOccupations, string schoolYear, Guid? Perfil, string roleName = null)
         {
-
             try
             {
-
                 var endPoint = new EndpointsAPI();
                 var profileApi = new PerfilSgpAPI(endPoint);
                 var parseado = int.TryParse(codeOccupations, out int result);
-                var profileInformation = await profileApi.getInformacoesPerfil(codeRF, parseado ? result : 0, int.Parse(schoolYear), _token, Perfil);
-                if (profileInformation != null)
-                {
-                    return profileInformation;
-                }
 
+                var profileInformation = await profileApi
+                    .getInformacoesPerfil(codeRF, parseado ? result : 0, int.Parse(schoolYear), _token, Perfil);
+
+                profileInformation = await ObterAbrangencia(codeRF, Convert.ToInt32(schoolYear), roleName, profileInformation);
+
+                if (profileInformation != null)
+                    return profileInformation;
                 else
-                {
                     return null;
-                }
             }
             catch (System.Exception ex)
             {
                 return null;
             }
+        }
 
+        private async Task<RetornoInfoPerfilDTO> ObterAbrangencia(string codeRF, int schoolYear, string roleName, RetornoInfoPerfilDTO profileInformation)
+        {
+            // Para coordenador pedagógico, assitente de diretor busca a abrangência no SGP
+            if (!string.IsNullOrWhiteSpace(roleName) && (roleName.Equals("CP") || roleName.Equals("AD")))
+            {
+                profileInformation = new RetornoInfoPerfilDTO();
+
+                var novoSgpApi = new NovoSGPAPI();
+                var dres = await novoSgpApi.AbrangenciaDres(codeRF, Convert.ToInt32(schoolYear));
+
+                dres.ForEach(dre =>
+                   {
+                       profileInformation.DREs.Add(new RetornoDREDTO()
+                       {
+                           Codigo = dre.Codigo,
+                           Nome = dre.Nome,
+                           Sigla = dre.Abreviacao
+                       });
+                       var ues = novoSgpApi.AbrangenciaUes(codeRF, schoolYear, dre.Codigo).Result;
+                       ues.ForEach(ue => profileInformation.Escolas.Add(new RetornoEscolaDTO()
+                       {
+                           Codigo = ue.Codigo,
+                           CodigoDRE = dre.Codigo,
+                           Nome = ue.Nome,
+                           Sigla = ue.NomeSimples
+                       }));
+                   });
+            }
+
+            return profileInformation;
         }
 
         public async Task<List<DREsDTO>> GetCodeDreAdm(string userName)

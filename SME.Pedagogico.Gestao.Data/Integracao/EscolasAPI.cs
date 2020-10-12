@@ -95,7 +95,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
 
             return await HttpHelper
                 .GetAsync<List<SalasPorUEDTO>>
-                      (token, string.Format(url, codigoUE, anoLetivo));
+                      (token, string.Format(url, codigoUE.ToString().PadLeft(6, '0'), anoLetivo));
         }
     }
 }

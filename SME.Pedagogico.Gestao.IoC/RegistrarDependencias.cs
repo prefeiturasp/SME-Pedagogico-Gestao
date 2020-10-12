@@ -46,6 +46,7 @@ namespace SME.Pedagogico.Gestao.IoC
         private static void RegistrarCasosDeUso(IServiceCollection services)
         {
             services.TryAddScoped<IGamesUseCase, GamesUseCase>();
+            services.TryAddScoped<IRelatorioImpressaoUseCase, RelatorioImpressaoUseCase>();
         }
     }
 }

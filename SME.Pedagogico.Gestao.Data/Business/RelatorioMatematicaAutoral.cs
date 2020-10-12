@@ -13,6 +13,7 @@ using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using SME.Pedagogico.Gestao.Data.Relatorios;
 using SME.Pedagogico.Gestao.Data.Relatorios.Querys;
+using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 
 namespace SME.Pedagogico.Gestao.Data.Business
 {
@@ -36,7 +37,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         }
 
-        private  async Task<List<PerguntaDTO>> RetornaRelatorioMatematica(filtrosRelatorioDTO filtro, NpgsqlConnection conexao, string query, int totalDeAlunos)
+        private async Task<List<PerguntaDTO>> RetornaRelatorioMatematica(filtrosRelatorioDTO filtro, NpgsqlConnection conexao, string query, int totalDeAlunos)
         {
             var ListaPerguntaEhRespostasRelatorio = await conexao.QueryAsync<PerguntasRespostasDTO>(query.ToString(),
                 new
@@ -119,9 +120,91 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 filtro.PeriodoId = periodo.Id;
             }
         }
-
         
+        private static string QueryRelatorioMatematicaAutoral(filtrosRelatorioDTO filtro)
+        {
+            var queryRelatorio = @"SELECT
+								p.""Id"" as ""PerguntaId"",
+							    p.""Descricao"" as ""PerguntaDescricao"",
+								r.""Id"" as ""RespostaId"",
+								r.""Descricao"" as ""RespostaDescricao"",
+								count(tabela.""RespostaId"") as ""QtdRespostas""
+							    from
+								""Pergunta"" p
+								inner join ""PerguntaAnoEscolar"" pa on
+							    pa.""PerguntaId"" = p.""Id""
+
+								and pa.""AnoEscolar"" = @AnoDaTurma
+								inner join ""PerguntaResposta"" pr on
+								pr.""PerguntaId"" = p.""Id""
+								inner join ""Resposta"" r on
+								r.""Id"" = pr.""RespostaId""
+								left join (
+									select
+									s.""AnoLetivo"",
+									s.""AnoTurma"",
+									per.""Descricao"",
+									c.""Descricao"",
+									sa.""NomeAluno"",
+									p.""Id"" as""PerguntaId"",
+									p.""Descricao"" as ""PerguntaDescricao"",
+									r.""Id"" as ""RespostaId"",
+									r.""Descricao"" as ""RespostaDescricao""
+								from
+									""SondagemAlunoRespostas"" sar
+								inner join ""SondagemAluno"" sa on
+									sa.""Id"" = ""SondagemAlunoId""
+								inner join ""Sondagem"" s on
+									s.""Id"" = sa.""SondagemId""
+								inner join ""Pergunta"" p on
+									p.""Id"" = sar.""PerguntaId""
+								inner join ""Resposta"" r on
+									r.""Id"" = sar.""RespostaId""
+								inner join ""Periodo"" per on
+									per.""Id"" = s.""PeriodoId""
+								inner join ""ComponenteCurricular"" c on
+									c.""Id"" = s.""ComponenteCurricularId""
+								where
+									s.""Id"" in (
+									select
+										""Id""
+									from
+										""Sondagem""
+									where
+									   ""ComponenteCurricularId"" = @ComponenteCurricularId
+										";
 
 
+            var query = new StringBuilder();
+            query.Append(queryRelatorio);
+            if (!string.IsNullOrEmpty(filtro.CodigoDRE))
+                query.AppendLine(@" and ""CodigoDre"" =  @CodigoDRE");
+            if (!string.IsNullOrEmpty(filtro.CodigoEscola))
+                query.AppendLine(@"and ""CodigoUe"" =  @CodigoEscola");
+
+            query.Append(@" and ""AnoLetivo"" = @AnoLetivo
+			                and ""AnoTurma"" =  @AnoDaTurma
+                            and ""PeriodoId"" = @PeriodoId
+				         -- and ""CodigoTurma"" = '2135826'
+                                                    ) ) as tabela on
+								p.""Id"" = tabela.""PerguntaId"" and
+								r.""Id""= tabela.""RespostaId""
+							group by
+								r.""Id"",
+								r.""Descricao"",
+								p.""Id"",
+								p.""Descricao""
+							order by
+								p.""Descricao"",
+								r.""Descricao"" ");
+            return query.ToString();
+        }
+
+        private static async Task<IEnumerable<AlunosNaTurmaDTO>> ObterAlunosPorTurmaEPeriodoEOl(string codigoTurma, DateTime dataReferencia)
+        {
+            var endpointsApi = new EndpointsAPI();
+            var alunoApi = new AlunosAPI(endpointsApi);
+            return await alunoApi.ObterAlunosAtivosPorTurmaEPeriodo(codigoTurma, dataReferencia);
+        }
     }
 }
