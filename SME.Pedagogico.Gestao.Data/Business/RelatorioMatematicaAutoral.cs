@@ -11,6 +11,7 @@ using SME.Pedagogico.Gestao.Data.Integracao.DTO;
 using System.Threading.Tasks;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
+using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 
 namespace SME.Pedagogico.Gestao.Data.Business
 {
@@ -38,7 +39,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         }
 
-        private  async Task<List<PerguntaDTO>> RetornaRelatorioMatematica(filtrosRelatorioDTO filtro, NpgsqlConnection conexao, string query, int totalDeAlunos)
+        private async Task<List<PerguntaDTO>> RetornaRelatorioMatematica(filtrosRelatorioDTO filtro, NpgsqlConnection conexao, string query, int totalDeAlunos)
         {
             var ListaPerguntaEhRespostasRelatorio = await conexao.QueryAsync<PerguntasRespostasDTO>(query.ToString(),
                 new
@@ -233,6 +234,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
 								p.""Descricao"",
 								r.""Descricao"" ");
             return query.ToString();
+        }
+
+        private static async Task<IEnumerable<AlunosNaTurmaDTO>> ObterAlunosPorTurmaEPeriodoEOl(string codigoTurma, DateTime dataReferencia)
+        {
+            var endpointsApi = new EndpointsAPI();
+            var alunoApi = new AlunosAPI(endpointsApi);
+            return await alunoApi.ObterAlunosAtivosPorTurmaEPeriodo(codigoTurma, dataReferencia);
         }
     }
 }
