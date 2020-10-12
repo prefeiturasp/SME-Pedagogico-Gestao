@@ -7,6 +7,7 @@
     SET_POLL_REPORT_DATA: "SET_POLL_REPORT_DATA",
     POLL_REPORT_API_REQUEST_FAIL: "POLL_REPORT_API_REQUEST_FAIL",
     POLL_REPORT_REQUEST_NOT_FOUND: "POLL_REPORT_REQUEST_NOT_FOUND",
+    RESET_DATA: "RESET_DATA",
 }
 
 const initialState = {
@@ -54,6 +55,7 @@ export const actionCreators = {
     showPollReport: () => ({ type: types.SHOW_POLL_REPORT_REQUEST }),
     hidePollReport: () => ({ type: types.HIDE_POLL_REPORT_REQUEST }),
     getPollReport: (parameters) => ({ type: types.GET_POLL_REPORT_REQUEST, parameters }),
+    resetData: () => ({ type: types.RESET_DATA }),
 }
 
 export const reducer = (state, action) => {
@@ -79,6 +81,11 @@ export const reducer = (state, action) => {
                 ...state,
                 showReport: false,
             });
+        case types.RESET_DATA:
+        return ({
+            ...state,
+            data: null,
+        });
         case types.SET_POLL_REPORT_DATA: 
             return ({
                

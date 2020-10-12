@@ -58,7 +58,7 @@ public class RelatorioPortuguesCapacidadeLeitura
 
                 var ordem = new OrdemDTO();
                 ordem.Ordem = ordemItem.Where(y => y.OrdermId == ordemItem.Key).First().Ordem;
-                ordem.Pergunta = new List<PerguntaDTO>();
+                ordem.Perguntas = new List<PerguntaDTO>();
 
                 var relatorioAgrupadoPergunta = ordemItem.GroupBy(x => x.PerguntaId);
 
@@ -92,7 +92,7 @@ public class RelatorioPortuguesCapacidadeLeitura
 
 
 
-                    ordem.Pergunta.Add(pergunta);
+                    ordem.Perguntas.Add(pergunta);
                 });
                 ListaOrdens.Add(ordem);
             });

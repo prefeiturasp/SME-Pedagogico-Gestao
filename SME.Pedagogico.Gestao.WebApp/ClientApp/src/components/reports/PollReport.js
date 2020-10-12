@@ -14,6 +14,8 @@ import { actionCreators } from "../../store/PollReport";
 import { bindActionCreators } from "redux";
 import RelatorioPortuguesAutoral from "./RelatorioAutoral/RelatorioPortuguesAutoral";
 import RelatorioMatematicaConsolidado from "./RelatorioMatematicaConsolidado";
+import { GrupoDto } from "../dtos/grupoDto";
+import RelatorioConsolidadoCapacidadeLeitura from "./RelatorioConsolidadeCapacidadeLeitura/RelatorioConsolidadoCapacidadeLeitura";
 
 class PollReport extends Component {
   constructor(props) {
@@ -850,12 +852,28 @@ class PollReport extends Component {
       reportData[0].poll !== undefined
     )
       if (reportData[0].poll[0].order === 0) numbers = true;
+
+    const montarRelatorioConsolidadosAcimaDoQuartoAno = dados => {
+      switch(this.props.pollReport.selectedFilter.grupoId){
+        case GrupoDto.CAPACIDADE_LEITURA:
+          return( 
+          <div className="mb-4">
+            <RelatorioConsolidadoCapacidadeLeitura dados={dados}/>
+          </div>)
+        case GrupoDto.LEITURA_EM_VOZ_ALTA:
+          return <RelatorioPortuguesAutoral dados={dados}/>
+        case GrupoDto.PRODUCAO_DE_TEXTO:
+          return <RelatorioPortuguesAutoral dados={dados}/>
+        default:
+          break;
+      }
+    }
+
     return (
       <div>
         <Card className="mb-3">
           <PollFilter reports={true} resultClick={this.openPollFilter} />
         </Card>
-        <RelatorioPortuguesAutoral />
         {this.state.showPollFilter && (
           <Card id="pollReport-card">
             <div className="py-2 px-3">
@@ -875,21 +893,36 @@ class PollReport extends Component {
                 </div>
               </div>
 
-              {this.props.pollReport.showReport === true && (
+              {this.props.pollReport.showReport ?(
                 <div>
                   <PollReportBreadcrumb className="mt-4" name="Planilha" />
 
-                  {this.props.pollReport.selectedFilter.discipline ===
-                  "Língua Portuguesa" ? (
-                    <PollReportPortugueseGrid
-                      className="mt-3"
-                      classroomReport={this.classroomReport}
-                      data={reportData}
-                    />
-                    /** TODO - Ajustar aqui para construir o componente RelatorioConsolidadoCapacidadeLeitura*/
+                  {reportData && (reportData.length || (reportData.perguntas && reportData.perguntas.length))
+                  ?
+                  this.props.pollReport.selectedFilter.discipline ===
+                   "Língua Portuguesa" ?(
+                    Number(
+                      this.props.pollReport.selectedFilter &&
+                        this.props.pollReport.selectedFilter.CodigoCurso
+                    ) >= 4 && !this.classroomReport ? (
+                      this.props.pollReport.selectedFilter.grupoId ===
+                      GrupoDto.CAPACIDADE_LEITURA ? (
+                        reportData.map((dados) =>
+                          montarRelatorioConsolidadosAcimaDoQuartoAno(dados)
+                        )
+                      ) : (
+                        montarRelatorioConsolidadosAcimaDoQuartoAno(reportData)
+                      )
+                    ) : (
+                      <PollReportPortugueseGrid
+                        className="mt-3"
+                        classroomReport={this.classroomReport}
+                        data={reportData}
+                      />
+                    )
                   ) : (
                     Number(this.props.pollReport.selectedFilter.CodigoCurso) >= 7?
-                    reportData.map(dados => {
+                    reportData && reportData.map(dados => {
                       return <RelatorioMatematicaConsolidado dados={dados}/>
                     })
                     :
@@ -898,15 +931,14 @@ class PollReport extends Component {
                       classroomReport={this.classroomReport}
                       data={reportData}
                     />
-                  )}
+                  ): null}
 
                   <PollReportBreadcrumb className="mt-5" name="Gráfico" />
                   {this.props.pollReport.selectedFilter.discipline ===
                     "Língua Portuguesa" && (
-                      Number(this.props.selectedFilter.CodigoCurso) >= 4 ?
-                        <RelatorioPortuguesAutoral />
-                        : <PollReportPortugueseChart data={chartData} />
+                      this.props.selectedFilter && chartData && chartData.length && <PollReportPortugueseChart data={chartData} />
                     )}
+                  {chartData && chartData.length &&
                   <div className="mt-4">
                     {//Consilidado de Numeros
                       this.classroomReport === false &&
@@ -966,8 +998,9 @@ class PollReport extends Component {
                         );
                       })}
                   </div>
+                  }
                 </div>
-              )}
+              ): null}
             </div>
           </Card>
         )}
