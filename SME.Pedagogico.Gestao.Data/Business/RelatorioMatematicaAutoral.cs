@@ -177,9 +177,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             var query = new StringBuilder();
             query.Append(queryRelatorio);
-            if (!string.IsNullOrEmpty(filtro.CodigoDRE))
+            if (!string.IsNullOrEmpty(filtro.CodigoDre))
                 query.AppendLine(@" and ""CodigoDre"" =  @CodigoDRE");
-            if (!string.IsNullOrEmpty(filtro.CodigoEscola))
+            if (!string.IsNullOrEmpty(filtro.CodigoUe))
                 query.AppendLine(@"and ""CodigoUe"" =  @CodigoEscola");
 
             query.Append(@" and ""AnoLetivo"" = @AnoLetivo
