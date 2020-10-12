@@ -633,7 +633,7 @@ class PollFilter extends Component {
         if (selectedSchool === "todas" || selectedDre === "todas") {
           hiddenDisabled = true;
 
-          var listyearClassrooms = [1, 2, 3, 4, 5, 6];
+          var listyearClassrooms = [1, 2, 3, 4, 5, 6, 7, 8, 9];
           for (var item in listyearClassrooms) {
             yearClassrooms.push({
               value: listyearClassrooms[item],

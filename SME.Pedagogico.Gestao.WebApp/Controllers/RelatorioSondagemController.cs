@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.Business;
-using SME.Pedagogico.Gestao.Data.DataTransfer;
+using SME.Pedagogico.Gestao.Data.DTO.Matematica.Relatorio;
+
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.DTO.Portugues.Relatorio;
 using SME.Pedagogico.Gestao.Models.Academic;
@@ -30,6 +31,25 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> ObterDados([FromBody]ParametersModel parameters)
         {
+
+            if (int.Parse(parameters.CodigoCurso) >= 7 && parameters.Discipline == "Matemática")
+            {
+                var filtro = new filtrosRelatorioDTO()
+                {
+                    AnoEscolar = int.Parse(parameters.CodigoCurso),
+                    AnoLetivo = int.Parse(parameters.SchoolYear),
+                    CodigoDre = parameters.CodigoDRE,
+                    CodigoUe = parameters.CodigoEscola,
+                    CodigoTurmaEol = parameters.CodigoTurmaEol,
+                    DescricaoDisciplina = parameters.Discipline,
+                    DescricaoPeriodo = parameters.Term,
+                };
+                var obj = new RelatorioMatematicaAutoral();
+                var retorno = await obj.ObterRelatorioMatematicaAutoral(filtro);
+               return  (Ok(retorno));
+            }
+
+
             if (parameters.Discipline == "Língua Portuguesa")
             {
                 if (parameters.ClassroomReport)
@@ -56,6 +76,23 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     if (periodo == null)
                         return StatusCode(500, $"Não foi possivel encontrar o périodo com descrição {parameters.Term}");
 
+                    if (parameters.GrupoId.Equals("e27b99a3-789d-43fb-a962-7df8793622b1"))
+                    {
+                        var relatorioCapacidadeLeitura = new RelatorioPortuguesCapacidadeLeitura();
+                       var relatorioCapacidade = await relatorioCapacidadeLeitura.ObterRelatorioCapacidadeLeitura(new RelatorioPortuguesFiltroDto
+                        {
+                            AnoEscolar = Convert.ToInt32(parameters.CodigoCurso),
+                            AnoLetivo = Convert.ToInt32(parameters.SchoolYear),
+                            CodigoDre = parameters.CodigoDRE,
+                            CodigoUe = parameters.CodigoEscola,
+                            ComponenteCurricularId = "c65b2c0a-7a58-4d40-b474-23f0982f14b1",
+                            GrupoId = "e27b99a3-789d-43fb-a962-7df8793622b1",
+                            PeriodoId = periodo.Id
+                       });
+
+                        return (Ok(relatorioCapacidade));
+
+                    }
                     return Ok(await BuscarDadosAutoralAsync(parameters, periodo.Id));
                 }
             }
@@ -126,11 +163,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
         private async Task<RelatorioAutoralLeituraProducaoDto> BuscarDadosAutoralAsync(ParametersModel parametersModel, string periodoId)
         {
-            if (parametersModel.GrupoId.Equals("e27b99a3-789d-43fb-a962-7df8793622b1"))
-            {
-                // Adicionar implementação do consolidado de capacidade de Leitura
-                return null;
-            }
+           
 
             var relatorioPortugues = new RelatorioPortugues();
 

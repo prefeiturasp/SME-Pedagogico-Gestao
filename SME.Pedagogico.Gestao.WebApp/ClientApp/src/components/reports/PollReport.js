@@ -9,11 +9,11 @@ import PollReportPortugueseChart from "./PollReportPortugueseChart";
 import PollReportMathChart from "./PollReportMathChart";
 import PollReportMathNumbersChart from "./PollReportMathNumbersChart";
 import PollReportMathChartClassroom from "./PollReportMathChartClassroom";
-import ReportService from "../../service/ReportService";
 import { connect } from "react-redux";
 import { actionCreators } from "../../store/PollReport";
 import { bindActionCreators } from "redux";
 import RelatorioPortuguesAutoral from "./RelatorioAutoral/RelatorioPortuguesAutoral";
+import RelatorioMatematicaConsolidado from "./RelatorioMatematicaConsolidado";
 
 class PollReport extends Component {
   constructor(props) {
@@ -784,7 +784,7 @@ class PollReport extends Component {
 
     if (this.props.pollReport.showReport === true) {
       if (
-        chartData.chartIdeaData !== undefined &&
+        chartData && chartData.chartIdeaData !== undefined &&
         chartData.chartIdeaData.length > 0
       ) {
         chartData.totals = [];
@@ -844,6 +844,7 @@ class PollReport extends Component {
     var numbers = false;
 
     if (
+      reportData &&
       reportData !== [] &&
       reportData.length > 0 &&
       reportData[0].poll !== undefined
@@ -879,19 +880,25 @@ class PollReport extends Component {
                   <PollReportBreadcrumb className="mt-4" name="Planilha" />
 
                   {this.props.pollReport.selectedFilter.discipline ===
-                    "Língua Portuguesa" ? (
-                      <PollReportPortugueseGrid
-                        className="mt-3"
-                        classroomReport={this.classroomReport}
-                        data={reportData}
-                      />
-                    ) : (
-                      <PollReportMathGrid
-                        className="mt-3"
-                        classroomReport={this.classroomReport}
-                        data={reportData}
-                      />
-                    )}
+                  "Língua Portuguesa" ? (
+                    <PollReportPortugueseGrid
+                      className="mt-3"
+                      classroomReport={this.classroomReport}
+                      data={reportData}
+                    />
+                    /** TODO - Ajustar aqui para construir o componente RelatorioConsolidadoCapacidadeLeitura*/
+                  ) : (
+                    Number(this.props.pollReport.selectedFilter.CodigoCurso) >= 7?
+                    reportData.map(dados => {
+                      return <RelatorioMatematicaConsolidado dados={dados}/>
+                    })
+                    :
+                    <PollReportMathGrid
+                      className="mt-3"
+                      classroomReport={this.classroomReport}
+                      data={reportData}
+                    />
+                  )}
 
                   <PollReportBreadcrumb className="mt-5" name="Gráfico" />
                   {this.props.pollReport.selectedFilter.discipline ===
@@ -958,32 +965,6 @@ class PollReport extends Component {
                           />
                         );
                       })}
-                    {/* {this.classroomReport === false ?
-                                                (chartData.chartIdeaData.length > 0 ?
-                                                    indexes.map(index => {
-                                                        var chartId = "ordem" + chartData.chartIdeaData[index].order;
-
-                                                        return (
-                                                            <PollReportMathChart key={chartId} chartIds={[(chartId + "idea"), (chartId + "result")]} data={chartData.totals[index]} />
-                                                        );
-                                                    })
-                                                    :
-                                                    <PollReportMathNumbersChart data={chartData.chartNumberData} />
-                                                )
-                                                :
-                                                numbers === false ?
-                                                    (chartData.map(item => {
-                                                        var order = item.name !== null ? item.name.replace(" ", "").toLowerCase() : "";
-                                                        var chart1Id = order + "-ideaChart";
-                                                        var chart2Id = order + "-resultChart"
-
-                                                        return (
-                                                            <PollReportMathChartClassroom data={item} chartIds={[chart1Id, chart2Id]} numbers={numbers} />
-                                                        );
-                                                    }))
-                                                    :
-                                                    <PollReportMathChartClassroom data={chartData} numbers={numbers} />
-                                            } */}
                   </div>
                 </div>
               )}

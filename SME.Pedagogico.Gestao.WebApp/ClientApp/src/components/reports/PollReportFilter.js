@@ -35,6 +35,16 @@ class PollReportFilter extends Component {
             this.initialFilter.push({ value: key, label: this.props.pollReport.filters[key].name });
     }
 
+    
+    componentDidUpdate(){
+        if(this.ehMatematicaAcimaDoSetimoAno() && this.state.selectedFilter.proficiency != null){
+            var novoFiltro = this.state.selectedFilter;
+            novoFiltro.proficiency = null;
+            this.setState({selectedFilter: novoFiltro});
+            this.setState({selectedProficiency: ""});
+        }
+    }
+
     initialFilterChange(event) {
         var filters = this.props.pollReport.filters;
         var index = event.nativeEvent.target.selectedIndex;
@@ -113,10 +123,17 @@ class PollReportFilter extends Component {
         this.props.getPollReport(parameters);
     }
 
+    ehMatematicaAcimaDoSetimoAno(){
+        return Number(this.props.poll.selectedFilter.yearClassroom) >= 7 &&
+        this.state.selectedFilter.discipline === "Matemática"
+    }
+
     checkButton() {
         var parameters = this.state.selectedFilter;
 
-        if (parameters.discipline != null && parameters.proficiency != null && parameters.term != null)
+        if (parameters.discipline != null && 
+            (parameters.proficiency != null || this.ehMatematicaAcimaDoSetimoAno()) && 
+            parameters.term != null)
             return (false);
 
         return (true);
@@ -124,20 +141,50 @@ class PollReportFilter extends Component {
 
     render() {
         return (
-            <div className="d-flex flex-column d-inline-flex">
-                <span className="sc-text-blue sc-text-size-1">Filtro para Relat&oacute;rios</span>
-                <div className="pt-2 d-inline-flex">
-                    <SelectChangeColor className="custom-select-sm" defaultText="Matéria" options={this.initialFilter} onChange={this.initialFilterChange} />
-                    <div className="px-2"></div>
-                    <SelectChangeColor className="custom-select-sm" defaultText="Proficiência" options={this.state.proficiencies} onChange={this.onChangeProficiency} value={this.state.selectedProficiency} resetColor={this.state.selectedProficiency === "" ? true : false} />
-                    <div className="px-2"></div>
-                    <SelectChangeColor className="custom-select-sm" defaultText="Período" options={this.state.terms} onChange={this.onChangeTerm} value={this.state.selectedTerm} resetColor={this.state.selectedTerm === "" ? true : false} />
-                    <div className="px-2"></div>
-                    <button type="button" className="btn btn-sm btn-outline-primary" style={{ width: 109 }} onClick={this.setSelectedFilter} disabled={this.checkButton()}>Buscar</button>
-                </div>
+          <div className="d-flex flex-column d-inline-flex">
+            <span className="sc-text-blue sc-text-size-1">
+              Filtro para Relatórios
+            </span>
+            <div className="pt-2 d-inline-flex">
+              <SelectChangeColor
+                className="custom-select-sm"
+                defaultText="Matéria"
+                options={this.initialFilter}
+                onChange={this.initialFilterChange}
+              />
+              <div className="px-2"></div>
+              <SelectChangeColor
+                className="custom-select-sm"
+                defaultText="Proficiência"
+                options={this.state.proficiencies}
+                onChange={this.onChangeProficiency}
+                value={this.state.selectedProficiency}
+                resetColor={this.state.selectedProficiency === "" ? true : false}
+                disabled={this.ehMatematicaAcimaDoSetimoAno()}
+              />
+              <div className="px-2"></div>
+              <SelectChangeColor
+                className="custom-select-sm"
+                defaultText="Período"
+                options={this.state.terms}
+                onChange={this.onChangeTerm}
+                value={this.state.selectedTerm}
+                resetColor={this.state.selectedTerm === "" ? true : false}
+              />
+              <div className="px-2"></div>
+              <button
+                type="button"
+                className="btn btn-sm btn-outline-primary"
+                style={{ width: 109 }}
+                onClick={this.setSelectedFilter}
+                disabled={this.checkButton()}
+              >
+                Buscar
+              </button>
             </div>
+          </div>
         );
-    }
+      }
 }
 
 export default connect(
