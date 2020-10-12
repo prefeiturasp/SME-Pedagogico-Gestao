@@ -161,7 +161,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                                                      anoTurma);
         }
 
-        private async Task<IEnumerable<RelatorioPortuguesPerguntasDto>> BuscarDadosAutoralAsync(ParametersModel parametersModel, string periodoId)
+        private async Task<RelatorioAutoralLeituraProducaoDto> BuscarDadosAutoralAsync(ParametersModel parametersModel, string periodoId)
         {
            
 
