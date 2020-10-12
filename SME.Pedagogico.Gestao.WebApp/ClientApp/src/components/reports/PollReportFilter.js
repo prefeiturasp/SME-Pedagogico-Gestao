@@ -3,6 +3,7 @@ import SelectChangeColor from '../inputs/SelectChangeColor';
 import { connect } from 'react-redux';
 import { actionCreators } from '../../store/PollReport';
 import { bindActionCreators } from 'redux';
+import { actionCreators as pollStoreActionCreators } from '../../store/SondagemPortuguesStore';
 
 class PollReportFilter extends Component {
     constructor() {
@@ -11,12 +12,15 @@ class PollReportFilter extends Component {
         this.initialFilter = [];
         this.state = {
             proficiencies: [],
+            grupos:[],
             terms: [],
             selectedFilter: {
                 discipline: null,
                 proficiency: null,
+                grupoId: null,
                 term: null,
             },
+            grupoSelecionado: null,
             selectedProficiency: null,
             selectedTerm: null,
         }
@@ -29,7 +33,8 @@ class PollReportFilter extends Component {
     }
 
     componentDidMount() {
-        this.props.hidePollReport();
+        this.props.pollReportsMethods.hidePollReport();        
+        this.props.sondagemPortuguesMethods.listarGrupos();
 
         for (var key in this.props.pollReport.filters)
             this.initialFilter.push({ value: key, label: this.props.pollReport.filters[key].name });
@@ -37,11 +42,16 @@ class PollReportFilter extends Component {
 
     
     componentDidUpdate(){
-        if(this.ehMatematicaAcimaDoSetimoAno() && this.state.selectedFilter.proficiency != null){
+        if((this.ehMatematicaAcimaDoSetimoAnoConsolidado() || this.ehPortuguesAcimaDoQuartoAnoConsolidado()) && 
+            (this.state.selectedFilter.proficiency != null || this.state.selectedFilter.grupoId != null)){
             var novoFiltro = this.state.selectedFilter;
             novoFiltro.proficiency = null;
-            this.setState({selectedFilter: novoFiltro});
-            this.setState({selectedProficiency: ""});
+            novoFiltro.grupoId = null;
+            this.setState({
+                selectedFilter: novoFiltro, 
+                selectedProficiency: null, 
+                grupoSelecionado:null
+            });            
         }
     }
 
@@ -49,17 +59,27 @@ class PollReportFilter extends Component {
         var filters = this.props.pollReport.filters;
         var index = event.nativeEvent.target.selectedIndex;
         var label = event.nativeEvent.target[index].text;
+        var grupos = this.props.sondagemPortugues.grupos ? 
+            this.props.sondagemPortugues.grupos.map(grupo => {
+                return ({
+                    value: grupo.id, 
+                    label: grupo.descricao
+                });
+            }):[];
 
         this.setState({
             selectedFilter: {
                 discipline: label,
                 proficiency: null,
                 term: null,
+                grupoId: null,
             },
             selectedProficiency: "",
             selectedTerm: "",
             proficiencies: filters[event.target.value].proficiencies,
-            terms: filters[event.target.value].terms,
+            grupos,
+            grupoSelecionado: "",
+            terms: filters[event.target.value].terms
         });
     }
 
@@ -81,8 +101,22 @@ class PollReportFilter extends Component {
                 discipline: selectedFilter.discipline,
                 proficiency: label,
                 term: selectedFilter.term,
+                grupoId: selectedFilter.grupoId
             },
             selectedProficiency: selectedProficiency
+        });
+    }
+
+    onChangeGrupo(event) {
+        var selectedFilter = this.state.selectedFilter;
+        this.setState({
+            selectedFilter: {
+                discipline: selectedFilter.discipline,
+                proficiency: selectedFilter.proficiency,
+                term: selectedFilter.term,
+                grupoId: event.target.value
+            },
+            grupoSelecionado: event.target.value
         });
     }
 
@@ -104,14 +138,15 @@ class PollReportFilter extends Component {
                 discipline: selectedFilter.discipline,
                 proficiency: selectedFilter.proficiency,
                 term: label,
+                grupoId: selectedFilter.grupoId,
             },
             selectedTerm: selectedTerm
         });
     }
 
     setSelectedFilter() {
-        this.props.resetPollReportFilter();
-        this.props.setPollReportFilter(this.state.selectedFilter);
+        this.props.pollReportsMethods.resetPollReportFilter();
+        this.props.pollReportsMethods.setPollReportFilter(this.state.selectedFilter);
 
         var parameters = this.state.selectedFilter;
         parameters.classroomReport = this.props.poll.selectedFilter.classroomCodeEol === "" ? false : true;
@@ -120,19 +155,26 @@ class PollReportFilter extends Component {
         parameters.CodigoCurso = this.props.poll.selectedFilter.yearClassroom;
         parameters.CodigoTurmaEol = this.props.poll.selectedFilter.classroomCodeEol === null ? "" : this.props.poll.selectedFilter.classroomCodeEol;
         parameters.SchoolYear = this.props.poll.selectedFilter.schoolYear;
-        this.props.getPollReport(parameters);
+        parameters.grupoId = this.props.poll.selectedFilter.grupoId;
+        this.props.pollReportsMethods.getPollReport(parameters);
     }
 
-    ehMatematicaAcimaDoSetimoAno(){
+    ehMatematicaAcimaDoSetimoAnoConsolidado(){
         return Number(this.props.poll.selectedFilter.yearClassroom) >= 7 &&
         this.state.selectedFilter.discipline === "Matemática"
+    }
+
+    ehPortuguesAcimaDoQuartoAnoConsolidado(){
+       return !this.props.poll.selectedFilter.classroomCodeEol && 
+       Number(this.props.poll.selectedFilter.schoolYear) >=4 &&
+       this.state.selectedFilter.discipline === "Língua Portuguesa"
     }
 
     checkButton() {
         var parameters = this.state.selectedFilter;
 
         if (parameters.discipline != null && 
-            (parameters.proficiency != null || this.ehMatematicaAcimaDoSetimoAno()) && 
+            (parameters.proficiency != null || this.ehMatematicaAcimaDoSetimoAnoConsolidado()) && 
             parameters.term != null)
             return (false);
 
@@ -160,8 +202,18 @@ class PollReportFilter extends Component {
                 onChange={this.onChangeProficiency}
                 value={this.state.selectedProficiency}
                 resetColor={this.state.selectedProficiency === "" ? true : false}
-                disabled={this.ehMatematicaAcimaDoSetimoAno()}
+                disabled={this.ehMatematicaAcimaDoSetimoAnoConsolidado() || this.ehPortuguesAcimaDoQuartoAnoConsolidado()}
               />
+               <div className="px-2"/>
+               <SelectChangeColor
+                   className="custom-select-sm"
+                   defaultText="Grupo"
+                   options={this.state.grupos}
+                   onChange={this.onChangeGrupo}
+                   value={this.props.grupoSelecionado}
+                   resetColor={!this.state.grupoSelecionado}
+                   disabled={!this.ehPortuguesAcimaDoQuartoAnoConsolidado()}
+               />
               <div className="px-2"></div>
               <SelectChangeColor
                 className="custom-select-sm"
@@ -188,6 +240,16 @@ class PollReportFilter extends Component {
 }
 
 export default connect(
-    state => ({ pollReport: state.pollReport, poll: state.poll }),
-    dispatch => bindActionCreators(actionCreators, dispatch)
-)(PollReportFilter);
+    (state) => ({
+      pollReport: state.pollReport,
+      poll: state.poll,
+      sondagemPortugues: state.sondagemPortugues,
+    }),
+    (dispatch) => ({
+      pollReportsMethods: bindActionCreators(actionCreators, dispatch),
+      sondagemPortuguesMethods: bindActionCreators(
+        pollStoreActionCreators,
+        dispatch
+      ),
+    })
+  )(PollReportFilter);

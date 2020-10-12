@@ -13,6 +13,7 @@ import { connect } from "react-redux";
 import { actionCreators } from "../../store/PollReport";
 import { bindActionCreators } from "redux";
 import RelatorioMatematicaConsolidado from "./RelatorioMatematicaConsolidado";
+import { GrupoDto } from "../dtos/grupoDto";
 
 class PollReport extends Component {
   constructor(props) {
@@ -850,6 +851,20 @@ class PollReport extends Component {
       reportData[0].poll !== undefined
     )
       if (reportData[0].poll[0].order === 0) numbers = true;
+
+    const montarRelatorioConsolidadosAcimaDoQuartoAno = () => {
+      switch(this.props.pollReport.selectedFilter.grupoId){
+        case GrupoDto.CAPACIDADE_LEITURA:
+          break;
+        case GrupoDto.LEITURA_EM_VOZ_ALTA:
+          break;
+        case GrupoDto.PRODUCAO_DE_TEXTO:
+          break;
+        default:
+          break;
+      }
+    }
+
     return (
       <div>
         <Card className="mb-3">
@@ -881,12 +896,14 @@ class PollReport extends Component {
 
                   {this.props.pollReport.selectedFilter.discipline ===
                   "Língua Portuguesa" ? (
+                    //Consolidado acima do 4 ano
+                    Number(this.props.pollReport.selectedFilter.CodigoCurso) >= 4 && this.classroomReport?
+                    montarRelatorioConsolidadosAcimaDoQuartoAno():
                     <PollReportPortugueseGrid
                       className="mt-3"
                       classroomReport={this.classroomReport}
                       data={reportData}
                     />
-                    /** TODO - Ajustar aqui para construir o componente RelatorioConsolidadoCapacidadeLeitura*/
                   ) : (
                     Number(this.props.pollReport.selectedFilter.CodigoCurso) >= 7?
                     reportData.map(dados => {
