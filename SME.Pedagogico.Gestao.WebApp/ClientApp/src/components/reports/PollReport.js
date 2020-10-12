@@ -9,12 +9,14 @@ import PollReportPortugueseChart from "./PollReportPortugueseChart";
 import PollReportMathChart from "./PollReportMathChart";
 import PollReportMathNumbersChart from "./PollReportMathNumbersChart";
 import PollReportMathChartClassroom from "./PollReportMathChartClassroom";
-import ReportService from "../../service/ReportService";
 import { connect } from "react-redux";
 import { actionCreators } from "../../store/PollReport";
 import { bindActionCreators } from "redux";
+import RelatorioPortuguesAutoral from "./RelatorioAutoral/RelatorioPortuguesAutoral";
 import MensagemConfirmacaoImprimir from "./MensagemConfirmacaoImprimir";
 import RelatorioMatematicaConsolidado from "./RelatorioMatematicaConsolidado";
+import { GrupoDto } from "../dtos/grupoDto";
+import RelatorioConsolidadoCapacidadeLeitura from "./RelatorioConsolidadeCapacidadeLeitura/RelatorioConsolidadoCapacidadeLeitura";
 
 class PollReport extends Component {
   constructor(props) {
@@ -919,6 +921,23 @@ class PollReport extends Component {
       reportData[0].poll !== undefined
     )
       if (reportData[0].poll[0].order === 0) numbers = true;
+
+    const montarRelatorioConsolidadosAcimaDoQuartoAno = dados => {
+      switch(this.props.pollReport.selectedFilter.grupoId){
+        case GrupoDto.CAPACIDADE_LEITURA:
+          return( 
+          <div className="mb-4">
+            <RelatorioConsolidadoCapacidadeLeitura dados={dados}/>
+          </div>)
+        case GrupoDto.LEITURA_EM_VOZ_ALTA:
+          return <RelatorioPortuguesAutoral dados={dados}/>
+        case GrupoDto.PRODUCAO_DE_TEXTO:
+          return <RelatorioPortuguesAutoral dados={dados}/>
+        default:
+          break;
+      }
+    }
+
     return (
       <div>
         <Card className="mb-3">
@@ -949,106 +968,114 @@ class PollReport extends Component {
                 </div>
               </div>
 
-              {this.props.pollReport.showReport === true && (
+              {this.props.pollReport.showReport ?(
                 <div>
                   <PollReportBreadcrumb className="mt-4" name="Planilha" />
 
-                  {this.props.pollReport.selectedFilter.discipline ===
-                  "Língua Portuguesa" ? (
-                    <PollReportPortugueseGrid
-                      className="mt-3"
-                      classroomReport={this.classroomReport}
-                      data={reportData}
-                    />
-                  ) : Number(
-                      this.props.pollReport.selectedFilter.CodigoCurso
-                    ) >= 7 ? (
-                    reportData.map((dados) => {
-                      return <RelatorioMatematicaConsolidado dados={dados} />;
-                    })
+                  {reportData && (reportData.length || (reportData.perguntas && reportData.perguntas.length))
+                  ?
+                  this.props.pollReport.selectedFilter.discipline ===
+                   "Língua Portuguesa" ?(
+                    Number(
+                      this.props.pollReport.selectedFilter &&
+                        this.props.pollReport.selectedFilter.CodigoCurso
+                    ) >= 4 && !this.classroomReport ? (
+                      this.props.pollReport.selectedFilter.grupoId ===
+                      GrupoDto.CAPACIDADE_LEITURA ? (
+                        reportData.map((dados) =>
+                          montarRelatorioConsolidadosAcimaDoQuartoAno(dados)
+                        )
+                      ) : (
+                        montarRelatorioConsolidadosAcimaDoQuartoAno(reportData)
+                      )
+                    ) : (
+                      <PollReportPortugueseGrid
+                        className="mt-3"
+                        classroomReport={this.classroomReport}
+                        data={reportData}
+                      />
+                    )
                   ) : (
+                    Number(this.props.pollReport.selectedFilter.CodigoCurso) >= 7?
+                    reportData && reportData.map(dados => {
+                      return <RelatorioMatematicaConsolidado dados={dados}/>
+                    })
+                    :
                     <PollReportMathGrid
                       className="mt-3"
                       classroomReport={this.classroomReport}
                       data={reportData}
                     />
-                  )}
+                  ): null}
 
                   <PollReportBreadcrumb className="mt-5" name="Gráfico" />
-
                   {this.props.pollReport.selectedFilter.discipline ===
                     "Língua Portuguesa" && (
-                    <PollReportPortugueseChart data={chartData} />
-                  )}
+                      this.props.selectedFilter && chartData && chartData.length && <PollReportPortugueseChart data={chartData} />
+                    )}
+                  {chartData && chartData.length &&
                   <div className="mt-4">
-                    {
-                      //Consilidado de Numeros
+                    {//Consilidado de Numeros
                       this.classroomReport === false &&
-                        this.props.pollReport.selectedFilter.proficiency ===
-                          "Números" && (
-                          <PollReportMathNumbersChart
-                            data={chartData.chartNumberData}
-                          />
-                        )
-                    }
-                    {
-                      //Consilidado de Aditivo e Multiplicativo
+                      this.props.pollReport.selectedFilter.proficiency ===
+                      "Números" && (
+                        <PollReportMathNumbersChart
+                          data={chartData.chartNumberData}
+                        />
+                      )}
+                    {//Consilidado de Aditivo e Multiplicativo
                       this.classroomReport === false &&
-                        this.props.pollReport.selectedFilter.proficiency !==
-                          "Números" &&
-                        indexes.map((index) => {
-                          var chartId =
-                            "ordem" + chartData.chartIdeaData[index].order;
+                      this.props.pollReport.selectedFilter.proficiency !==
+                      "Números" &&
+                      indexes.map(index => {
+                        var chartId =
+                          "ordem" + chartData.chartIdeaData[index].order;
 
-                          return (
-                            <PollReportMathChart
-                              key={chartId}
-                              chartIds={[chartId + "idea", chartId + "result"]}
-                              data={chartData.totals[index]}
-                            />
-                          );
-                        })
-                    }
-                    {
-                      // Por Turma de Numeros
+                        return (
+                          <PollReportMathChart
+                            key={chartId}
+                            chartIds={[chartId + "idea", chartId + "result"]}
+                            data={chartData.totals[index]}
+                          />
+                        );
+                      })}
+                    {// Por Turma de Numeros
                       this.classroomReport === true &&
-                        this.props.pollReport.selectedFilter.proficiency ===
-                          "Números" &&
-                        chartData !== undefined &&
-                        Array.isArray(chartData) && (
+                      this.props.pollReport.selectedFilter.proficiency ===
+                      "Números" &&
+                      chartData !== undefined &&
+                      Array.isArray(chartData) && (
+                        <PollReportMathChartClassroom
+                          data={chartData}
+                          numbers={numbers}
+                        />
+                      )}
+                    {// Por Turma Aditivo e Multiplicativo
+                      this.classroomReport === true &&
+                      this.props.pollReport.selectedFilter.proficiency !==
+                      "Números" &&
+                      chartData !== undefined &&
+                      Array.isArray(chartData) &&
+                      chartData.map(item => {
+                        var order =
+                          item.name !== null
+                            ? item.name.replace(" ", "").toLowerCase()
+                            : "";
+                        var chart1Id = order + "-ideaChart";
+                        var chart2Id = order + "-resultChart";
+
+                        return (
                           <PollReportMathChartClassroom
-                            data={chartData}
+                            data={item}
+                            chartIds={[chart1Id, chart2Id]}
                             numbers={numbers}
                           />
-                        )
-                    }
-                    {
-                      // Por Turma Aditivo e Multiplicativo
-                      this.classroomReport === true &&
-                        this.props.pollReport.selectedFilter.proficiency !==
-                          "Números" &&
-                        chartData !== undefined &&
-                        Array.isArray(chartData) &&
-                        chartData.map((item) => {
-                          var order =
-                            item.name !== null
-                              ? item.name.replace(" ", "").toLowerCase()
-                              : "";
-                          var chart1Id = order + "-ideaChart";
-                          var chart2Id = order + "-resultChart";
-
-                          return (
-                            <PollReportMathChartClassroom
-                              data={item}
-                              chartIds={[chart1Id, chart2Id]}
-                              numbers={numbers}
-                            />
-                          );
-                        })
-                    }
+                        );
+                      })}
                   </div>
+                  }
                 </div>
-              )}
+              ): null}
             </div>
           </Card>
         )}
