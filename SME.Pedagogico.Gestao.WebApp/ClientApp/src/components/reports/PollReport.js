@@ -12,6 +12,7 @@ import PollReportMathChartClassroom from "./PollReportMathChartClassroom";
 import { connect } from "react-redux";
 import { actionCreators } from "../../store/PollReport";
 import { bindActionCreators } from "redux";
+import RelatorioPortuguesAutoral from "./RelatorioAutoral/RelatorioPortuguesAutoral";
 import RelatorioMatematicaConsolidado from "./RelatorioMatematicaConsolidado";
 
 class PollReport extends Component {
@@ -48,7 +49,7 @@ class PollReport extends Component {
     var RelatorioDeClasse = this.props.pollReport.selectedFilter
       .classroomReport;
     var Dres = this.props.filters.listDres;
- 
+
     if ("codigoDRE" in Dres[0]) {
       var nomeDre =
         CodigoDre == "todas"
@@ -62,37 +63,37 @@ class PollReport extends Component {
     }
 
 
-   if(this.props.filters.scholls[0] != undefined){
-    if ("codigoEscola" in this.props.filters.scholls[0]) {
-      var nomeEscola =
-        CodigoEscola == "todas"
-          ? "Todas"
-          : this.props.filters.scholls.filter(
+    if (this.props.filters.scholls[0] != undefined) {
+      if ("codigoEscola" in this.props.filters.scholls[0]) {
+        var nomeEscola =
+          CodigoEscola == "todas"
+            ? "Todas"
+            : this.props.filters.scholls.filter(
               x => x.codigoEscola == CodigoEscola
             )[0].nomeEscola;
-    }
-    else {
-      var nomeEscola =
-      CodigoEscola == "todas"
-        ? "Todas"
-        : this.props.filters.scholls.filter(x => x.codigo == CodigoEscola)[0]
-            .nome;
+      }
+      else {
+        var nomeEscola =
+          CodigoEscola == "todas"
+            ? "Todas"
+            : this.props.filters.scholls.filter(x => x.codigo == CodigoEscola)[0]
+              .nome;
+      }
+
     }
 
-   }  
-    
     else {
       var nomeEscola =
         CodigoEscola == "todas"
           ? "Todas"
           : this.props.filters.scholls.filter(x => x.codigo == CodigoEscola)[0]
-              .nome;
+            .nome;
     }
 
     var pollReportData = this.props.pollReport.data;
     var chartData = this.props.pollReport.chartData;
 
-  var especial = AnoCurso == "3" &&  Proeficiencia == "Escrita" ? true : false
+    var especial = AnoCurso == "3" && Proeficiencia == "Escrita" ? true : false
 
 
     if (
@@ -100,8 +101,8 @@ class PollReport extends Component {
       Proeficiencia == "Escrita" &&
       RelatorioDeClasse == false && !especial
     ) {
-    
-     
+
+
       var preSilabicoValor = 0;
       var silabicoComValor = 0;
       var silabicoSemValor = 0;
@@ -220,12 +221,11 @@ class PollReport extends Component {
         });
     }
 
-     else if ((
+    else if ((
       Disciplina == "Língua Portuguesa" &&
       Proeficiencia == "Leitura" &&
-      RelatorioDeClasse == false ) || 
-       especial)
-     {
+      RelatorioDeClasse == false) ||
+      especial) {
       var nivel1 = 0;
       var nivel2 = 0;
       var nivel3 = 0;
@@ -559,7 +559,7 @@ class PollReport extends Component {
 
       for (var index in itemsIdeia) {
         tables.push({
-          tableName:  "ORDEM " + '' + itemsResults[index].orderName,
+          tableName: "ORDEM " + '' + itemsResults[index].orderName,
           ideia_Acertou_Value: itemsIdeia[index].correctIdeaQuantity,
           ideia_Errou_Value: itemsIdeia[index].incorrectIdeaQuantity,
           ideia_NaoResolveu_Value: itemsIdeia[index].notAnsweredIdeaQuantity,
@@ -789,7 +789,7 @@ class PollReport extends Component {
       ) {
         chartData.totals = [];
         mathType = "consolidado";
-          
+
         for (var i = 0; i < chartData.chartIdeaData.length; i++) {
           indexes.push(i);
           chartData.totals.push({
@@ -853,9 +853,9 @@ class PollReport extends Component {
     return (
       <div>
         <Card className="mb-3">
-                <PollFilter reports={true} resultClick={this.openPollFilter} />
+          <PollFilter reports={true} resultClick={this.openPollFilter} />
         </Card>
-
+        <RelatorioPortuguesAutoral />
         {this.state.showPollFilter && (
           <Card id="pollReport-card">
             <div className="py-2 px-3">
@@ -901,24 +901,25 @@ class PollReport extends Component {
                   )}
 
                   <PollReportBreadcrumb className="mt-5" name="Gráfico" />
-
                   {this.props.pollReport.selectedFilter.discipline ===
                     "Língua Portuguesa" && (
-                    <PollReportPortugueseChart data={chartData} />
-                  )}
+                      Number(this.props.selectedFilter.CodigoCurso) >= 4 ?
+                        <RelatorioPortuguesAutoral />
+                        : <PollReportPortugueseChart data={chartData} />
+                    )}
                   <div className="mt-4">
                     {//Consilidado de Numeros
-                    this.classroomReport === false &&
+                      this.classroomReport === false &&
                       this.props.pollReport.selectedFilter.proficiency ===
-                        "Números" && (
+                      "Números" && (
                         <PollReportMathNumbersChart
                           data={chartData.chartNumberData}
                         />
                       )}
                     {//Consilidado de Aditivo e Multiplicativo
-                    this.classroomReport === false &&
+                      this.classroomReport === false &&
                       this.props.pollReport.selectedFilter.proficiency !==
-                        "Números" &&
+                      "Números" &&
                       indexes.map(index => {
                         var chartId =
                           "ordem" + chartData.chartIdeaData[index].order;
@@ -932,9 +933,9 @@ class PollReport extends Component {
                         );
                       })}
                     {// Por Turma de Numeros
-                    this.classroomReport === true &&
+                      this.classroomReport === true &&
                       this.props.pollReport.selectedFilter.proficiency ===
-                        "Números" &&
+                      "Números" &&
                       chartData !== undefined &&
                       Array.isArray(chartData) && (
                         <PollReportMathChartClassroom
@@ -943,9 +944,9 @@ class PollReport extends Component {
                         />
                       )}
                     {// Por Turma Aditivo e Multiplicativo
-                    this.classroomReport === true &&
+                      this.classroomReport === true &&
                       this.props.pollReport.selectedFilter.proficiency !==
-                        "Números" &&
+                      "Números" &&
                       chartData !== undefined &&
                       Array.isArray(chartData) &&
                       chartData.map(item => {

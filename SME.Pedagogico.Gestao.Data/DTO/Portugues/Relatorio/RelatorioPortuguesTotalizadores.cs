@@ -7,6 +7,6 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Portugues.Relatorio
     public class RelatorioPortuguesTotalizadores
     {
         public int Quantidade { get; set; }
-        public double Porcentagem { get; set; }
+        public double? Porcentagem { get; set; } = null;
     }
 }
