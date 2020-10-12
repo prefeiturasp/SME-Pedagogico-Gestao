@@ -1,4 +1,5 @@
 ﻿using SME.Pedagogico.Gestao.Data.Integracao.DTO;
+using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using System;
 using System.Collections.Generic;
@@ -43,6 +44,15 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
                 urlCompleta += $"?{parametrosString}";
 
             return await HttpHelper.GetAsync<int>(urlCompleta);
+        }
+
+        public async Task<IEnumerable<AlunosNaTurmaDTO>> ObterAlunosAtivosPorTurmaEPeriodo(string codigoTurma, DateTime dataReferencia)
+        {
+            var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.ObterAlunosAtivosPorTurmaEPeriodo);
+
+            var urlCompleta = string.Format(url, codigoTurma, dataReferencia.ToString("yyyy-MM-dd"));
+
+            return await HttpHelper.GetAsync<IEnumerable<AlunosNaTurmaDTO>>(urlCompleta);
         }
     }
 }
