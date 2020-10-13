@@ -58,7 +58,7 @@ export default class PollReportMathGridHeader extends Component {
                                 <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center">Cod. EOL</div>
                             </div>
                             <div className="col-3 sc-gray">
-                                <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center">Alunos</div>
+                                <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center">Nome do estudante</div>
                             </div>
                             {orderIndexes.map(item =>
                                 [<ClassReportColumn1 />, <ClassReportColumn2 />]
@@ -74,7 +74,7 @@ export default class PollReportMathGridHeader extends Component {
                                 <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-bold">Cod. EOL</div>
                             </div>
                             <div className="col-3 sc-gray">
-                                <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-bold">Alunos</div>
+                                <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-bold">Nome do estudante</div>
                             </div>
                             {headers.map(item => {
                                 return (

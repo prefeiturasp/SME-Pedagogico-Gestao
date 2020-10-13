@@ -9,7 +9,7 @@ const PollReportGridHeader = (props) => {
                     <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center">Cod. EOL</div>
                 </div>
                 <div className="col-11 sc-gray border-right border-white">
-                    <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center">Alunos</div>
+                    <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center">Nome do estudante</div>
                 </div>
             </div>
         );
