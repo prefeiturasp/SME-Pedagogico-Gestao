@@ -1013,7 +1013,7 @@ class PollReport extends Component {
                     "Língua Portuguesa" && (
                       this.props.selectedFilter && chartData && chartData.length && <PollReportPortugueseChart data={chartData} />
                     )}
-                  {chartData && chartData.length &&
+                  {chartData && chartData.length ?
                   <div className="mt-4">
                     {//Consilidado de Numeros
                       this.classroomReport === false &&
@@ -1073,7 +1073,7 @@ class PollReport extends Component {
                         );
                       })}
                   </div>
-                  }
+                  : null}
                 </div>
               ): null}
             </div>
