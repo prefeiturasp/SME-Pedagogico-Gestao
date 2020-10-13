@@ -170,7 +170,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 // Para coordenador pedagógico, assitente de diretor, diretor busca a abrangência no SGP
                 if (!string.IsNullOrWhiteSpace(roleName) && (roleName.Equals("CP") || roleName.Equals("AD") || roleName.Equals("Diretor")))
-                    profileInformation = await ObterAbrangencia(codeRF, Convert.ToInt32(schoolYear), roleName, profileInformation);
+                    profileInformation = await ObterAbrangencia(codeRF, null, profileInformation);
                 else
                     profileInformation = await profileApi
                         .getInformacoesPerfil(codeRF, parseado ? result : 0, int.Parse(schoolYear), _token, Perfil);
@@ -186,10 +186,10 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        private async Task<RetornoInfoPerfilDTO> ObterAbrangencia(string codeRF, int schoolYear, string roleName, RetornoInfoPerfilDTO profileInformation)
+        private async Task<RetornoInfoPerfilDTO> ObterAbrangencia(string codeRF, int? schoolYear, RetornoInfoPerfilDTO profileInformation)
         {
             var novoSgpApi = new NovoSGPAPI();
-            var dres = await novoSgpApi.AbrangenciaDres(codeRF, Convert.ToInt32(schoolYear));
+            var dres = await novoSgpApi.AbrangenciaDres(codeRF, schoolYear);
 
             dres.ForEach(dre =>
                {
