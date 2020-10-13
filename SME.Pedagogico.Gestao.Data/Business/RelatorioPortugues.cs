@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MoreLinq;
 using Npgsql;
 using SME.Pedagogico.Gestao.Data.Contexts;
 using SME.Pedagogico.Gestao.Data.DTO.Portugues.Relatorio;
@@ -28,6 +29,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             var dados = new List<SondagemAlunoRespostas>();
             PeriodoFixoAnual periodo = null;
             Grupo grupo = null;
+            IEnumerable<Pergunta> perguntas = null;
             var relatorio = new RelatorioAutoralLeituraProducaoDto();
 
             using (var contexto = new SMEManagementContextData())
@@ -39,6 +41,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 periodo = await contexto.PeriodoFixoAnual.FirstOrDefaultAsync(x => x.PeriodoId == filtroRelatorioSondagem.PeriodoId);
 
                 grupo = await contexto.Grupo.FirstOrDefaultAsync(x => x.Id == filtroRelatorioSondagem.GrupoId);
+
+                perguntas = await contexto.OrdemPergunta.Include(x => x.Pergunta).Where(x => x.GrupoId.Equals(filtroRelatorioSondagem.GrupoId)).Select(x => x.Pergunta).ToListAsync();
             }
 
             if (grupo == null)
@@ -46,22 +50,28 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             relatorio.GrupoDescricao = grupo.Descricao;
 
-            if (dados == null || !dados.Any())
-                return null;
-
             int quantidade = await ObterQuantidadeAlunosAtivos(filtroRelatorioSondagem, periodo);
-
-            relatorio.Totais = new RelatorioPortuguesTotalizadores { Quantidade = quantidade };
-
-            if (filtroRelatorioSondagem.GrupoId.Equals("6a3d323a-2c44-4052-ba68-13a8dead299a"))
-                relatorio.Totais.Porcentagem = 100;
 
             if (quantidade == 0)
                 throw new Exception("Não foi possivel obter os alunos ativos para o filtro especificado");
 
-            var perguntas = dados.GroupBy(x => x.Pergunta).Select(x => x.Key);
+            relatorio.Totais = new RelatorioPortuguesTotalizadores { Quantidade = quantidade };
 
             var listaRetorno = new List<RelatorioPortuguesPerguntasDto>();
+
+            if (dados == null || !dados.Any())
+            {
+                PreencherPerguntasForaLista(listaRetorno, perguntas);
+
+                ObterSemPreenchimento(dados, quantidade, listaRetorno);
+                
+                relatorio.Perguntas = listaRetorno;
+
+                return relatorio;
+            }
+
+            if (filtroRelatorioSondagem.GrupoId.Equals("6a3d323a-2c44-4052-ba68-13a8dead299a"))
+                relatorio.Totais.Porcentagem = 100;
 
             PopularListaRetorno(dados, quantidade, perguntas, listaRetorno);
 
@@ -93,6 +103,27 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
 
             ObterSemPreenchimento(dados, alunosAtivos, listaRetorno);
+            PreencherPerguntasForaLista(listaRetorno, perguntas);
+        }
+
+        private static void PreencherPerguntasForaLista(List<RelatorioPortuguesPerguntasDto> listaRetorno, IEnumerable<Pergunta> perguntas)
+        {
+            perguntas.ForEach(pergunta =>
+            {
+                if (listaRetorno.Any(x => x.Id?.Equals(pergunta.Id) ?? false))
+                    return;
+
+                listaRetorno.Add(new RelatorioPortuguesPerguntasDto
+                {
+                    Id = pergunta.Id,
+                    Nome = pergunta.Descricao,
+                    Total = new RelatorioPortuguesTotalizadores
+                    {
+                        Quantidade = 0,
+                        Porcentagem = 0,
+                    }
+                });
+            });
         }
 
         private static void ObterSemPreenchimento(List<SondagemAlunoRespostas> dados, int alunosAtivos, List<RelatorioPortuguesPerguntasDto> listaRetorno)
@@ -111,7 +142,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 Total = new RelatorioPortuguesTotalizadores
                 {
                     Quantidade = diferenca,
-                    Porcentagem = Math.Round(((double)diferenca / (double)alunosAtivos) * 100,2)
+                    Porcentagem = Math.Round(((double)diferenca / (double)alunosAtivos) * 100, 2)
                 }
             });
         }
