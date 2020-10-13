@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,27 +19,21 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
         //    _httpClient = new HttpClient();
         //}
 
+        internal static async Task<T> GetAsync<T>(string url)
+        {
+            return await GetAsync<T>(string.Empty, url);
+        }
+
         internal static async Task<T> GetAsync<T>(string token, string url)
         {
-
             using (var client = new HttpClient())
             {
-                try
-                {
-                    AddHeaders(token, client);
-                    HttpResponseMessage response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
-                    response.EnsureSuccessStatusCode();
-                    var data = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<T>(data);
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-
-              
+                AddHeaders(token, client);
+                HttpResponseMessage response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+                response.EnsureSuccessStatusCode();
+                var data = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<T>(data);
             }
-
         }
 
         //private static Uri CreateRequestUri(string relativePath, string queryString = "")
@@ -59,7 +52,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
 
         private static void AddHeaders(string token, HttpClient client)
         {
-            var apiKey =   Environment.GetEnvironmentVariable("API_EOL_KEY_ENV");
+            var apiKey = Environment.GetEnvironmentVariable("API_EOL_KEY_ENV");
             client.DefaultRequestHeaders.Add("token", token);
             client.DefaultRequestHeaders.Add(API_EOL_KEY_HEADER, apiKey);
         }

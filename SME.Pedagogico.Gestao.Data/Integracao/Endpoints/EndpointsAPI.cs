@@ -18,6 +18,9 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
         public string AbrangenciaCompactaSondagem { get; set; } = "abrangencia/compacta-vigente/{0}/perfil/{1}/Sondagem";
 
         public string BuscaCargos { get; set; } = "cargos";
+		
+		public string ObterTotalAlunosAtivosPorPeriodo { get; set; } = "alunos/ativos/anos/{0}/anos-letivos/{1}/inicio/{2}/fim/{3}";
+		public string ObterAlunosAtivosPorTurmaEPeriodo { get; set; } = "alunos/turmas/{0}/ativos/{1}";
 
         //professores/{codigoRF}/escolas/{codigoUE}/anos_letivos/{anoLetivo}
         public string BuscaTurmasDeProfessores { get; set; } = "professores/{0}/escolas/{1}/anos_letivos/{2}";
