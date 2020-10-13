@@ -41,8 +41,11 @@ class PollReport extends Component {
         proficiency: proficiencia,
         term: semestre,
       } = this.props.pollReport.selectedFilter;
-
-      const valor = !!componenteCurricular && !!proficiencia && !!semestre;
+      
+      const { yearClassroom: ano } = this.props.poll.selectedFilter;
+      const temProficiencia = ano < "7" ? proficiencia : "0";
+      const valor = !!componenteCurricular && !!temProficiencia && !!semestre;
+      
       if (prevState.ehDesabilitado === valor) {
         this.setState({
           ehDesabilitado: !valor,
@@ -1087,6 +1090,7 @@ class PollReport extends Component {
 export default connect(
   (state) => ({
     pollReport: state.pollReport,
+    poll: state.poll,
     user: state.user,
     filters: state.filters,
   }),
