@@ -20,7 +20,8 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios
         public static async Task<int> BuscaTotalDeAlunosEOl(filtrosRelatorioDTO filtro)
         {
             var DatasPeriodo = await BuscaDatasPeriodoFixoAnual(filtro);
-
+            if (DatasPeriodo.Count() == 0)
+                return 0;
 
             var endpointsApi = new EndpointsAPI();
             var alunoApi = new AlunosAPI(endpointsApi);
