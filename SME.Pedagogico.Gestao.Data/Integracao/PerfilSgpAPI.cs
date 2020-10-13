@@ -41,8 +41,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
         }
 
 
-        public async Task<bool> VerificaSeProfessorTemAcesso(string codigoRF,
-                                                     string token)
+        public async Task<bool> VerificaSeProfessorTemAcesso(string codigoRF, string token)
         {
             var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.VerificaSeProfessorTemAcesso);
 
@@ -50,7 +49,5 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
                 .GetAsync<bool>
                       (token, string.Format(url, codigoRF));
         }
-
-
     }
 }
