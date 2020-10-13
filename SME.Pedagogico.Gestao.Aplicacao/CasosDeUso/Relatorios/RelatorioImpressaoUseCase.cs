@@ -15,16 +15,21 @@ namespace SME.Pedagogico.Gestao.Aplicacao
         }
         public async Task Executar(RelatorioImpressaoFiltroDto filtros)
         {
+            TipoRelatorio? tipoRelatorio = null;
 
             if (filtros.ComponenteCurricularId == ComponenteCurricularEnum.Matematica)
             {
                 if (filtros.ProficienciaId == ProficienciaEnum.CampoAditivo || filtros.ProficienciaId == ProficienciaEnum.CampoMultiplicativo)
                 {
-                    await mediator.Send(new GerarRelatorioCommand(TipoRelatorio.RelatorioMatetimaticaPorTurma, filtros, filtros.UsuarioRF));
+                    tipoRelatorio = TipoRelatorio.RelatorioMatetimaticaPorTurma;
+                }
+                else  if (filtros.TurmaCodigo <= 0)
+                {
+                    tipoRelatorio = TipoRelatorio.RelatorioMatetimaticaConsolidado;
                 }
             }
 
-
+            await mediator.Send(new GerarRelatorioCommand(tipoRelatorio.Value, filtros, filtros.UsuarioRF));
         }
     }
 }
