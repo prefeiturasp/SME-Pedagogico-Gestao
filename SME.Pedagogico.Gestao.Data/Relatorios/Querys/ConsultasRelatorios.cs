@@ -29,6 +29,7 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
                                    r.""Id"" as ""RespostaId"", 
                                    r.""Descricao"" as ""RespostaDescricao"" ,
                                    gp.""Ordenacao"",
+                                   op.""OrdenacaoNaTela"",
                                    count(tabela.""RespostaId"") as ""QtdRespostas""
                                    from
                                        ""Ordem""  as o 
@@ -87,6 +88,7 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
                                                query.AppendLine(@"and ""CodigoUe"" =  @CodigoEscola");
                                         
                                            query.Append(@"
+                                            and s.""PeriodoId"" = @PeriodoId
                                    			and s.""AnoLetivo"" = @AnoLetivo
                                    			and s.""AnoTurma"" = @AnoTurma
                                    		        ) ) as tabela on
@@ -100,11 +102,12 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
                                           	r.""Descricao"",
                                           	p.""Id"",
                                           	p.""Descricao"",
-                                          	gp.""Ordenacao""
+                                          	gp.""Ordenacao"",
+                                            op.""OrdenacaoNaTela""
                                           order by
                                              gp.""Ordenacao"",
                                              o.""Descricao"",
-                                             p.""Descricao"",
+                                             op.""OrdenacaoNaTela"",
                                               r.""Descricao""");
             return query.ToString();
         }

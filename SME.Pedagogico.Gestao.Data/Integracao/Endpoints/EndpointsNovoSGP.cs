@@ -18,8 +18,8 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
 
         public static Func<string> RevalidarAutenticacao = () => $"autenticacao/revalidar";
 
-        public static Func<bool, int, string> AbrangenciaDres = (consideraHistorico, anoLetivo) => $"abrangencias/{consideraHistorico}/dres?anoLetivo={anoLetivo}";
+        public static Func<bool, int?, string> AbrangenciaDres = (consideraHistorico, anoLetivo) => $"abrangencias/{consideraHistorico}/dres{ (anoLetivo.HasValue ? $"?anoLetivo={anoLetivo}" : string.Empty) }";
 
-        public static Func<bool, int, string, string> AbrangenciaUes = (consideraHistorico, anoLetivo, codigoDre) => $"abrangencias/{consideraHistorico}/dres/{codigoDre}/ues?anoLetivo={anoLetivo}";
+        public static Func<bool, int?, string, string> AbrangenciaUes = (consideraHistorico, anoLetivo, codigoDre) => $"abrangencias/{consideraHistorico}/dres/{codigoDre}/ues{ (anoLetivo.HasValue ? $"?anoLetivo={anoLetivo}" : string.Empty) }";
     }
 }
