@@ -38,7 +38,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                                               .FromSql(ObterConsultaCompleta(filtroRelatorioSondagem),
                                                                         ObterParametros(filtroRelatorioSondagem)).ToListAsync();
 
-                periodo = await contexto.PeriodoFixoAnual.FirstOrDefaultAsync(x => x.PeriodoId == filtroRelatorioSondagem.PeriodoId);
+                periodo = await contexto.PeriodoFixoAnual.FirstOrDefaultAsync(x => x.PeriodoId == filtroRelatorioSondagem.PeriodoId && x.Ano == filtroRelatorioSondagem.AnoLetivo);
 
                 grupo = await contexto.Grupo.FirstOrDefaultAsync(x => x.Id == filtroRelatorioSondagem.GrupoId);
 
