@@ -48,6 +48,7 @@ const initialState = {
     classroomCodeEol: null,
     schoolYear: null,
     yearClassroom: null,
+    rfCode: null
   },
   newDataToSave: false,
   loadingSalvar: false,

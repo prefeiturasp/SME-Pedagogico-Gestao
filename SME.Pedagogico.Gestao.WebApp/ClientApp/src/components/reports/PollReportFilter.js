@@ -3,6 +3,7 @@ import SelectChangeColor from '../inputs/SelectChangeColor';
 import { connect } from 'react-redux';
 import { actionCreators } from '../../store/PollReport';
 import { bindActionCreators } from 'redux';
+import { DISCIPLINES_ENUM } from "../../Enums";
 
 class PollReportFilter extends Component {
     constructor() {
@@ -30,6 +31,9 @@ class PollReportFilter extends Component {
 
     componentDidMount() {
         this.props.hidePollReport();
+
+        if (this.props.filters.listDisciplines.length === 1)
+            delete this.props.pollReport.filters[!DISCIPLINES_ENUM.PossuiDisciplina(DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES, this.props.filters.listDisciplines) ? "port" : "math"];
 
         for (var key in this.props.pollReport.filters)
             this.initialFilter.push({ value: key, label: this.props.pollReport.filters[key].name });
@@ -105,7 +109,7 @@ class PollReportFilter extends Component {
 
         var parameters = this.state.selectedFilter;
         parameters.classroomReport = this.props.poll.selectedFilter.classroomCodeEol === "" ? false : true;
-        parameters.codigoDRE = this.props.poll.selectedFilter.dreCodeEol === "todas" ? "": this.props.poll.selectedFilter.dreCodeEol;
+        parameters.codigoDRE = this.props.poll.selectedFilter.dreCodeEol === "todas" ? "" : this.props.poll.selectedFilter.dreCodeEol;
         parameters.CodigoEscola = this.props.poll.selectedFilter.schoolCodeEol === "todas" ? "" : this.props.poll.selectedFilter.schoolCodeEol;
         parameters.CodigoCurso = this.props.poll.selectedFilter.yearClassroom;
         parameters.CodigoTurmaEol = this.props.poll.selectedFilter.classroomCodeEol === null ? "" : this.props.poll.selectedFilter.classroomCodeEol;
@@ -141,6 +145,6 @@ class PollReportFilter extends Component {
 }
 
 export default connect(
-    state => ({ pollReport: state.pollReport, poll: state.poll }),
+    state => ({ pollReport: state.pollReport, poll: state.poll, filters: state.filters }),
     dispatch => bindActionCreators(actionCreators, dispatch)
 )(PollReportFilter);

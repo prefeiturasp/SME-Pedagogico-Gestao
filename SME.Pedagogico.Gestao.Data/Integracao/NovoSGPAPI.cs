@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SME.Pedagogico.Gestao.Data.Business;
+using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using System;
@@ -101,6 +102,17 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
             var resposta = await httpClient.GetAsync(EndpointsNovoSGP.AbrangenciaUes(consideraHistorico, anoLetivo, codigoDre));
 
             return await TrataRetorno<IList<AbrangenciaUeRetornoDto>>(resposta);
+        }
+
+        public async Task<IList<DisciplinaRetornoDto>> DisciplinasPorTurma(BuscarDisciplinasPorRfTurmaDto buscarDisciplinasPorRfTurmaDto)
+        {
+            var loggedUser = await Authentication.GetLoggedUser(buscarDisciplinasPorRfTurmaDto.CodigoRf);
+
+            ResetarCabecalhoAutenticado(loggedUser.RefreshToken);
+
+            var resposta = await httpClient.GetAsync(EndpointsNovoSGP.Disciplinas(buscarDisciplinasPorRfTurmaDto.CodigoTurmaEol));
+
+            return await TrataRetorno<IList<DisciplinaRetornoDto>>(resposta);
         }
 
         private async Task<T> TrataRetorno<T>(HttpResponseMessage response)

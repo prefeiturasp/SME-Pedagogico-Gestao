@@ -2,6 +2,7 @@
 import "./Poll.css";
 import Card from "../containers/Card";
 import PollFilter from "./PollFilter";
+import { DISCIPLINES_ENUM } from "../../Enums";
 
 import { ClassRoomEnum } from "../polls/component/ClassRoomHelper";
 import { connect } from "react-redux";
@@ -128,7 +129,7 @@ class Poll extends Component {
     }
   }
 
-  componentDidMount() {}
+  componentDidMount() { }
 
   componentWillUpdate() {
     var todayDate = new Date();
@@ -732,8 +733,8 @@ class Poll extends Component {
 
       const sequenciaOrdemSelecionada = sequenciasOrdens
         ? sequenciasOrdens.findIndex(
-            (sequencia) => sequencia.ordemId === idOrdemSelecionada
-          )
+          (sequencia) => sequencia.ordemId === idOrdemSelecionada
+        )
         : 0;
 
       try {
@@ -857,9 +858,11 @@ class Poll extends Component {
 
   checkButtonPortuguese() {
     var btn;
+    if (!DISCIPLINES_ENUM.PossuiDisciplina(DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES, this.props.filters.listDisciplines))
+      return btn;
+
     if (
       this.props.poll.selectedFilter.yearClassroom !== null &&
-      // parseInt(this.props.poll.selectedFilter.yearClassroom) < 4 &&
       this.props.poll.selectedFilter.yearClassroom !== undefined
     ) {
       if (this.props.data.newDataToSave) {
@@ -919,9 +922,11 @@ class Poll extends Component {
 
   checkButtonMath() {
     var btn;
+    if (!DISCIPLINES_ENUM.PossuiDisciplina(DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA, this.props.filters.listDisciplines))
+      return btn;
+
     if (
       this.props.poll.selectedFilter.yearClassroom !== null &&
-      //parseInt(this.props.poll.selectedFilter.yearClassroom) < 7 &&
       this.props.poll.selectedFilter.yearClassroom !== undefined
     ) {
       if (this.props.data.newDataToSave) {
