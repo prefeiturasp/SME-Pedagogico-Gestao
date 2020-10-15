@@ -9,10 +9,14 @@ import PollReportPortugueseChart from "./PollReportPortugueseChart";
 import PollReportMathChart from "./PollReportMathChart";
 import PollReportMathNumbersChart from "./PollReportMathNumbersChart";
 import PollReportMathChartClassroom from "./PollReportMathChartClassroom";
-import ReportService from "../../service/ReportService";
 import { connect } from "react-redux";
 import { actionCreators } from "../../store/PollReport";
 import { bindActionCreators } from "redux";
+import RelatorioPortuguesAutoral from "./RelatorioAutoral/RelatorioPortuguesAutoral";
+import MensagemConfirmacaoImprimir from "./MensagemConfirmacaoImprimir";
+import RelatorioMatematicaConsolidado from "./RelatorioMatematicaConsolidado";
+import { GrupoDto } from "../dtos/grupoDto";
+import RelatorioConsolidadoCapacidadeLeitura from "./RelatorioConsolidadeCapacidadeLeitura/RelatorioConsolidadoCapacidadeLeitura";
 
 class PollReport extends Component {
   constructor(props) {
@@ -22,15 +26,74 @@ class PollReport extends Component {
 
     this.state = {
       showMessage: false,
-      showPollFilter: false
+      showPollFilter: false,
+      ehDesabilitado: true,
     };
 
     this.printClick = this.printClick.bind(this);
     this.openPollFilter = this.openPollFilter.bind(this);
   }
 
-  printClick() {
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.pollReport.showReport === true) {
+      const {
+        discipline: componenteCurricular,
+        proficiency: proficiencia,
+        term: semestre,
+      } = this.props.pollReport.selectedFilter;
+      
+      const { yearClassroom: ano } = this.props.poll.selectedFilter;
+      const temProficiencia = ano < "7" ? proficiencia : "0";
+      const valor = !!componenteCurricular && !!temProficiencia && !!semestre;
+      
+      if (prevState.ehDesabilitado === valor) {
+        this.setState({
+          ehDesabilitado: !valor,
+        });
+      }
+    }
+  }
 
+  imprimir = () => {
+    this.setState({ showMessage: true });
+
+    const discipline = Object.values(this.props.pollReport.filters).filter(
+      (item) => item.name === this.props.pollReport.selectedFilter.discipline
+    );
+
+    const proficiencia = discipline[0].proficiencies.filter(
+      (item) => item.label === this.props.pollReport.selectedFilter.proficiency
+    );
+
+    const { username: usuarioRf } = this.props.user;
+    const {
+      SchoolYear,
+      codigoDRE,
+      CodigoEscola,
+      CodigoTurmaEol,
+      CodigoCurso,
+      term,
+    } = this.props.pollReport.selectedFilter;
+    
+    const semestre = term === "1° Semestre" ? 1 : 2;
+    const proficienciaId = proficiencia.length ? proficiencia[0].id : 1;
+
+    const payload = {
+      anoLetivo: parseInt(SchoolYear),
+      dreCodigo: parseInt(codigoDRE || 0),
+      ueCodigo: CodigoEscola,
+      ano: CodigoCurso,
+      turmaCodigo: parseInt(CodigoTurmaEol || 0),
+      componenteCurricularId: discipline[0].id,
+      proficienciaId,
+      semestre,
+      usuarioRf,
+    };
+
+    this.props.pollReportMethods.printPollReport(payload);
+  };
+
+  printClick() {
     var userName = this.props.user.username;
     var AnoCurso = this.props.pollReport.selectedFilter.CodigoCurso;
     var CodigoEscola =
@@ -48,60 +111,57 @@ class PollReport extends Component {
     var RelatorioDeClasse = this.props.pollReport.selectedFilter
       .classroomReport;
     var Dres = this.props.filters.listDres;
- 
+
     if ("codigoDRE" in Dres[0]) {
       var nomeDre =
         CodigoDre == "todas"
           ? "Todas"
-          : Dres.filter(x => x.codigoDRE == CodigoDre)[0].nomeDRE.substring(31);
+          : Dres.filter((x) => x.codigoDRE == CodigoDre)[0].nomeDRE.substring(
+              31
+            );
     } else {
       var nomeDre =
         CodigoDre == "todas"
           ? "Todas"
-          : Dres.filter(x => x.codigo == CodigoDre)[0].nome.substring(31);
+          : Dres.filter((x) => x.codigo == CodigoDre)[0].nome.substring(31);
     }
 
-
-   if(this.props.filters.scholls[0] != undefined){
-    if ("codigoEscola" in this.props.filters.scholls[0]) {
+    if (this.props.filters.scholls[0] != undefined) {
+      if ("codigoEscola" in this.props.filters.scholls[0]) {
+        var nomeEscola =
+          CodigoEscola == "todas"
+            ? "Todas"
+            : this.props.filters.scholls.filter(
+                (x) => x.codigoEscola == CodigoEscola
+              )[0].nomeEscola;
+      } else {
+        var nomeEscola =
+          CodigoEscola == "todas"
+            ? "Todas"
+            : this.props.filters.scholls.filter(
+                (x) => x.codigo == CodigoEscola
+              )[0].nome;
+      }
+    } else {
       var nomeEscola =
         CodigoEscola == "todas"
           ? "Todas"
           : this.props.filters.scholls.filter(
-              x => x.codigoEscola == CodigoEscola
-            )[0].nomeEscola;
-    }
-    else {
-      var nomeEscola =
-      CodigoEscola == "todas"
-        ? "Todas"
-        : this.props.filters.scholls.filter(x => x.codigo == CodigoEscola)[0]
-            .nome;
-    }
-
-   }  
-    
-    else {
-      var nomeEscola =
-        CodigoEscola == "todas"
-          ? "Todas"
-          : this.props.filters.scholls.filter(x => x.codigo == CodigoEscola)[0]
-              .nome;
+              (x) => x.codigo == CodigoEscola
+            )[0].nome;
     }
 
     var pollReportData = this.props.pollReport.data;
     var chartData = this.props.pollReport.chartData;
 
-  var especial = AnoCurso == "3" &&  Proeficiencia == "Escrita" ? true : false
-
+    var especial = AnoCurso == "3" && Proeficiencia == "Escrita" ? true : false;
 
     if (
       Disciplina == "Língua Portuguesa" &&
       Proeficiencia == "Escrita" &&
-      RelatorioDeClasse == false && !especial
+      RelatorioDeClasse == false &&
+      !especial
     ) {
-    
-     
       var preSilabicoValor = 0;
       var silabicoComValor = 0;
       var silabicoSemValor = 0;
@@ -170,7 +230,7 @@ class PollReport extends Component {
           subject: Disciplina, // Portugues
           testName: Proeficiencia, // Escrita
           period: periodo, // 1 BIMESTRES
-          type: RelatorioDeClasse == true ? "Por Turma" : "Consolidado" // CONSOLIDADO
+          type: RelatorioDeClasse == true ? "Por Turma" : "Consolidado", // CONSOLIDADO
         },
         table: {
           pS_Value: preSilabicoValor,
@@ -184,24 +244,27 @@ class PollReport extends Component {
           scV_Percentage: silabicoComValorPorcentagem,
           sA_Percentage: silabicoAlfabeticoPorcentagem,
           a_Percentage: alfabeticoPorcentagem,
-          total_Percentage: totalPercentage
+          total_Percentage: totalPercentage,
         },
         chart: {
           pS_Value: preSilabicoChart,
           ssV_Value: silabicoSemValorChart,
           scV_Value: silabicoComValorChart,
           sA_Value: silabicoAlfabeticoChart,
-          a_Value: alfabeticoChart
-        }
+          a_Value: alfabeticoChart,
+        },
       };
 
-      return fetch("http://hom-latexservice.sme.prefeitura.sp.gov.br/api/Recipes/PollReportPortugueseWriting", {
-        method: "post",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(report)
-      })
-        .then(response => response.blob())
-        .then(blob => {
+      return fetch(
+        "http://hom-latexservice.sme.prefeitura.sp.gov.br/api/Recipes/PollReportPortugueseWriting",
+        {
+          method: "post",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(report),
+        }
+      )
+        .then((response) => response.blob())
+        .then((blob) => {
           // 2. Create blob link to download
           const url = window.URL.createObjectURL(new Blob([blob]));
           const link = document.createElement("a");
@@ -218,14 +281,12 @@ class PollReport extends Component {
           // 5. Clean up and remove the link
           link.parentNode.removeChild(link);
         });
-    }
-
-     else if ((
-      Disciplina == "Língua Portuguesa" &&
-      Proeficiencia == "Leitura" &&
-      RelatorioDeClasse == false ) || 
-       especial)
-     {
+    } else if (
+      (Disciplina == "Língua Portuguesa" &&
+        Proeficiencia == "Leitura" &&
+        RelatorioDeClasse == false) ||
+      especial
+    ) {
       var nivel1 = 0;
       var nivel2 = 0;
       var nivel3 = 0;
@@ -280,7 +341,7 @@ class PollReport extends Component {
             subject: Disciplina, // Portugues
             testName: Proeficiencia, // Escrita
             period: periodo, // 1 BIMESTRES
-            type: RelatorioDeClasse == true ? "Por Turma" : "Consolidado" // cONSOLIDADO
+            type: RelatorioDeClasse == true ? "Por Turma" : "Consolidado", // cONSOLIDADO
           },
           table: {
             n1_Value: nivel1,
@@ -292,23 +353,26 @@ class PollReport extends Component {
             n2_Percentage: nivel2Porcentagem,
             n3_Percentage: nivel3Porcentagem,
             n4_Percentage: nivel4Porcentagem,
-            total_Percentage: totalPorcentagem
+            total_Percentage: totalPorcentagem,
           },
           chart: {
             n1_Value: nivel1Chart,
             n2_Value: nivel2Chart,
             n3_Value: nivel3Chart,
-            n4_Value: nivel4Chart
-          }
+            n4_Value: nivel4Chart,
+          },
         };
 
-        return fetch("http://hom-latexservice.sme.prefeitura.sp.gov.br/api/Recipes/PollReportPortugueseReading", {
-          method: "post",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(report)
-        })
-          .then(response => response.blob())
-          .then(blob => {
+        return fetch(
+          "http://hom-latexservice.sme.prefeitura.sp.gov.br/api/Recipes/PollReportPortugueseReading",
+          {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(report),
+          }
+        )
+          .then((response) => response.blob())
+          .then((blob) => {
             // 2. Create blob link to download
             const url = window.URL.createObjectURL(new Blob([blob]));
             const link = document.createElement("a");
@@ -346,18 +410,18 @@ class PollReport extends Component {
           subject: Disciplina, // Portugues
           testName: Proeficiencia, // Escrita
           period: periodo, // 1 BIMESTRES
-          type: RelatorioDeClasse == true ? "Por Turma" : "Consolidado" // CONSOLIDADO
+          type: RelatorioDeClasse == true ? "Por Turma" : "Consolidado", // CONSOLIDADO
         },
         table: {
           itemTemplatePath: "string",
-          items: pollReportData
+          items: pollReportData,
         },
         chart: {
           n1_Value: 0,
           n2_Value: 0,
           n3_Value: 0,
-          n4_Value: 0
-        }
+          n4_Value: 0,
+        },
       };
 
       return fetch(
@@ -365,11 +429,11 @@ class PollReport extends Component {
         {
           method: "post",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(report)
+          body: JSON.stringify(report),
         }
       )
-        .then(response => response.blob())
-        .then(blob => {
+        .then((response) => response.blob())
+        .then((blob) => {
           // 2. Create blob link to download
           const url = window.URL.createObjectURL(new Blob([blob]));
           const link = document.createElement("a");
@@ -430,7 +494,7 @@ class PollReport extends Component {
 
       for (var index in itemsIdeia) {
         tables.push({
-          tableName: "ORDEM " + '' + itemsResults[index].orderName,
+          tableName: "ORDEM " + "" + itemsResults[index].orderName,
           ideia_Acertou_Value: itemsIdeia[index].correctIdeaQuantity,
           ideia_Errou_Value: itemsIdeia[index].incorrectIdeaQuantity,
           ideia_NaoResolveu_Value: itemsIdeia[index].notAnsweredIdeaQuantity,
@@ -451,7 +515,8 @@ class PollReport extends Component {
             itemsResults[index].incorrectResultPercentage,
           resultado_NaoResolveu_Percentage:
             itemsResults[index].notAnsweredResultPercentage,
-          resultado_Total_Percentage: totals[index].totalStudentResultPercentage
+          resultado_Total_Percentage:
+            totals[index].totalStudentResultPercentage,
         });
       }
 
@@ -471,7 +536,7 @@ class PollReport extends Component {
           resultado_Errou_Value:
             itemscharts.chartResultData[index].result[1].quantity,
           resultado_NaoResolveu_Value:
-            itemscharts.chartResultData[index].result[2].quantity
+            itemscharts.chartResultData[index].result[2].quantity,
         });
       }
 
@@ -485,20 +550,23 @@ class PollReport extends Component {
           subject: Disciplina, // Portugues
           testName: Proeficiencia, // Escrita
           period: periodo, // 1 BIMESTRES
-          type: RelatorioDeClasse == true ? "Por Turma" : "Consolidado" // Consolidado
+          type: RelatorioDeClasse == true ? "Por Turma" : "Consolidado", // Consolidado
         },
         tables,
 
-        charts
+        charts,
       };
 
-      return fetch("http://hom-latexservice.sme.prefeitura.sp.gov.br/api/Recipes/PollReportMathSum", {
-        method: "post",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(report)
-      })
-        .then(response => response.blob())
-        .then(blob => {
+      return fetch(
+        "http://hom-latexservice.sme.prefeitura.sp.gov.br/api/Recipes/PollReportMathSum",
+        {
+          method: "post",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(report),
+        }
+      )
+        .then((response) => response.blob())
+        .then((blob) => {
           // 2. Create blob link to download
           const url = window.URL.createObjectURL(new Blob([blob]));
           const link = document.createElement("a");
@@ -559,7 +627,7 @@ class PollReport extends Component {
 
       for (var index in itemsIdeia) {
         tables.push({
-          tableName:  "ORDEM " + '' + itemsResults[index].orderName,
+          tableName: "ORDEM " + "" + itemsResults[index].orderName,
           ideia_Acertou_Value: itemsIdeia[index].correctIdeaQuantity,
           ideia_Errou_Value: itemsIdeia[index].incorrectIdeaQuantity,
           ideia_NaoResolveu_Value: itemsIdeia[index].notAnsweredIdeaQuantity,
@@ -580,7 +648,8 @@ class PollReport extends Component {
             itemsResults[index].incorrectResultPercentage,
           resultado_NaoResolveu_Percentage:
             itemsResults[index].notAnsweredResultPercentage,
-          resultado_Total_Percentage: totals[index].totalStudentResultPercentage
+          resultado_Total_Percentage:
+            totals[index].totalStudentResultPercentage,
         });
       }
 
@@ -600,7 +669,7 @@ class PollReport extends Component {
           resultado_Errou_Value:
             itemscharts.chartResultData[index].result[1].quantity,
           resultado_NaoResolveu_Value:
-            itemscharts.chartResultData[index].result[2].quantity
+            itemscharts.chartResultData[index].result[2].quantity,
         });
       }
 
@@ -614,20 +683,23 @@ class PollReport extends Component {
           subject: Disciplina, // Portugues
           testName: Proeficiencia, // Escrita
           period: periodo, // 1 BIMESTRES
-          type: RelatorioDeClasse == true ? "Por Turma" : "Consolidado" // cONSOLIDADO
+          type: RelatorioDeClasse == true ? "Por Turma" : "Consolidado", // cONSOLIDADO
         },
         tables,
 
-        charts
+        charts,
       };
 
-      return fetch("http://hom-latexservice.sme.prefeitura.sp.gov.br/api/Recipes/PollReportMathMultiplication", {
-        method: "post",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(report)
-      })
-        .then(response => response.blob())
-        .then(blob => {
+      return fetch(
+        "http://hom-latexservice.sme.prefeitura.sp.gov.br/api/Recipes/PollReportMathMultiplication",
+        {
+          method: "post",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(report),
+        }
+      )
+        .then((response) => response.blob())
+        .then((blob) => {
           // 2. Create blob link to download
           const url = window.URL.createObjectURL(new Blob([blob]));
           const link = document.createElement("a");
@@ -675,7 +747,7 @@ class PollReport extends Component {
             pollReportData.numerosResults[index]
               .naoEscreveConvencionalmentePercentage +
             pollReportData.numerosResults[index]
-              .escreveConvencionalmentePercentage
+              .escreveConvencionalmentePercentage,
         });
       }
 
@@ -689,7 +761,7 @@ class PollReport extends Component {
           false1_Value: chartData.chartNumberData[0].numbers[1].quantity,
           chart2Name: chartData.chartNumberData[1].order,
           true2_Value: chartData.chartNumberData[1].numbers[0].quantity,
-          false2_Value: chartData.chartNumberData[1].numbers[1].quantity
+          false2_Value: chartData.chartNumberData[1].numbers[1].quantity,
         },
         {
           dataName: "",
@@ -698,7 +770,7 @@ class PollReport extends Component {
           false1_Value: chartData.chartNumberData[2].numbers[1].quantity,
           chart2Name: chartData.chartNumberData[3].order,
           true2_Value: chartData.chartNumberData[3].numbers[0].quantity,
-          false2_Value: chartData.chartNumberData[3].numbers[1].quantity
+          false2_Value: chartData.chartNumberData[3].numbers[1].quantity,
         },
         {
           dataName: "",
@@ -707,7 +779,7 @@ class PollReport extends Component {
           false1_Value: chartData.chartNumberData[4].numbers[1].quantity,
           chart2Name: chartData.chartNumberData[5].order,
           true2_Value: chartData.chartNumberData[5].numbers[0].quantity,
-          false2_Value: chartData.chartNumberData[5].numbers[1].quantity
+          false2_Value: chartData.chartNumberData[5].numbers[1].quantity,
         }
       );
 
@@ -721,7 +793,7 @@ class PollReport extends Component {
           subject: Disciplina, // Portugues
           testName: Proeficiencia, // Escrita
           period: periodo, // 1 BIMESTRES
-          type: RelatorioDeClasse == true ? "Por Turma" : "Consolidado" // cONSOLIDADO
+          type: RelatorioDeClasse == true ? "Por Turma" : "Consolidado", // cONSOLIDADO
         },
         tables,
 
@@ -730,17 +802,20 @@ class PollReport extends Component {
           dataName: "dataName",
           chartName: chartData.chartNumberData[6].order,
           true_Value: chartData.chartNumberData[6].numbers[0].quantity,
-          false_Value: chartData.chartNumberData[6].numbers[1].quantity
-        }
+          false_Value: chartData.chartNumberData[6].numbers[1].quantity,
+        },
       };
 
-      return fetch("http://hom-latexservice.sme.prefeitura.sp.gov.br/api/Recipes/PollReportMathNumbers", {
-        method: "post",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(report)
-      })
-        .then(response => response.blob())
-        .then(blob => {
+      return fetch(
+        "http://hom-latexservice.sme.prefeitura.sp.gov.br/api/Recipes/PollReportMathNumbers",
+        {
+          method: "post",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(report),
+        }
+      )
+        .then((response) => response.blob())
+        .then((blob) => {
           // 2. Create blob link to download
           const url = window.URL.createObjectURL(new Blob([blob]));
           const link = document.createElement("a");
@@ -762,7 +837,7 @@ class PollReport extends Component {
 
   openPollFilter(value) {
     this.setState({
-      showPollFilter: value
+      showPollFilter: value,
     });
   }
   render() {
@@ -784,18 +859,19 @@ class PollReport extends Component {
 
     if (this.props.pollReport.showReport === true) {
       if (
+        chartData &&
         chartData.chartIdeaData !== undefined &&
         chartData.chartIdeaData.length > 0
       ) {
         chartData.totals = [];
         mathType = "consolidado";
-          
+
         for (var i = 0; i < chartData.chartIdeaData.length; i++) {
           indexes.push(i);
           chartData.totals.push({
             name: "ORDEM " + chartData.chartIdeaData[i].order,
             idea: new Array(chartData.chartIdeaData[i].idea.length),
-            result: new Array(chartData.chartResultData[i].result.length)
+            result: new Array(chartData.chartResultData[i].result.length),
           });
 
           for (var j = 0; j < chartData.chartIdeaData[i].idea.length; j++) {
@@ -844,16 +920,38 @@ class PollReport extends Component {
     var numbers = false;
 
     if (
+      reportData &&
       reportData !== [] &&
       reportData.length > 0 &&
       reportData[0].poll !== undefined
     )
       if (reportData[0].poll[0].order === 0) numbers = true;
+
+    const montarRelatorioConsolidadosAcimaDoQuartoAno = dados => {
+      switch(this.props.pollReport.selectedFilter.grupoId){
+        case GrupoDto.CAPACIDADE_LEITURA:
+          return( 
+          <div className="mb-4">
+            <RelatorioConsolidadoCapacidadeLeitura dados={dados}/>
+          </div>)
+        case GrupoDto.LEITURA_EM_VOZ_ALTA:
+          return <RelatorioPortuguesAutoral dados={dados}/>
+        case GrupoDto.PRODUCAO_DE_TEXTO:
+          return <RelatorioPortuguesAutoral dados={dados}/>
+        default:
+          break;
+      }
+    }
+
     return (
       <div>
         <Card className="mb-3">
-                <PollFilter reports={true} resultClick={this.openPollFilter} />
+          <PollFilter reports={true} resultClick={this.openPollFilter} />
         </Card>
+        <MensagemConfirmacaoImprimir
+          exibir={this.state.showMessage}
+          acaoFeedBack={() => this.setState({ showMessage: false })}
+        />
 
         {this.state.showPollFilter && (
           <Card id="pollReport-card">
@@ -865,53 +963,75 @@ class PollReport extends Component {
                     <button
                       type="button"
                       className="btn btn-sm btn-outline-primary"
-                      style={{ width: 109 }}
-                      onClick={this.printClick}
+                      style={{ width: 48 }}
+                      onClick={() => this.imprimir()}
+                      disabled={this.state.ehDesabilitado}
                     >
-                      Baixar pdf | <i className="fas fa-print"></i>
+                      <i className="fas fa-print"></i>
                     </button>
                   </div>
                 </div>
               </div>
 
-              {this.props.pollReport.showReport === true && (
+              {this.props.pollReport.showReport ?(
                 <div>
                   <PollReportBreadcrumb className="mt-4" name="Planilha" />
 
-                  {this.props.pollReport.selectedFilter.discipline ===
-                  "Língua Portuguesa" ? (
-                    <PollReportPortugueseGrid
-                      className="mt-3"
-                      classroomReport={this.classroomReport}
-                      data={reportData}
-                    />
+                  {reportData && (reportData.length || (reportData.perguntas && reportData.perguntas.length))
+                  ?
+                  this.props.pollReport.selectedFilter.discipline ===
+                   "Língua Portuguesa" ?(
+                    Number(
+                      this.props.pollReport.selectedFilter &&
+                        this.props.pollReport.selectedFilter.CodigoCurso
+                    ) >= 4 && !this.classroomReport ? (
+                      this.props.pollReport.selectedFilter.grupoId ===
+                      GrupoDto.CAPACIDADE_LEITURA ? (
+                        reportData.map((dados) =>
+                          montarRelatorioConsolidadosAcimaDoQuartoAno(dados)
+                        )
+                      ) : (
+                        montarRelatorioConsolidadosAcimaDoQuartoAno(reportData)
+                      )
+                    ) : (
+                      <PollReportPortugueseGrid
+                        className="mt-3"
+                        classroomReport={this.classroomReport}
+                        data={reportData}
+                      />
+                    )
                   ) : (
+                    Number(this.props.pollReport.selectedFilter.CodigoCurso) >= 7?
+                    reportData && reportData.map(dados => {
+                      return <RelatorioMatematicaConsolidado dados={dados}/>
+                    })
+                    :
                     <PollReportMathGrid
                       className="mt-3"
                       classroomReport={this.classroomReport}
                       data={reportData}
                     />
-                  )}
+                  ): null}
 
                   <PollReportBreadcrumb className="mt-5" name="Gráfico" />
-
                   {this.props.pollReport.selectedFilter.discipline ===
                     "Língua Portuguesa" && (
-                    <PollReportPortugueseChart data={chartData} />
-                  )}
+                      this.props.selectedFilter && chartData && chartData.length && <PollReportPortugueseChart data={chartData} />
+                    )}
+                  {chartData && chartData.length ?
                   <div className="mt-4">
                     {//Consilidado de Numeros
-                    this.classroomReport === false &&
+                      this.classroomReport === false &&
                       this.props.pollReport.selectedFilter.proficiency ===
-                        "Números" && (
+                      "Números" && (
                         <PollReportMathNumbersChart
                           data={chartData.chartNumberData}
                         />
                       )}
                     {//Consilidado de Aditivo e Multiplicativo
-                    this.classroomReport === false &&
+                      this.classroomReport === false &&
                       this.props.pollReport.selectedFilter.proficiency !==
-                        "Números" &&
+                      "Números" &&
                       indexes.map(index => {
                         var chartId =
                           "ordem" + chartData.chartIdeaData[index].order;
@@ -925,9 +1045,9 @@ class PollReport extends Component {
                         );
                       })}
                     {// Por Turma de Numeros
-                    this.classroomReport === true &&
+                      this.classroomReport === true &&
                       this.props.pollReport.selectedFilter.proficiency ===
-                        "Números" &&
+                      "Números" &&
                       chartData !== undefined &&
                       Array.isArray(chartData) && (
                         <PollReportMathChartClassroom
@@ -936,9 +1056,9 @@ class PollReport extends Component {
                         />
                       )}
                     {// Por Turma Aditivo e Multiplicativo
-                    this.classroomReport === true &&
+                      this.classroomReport === true &&
                       this.props.pollReport.selectedFilter.proficiency !==
-                        "Números" &&
+                      "Números" &&
                       chartData !== undefined &&
                       Array.isArray(chartData) &&
                       chartData.map(item => {
@@ -957,35 +1077,10 @@ class PollReport extends Component {
                           />
                         );
                       })}
-                    {/* {this.classroomReport === false ?
-                                                (chartData.chartIdeaData.length > 0 ?
-                                                    indexes.map(index => {
-                                                        var chartId = "ordem" + chartData.chartIdeaData[index].order;
-
-                                                        return (
-                                                            <PollReportMathChart key={chartId} chartIds={[(chartId + "idea"), (chartId + "result")]} data={chartData.totals[index]} />
-                                                        );
-                                                    })
-                                                    :
-                                                    <PollReportMathNumbersChart data={chartData.chartNumberData} />
-                                                )
-                                                :
-                                                numbers === false ?
-                                                    (chartData.map(item => {
-                                                        var order = item.name !== null ? item.name.replace(" ", "").toLowerCase() : "";
-                                                        var chart1Id = order + "-ideaChart";
-                                                        var chart2Id = order + "-resultChart"
-
-                                                        return (
-                                                            <PollReportMathChartClassroom data={item} chartIds={[chart1Id, chart2Id]} numbers={numbers} />
-                                                        );
-                                                    }))
-                                                    :
-                                                    <PollReportMathChartClassroom data={chartData} numbers={numbers} />
-                                            } */}
                   </div>
+                  : null}
                 </div>
-              )}
+              ): null}
             </div>
           </Card>
         )}
@@ -995,10 +1090,13 @@ class PollReport extends Component {
 }
 
 export default connect(
-  state => ({
+  (state) => ({
     pollReport: state.pollReport,
+    poll: state.poll,
     user: state.user,
-    filters: state.filters
+    filters: state.filters,
   }),
-  dispatch => bindActionCreators(actionCreators, dispatch)
+  (dispatch) => ({
+    pollReportMethods: bindActionCreators(actionCreators, dispatch),
+  })
 )(PollReport);

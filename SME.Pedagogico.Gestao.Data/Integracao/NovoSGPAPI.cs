@@ -78,26 +78,26 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
             return await TrataRetorno<AutenticacaoRevalidarRetornoDto>(resposta);
         }        
 
-        public async Task<IList<AbrangenciaDreRetornoDto>> AbrangenciaDres(string userName, int anoLetivo)
+        public async Task<IList<AbrangenciaDreRetornoDto>> AbrangenciaDres(string userName, int? anoLetivo)
         {
             var loggedUser = await Authentication.GetLoggedUser(userName);
             
             ResetarCabecalhoAutenticado(loggedUser.RefreshToken);
 
-            var consideraHistorico = !DateTime.Now.Year.Equals(anoLetivo);
+            var consideraHistorico = anoLetivo.HasValue && !DateTime.Now.Year.Equals(anoLetivo.Value);
 
             var resposta = await httpClient.GetAsync(EndpointsNovoSGP.AbrangenciaDres(consideraHistorico, anoLetivo));
 
             return await TrataRetorno<IList<AbrangenciaDreRetornoDto>>(resposta);
         }
 
-        public async Task<IList<AbrangenciaUeRetornoDto>> AbrangenciaUes(string userName, int anoLetivo, string codigoDre)
+        public async Task<IList<AbrangenciaUeRetornoDto>> AbrangenciaUes(string userName, int? anoLetivo, string codigoDre)
         {
             var loggedUser = await Authentication.GetLoggedUser(userName);
 
             ResetarCabecalhoAutenticado(loggedUser.RefreshToken);
 
-            var consideraHistorico = !DateTime.Now.Year.Equals(anoLetivo);
+            var consideraHistorico = anoLetivo.HasValue && !DateTime.Now.Year.Equals(anoLetivo);
 
             var resposta = await httpClient.GetAsync(EndpointsNovoSGP.AbrangenciaUes(consideraHistorico, anoLetivo, codigoDre));
 

@@ -753,12 +753,14 @@ class Poll extends Component {
       return;
     }
 
-    if (this.props.pollStudents.pollSelected == ClassRoomEnum.ClassMTAutoral) {
+    if (this.props.pollStudents && 
+		this.props.pollStudents.pollSelected == ClassRoomEnum.ClassMTAutoral) {
       this.props.autoralMethods.salvaSondagemAutoralMatematica(
         this.props.autoral.listaAlunosAutoralMatematica
       );
     } else if (
-      this.props.pollStudents.pollSelected == ClassRoomEnum.ClassPTAutoral
+      this.props.pollStudents &&
+	  this.props.pollStudents.pollSelected == ClassRoomEnum.ClassPTAutoral
     ) {
     } else if (this.props.poll.pollSelected !== null) {
       if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
