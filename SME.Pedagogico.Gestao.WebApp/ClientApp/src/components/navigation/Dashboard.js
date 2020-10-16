@@ -2,11 +2,13 @@
 import './Dashboard.css';
 import { connect } from 'react-redux';
 import { actionCreators } from '../../store/LeftMenu';
+import { actionCreators as actionCreatorsPollReport } from "../../store/PollReport";
 import { bindActionCreators } from 'redux';
 import { Spring } from 'react-spring/renderprops';
 import { animated } from 'react-spring';
 import TopMenu from './TopMenu';
 import LeftMenu from './LeftMenu';
+import Loader from "../loader/Loader";
 
 class Dashboard extends Component {
     constructor(props) {
@@ -33,31 +35,50 @@ class Dashboard extends Component {
         window.removeEventListener("resize", this.updateWindowDimensions);
     }
 
+    handleClose = () => {
+        this.props.pollReportMethods.printingPollReport(false);
+        
+    }
+
     render() {
+        const { printing } = this.props.pollReport;
+
         return (
             <div id="dashboard-component" className="vh-100">
-                <TopMenu />
-                {/*<LeftMenu />*/}
+                <Loader 
+                    isPrinting
+                    loading={printing} 
+                    handleClose={() => this.handleClose()} 
+                >
+                    <TopMenu />
+                    {/*<LeftMenu />*/}
 
-                <Spring
-                    from={{
-                        width: this.state.viewportWidth
-                    }}
-                    to={{
-                        width: this.props.leftMenuIsOpen ? (this.state.viewportWidth - 265) : this.state.viewportWidth,
-                    }}>
-                    {props =>
-                        <animated.div id="dashboard-content" className="px-5 py-5" style={props}>
-                            {this.props.children}
-                        </animated.div>
-                    }
-                </Spring>
+                    <Spring
+                        from={{
+                            width: this.state.viewportWidth
+                        }}
+                        to={{
+                            width: this.props.leftMenuIsOpen ? (this.state.viewportWidth - 265) : this.state.viewportWidth,
+                        }}>
+                        {props =>
+                            <animated.div id="dashboard-content" className="px-5 py-5" style={props}>
+                                {this.props.children}
+                            </animated.div>
+                        }
+                    </Spring>
+                </Loader>
             </div>
         );
     }
 }
 
 export default connect(
-    state => state.leftMenu,
-    dispatch => bindActionCreators(actionCreators, dispatch)
+    state => ({
+        pollReport: state.pollReport,
+        leftMenu: state.leftMenu,
+    }),
+    dispatch => ({
+        pollReportMethods: bindActionCreators(actionCreatorsPollReport, dispatch),
+        leftMenuMethods: bindActionCreators(actionCreators, dispatch),
+    })
 )(Dashboard);

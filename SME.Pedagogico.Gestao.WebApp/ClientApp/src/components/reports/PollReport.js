@@ -55,7 +55,7 @@ class PollReport extends Component {
   }
 
   imprimir = () => {
-    this.setState({ showMessage: true });
+    this.props.pollReportMethods.printingPollReport(true)
 
     const discipline = Object.values(this.props.pollReport.filters).filter(
       (item) => item.name === this.props.pollReport.selectedFilter.discipline
@@ -844,6 +844,7 @@ class PollReport extends Component {
     var reportData = null;
     var chartData = null;
     var mathType = null;
+    const { imprimindo } = this.state;
 
     if (this.props.pollReport.showReport === true) {
       reportData = this.props.pollReport.data;
@@ -944,7 +945,7 @@ class PollReport extends Component {
     }
 
     return (
-      <div>
+      <>
         <Card className="mb-3">
           <PollFilter reports={true} resultClick={this.openPollFilter} />
         </Card>
@@ -1084,7 +1085,7 @@ class PollReport extends Component {
             </div>
           </Card>
         )}
-      </div>
+      </>
     );
   }
 }

@@ -9,6 +9,7 @@
     POLL_REPORT_REQUEST_NOT_FOUND: "POLL_REPORT_REQUEST_NOT_FOUND",
     RESET_DATA: "RESET_DATA",
     PRINT_POLL_REPORT: "PRINT_POLL_REPORT",
+    PRINTING_POLL_REPORT: "PRINTING_POLL_REPORT",
 }
 
 const initialState = {
@@ -50,6 +51,7 @@ const initialState = {
   showReport: false,
   data: null,
   chartData: null,
+  printing: false
 };
 
 export const actionCreators = {
@@ -63,6 +65,7 @@ export const actionCreators = {
       type: types.PRINT_POLL_REPORT,
       parameters,
     }),
+    printingPollReport: (printing) => ({ type: types.PRINTING_POLL_REPORT, printing }),
 }
 
 export const reducer = (state, action) => {
@@ -100,6 +103,11 @@ export const reducer = (state, action) => {
                 data: action.pollReportResponse.data,
                 chartData: action.pollReportResponse.chartData
             });
+        case types.PRINTING_POLL_REPORT:
+          return ({
+              ...state,
+              printing: action.printing,
+          });
         default:
             return (state);
     }
