@@ -37,5 +37,4 @@ export const ButtonClose = styled.button `
   &:hover {
     opacity: 0.6;
   }
-
 `;

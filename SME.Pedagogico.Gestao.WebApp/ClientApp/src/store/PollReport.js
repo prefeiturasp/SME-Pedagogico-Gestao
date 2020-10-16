@@ -10,6 +10,9 @@
     RESET_DATA: "RESET_DATA",
     PRINT_POLL_REPORT: "PRINT_POLL_REPORT",
     PRINTING_POLL_REPORT: "PRINTING_POLL_REPORT",
+    SET_POLL_REPORT_LINK_PDF: "SET_POLL_REPORT_LINK_PDF",
+    SHOW_POLL_REPORT_MESSAGE_SUCCESS: "SHOW_POLL_REPORT_MESSAGE_SUCCESS",
+    SHOW_POLL_REPORT_MESSAGE_ERROR: "SHOW_POLL_REPORT_REQUEST",
 }
 
 const initialState = {
@@ -51,7 +54,10 @@ const initialState = {
   showReport: false,
   data: null,
   chartData: null,
-  printing: false
+  printing: false,
+  linkPdf: '',
+  showMessageSuccess: false,
+  showMessageError: false,
 };
 
 export const actionCreators = {
@@ -66,6 +72,8 @@ export const actionCreators = {
       parameters,
     }),
     printingPollReport: (printing) => ({ type: types.PRINTING_POLL_REPORT, printing }),
+    showMessageSuccessPollReport: (showMessageSuccess) => ({ type: types.SHOW_POLL_REPORT_MESSAGE_SUCCESS, showMessageSuccess }),
+    showMessageErrorPollReport: (showMessageError) => ({ type: types.SHOW_POLL_REPORT_MESSAGE_ERROR, showMessageError }),
 }
 
 export const reducer = (state, action) => {
@@ -107,6 +115,21 @@ export const reducer = (state, action) => {
           return ({
               ...state,
               printing: action.printing,
+          });
+        case types.SET_POLL_REPORT_LINK_PDF:
+          return ({
+            ...state,
+            linkPdf: action.linkPdf  
+          });          
+        case types.SHOW_POLL_REPORT_MESSAGE_SUCCESS:
+          return ({
+            ...state,
+            showMessageSuccess: action.showMessageSuccess  
+          });          
+        case types.SHOW_POLL_REPORT_MESSAGE_ERROR:
+          return ({
+            ...state,
+            showMessageError: action.showMessageError  
           });
         default:
             return (state);

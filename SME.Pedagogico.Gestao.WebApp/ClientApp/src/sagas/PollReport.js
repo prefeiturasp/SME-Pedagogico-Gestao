@@ -74,12 +74,39 @@ function getPollReportData(parameters) {
 
 function* PrintPollReportSaga({ parameters }) {
   try {
-    yield fetch("api/v1/relatorios", {
+    const data = yield call(fetch, "api/v1/relatorios/sync", {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(parameters),
     });
+    
+   if(data.status === 200){
+      const linkPdf = yield data.text();
+      
+      yield put({
+        type: PollReport.types.SET_POLL_REPORT_LINK_PDF,
+        linkPdf,
+      });
+
+      yield put({
+        type: PollReport.types.SHOW_POLL_REPORT_MESSAGE_SUCCESS,
+        showMessageSuccess: true,
+      });   
+    } else {
+      yield put({
+        type: PollReport.types.SHOW_POLL_REPORT_MESSAGE_SUCCESS,
+        showMessageSuccess: false,
+      }); 
+    }
   } catch (error) {
-    yield put({ type: PollReport.types.POLL_REPORT_API_REQUEST_FAIL });
+    yield put({
+      type: PollReport.types.SHOW_POLL_REPORT_MESSAGE_SUCCESS,
+      showMessageSuccess: false,
+    }); 
+  } finally {
+    yield put({
+      type: PollReport.types.PRINTING_POLL_REPORT,
+      printing: false,
+    });
   }
 }
