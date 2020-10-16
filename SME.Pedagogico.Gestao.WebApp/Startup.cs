@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.IoC;
 using SME.Pedagogico.Gestao.WebApp.Contexts;
+using SME.Pedagogico.Gestao.WebApp.Middlewares;
 using System;
 using System.IO;
 using System.Reflection;
@@ -30,9 +31,15 @@ namespace SME.Pedagogico.Gestao.WebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddResponseCaching();
+            services.AddResponseCaching();            
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(options =>
+            {
+                options.AllowValidatingTopLevelNodes = false;
+                options.EnableEndpointRouting = true;                
+                options.Filters.Add(new FiltroExcecoesAttribute());
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
 
             RegistrarDependencias.Registrar(services);
 

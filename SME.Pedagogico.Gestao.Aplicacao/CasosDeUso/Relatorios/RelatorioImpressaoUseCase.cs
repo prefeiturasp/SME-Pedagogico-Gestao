@@ -1,6 +1,8 @@
 ﻿using MediatR;
+using SME.Pedagogico.Gestao.Dominio;
 using SME.Pedagogico.Gestao.Infra;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.Aplicacao
@@ -30,6 +32,18 @@ namespace SME.Pedagogico.Gestao.Aplicacao
             }
 
             await mediator.Send(new GerarRelatorioCommand(tipoRelatorio.Value, filtros, filtros.UsuarioRF));
+        }
+        public async Task<string> ExecutarSync(RelatorioImpressaoFiltroDto filtros)
+        {
+            Thread.Sleep(5000);
+
+            if (filtros.AnoLetivo == 6969)
+                throw new Exception("Algum erro interno aconteceu. ");
+
+            if (filtros.AnoLetivo == 69)
+                throw new NegocioException("Algum erro de negócio aconteceu. ");
+
+            return await Task.FromResult("https://dev-sr-relatorios.sme.prefeitura.sp.gov.br/api/v1/downloads/sgp/pdf/relatorio-teste-123.pdf/091ac4cd-38ff-46f0-8320-8c037a3a3d97");
         }
     }
 }
