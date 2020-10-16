@@ -46,3 +46,21 @@
     );
   },
 };
+
+export const DISCIPLINES_ENUM = {
+  DISCIPLINA_PORTUGUES: {
+    Codigo: 138,
+    Descricao: "Língua Portuguesa"    
+  },
+  DISCIPLINA_MATEMATICA: {
+    Codigo: 2,
+    Descricao: "Matemática"    
+  },
+  PossuiDisciplina(disciplina, listaDisciplinas){
+    for(var disciplinaAtual in listaDisciplinas){
+      if (disciplina.Codigo === listaDisciplinas[disciplinaAtual].codigoComponenteCurricular)
+        return true;
+    }
+    return false;    
+  }
+};

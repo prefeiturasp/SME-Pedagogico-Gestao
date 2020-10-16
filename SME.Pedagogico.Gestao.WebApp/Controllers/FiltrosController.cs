@@ -3,10 +3,7 @@ using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.Integracao;
-using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
@@ -44,7 +41,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 //Necessário para gerar o Token temporariamente
                 var filterBusiness = new Filters(_config);
-                var listClassRoom =  await filterBusiness.GetListClassRoomSchool(classrooms.schoolCodeEol, classrooms.schoolYear);
+                var listClassRoom = await filterBusiness.GetListClassRoomSchool(classrooms.schoolCodeEol, classrooms.schoolYear);
 
                 if (listClassRoom != null)
                 {
@@ -74,7 +71,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 //Necessário para gerar o Token temporariamente
                 var filterBusiness = new Filters(_config);
-                var listSchool =  await filterBusiness.GetListSchoolDre(schoolFilters.dreCodeEol, schoolFilters.schoolYear);
+                var listSchool = await filterBusiness.GetListSchoolDre(schoolFilters.dreCodeEol, schoolFilters.schoolYear);
 
                 if (listSchool != null)
                 {
@@ -121,8 +118,29 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Busca as disciplinas pelo RF e código da turma selecionada.
+        /// </summary>
+        /// <param name="buscarDisciplinasPorRfTurmaDto">Parâmetro com o RF e código da turma.</param>
+        /// <returns>Lista disciplinas com nome e código.</returns>
+        [HttpPost]
+        public async Task<ActionResult<string>> ListarDisciplinasPorRfTurma(BuscarDisciplinasPorRfTurmaDto buscarDisciplinasPorRfTurmaDto)
+        {
+            try
+            {
+                var novoSgpApi = new NovoSGPAPI();
+                var listDiscplines = await novoSgpApi.DisciplinasPorTurma(buscarDisciplinasPorRfTurmaDto);
 
+                if (listDiscplines != null)
+                    return (Ok(listDiscplines));
+
+                return (NoContent());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
     }
-
 }
 

@@ -40,8 +40,6 @@ class PollFilter extends Component {
   }
 
   componentWillMount() {
-    var role = this.props.user;
-
     var anoLetivo = new Date();
     var anoAtual = anoLetivo.getFullYear();
     this.setState({
@@ -49,22 +47,22 @@ class PollFilter extends Component {
     });
 
     this.props.filterMethods.getPeriod(anoAtual);
-
-
-
     this.props.filterMethods.setSchoolYear(anoAtual);
 
-    if (ROLES_ENUM.IsDRE(this.props.user.activeRole.roleName)) {
-      var userName = this.props.user.username;
-      this.props.filterMethods.getDreAdm(userName);
-    } else if (ROLES_ENUM.IsSME(this.props.user.activeRole.roleName)) {
-      this.props.filterMethods.getListDres();
-    } else if (ROLES_ENUM.IsUE(role.activeRole.roleName)) {
-      this.getProfileInformationProf(anoAtual);
-    }
-    if (ROLES_ENUM.ApenasRelatorios(role.activeRole.roleName)) {
+    this.applyRole(anoAtual);
+
+    if (ROLES_ENUM.ApenasRelatorios(this.props.user.activeRole.roleName)) {
       this.props.pollRouterMethods.setActiveRoute("Relatórios");
     }
+  }
+
+  applyRole(ano) {
+    if (ROLES_ENUM.IsDRE(this.props.user.activeRole.roleName))
+      this.props.filterMethods.getDreAdm(this.props.user.username);
+    else if (ROLES_ENUM.IsSME(this.props.user.activeRole.roleName))
+      this.props.filterMethods.getListDres();
+    else if (ROLES_ENUM.IsUE(this.props.user.activeRole.roleName))
+      this.getProfileInformationProf(ano);
   }
 
   getProfileInformationProf(anoAtual) {
@@ -115,13 +113,7 @@ class PollFilter extends Component {
     //     classroom: "",
     // });
 
-    this.props.filterMethods.getPeriod(label);
-
-    if (ROLES_ENUM.IsSME(this.props.user.activeRole.roleName)) {
-      this.props.filterMethods.getListDres();
-    } else {
-      this.getProfileInformationProf(label);
-    }
+    this.applyRole(label);
   }
 
   selectedDreTeacher(event) {
@@ -231,7 +223,8 @@ class PollFilter extends Component {
       schoolCodeEol: label,
       schoolYear: this.props.filters.setSchoolYear,
     };
-    this.props.filterMethods.getClassroom(classRoomFilter);
+    if (label !== "todas")
+      this.props.filterMethods.getClassroom(classRoomFilter);
     this.setState({
       selectedSchool: label,
       selectedClassRoom: "",
@@ -246,6 +239,12 @@ class PollFilter extends Component {
 
     var codeClassRoom = label;
 
+    var disciplinesFilter = {
+      codigoRf: this.props.user.username,
+      codigoTurmaEol: codeClassRoom
+    };
+
+    this.props.filterMethods.getDisciplinesByClassroom(disciplinesFilter);
     this.props.filterMethods.activeClassroom(codeClassRoom);
 
     this.setState({
@@ -278,6 +277,7 @@ class PollFilter extends Component {
       classroomCodeEol: this.props.filters.activeClassRoomCode,
       schoolYear: this.props.filters.setSchoolYear,
       yearClassroom: this.state.classroom,
+      rfCode: this.props.user.username
     };
 
     this.props.poll2.setSelectedFilter(selectedFilter);
@@ -288,7 +288,7 @@ class PollFilter extends Component {
   checkDisabledButton() {
     if (this.props.reports) {
       //Independente do perfil o relatorio so pode ser tirado por Ano
-      if (this.state.classroom !== null && this.state.classroom !== "") {
+      if (this.state.classroom !== null && this.state.classroom !== "" && this.props.filters.listDisciplines.length > 0) {
         return true;
       } else {
         return false;
@@ -675,9 +675,16 @@ class PollFilter extends Component {
         />
         <MensagemConfirmacaoAutoral
           controleExibicao={this.toggleMessageBox}
-          acaoPrincipal={async () => { this.props.savePollStudent().then(() => setTimeout(() => this.setSelectedFilter(), 1000)); }}
-          acaoSecundaria={async () => { this.setSelectedFilter(); }}
-          exibir={this.state.showMessageBox} />
+          acaoPrincipal={async () => {
+            this.props
+              .savePollStudent()
+              .then(() => setTimeout(() => this.setSelectedFilter(), 1000));
+          }}
+          acaoSecundaria={async () => {
+            this.setSelectedFilter();
+          }}
+          exibir={this.state.showMessageBox}
+        />
       </div>
     );
   }

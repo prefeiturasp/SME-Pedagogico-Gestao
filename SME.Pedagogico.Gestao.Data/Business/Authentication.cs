@@ -4,6 +4,7 @@ using SME.Pedagogico.Gestao.Data.Contexts;
 using SME.Pedagogico.Gestao.Data.DataTransfer;
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.Enums;
+using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Models.Authentication;
 using SME.Pedagogico.Gestao.WebApp.Models.Auth;
 using System;
@@ -65,15 +66,15 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public static bool ValidateUser(string username, string password)
         {
-            using (Data.Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
-                return (db.Users.Any(x => x.Name == username && x.Password == Functionalities.Cryptography.HashPassword(password)));
+            using (SMEManagementContextData db = new SMEManagementContextData())
+                return (db.Users.Any(x => x.Name == username && x.Password == Cryptography.HashPassword(password)));
         }
 
         public static bool ValidateUser(string username)
         {
             try
             {
-                using (Data.Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
+                using (SMEManagementContextData db = new SMEManagementContextData())
                     return (db.Users.Any(x => x.Name == username));
             }
             catch (Exception ex)
@@ -215,29 +216,29 @@ namespace SME.Pedagogico.Gestao.Data.Business
             yield break;
         }
 
-        public static async Task<bool> LoginUser(string username, string session, string refreshToken)
+        public static async Task<bool> LoginUser(string username, string session, string refreshToken, DateTime expiresAt)
         {
-            using (Data.Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
+            using (SMEManagementContextData db = new SMEManagementContextData())
             {
-                Models.Authentication.LoggedUser loggedUser = await
+                LoggedUser loggedUser = await
                     (from current in db.LoggedUsers.Include(".User")
                      where current.User.Name == username
                      select current).FirstOrDefaultAsync();
 
                 if (loggedUser == null)
                 {
-                    Models.Authentication.User user = await
+                    User user = await
                         (from current in db.Users
                          where current.Name == username
                          select current).FirstOrDefaultAsync();
 
-                    loggedUser = new Models.Authentication.LoggedUser()
+                    loggedUser = new LoggedUser()
                     {
                         User = user,
                         RefreshToken = refreshToken,
                         Session = session,
                         LastAccess = DateTime.Now,
-                        ExpiresAt = DateTime.Now.AddMinutes(30)
+                        ExpiresAt = expiresAt
                     };
 
                     await db.LoggedUsers.AddAsync(loggedUser);
@@ -247,7 +248,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     loggedUser.RefreshToken = refreshToken;
                     loggedUser.Session = session;
                     loggedUser.LastAccess = DateTime.Now;
-                    loggedUser.ExpiresAt = DateTime.Now.AddMinutes(30);
+                    loggedUser.ExpiresAt = expiresAt;
                 }
 
                 await db.SaveChangesAsync();
@@ -256,9 +257,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public static async Task<Models.Authentication.LoggedUser> GetLoggedUser(string username, string session, string refreshToken)
+        public static async Task<LoggedUser> GetLoggedUser(string username, string session, string refreshToken)
         {
-            using (Data.Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
+            using (SMEManagementContextData db = new SMEManagementContextData())
                 return (await
                     (from current in db.LoggedUsers.Include(".User")
                      where current.User.Name == username
@@ -267,11 +268,30 @@ namespace SME.Pedagogico.Gestao.Data.Business
                      select current).FirstOrDefaultAsync());
         }
 
+        public static async Task<LoggedUser> GetLoggedUser(string userName)
+        {
+            using (SMEManagementContextData db = new SMEManagementContextData())
+            {
+                var currentUser = await (from current in db.LoggedUsers.Include(".User")
+                                         where current.User.Name.Equals(userName.Trim())
+                                         select current).LastOrDefaultAsync();
+
+                if (DateTime.Now > currentUser.ExpiresAt || DateTime.Now.Day > currentUser.ExpiresAt.Day)
+                {
+                    var retornoRevalidacao = await new NovoSGPAPI().RevalidarAutenticacao(currentUser.RefreshToken);
+                    await LoginUser(userName, currentUser.Session, retornoRevalidacao.Token, retornoRevalidacao.DataHoraExpiracao);
+                    return await GetLoggedUser(userName);
+                }
+
+                return currentUser;
+            }
+        }
+
         public static async Task<bool> LogoutUser(string username, string session)
         {
-            using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
+            using (SMEManagementContextData db = new SMEManagementContextData())
             {
-                Models.Authentication.LoggedUser loggedUser = await
+                LoggedUser loggedUser = await
                     (from current in db.LoggedUsers.Include(".User")
                      where current.User.Name == username
                      && current.Session == session
