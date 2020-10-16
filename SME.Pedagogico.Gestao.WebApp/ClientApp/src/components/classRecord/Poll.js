@@ -33,6 +33,7 @@ import TwoStepsSave from "../messaging/TwoStepsSave";
 import TwoSteps from "../messaging/TwoSteps";
 import MensagemConfirmacaoAutoral from "./SondagemPortuguesAutoral/mensagemConfirmacaoAutoral";
 import Loader from "../loader/Loader";
+import Teste from "./teste";
 class Poll extends Component {
   constructor(props) {
     super(props);
@@ -752,14 +753,16 @@ class Poll extends Component {
       return;
     }
 
-    if (this.props.pollStudents && 
-		this.props.pollStudents.pollSelected == ClassRoomEnum.ClassMTAutoral) {
+    if (
+      this.props.pollStudents &&
+      this.props.pollStudents.pollSelected == ClassRoomEnum.ClassMTAutoral
+    ) {
       this.props.autoralMethods.salvaSondagemAutoralMatematica(
         this.props.autoral.listaAlunosAutoralMatematica
       );
     } else if (
       this.props.pollStudents &&
-	  this.props.pollStudents.pollSelected == ClassRoomEnum.ClassPTAutoral
+      this.props.pollStudents.pollSelected == ClassRoomEnum.ClassPTAutoral
     ) {
     } else if (this.props.poll.pollSelected !== null) {
       if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
@@ -1000,6 +1003,7 @@ class Poll extends Component {
   render() {
     return (
       <>
+        <Teste />
         <MensagemConfirmacaoAutoral
           controleExibicao={this.toggleMessagePortugueseBox}
           acaoPrincipal={this.savePollStudent}
