@@ -1,10 +1,6 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SME.Pedagogico.Gestao.Aplicacao;
 using SME.Pedagogico.Gestao.Infra;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
@@ -19,6 +15,13 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         {
             await relatorioMatematicaNumerosAutoralConsolidadoUseCase.Executar(filtros);
             return Ok();
+        }
+        [HttpPost]
+        [Route("sync")]
+        public async Task<IActionResult> GerarSync([FromBody]RelatorioImpressaoFiltroDto filtros,
+            [FromServices]IRelatorioImpressaoUseCase relatorioMatematicaNumerosAutoralConsolidadoUseCase)
+        {
+            return Ok(await relatorioMatematicaNumerosAutoralConsolidadoUseCase.ExecutarSync(filtros));
         }
     }
 }
