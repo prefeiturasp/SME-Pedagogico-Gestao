@@ -21,5 +21,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
         public static Func<bool, int?, string> AbrangenciaDres = (consideraHistorico, anoLetivo) => $"abrangencias/{consideraHistorico}/dres{ (anoLetivo.HasValue ? $"?anoLetivo={anoLetivo}" : string.Empty) }";
 
         public static Func<bool, int?, string, string> AbrangenciaUes = (consideraHistorico, anoLetivo, codigoDre) => $"abrangencias/{consideraHistorico}/dres/{codigoDre}/ues{ (anoLetivo.HasValue ? $"?anoLetivo={anoLetivo}" : string.Empty) }";
+
+        public static Func<string, string> Disciplinas = (codigoTurma) => $"professores/turmas/{codigoTurma}/disciplinas";
     }
 }
