@@ -32,7 +32,7 @@ CREATE TABLE public."ComponenteCurricular" (
 );
 
 
-ALTER TABLE public."ComponenteCurricular" OWNER TO postgres;
+ALTER TABLE public."ComponenteCurricular" OWNER TO usr_pedagogicogestao;
 
 --
 -- TOC entry 222 (class 1259 OID 68303)
@@ -47,7 +47,7 @@ CREATE TABLE public."Grupo" (
 );
 
 
-ALTER TABLE public."Grupo" OWNER TO postgres;
+ALTER TABLE public."Grupo" OWNER TO usr_pedagogicogestao;
 
 --
 -- TOC entry 227 (class 1259 OID 68347)
@@ -63,7 +63,7 @@ CREATE TABLE public."GrupoOrdem" (
 );
 
 
-ALTER TABLE public."GrupoOrdem" OWNER TO postgres;
+ALTER TABLE public."GrupoOrdem" OWNER TO usr_pedagogicogestao;
 
 --
 -- TOC entry 223 (class 1259 OID 68312)
@@ -79,7 +79,7 @@ CREATE TABLE public."Ordem" (
 );
 
 
-ALTER TABLE public."Ordem" OWNER TO postgres;
+ALTER TABLE public."Ordem" OWNER TO usr_pedagogicogestao;
 
 --
 -- TOC entry 224 (class 1259 OID 68321)
@@ -96,7 +96,7 @@ CREATE TABLE public."OrdemPergunta" (
 );
 
 
-ALTER TABLE public."OrdemPergunta" OWNER TO postgres;
+ALTER TABLE public."OrdemPergunta" OWNER TO usr_pedagogicogestao;
 
 --
 -- TOC entry 218 (class 1259 OID 68267)
@@ -111,7 +111,7 @@ CREATE TABLE public."Pergunta" (
 );
 
 
-ALTER TABLE public."Pergunta" OWNER TO postgres;
+ALTER TABLE public."Pergunta" OWNER TO usr_pedagogicogestao;
 
 --
 -- TOC entry 221 (class 1259 OID 68294)
@@ -127,7 +127,7 @@ CREATE TABLE public."PerguntaAnoEscolar" (
 );
 
 
-ALTER TABLE public."PerguntaAnoEscolar" OWNER TO postgres;
+ALTER TABLE public."PerguntaAnoEscolar" OWNER TO usr_pedagogicogestao;
 
 --
 -- TOC entry 220 (class 1259 OID 68285)
@@ -143,7 +143,7 @@ CREATE TABLE public."PerguntaResposta" (
 );
 
 
-ALTER TABLE public."PerguntaResposta" OWNER TO postgres;
+ALTER TABLE public."PerguntaResposta" OWNER TO usr_pedagogicogestao;
 
 --
 -- TOC entry 234 (class 1259 OID 112556)
@@ -161,7 +161,7 @@ CREATE TABLE public."PeriodoFixoAnual" (
 );
 
 
-ALTER TABLE public."PeriodoFixoAnual" OWNER TO postgres;
+ALTER TABLE public."PeriodoFixoAnual" OWNER TO usr_pedagogicogestao;
 
 --
 -- TOC entry 233 (class 1259 OID 112554)
@@ -191,7 +191,7 @@ CREATE TABLE public."Periodo" (
 );
 
 
-ALTER TABLE public."Periodo" OWNER TO postgres;
+ALTER TABLE public."Periodo" OWNER TO usr_pedagogicogestao;
 
 --
 -- TOC entry 229 (class 1259 OID 71004)
@@ -207,7 +207,7 @@ CREATE TABLE public."PeriodoDeAberturas" (
 );
 
 
-ALTER TABLE public."PeriodoDeAberturas" OWNER TO postgres;
+ALTER TABLE public."PeriodoDeAberturas" OWNER TO usr_pedagogicogestao;
 
 --
 -- TOC entry 228 (class 1259 OID 71002)
@@ -237,7 +237,7 @@ CREATE TABLE public."Resposta" (
 );
 
 
-ALTER TABLE public."Resposta" OWNER TO postgres;
+ALTER TABLE public."Resposta" OWNER TO usr_pedagogicogestao;
 
 --
 -- TOC entry 3094 (class 0 OID 68258)
