@@ -1,12 +1,11 @@
 import styled from 'styled-components';
-import { Link } from "react-router-dom";
 
 export const MessageWrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-export const ButtonDownload = styled(Link)`
+export const ButtonDownload = styled.a`
   height: 100%;
   color: white;
   background: rgb(6, 79, 121);
@@ -14,6 +13,11 @@ export const ButtonDownload = styled(Link)`
   padding: 15px;
   margin-top: 5px;
   width: 115px;
+
+  &:hover {
+    text-decoration: none;
+    color: #fff;
+  }
 `;
 
 export const ButtonClose = styled.button `

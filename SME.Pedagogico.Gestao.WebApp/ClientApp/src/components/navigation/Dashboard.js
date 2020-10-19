@@ -9,6 +9,7 @@ import { animated } from 'react-spring';
 import TopMenu from './TopMenu';
 import LeftMenu from './LeftMenu';
 import Loader from "../loader/Loader";
+import MensagemConfirmacao from "./MensagemConfirmacao";
 
 class Dashboard extends Component {
     constructor(props) {
@@ -17,6 +18,7 @@ class Dashboard extends Component {
         this.state = {
             viewportWidth: 0,
             viewportHeight: 0,
+            showMessage: false
         }
 
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
@@ -36,8 +38,18 @@ class Dashboard extends Component {
     }
 
     handleClose = () => {
-        this.props.pollReportMethods.printingPollReport(false);
-        
+        this.props.pollReportMethods.printingPollReport(false);        
+        this.setState({ showMessage: true });
+    }
+
+    botaoNao = () => {
+        this.setState({ showMessage: false });
+        this.props.pollReportMethods.printingPollReport(true);        
+    }
+
+    botaoSim = () => {
+        this.setState({ showMessage: false });
+        this.props.pollReportMethods.cancelPollReportRequest(true);        
     }
 
     render() {
@@ -45,11 +57,18 @@ class Dashboard extends Component {
 
         return (
             <div id="dashboard-component" className="vh-100">
+                <MensagemConfirmacao
+                    confirmacao
+                    exibir={this.state.showMessage}
+                    botaoSim={() => this.botaoSim()}
+                    botaoNao={() => this.botaoNao()} 
+                />
+
                 <Loader 
                     isPrinting
                     loading={printing} 
                     handleClose={() => this.handleClose()} 
-                >
+                >        
                     <TopMenu />
                     {/*<LeftMenu />*/}
 

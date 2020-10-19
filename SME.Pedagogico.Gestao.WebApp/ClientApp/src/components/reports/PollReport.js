@@ -27,6 +27,7 @@ class PollReport extends Component {
     this.state = {
       showMessage: false,
       showPollFilter: false,
+      messageType: "",
       ehDesabilitado: true,
     };
 
@@ -36,7 +37,16 @@ class PollReport extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.pollReport.showReport === true) {
-      const {selectedFilter, showMessageSuccess} = this.props.pollReport;
+      const { 
+        selectedFilter, 
+        showMessageSuccess, 
+        showMessageError,
+        messageError
+      } = this.props.pollReport;
+      const {
+        showMessageSuccessPollReport, 
+        showMessageErrorPollReport
+      } =  this.props.pollReportMethods
       const {
         discipline: componenteCurricular,
         proficiency: proficiencia,
@@ -54,7 +64,13 @@ class PollReport extends Component {
       }
 
       if(showMessageSuccess && !this.state.showMessage){
-        this.setState({showMessage: true});
+        this.setState({showMessage: true, messageType: "success"});
+        showMessageSuccessPollReport(false)
+      }
+
+      if(showMessageError && !this.state.showMessage){
+        this.setState({showMessage: true, messageType: "error"});
+        showMessageErrorPollReport(false, messageError);
       }
     }
   }
@@ -959,12 +975,11 @@ class PollReport extends Component {
         <Card className="mb-3">
           <PollFilter reports={true} resultClick={this.openPollFilter} />
         </Card>
+       
         <MensagemConfirmacaoImprimir
           exibir={this.state.showMessage}
-          acaoFeedBack={() => {
-            this.setState({ showMessage: false });
-            this.props.pollReport.showMessageSuccessPollReport(false)
-          }}
+          messageType={this.state.messageType}
+          acaoFeedBack={() => this.setState({ showMessage: false })}
           linkPdf={linkPdf}
         />
 

@@ -12,7 +12,10 @@ export default function MesangemInformacao({
   exibir,
   linkPdf,
   mesagemPrincipal,
+  botaoSim,
+  botaoNao,
   titulo,
+  confirmacao,
 }) {
   return (
     <div>
@@ -33,34 +36,55 @@ export default function MesangemInformacao({
               className="block-screen d-flex justify-content-center align-items-center"
             >
               <Card className="col-5 p-4">
-                <ButtonClose
-                  className="btn btn-lg"
-                  onClick={acaoFeedBack}
-                >
-                  <i className="fas fa-times"></i>
-                </ButtonClose>
-                <div className="border-bottom sc-text-size-4">{titulo}</div>
+              {
+                linkPdf && (
+                  <ButtonClose
+                    className="btn btn-lg"
+                    onClick={acaoFeedBack}
+                  >
+                    <i className="fas fa-times"></i>
+                  </ButtonClose>
+              )}
+              <div className="border-bottom sc-text-size-4">{titulo}</div>
 
                 <MessageWrapper className="pt-2 sc-text-size-1">
                   {mesagemPrincipal}
-                 {
-                  linkPdf && (
-                  <ButtonDownload to={linkPdf} target="_blank" class="btn-baixar-relatorio">
-                    <i class="fas fa-arrow-down mr-2"></i>
-                    Download
-                  </ButtonDownload>
+                  {
+                    linkPdf && (
+                      <ButtonDownload href={linkPdf} target="_blank" class="btn-baixar-relatorio">
+                        <i class="fas fa-arrow-down mr-2"></i>
+                        Download
+                      </ButtonDownload>
                   )}
                 </MessageWrapper>
-
                 {
-                  !linkPdf && (
+                  (!linkPdf && !confirmacao) && (
+                    <div className="pt-5 d-flex justify-content-end">
+                      <button
+                        type="button"
+                        className="col-3 btn btn-primary btn-sm sc-darkblue-button"
+                        onClick={acaoFeedBack}
+                      >
+                        Ok
+                      </button>
+                    </div>
+                )}
+                {
+                  confirmacao && (
                   <div className="pt-5 d-flex justify-content-end">
-                    <button
-                      type="button"
-                      className="col-3 btn btn-primary btn-sm sc-darkblue-button"
-                      onClick={acaoFeedBack}
+                    <button 
+                      type="button" 
+                      className="btn btn-outline-primary btn-sm mr-3 sc-darkblue-outline-button btn-message" 
+                      onClick={botaoNao}
                     >
-                      Ok
+                      Não
+                    </button>
+                    <button 
+                      type="button" 
+                      className="btn btn-primary btn-sm sc-darkblue-button btn-message" 
+                      onClick={botaoSim}
+                    >
+                      Sim
                     </button>
                   </div>
                 )}
@@ -79,6 +103,9 @@ MesangemInformacao.defaultProps = {
   linkPdf: "",
   mesagemPrincipal: "",
   titulo: "",
+  botaoSim: () => {},
+  botaoNao: () => {},
+  confirmacao: false,
 }
 
 MesangemInformacao.propTypes = {
@@ -87,4 +114,7 @@ MesangemInformacao.propTypes = {
   linkPdf: PropTypes.string,
   mesagemPrincipal: PropTypes.string,
   titulo: PropTypes.string,
+  botaoSim: PropTypes.func,
+  botaoNao: PropTypes.func,
+  confirmacao: PropTypes.bool,
 }

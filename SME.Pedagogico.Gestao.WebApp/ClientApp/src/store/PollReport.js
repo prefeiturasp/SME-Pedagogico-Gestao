@@ -12,7 +12,8 @@
     PRINTING_POLL_REPORT: "PRINTING_POLL_REPORT",
     SET_POLL_REPORT_LINK_PDF: "SET_POLL_REPORT_LINK_PDF",
     SHOW_POLL_REPORT_MESSAGE_SUCCESS: "SHOW_POLL_REPORT_MESSAGE_SUCCESS",
-    SHOW_POLL_REPORT_MESSAGE_ERROR: "SHOW_POLL_REPORT_REQUEST",
+    SHOW_POLL_REPORT_MESSAGE_ERROR: "SHOW_POLL_REPORT_MESSAGE_ERROR",
+    CANCEL_POLL_REPORT_REQUEST: "CANCEL_POLL_REPORT_REQUEST",
 }
 
 const initialState = {
@@ -58,6 +59,8 @@ const initialState = {
   linkPdf: '',
   showMessageSuccess: false,
   showMessageError: false,
+  cancelPollReportRequest: false,
+  messageError: "",
 };
 
 export const actionCreators = {
@@ -73,7 +76,12 @@ export const actionCreators = {
     }),
     printingPollReport: (printing) => ({ type: types.PRINTING_POLL_REPORT, printing }),
     showMessageSuccessPollReport: (showMessageSuccess) => ({ type: types.SHOW_POLL_REPORT_MESSAGE_SUCCESS, showMessageSuccess }),
-    showMessageErrorPollReport: (showMessageError) => ({ type: types.SHOW_POLL_REPORT_MESSAGE_ERROR, showMessageError }),
+    showMessageErrorPollReport: (showMessageError, messageError) => ({ 
+      type: types.SHOW_POLL_REPORT_MESSAGE_ERROR, 
+      showMessageError, 
+      messageError
+    }),
+    cancelPollReportRequest: (cancelPollReportRequest) => ({ type: types.CANCEL_POLL_REPORT_REQUEST, cancelPollReportRequest }),
 }
 
 export const reducer = (state, action) => {
@@ -129,7 +137,13 @@ export const reducer = (state, action) => {
         case types.SHOW_POLL_REPORT_MESSAGE_ERROR:
           return ({
             ...state,
-            showMessageError: action.showMessageError  
+            showMessageError: action.showMessageError,  
+            messageError: action.messageError,  
+          });          
+        case types.CANCEL_POLL_REPORT_REQUEST:
+          return ({
+            ...state,
+            cancelPollReportRequest: action.cancelPollReportRequest  
           });
         default:
             return (state);
