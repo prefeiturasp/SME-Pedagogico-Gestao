@@ -1,4 +1,4 @@
-﻿import { takeLatest, call, put, all } from "redux-saga/effects";
+﻿import { takeLatest, call, put, all, select } from "redux-saga/effects";
 import * as PollReport from "../store/PollReport";
 
 export default function* () {
@@ -72,14 +72,89 @@ function getPollReportData(parameters) {
   }).then((response) => response.json());
 }
 
+async function fetchWithTimeout(url, options, delay) {
+  const timer = new Promise((resolve) => {
+    setTimeout(resolve, delay, {
+      timeout: true,
+    });
+  });
+  const response = await Promise.race([
+    fetch(url, options),
+    timer
+  ]);
+  return response;
+}
+
+function* setError(mensagem) {
+  yield put({
+    type: PollReport.types.SET_POLL_REPORT_LINK_PDF,
+    linkPdf: "",
+  });
+
+  yield put({
+    type: PollReport.types.SHOW_POLL_REPORT_MESSAGE_ERROR,
+    showMessageError: true,
+    messageError: mensagem,
+  });  
+} 
+
 function* PrintPollReportSaga({ parameters }) {
   try {
-    yield fetch("api/v1/relatorios", {
+    const data = yield call(fetchWithTimeout, "api/v1/relatorios/sync", {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(parameters),
+    }, 300000);
+    
+    const { pollReport } = yield select();
+    const { cancelPollReportRequest } = pollReport; 
+    let mensagem ="Erro ao gerar relatório. Tente novamente mais tarde."  
+       
+    if(data.status === 200 && !cancelPollReportRequest){
+      const linkPdf = yield data.text();
+     
+      yield put({
+        type: PollReport.types.SET_POLL_REPORT_LINK_PDF,
+        linkPdf,
+      });
+
+      yield put({
+        type: PollReport.types.SHOW_POLL_REPORT_MESSAGE_SUCCESS,
+        showMessageSuccess: true,
+      });   
+      
+      return;
+    } 
+
+    if(!cancelPollReportRequest && (data.status === 500 || data.status === 601) ){
+      const response = yield data.json();
+      if(response) {
+         mensagem = response.mensagens.reduce(msg => msg.concat());         
+      }
+    }
+    
+    if(!cancelPollReportRequest){
+      yield call(setError, mensagem);      
+    }
+
+  } catch (error) {   
+    const { pollReport } = yield select();
+    const { cancelPollReportRequest } = pollReport;   
+    let mensagem = "Erro ao gerar relatório. Tente novamente mais tarde."  
+    
+    if(!cancelPollReportRequest){
+      yield call(setError, mensagem);      
+    }  
+
+  } finally {
+    yield put({
+      type: PollReport.types.PRINTING_POLL_REPORT,
+      printing: false,
     });
-  } catch (error) {
-    yield put({ type: PollReport.types.POLL_REPORT_API_REQUEST_FAIL });
+
+    yield put({
+      type: PollReport.types.CANCEL_POLL_REPORT_REQUEST,
+      cancelPollReportRequest: false,
+    });
   }
 }
