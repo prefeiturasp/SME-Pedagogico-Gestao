@@ -27,6 +27,14 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             _config = config;
         }
 
+        [HttpPost]
+        public async Task<ActionResult> ObterDadosTeste([FromBody]RelatorioPortuguesFiltroDto filtro)
+        {
+            var relatorio = new RelatorioPortugues();
+
+            return Ok(await relatorio.ObterRelatorioPorTurmasPortugues(filtro));
+        }
+
         #region ==================== METHODS ====================
         [HttpPost]
         public async Task<ActionResult<string>> ObterDados([FromBody]ParametersModel parameters)
@@ -167,7 +175,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
             var relatorioPortugues = new RelatorioPortugues();
 
-            return await relatorioPortugues.ObterRelatorioPortugues(new RelatorioPortuguesFiltroDto
+            return await relatorioPortugues.ObterRelatorioConsolidadoPortugues(new RelatorioPortuguesFiltroDto
             {
                 AnoEscolar = Convert.ToInt32(parametersModel.CodigoCurso),
                 AnoLetivo = Convert.ToInt32(parametersModel.SchoolYear),
