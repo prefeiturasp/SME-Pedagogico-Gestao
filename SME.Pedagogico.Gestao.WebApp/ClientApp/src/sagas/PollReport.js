@@ -16,15 +16,17 @@ function* GetPollReportSaga({ parameters }) {
             yield put({ type: PollReport.types.POLL_REPORT_REQUEST_NOT_FOUND });
         else {
             var pollReportResponse = null;
-            if (parameters.discipline !== "Matemática")
+            if (parameters.discipline === "Língua Portuguesa" && parameters.classroomReport)
                 pollReportResponse = {
                     data: data.results,
                     chartData: data.chartData
             }
-            else if (parameters.classroomReport === false) {
-                if(Number(parameters.CodigoCurso)>=7 &&
+            else if (!parameters.classroomReport) {
+                if((Number(parameters.CodigoCurso)>=7 &&
                     parameters.discipline === "Matemática" &&
-                    !parameters.proficiency){
+                    !parameters.proficiency) ||
+                    (Number(parameters.CodigoCurso)>=4 &&
+                    parameters.discipline === "Língua Portuguesa")){
                     pollReportResponse = {
                         data: data,
                         chartData: null
