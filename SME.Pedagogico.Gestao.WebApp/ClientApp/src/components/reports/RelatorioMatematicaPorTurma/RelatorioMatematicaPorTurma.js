@@ -1,9 +1,9 @@
 import React from "react";
 
 const RelatorioMatematicaPorTurma = (props) => {
-  const { dados } = props;
+  const { alunos, perguntas } = props;
 
-  const constuirHeader = (colunas) => {
+  const constuirHeader = () => {
     return (
       <div className="d-flex poll-report-grid-header border-bottom border-white">
         <div className="col-1 sc-gray">
@@ -16,11 +16,11 @@ const RelatorioMatematicaPorTurma = (props) => {
             Nome do estudante
           </div>
         </div>
-        {colunas.map((coluna) => {
+        {perguntas.map((pergunta) => {
           return (
             <div className="col sc-gray border-left border-white font-weight-bold">
-              <div className="sc-text-size-00 d-flex flex-fill h-100 align-items-center">
-                {coluna.nome}
+              <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-bold">
+                {pergunta.nome}
               </div>
             </div>
           );
@@ -29,7 +29,7 @@ const RelatorioMatematicaPorTurma = (props) => {
     );
   };
 
-  const construirItens = (codigoEol, nomeEstudante, itens) => {
+  const construirItens = (codigoEol, nomeEstudante, perguntasAluno) => {
     return (
       <div className="d-flex poll-report-grid-item border-bottom">
         <div className="col-1">
@@ -42,11 +42,12 @@ const RelatorioMatematicaPorTurma = (props) => {
             {nomeEstudante}
           </div>
         </div>
-        {itens.map((item) => {
+        {perguntas.map((pergunta) => {
+          const resposta = perguntasAluno.find((p) => p.id === pergunta.id);
           return (
             <div className="col">
               <div className="sc-text-size-00 d-flex flex-fill h-100 align-items-center">
-                {item.resposta}
+                {resposta.valor || ""}
               </div>
             </div>
           );
@@ -57,11 +58,11 @@ const RelatorioMatematicaPorTurma = (props) => {
 
   return (
     <>
-      {dados && dados.length ? (
+      {alunos && alunos.length ? (
         <div>
-          {constuirHeader(dados[0].ordens)}
-          {dados.map((item) =>
-            construirItens(item.codigoEol, item.nomeEstudante, item.ordens)
+          {constuirHeader()}
+          {alunos.map((aluno) =>
+            construirItens(aluno.codigoAluno, aluno.nomeAluno, aluno.perguntas)
           )}
         </div>
       ) : null}

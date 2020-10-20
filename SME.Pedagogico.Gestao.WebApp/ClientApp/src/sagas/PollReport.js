@@ -45,7 +45,13 @@ function* GetPollReportSaga({ parameters }) {
                         }
                     }
                 }
-            }  else {
+            } 
+            else if (parameters.classroomReport && parameters.discipline === "Matemática") {
+              pollReportResponse = {
+                data: data,
+                chartData: data.graficos,
+              }  
+            } else {
               pollReportResponse = {
                 data: data.results,
                 chartData: data.chartData,
