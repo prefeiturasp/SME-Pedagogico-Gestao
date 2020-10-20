@@ -18,7 +18,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
         public async Task<Guid> Handle(ObterCodigoCorrelacaoQuery request, CancellationToken cancellationToken)
         {
             var guidRelatorio = Guid.NewGuid();
-            var mensagem = new MensagemInserirCodigoCorrelacaoDto(request.TipoRelatorio, request.Formato);
+            var mensagem = new MensagemInserirCodigoCorrelacaoDto(request.TipoRelatorio, TipoFormatoRelatorio.Pdf);
 
             await mediator.Send(new InserirFilaRabbitCommand(new PublicaFilaRelatoriosDto(RotasRabbit.FilaSgp, RotasRabbit.ExchangeSgp, mensagem, RotasRabbit.RotaRelatorioCorrelacaoInserir, guidRelatorio, request.UsuarioRf)));
 

@@ -1,14 +1,15 @@
 ﻿export const types = {
-  SET_POLL_REPORT_FILTER: "SET_POLL_REPORT_FILTER",
-  RESET_POLL_REPORT_FILTER: "RESET_POLL_REPORT_FILTER",
-  SHOW_POLL_REPORT_REQUEST: "SHOW_POLL_REPORT_REQUEST",
-  HIDE_POLL_REPORT_REQUEST: "HIDE_POLL_REPORT_REQUEST",
-  GET_POLL_REPORT_REQUEST: "GET_POLL_REPORT_REQUEST",
-  SET_POLL_REPORT_DATA: "SET_POLL_REPORT_DATA",
-  POLL_REPORT_API_REQUEST_FAIL: "POLL_REPORT_API_REQUEST_FAIL",
-  POLL_REPORT_REQUEST_NOT_FOUND: "POLL_REPORT_REQUEST_NOT_FOUND",
-  PRINT_POLL_REPORT: "PRINT_POLL_REPORT",
-};
+    SET_POLL_REPORT_FILTER: "SET_POLL_REPORT_FILTER",
+    RESET_POLL_REPORT_FILTER: "RESET_POLL_REPORT_FILTER",
+    SHOW_POLL_REPORT_REQUEST: "SHOW_POLL_REPORT_REQUEST",
+    HIDE_POLL_REPORT_REQUEST: "HIDE_POLL_REPORT_REQUEST",
+    GET_POLL_REPORT_REQUEST: "GET_POLL_REPORT_REQUEST",
+    SET_POLL_REPORT_DATA: "SET_POLL_REPORT_DATA",
+    POLL_REPORT_API_REQUEST_FAIL: "POLL_REPORT_API_REQUEST_FAIL",
+    POLL_REPORT_REQUEST_NOT_FOUND: "POLL_REPORT_REQUEST_NOT_FOUND",
+    RESET_DATA: "RESET_DATA",
+    PRINT_POLL_REPORT: "PRINT_POLL_REPORT",
+}
 
 const initialState = {
   filters: {
@@ -52,53 +53,54 @@ const initialState = {
 };
 
 export const actionCreators = {
-  setPollReportFilter: (selectedFilter) => ({
-    type: types.SET_POLL_REPORT_FILTER,
-    selectedFilter,
-  }),
-  resetPollReportFilter: () => ({ type: types.RESET_POLL_REPORT_FILTER }),
-  showPollReport: () => ({ type: types.SHOW_POLL_REPORT_REQUEST }),
-  hidePollReport: () => ({ type: types.HIDE_POLL_REPORT_REQUEST }),
-  getPollReport: (parameters) => ({
-    type: types.GET_POLL_REPORT_REQUEST,
-    parameters,
-  }),
-  printPollReport: (parameters) => ({
-    type: types.PRINT_POLL_REPORT,
-    parameters,
-  }),
-};
+    setPollReportFilter: (selectedFilter) => ({ type: types.SET_POLL_REPORT_FILTER, selectedFilter }),
+    resetPollReportFilter: () => ({ type: types.RESET_POLL_REPORT_FILTER}),
+    showPollReport: () => ({ type: types.SHOW_POLL_REPORT_REQUEST }),
+    hidePollReport: () => ({ type: types.HIDE_POLL_REPORT_REQUEST }),
+    getPollReport: (parameters) => ({ type: types.GET_POLL_REPORT_REQUEST, parameters }),
+    resetData: () => ({ type: types.RESET_DATA }),
+    printPollReport: (parameters) => ({
+      type: types.PRINT_POLL_REPORT,
+      parameters,
+    }),
+}
 
 export const reducer = (state, action) => {
-  state = state || initialState;
-  switch (action.type) {
-    case types.SET_POLL_REPORT_FILTER:
-      return {
-        ...state,
-        selectedFilter: action.selectedFilter,
-      };
-    case types.RESET_POLL_REPORT_FILTER:
-      return {
-        ...state,
-        selectedFilter: initialState.selectedFilter,
-      };
-    case types.SHOW_POLL_REPORT_REQUEST:
-      return {
-        ...state,
-        showReport: true,
-      };
-    case types.HIDE_POLL_REPORT_REQUEST:
-      return {
-        ...state,
-        showReport: false,
-      };
-    case types.SET_POLL_REPORT_DATA:
-      return {
-        ...state,
-        data: action.pollReportResponse.data,
-        chartData: action.pollReportResponse.chartData,
-      };
-    default:
-      return state;
-  }
-};
+    state = state || initialState;
+    switch (action.type) {
+        case types.SET_POLL_REPORT_FILTER:
+            return ({
+                ...state,
+                selectedFilter: action.selectedFilter,
+            });
+        case types.RESET_POLL_REPORT_FILTER:
+            return ({
+                ...state,
+                selectedFilter: initialState.selectedFilter,
+            });
+        case types.SHOW_POLL_REPORT_REQUEST:
+            return ({
+                ...state,
+                showReport: true,
+            });
+        case types.HIDE_POLL_REPORT_REQUEST:
+            return ({
+                ...state,
+                showReport: false,
+            });
+        case types.RESET_DATA:
+        return ({
+            ...state,
+            data: null,
+        });
+        case types.SET_POLL_REPORT_DATA: 
+            return ({
+               
+                ...state,
+                data: action.pollReportResponse.data,
+                chartData: action.pollReportResponse.chartData
+            });
+        default:
+            return (state);
+    }
+}

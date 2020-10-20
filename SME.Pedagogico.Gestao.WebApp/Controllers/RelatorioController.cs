@@ -14,7 +14,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
     public class RelatorioController : ControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> Gerar([FromServices]IMediator mediator,[FromBody]RelatorioImpressaoFiltroDto filtros,
+        public async Task<IActionResult> Gerar([FromBody]RelatorioImpressaoFiltroDto filtros,
             [FromServices]IRelatorioImpressaoUseCase relatorioMatematicaNumerosAutoralConsolidadoUseCase)
         {
             await relatorioMatematicaNumerosAutoralConsolidadoUseCase.Executar(filtros);

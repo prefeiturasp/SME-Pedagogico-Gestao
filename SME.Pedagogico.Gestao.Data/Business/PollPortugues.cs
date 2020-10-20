@@ -251,6 +251,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
+        public async Task<Periodo> ObterPeriodoRelatorioPorDescricao(string descricao)
+        {
+            using (var contexto = new SMEManagementContextData())
+            {
+                return await contexto.Periodo.FirstOrDefaultAsync(p => p.Descricao.Equals(descricao));
+            }
+        }
+
         public async Task<PollReportPortugueseResult> BuscarDadosRelatorioPortugues(string proficiencia, string bimestre, string anoLetivo, string codigoDre, string codigoEscola, string codigoCurso)
         {
 
@@ -703,7 +711,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         perguntaDto.Ordenacao = ordem.OrdenacaoNaTela;
                         perguntaDto.SequenciaOrdem = ordem.SequenciaOrdem;
 
-                        var lresposta = perguntaResposta.Where(x => x.Pergunta.Id == ordem.PerguntaId);
+                        var lresposta = perguntaResposta.Where(x => x.Pergunta!=null && x.Pergunta.Id == ordem.PerguntaId);
                         perguntaDto.Respostas = lresposta.Select(item => new RespostaDto
                         {
                             Descricao = item.Resposta.Descricao,
