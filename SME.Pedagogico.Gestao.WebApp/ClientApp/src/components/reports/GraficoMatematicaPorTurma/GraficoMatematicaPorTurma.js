@@ -13,9 +13,9 @@ const GraficoMatematicaPorTurma = (props) => {
     const dadosLabel = [];
     const dadosValores = [];
 
-    dados.respostas.forEach(item => {
+    dados.barras.forEach(item => {
         dadosLabel.push(item.label);
-        dadosValores.push(item.valor);
+        dadosValores.push(item.value);
     })
 
     myChart.setOption({
@@ -51,7 +51,7 @@ const GraficoMatematicaPorTurma = (props) => {
         className="d-flex flex-fill justify-content-center align-items-center sc-gray"
         style={{ height: 35 }}
       >
-        <div className="sc-text-size-1 font-weight-bold">{dados.ordem}</div>
+        <div className="sc-text-size-1 font-weight-bold">{dados.nomeGrafico}</div>
       </TituloGrafico>
       <div
         className="d-flex flex-fill justify-content-center"
