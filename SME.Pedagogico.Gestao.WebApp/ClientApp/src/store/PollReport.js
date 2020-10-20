@@ -1,4 +1,6 @@
-﻿export const types = {
+﻿import { type } from "jquery";
+
+export const types = {
     SET_POLL_REPORT_FILTER: "SET_POLL_REPORT_FILTER",
     RESET_POLL_REPORT_FILTER: "RESET_POLL_REPORT_FILTER",
     SHOW_POLL_REPORT_REQUEST: "SHOW_POLL_REPORT_REQUEST",
@@ -75,13 +77,23 @@ export const actionCreators = {
       parameters,
     }),
     printingPollReport: (printing) => ({ type: types.PRINTING_POLL_REPORT, printing }),
-    showMessageSuccessPollReport: (showMessageSuccess) => ({ type: types.SHOW_POLL_REPORT_MESSAGE_SUCCESS, showMessageSuccess }),
+    showMessageSuccessPollReport: (showMessageSuccess) => (
+      { 
+        type: types.SHOW_POLL_REPORT_MESSAGE_SUCCESS,
+        showMessageSuccess 
+      }
+    ),
     showMessageErrorPollReport: (showMessageError, messageError) => ({ 
       type: types.SHOW_POLL_REPORT_MESSAGE_ERROR, 
       showMessageError, 
       messageError
     }),
-    cancelPollReportRequest: (cancelPollReportRequest) => ({ type: types.CANCEL_POLL_REPORT_REQUEST, cancelPollReportRequest }),
+    cancelPollReportRequest: (cancelPollReportRequest) => (
+      { 
+        type: types.CANCEL_POLL_REPORT_REQUEST, 
+        cancelPollReportRequest 
+      }
+    ),
 }
 
 export const reducer = (state, action) => {

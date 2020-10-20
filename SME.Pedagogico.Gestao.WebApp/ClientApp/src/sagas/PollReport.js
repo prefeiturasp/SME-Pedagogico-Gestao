@@ -98,8 +98,22 @@ function* setError(mensagem) {
   });  
 } 
 
+function* resetPollReport () {
+  yield put({
+    type: PollReport.types.CANCEL_POLL_REPORT_REQUEST,
+    cancelPollReportRequest: false,
+  });
+
+  yield put({
+    type: PollReport.types.SET_POLL_REPORT_LINK_PDF,
+    linkPdf: "",
+  });
+}
+
 function* PrintPollReportSaga({ parameters }) {
   try {
+    yield call(resetPollReport)
+    
     const data = yield call(fetchWithTimeout, "api/v1/relatorios/sync", {
       method: "post",
       headers: { "Content-Type": "application/json" },
@@ -110,7 +124,7 @@ function* PrintPollReportSaga({ parameters }) {
     const { cancelPollReportRequest } = pollReport; 
     let mensagem ="Erro ao gerar relatório. Tente novamente mais tarde."  
        
-    if(data.status === 200 && !cancelPollReportRequest){
+    if(data.status === 200){
       const linkPdf = yield data.text();
      
       yield put({
@@ -118,10 +132,12 @@ function* PrintPollReportSaga({ parameters }) {
         linkPdf,
       });
 
-      yield put({
-        type: PollReport.types.SHOW_POLL_REPORT_MESSAGE_SUCCESS,
-        showMessageSuccess: true,
-      });   
+      if(!cancelPollReportRequest){
+        yield put({
+          type: PollReport.types.SHOW_POLL_REPORT_MESSAGE_SUCCESS,
+          showMessageSuccess: true,
+        });   
+      }
       
       return;
     } 
