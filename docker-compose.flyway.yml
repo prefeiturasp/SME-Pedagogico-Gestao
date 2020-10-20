@@ -1,0 +1,15 @@
+version: "3.1"
+
+services:
+  sondagem-flyway:
+    container_name: sondagem-flyway
+    image: boxfuse/flyway:5.2.4
+    command: -url=jdbc:postgresql://sme-db:5432/db_pedagogicogestao?user=postgres&password=postgres -locations='filesystem:/opt/scripts' -outOfOrder=true -baselineOnMigrate=true migrate
+    volumes:
+      - ./scripts:/opt/scripts
+    networks:
+      - sondagem-network
+networks:
+  sondagem-network:
+    external:
+      name: sme_external_network
