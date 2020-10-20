@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.IoC;
+using SME.Pedagogico.Gestao.WebApp.Configuracoes;
 using SME.Pedagogico.Gestao.WebApp.Contexts;
 using SME.Pedagogico.Gestao.WebApp.Middlewares;
 using System;
@@ -42,6 +43,7 @@ namespace SME.Pedagogico.Gestao.WebApp
 
 
             RegistrarDependencias.Registrar(services);
+            RegistraClientesHttp.Registrar(services, Configuration);
 
             services.AddRabbit();
 
