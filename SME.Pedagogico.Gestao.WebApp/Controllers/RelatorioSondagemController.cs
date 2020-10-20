@@ -32,6 +32,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         public async Task<ActionResult<string>> ObterDados([FromBody]ParametersModel parameters)
         {
 
+
             if (int.Parse(parameters.CodigoCurso) >= 7 && parameters.Discipline == "Matemática")
             {
                 var filtro = new filtrosRelatorioDTO()
@@ -45,8 +46,15 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     DescricaoPeriodo = parameters.Term,
                 };
                 var obj = new RelatorioMatematicaAutoral();
-                var retorno = await obj.ObterRelatorioMatematicaAutoral(filtro);
-               return  (Ok(retorno));
+
+                if (parameters.ClassroomReport)
+                {
+                    var relatorioPorTurma = await obj.ObterRelatorioPorTurma(filtro);
+                    return (Ok(relatorioPorTurma));
+                }
+                var relatorioConsolidado = await obj.ObterRelatorioMatematicaAutoral(filtro);
+
+                return (Ok(relatorioConsolidado));
             }
 
 
@@ -79,7 +87,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     if (parameters.GrupoId.Equals("e27b99a3-789d-43fb-a962-7df8793622b1"))
                     {
                         var relatorioCapacidadeLeitura = new RelatorioPortuguesCapacidadeLeitura();
-                       var relatorioCapacidade = await relatorioCapacidadeLeitura.ObterRelatorioCapacidadeLeitura(new RelatorioPortuguesFiltroDto
+                        var relatorioCapacidade = await relatorioCapacidadeLeitura.ObterRelatorioCapacidadeLeitura(new RelatorioPortuguesFiltroDto
                         {
                             AnoEscolar = Convert.ToInt32(parameters.CodigoCurso),
                             AnoLetivo = Convert.ToInt32(parameters.SchoolYear),
@@ -88,7 +96,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                             ComponenteCurricularId = "c65b2c0a-7a58-4d40-b474-23f0982f14b1",
                             GrupoId = "e27b99a3-789d-43fb-a962-7df8793622b1",
                             PeriodoId = periodo.Id
-                       });
+                        });
 
                         return (Ok(relatorioCapacidade));
 
@@ -163,7 +171,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
         private async Task<RelatorioAutoralLeituraProducaoDto> BuscarDadosAutoralAsync(ParametersModel parametersModel, string periodoId)
         {
-           
+
 
             var relatorioPortugues = new RelatorioPortugues();
 

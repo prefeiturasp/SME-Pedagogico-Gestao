@@ -15,6 +15,11 @@ using SME.Pedagogico.Gestao.Data.Relatorios;
 using SME.Pedagogico.Gestao.Data.Relatorios.Querys;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.DTO.Matematica;
+using SME.Pedagogico.Gestao.Data.DTO.Matematica.RelatorioPorTurma;
+using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
+using SME.Pedagogico.Gestao.Models.Autoral;
+using SME.Pedagogico.Gestao.Data.DTO;
 
 namespace SME.Pedagogico.Gestao.Data.Business
 {
@@ -122,7 +127,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public async Task<List<PerguntaDTO>> ObterRelatorioPorTurma(filtrosRelatorioDTO filtro)
+        public async Task<RelatorioMatematicaPorTurmaDTO> ObterRelatorioPorTurma(filtrosRelatorioDTO filtro)
         {
             IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
             var periodos = await ConsultaTotalDeAlunos.BuscaDatasPeriodoFixoAnual(filtro);
@@ -133,21 +138,98 @@ namespace SME.Pedagogico.Gestao.Data.Business
             var endpoits = new EndpointsAPI();
             var alunoApi = new AlunosAPI(endpoits);
             var alunosEol = await alunoApi.ObterAlunosAtivosPorTurmaEPeriodo(filtro.CodigoTurmaEol, periodos.First().DataFim);
-
             var QueryAlunosRespostas = ConsultasRelatorios.QueryRelatorioPorTurmaMatematica();
-
-          var listaAlunoRespostas =  await RetornaListaRespostasAlunoPorTurma(filtro, QueryAlunosRespostas);
-
+            var listaAlunoRespostas = await RetornaListaRespostasAlunoPorTurma(filtro, QueryAlunosRespostas);
             var AlunosAgrupados = listaAlunoRespostas.GroupBy(x => x.CodigoAluno);
+            var relatorio = new RelatorioMatematicaPorTurmaDTO();
+            await RetornaPerguntasDoRelatorio(filtro, relatorio);
+
+            relatorio.Alunos = new List<AlunoPorTurmaRelatorioDTO>();
+            alunosEol.ForEach(alunoRetorno =>
+            {
+                var aluno = new AlunoPorTurmaRelatorioDTO();
+                aluno.CodigoAluno = alunoRetorno.CodigoAluno;
+                aluno.NomeAluno = alunoRetorno.NomeAluno;
+                aluno.Perguntas = new List<PergurntaRespostaPorAluno>();
+
+                var alunoRespostas = AlunosAgrupados.Where(x => x.Key == aluno.CodigoAluno.ToString()).ToList();
+
+                foreach (var perguntaBanco in relatorio.Perguntas)
+                {
+                    var pergunta = new PergurntaRespostaPorAluno()
+                    {
+                        Id = perguntaBanco.Id,
+                        Valor = string.Empty
+                    };
+
+                    var respostaAluno = listaAlunoRespostas.Where(x => x.PerguntaId == perguntaBanco.Id && x.CodigoAluno == aluno.CodigoAluno.ToString()).FirstOrDefault();
+                    if (respostaAluno != null)
+                        pergunta.Valor = respostaAluno.RespostaDescricao;
+                    aluno.Perguntas.Add(pergunta);
+                }
+                relatorio.Alunos.Add(aluno);
+            });
+
+            relatorio.Graficos = new List<GraficosRelatorioDTO>();
 
 
-            //perguntasAgrupadas.ForEach(x =>
-            //{
-            //    x.Key
-            //});
+            using (var contexto = new SMEManagementContextData())
+            {
+                var perguntasBanco = await contexto.PerguntaResposta.Include(x => x.Pergunta).Include(y => y.Resposta).Where(pr => relatorio.Perguntas.Any(p => p.Id == pr.Pergunta.Id)).ToListAsync();
 
 
-            return null;
+                foreach (var pergunta in relatorio.Perguntas)
+                {
+                    var grafico = new GraficosRelatorioDTO();
+                    grafico.nomeGrafico = pergunta.Nome;
+                    grafico.Barras = new List<BarrasGraficoDTO>();
+                   var listaRespostas = perguntasBanco.Where(x => x.Pergunta.Id == pergunta.Id).ToList();
+
+                    listaRespostas.ForEach(resposta =>
+                    {
+                        var barra = new BarrasGraficoDTO();
+                        barra.label = resposta.Resposta.Descricao;
+                        barra.value = listaAlunoRespostas.GroupBy(x => x.PerguntaId == pergunta.Id).Where(x => x.Any(r => r.RespostaId == resposta.Resposta.Id)).ToList().Count();
+                        grafico.Barras.Add(barra);
+
+                    });
+
+                    relatorio.Graficos.Add(grafico);
+
+                }
+            }
+
+
+
+
+            return relatorio;
+        }
+
+        private async Task RetornaPerguntasDoRelatorio(filtrosRelatorioDTO filtro, RelatorioMatematicaPorTurmaDTO relatorio)
+        {
+            relatorio.Perguntas = new List<PerguntasRelatorioDTO>();
+            using (var contexto = new SMEManagementContextData())
+            {
+                var perguntasBanco = await contexto.PerguntaAnoEscolar.Include(x => x.Pergunta).Where(perguntaAnoEscolar => perguntaAnoEscolar.AnoEscolar == filtro.AnoEscolar).Select(x => MapearPergunta(x)).ToListAsync();
+                relatorio.Perguntas = perguntasBanco.Select(x => new PerguntasRelatorioDTO
+                {
+                    Id = x.Id,
+                    Nome = x.Descricao
+
+                }).ToList();
+            }
+        }
+
+        private PerguntaDto MapearPergunta(PerguntaAnoEscolar perguntaAnoEscolar)
+        {
+            var retorno = (PerguntaDto)perguntaAnoEscolar.Pergunta;
+
+            if (retorno == null)
+                return default;
+
+            retorno.Ordenacao = perguntaAnoEscolar.Ordenacao;
+
+            return retorno;
         }
 
         private static async Task<IEnumerable<AlunoPerguntaRespostaDTO>> RetornaListaRespostasAlunoPorTurma(filtrosRelatorioDTO filtro, string QueryAlunosRespostas)
@@ -157,7 +239,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var listaAlunoRespostas = await conexao.QueryAsync<AlunoPerguntaRespostaDTO>(QueryAlunosRespostas.ToString(),
                 new
                 {
-                    CodigoTurmaEol = "2117440", //filtro.CodigoTurmaEol,
+                    CodigoTurmaEol = filtro.CodigoTurmaEol,
                     AnoLetivo = filtro.AnoLetivo,
                     PeriodoId = filtro.PeriodoId,
                     ComponenteCurricularId = filtro.ComponenteCurricularId
@@ -166,14 +248,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 return listaAlunoRespostas;
 
-    }
+            }
         }
 
-        private static async Task<IEnumerable<AlunosNaTurmaDTO>> ObterAlunosPorTurmaEPeriodoEOl(string codigoTurma, DateTime dataReferencia)
-        {
-            var endpointsApi = new EndpointsAPI();
-            var alunoApi = new AlunosAPI(endpointsApi);
-            return await alunoApi.ObterAlunosAtivosPorTurmaEPeriodo(codigoTurma, dataReferencia);
-        }
+
     }
 }
