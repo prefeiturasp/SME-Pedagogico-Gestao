@@ -45,7 +45,7 @@ namespace SME.Pedagogico.Gestao.WebApp
             RegistrarDependencias.Registrar(services);
             RegistraClientesHttp.Registrar(services, Configuration);
 
-            services.AddRabbit();
+            //services.AddRabbit();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
