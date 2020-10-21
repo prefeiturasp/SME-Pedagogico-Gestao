@@ -1,4 +1,6 @@
-﻿export const types = {
+﻿import { type } from "jquery";
+
+export const types = {
     SET_POLL_REPORT_FILTER: "SET_POLL_REPORT_FILTER",
     RESET_POLL_REPORT_FILTER: "RESET_POLL_REPORT_FILTER",
     SHOW_POLL_REPORT_REQUEST: "SHOW_POLL_REPORT_REQUEST",
@@ -14,6 +16,7 @@
     SHOW_POLL_REPORT_MESSAGE_SUCCESS: "SHOW_POLL_REPORT_MESSAGE_SUCCESS",
     SHOW_POLL_REPORT_MESSAGE_ERROR: "SHOW_POLL_REPORT_MESSAGE_ERROR",
     CANCEL_POLL_REPORT_REQUEST: "CANCEL_POLL_REPORT_REQUEST",
+    ABORT_CONTROLLER_POLL_REPORT_REQUEST: "ABORT_CONTROLLER_POLL_REPORT_REQUEST",
 }
 
 const initialState = {
@@ -61,6 +64,7 @@ const initialState = {
   showMessageError: false,
   cancelPollReportRequest: false,
   messageError: "",
+  abortController: null,
 };
 
 export const actionCreators = {
@@ -75,13 +79,23 @@ export const actionCreators = {
       parameters,
     }),
     printingPollReport: (printing) => ({ type: types.PRINTING_POLL_REPORT, printing }),
-    showMessageSuccessPollReport: (showMessageSuccess) => ({ type: types.SHOW_POLL_REPORT_MESSAGE_SUCCESS, showMessageSuccess }),
+    showMessageSuccessPollReport: (showMessageSuccess) => (
+      { 
+        type: types.SHOW_POLL_REPORT_MESSAGE_SUCCESS,
+        showMessageSuccess 
+      }
+    ),
     showMessageErrorPollReport: (showMessageError, messageError) => ({ 
       type: types.SHOW_POLL_REPORT_MESSAGE_ERROR, 
       showMessageError, 
       messageError
     }),
-    cancelPollReportRequest: (cancelPollReportRequest) => ({ type: types.CANCEL_POLL_REPORT_REQUEST, cancelPollReportRequest }),
+    cancelPollReportRequest: (cancelPollReportRequest) => (
+      { 
+        type: types.CANCEL_POLL_REPORT_REQUEST, 
+        cancelPollReportRequest 
+      }
+    ),
 }
 
 export const reducer = (state, action) => {
@@ -143,8 +157,13 @@ export const reducer = (state, action) => {
         case types.CANCEL_POLL_REPORT_REQUEST:
           return ({
             ...state,
-            cancelPollReportRequest: action.cancelPollReportRequest  
-          });
+            cancelPollReportRequest: action.cancelPollReportRequest,  
+          });          
+          case types.ABORT_CONTROLLER_POLL_REPORT_REQUEST:
+            return ({
+              ...state,
+              abortController: action.abortController,  
+            });
         default:
             return (state);
     }

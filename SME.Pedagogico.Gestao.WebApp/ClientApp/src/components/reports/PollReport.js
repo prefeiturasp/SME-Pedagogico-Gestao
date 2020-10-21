@@ -38,6 +38,7 @@ class PollReport extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.pollReport.showReport === true) {
       const { 
+        linkPdf,
         selectedFilter, 
         showMessageSuccess, 
         showMessageError,
@@ -65,7 +66,7 @@ class PollReport extends Component {
 
       if(showMessageSuccess && !this.state.showMessage){
         this.setState({showMessage: true, messageType: "success"});
-        showMessageSuccessPollReport(false)
+        showMessageSuccessPollReport(false);
       }
 
       if(showMessageError && !this.state.showMessage){
@@ -118,6 +119,10 @@ class PollReport extends Component {
 
     printPollReport(payload);
   };
+
+  acaoFeedBack = () => {
+    this.setState({ showMessage: false });
+  }
 
   printClick() {
     var userName = this.props.user.username;
@@ -979,7 +984,7 @@ class PollReport extends Component {
         <MensagemConfirmacaoImprimir
           exibir={this.state.showMessage}
           messageType={this.state.messageType}
-          acaoFeedBack={() => this.setState({ showMessage: false })}
+          acaoFeedBack={() => this.acaoFeedBack()}
           linkPdf={linkPdf}
         />
 

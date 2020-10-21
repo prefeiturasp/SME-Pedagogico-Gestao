@@ -38,18 +38,38 @@ class Dashboard extends Component {
     }
 
     handleClose = () => {
-        this.props.pollReportMethods.printingPollReport(false);        
+          const { 
+            cancelPollReportRequest, 
+            printingPollReport
+        } = this.props.pollReportMethods;
+
+        cancelPollReportRequest(true);    
+        printingPollReport(false);        
         this.setState({ showMessage: true });
     }
 
     botaoNao = () => {
+        const {pollReport, pollReportMethods} = this.props;
+        const {linkPdf} = pollReport;
+        const { 
+            showMessageSuccessPollReport, 
+            cancelPollReportRequest, 
+            printingPollReport
+        } = pollReportMethods;
+
+        cancelPollReportRequest(false);    
         this.setState({ showMessage: false });
-        this.props.pollReportMethods.printingPollReport(true);        
+
+        if(linkPdf){
+            showMessageSuccessPollReport(true);
+            return;
+        }
+        printingPollReport(true);        
     }
 
     botaoSim = () => {
-        this.setState({ showMessage: false });
-        this.props.pollReportMethods.cancelPollReportRequest(true);        
+        this.setState({ showMessage: false }); 
+        this.props.pollReport.abortController.abort();
     }
 
     render() {
