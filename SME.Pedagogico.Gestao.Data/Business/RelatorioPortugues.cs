@@ -62,7 +62,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 MapearGraficoPorTurma(dados, perguntas, grupo, alunos, relatorio);
             }
 
-            relatorio.Alunos = relatorio.Alunos.OrderBy(x => x.NumeroChamada).ToList();
+            relatorio.Alunos = relatorio.Alunos.OrderBy(x => x.NomeAluno).ToList();
 
             return relatorio;
         }
