@@ -1,14 +1,15 @@
 ﻿import { takeLatest, call, put, all } from "redux-saga/effects";
 import * as Filters from "../store/Filters";
 
-export default function*() {
+export default function* () {
   yield all([
     takeLatest(Filters.types.GET_DRE, GetDres),
     takeLatest(Filters.types.GET_SCHOOL, GetSchools),
     takeLatest(Filters.types.GET_CLASSROOM, GetClassRoom),
     takeLatest(Filters.types.GET_FILTERS_TEACHER, GetFiltersTeacher),
     takeLatest(Filters.types.GET_DRE_ADM, GetDreAdm),
-    takeLatest(Filters.types.GET_PERIOD, GetPeriod)
+    takeLatest(Filters.types.GET_PERIOD, GetPeriod),
+    takeLatest(Filters.types.GET_LIST_DISCIPLINES_BY_CLASSROOM, GetDisciplinesByClassroom)
   ]);
 }
 
@@ -22,7 +23,7 @@ function* GetDreAdm({ userName }) {
   }
 }
 
-function* GetDres({}) {
+function* GetDres({ }) {
   try {
     const data = yield call(getDresAPI);
     var listDres = data;
@@ -32,15 +33,25 @@ function* GetDres({}) {
   }
 }
 
-function* GetPeriod({schoolYear}) {
+function* GetDisciplinesByClassroom({ disciplinesFilter }) {
+  try {
+    const data = yield call(getDisciplinesByClassroomAPI, disciplinesFilter);    
+    var listDisciplines = data;
+    yield put({ type: Filters.types.LIST_DISCIPLINES, listDisciplines });
+    yield put({ type: Filters.types.DISCIPLINES_FILTER, disciplinesFilter });
+  } catch (error) {    
+    yield put({ type: "API_CALL_ERROR" });
+  }
+}
+
+function* GetPeriod({ schoolYear }) {
   try {
     const data = yield call(getPeriodApi, schoolYear);
     var listPeriod = data;
-    yield put({ type: Filters.types.SET_PERIOD, listPeriod})
-  }catch (error) {
+    yield put({ type: Filters.types.SET_PERIOD, listPeriod })
+  } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
   }
-
 }
 
 function* GetSchools({ schoolCode }) {
@@ -69,7 +80,7 @@ function* GetFiltersTeacher({ profileOccupatios }) {
   try {
     const data = yield call(getTeacherFiltersApi, profileOccupatios);
     var filters = data;
-	console.log(data);
+    console.log(data);
     yield put({ type: Filters.types.SET_FILTERS_TEACHER, filters });
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
@@ -81,8 +92,8 @@ function* GetFiltersTeacher({ profileOccupatios }) {
 function getPeriodApi(schoolYear) {
   var url = `/api/Filtros/ListarPeriodoDeAberturas/${schoolYear}`;
   return fetch(url, {
-    method: "get", 
-    headers: {"Content-Type": "application/json"} 
+    method: "get",
+    headers: { "Content-Type": "application/json" }
   }).then(response => response.json());
 };
 
@@ -123,5 +134,13 @@ function getDresAPI() {
     method: "get",
     headers: { "Content-Type": "application/json" }
     //body: JSON.stringify(credential)
+  }).then(response => response.json());
+}
+
+function getDisciplinesByClassroomAPI(disciplinesFilter) {
+  return fetch("/api/Filtros/ListarDisciplinasPorRfTurma", {
+    method: "post",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(disciplinesFilter)
   }).then(response => response.json());
 }
