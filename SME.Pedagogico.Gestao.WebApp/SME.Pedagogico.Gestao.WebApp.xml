@@ -130,6 +130,13 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.FiltrosController.ListarDisciplinasPorRfTurma(SME.Pedagogico.Gestao.Data.DTO.BuscarDisciplinasPorRfTurmaDto)">
+            <summary>
+            Busca as disciplinas pelo RF e código da turma selecionada.
+            </summary>
+            <param name="buscarDisciplinasPorRfTurmaDto">Parâmetro com o RF e código da turma.</param>
+            <returns>Lista disciplinas com nome e código.</returns>
+        </member>
         <member name="M:SME.Pedagogico.Gestao.WebApp.Controllers.SondagemMatematicaController.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
             Construtor padrão para o SondagemMatematicaController, faz injeção de dependências SMEManagementContext.

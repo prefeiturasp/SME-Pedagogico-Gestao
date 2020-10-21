@@ -16,7 +16,10 @@ export const types = {
     SET_SCHOOLYEAR: "SET_SCHOOLYEAR",
     GET_PERIOD: "GET_PERIOD",
     SET_PERIOD: "SET_PERIOD",
-    PERIODO_ABERTURA_MAT: "PERIODO_ABERTURA_MAT"
+    PERIODO_ABERTURA_MAT: "PERIODO_ABERTURA_MAT",
+    GET_LIST_DISCIPLINES_BY_CLASSROOM: "GET_LIST_DISCIPLINES_BY_CLASSROOM",
+    LIST_DISCIPLINES: "LIST_DISCIPLINES",
+    DISCIPLINES_FILTER: "DISCIPLINES_FILTER"
     //UNAUTHORIZED: "UNAUTHORIZED",
     //LOGOUT_REQUEST: "LOGOUT_REQUEST",
     //LOGOUT_USER: "LOGOUT_USER",
@@ -36,7 +39,8 @@ const initialState = {
     filterTeachers: null,
     period: null,
     abertura1Semestre: false,
-    abertura2Semestre: false
+    abertura2Semestre: false,
+    listDisciplines: []
 };
 
 export const actionCreators = {
@@ -56,8 +60,8 @@ export const actionCreators = {
     getPeriod: (schoolYear) => ({ type: types.GET_PERIOD, schoolYear }),
     setPeriod: () => ({ type: types.SET_PERIOD }),
     verificaPeriodosMatematica: () => ({ type: types.PERIODO_ABERTURA_MAT }),
-
-
+    getDisciplinesByClassroom: (disciplinesFilter) => ({ type: types.GET_LIST_DISCIPLINES_BY_CLASSROOM, disciplinesFilter }),
+    listDisciplines: () => ({ type: types.LIST_DISCIPLINES })
 };
 
 export const reducer = (state, action) => {
@@ -120,7 +124,7 @@ export const reducer = (state, action) => {
             });
         case types.PERIODO_ABERTURA_MAT:
             var todayDate = new Date();
-            let estadoRetorno = { state};
+            let estadoRetorno = { state };
             state.period.forEach((item) => {
                 if (item.bimestre === 2) {
                     if (todayDate >= new Date(item.dataInicio) && todayDate <= new Date(item.dataFim)) {
@@ -132,9 +136,9 @@ export const reducer = (state, action) => {
                     }
                 }
                 if (item.bimestre === 4) {
-                   
+
                     if (todayDate >= new Date(item.dataInicio) && todayDate <= new Date(item.dataFim)) {
-                       
+
                         estadoRetorno = {
                             ...state,
                             ...estadoRetorno,
@@ -146,7 +150,11 @@ export const reducer = (state, action) => {
                 }
             });
             return estadoRetorno;
-          
+        case types.LIST_DISCIPLINES:
+            return ({
+                ...state,
+                listDisciplines: action.listDisciplines
+            });
         default:
             return (state);
     }

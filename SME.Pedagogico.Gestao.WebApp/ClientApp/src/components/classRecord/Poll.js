@@ -2,6 +2,8 @@
 import "./Poll.css";
 import Card from "../containers/Card";
 import PollFilter from "./PollFilter";
+import { DISCIPLINES_ENUM } from "../../Enums";
+import { ROLES_ENUM } from "../../Enums";
 
 import { ClassRoomEnum } from "../polls/component/ClassRoomHelper";
 import { connect } from "react-redux";
@@ -128,7 +130,7 @@ class Poll extends Component {
     }
   }
 
-  componentDidMount() {}
+  componentDidMount() { }
 
   componentWillUpdate() {
     var todayDate = new Date();
@@ -732,8 +734,8 @@ class Poll extends Component {
 
       const sequenciaOrdemSelecionada = sequenciasOrdens
         ? sequenciasOrdens.findIndex(
-            (sequencia) => sequencia.ordemId === idOrdemSelecionada
-          )
+          (sequencia) => sequencia.ordemId === idOrdemSelecionada
+        )
         : 0;
 
       try {
@@ -752,14 +754,14 @@ class Poll extends Component {
       return;
     }
 
-    if (this.props.pollStudents && 
-		this.props.pollStudents.pollSelected == ClassRoomEnum.ClassMTAutoral) {
+    if (this.props.pollStudents &&
+      this.props.pollStudents.pollSelected == ClassRoomEnum.ClassMTAutoral) {
       this.props.autoralMethods.salvaSondagemAutoralMatematica(
         this.props.autoral.listaAlunosAutoralMatematica
       );
     } else if (
       this.props.pollStudents &&
-	  this.props.pollStudents.pollSelected == ClassRoomEnum.ClassPTAutoral
+      this.props.pollStudents.pollSelected == ClassRoomEnum.ClassPTAutoral
     ) {
     } else if (this.props.poll.pollSelected !== null) {
       if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
@@ -859,9 +861,12 @@ class Poll extends Component {
 
   checkButtonPortuguese() {
     var btn;
+
+    if (this.restricaoDisciplina(DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES))
+      return btn;
+
     if (
       this.props.poll.selectedFilter.yearClassroom !== null &&
-      // parseInt(this.props.poll.selectedFilter.yearClassroom) < 4 &&
       this.props.poll.selectedFilter.yearClassroom !== undefined
     ) {
       if (this.props.data.newDataToSave) {
@@ -921,9 +926,12 @@ class Poll extends Component {
 
   checkButtonMath() {
     var btn;
+
+    if (this.restricaoDisciplina(DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA))
+      return btn;
+
     if (
       this.props.poll.selectedFilter.yearClassroom !== null &&
-      //parseInt(this.props.poll.selectedFilter.yearClassroom) < 7 &&
       this.props.poll.selectedFilter.yearClassroom !== undefined
     ) {
       if (this.props.data.newDataToSave) {
@@ -997,6 +1005,12 @@ class Poll extends Component {
     }
   }
 
+  restricaoDisciplina(disciplina) {
+    return this.props.user.activeRole.roleName === ROLES_ENUM.PROFESSOR &&
+      !DISCIPLINES_ENUM.PossuiDisciplinaRegencia(this.props.filters.listDisciplines) &&
+      !DISCIPLINES_ENUM.PossuiDisciplina(disciplina, this.props.filters.listDisciplines);
+  }
+
   render() {
     return (
       <>
@@ -1049,6 +1063,7 @@ export default connect(
     filters: state.filters,
     autoral: state.autoral,
     sondagemPortugues: state.sondagemPortugues,
+    user: state.user
   }),
   (dispatch) => ({
     pollMethods: bindActionCreators(actionCreatorsPoll, dispatch),

@@ -10,7 +10,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.IoC;
+using SME.Pedagogico.Gestao.WebApp.Configuracoes;
 using SME.Pedagogico.Gestao.WebApp.Contexts;
+using SME.Pedagogico.Gestao.WebApp.Middlewares;
 using System;
 using System.IO;
 using System.Reflection;
@@ -30,13 +32,20 @@ namespace SME.Pedagogico.Gestao.WebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddResponseCaching();
+            services.AddResponseCaching();            
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(options =>
+            {
+                options.AllowValidatingTopLevelNodes = false;
+                options.EnableEndpointRouting = true;                
+                options.Filters.Add(new FiltroExcecoesAttribute());
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
 
             RegistrarDependencias.Registrar(services);
+            RegistraClientesHttp.Registrar(services, Configuration);
 
-            services.AddRabbit();
+            //services.AddRabbit();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -44,7 +53,7 @@ namespace SME.Pedagogico.Gestao.WebApp
                 configuration.RootPath = "ClientApp/build";
             });
 
-            // Configuração de injeção de dependência do SMEContext (Postgres - Npgsql)
+            // Configuraï¿½ï¿½o de injeï¿½ï¿½o de dependï¿½ncia do SMEContext (Postgres - Npgsql)
             services.AddDbContext<SMEManagementContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -69,7 +78,7 @@ namespace SME.Pedagogico.Gestao.WebApp
             {
                 options.AddPolicy("CorsPolicy",
                     builder => builder
-                        .AllowAnyOrigin() // Ulilizar a função abaixo e comentar essa para definir permissão de acesso de determinadas origens, caso contrário será aceito qualquer origem da requisição
+                        .AllowAnyOrigin() // Ulilizar a funï¿½ï¿½o abaixo e comentar essa para definir permissï¿½o de acesso de determinadas origens, caso contrï¿½rio serï¿½ aceito qualquer origem da requisiï¿½ï¿½o
                                           //.WithOrigins("https://mydomain.com", "http://outroendereco.com.br")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
@@ -84,7 +93,7 @@ namespace SME.Pedagogico.Gestao.WebApp
                 {
                     Title = "SME.Pedagogico.Gestao.WebApp",
                     Version = "v1.0.0",
-                    Description = "Documentação das APIs do SME.Pedagogico.Gestao.WebApp (.NET Core v2.2)",
+                    Description = "Documentaï¿½ï¿½o das APIs do SME.Pedagogico.Gestao.WebApp (.NET Core v2.2)",
                 });
 
                 string xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
