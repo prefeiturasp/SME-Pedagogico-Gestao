@@ -7,6 +7,7 @@ import { actionCreators as actionCreatorsPoll2 } from "../../store/Poll";
 import { actionCreators as actionCreatorsPollRouter } from "../../store/PollRouter";
 import { bindActionCreators } from "redux";
 import { ROLES_ENUM } from "../../Enums";
+import { DISCIPLINES_ENUM } from "../../Enums";
 import TwoSteps from "../messaging/TwoSteps";
 import MensagemConfirmacaoAutoral from "./SondagemPortuguesAutoral/mensagemConfirmacaoAutoral";
 
@@ -288,11 +289,14 @@ class PollFilter extends Component {
   checkDisabledButton() {
     if (this.props.reports) {
       //Independente do perfil o relatorio so pode ser tirado por Ano
-      if (this.state.classroom !== null && this.state.classroom !== "" && this.props.filters.listDisciplines.length > 0) {
+      if (this.state.classroom !== null && this.state.classroom !== "" && this.props.user.activeRole.roleName !== ROLES_ENUM.PROFESSOR)
         return true;
-      } else {
+      //Para professor é necessário selecionar a turma
+      else if (this.props.user.activeRole.roleName === ROLES_ENUM.PROFESSOR && this.props.filters.listDisciplines.length > 0)
+        return true;
+      else
         return false;
-      }
+
 
       //if (this.props.filters.activeDreCode !== null &&
       //    this.props.filters.activeSchollsCode !== null || this.props.filters.activeClassRoomCode !== null)
