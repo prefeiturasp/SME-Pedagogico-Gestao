@@ -273,7 +273,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             using (SMEManagementContextData db = new SMEManagementContextData())
             {
                 var currentUser = await (from current in db.LoggedUsers.Include(".User")
-                                         where current.User.Name.Equals(userName)
+                                         where current.User.Name.Equals(userName.Trim())
                                          select current).LastOrDefaultAsync();
 
                 if (DateTime.Now > currentUser.ExpiresAt || DateTime.Now.Day > currentUser.ExpiresAt.Day)

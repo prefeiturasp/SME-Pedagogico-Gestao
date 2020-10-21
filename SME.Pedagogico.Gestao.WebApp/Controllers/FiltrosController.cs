@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DTO;
+using SME.Pedagogico.Gestao.Data.Integracao;
 using System;
 using System.Threading.Tasks;
 
@@ -110,6 +111,30 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     return (NoContent());
                 }
 
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
+
+        /// <summary>
+        /// Busca as disciplinas pelo RF e código da turma selecionada.
+        /// </summary>
+        /// <param name="buscarDisciplinasPorRfTurmaDto">Parâmetro com o RF e código da turma.</param>
+        /// <returns>Lista disciplinas com nome e código.</returns>
+        [HttpPost]
+        public async Task<ActionResult<string>> ListarDisciplinasPorRfTurma(BuscarDisciplinasPorRfTurmaDto buscarDisciplinasPorRfTurmaDto)
+        {
+            try
+            {
+                var novoSgpApi = new NovoSGPAPI();
+                var listDiscplines = await novoSgpApi.DisciplinasPorTurma(buscarDisciplinasPorRfTurmaDto);
+
+                if (listDiscplines != null)
+                    return (Ok(listDiscplines));
+
+                return (NoContent());
             }
             catch (Exception ex)
             {
