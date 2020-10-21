@@ -173,8 +173,7 @@ class PollReportFilter extends Component {
     }
 
     ehPortuguesAcimaDoQuartoAnoConsolidado(){
-       return !this.props.poll.selectedFilter.classroomCodeEol && 
-       Number(this.props.poll.selectedFilter.yearClassroom) >=4 &&
+       return Number(this.props.poll.selectedFilter.yearClassroom) >=4 &&
        this.state.selectedFilter.discipline === "Língua Portuguesa"
     }
 

@@ -81,7 +81,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                         return (Ok(result));
                     }
 
-                    if (parameters.GrupoId.Equals("e27b99a3-789d-43fb-a962-7df8793622b1"))
+                    if (parameters.GrupoId != null && parameters.GrupoId.Equals("e27b99a3-789d-43fb-a962-7df8793622b1"))
                     {
                         return NoContent();
                     }
