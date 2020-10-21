@@ -183,17 +183,23 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     var grafico = new GraficosRelatorioDTO();
                     grafico.nomeGrafico = pergunta.Nome;
                     grafico.Barras = new List<BarrasGraficoDTO>();
-                   var listaRespostas = perguntasBanco.Where(x => x.Pergunta.Id == pergunta.Id).ToList();
+                    var listaRespostas = perguntasBanco.Where(x => x.Pergunta.Id == pergunta.Id).ToList();
 
                     listaRespostas.ForEach(resposta =>
                     {
                         var barra = new BarrasGraficoDTO();
                         barra.label = resposta.Resposta.Descricao;
-                        barra.value = listaAlunoRespostas.GroupBy(x => x.PerguntaId == pergunta.Id).Where(x => x.Any(r => r.RespostaId == resposta.Resposta.Id)).ToList().Count();
+                        barra.value = relatorio.Alunos.Count(x=> x.Perguntas.Any(r => r.Id == pergunta.Id && r.Valor == resposta.Resposta.Descricao));
                         grafico.Barras.Add(barra);
 
                     });
 
+                    var barraAlunosSemPreenchimento = new BarrasGraficoDTO();
+                    barraAlunosSemPreenchimento.label = "Sem Preenchimento";
+                    barraAlunosSemPreenchimento.value = relatorio.Alunos.Count() - grafico.Barras.Sum(x => x.value);
+                    grafico.Barras.Add(barraAlunosSemPreenchimento);
+
+                  
                     relatorio.Graficos.Add(grafico);
 
                 }
