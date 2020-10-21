@@ -17,6 +17,8 @@ import MensagemConfirmacaoImprimir from "./MensagemConfirmacaoImprimir";
 import RelatorioMatematicaConsolidado from "./RelatorioMatematicaConsolidado";
 import { GrupoDto } from "../dtos/grupoDto";
 import RelatorioConsolidadoCapacidadeLeitura from "./RelatorioConsolidadeCapacidadeLeitura/RelatorioConsolidadoCapacidadeLeitura";
+import RelatorioPorTurmaLeituraVozAlta from "./RelatorioPorTurmaLeituraVozAlta/RelatorioPorTurmaLeituraVozAlta";
+import GraficoPorTurmaLeituraVozAlta from "./GraficoPorTurmaLeituraVozAlta/GraficoPorTurmaLeituraVozAlta";
 import RelatorioMatematicaPorTurma from "./RelatorioMatematicaPorTurma/RelatorioMatematicaPorTurma";
 import GraficoMatematicaPorTurma from "./GraficoMatematicaPorTurma/GraficoMatematicaPorTurma";
 
@@ -976,6 +978,62 @@ class PollReport extends Component {
           break;
       }
     }
+
+    const montarRelatorioPorTurmaPortuguesAcimaDoQuartoAno = (dados) => {
+      switch (this.props.pollReport.selectedFilter.grupoId) {
+        case GrupoDto.CAPACIDADE_LEITURA:
+          return (
+            <div className="mb-4">
+              <div></div>
+            </div>
+          );
+        case GrupoDto.LEITURA_EM_VOZ_ALTA:
+          return (
+            <div className="mb-4">
+              <RelatorioPorTurmaLeituraVozAlta
+                perguntas={dados.perguntas}
+                alunos={dados.alunos}
+              />
+            </div>
+          );
+        case GrupoDto.PRODUCAO_DE_TEXTO:
+          return (
+            <div className="mb-4">
+              <div></div>
+            </div>
+          );
+        default:
+          break;
+      }
+    };
+
+    const montarGraficoPorTurmaPortuguesAcimaDoQuartoAno = (graficos) => {
+      switch (this.props.pollReport.selectedFilter.grupoId) {
+        case GrupoDto.CAPACIDADE_LEITURA:
+          return (
+            <div className="mb-4">
+              <div></div>
+            </div>
+          );
+        case GrupoDto.LEITURA_EM_VOZ_ALTA:
+          return (
+            <div className="row">
+              {graficos.map((dados) => {
+                return <GraficoPorTurmaLeituraVozAlta dados={dados} />;
+              })}
+            </div>
+          );
+        case GrupoDto.PRODUCAO_DE_TEXTO:
+          return (
+            <div className="mb-4">
+              <div></div>
+            </div>
+          );
+        default:
+          break;
+      }
+    };
+
     
     return (
       <>
@@ -1021,14 +1079,18 @@ class PollReport extends Component {
                     Number(
                       this.props.pollReport.selectedFilter &&
                         this.props.pollReport.selectedFilter.CodigoCurso
-                    ) >= 4 && !this.classroomReport ? (
-                      this.props.pollReport.selectedFilter.grupoId ===
-                      GrupoDto.CAPACIDADE_LEITURA ? (
-                        reportData.map((dados) =>
-                          montarRelatorioConsolidadosAcimaDoQuartoAno(dados)
+                    ) >= 4 ? (
+                      this.classroomReport ? (
+                        montarRelatorioPorTurmaPortuguesAcimaDoQuartoAno(reportData)                        
+                      ):(
+                        this.props.pollReport.selectedFilter.grupoId ===
+                        GrupoDto.CAPACIDADE_LEITURA ? (
+                          reportData.map((dados) =>
+                            montarRelatorioConsolidadosAcimaDoQuartoAno(dados)
+                          )
+                        ) : (
+                          montarRelatorioConsolidadosAcimaDoQuartoAno(reportData)
                         )
-                      ) : (
-                        montarRelatorioConsolidadosAcimaDoQuartoAno(reportData)
                       )
                     ) : (
                       <PollReportPortugueseGrid
@@ -1057,11 +1119,16 @@ class PollReport extends Component {
                   ): null}
 
                   <PollReportBreadcrumb className="mt-5" name="Gráfico" />
-                  {this.props.pollReport.selectedFilter.discipline ===
-                    "Língua Portuguesa" && (
-                      this.props.selectedFilter && chartData && chartData.length && <PollReportPortugueseChart data={chartData} />
-                    )}
-                  {chartData && chartData.length ?
+                  {chartData && chartData.length ?(
+                  this.props.pollReport.selectedFilter.discipline === "Língua Portuguesa" ?(
+                    Number(
+                      this.props.pollReport.selectedFilter &&
+                        this.props.pollReport.selectedFilter.CodigoCurso
+                    ) >= 4 && this.classroomReport?  
+                      montarGraficoPorTurmaPortuguesAcimaDoQuartoAno(chartData)
+                    :<PollReportPortugueseChart data={chartData} />
+                  )
+                  :(
                   this.props.pollReport.selectedFilter.discipline === "Matemática" &&
                   Number(this.props.pollReport.selectedFilter.CodigoCurso) >= 7 ? (
                     this.classroomReport ? (
@@ -1138,7 +1205,8 @@ class PollReport extends Component {
                         );
                       })}
                   </div>
-                  : null}
+                  )
+                ): null}
                 </div>
               ): null}
             </div>

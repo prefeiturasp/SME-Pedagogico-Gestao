@@ -12,6 +12,7 @@ using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.DTO.Portugues.Relatorio;
 using SME.Pedagogico.Gestao.Models.Academic;
 using SME.Pedagogico.Gestao.WebApp.Models.RelatorioSondagem;
+using SME.Pedagogico.Gestao.Models.Autoral;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
@@ -25,6 +26,14 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         {
 
             _config = config;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ObterDadosTeste([FromBody]RelatorioPortuguesFiltroDto filtro)
+        {
+            var relatorio = new RelatorioPortugues();
+
+            return Ok(await relatorio.ObterRelatorioPorTurmasPortugues(filtro));
         }
 
         #region ==================== METHODS ====================
@@ -60,12 +69,32 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
             if (parameters.Discipline == "Língua Portuguesa")
             {
+                Periodo periodo = null;
+
+                if (Convert.ToInt32(parameters.CodigoCurso) >= 4)
+                {
+                    var businessPoll = new Data.Business.PollPortuguese(_config);
+
+                    periodo = await businessPoll.ObterPeriodoRelatorioPorDescricao(parameters.Term);
+                }
+
                 if (parameters.ClassroomReport)
                 {
-                    PollReportPortugueseStudentResult result = new PollReportPortugueseStudentResult();
-                    result = await BuscarDadosPorTurmaAsync(parameters);
+                    if (Convert.ToInt32(parameters.CodigoCurso) < 4)
+                    {
 
-                    return (Ok(result));
+                        PollReportPortugueseStudentResult result = new PollReportPortugueseStudentResult();
+                        result = await BuscarDadosPorTurmaAsync(parameters);
+
+                        return (Ok(result));
+                    }
+
+                    if (parameters.GrupoId != null && parameters.GrupoId.Equals("e27b99a3-789d-43fb-a962-7df8793622b1"))
+                    {
+                        return NoContent();
+                    }
+
+                    return Ok(await ObterRelatorioProducaoTextoLeituraVozAlta(parameters, periodo));
                 }
                 else
                 {
@@ -78,8 +107,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
                         return (Ok(result));
                     }
-
-                    var periodo = await businessPoll.ObterPeriodoRelatorioPorDescricao(parameters.Term);
 
                     if (periodo == null)
                         return StatusCode(500, $"Não foi possivel encontrar o périodo com descrição {parameters.Term}");
@@ -140,6 +167,23 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return (NotFound());
         }
 
+        private static async Task<RelatorioPortuguesTurmaDto> ObterRelatorioProducaoTextoLeituraVozAlta(ParametersModel parameters, Periodo periodo)
+        {
+            var relatorio = new RelatorioPortugues();
+
+            var retorno = await relatorio.ObterRelatorioPorTurmasPortugues(new RelatorioPortuguesFiltroDto
+            {
+                AnoEscolar = Convert.ToInt32(parameters.CodigoCurso),
+                AnoLetivo = Convert.ToInt32(parameters.SchoolYear),
+                CodigoDre = parameters.CodigoDRE,
+                CodigoTurma = parameters.CodigoTurmaEol,
+                CodigoUe = parameters.CodigoEscola,
+                ComponenteCurricularId = "c65b2c0a-7a58-4d40-b474-23f0982f14b1",
+                GrupoId = parameters.GrupoId,
+                PeriodoId = periodo.Id
+            });
+            return retorno;
+        }
 
         private PollReportMathStudentResult BuscaDadosMathTurmaAsync(string proficiency, string term, string codigoDre, string codigoEscola, string codigoTurma, string codigoCurso)
         {
@@ -175,7 +219,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
             var relatorioPortugues = new RelatorioPortugues();
 
-            return await relatorioPortugues.ObterRelatorioPortugues(new RelatorioPortuguesFiltroDto
+            return await relatorioPortugues.ObterRelatorioConsolidadoPortugues(new RelatorioPortuguesFiltroDto
             {
                 AnoEscolar = Convert.ToInt32(parametersModel.CodigoCurso),
                 AnoLetivo = Convert.ToInt32(parametersModel.SchoolYear),
