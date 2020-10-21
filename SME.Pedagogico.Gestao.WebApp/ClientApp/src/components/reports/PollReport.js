@@ -29,6 +29,7 @@ class PollReport extends Component {
     this.state = {
       showMessage: false,
       showPollFilter: false,
+      messageType: "",
       ehDesabilitado: true,
     };
 
@@ -38,13 +39,24 @@ class PollReport extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.pollReport.showReport === true) {
+      const { 
+        linkPdf,
+        selectedFilter, 
+        showMessageSuccess, 
+        showMessageError,
+        messageError
+      } = this.props.pollReport;
+      const {
+        showMessageSuccessPollReport, 
+        showMessageErrorPollReport
+      } =  this.props.pollReportMethods
       const {
         discipline: componenteCurricular,
         proficiency: proficiencia,
         term: semestre,
-      } = this.props.pollReport.selectedFilter;
+      } = selectedFilter;
       
-      const { yearClassroom: ano } = this.props.poll.selectedFilter;
+      const { yearClassroom: ano } = selectedFilter;
       const temProficiencia = ano < "7" ? proficiencia : "0";
       const valor = !!componenteCurricular && !!temProficiencia && !!semestre;
       
@@ -53,29 +65,44 @@ class PollReport extends Component {
           ehDesabilitado: !valor,
         });
       }
+
+      if(showMessageSuccess && !this.state.showMessage){
+        this.setState({showMessage: true, messageType: "success"});
+        showMessageSuccessPollReport(false);
+      }
+
+      if(showMessageError && !this.state.showMessage){
+        this.setState({showMessage: true, messageType: "error"});
+        showMessageErrorPollReport(false, messageError);
+      }
     }
   }
 
   imprimir = () => {
-    this.setState({ showMessage: true });
-
-    const discipline = Object.values(this.props.pollReport.filters).filter(
-      (item) => item.name === this.props.pollReport.selectedFilter.discipline
-    );
-
-    const proficiencia = discipline[0].proficiencies.filter(
-      (item) => item.label === this.props.pollReport.selectedFilter.proficiency
-    );
-
-    const { username: usuarioRf } = this.props.user;
+    const {pollReportMethods, pollReport, user} = this.props;
+    const {printingPollReport, printPollReport} = pollReportMethods; 
+    const {selectedFilter, filters} = pollReport;
+    const { username: usuarioRf } = user;
     const {
+      discipline, 
+      proficiency,
       SchoolYear,
       codigoDRE,
       CodigoEscola,
       CodigoTurmaEol,
       CodigoCurso,
       term,
-    } = this.props.pollReport.selectedFilter;
+    } = selectedFilter;
+
+    printingPollReport(true)
+
+    const componenteCurricular = Object.values(filters).filter(
+      (item) => item.name === discipline
+    );
+
+    const proficiencia = componenteCurricular[0].proficiencies.filter(
+      (item) => item.label === proficiency
+    );  
     
     const semestre = term === "1° Semestre" ? 1 : 2;
     const proficienciaId = proficiencia.length ? proficiencia[0].id : 0;
@@ -86,14 +113,18 @@ class PollReport extends Component {
       ueCodigo: CodigoEscola,
       ano: CodigoCurso,
       turmaCodigo: parseInt(CodigoTurmaEol || 0),
-      componenteCurricularId: discipline[0].id,
+      componenteCurricularId: componenteCurricular[0].id,
       proficienciaId,
       semestre,
       usuarioRf,
     };
 
-    this.props.pollReportMethods.printPollReport(payload);
+    printPollReport(payload);
   };
+
+  acaoFeedBack = () => {
+    this.setState({ showMessage: false });
+  }
 
   printClick() {
     var userName = this.props.user.username;
@@ -846,6 +877,7 @@ class PollReport extends Component {
     var reportData = null;
     var chartData = null;
     var mathType = null;
+    const { linkPdf } = this.props.pollReport;
 
     if (this.props.pollReport.showReport === true) {
       reportData = this.props.pollReport.data;
@@ -944,15 +976,18 @@ class PollReport extends Component {
           break;
       }
     }
-
+    
     return (
-      <div>
+      <>
         <Card className="mb-3">
           <PollFilter reports={true} resultClick={this.openPollFilter} />
         </Card>
+       
         <MensagemConfirmacaoImprimir
           exibir={this.state.showMessage}
-          acaoFeedBack={() => this.setState({ showMessage: false })}
+          messageType={this.state.messageType}
+          acaoFeedBack={() => this.acaoFeedBack()}
+          linkPdf={linkPdf}
         />
 
         {this.state.showPollFilter && (
@@ -1109,7 +1144,7 @@ class PollReport extends Component {
             </div>
           </Card>
         )}
-      </div>
+      </>
     );
   }
 }
