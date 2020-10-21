@@ -92,6 +92,7 @@ export const reducer = (state, action) => {
         return ({
             ...state,
             data: null,
+            chartData: null,
         });
         case types.SET_POLL_REPORT_DATA: 
             return ({

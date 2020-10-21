@@ -7,6 +7,12 @@ const GraficoMatematicaPorTurma = (props) => {
 
   useEffect(() => construirGrafico(), [dados]);
 
+  const posicaoToolTip = (posicaoX, texto) => {
+    return texto.length > 50
+      ? posicaoX - 100
+      : posicaoX - 100;
+  };
+
   const construirGrafico = () => {
     const myChart = echarts.init(document.getElementById(`grafico-${index}`));
 
@@ -19,7 +25,11 @@ const GraficoMatematicaPorTurma = (props) => {
     });
 
     myChart.setOption({
-      tooltip: {},
+      tooltip: {
+        position: function (posicao, conteudo) {
+          return [posicaoToolTip(posicao[0], conteudo.name), 300];
+        },
+      },
       xAxis: {
         type: "category",
         data: dadosLabel,
