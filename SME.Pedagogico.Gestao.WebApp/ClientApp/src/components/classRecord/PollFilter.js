@@ -287,7 +287,7 @@ class PollFilter extends Component {
 
   checkDisabledButton() {
     if (this.props.reports) {
-      if (this.state.classroom === null || !this.state.classroom || this.state.classroom !== "")
+      if (this.state.classroom === null || !this.state.classroom || this.state.classroom === "")
         return false;
 
       return this.props.user.activeRole.roleName === ROLES_ENUM.PROFESSOR ? this.props.filters.listDisciplines.length > 0 : true;
