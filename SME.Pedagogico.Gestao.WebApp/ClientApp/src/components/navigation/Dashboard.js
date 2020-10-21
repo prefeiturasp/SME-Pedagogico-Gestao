@@ -69,6 +69,7 @@ class Dashboard extends Component {
 
     botaoSim = () => {
         this.setState({ showMessage: false }); 
+        this.props.pollReport.abortController.abort();
     }
 
     render() {

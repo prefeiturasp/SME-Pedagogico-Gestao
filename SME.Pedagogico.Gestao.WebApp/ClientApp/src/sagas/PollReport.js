@@ -1,4 +1,4 @@
-﻿import { takeLatest, call, put, all, select } from "redux-saga/effects";
+﻿import { takeLatest, call, put, all, select, cancelled } from "redux-saga/effects";
 import * as PollReport from "../store/PollReport";
 
 export default function* () {
@@ -112,18 +112,25 @@ function* resetPollReport () {
 
 function* PrintPollReportSaga({ parameters }) {
   try {
-    yield call(resetPollReport)
-    
+    yield call(resetPollReport);
+    const abortController = new AbortController();
+
+    yield put({
+      type: PollReport.types.ABORT_CONTROLLER_POLL_REPORT_REQUEST,
+      abortController,
+    });
+        
     const data = yield call(fetchWithTimeout, "api/v1/relatorios/sync", {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(parameters),
+      signal: abortController.signal
     }, 300000);
-    
+   
     const { pollReport } = yield select();
-    const { cancelPollReportRequest } = pollReport; 
+    const { cancelPollReportRequest  } = pollReport; 
     let mensagem ="Erro ao gerar relatório. Tente novamente mais tarde."  
-       
+      
     if(data.status === 200){
       const linkPdf = yield data.text();
      
@@ -153,6 +160,10 @@ function* PrintPollReportSaga({ parameters }) {
       yield call(setError, mensagem);      
     }
 
+    if(data.timeout){
+      abortController.abort();
+    }
+
   } catch (error) {   
     const { pollReport } = yield select();
     const { cancelPollReportRequest } = pollReport;   
@@ -166,11 +177,6 @@ function* PrintPollReportSaga({ parameters }) {
     yield put({
       type: PollReport.types.PRINTING_POLL_REPORT,
       printing: false,
-    });
-
-    yield put({
-      type: PollReport.types.CANCEL_POLL_REPORT_REQUEST,
-      cancelPollReportRequest: false,
     });
   }
 }
