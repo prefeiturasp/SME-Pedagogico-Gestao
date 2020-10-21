@@ -42,13 +42,16 @@ namespace SME.Pedagogico.Gestao.Aplicacao
 
             if (filtros.ComponenteCurricularId == ComponenteCurricularEnum.Matematica)
             {
-                if (filtros.TurmaCodigo > 0 && filtros.ProficienciaId == ProficienciaEnum.CampoAditivo || filtros.ProficienciaId == ProficienciaEnum.CampoMultiplicativo || filtros.ProficienciaId == ProficienciaEnum.Numeros)
+                if (filtros.TurmaCodigo > 0 && (filtros.ProficienciaId == ProficienciaEnum.CampoAditivo || filtros.ProficienciaId == ProficienciaEnum.CampoMultiplicativo || filtros.ProficienciaId == ProficienciaEnum.Numeros))
                 {
                     tipoRelatorio = TipoRelatorio.RelatorioMatetimaticaPorTurma;
                 }
                 else if (filtros.TurmaCodigo <= 0)
                 {
-                    tipoRelatorio = TipoRelatorio.RelatorioMatetimaticaConsolidado;
+                    if (filtros.ProficienciaId == ProficienciaEnum.CampoAditivo || filtros.ProficienciaId == ProficienciaEnum.CampoMultiplicativo)
+                        tipoRelatorio = TipoRelatorio.RelatorioMatetimaticaConsolidadoAditMult;
+                    else
+                        tipoRelatorio = TipoRelatorio.RelatorioMatetimaticaConsolidado;
                 }
             }
 
