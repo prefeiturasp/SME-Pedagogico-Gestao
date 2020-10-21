@@ -13,7 +13,7 @@ namespace SME.Pedagogico.Gestao.Infra
         [Display(Name = "relatorios/sondagem/matematica-consolidado", ShortName = "MatematicaConsolidado", Description = "Matematica Consolidado")]
         RelatorioMatetimaticaConsolidado = 17,
 
-        [Display(Name = "relatorios/sondagem/matematica-consolidado-aditivo-multiplicativo", ShortName = "MatematicaConsolidado", Description = "Matematica Consolidado")]
+        [Display(Name = "relatorios/sondagem/matematica-consolidado-aditivo-multiplicativo", ShortName = "MatematicaConsolidadoAditMult", Description = "Matematica Consolidado Aditivo Multiplicativo")]
         RelatorioMatetimaticaConsolidadoAditMult = 18
 
     }
