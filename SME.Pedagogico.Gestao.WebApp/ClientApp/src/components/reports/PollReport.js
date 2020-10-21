@@ -17,6 +17,8 @@ import MensagemConfirmacaoImprimir from "./MensagemConfirmacaoImprimir";
 import RelatorioMatematicaConsolidado from "./RelatorioMatematicaConsolidado";
 import { GrupoDto } from "../dtos/grupoDto";
 import RelatorioConsolidadoCapacidadeLeitura from "./RelatorioConsolidadeCapacidadeLeitura/RelatorioConsolidadoCapacidadeLeitura";
+import RelatorioMatematicaPorTurma from "./RelatorioMatematicaPorTurma/RelatorioMatematicaPorTurma";
+import GraficoMatematicaPorTurma from "./GraficoMatematicaPorTurma/GraficoMatematicaPorTurma";
 
 class PollReport extends Component {
   constructor(props) {
@@ -1037,9 +1039,15 @@ class PollReport extends Component {
                     )
                   ) : (
                     Number(this.props.pollReport.selectedFilter.CodigoCurso) >= 7?
+                    (this.classroomReport?
+                      <RelatorioMatematicaPorTurma
+                          alunos={reportData.alunos}
+                          perguntas={reportData.perguntas}
+                        />
+                    :
                     reportData && reportData.map(dados => {
                       return <RelatorioMatematicaConsolidado dados={dados}/>
-                    })
+                    }))
                     :
                     <PollReportMathGrid
                       className="mt-3"
@@ -1054,6 +1062,23 @@ class PollReport extends Component {
                       this.props.selectedFilter && chartData && chartData.length && <PollReportPortugueseChart data={chartData} />
                     )}
                   {chartData && chartData.length ?
+                  this.props.pollReport.selectedFilter.discipline === "Matemática" &&
+                  Number(this.props.pollReport.selectedFilter.CodigoCurso) >= 7 ? (
+                    this.classroomReport ? (
+                      <div className="row">
+                      {
+                        chartData.map((dados, index) => {
+                          return (
+                            <GraficoMatematicaPorTurma
+                              dados={dados}
+                              index={index}
+                            />
+                          );
+                        })
+                      }
+                      </div>
+                    ) : null
+                   ) : 
                   <div className="mt-4">
                     {//Consilidado de Numeros
                       this.classroomReport === false &&

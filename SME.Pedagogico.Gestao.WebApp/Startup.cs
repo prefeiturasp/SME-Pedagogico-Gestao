@@ -53,7 +53,7 @@ namespace SME.Pedagogico.Gestao.WebApp
                 configuration.RootPath = "ClientApp/build";
             });
 
-            // Configuração de injeção de dependência do SMEContext (Postgres - Npgsql)
+            // Configuraï¿½ï¿½o de injeï¿½ï¿½o de dependï¿½ncia do SMEContext (Postgres - Npgsql)
             services.AddDbContext<SMEManagementContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -78,7 +78,7 @@ namespace SME.Pedagogico.Gestao.WebApp
             {
                 options.AddPolicy("CorsPolicy",
                     builder => builder
-                        .AllowAnyOrigin() // Ulilizar a função abaixo e comentar essa para definir permissão de acesso de determinadas origens, caso contrário será aceito qualquer origem da requisição
+                        .AllowAnyOrigin() // Ulilizar a funï¿½ï¿½o abaixo e comentar essa para definir permissï¿½o de acesso de determinadas origens, caso contrï¿½rio serï¿½ aceito qualquer origem da requisiï¿½ï¿½o
                                           //.WithOrigins("https://mydomain.com", "http://outroendereco.com.br")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
@@ -93,7 +93,7 @@ namespace SME.Pedagogico.Gestao.WebApp
                 {
                     Title = "SME.Pedagogico.Gestao.WebApp",
                     Version = "v1.0.0",
-                    Description = "Documentação das APIs do SME.Pedagogico.Gestao.WebApp (.NET Core v2.2)",
+                    Description = "Documentaï¿½ï¿½o das APIs do SME.Pedagogico.Gestao.WebApp (.NET Core v2.2)",
                 });
 
                 string xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
