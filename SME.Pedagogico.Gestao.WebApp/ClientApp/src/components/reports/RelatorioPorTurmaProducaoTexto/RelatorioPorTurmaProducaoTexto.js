@@ -1,7 +1,7 @@
 import React from "react";
 
 const RelatorioPorTurmaProducaoTexto = (props) => {
-  const { ordens, perguntas, alunos } = props;
+  const { perguntas, alunos } = props;
 
   const getCabecalhoPerguntas = () => {
     return perguntas.map((pergunta) => {
