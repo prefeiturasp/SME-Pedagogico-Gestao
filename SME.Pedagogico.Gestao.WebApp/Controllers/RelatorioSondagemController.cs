@@ -41,6 +41,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         public async Task<ActionResult<string>> ObterDados([FromBody]ParametersModel parameters)
         {
 
+
             if (int.Parse(parameters.CodigoCurso) >= 7 && parameters.Discipline == "Matemática")
             {
                 var filtro = new filtrosRelatorioDTO()
@@ -54,8 +55,15 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     DescricaoPeriodo = parameters.Term,
                 };
                 var obj = new RelatorioMatematicaAutoral();
-                var retorno = await obj.ObterRelatorioMatematicaAutoral(filtro);
-                return (Ok(retorno));
+
+                if (parameters.ClassroomReport)
+                {
+                    var relatorioPorTurma = await obj.ObterRelatorioPorTurma(filtro);
+                    return (Ok(relatorioPorTurma));
+                }
+                var relatorioConsolidado = await obj.ObterRelatorioMatematicaAutoral(filtro);
+
+                return (Ok(relatorioConsolidado));
             }
 
 
@@ -207,6 +215,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
         private async Task<RelatorioAutoralLeituraProducaoDto> BuscarDadosAutoralAsync(ParametersModel parametersModel, string periodoId)
         {
+
+
             var relatorioPortugues = new RelatorioPortugues();
 
             return await relatorioPortugues.ObterRelatorioConsolidadoPortugues(new RelatorioPortuguesFiltroDto

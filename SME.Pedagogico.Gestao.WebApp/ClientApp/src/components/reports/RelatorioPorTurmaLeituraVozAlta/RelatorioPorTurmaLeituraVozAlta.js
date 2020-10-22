@@ -3,36 +3,10 @@ import React from "react";
 const RelatorioPorTurmaLeituraVozAlta = (props) => {
   const { perguntas, alunos } = props;
 
-  const getCabecalhoPerguntas = () => {
-    return perguntas.map((pergunta) => {
-      return (
-        <div className="col sc-gray border-left border-white">
-          <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center font-weight-bold">
-            {pergunta.descricao}
-          </div>
-        </div>
-      );
-    });
-  };
-
   const getDadosAlunos = (aluno) => {
-    return perguntas.map((pergunta) => {
-      const temPerguntaRespondida = aluno.perguntas
-        ? aluno.perguntas.find((a) => a === pergunta.id)
-        : false;
-      return (
-        <div className="col align-items-center justify-content-center d-flex flex-fill font-weight-light border-left">
-          {temPerguntaRespondida ? (
-            <i
-              className="fas fa-check-circle ml-2"
-              style={{
-                color: "#72BC17",
-              }}
-            />
-          ) : null}
-        </div>
-      );
-    });
+    return aluno.perguntas && aluno.perguntas.length
+      ? perguntas.find((p) => p.id === aluno.perguntas[0]).descricao
+      : "";
   };
 
   return (
@@ -43,12 +17,14 @@ const RelatorioPorTurmaLeituraVozAlta = (props) => {
             Código EOL
           </div>
         </div>
-        <div className="col-3 sc-gray border-left border-white">
+        <div className="col-4 sc-gray border-left border-white">
           <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-bold">
             Nome do estudante
           </div>
         </div>
-        {getCabecalhoPerguntas()}
+        <div className="col-7 sc-gray border-left border-white">
+          <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-bold"></div>
+        </div>
       </div>
       {alunos.map((aluno) => {
         return (
@@ -58,12 +34,16 @@ const RelatorioPorTurmaLeituraVozAlta = (props) => {
                 {aluno.codigoAluno}
               </div>
             </div>
-            <div className="col-3">
+            <div className="col-4">
               <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-light">
                 {aluno.nomeAluno}
               </div>
             </div>
-            {getDadosAlunos(aluno)}
+            <div className="col-7">
+              <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center font-weight-light">
+                {getDadosAlunos(aluno)}
+              </div>
+            </div>
           </div>
         );
       })}
