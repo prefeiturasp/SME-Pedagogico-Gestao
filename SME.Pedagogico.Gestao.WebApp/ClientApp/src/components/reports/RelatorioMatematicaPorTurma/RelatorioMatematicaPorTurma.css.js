@@ -1,5 +1,14 @@
 import styled from 'styled-components';
 
-export const CabecalhoMatematicaPorTurma = styled.div``;
+export const CorpoRelatorio = styled.div`
+.overflow-hidden{
+    overflow: hidden
+}
 
-export const ItemMatematicaPorTurma = styled.div``;
+.item-celula{
+    overflow: hidden;
+    display: block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+`;
