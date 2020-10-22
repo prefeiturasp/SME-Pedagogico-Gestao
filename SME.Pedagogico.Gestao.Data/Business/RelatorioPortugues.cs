@@ -177,7 +177,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             perguntas = await contexto.OrdemPergunta
                                 .Include(x => x.Pergunta)
                                 .Where(x => x.GrupoId.Equals(relatorioPortuguesFiltroDto.GrupoId) && x.Excluido == false)
-                                .OrderBy(x => x.SequenciaOrdem)
+                                .OrderBy(x => x.OrdenacaoNaTela)
                                 .Select(x => x.Pergunta)
                                 .ToListAsync();
 
