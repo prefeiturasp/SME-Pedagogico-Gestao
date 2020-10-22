@@ -86,11 +86,24 @@ class PollReport extends Component {
       proficiency,
       SchoolYear,
       codigoDRE,
-      CodigoEscola,
+      CodigoEscola: ueCodigo,
       CodigoTurmaEol,
-      CodigoCurso,
+      CodigoCurso: ano,
       term,
+      grupoId: grupoID
     } = selectedFilter;
+
+    const BIMESTRES = {
+      ["1° Bimestre"]: 1,
+      ["2° Bimestre"]: 2,
+      ["3° Bimestre"]: 3,
+      ["4° Bimestre"]: 4,
+    };
+
+    const SEMESTRES = {
+      ["1° Semestre"]: 1,
+      ["2° Semestre"]: 2,
+    };
 
     printingPollReport(true)
 
@@ -101,23 +114,30 @@ class PollReport extends Component {
     const proficiencia = componenteCurricular[0].proficiencies.filter(
       (item) => item.label === proficiency
     );  
-    
-    const semestre = term === "1° Semestre" ? 1 : 2;
-    const proficienciaId = proficiencia.length ? proficiencia[0].id : 0;
 
-    const payload = {
-      anoLetivo: parseInt(SchoolYear),
-      dreCodigo: parseInt(codigoDRE || 0),
-      ueCodigo: CodigoEscola,
-      ano: CodigoCurso,
-      turmaCodigo: parseInt(CodigoTurmaEol || 0),
-      componenteCurricularId: componenteCurricular[0].id,
+    const ehMatematica = discipline === "Matemática"; 
+    const semestre = ehMatematica ? SEMESTRES[term] : 0;
+    const bimestre = ehMatematica ? 0 : BIMESTRES[term];
+    const proficienciaId = proficiencia.length ? proficiencia[0].id : 0;
+    const anoLetivo = parseInt(SchoolYear);
+    const dreCodigo = parseInt(codigoDRE) || 0; 
+    const turmaCodigo = parseInt(CodigoTurmaEol) || 0;
+    const componenteCurricularId = componenteCurricular[0].id;
+    const grupoId = grupoID || "";
+
+    printPollReport({
+      anoLetivo,
+      dreCodigo,
+      ueCodigo,
+      ano,
+      turmaCodigo,
+      componenteCurricularId,
       proficienciaId,
       semestre,
+      bimestre,
+      grupoId,
       usuarioRf,
-    };
-
-    printPollReport(payload);
+    });
   };
 
   acaoFeedBack = () => {
