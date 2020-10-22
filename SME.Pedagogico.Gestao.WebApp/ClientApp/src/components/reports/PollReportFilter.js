@@ -180,10 +180,9 @@ class PollReportFilter extends Component {
             this.state.selectedFilter.discipline === "Matemática"
     }
 
-    ehPortuguesAcimaDoQuartoAnoConsolidado() {
-        return !this.props.poll.selectedFilter.classroomCodeEol &&
-            Number(this.props.poll.selectedFilter.yearClassroom) >= 4 &&
-            this.state.selectedFilter.discipline === "Língua Portuguesa"
+    ehPortuguesAcimaDoQuartoAnoConsolidado(){
+       return Number(this.props.poll.selectedFilter.yearClassroom) >=4 &&
+       this.state.selectedFilter.discipline === "Língua Portuguesa"
     }
 
     checkButton() {

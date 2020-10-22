@@ -5,10 +5,8 @@ using System.Text;
 
 namespace SME.Pedagogico.Gestao.Data.DTO
 {
-    public class PerguntaDto
-    {
-        public string Id { get; set; }
-        public string Descricao { get; set; }
+    public class PerguntaDto : PerguntaSimplificadaDto
+    {       
         public int Ordenacao { get; set; }
         public int? SequenciaOrdem { get; set; }
         public IEnumerable<RespostaDto> Respostas { get; set; }
