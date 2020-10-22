@@ -17,7 +17,7 @@ namespace SME.Pedagogico.Gestao.Infra
         RelatorioPortuguesPorTurma = 18,
 
         [Display(Name = "v1/sondagem/portugues-consolidado", ShortName = "PortuguesConsolidado", Description = "Português Consolidado")]
-        RelatorioPortuguesConsolidado = 18
+        RelatorioPortuguesConsolidado = 19
 
     }
 }
