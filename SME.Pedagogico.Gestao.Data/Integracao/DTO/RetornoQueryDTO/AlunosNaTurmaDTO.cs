@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Internal;
+using SME.Pedagogico.Gestao.Data.Enums;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO
@@ -8,12 +11,26 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO
     {
         public int CodigoAluno { get; set; }
         public string NomeAluno { get; set; }
+        public string NomeAlunoRelatorio
+        {
+            get
+            {
+                return AlunoInativo ? string.Format("{0} ({1} em {2})", NomeAluno, SituacaoMatricula, DataSituacao.ToString("dd/MM/yyyy")) : NomeAluno;
+            }
+        }
         public string DataNascimento { get; set; }
         public string NomeSocialAluno { get; set; }
         public int CodigoSituacaoMatricula { get; set; }
         public string SituacaoMatricula { get; set; }
-        public string DataSituacao { get; set; }
+        public DateTime DataSituacao { get; set; }
         public int NumeroAlunoChamada { get; set; }
         public bool PossuiDeficiencia { get; set; }
+        public bool AlunoInativo
+        {
+            get
+            {
+                return Enum.GetValues(typeof(AlunoInativoEnum)).OfType<AlunoInativoEnum>().Any(x => Convert.ToInt32(x) == CodigoSituacaoMatricula);
+            }
+        }
     }
 }
