@@ -1,4 +1,5 @@
 import React from "react";
+import { CorpoRelatorio } from "./RelatorioMatematicaPorTurma.css";
 
 const RelatorioMatematicaPorTurma = (props) => {
   const { alunos, perguntas } = props;
@@ -45,9 +46,11 @@ const RelatorioMatematicaPorTurma = (props) => {
         {perguntas.map((pergunta) => {
           const resposta = perguntasAluno.find((p) => p.id === pergunta.id);
           return (
-            <div className="col">
+            <div className="col overflow-hidden">
               <div className="sc-text-size-00 d-flex flex-fill h-100 align-items-center">
-                {resposta.valor || ""}
+                <span className="item-celula" data-toggle="tooltip" data-placement="bottom" title={resposta.valor || ""}>
+                  {resposta.valor || ""}
+                </span>
               </div>
             </div>
           );
@@ -59,12 +62,12 @@ const RelatorioMatematicaPorTurma = (props) => {
   return (
     <>
       {alunos && alunos.length ? (
-        <div>
+        <CorpoRelatorio>
           {constuirHeader()}
           {alunos.map((aluno) =>
             construirItens(aluno.codigoAluno, aluno.nomeAluno, aluno.perguntas)
           )}
-        </div>
+        </CorpoRelatorio>
       ) : null}
     </>
   );

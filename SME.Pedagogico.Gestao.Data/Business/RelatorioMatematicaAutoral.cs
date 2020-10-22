@@ -144,7 +144,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             var relatorio = new RelatorioMatematicaPorTurmaDTO();
             await RetornaPerguntasDoRelatorio(filtro, relatorio);
 
-            relatorio.Alunos = new List<AlunoPorTurmaRelatorioDTO>();
+           var ListaAlunos = new List<AlunoPorTurmaRelatorioDTO>();
             alunosEol.ForEach(alunoRetorno =>
             {
                 var aluno = new AlunoPorTurmaRelatorioDTO();
@@ -167,9 +167,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         pergunta.Valor = respostaAluno.RespostaDescricao;
                     aluno.Perguntas.Add(pergunta);
                 }
-                relatorio.Alunos.Add(aluno);
+                ListaAlunos.Add(aluno);
             });
-
+             relatorio.Alunos = ListaAlunos.OrderBy(aluno => aluno.NomeAluno);
             relatorio.Graficos = new List<GraficosRelatorioDTO>();
 
 

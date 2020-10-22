@@ -7,7 +7,7 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Matematica.RelatorioPorTurma
    public class RelatorioMatematicaPorTurmaDTO
     {
         public List<PerguntasRelatorioDTO> Perguntas { get; set; }
-        public List<AlunoPorTurmaRelatorioDTO> Alunos { get; set; }
+        public IEnumerable<AlunoPorTurmaRelatorioDTO> Alunos { get; set; }
         public List<GraficosRelatorioDTO> Graficos { get; set; }
     }
 }
