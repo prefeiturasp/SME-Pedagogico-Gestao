@@ -2,6 +2,7 @@
 {
     public enum ProficienciaEnum
     {
+        Autoral = 0,
         CampoAditivo = 1,
         CampoMultiplicativo = 2,
         Numeros = 3,

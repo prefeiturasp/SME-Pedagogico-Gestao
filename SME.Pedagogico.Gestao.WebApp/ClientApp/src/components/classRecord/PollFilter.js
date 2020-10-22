@@ -241,7 +241,7 @@ class PollFilter extends Component {
 
     var disciplinesFilter = {
       codigoRf: this.props.user.username,
-      codigoTurmaEol: codeClassRoom
+      codigoTurmaEol: codeClassRoom,
     };
 
     this.props.filterMethods.getDisciplinesByClassroom(disciplinesFilter);
@@ -277,7 +277,7 @@ class PollFilter extends Component {
       classroomCodeEol: this.props.filters.activeClassRoomCode,
       schoolYear: this.props.filters.setSchoolYear,
       yearClassroom: this.state.classroom,
-      rfCode: this.props.user.username
+      rfCode: this.props.user.username,
     };
 
     this.props.poll2.setSelectedFilter(selectedFilter);
@@ -287,18 +287,10 @@ class PollFilter extends Component {
 
   checkDisabledButton() {
     if (this.props.reports) {
-      //Independente do perfil o relatorio so pode ser tirado por Ano
-      if (this.state.classroom !== null && this.state.classroom !== "" && this.props.filters.listDisciplines.length > 0) {
-        return true;
-      } else {
+      if (this.state.classroom === null || !this.state.classroom || this.state.classroom === "")
         return false;
-      }
 
-      //if (this.props.filters.activeDreCode !== null &&
-      //    this.props.filters.activeSchollsCode !== null || this.props.filters.activeClassRoomCode !== null)
-      //    return (true);
-      //else
-      //    return (false);
+      return this.props.user.activeRole.roleName === ROLES_ENUM.PROFESSOR ? this.props.filters.listDisciplines.length > 0 : true;
     } else {
       if (this.props.user.activeRole.roleName !== ROLES_ENUM.PROFESSOR) {
         if (
