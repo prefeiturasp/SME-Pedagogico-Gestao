@@ -1,21 +1,22 @@
 import React from "react";
 import MensagemInformacao from "../messaging/MensagemInformacao";
+import { useSelector } from "react-redux";
 
-function MensagemConfirmacaoImprimir({ exibir, acaoFeedBack }) {
+function MensagemConfirmacaoImprimir({ exibir, acaoFeedBack, linkPdf, messageType }) {
+  const messageError = useSelector((store) => store.pollReport.messageError);
+
   const titulo = "Geração de relatório";
-  const mesagemPrincipal =
-    "Solicitação de geração do relatório gerada com sucesso. Em breve você receberá uma notificação no ";
-  const palavraEmNegrito = "SGP";
-  const mensagemFinal = " com o resultado.";
+  const mesagemPrincipal = messageType === "success" ?
+    "Relatório gerado com sucesso. Clique no botão Download para baixar o PDF." 
+    : messageError;
 
   return (
     <MensagemInformacao
       acaoFeedBack={acaoFeedBack}
       exibir={exibir}
-      mensagemFinal={mensagemFinal}
       mesagemPrincipal={mesagemPrincipal}
-      palavraEmNegrito={palavraEmNegrito}
       titulo={titulo}
+      linkPdf={linkPdf}
     />
   );
 }

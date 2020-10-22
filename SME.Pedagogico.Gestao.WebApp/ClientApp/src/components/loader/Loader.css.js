@@ -10,7 +10,7 @@ export const LoaderWrapper = styled.div`
 `;
 
 export const DivLoading = styled.div`
-  top: 20%;
+  top: ${({ isPrinting }) => isPrinting ? "35%" : "20%"};
   left: 50%;
   position: absolute;
   z-index: 30;
@@ -25,3 +25,16 @@ export const SpinerLoading = styled.span`
  margin-left: 25px;
 `;
 
+export const ButtonClose = styled.button `
+  position: absolute;
+  right: 0;
+  font-size: 24px;
+
+  &:focus {
+    box-shadow: none;
+  }
+ 
+  &:hover {
+    opacity: 0.6;
+  }
+`;

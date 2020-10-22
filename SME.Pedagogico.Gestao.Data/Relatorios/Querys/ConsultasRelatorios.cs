@@ -195,5 +195,37 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
 	         						r.""Descricao"" ");
                   return query.ToString();
         }
+
+        public static string QueryRelatorioPorTurmaMatematica()
+        {
+          return  @"select
+                        s.""AnoLetivo"",
+           	            s.""AnoTurma"",
+                        sa.""CodigoAluno"",
+                       	sa.""NomeAluno"",
+                       	p.""Id"" as""PerguntaId"",
+                       	p.""Descricao"" as ""PerguntaDescricao"",
+                       	r.""Id"" as ""RespostaId"",
+                       	r.""Descricao"" as ""RespostaDescricao""
+                        from
+                       ""SondagemAlunoRespostas"" sar
+                       inner join ""SondagemAluno"" sa on                     
+                            sa.""Id"" = ""SondagemAlunoId""
+                       inner join ""Sondagem"" s on
+                            s.""Id"" = sa.""SondagemId""
+                        inner join ""Pergunta"" p on
+                            p.""Id"" = sar.""PerguntaId""
+                        inner join ""Resposta"" r on
+                            r.""Id"" = sar.""RespostaId""
+                        inner join ""Periodo"" per on
+                            per.""Id"" = s.""PeriodoId""
+                        inner join ""ComponenteCurricular"" c on
+                            c.""Id"" = s.""ComponenteCurricularId""
+                        where s.""CodigoTurma"" = @CodigoTurmaEol
+                          and s.""AnoLetivo"" = @AnoLetivo
+                          and s.""ComponenteCurricularId"" = @ComponenteCurricularId
+                          and s.""PeriodoId"" = @PeriodoId";
+        }
+
     }
 }
