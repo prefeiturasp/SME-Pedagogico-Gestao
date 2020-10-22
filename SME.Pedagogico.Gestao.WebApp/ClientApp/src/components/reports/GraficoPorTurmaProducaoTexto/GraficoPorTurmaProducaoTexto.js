@@ -4,7 +4,7 @@ import echarts from 'echarts';
 const GraficoPorTurmaProducaoTexto = (props) => {
   const { dados } = props;
 
-  useEffect(() => construirGrafico(), []);
+  useEffect(() => construirGrafico(), [dados]);
 
   const construirGrafico = () => {
     const myChart = echarts.init(
