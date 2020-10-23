@@ -4,7 +4,7 @@ import echarts from "echarts";
 const GraficoPerguntaCapacidadeLeitura = (props) => {
   const { dados, index, grupo } = props;
 
-  useEffect(() => construirGrafico(), []);
+  useEffect(() => construirGrafico(), [dados]);
 
   const construirGrafico = () => {
     const myChart = echarts.init(
@@ -14,9 +14,9 @@ const GraficoPerguntaCapacidadeLeitura = (props) => {
     const dadosLabel = [];
     const dadosValores = [];
 
-    dados.respostas.forEach((item) => {
+    dados.barras.forEach((item) => {
       dadosLabel.push(item.label);
-      dadosValores.push(item.valor);
+      dadosValores.push(item.value);
     });
 
     myChart.setOption({

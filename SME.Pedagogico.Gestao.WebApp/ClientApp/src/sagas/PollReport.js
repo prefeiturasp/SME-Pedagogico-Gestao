@@ -21,7 +21,8 @@ function* GetPollReportSaga({ parameters }) {
                 pollReportResponse = {
                   data: {
                     alunos: data.alunos, 
-                    perguntas: data.perguntas
+                    perguntas: data.perguntas,
+                    ordens: data.ordens,
                   },
                   chartData: data.graficos
                 }
