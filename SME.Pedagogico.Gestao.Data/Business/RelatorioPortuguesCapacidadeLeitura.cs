@@ -15,6 +15,14 @@ using SME.Pedagogico.Gestao.Data.DTO.Portugues.Relatorio.CapacidadeLeitura;
 using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.Relatorios.Querys;
 using SME.Pedagogico.Gestao.Data.Relatorios;
+using SME.Pedagogico.Gestao.Data.DTO.RelatorioPorTurma;
+using SME.Pedagogico.Gestao.Data.Contexts;
+using Microsoft.EntityFrameworkCore;
+using SME.Pedagogico.Gestao.Data.DTO.Relatorio;
+using System.Collections.Immutable;
+using SME.Pedagogico.Gestao.Data.DTO.Matematica;
+using SME.Pedagogico.Gestao.Data.DTO.Portugues.Graficos.Portugues;
+using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 
 public class RelatorioPortuguesCapacidadeLeitura
 {
@@ -26,7 +34,147 @@ public class RelatorioPortuguesCapacidadeLeitura
 
     }
 
-    
+    public async Task<RelatorioCapacidadeLeituraPorTurma> ObterRelatorioCapacidadeLeituraPorTurma(RelatorioPortuguesFiltroDto filtro)
+    {
+      
+            var filtrosRelatorio = CriaMapFiltroRelatorio(filtro);
+            var periodos = await ConsultaTotalDeAlunos.BuscaDatasPeriodoFixoAnual(filtrosRelatorio);
+
+            if (periodos.Count() == 0)
+                throw new Exception("Periodo fixo anual nao encontrado");
+            var alunosEol = await alunoAPI.ObterAlunosAtivosPorTurmaEPeriodo(filtro.CodigoTurma, periodos.First().DataFim);
+            var queryPorTurma = ConsultasRelatorios.QueryRelatorioPorTurmaPortuguesCapacidadeDeLeitura();
+            var listaAlunoRespostas = await RetornaListaRespostasAlunoPorTurma(filtrosRelatorio, queryPorTurma);
+            var relatorio = await CriaRelatorioAlunos(filtrosRelatorio, alunosEol, listaAlunoRespostas);
+
+            using (var contexto = new SMEManagementContextData())
+            {
+                await CriaGraficosRelatorio(relatorio, contexto);
+            }
+            relatorio.Alunos = relatorio.Alunos.OrderBy(x => x.NomeAluno).ToList();
+
+            return relatorio;
+        
+    }
+
+    private static async Task CriaGraficosRelatorio(RelatorioCapacidadeLeituraPorTurma relatorio, SMEManagementContextData contexto)
+    {
+        var perguntasBanco = await contexto.PerguntaResposta.Include(x => x.Pergunta).Include(y => y.Resposta).Where(pr => relatorio.Perguntas.Any(p => p.Id == pr.Pergunta.Id)).ToListAsync();
+        relatorio.Graficos = new List<GraficoOrdem>();
+        relatorio.Ordens.ForEach(o =>
+        {
+            var graficoOrdem = new GraficoOrdem();
+            graficoOrdem.Ordem = o.Nome;
+            graficoOrdem.perguntasGrafico = new List<Grafico>();
+            relatorio.Perguntas.ForEach(p =>
+            {
+                var grafico = new Grafico();
+                grafico.NomeGrafico = p.Nome;
+
+                var listaRespostas = perguntasBanco.Where(x => x.Pergunta.Id == p.Id);
+
+                listaRespostas.ForEach(r =>
+                {
+                    var barra = new GraficoBarra();
+                    barra.Label = r.Resposta.Descricao;
+                    barra.Value = relatorio.Alunos.Count(x => x.Ordem.Any(ordem => ordem.Id == o.Id && ordem.Perguntas.Any(pr => pr.Id == p.Id && pr.Valor == r.Resposta.Descricao)));
+                    grafico.Barras.Add(barra);
+                });
+                var barraAlunosSemPreenchimento = new GraficoBarra();
+                barraAlunosSemPreenchimento.Label = "Sem Preenchimento";
+                barraAlunosSemPreenchimento.Value = relatorio.Alunos.Count() - grafico.Barras.Sum(x => x.Value);
+                grafico.Barras.Add(barraAlunosSemPreenchimento);
+                graficoOrdem.perguntasGrafico.Add(grafico);
+            });
+            relatorio.Graficos.Add(graficoOrdem);
+        });
+    }
+
+    private async Task<RelatorioCapacidadeLeituraPorTurma> CriaRelatorioAlunos(filtrosRelatorioDTO filtrosRelatorio, IEnumerable<AlunosNaTurmaDTO> alunosEol, IEnumerable<AlunoPerguntaRespostaDTO> listaAlunoRespostas)
+    {
+        var relatorio = new RelatorioCapacidadeLeituraPorTurma();
+        await IncluiOrdensEPerguntasNoRelatorio(filtrosRelatorio, relatorio);
+
+        var alunosAgrupados = listaAlunoRespostas.GroupBy(x => x.CodigoAluno);
+        relatorio.Alunos = new List<AlunoPorTurmaCapacidadeLeituraDTO>();
+        alunosEol.ForEach(alunoRetorno =>
+        {
+            var aluno = new AlunoPorTurmaCapacidadeLeituraDTO();
+            aluno.CodigoAluno = alunoRetorno.CodigoAluno;
+            aluno.NomeAluno = alunoRetorno.NomeAluno;
+            aluno.Ordem = new List<OrdemPorAlunoCapacidadeLeituraDTO>();
+            var alunoRespostas = alunosAgrupados.Where(x => x.Key == aluno.CodigoAluno.ToString()).ToList();
+            relatorio.Ordens.ForEach(o =>
+            {
+                var ordemDto = new OrdemPorAlunoCapacidadeLeituraDTO()
+                {
+                    Id = o.Id,
+                    Nome = o.Nome,
+                    Perguntas = new List<PerguntaRespostaPorAluno>()
+                };
+
+                ordemDto.Perguntas = relatorio.Perguntas.Select(p => new PerguntaRespostaPorAluno
+                {
+                    Id = p.Id,
+                    Valor = RetornaRespostaAluno(listaAlunoRespostas, p.Id, o.Id, alunoRetorno.CodigoAluno.ToString())
+                }).ToList();
+                aluno.Ordem.Add(ordemDto);
+            });
+            relatorio.Alunos.Add(aluno);
+        });
+        return relatorio;
+    }
+
+    private static string RetornaRespostaAluno(IEnumerable<AlunoPerguntaRespostaDTO> listaAlunoRespostas, string PerguntaId, string OrdemId, string CodigoAluno)
+    {
+        var alunoResposta = listaAlunoRespostas.Where(x => x.PerguntaId == PerguntaId && OrdemId == x.OrdemId && x.CodigoAluno == CodigoAluno.ToString()).FirstOrDefault();
+        if (alunoResposta != null)
+            return alunoResposta.RespostaDescricao;
+        return string.Empty;
+    }
+
+    private static async Task<IEnumerable<AlunoPerguntaRespostaDTO>> RetornaListaRespostasAlunoPorTurma(filtrosRelatorioDTO filtro, string QueryAlunosRespostas)
+    {
+        using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
+        {
+            var listaAlunoRespostas = await conexao.QueryAsync<AlunoPerguntaRespostaDTO>(QueryAlunosRespostas.ToString(),
+            new
+            {
+                GrupoId = filtro.GrupoId,
+                CodigoTurmaEol = filtro.CodigoTurmaEol,
+                AnoLetivo = filtro.AnoLetivo,
+                PeriodoId = filtro.PeriodoId,
+                ComponenteCurricularId = filtro.ComponenteCurricularId
+
+            });
+
+            return listaAlunoRespostas;
+
+        }
+    }
+
+
+    private async Task IncluiOrdensEPerguntasNoRelatorio(filtrosRelatorioDTO filtro, RelatorioCapacidadeLeituraPorTurma relatorio)
+    {
+        using (var contexto = new SMEManagementContextData())
+        {
+            var listaOrdemPergunta = await contexto.OrdemPergunta.Include(x => x.Pergunta).Where(y => y.GrupoId == filtro.GrupoId).OrderBy(x => x.OrdenacaoNaTela).ToListAsync();
+
+            relatorio.Perguntas = listaOrdemPergunta.Select(x => new PerguntasRelatorioDTO
+            {
+                Id = x.PerguntaId,
+                Nome = x.Pergunta.Descricao
+            }).ToList();
+
+            var grupos = await contexto.Grupo.Include(x => x.Ordem).Where(x => x.Id == filtro.GrupoId).FirstOrDefaultAsync();
+            relatorio.Ordens = grupos.Ordem.OrderBy(x => x.Ordenacao).Select(x => new OrdemRelatorioPorTurmaDTO
+            {
+                Id = x.Id,
+                Nome = x.Descricao
+            }).ToList();
+        }
+    }
+
 
     public async Task<List<OrdemDTO>> ObterRelatorioCapacidadeLeitura(RelatorioPortuguesFiltroDto filtro)
     {
@@ -34,7 +182,7 @@ public class RelatorioPortuguesCapacidadeLeitura
         var filtrosRelatorio = CriaMapFiltroRelatorio(filtro);
         int totalDeAlunos = await ConsultaTotalDeAlunos.BuscaTotalDeAlunosEOl(filtrosRelatorio);
         var query = ConsultasRelatorios.MontaQueryConsolidadoCapacidadeLeitura(filtro);
-       
+
         using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
         {
             var ListaPerguntaEhRespostasRelatorio = await conexao.QueryAsync<OrdemPerguntaRespostaDTO>(query.ToString(),
@@ -69,7 +217,7 @@ public class RelatorioPortuguesCapacidadeLeitura
                     pergunta.Total = new TotalDTO()
                     {
                         Quantidade = totalDeAlunos,
-                        
+
                     };
 
                     pergunta.Total.Porcentagem = (pergunta.Total.Quantidade > 0 ? (pergunta.Total.Quantidade * 100) / (Double)totalDeAlunos : 0).ToString("0.00");
@@ -118,7 +266,9 @@ public class RelatorioPortuguesCapacidadeLeitura
             CodigoDre = filtro.CodigoDre,
             CodigoUe = filtro.CodigoUe,
             ComponenteCurricularId = filtro.ComponenteCurricularId,
-            PeriodoId = filtro.PeriodoId
+            PeriodoId = filtro.PeriodoId,
+            GrupoId = filtro.GrupoId,
+            CodigoTurmaEol = filtro.CodigoTurma
 
         };
 
