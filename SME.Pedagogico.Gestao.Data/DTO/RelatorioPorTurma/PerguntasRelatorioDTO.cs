@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SME.Pedagogico.Gestao.Data.DTO.Matematica.RelatorioPorTurma
+namespace SME.Pedagogico.Gestao.Data.DTO.RelatorioPorTurma
 {
    public class PerguntasRelatorioDTO
     {

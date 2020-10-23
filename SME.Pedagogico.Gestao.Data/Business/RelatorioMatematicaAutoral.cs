@@ -5,21 +5,17 @@ using System.Collections.Generic;
 using System.Linq;
 using MoreLinq;
 using SME.Pedagogico.Gestao.Data.DTO.Matematica.Relatorio;
-using System.Text;
 using SME.Pedagogico.Gestao.Data.Contexts;
-using SME.Pedagogico.Gestao.Data.Integracao.DTO;
 using System.Threading.Tasks;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using SME.Pedagogico.Gestao.Data.Relatorios;
 using SME.Pedagogico.Gestao.Data.Relatorios.Querys;
-using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.DTO.Matematica;
-using SME.Pedagogico.Gestao.Data.DTO.Matematica.RelatorioPorTurma;
-using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using SME.Pedagogico.Gestao.Models.Autoral;
 using SME.Pedagogico.Gestao.Data.DTO;
+using SME.Pedagogico.Gestao.Data.DTO.RelatorioPorTurma;
 
 namespace SME.Pedagogico.Gestao.Data.Business
 {
@@ -150,13 +146,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var aluno = new AlunoPorTurmaRelatorioDTO();
                 aluno.CodigoAluno = alunoRetorno.CodigoAluno;
                 aluno.NomeAluno = alunoRetorno.NomeAluno;
-                aluno.Perguntas = new List<PergurntaRespostaPorAluno>();
+                aluno.Perguntas = new List<PerguntaRespostaPorAluno>();
 
                 var alunoRespostas = AlunosAgrupados.Where(x => x.Key == aluno.CodigoAluno.ToString()).ToList();
 
                 foreach (var perguntaBanco in relatorio.Perguntas)
                 {
-                    var pergunta = new PergurntaRespostaPorAluno()
+                    var pergunta = new PerguntaRespostaPorAluno()
                     {
                         Id = perguntaBanco.Id,
                         Valor = string.Empty
@@ -198,16 +194,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     barraAlunosSemPreenchimento.label = "Sem Preenchimento";
                     barraAlunosSemPreenchimento.value = relatorio.Alunos.Count() - grafico.Barras.Sum(x => x.value);
                     grafico.Barras.Add(barraAlunosSemPreenchimento);
-
-                  
                     relatorio.Graficos.Add(grafico);
-
                 }
             }
-
-
-
-
             return relatorio;
         }
 
