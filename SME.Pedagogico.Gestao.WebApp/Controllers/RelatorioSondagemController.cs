@@ -91,7 +91,20 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
                     if (parameters.GrupoId != null && parameters.GrupoId.Equals("e27b99a3-789d-43fb-a962-7df8793622b1"))
                     {
-                        return NoContent();
+                        var relatorioCapacidadeLeitura = new RelatorioPortuguesCapacidadeLeitura();
+                       var relatorio = await relatorioCapacidadeLeitura.ObterRelatorioCapacidadeLeituraPorTurma(new RelatorioPortuguesFiltroDto
+                        {
+                            AnoEscolar = Convert.ToInt32(parameters.CodigoCurso),
+                            AnoLetivo = Convert.ToInt32(parameters.SchoolYear),
+                            CodigoDre = parameters.CodigoDRE,
+                            CodigoUe = parameters.CodigoEscola,
+                            ComponenteCurricularId = "c65b2c0a-7a58-4d40-b474-23f0982f14b1",
+                            GrupoId = "e27b99a3-789d-43fb-a962-7df8793622b1",
+                            PeriodoId = periodo.Id,
+                            CodigoTurma = parameters.CodigoTurmaEol
+                        });
+
+                        return Ok(relatorio);
                     }
 
                     return Ok(await ObterRelatorioProducaoTextoLeituraVozAlta(parameters, periodo));

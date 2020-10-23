@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SME.Pedagogico.Gestao.Data.DTO.Matematica.RelatorioPorTurma
+namespace SME.Pedagogico.Gestao.Data.DTO.RelatorioPorTurma
 {
   public  class AlunoPorTurmaRelatorioDTO
     {
@@ -10,6 +10,6 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Matematica.RelatorioPorTurma
 
         public string NomeAluno { get; set; }
 
-        public List<PergurntaRespostaPorAluno> Perguntas { get; set; }
+        public List<PerguntaRespostaPorAluno> Perguntas { get; set; }
     }
 }

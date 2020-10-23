@@ -112,6 +112,8 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
             return query.ToString();
         }
 
+
+
         public static string QueryRelatorioMatematicaAutoral(filtrosRelatorioDTO filtro)
         {
             var queryRelatorio = @"SELECT
@@ -225,6 +227,50 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
                           and s.""AnoLetivo"" = @AnoLetivo
                           and s.""ComponenteCurricularId"" = @ComponenteCurricularId
                           and s.""PeriodoId"" = @PeriodoId";
+        }
+
+        public static string QueryRelatorioPorTurmaPortuguesCapacidadeDeLeitura()
+        {
+            return @"
+                    select
+                       s.""OrdemId"",
+                       o.""Descricao"" as ""OrdemDescricao"",
+                       sa.""CodigoAluno"",
+                       sa.""NomeAluno"",
+                       p.""Id"" as ""PerguntaId"",
+                       p.""Descricao"" as ""PerguntaDescricao"",
+                       sar.""RespostaId"",
+                       r.""Descricao"" as ""RespostaDescricao""  
+            	from
+            		""SondagemAlunoRespostas"" sar
+            	inner join ""SondagemAluno"" sa on
+            		sa.""Id"" = ""SondagemAlunoId""
+            	inner join ""Sondagem"" s on
+            		s.""Id"" = sa.""SondagemId""
+            	inner join ""Pergunta"" p on
+            		p.""Id"" = sar.""PerguntaId""
+            	inner join ""Resposta"" r on
+            		r.""Id"" = sar.""RespostaId""
+            	inner join ""Periodo"" per on
+            		per.""Id"" = s.""PeriodoId""
+            	inner join ""ComponenteCurricular"" c on
+            		c.""Id"" = s.""ComponenteCurricularId""
+                	inner join ""Ordem"" o on
+                    o.""Id"" = s.""OrdemId""
+
+                where
+            		s.""Id"" in (
+            		select
+            			s.""Id""
+            		from
+            			""Sondagem"" s
+            		where
+            		        s.""GrupoId"" = @GrupoId
+            		    and s.""ComponenteCurricularId"" = @ComponenteCurricularId
+                     and s.""PeriodoId"" = @PeriodoId
+            			and s.""AnoLetivo"" = @AnoLetivo
+            			and s.""CodigoTurma"" = @CodigoTurmaEol
+            		        )";
         }
 
     }
