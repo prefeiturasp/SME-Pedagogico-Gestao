@@ -205,7 +205,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             relatorio.Perguntas = new List<PerguntasRelatorioDTO>();
             using (var contexto = new SMEManagementContextData())
             {
-                var perguntasBanco = await contexto.PerguntaAnoEscolar.Include(x => x.Pergunta).Where(perguntaAnoEscolar => perguntaAnoEscolar.AnoEscolar == filtro.AnoEscolar).Select(x => MapearPergunta(x)).ToListAsync();
+                var perguntasBanco = await contexto.PerguntaAnoEscolar.Include(x => x.Pergunta).Where(perguntaAnoEscolar => perguntaAnoEscolar.AnoEscolar == filtro.AnoEscolar).OrderBy(x => x.Ordenacao).Select(x => MapearPergunta(x)).ToListAsync();
                 relatorio.Perguntas = perguntasBanco.Select(x => new PerguntasRelatorioDTO
                 {
                     Id = x.Id,

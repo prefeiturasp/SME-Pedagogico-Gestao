@@ -131,7 +131,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             if (alunos == null || !alunos.Any())
                 throw new Exception("Não encontrado alunos para a turma informda");
-
+            
             return alunos;
         }
 
@@ -177,6 +177,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             perguntas = await contexto.OrdemPergunta
                                 .Include(x => x.Pergunta)
                                 .Where(x => x.GrupoId.Equals(relatorioPortuguesFiltroDto.GrupoId) && x.Excluido == false)
+                                .OrderBy(x => x.OrdenacaoNaTela)
                                 .Select(x => x.Pergunta)
                                 .ToListAsync();
 
@@ -199,7 +200,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 relatorio.Alunos.Add(new RelatorioPortuguesTurmaAluno
                 {
                     CodigoAluno = aluno.CodigoAluno.ToString(),
-                    NomeAluno = aluno.NomeAluno,
+                    NomeAluno = aluno.NomeAlunoRelatorio,
                     NumeroChamada = aluno.NumeroAlunoChamada,
                 });
             });
@@ -210,7 +211,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             var relatorioAluno = relatorio.Alunos.FirstOrDefault(ra => ra.CodigoAluno.Equals(aluno.CodigoAluno.ToString()));
 
             relatorioAluno.CodigoAluno = aluno.CodigoAluno.ToString();
-            relatorioAluno.NomeAluno = aluno.NomeAluno;
+            relatorioAluno.NomeAluno = aluno.NomeAlunoRelatorio;
             relatorioAluno.NumeroChamada = aluno.NumeroAlunoChamada;
 
             return;

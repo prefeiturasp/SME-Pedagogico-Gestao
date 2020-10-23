@@ -21,6 +21,8 @@ import RelatorioPorTurmaLeituraVozAlta from "./RelatorioPorTurmaLeituraVozAlta/R
 import GraficoPorTurmaLeituraVozAlta from "./GraficoPorTurmaLeituraVozAlta/GraficoPorTurmaLeituraVozAlta";
 import RelatorioMatematicaPorTurma from "./RelatorioMatematicaPorTurma/RelatorioMatematicaPorTurma";
 import GraficoMatematicaPorTurma from "./GraficoMatematicaPorTurma/GraficoMatematicaPorTurma";
+import RelatorioPorTurmaProducaoTexto from "./RelatorioPorTurmaProducaoTexto/RelatorioPorTurmaProducaoTexto";
+import GraficoPorTurmaProducaoTexto from "./GraficoPorTurmaProducaoTexto/GraficoPorTurmaProducaoTexto"
 
 class PollReport extends Component {
   constructor(props) {
@@ -999,7 +1001,10 @@ class PollReport extends Component {
         case GrupoDto.PRODUCAO_DE_TEXTO:
           return (
             <div className="mb-4">
-              <div></div>
+              <RelatorioPorTurmaProducaoTexto
+                perguntas={dados.perguntas}
+                alunos={dados.alunos}
+              />
             </div>
           );
         default:
@@ -1026,7 +1031,9 @@ class PollReport extends Component {
         case GrupoDto.PRODUCAO_DE_TEXTO:
           return (
             <div className="mb-4">
-              <div></div>
+              {graficos.map((dados) => {
+                return <GraficoPorTurmaProducaoTexto dados={dados} />;
+              })}
             </div>
           );
         default:
