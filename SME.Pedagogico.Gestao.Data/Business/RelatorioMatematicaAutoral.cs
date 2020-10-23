@@ -145,8 +145,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 var aluno = new AlunoPorTurmaRelatorioDTO();
                 aluno.CodigoAluno = alunoRetorno.CodigoAluno;
-                aluno.NomeAluno = alunoRetorno.NomeAluno;
-                aluno.Perguntas = new List<PerguntaRespostaPorAluno>();
+                aluno.NomeAluno = alunoRetorno.NomeAlunoRelatorio;
+                aluno.Perguntas = new List<PergurntaRespostaPorAluno>();
 
                 var alunoRespostas = AlunosAgrupados.Where(x => x.Key == aluno.CodigoAluno.ToString()).ToList();
 
