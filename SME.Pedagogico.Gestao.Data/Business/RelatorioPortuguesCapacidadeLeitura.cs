@@ -77,7 +77,7 @@ public class RelatorioPortuguesCapacidadeLeitura
                 {
                     var barra = new GraficoBarra();
                     barra.Label = r.Resposta.Descricao;
-                    barra.Value = relatorio.Alunos.Count(x => x.Ordem.Any(ordem => ordem.Id == o.Id && ordem.Perguntas.Any(pr => pr.Id == p.Id && pr.Valor == r.Resposta.Descricao)));
+                    barra.Value = relatorio.Alunos.Count(x => x.Ordens.Any(ordem => ordem.Id == o.Id && ordem.Perguntas.Any(pr => pr.Id == p.Id && pr.Valor == r.Resposta.Descricao)));
                     grafico.Barras.Add(barra);
                 });
                 var barraAlunosSemPreenchimento = new GraficoBarra();
@@ -101,8 +101,8 @@ public class RelatorioPortuguesCapacidadeLeitura
         {
             var aluno = new AlunoPorTurmaCapacidadeLeituraDTO();
             aluno.CodigoAluno = alunoRetorno.CodigoAluno;
-            aluno.NomeAluno = alunoRetorno.NomeAluno;
-            aluno.Ordem = new List<OrdemPorAlunoCapacidadeLeituraDTO>();
+            aluno.NomeAluno = alunoRetorno.NomeAlunoRelatorio;
+            aluno.Ordens = new List<OrdemPorAlunoCapacidadeLeituraDTO>();
             var alunoRespostas = alunosAgrupados.Where(x => x.Key == aluno.CodigoAluno.ToString()).ToList();
             relatorio.Ordens.ForEach(o =>
             {
@@ -118,7 +118,7 @@ public class RelatorioPortuguesCapacidadeLeitura
                     Id = p.Id,
                     Valor = RetornaRespostaAluno(listaAlunoRespostas, p.Id, o.Id, alunoRetorno.CodigoAluno.ToString())
                 }).ToList();
-                aluno.Ordem.Add(ordemDto);
+                aluno.Ordens.Add(ordemDto);
             });
             relatorio.Alunos.Add(aluno);
         });

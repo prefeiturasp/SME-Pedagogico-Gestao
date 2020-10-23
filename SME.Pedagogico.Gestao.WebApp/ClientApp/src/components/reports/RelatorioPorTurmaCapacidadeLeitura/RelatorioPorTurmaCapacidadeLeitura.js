@@ -10,7 +10,7 @@ const RelatorioPorTurmaCapacidadeLeitura = (props) => {
   const getCabecalhoOrdens = () => {
     return ordens.map((ordem) => {
       return (
-        <div className="col sc-gray border-left border-white">
+        <div className="col-3 sc-gray border-left border-white">
           <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center font-weight-bold">
             {ordem.nome}
           </div>
@@ -22,7 +22,7 @@ const RelatorioPorTurmaCapacidadeLeitura = (props) => {
   const getCabecalhoPerguntas = () => {
     return perguntas.map((ordem) => {
       return (
-        <div className="col sc-gray border-left border-white">
+        <div className="col-1 sc-gray border-left border-white">
           <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center font-weight-bold">
             {ordem.nome}
           </div>
@@ -38,8 +38,8 @@ const RelatorioPorTurmaCapacidadeLeitura = (props) => {
         const perguntaAluno =
           ordemAluno && ordemAluno.perguntas.find((p) => p.id === pergunta.id);
         return (
-          <div className="col">
-            <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-light">
+          <div className="col-1 border-right">
+            <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center font-weight-light">
               {perguntaAluno ? perguntaAluno.valor : ""}
             </div>
           </div>
@@ -51,7 +51,7 @@ const RelatorioPorTurmaCapacidadeLeitura = (props) => {
   return (
     <div>
       <CabecalhoOrdens className="d-flex poll-report-grid-header border-bottom border-white">
-        <div className="col-4" />
+        <div className="col-3" />
         {getCabecalhoOrdens()}
       </CabecalhoOrdens>
       <CabecalhoOrdens className="d-flex poll-report-grid-header border-bottom border-white">
@@ -60,7 +60,7 @@ const RelatorioPorTurmaCapacidadeLeitura = (props) => {
             Código EOL
           </div>
         </div>
-        <div className="col-3 sc-gray border-left border-white">
+        <div className="col-2 sc-gray border-left border-white">
           <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-bold">
             Nome do estudante
           </div>
@@ -74,12 +74,12 @@ const RelatorioPorTurmaCapacidadeLeitura = (props) => {
           <ItensCapacidadeLeituraPorTurma className="d-flex poll-report-grid-item border-bottom">
             <div className="col-1">
               <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-light">
-                {aluno.codigoEol}
+                {aluno.codigoAluno}
               </div>
             </div>
-            <div className="col-3">
+            <div className="col-2 border-right">
               <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-light">
-                {aluno.nome}
+                <span>{aluno.nomeAluno}</span>
               </div>
             </div>
             {getDadosAlunos(aluno)}

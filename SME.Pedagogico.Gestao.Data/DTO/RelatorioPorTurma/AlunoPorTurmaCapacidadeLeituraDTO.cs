@@ -9,7 +9,7 @@ namespace SME.Pedagogico.Gestao.Data.DTO.RelatorioPorTurma
     {
         public int CodigoAluno { get; set; }
         public string NomeAluno { get; set; }
-        public List<OrdemPorAlunoCapacidadeLeituraDTO> Ordem { get; set; }
+        public List<OrdemPorAlunoCapacidadeLeituraDTO> Ordens { get; set; }
         
     }
 }
