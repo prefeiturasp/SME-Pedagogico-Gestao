@@ -131,7 +131,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             if (alunos == null || !alunos.Any())
                 throw new Exception("Não encontrado alunos para a turma informda");
-            
+
             return alunos;
         }
 
@@ -283,6 +283,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
             PopularListaRetorno(dados, quantidade, perguntas, listaRetorno);
 
             relatorio.Perguntas = listaRetorno;
+
+            relatorio.Grafico = new Grafico
+            {
+                NomeGrafico = grupo.Descricao,
+                Barras = relatorio.Perguntas.Select(pergunta => new GraficoBarra
+                {
+                    Label = pergunta.Nome,
+                    Value = pergunta.Total.Quantidade
+                }).ToList()
+            };
 
             return relatorio;
         }
