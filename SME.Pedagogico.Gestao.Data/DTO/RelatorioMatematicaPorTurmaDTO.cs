@@ -1,8 +1,9 @@
-﻿using System;
+﻿using SME.Pedagogico.Gestao.Data.DTO.Matematica;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SME.Pedagogico.Gestao.Data.DTO.Matematica.RelatorioPorTurma
+namespace SME.Pedagogico.Gestao.Data.DTO.RelatorioPorTurma
 {
    public class RelatorioMatematicaPorTurmaDTO
     {

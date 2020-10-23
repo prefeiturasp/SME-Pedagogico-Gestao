@@ -23,6 +23,8 @@ import RelatorioMatematicaPorTurma from "./RelatorioMatematicaPorTurma/Relatorio
 import GraficoMatematicaPorTurma from "./GraficoMatematicaPorTurma/GraficoMatematicaPorTurma";
 import RelatorioPorTurmaProducaoTexto from "./RelatorioPorTurmaProducaoTexto/RelatorioPorTurmaProducaoTexto";
 import GraficoPorTurmaProducaoTexto from "./GraficoPorTurmaProducaoTexto/GraficoPorTurmaProducaoTexto"
+import RelatorioPorTurmaCapacidadeLeitura from "./RelatorioPorTurmaCapacidadeLeitura/RelatorioPorTurmaCapacidadeLeitura";
+import GraficoPorTurmaCapacidadeLeitura from "./GraficoPorTurmaCapacidadeLeitura/GraficoPorTurmaCapacidadeLeitura"
 
 class PollReport extends Component {
   constructor(props) {
@@ -986,7 +988,11 @@ class PollReport extends Component {
         case GrupoDto.CAPACIDADE_LEITURA:
           return (
             <div className="mb-4">
-              <div></div>
+              <RelatorioPorTurmaCapacidadeLeitura
+                ordens={dados.ordens}
+                perguntas={dados.perguntas}
+                alunos={dados.alunos}
+              />
             </div>
           );
         case GrupoDto.LEITURA_EM_VOZ_ALTA:
@@ -1016,8 +1022,10 @@ class PollReport extends Component {
       switch (this.props.pollReport.selectedFilter.grupoId) {
         case GrupoDto.CAPACIDADE_LEITURA:
           return (
-            <div className="mb-4">
-              <div></div>
+            <div className="row">
+              {graficos.map((dados) => {
+                return <GraficoPorTurmaCapacidadeLeitura dados={dados} />;
+              })}
             </div>
           );
         case GrupoDto.LEITURA_EM_VOZ_ALTA:
