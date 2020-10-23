@@ -13,7 +13,7 @@ const GraficoPorTurmaCapacidadeLeitura = (props) => {
         <div className="sc-text-size-1 font-weight-bold">{dados.ordem}</div>
       </div>
       <div className="row">
-        {dados.perguntas.map((pergunta, index) => {
+        {dados.perguntasGrafico.map((pergunta, index) => {
           return (
             <GraficoPerguntaCapacidadeLeitura
               dados={pergunta}
