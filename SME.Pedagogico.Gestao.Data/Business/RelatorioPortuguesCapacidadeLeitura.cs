@@ -34,27 +34,141 @@ public class RelatorioPortuguesCapacidadeLeitura
 
     }
 
+    public async Task<RelatorioConsolidadoCapacidadeLeituraDTO> ObterRelatorioCapacidadeLeitura(RelatorioPortuguesFiltroDto filtro)
+    {
+        var filtrosRelatorio = CriaMapFiltroRelatorio(filtro);
+        int totalDeAlunos = await ConsultaTotalDeAlunos.BuscaTotalDeAlunosEOl(filtrosRelatorio);
+        var query = ConsultasRelatorios.MontaQueryConsolidadoCapacidadeLeitura(filtro);
+        var relatorio = new RelatorioConsolidadoCapacidadeLeituraDTO();
+        var ListaPerguntaEhRespostasRelatorio = await RetornaListaDehPerguntasEhRespostas(filtro, query);
+
+        var relatorioAgrupado = ListaPerguntaEhRespostasRelatorio.GroupBy(p => p.OrdermId).ToList();
+        relatorio.RelatorioPorOrdem = RetornaRelatorioPorOrdens(totalDeAlunos, relatorioAgrupado);
+        relatorio.Graficos = CriaGraficosConsolidados(relatorio);
+        return relatorio;
+
+    }
+
+    private List<GraficoOrdem> CriaGraficosConsolidados(RelatorioConsolidadoCapacidadeLeituraDTO relatorio)
+    {
+        var listaGraficos = new List<GraficoOrdem>();
+        relatorio.RelatorioPorOrdem.ForEach(o =>
+        {
+            var graficoOrdem = new GraficoOrdem();
+            graficoOrdem.Ordem = o.Ordem;
+            graficoOrdem.perguntasGrafico = new List<Grafico>();
+            o.Perguntas.ForEach(p =>
+            {
+                var grafico = new Grafico();
+                grafico.NomeGrafico = p.Nome;
+
+
+                p.Respostas.ForEach(r =>
+                {
+                    var barra = new GraficoBarra();
+                    barra.Label = r.Nome;
+                    barra.Value = r.quantidade;
+                    grafico.Barras.Add(barra);
+                });
+
+                graficoOrdem.perguntasGrafico.Add(grafico);
+            });
+            listaGraficos.Add(graficoOrdem);
+        });
+
+        return listaGraficos;
+    }
+
+    private static async Task<IEnumerable<OrdemPerguntaRespostaDTO>> RetornaListaDehPerguntasEhRespostas(RelatorioPortuguesFiltroDto filtro, string query)
+    {
+        using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
+        {
+            var ListaPerguntaEhRespostasRelatorio = await conexao.QueryAsync<OrdemPerguntaRespostaDTO>(query.ToString(),
+         new
+         {
+             AnoTurma = filtro.AnoEscolar,
+             CodigoEscola = filtro.CodigoUe,
+             CodigoDRE = filtro.CodigoDre,
+             AnoLetivo = filtro.AnoLetivo,
+             PeriodoId = filtro.PeriodoId,
+             filtro.ComponenteCurricularId,
+             GrupoId = filtro.GrupoId
+
+         });
+            return ListaPerguntaEhRespostasRelatorio;
+        }
+    }
+
+    private List<OrdemDTO> RetornaRelatorioPorOrdens(int totalDeAlunos, List<IGrouping<string, OrdemPerguntaRespostaDTO>> relatorioAgrupado)
+    {
+        var ListaOrdens = new List<OrdemDTO>();
+        relatorioAgrupado.ForEach(ordemItem =>
+        {
+
+            var ordem = new OrdemDTO();
+            ordem.Ordem = ordemItem.Where(y => y.OrdermId == ordemItem.Key).First().Ordem;
+            ordem.Perguntas = new List<PerguntaDTO>();
+
+            var relatorioAgrupadoPergunta = ordemItem.GroupBy(x => x.PerguntaId);
+
+            relatorioAgrupadoPergunta.ForEach(x =>
+            {
+                var pergunta = new PerguntaDTO();
+                pergunta.Nome = x.Where(y => y.PerguntaId == x.Key).First().PerguntaDescricao;
+                pergunta.Total = new TotalDTO()
+                {
+                    Quantidade = totalDeAlunos,
+
+                };
+
+                pergunta.Total.Porcentagem = (pergunta.Total.Quantidade > 0 ? (pergunta.Total.Quantidade * 100) / (Double)totalDeAlunos : 0).ToString("0.00");
+                pergunta.Respostas = new List<RespostaDTO>();
+                var totalRespostas = x.Where(y => y.PerguntaId == x.Key).Sum(q => q.QtdRespostas);
+                var listaPr = x.Where(y => y.PerguntaId == x.Key).ToList();
+
+                foreach (var item in listaPr)
+                {
+                    var resposta = new RespostaDTO();
+                    resposta.Nome = item.RespostaDescricao;
+                    resposta.quantidade = item.QtdRespostas;
+                    resposta.porcentagem = (item.QtdRespostas > 0 ? (item.QtdRespostas * 100) / (Double)totalDeAlunos : 0).ToString("0.00");
+                    pergunta.Respostas.Add(resposta);
+                }
+
+
+                var respostaSempreenchimento = CriaRespostaSemPreenchimento(totalDeAlunos, totalRespostas);
+                pergunta.Respostas.Add(respostaSempreenchimento);
+
+
+
+                ordem.Perguntas.Add(pergunta);
+            });
+            ListaOrdens.Add(ordem);
+        });
+        return ListaOrdens;
+    }
+
     public async Task<RelatorioCapacidadeLeituraPorTurma> ObterRelatorioCapacidadeLeituraPorTurma(RelatorioPortuguesFiltroDto filtro)
     {
-      
-            var filtrosRelatorio = CriaMapFiltroRelatorio(filtro);
-            var periodos = await ConsultaTotalDeAlunos.BuscaDatasPeriodoFixoAnual(filtrosRelatorio);
 
-            if (periodos.Count() == 0)
-                throw new Exception("Periodo fixo anual nao encontrado");
-            var alunosEol = await alunoAPI.ObterAlunosAtivosPorTurmaEPeriodo(filtro.CodigoTurma, periodos.First().DataFim);
-            var queryPorTurma = ConsultasRelatorios.QueryRelatorioPorTurmaPortuguesCapacidadeDeLeitura();
-            var listaAlunoRespostas = await RetornaListaRespostasAlunoPorTurma(filtrosRelatorio, queryPorTurma);
-            var relatorio = await CriaRelatorioAlunos(filtrosRelatorio, alunosEol, listaAlunoRespostas);
+        var filtrosRelatorio = CriaMapFiltroRelatorio(filtro);
+        var periodos = await ConsultaTotalDeAlunos.BuscaDatasPeriodoFixoAnual(filtrosRelatorio);
 
-            using (var contexto = new SMEManagementContextData())
-            {
-                await CriaGraficosRelatorio(relatorio, contexto);
-            }
-            relatorio.Alunos = relatorio.Alunos.OrderBy(x => x.NomeAluno).ToList();
+        if (periodos.Count() == 0)
+            throw new Exception("Periodo fixo anual nao encontrado");
+        var alunosEol = await alunoAPI.ObterAlunosAtivosPorTurmaEPeriodo(filtro.CodigoTurma, periodos.First().DataFim);
+        var queryPorTurma = ConsultasRelatorios.QueryRelatorioPorTurmaPortuguesCapacidadeDeLeitura();
+        var listaAlunoRespostas = await RetornaListaRespostasAlunoPorTurma(filtrosRelatorio, queryPorTurma);
+        var relatorio = await CriaRelatorioAlunos(filtrosRelatorio, alunosEol, listaAlunoRespostas);
 
-            return relatorio;
-        
+        using (var contexto = new SMEManagementContextData())
+        {
+            await CriaGraficosRelatorio(relatorio, contexto);
+        }
+        relatorio.Alunos = relatorio.Alunos.OrderBy(x => x.NomeAluno).ToList();
+
+        return relatorio;
+
     }
 
     private static async Task CriaGraficosRelatorio(RelatorioCapacidadeLeituraPorTurma relatorio, SMEManagementContextData contexto)
@@ -176,77 +290,7 @@ public class RelatorioPortuguesCapacidadeLeitura
     }
 
 
-    public async Task<List<OrdemDTO>> ObterRelatorioCapacidadeLeitura(RelatorioPortuguesFiltroDto filtro)
-    {
 
-        var filtrosRelatorio = CriaMapFiltroRelatorio(filtro);
-        int totalDeAlunos = await ConsultaTotalDeAlunos.BuscaTotalDeAlunosEOl(filtrosRelatorio);
-        var query = ConsultasRelatorios.MontaQueryConsolidadoCapacidadeLeitura(filtro);
-
-        using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
-        {
-            var ListaPerguntaEhRespostasRelatorio = await conexao.QueryAsync<OrdemPerguntaRespostaDTO>(query.ToString(),
-         new
-         {
-             AnoTurma = filtro.AnoEscolar,
-             CodigoEscola = filtro.CodigoUe,
-             CodigoDRE = filtro.CodigoDre,
-             AnoLetivo = filtro.AnoLetivo,
-             PeriodoId = filtro.PeriodoId,
-             ComponenteCurricularId = filtro.ComponenteCurricularId,
-             GrupoId = filtro.GrupoId
-
-         });
-
-            var relatorioAgrupado = ListaPerguntaEhRespostasRelatorio.GroupBy(p => p.OrdermId).ToList();
-
-            var ListaOrdens = new List<OrdemDTO>();
-            relatorioAgrupado.ForEach(ordemItem =>
-            {
-
-                var ordem = new OrdemDTO();
-                ordem.Ordem = ordemItem.Where(y => y.OrdermId == ordemItem.Key).First().Ordem;
-                ordem.Perguntas = new List<PerguntaDTO>();
-
-                var relatorioAgrupadoPergunta = ordemItem.GroupBy(x => x.PerguntaId);
-
-                relatorioAgrupadoPergunta.ForEach(x =>
-                {
-                    var pergunta = new PerguntaDTO();
-                    pergunta.Nome = x.Where(y => y.PerguntaId == x.Key).First().PerguntaDescricao;
-                    pergunta.Total = new TotalDTO()
-                    {
-                        Quantidade = totalDeAlunos,
-
-                    };
-
-                    pergunta.Total.Porcentagem = (pergunta.Total.Quantidade > 0 ? (pergunta.Total.Quantidade * 100) / (Double)totalDeAlunos : 0).ToString("0.00");
-                    pergunta.Respostas = new List<RespostaDTO>();
-                    var totalRespostas = x.Where(y => y.PerguntaId == x.Key).Sum(q => q.QtdRespostas);
-                    var listaPr = x.Where(y => y.PerguntaId == x.Key).ToList();
-
-                    foreach (var item in listaPr)
-                    {
-                        var resposta = new RespostaDTO();
-                        resposta.Nome = item.RespostaDescricao;
-                        resposta.quantidade = item.QtdRespostas;
-                        resposta.porcentagem = (item.QtdRespostas > 0 ? (item.QtdRespostas * 100) / (Double)totalDeAlunos : 0).ToString("0.00");
-                        pergunta.Respostas.Add(resposta);
-                    }
-
-
-                    var respostaSempreenchimento = CriaRespostaSemPreenchimento(totalDeAlunos, totalRespostas);
-                    pergunta.Respostas.Add(respostaSempreenchimento);
-
-
-
-                    ordem.Perguntas.Add(pergunta);
-                });
-                ListaOrdens.Add(ordem);
-            });
-            return ListaOrdens;
-        }
-    }
     private RespostaDTO CriaRespostaSemPreenchimento(int totalDeAlunos, int quantidadeTotalRespostasPergunta)
     {
         var respostaSemPreenchimento = new RespostaDTO();
