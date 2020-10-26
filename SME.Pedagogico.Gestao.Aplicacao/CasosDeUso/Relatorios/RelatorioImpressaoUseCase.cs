@@ -17,45 +17,46 @@ namespace SME.Pedagogico.Gestao.Aplicacao
         }
         public async Task Executar(RelatorioImpressaoFiltroDto filtros)
         {
-            TipoRelatorio? tipoRelatorio = null;
-
-            if (filtros.ComponenteCurricularId == ComponenteCurricularEnum.Matematica)
-            {
-                if (filtros.TurmaCodigo > 0 && (filtros.ProficienciaId == ProficienciaEnum.CampoAditivo || filtros.ProficienciaId == ProficienciaEnum.CampoMultiplicativo || filtros.ProficienciaId == ProficienciaEnum.Numeros))
-                {
-                    tipoRelatorio = TipoRelatorio.RelatorioMatetimaticaPorTurma;
-                }
-                else  if (filtros.TurmaCodigo <= 0)
-                {
-                    if (filtros.ProficienciaId == ProficienciaEnum.CampoAditivo || filtros.ProficienciaId == ProficienciaEnum.CampoMultiplicativo)
-                        tipoRelatorio = TipoRelatorio.RelatorioMatetimaticaConsolidadoAditMult;
-                    else
-                        tipoRelatorio = TipoRelatorio.RelatorioMatetimaticaConsolidado;
-                }
-            }
+            TipoRelatorio? tipoRelatorio = GetTipoRelatorio(filtros);
 
             await mediator.Send(new GerarRelatorioCommand(tipoRelatorio.Value, filtros, filtros.UsuarioRF));
         }
         public async Task<string> ExecutarSync(RelatorioImpressaoFiltroDto filtros)
         {
+            TipoRelatorio? tipoRelatorio = GetTipoRelatorio(filtros);
+
+            return (await mediator.Send(new ObterRelatorioSincronoQuery(tipoRelatorio.Value, filtros, filtros.UsuarioRF)));
+        }
+
+        private TipoRelatorio? GetTipoRelatorio(RelatorioImpressaoFiltroDto filtros)
+        {
             TipoRelatorio? tipoRelatorio = null;
 
             if (filtros.ComponenteCurricularId == ComponenteCurricularEnum.Matematica)
             {
-                if (filtros.TurmaCodigo > 0)
+                if (filtros.TurmaCodigo > 0 && filtros.ProficienciaId == ProficienciaEnum.CampoAditivo || filtros.ProficienciaId == ProficienciaEnum.CampoMultiplicativo || filtros.ProficienciaId == ProficienciaEnum.Numeros)
                 {
-                    tipoRelatorio = TipoRelatorio.RelatorioMatetimaticaPorTurma;
+                    tipoRelatorio = TipoRelatorio.RelatorioMatematicaPorTurma;
                 }
                 else if (filtros.TurmaCodigo <= 0)
                 {
-                    if (filtros.ProficienciaId == ProficienciaEnum.CampoAditivo || filtros.ProficienciaId == ProficienciaEnum.CampoMultiplicativo)
-                        tipoRelatorio = TipoRelatorio.RelatorioMatetimaticaConsolidadoAditMult;
-                    else
-                        tipoRelatorio = TipoRelatorio.RelatorioMatetimaticaConsolidado;
+                    tipoRelatorio = TipoRelatorio.RelatorioMatematicaConsolidado;
                 }
             }
 
-            return (await mediator.Send(new ObterRelatorioSincronoQuery(tipoRelatorio.Value, filtros, filtros.UsuarioRF)));
+            if (filtros.ComponenteCurricularId == ComponenteCurricularEnum.Portugues)
+            {
+                if (filtros.TurmaCodigo > 0)
+                {
+                    tipoRelatorio = TipoRelatorio.RelatorioPortuguesPorTurma;
+                }
+                else if (filtros.TurmaCodigo <= 0)
+                {
+                    tipoRelatorio = TipoRelatorio.RelatorioPortuguesConsolidado;
+                }
+            }
+
+            return tipoRelatorio;
         }
     }
 }
