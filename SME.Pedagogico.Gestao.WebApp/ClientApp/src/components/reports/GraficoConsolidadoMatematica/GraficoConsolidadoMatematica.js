@@ -1,7 +1,7 @@
 import React from "react";
 import GraficoMatematica from "../GraficoMatematica/GraficoMatematica";
 
-const GraficoMatematicaPorTurma = (props) => {
+const GraficoConsolidadoMatematica = (props) => {
   const { dados, index } = props;
 
   return (
@@ -9,4 +9,4 @@ const GraficoMatematicaPorTurma = (props) => {
   );
 };
 
-export default GraficoMatematicaPorTurma;
+export default GraficoConsolidadoMatematica;
