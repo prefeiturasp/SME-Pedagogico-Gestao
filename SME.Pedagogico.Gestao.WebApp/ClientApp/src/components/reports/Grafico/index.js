@@ -1,6 +1,5 @@
-import React from 'react';
-
-// import { Container } from './styles';
+import React, { useEffect } from 'react';
+import echarts from 'echarts';
 
 function Grafico(props) {
     const { dados, id } = props;

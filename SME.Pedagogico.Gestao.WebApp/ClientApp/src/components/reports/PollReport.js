@@ -24,7 +24,10 @@ import GraficoMatematicaPorTurma from "./GraficoMatematicaPorTurma/GraficoMatema
 import RelatorioPorTurmaProducaoTexto from "./RelatorioPorTurmaProducaoTexto/RelatorioPorTurmaProducaoTexto";
 import GraficoPorTurmaProducaoTexto from "./GraficoPorTurmaProducaoTexto/GraficoPorTurmaProducaoTexto"
 import RelatorioPorTurmaCapacidadeLeitura from "./RelatorioPorTurmaCapacidadeLeitura/RelatorioPorTurmaCapacidadeLeitura";
-import GraficoPorTurmaCapacidadeLeitura from "./GraficoPorTurmaCapacidadeLeitura/GraficoPorTurmaCapacidadeLeitura"
+import GraficoPorTurmaCapacidadeLeitura from "./GraficoPorTurmaCapacidadeLeitura/GraficoPorTurmaCapacidadeLeitura";
+import GraficoConsolidadoLeituraVozAlta from "./GraficoConsolidadoLeituraVozAlta";
+import GraficoConsolidadoProducaoTexto from "./GraficoConsolidadoProducaoTexto";
+import GraficoConsolidadoMatematica from "./GraficoConsolidadoMatematica/GraficoConsolidadoMatematica";
 
 class PollReport extends Component {
   constructor(props) {
@@ -1049,6 +1052,34 @@ class PollReport extends Component {
       }
     };
 
+    const montarGraficoConsolidadosPortuguesAcimaDoQuartoAno = (graficos) => {
+      switch (this.props.pollReport.selectedFilter.grupoId) {
+        case GrupoDto.CAPACIDADE_LEITURA:
+          return (
+            <div className="row">
+            </div>
+          );
+        case GrupoDto.LEITURA_EM_VOZ_ALTA:
+          return (
+            <div className="row">
+              {graficos.map((dados) => {
+                return <GraficoConsolidadoLeituraVozAlta dados={dados} />;
+              })}
+            </div>
+          );
+        case GrupoDto.PRODUCAO_DE_TEXTO:
+          return (
+            <div className="mb-4">
+              {graficos.map((dados) => {
+                return <GraficoConsolidadoProducaoTexto dados={dados} />;
+              })}
+            </div>
+          );
+        default:
+          break;
+      }
+    };
+
     
     return (
       <>
@@ -1122,7 +1153,7 @@ class PollReport extends Component {
                           perguntas={reportData.perguntas}
                         />
                     :
-                    reportData && reportData.map(dados => {
+                    reportData && reportData.perguntas && reportData.perguntas.map(dados => {
                       return <RelatorioMatematicaConsolidado dados={dados}/>
                     }))
                     :
@@ -1134,21 +1165,24 @@ class PollReport extends Component {
                   ): null}
 
                   <PollReportBreadcrumb className="mt-5" name="Gráfico" />
-                  {chartData && chartData.length ?(
+                  {chartData ?(
                   this.props.pollReport.selectedFilter.discipline === "Língua Portuguesa" ?(
                     Number(
                       this.props.pollReport.selectedFilter &&
                         this.props.pollReport.selectedFilter.CodigoCurso
-                    ) >= 4 && this.classroomReport?  
-                      montarGraficoPorTurmaPortuguesAcimaDoQuartoAno(chartData)
+                    ) >= 4?
+                      (this.classroomReport ?
+                        montarGraficoPorTurmaPortuguesAcimaDoQuartoAno(chartData)
+                        :
+                        montarGraficoConsolidadosPortuguesAcimaDoQuartoAno(chartData)
+                      )
                     :<PollReportPortugueseChart data={chartData} />
                   )
                   :(
                   this.props.pollReport.selectedFilter.discipline === "Matemática" &&
                   Number(this.props.pollReport.selectedFilter.CodigoCurso) >= 7 ? (
-                    this.classroomReport ? (
-                      <div className="row">
-                      {
+                    <div className="row">
+                      {this.classroomReport ?
                         chartData.map((dados, index) => {
                           return (
                             <GraficoMatematicaPorTurma
@@ -1157,9 +1191,17 @@ class PollReport extends Component {
                             />
                           );
                         })
+                        :
+                        chartData.map((dados, index) => {
+                          return (
+                            <GraficoConsolidadoMatematica
+                              dados={dados}
+                              index={index}
+                            />
+                          );
+                        })
                       }
-                      </div>
-                    ) : null
+                    </div>
                    ) : 
                   <div className="mt-4">
                     {//Consilidado de Numeros
