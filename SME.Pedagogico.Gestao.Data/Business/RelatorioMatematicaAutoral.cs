@@ -21,22 +21,37 @@ namespace SME.Pedagogico.Gestao.Data.Business
 {
     public class RelatorioMatematicaAutoral
     {
-
-
-        public async Task<List<PerguntaDTO>> ObterRelatorioMatematicaAutoral(filtrosRelatorioDTO filtro)
+        public async Task<RelatorioConsolidadoDTO> ObterRelatorioMatematicaAutoral(filtrosRelatorioDTO filtro)
         {
-
             IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
             int totalDeAlunos = await ConsultaTotalDeAlunos.BuscaTotalDeAlunosEOl(filtro);
             var query = ConsultasRelatorios.QueryRelatorioMatematicaAutoral(filtro);
-
-
+            var relatorio = new RelatorioConsolidadoDTO();
 
             using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
             {
-                return await RetornaRelatorioMatematica(filtro, conexao, query, totalDeAlunos);
+                relatorio.Perguntas = await RetornaRelatorioMatematica(filtro, conexao, query, totalDeAlunos);
             }
 
+            relatorio.Graficos = new List<GraficosRelatorioDTO>();
+
+
+            foreach (var pergunta in relatorio.Perguntas)
+            {
+                var grafico = new GraficosRelatorioDTO();
+                grafico.nomeGrafico = pergunta.Nome;
+                grafico.Barras = new List<BarrasGraficoDTO>();
+                pergunta.Respostas.ForEach(resposta =>
+                {
+                    var barra = new BarrasGraficoDTO();
+                    barra.label = resposta.Nome;
+                    barra.value = resposta.quantidade;
+                    grafico.Barras.Add(barra);
+                });
+
+                relatorio.Graficos.Add(grafico);
+            }
+            return relatorio;
         }
 
         private async Task<List<PerguntaDTO>> RetornaRelatorioMatematica(filtrosRelatorioDTO filtro, NpgsqlConnection conexao, string query, int totalDeAlunos)
@@ -140,7 +155,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             var relatorio = new RelatorioMatematicaPorTurmaDTO();
             await RetornaPerguntasDoRelatorio(filtro, relatorio);
 
-           var ListaAlunos = new List<AlunoPorTurmaRelatorioDTO>();
+            var ListaAlunos = new List<AlunoPorTurmaRelatorioDTO>();
             alunosEol.ForEach(alunoRetorno =>
             {
                 var aluno = new AlunoPorTurmaRelatorioDTO();
@@ -165,7 +180,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 }
                 ListaAlunos.Add(aluno);
             });
-             relatorio.Alunos = ListaAlunos.OrderBy(aluno => aluno.NomeAluno);
+            relatorio.Alunos = ListaAlunos.OrderBy(aluno => aluno.NomeAluno);
             relatorio.Graficos = new List<GraficosRelatorioDTO>();
 
 
@@ -185,7 +200,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     {
                         var barra = new BarrasGraficoDTO();
                         barra.label = resposta.Resposta.Descricao;
-                        barra.value = relatorio.Alunos.Count(x=> x.Perguntas.Any(r => r.Id == pergunta.Id && r.Valor == resposta.Resposta.Descricao));
+                        barra.value = relatorio.Alunos.Count(x => x.Perguntas.Any(r => r.Id == pergunta.Id && r.Valor == resposta.Resposta.Descricao));
                         grafico.Barras.Add(barra);
 
                     });
