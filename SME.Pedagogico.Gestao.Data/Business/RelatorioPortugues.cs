@@ -293,7 +293,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private static void MapearGrafico(Grupo grupo, RelatorioAutoralLeituraProducaoDto relatorio)
         {
-            relatorio.Grafico = new Grafico
+            var grafico = new Grafico
             {
                 NomeGrafico = grupo.Descricao,
                 Barras = relatorio.Perguntas.Select(pergunta => new GraficoBarra
@@ -302,6 +302,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     Value = pergunta.Total.Quantidade
                 }).ToList()
             };
+
+            relatorio.Graficos.Add(grafico);
         }
 
         private async Task<int> ObterQuantidadeAlunosAtivos(RelatorioPortuguesFiltroDto filtroRelatorioSondagem, PeriodoFixoAnual periodo)
