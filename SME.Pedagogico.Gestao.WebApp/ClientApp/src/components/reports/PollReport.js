@@ -1087,7 +1087,7 @@ class PollReport extends Component {
                 <div>
                   <PollReportBreadcrumb className="mt-4" name="Planilha" />
 
-                  {reportData && (reportData.length || (reportData.perguntas && reportData.perguntas.length))
+                  {reportData
                   ?
                   this.props.pollReport.selectedFilter.discipline ===
                    "Língua Portuguesa" ?(
