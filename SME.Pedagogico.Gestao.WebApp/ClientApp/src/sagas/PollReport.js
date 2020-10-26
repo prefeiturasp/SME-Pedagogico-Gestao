@@ -16,52 +16,28 @@ function* GetPollReportSaga({ parameters }) {
             yield put({ type: PollReport.types.POLL_REPORT_REQUEST_NOT_FOUND });
         else {
             var pollReportResponse = null;
-            if (parameters.discipline === "Língua Portuguesa" && parameters.classroomReport){
-              if((Number(parameters.CodigoCurso)>=4)){
+
+
+            if ((parameters.discipline === "Língua Portuguesa" && Number(parameters.CodigoCurso)>=4) ||
+              (parameters.discipline === "Matemática" && Number(parameters.CodigoCurso)>=7)){
                 pollReportResponse = {
-                  data: {
-                    alunos: data.alunos, 
-                    perguntas: data.perguntas
-                  },
+                  data: data,
                   chartData: data.graficos
                 }
-              }else{
-                pollReportResponse = {
-                    data: data.results,
-                    chartData: data.chartData
-                }
-              }
-            }
-            else if (!parameters.classroomReport) {
-                if((Number(parameters.CodigoCurso)>=7 &&
-                    parameters.discipline === "Matemática" &&
-                    !parameters.proficiency) ||
-                    (Number(parameters.CodigoCurso)>=4 &&
-                    parameters.discipline === "Língua Portuguesa")){
-                    pollReportResponse = {
-                        data: data,
-                        chartData: null
-                    }   
-                }else{
-                    pollReportResponse = {
-                        data: {
-                            numerosResults: data.results.numerosResults,
-                            ideaResults: data.results.ideaResults,
-                            resultResults: data.results.resultResults
-                        },
-                        chartData: {
-                            chartIdeaData: data.chartIdeaData,
-                            chartNumberData: data.chartNumberData,
-                            chartResultData: data.chartResultData
-                        }
-                    }
-                }
             } 
-            else if (parameters.classroomReport && parameters.discipline === "Matemática") {
+            else if (!parameters.classroomReport && parameters.discipline === "Matemática") {
               pollReportResponse = {
-                data: data,
-                chartData: data.graficos,
-              }  
+                  data: {
+                      numerosResults: data.results.numerosResults,
+                      ideaResults: data.results.ideaResults,
+                      resultResults: data.results.resultResults
+                  },
+                  chartData: {
+                      chartIdeaData: data.chartIdeaData,
+                      chartNumberData: data.chartNumberData,
+                      chartResultData: data.chartResultData
+                  }
+              }
             } else {
               pollReportResponse = {
                 data: data.results,
