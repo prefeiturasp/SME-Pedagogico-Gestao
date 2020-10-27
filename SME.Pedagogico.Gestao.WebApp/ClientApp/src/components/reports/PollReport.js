@@ -1154,7 +1154,7 @@ class PollReport extends Component {
                   ): null}
 
                   <PollReportBreadcrumb className="mt-5" name="Gráfico" />
-                  {chartData && chartData.length ?(
+                  {chartData ?(
                   this.props.pollReport.selectedFilter.discipline === "Língua Portuguesa" ?(
                     Number(
                       this.props.pollReport.selectedFilter &&
