@@ -13,11 +13,14 @@ namespace SME.Pedagogico.Gestao.Infra
         [Display(Name = "v1/sondagem/matematica-consolidado", ShortName = "MatematicaConsolidado", Description = "Matematica Consolidado")]
         RelatorioMatematicaConsolidado = 17,
 
+        [Display(Name = "v1/sondagem/matematica-consolidado-aditivo-multiplicativo", ShortName = "MatematicaConsolidadoAdtMult", Description = "Matematica Consolidado Aditivo Multiplicativo")]
+        RelatorioMatematicaConsolidadoAdtMult = 18,
+
         [Display(Name = "v1/sondagem/portugues-por-turma", ShortName = "Relatório de Sondagem (Português)", Description = "Relatório de Sondagem (Português)")]
-        RelatorioPortuguesPorTurma = 18,
+        RelatorioPortuguesPorTurma = 19,
 
         [Display(Name = "v1/sondagem/portugues-consolidado", ShortName = "PortuguesConsolidado", Description = "Português Consolidado")]
-        RelatorioPortuguesConsolidado = 19
+        RelatorioPortuguesConsolidado = 20
 
     }
 }
