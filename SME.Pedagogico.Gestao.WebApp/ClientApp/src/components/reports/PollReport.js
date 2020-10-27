@@ -1060,7 +1060,7 @@ class PollReport extends Component {
             <div className="row">
               {
                 graficos.map((dados) => {
-                  <GraficoConsolidadoCapacidadeLeitura dados={dados} />
+                 return <GraficoConsolidadoCapacidadeLeitura dados={dados} />
                 })
               }
             </div>
@@ -1137,7 +1137,7 @@ class PollReport extends Component {
                             ) : (
                                 this.props.pollReport.selectedFilter.grupoId ===
                                   GrupoDto.CAPACIDADE_LEITURA ? (
-                                    reportData.map((dados) =>
+                                    reportData && reportData.relatorioPorOrdem.map((dados) =>
                                       montarRelatorioConsolidadosAcimaDoQuartoAno(dados)
                                     )
                                   ) : (
