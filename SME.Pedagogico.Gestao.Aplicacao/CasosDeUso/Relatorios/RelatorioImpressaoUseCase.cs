@@ -34,7 +34,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
 
             if (filtros.ComponenteCurricularId == ComponenteCurricularEnum.Matematica)
             {
-                if (filtros.TurmaCodigo > 0 && filtros.ProficienciaId == ProficienciaEnum.CampoAditivo || filtros.ProficienciaId == ProficienciaEnum.CampoMultiplicativo || filtros.ProficienciaId == ProficienciaEnum.Numeros)
+                if (filtros.TurmaCodigo > 0 && (filtros.ProficienciaId == ProficienciaEnum.CampoAditivo || filtros.ProficienciaId == ProficienciaEnum.CampoMultiplicativo || filtros.ProficienciaId == ProficienciaEnum.Numeros))
                 {
                     tipoRelatorio = TipoRelatorio.RelatorioMatematicaPorTurma;
                 }
@@ -50,7 +50,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 {
                     tipoRelatorio = TipoRelatorio.RelatorioPortuguesPorTurma;
                 }
-                else if (filtros.TurmaCodigo <= 0)
+                else if (filtros.TurmaCodigo <= 0 && filtros.ProficienciaId == ProficienciaEnum.Autoral)
                 {
                     tipoRelatorio = TipoRelatorio.RelatorioPortuguesConsolidado;
                 }
