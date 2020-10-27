@@ -40,7 +40,10 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 }
                 else if (filtros.TurmaCodigo <= 0)
                 {
-                    tipoRelatorio = TipoRelatorio.RelatorioMatematicaConsolidado;
+                    if (filtros.ProficienciaId == ProficienciaEnum.CampoAditivo || filtros.ProficienciaId == ProficienciaEnum.CampoMultiplicativo)
+                    {
+                        tipoRelatorio = TipoRelatorio.RelatorioMatematicaConsolidadoAdtMult;
+                    } else tipoRelatorio = TipoRelatorio.RelatorioMatematicaConsolidado;
                 }
             }
 
