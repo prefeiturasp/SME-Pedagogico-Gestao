@@ -91,7 +91,7 @@ const ChartLabel = (props) => {
             myChart.setOption({
                 tooltip: {},
                 xAxis: {
-                    data: ['Acertou', 'Errou', 'Não Resolveu']
+                    data: ['Acertou', 'Errou', 'Não Resolveu', 'Sem preenchimento']
                 },
                 yAxis: {},
                 series: [{
@@ -109,7 +109,7 @@ const ChartLabel = (props) => {
             myChart2.setOption({
                 tooltip: {},
                 xAxis: {
-                    data: ['Acertou', 'Errou', 'Não Resolveu']
+                    data: ['Acertou', 'Errou', 'Não Resolveu', 'Sem preenchimento']
                 },
                 yAxis: {},
                 series: [{

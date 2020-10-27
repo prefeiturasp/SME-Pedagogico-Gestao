@@ -17,7 +17,7 @@ const ChartLabel = (props) => {
     );
 }
 
-export default class PollReportPortugueseChart extends Component {
+export default class PollReportMathChart extends Component {
     constructor() {
         super();
 
@@ -35,7 +35,7 @@ export default class PollReportPortugueseChart extends Component {
         myChart.setOption({
             tooltip: {},
             xAxis: {
-                data: ['Acertou', 'Errou', 'Não Resolveu']
+                data: ['Acertou', 'Errou', 'Não Resolveu', 'Sem preenchimento']
             },
             yAxis: {},
             series: [{
@@ -53,7 +53,7 @@ export default class PollReportPortugueseChart extends Component {
         myChart2.setOption({
             tooltip: {},
             xAxis: {
-                data: ['Acertou', 'Errou', 'Não Resolveu']
+                data: ['Acertou', 'Errou', 'Não Resolveu', 'Sem preenchimento']
             },
             yAxis: {},
             series: [{
