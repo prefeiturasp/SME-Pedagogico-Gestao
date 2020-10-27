@@ -14,7 +14,7 @@ class MathChart extends Component {
         myChart.setOption({
             tooltip: {},
             xAxis: {
-                data: ['Escreve conv.', 'Não escreve conv.']
+                data: ['Escreve conv.', 'Não escreve conv.', 'S. preenchimento']
             },
             yAxis: {},
             series: [{
@@ -22,10 +22,14 @@ class MathChart extends Component {
                 type: 'bar',
                 data: [{
                     value: this.props.value1,
-                    itemStyle: { color: '#9C96F6' },
+                    itemStyle: { color: '#0077BE' },
                 },
                 {
                     value: this.props.value2,
+                    itemStyle: { color: '#0077BE' },
+                },
+                {
+                    value: this.props.value3,
                     itemStyle: { color: '#0077BE' },
                 }]
             }]
@@ -66,34 +70,67 @@ export default class PollReportMathNumbersChart extends Component {
           
              for (var i = 0; i < this.props.data.length; i++)
                 
-                 switch (this.props.data[i].order) {
-              
+                 switch (this.props.data[i].order) {              
                      case "Familiares/Frequentes":
-                    familiares = { name: "Familiares/Frequentes", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
+                    familiares = { 
+                        name: "Familiares/Frequentes", 
+                        value1: this.props.data[i].numbers[0].quantity, 
+                        value2: this.props.data[i].numbers[1].quantity, 
+                        value3: this.props.data[i].numbers[2] && this.props.data[i].numbers[2].quantity 
+                    }
                     break;
                 case "Opacos":
-                    opacos = { name: "Opacos", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
+                    opacos = { 
+                        name: "Opacos", 
+                        value1: this.props.data[i].numbers[0].quantity, 
+                        value2: this.props.data[i].numbers[1].quantity,
+                        value3: this.props.data[i].numbers[2] && this.props.data[i].numbers[2].quantity 
+                    }
                     break;
                 case "Transparentes":
-                    transparentes = { name: "Transparentes", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
+                    transparentes = { 
+                        name: "Transparentes", 
+                        value1: this.props.data[i].numbers[0].quantity, 
+                        value2: this.props.data[i].numbers[1].quantity,
+                        value3: this.props.data[i].numbers[2] && this.props.data[i].numbers[2].quantity 
+                    }
                     break;
                 case "Terminam em zero":
-                    terminamZero = { name: "Terminam em zero", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
+                    terminamZero = { 
+                        name: "Terminam em zero", 
+                        value1: this.props.data[i].numbers[0].quantity, 
+                        value2: this.props.data[i].numbers[1].quantity, 
+                        value3: this.props.data[i].numbers[2] && this.props.data[i].numbers[2].quantity 
+                    }
                     break;
                      case "Algarismos iguais":
-                    algarismos = { name: "Algarismos Iguais", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
+                    algarismos = { 
+                        name: "Algarismos Iguais", 
+                        value1: this.props.data[i].numbers[0].quantity, 
+                        value2: this.props.data[i].numbers[1].quantity, 
+                        value3: this.props.data[i].numbers[2] && this.props.data[i].numbers[2].quantity 
+                    }
                     break;
                 case "Processo de generalização":
-                    processoGeneralizacao = { name: "Processo de generalização", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
+                    processoGeneralizacao = { 
+                        name: "Processo de generalização", 
+                        value1: this.props.data[i].numbers[0].quantity, 
+                        value2: this.props.data[i].numbers[1].quantity, 
+                        value3: this.props.data[i].numbers[2] && this.props.data[i].numbers[2].quantity 
+                    }
                     break;
                 case "Zero intercalado":
-                    zeroIntercalado = { name: "Zero intercalado", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
+                    zeroIntercalado = { 
+                        name: "Zero intercalado", 
+                        value1: this.props.data[i].numbers[0].quantity, 
+                        value2: this.props.data[i].numbers[1].quantity, 
+                        value3: this.props.data[i].numbers[2] && this.props.data[i].numbers[2].quantity 
+                    }
                     break;
                 default:
                     break;
             }
-         }
-       
+         }       
 
         return (
             <div>
@@ -119,3 +156,25 @@ export default class PollReportMathNumbersChart extends Component {
         );
     }
 }
+
+// const PollReportMathNumbersChart = ({ data }) => (            
+//     <div style={{display: "grid", gridTemplateColumns: "1fr 1fr"}}>
+//         {
+//             data && data.map(item => {
+//                 const obj = {
+//                     name: item.order, 
+//                     value1: item.numbers[0] && item.numbers[0].quantity, 
+//                     value2: item.numbers[1] && item.numbers[1].quantity, 
+//                     value3: item.numbers[2] && item.numbers[2].quantity 
+//                 };    
+//                 return (                          
+//                     <div className="d-flex flex-fill justify-content-center">
+//                         {item.order !== null && <MathChart {...obj} />}
+//                     </div>                          
+//                 );
+//             })
+//         }
+//     </div>
+// );
+
+// export default PollReportMathNumbersChart;
