@@ -11,17 +11,17 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
     {
         [HttpPost]
         public async Task<IActionResult> Gerar([FromBody]RelatorioImpressaoFiltroDto filtros,
-            [FromServices]IRelatorioImpressaoUseCase relatorioMatematicaNumerosAutoralConsolidadoUseCase)
+            [FromServices]IRelatorioImpressaoUseCase relatorioImpressaoUseCase)
         {
-            await relatorioMatematicaNumerosAutoralConsolidadoUseCase.Executar(filtros);
+            await relatorioImpressaoUseCase.Executar(filtros);
             return Ok();
         }
         [HttpPost]
         [Route("sync")]
         public async Task<IActionResult> GerarSync([FromBody]RelatorioImpressaoFiltroDto filtros,
-            [FromServices]IRelatorioImpressaoUseCase relatorioMatematicaNumerosAutoralConsolidadoUseCase)
+            [FromServices]IRelatorioImpressaoUseCase relatorioImpressaoUseCase)
         {
-            return Ok(await relatorioMatematicaNumerosAutoralConsolidadoUseCase.ExecutarSync(filtros));
+            return Ok(await relatorioImpressaoUseCase.ExecutarSync(filtros));
         }
     }
 }
