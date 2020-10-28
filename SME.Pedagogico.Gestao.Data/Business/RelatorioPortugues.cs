@@ -131,7 +131,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             if (alunos == null || !alunos.Any())
                 throw new Exception("Não encontrado alunos para a turma informda");
-            
+
             return alunos;
         }
 
@@ -274,6 +274,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 relatorio.Perguntas = listaRetorno;
 
+                MapearGrafico(grupo, relatorio);
+
                 return relatorio;
             }
 
@@ -284,7 +286,24 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             relatorio.Perguntas = listaRetorno;
 
+            MapearGrafico(grupo, relatorio);
+
             return relatorio;
+        }
+
+        private static void MapearGrafico(Grupo grupo, RelatorioAutoralLeituraProducaoDto relatorio)
+        {
+            var grafico = new Grafico
+            {
+                NomeGrafico = grupo.Descricao,
+                Barras = relatorio.Perguntas.Select(pergunta => new GraficoBarra
+                {
+                    Label = pergunta.Nome,
+                    Value = pergunta.Total.Quantidade
+                }).ToList()
+            };
+
+            relatorio.Graficos.Add(grafico);
         }
 
         private async Task<int> ObterQuantidadeAlunosAtivos(RelatorioPortuguesFiltroDto filtroRelatorioSondagem, PeriodoFixoAnual periodo)
