@@ -5,7 +5,8 @@ using System.Text;
 namespace SME.Pedagogico.Gestao.Data.DTO.Matematica.Relatorio
 {
     public class filtrosRelatorioDTO
-    {     
+    {
+        public string GrupoId { get; set; }
         public string DescricaoDisciplina { get; set; }
         public string DescricaoPeriodo { get; set; }
         public string CodigoDre { get; set; }
