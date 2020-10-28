@@ -34,7 +34,8 @@ namespace SME.Pedagogico.Gestao.Aplicacao
 
             if (filtros.ComponenteCurricularId == ComponenteCurricularEnum.Matematica)
             {
-                if (filtros.TurmaCodigo > 0 && (filtros.ProficienciaId == ProficienciaEnum.CampoAditivo || filtros.ProficienciaId == ProficienciaEnum.CampoMultiplicativo || filtros.ProficienciaId == ProficienciaEnum.Numeros))
+                if (filtros.TurmaCodigo > 0 && (filtros.ProficienciaId == ProficienciaEnum.CampoAditivo || filtros.ProficienciaId == ProficienciaEnum.CampoMultiplicativo 
+                    || filtros.ProficienciaId == ProficienciaEnum.Numeros || filtros.ProficienciaId == ProficienciaEnum.Autoral))
                 {
                     tipoRelatorio = TipoRelatorio.RelatorioMatematicaPorTurma;
                 }
