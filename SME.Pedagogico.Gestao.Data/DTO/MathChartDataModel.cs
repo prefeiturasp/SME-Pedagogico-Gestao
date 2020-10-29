@@ -11,5 +11,6 @@ namespace SME.Pedagogico.Gestao.Data.DTO
         public string Name { get; set; }
         public List<int> Idea { get; set; }
         public List<int> Result { get; set; }
+        public List<int> NoFill { get; set; }
     }
 }
