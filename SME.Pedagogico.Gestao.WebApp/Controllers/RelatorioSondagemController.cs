@@ -69,14 +69,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
             if (parameters.Discipline == "Língua Portuguesa")
             {
-                Periodo periodo = null;
+                var businessPoll = new Data.Business.PollPortuguese(_config);
 
-                if (Convert.ToInt32(parameters.CodigoCurso) >= 4)
-                {
-                    var businessPoll = new Data.Business.PollPortuguese(_config);
-
-                    periodo = await businessPoll.ObterPeriodoRelatorioPorDescricao(parameters.Term);
-                }
+                Periodo periodo = await businessPoll.ObterPeriodoRelatorioPorDescricao(parameters.Term);
 
                 if (parameters.ClassroomReport)
                 {
@@ -92,7 +87,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     if (parameters.GrupoId != null && parameters.GrupoId.Equals("e27b99a3-789d-43fb-a962-7df8793622b1"))
                     {
                         var relatorioCapacidadeLeitura = new RelatorioPortuguesCapacidadeLeitura();
-                       var relatorio = await relatorioCapacidadeLeitura.ObterRelatorioCapacidadeLeituraPorTurma(new RelatorioPortuguesFiltroDto
+                        var relatorio = await relatorioCapacidadeLeitura.ObterRelatorioCapacidadeLeituraPorTurma(new RelatorioPortuguesFiltroDto
                         {
                             AnoEscolar = Convert.ToInt32(parameters.CodigoCurso),
                             AnoLetivo = Convert.ToInt32(parameters.SchoolYear),
@@ -111,18 +106,17 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 }
                 else
                 {
-                    var businessPoll = new Data.Business.PollPortuguese(_config);
+
+                    if (periodo == null)
+                        return StatusCode(500, $"Não foi possivel encontrar o périodo com descrição {parameters.Term}");
 
                     if (Convert.ToInt32(parameters.CodigoCurso) < 4)
                     {
                         PollReportPortugueseResult result = new PollReportPortugueseResult();
-                        result = await BuscarDadosSyncAsync(parameters, parameters.SchoolYear, parameters.CodigoDRE, parameters.CodigoEscola, parameters.CodigoCurso, businessPoll);
+                        result = await BuscarDadosSyncAsync(parameters, parameters.SchoolYear, parameters.CodigoDRE, parameters.CodigoEscola, parameters.CodigoCurso, businessPoll, periodo);
 
                         return (Ok(result));
                     }
-
-                    if (periodo == null)
-                        return StatusCode(500, $"Não foi possivel encontrar o périodo com descrição {parameters.Term}");
 
                     if (parameters.GrupoId.Equals("e27b99a3-789d-43fb-a962-7df8793622b1"))
                     {
@@ -228,8 +222,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
         private async Task<RelatorioAutoralLeituraProducaoDto> BuscarDadosAutoralAsync(ParametersModel parametersModel, string periodoId)
         {
-
-
             var relatorioPortugues = new RelatorioPortugues();
 
             return await relatorioPortugues.ObterRelatorioConsolidadoPortugues(new RelatorioPortuguesFiltroDto
@@ -244,9 +236,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             });
         }
 
-        private async Task<PollReportPortugueseResult> BuscarDadosSyncAsync(ParametersModel parameters, string anoLetivo, string codigoDre, string codigoEscola, string codigoCurso, PollPortuguese businessPoll)
+        private async Task<PollReportPortugueseResult> BuscarDadosSyncAsync(ParametersModel parameters, string anoLetivo, string codigoDre, string codigoEscola, string codigoCurso, PollPortuguese businessPoll, Periodo periodo)
         {
-            return await businessPoll.BuscarDadosRelatorioPortugues(parameters.Proficiency, parameters.Term, anoLetivo, codigoDre, codigoEscola, codigoCurso);
+            return await businessPoll.BuscarDadosRelatorioPortugues(parameters.Proficiency, parameters.Term, anoLetivo, codigoDre, codigoEscola, codigoCurso, periodo);
         }
 
         private async Task<PollReportPortugueseStudentResult> BuscarDadosPorTurmaAsync(ParametersModel parameters)
