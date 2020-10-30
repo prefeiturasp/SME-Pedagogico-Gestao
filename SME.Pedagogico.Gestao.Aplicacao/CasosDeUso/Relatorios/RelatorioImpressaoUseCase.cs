@@ -52,7 +52,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
             {
                 if (filtros.TurmaCodigo > 0)
                 {
-                    if (!string.IsNullOrEmpty(filtros.Ano) && int.Parse(filtros.Ano) > 4 && filtros.GrupoId.Equals("e27b99a3-789d-43fb-a962-7df8793622b1"))
+                    if (!string.IsNullOrEmpty(filtros.Ano) && int.Parse(filtros.Ano) >= 4 && filtros.GrupoId.Equals("e27b99a3-789d-43fb-a962-7df8793622b1"))
                         tipoRelatorio = TipoRelatorio.RelatorioPortuguesCapLeituraPorTurma;
                     else
                         tipoRelatorio = TipoRelatorio.RelatorioPortuguesPorTurma;
