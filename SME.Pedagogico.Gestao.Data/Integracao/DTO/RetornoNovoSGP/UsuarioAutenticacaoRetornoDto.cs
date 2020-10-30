@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP
 {
@@ -16,5 +17,6 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP
         public DateTime DataHoraExpiracao { get; set; }
         public string Token { get; set; }
         public Guid UsuarioId { get; set; }
+        public IEnumerable<MenuPermissaoDto> Permissoes { get; set; }
     }
 }

@@ -126,20 +126,13 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> ListarDisciplinasPorRfTurma(BuscarDisciplinasPorRfTurmaDto buscarDisciplinasPorRfTurmaDto)
         {
-            try
-            {
-                var novoSgpApi = new NovoSGPAPI();
-                var listDiscplines = await novoSgpApi.DisciplinasPorTurma(buscarDisciplinasPorRfTurmaDto);
+            var novoSgpApi = new NovoSGPAPI();
+            var listDiscplines = await novoSgpApi.DisciplinasPorTurma(buscarDisciplinasPorRfTurmaDto);
 
-                if (listDiscplines != null)
-                    return (Ok(listDiscplines));
+            if (listDiscplines != null)
+                return (Ok(listDiscplines));
 
-                return (NoContent());
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex);
-            }
+            return (NoContent());
         }
     }
 }

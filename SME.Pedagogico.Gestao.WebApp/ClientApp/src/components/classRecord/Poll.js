@@ -3,7 +3,6 @@ import "./Poll.css";
 import Card from "../containers/Card";
 import PollFilter from "./PollFilter";
 import { DISCIPLINES_ENUM } from "../../Enums";
-import { ROLES_ENUM } from "../../Enums";
 
 import { ClassRoomEnum } from "../polls/component/ClassRoomHelper";
 import { connect } from "react-redux";
@@ -35,6 +34,7 @@ import TwoStepsSave from "../messaging/TwoStepsSave";
 import TwoSteps from "../messaging/TwoSteps";
 import MensagemConfirmacaoAutoral from "./SondagemPortuguesAutoral/mensagemConfirmacaoAutoral";
 import Loader from "../loader/Loader";
+
 class Poll extends Component {
   constructor(props) {
     super(props);
@@ -130,12 +130,12 @@ class Poll extends Component {
     }
   }
 
-  componentDidMount() { }
+  componentDidMount() {}
 
   componentWillUpdate() {
     var todayDate = new Date();
     if (this.props.filters !== undefined) {
-      if (this.props.filters.period !== null) {
+      if (this.props.filters.period && this.props.filters.period.length) {
         var period = this.props.filters.period;
         period.forEach((item) => {
           if (item.bimestre === 1) {
@@ -734,8 +734,8 @@ class Poll extends Component {
 
       const sequenciaOrdemSelecionada = sequenciasOrdens
         ? sequenciasOrdens.findIndex(
-          (sequencia) => sequencia.ordemId === idOrdemSelecionada
-        )
+            (sequencia) => sequencia.ordemId === idOrdemSelecionada
+          )
         : 0;
 
       try {
@@ -754,8 +754,10 @@ class Poll extends Component {
       return;
     }
 
-    if (this.props.pollStudents &&
-      this.props.pollStudents.pollSelected == ClassRoomEnum.ClassMTAutoral) {
+    if (
+      this.props.pollStudents &&
+      this.props.pollStudents.pollSelected == ClassRoomEnum.ClassMTAutoral
+    ) {
       this.props.autoralMethods.salvaSondagemAutoralMatematica(
         this.props.autoral.listaAlunosAutoralMatematica
       );
@@ -1006,9 +1008,16 @@ class Poll extends Component {
   }
 
   restricaoDisciplina(disciplina) {
-    return this.props.user.activeRole.roleName === ROLES_ENUM.PROFESSOR &&
-      !DISCIPLINES_ENUM.PossuiDisciplinaRegencia(this.props.filters.listDisciplines) &&
-      !DISCIPLINES_ENUM.PossuiDisciplina(disciplina, this.props.filters.listDisciplines);
+    return (
+      this.props.user.ehProfessor &&
+      !DISCIPLINES_ENUM.PossuiDisciplinaRegencia(
+        this.props.filters.listDisciplines
+      ) &&
+      !DISCIPLINES_ENUM.PossuiDisciplina(
+        disciplina,
+        this.props.filters.listDisciplines
+      )
+    );
   }
 
   render() {
@@ -1063,7 +1072,7 @@ export default connect(
     filters: state.filters,
     autoral: state.autoral,
     sondagemPortugues: state.sondagemPortugues,
-    user: state.user
+    user: state.user,
   }),
   (dispatch) => ({
     pollMethods: bindActionCreators(actionCreatorsPoll, dispatch),

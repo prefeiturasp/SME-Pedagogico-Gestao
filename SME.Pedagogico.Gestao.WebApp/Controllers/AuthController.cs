@@ -6,8 +6,10 @@ using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO;
+using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP;
 using SME.Pedagogico.Gestao.Models.Authentication;
 using SME.Pedagogico.Gestao.WebApp.Contexts;
+using SME.Pedagogico.Gestao.WebApp.Models;
 using SME.Pedagogico.Gestao.WebApp.Models.Auth;
 using System;
 using System.Collections.Generic;
@@ -19,9 +21,6 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP;
-using SME.Pedagogico.Gestao.Data.DataTransfer;
-using SME.Pedagogico.Gestao.WebApp.Models;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
@@ -283,7 +282,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                             haveOccupationAccess = true;
                             isTeacher = true;
                             qtdIsTeacher += 1;
-                            break;                            
+                            break;
                         case "3310":
                             roleName = "Professor";
                             accessLevel = "32";
@@ -424,7 +423,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// <returns>Token, Sessão e RefreshToken gerado à partir das informações do usuário encontrado, caso não seja encontrado nenhum usuário correspondente à credencial, o método retorna usuário não autorizado.</returns>
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult<string>> Login([FromBody]CredentialModel credential)
+        public async Task<ActionResult<string>> Login([FromBody] CredentialModel credential)
         {
             if (Authentication.ValidateUser(credential.Username, credential.Password))
             {
@@ -452,7 +451,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// <returns>Token e RefreshToken gerado à partir do RefreshToken utilizado, caso o RefreshToken não seja válido, o método retorna usuário não autorizado.</returns>
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult<string>> RefreshLoginJWT([FromBody]CredentialModel credential)
+        public async Task<ActionResult<string>> RefreshLoginJWT([FromBody] CredentialModel credential)
         {
             // Faz a pesquisa no banco de dados (smeManagementDB/LoggedUsers) se o usuário está listado como logado possuindo a mesma sessão e o mesmo refresh token
             LoggedUser loggedUser = await Authentication.GetLoggedUser(credential.Username, credential.Session, credential.RefreshToken);
@@ -488,7 +487,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// <returns>Retorna verdadeiro caso o usuário estiver logado com as credenciais especificadas, caso contrário retorna falso.</returns>
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult<string>> Logout([FromBody]CredentialModel credential)
+        public async Task<ActionResult<string>> Logout([FromBody] CredentialModel credential)
         {
             return (Ok(await Data.Business.Authentication.LogoutUser(credential.Username, credential.Session)));
         }
@@ -496,7 +495,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult<string>> LoginIdentityNovo([FromBody]CredentialModel credential)
+        public async Task<ActionResult<string>> LoginIdentityNovo([FromBody] CredentialModel credential)
         {
             var api = new NovoSGPAPI();
 
@@ -622,7 +621,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// <returns>Informações sobre o usuário que está tentando logar (tokens de acesso e cookies), caso não seja encontrado nenhum usuário correspondente à credencial, o método retorna usuário não autorizado.</returns>
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult<string>> LoginIdentity([FromBody]CredentialModel credential)
+        public async Task<ActionResult<string>> LoginIdentity([FromBody] CredentialModel credential)
         {
             var retornoAutenticacao = await _apiNovoSgp.Autenticar(credential.Username, credential.Password);
 
@@ -639,75 +638,106 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             if (retornoAutenticacao.ModificarSenha)
                 return Unauthorized("Você deve alterar a sua senha diretamente no Novo SGP");
 
-            //cadastra usuario se não existir
-            await CadastraUsuario(credential);
+            var menus = await _apiNovoSgp.ObterMenus(retornoAutenticacao.Token);
 
-            var meusDados = await _apiNovoSgp.MeusDados(retornoAutenticacao.Token);
+            var menussSondagem = menus.SelectMany(c => c.Menus).Where(c => c.Codigo < 9).ToDictionary(c => c.Url, k => k);
 
-            if (meusDados == null)
-                return Unauthorized("Não foi possivel obter os dados do usuário. Contate a SME");
-
-            var ProfileBusiness = new Profile(_config);            
-
-            var privileged = new List<PrivilegedAccess>();
-
-            if (retornoAutenticacao.PerfisUsuario.PossuiPerfilDre)
+            retornoAutenticacao.Permissoes = new List<MenuPermissaoDto>
             {
-                var perfisDre = Perfil.ObterPerfis().Where(x => x.IsDre);
-
-                var perfilAbrangencia = perfisDre.FirstOrDefault(x => retornoAutenticacao.PerfisUsuario.Perfis.Any(z => z.CodigoPerfil.ToString().ToUpper().Equals(x.PerfilGuid.ToString().ToUpper())));
-
-                var abrangencia = await _abrangenciaAPI.ObterAbrangenciaCompactaDreDetalhes(retornoAutenticacao.Token, meusDados.CodigoRf, perfilAbrangencia.PerfilGuid);
-
-                if (abrangencia != null && abrangencia.Dres != null && abrangencia.Dres.Any())
-                    privileged = abrangencia.Dres.Select(x => new PrivilegedAccess
-                    {
-                        DreCodeEol = x.CodigoDRE,
-                        Login = credential.Username,
-                        Name = meusDados.Nome,
-                        OccupationPlace = x.NomeDRE,
-                        OccupationPlaceCode = 3
-                    }).ToList();
-
-                await Authentication.SetPrivilegedAccess(credential.Username, privileged);
-            }
-
-            if (retornoAutenticacao.PerfisUsuario.PossuiPerfilSme)
-            {
-                privileged.Add(new PrivilegedAccess
+                menussSondagem["/sondagem"],
+                new MenuPermissaoDto
                 {
-                    Login = credential.Username,
-                    Name = meusDados.Nome,
-                    OccupationPlace = "SME",
-                    OccupationPlaceCode = 2
-                });
+                    PodeAlterar = false,
+                    PodeConsultar = true,
+                    PodeExcluir = false,
+                    PodeIncluir = false,
+                },
+            };
+            return Ok(retornoAutenticacao);
 
-                await Authentication.SetPrivilegedAccess(credential.Username, privileged);
-            }
+            ////cadastra usuario se não existir
+            //await CadastraUsuario(credential);
 
-            var listOccupations = new Dictionary<string, string>();
-            var occupationRF = await ProfileBusiness.GetOccupationsRF(meusDados.CodigoRf);
+            //var meusDados = await _apiNovoSgp.MeusDados(retornoAutenticacao.Token);
 
-            if (occupationRF != null)
-                listOccupations = await SetOccupationsRF(credential.Username, occupationRF);
+            //if (meusDados == null)
+            //    return Unauthorized("Não foi possivel obter os dados do usuário. Contate a SME");
 
-            var roles = await GetUserRoles(credential.Username);
+            //var ProfileBusiness = new Profile(_config);
 
-            if (!roles.Any())
-                return Unauthorized("Usuario não autorizado");
+            //var privileged = new List<PrivilegedAccess>();
 
-            string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
-            string refreshToken = retornoAutenticacao.Token; // Usa token criado no novo SGP
-            await Authentication.LoginUser(credential.Username, session, refreshToken, retornoAutenticacao.DataHoraExpiracao); // Loga o usuário no sistema
+            //if (retornoAutenticacao.PerfisUsuario.PossuiPerfilDre)
+            //{
+            //    var perfisDre = Perfil.ObterPerfis().Where(x => x.IsDre);
 
-            return Ok(new
-            {
-                Token = CreateToken(credential.Username),
-                Session = session,
-                RefreshToken = refreshToken,
-                roles,
-                ListOccupations = listOccupations,
-            });
+            //    var perfilAbrangencia = perfisDre.FirstOrDefault(x => retornoAutenticacao.PerfisUsuario.Perfis.Any(z => z.CodigoPerfil.ToString().ToUpper().Equals(x.PerfilGuid.ToString().ToUpper())));
+
+            //    var abrangencia = await _abrangenciaAPI.ObterAbrangenciaCompactaDreDetalhes(retornoAutenticacao.Token, meusDados.CodigoRf, perfilAbrangencia.PerfilGuid);
+
+            //    if (abrangencia != null && abrangencia.Dres != null && abrangencia.Dres.Any())
+            //        privileged = abrangencia.Dres.Select(x => new PrivilegedAccess
+            //        {
+            //            DreCodeEol = x.CodigoDRE,
+            //            Login = credential.Username,
+            //            Name = meusDados.Nome,
+            //            OccupationPlace = x.NomeDRE,
+            //            OccupationPlaceCode = 3
+            //        }).ToList();
+
+            //    await Authentication.SetPrivilegedAccess(credential.Username, privileged);
+            //}
+
+            //if (retornoAutenticacao.PerfisUsuario.PossuiPerfilSme)
+            //{
+            //    privileged.Add(new PrivilegedAccess
+            //    {
+            //        Login = credential.Username,
+            //        Name = meusDados.Nome,
+            //        OccupationPlace = "SME",
+            //        OccupationPlaceCode = 2
+            //    });
+
+            //    await Authentication.SetPrivilegedAccess(credential.Username, privileged);
+            //}
+
+            //var listOccupations = new Dictionary<string, string>();
+            //var occupationRF = await ProfileBusiness.GetOccupationsRF(meusDados.CodigoRf);
+
+            //if (occupationRF != null)
+            //    listOccupations = await SetOccupationsRF(credential.Username, occupationRF);
+
+            //return Ok(retornoAutenticacao);
+
+            //var roles = await GetUserRoles(credential.Username);
+
+            //if (!roles.Any())
+            //    return Unauthorized("Usuario não autorizado");
+
+            //string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
+            //string refreshToken = retornoAutenticacao.Token; // Usa token criado no novo SGP
+            //await Authentication.LoginUser(credential.Username, session, refreshToken, retornoAutenticacao.DataHoraExpiracao); // Loga o usuário no sistema
+
+
+            //    var permissoes = new {
+            //  "/": retornoAutenticacao.permissoes["/sondagem"],
+            //  "/Relatorios/Sondagem": usuario.permissoes["/Relatorios/Sondagem"],
+            //  "/Usuario/TrocarPerfil": {
+            //    podeAlterar: false,
+            //    podeConsultar: true,
+            //    podeExcluir: false,
+            //    podeIncluir: false,
+            //  },
+            //};
+
+            //return Ok(new
+            //{
+            //    //Token = CreateToken(credential.Username),
+            //    //Session = session,
+            //    //RefreshToken = refreshToken,
+            //    //roles,
+            //    ListOccupations = listOccupations,
+            //});
         }
 
         private async Task<List<UserRoleModel>> GetRolesAuthentication(CredentialModel credential, UsuarioAutenticacaoRetornoDto retornoAutenticacao)

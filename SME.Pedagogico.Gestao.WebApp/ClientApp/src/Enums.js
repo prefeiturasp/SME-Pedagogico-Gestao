@@ -50,65 +50,74 @@
 export const DISCIPLINES_ENUM = {
   DISCIPLINA_PORTUGUES: {
     Codigo: 138,
-    Descricao: "Língua Portuguesa"    
+    Descricao: "Língua Portuguesa",
   },
   DISCIPLINA_MATEMATICA: {
     Codigo: 2,
-    Descricao: "Matemática"    
-  },  
+    Descricao: "Matemática",
+  },
   DISCIPLINA_REGENCIA_CLAS_F_I: {
     Codigo: 508,
-    Descricao: "REGENCIA CLAS.F I"
+    Descricao: "REGENCIA CLAS.F I",
   },
   DISCIPLINA_REG_CLASSE_CICLO_ALFAB_INTERD_5HRS: {
     Codigo: 1105,
-    Descricao: "REG CLASSE CICLO ALFAB / INTERD 5HRS"
+    Descricao: "REG CLASSE CICLO ALFAB / INTERD 5HRS",
   },
   DISCIPLINA_REG_CLASSE_CICLO_ALFAB_INTERD_4HRS: {
     Codigo: 1112,
-    Descricao: "REG CLASSE CICLO ALFAB / INTERD 4HRS"
+    Descricao: "REG CLASSE CICLO ALFAB / INTERD 4HRS",
   },
   DISCIPLINA_REG_CLASSE_ESPECIAL_DIURNO: {
     Codigo: 1115,
-    Descricao: "REG CLASSE ESPECIAL DIURNO"
+    Descricao: "REG CLASSE ESPECIAL DIURNO",
   },
   DISCIPLINA_REG_CLASSE_ALFAB_INTEGRAL_TARDE: {
     Codigo: 1121,
-    Descricao: "REG CLASSE ALFAB_INTEGRAL TARDE"
+    Descricao: "REG CLASSE ALFAB_INTEGRAL TARDE",
   },
   DISCIPLINA_REG_CLASSE_ALFAB_INTEGRAL_MANHA: {
     Codigo: 1124,
-    Descricao: "REG CLASSE ALFAB_INTEGRAL MANHA"
+    Descricao: "REG CLASSE ALFAB_INTEGRAL MANHA",
   },
   DISCIPLINA_REG_CLASSE_SP_INTEGRAL_1A5_ANOS: {
     Codigo: 1213,
-    Descricao: "REG CLASSE SP INTEGRAL 1A5 ANOS"
+    Descricao: "REG CLASSE SP INTEGRAL 1A5 ANOS",
   },
   DISCIPLINA_REG_CLASSE_SURDO_CEGUEIRA: {
     Codigo: 1301,
-    Descricao: "REG CLASSE SURDOCEGUEIRA"
+    Descricao: "REG CLASSE SURDOCEGUEIRA",
   },
-  PossuiDisciplina(disciplina, listaDisciplinas){
-    for(var disciplinaAtual in listaDisciplinas){
-      if (disciplina.Codigo === listaDisciplinas[disciplinaAtual].codigoComponenteCurricular)
+  PossuiDisciplina(disciplina, listaDisciplinas) {
+    for (var disciplinaAtual in listaDisciplinas) {
+      if (
+        disciplina.Codigo ===
+        listaDisciplinas[disciplinaAtual].codigoComponenteCurricular
+      )
         return true;
     }
-    return false;    
+    return false;
   },
-  PossuiDisciplinaRegencia(listaDisciplinas){
-    var disciplinasRegencia = [DISCIPLINES_ENUM.DISCIPLINA_REGENCIA_CLAS_F_I.Codigo,
-                               DISCIPLINES_ENUM.DISCIPLINA_REG_CLASSE_CICLO_ALFAB_INTERD_5HRS.Codigo,
-                               DISCIPLINES_ENUM.DISCIPLINA_REG_CLASSE_CICLO_ALFAB_INTERD_4HRS.Codigo,
-                               DISCIPLINES_ENUM.DISCIPLINA_REG_CLASSE_ESPECIAL_DIURNO.Codigo, 
-                               DISCIPLINES_ENUM.DISCIPLINA_REG_CLASSE_ALFAB_INTEGRAL_TARDE.Codigo,
-                               DISCIPLINES_ENUM.DISCIPLINA_REG_CLASSE_ALFAB_INTEGRAL_MANHA.Codigo,
-                               DISCIPLINES_ENUM.DISCIPLINA_REG_CLASSE_SP_INTEGRAL_1A5_ANOS.Codigo,
-                               DISCIPLINES_ENUM.DISCIPLINA_REG_CLASSE_SURDO_CEGUEIRA.Codigo];
+  PossuiDisciplinaRegencia(listaDisciplinas) {
+    var disciplinasRegencia = [
+      DISCIPLINES_ENUM.DISCIPLINA_REGENCIA_CLAS_F_I.Codigo,
+      DISCIPLINES_ENUM.DISCIPLINA_REG_CLASSE_CICLO_ALFAB_INTERD_5HRS.Codigo,
+      DISCIPLINES_ENUM.DISCIPLINA_REG_CLASSE_CICLO_ALFAB_INTERD_4HRS.Codigo,
+      DISCIPLINES_ENUM.DISCIPLINA_REG_CLASSE_ESPECIAL_DIURNO.Codigo,
+      DISCIPLINES_ENUM.DISCIPLINA_REG_CLASSE_ALFAB_INTEGRAL_TARDE.Codigo,
+      DISCIPLINES_ENUM.DISCIPLINA_REG_CLASSE_ALFAB_INTEGRAL_MANHA.Codigo,
+      DISCIPLINES_ENUM.DISCIPLINA_REG_CLASSE_SP_INTEGRAL_1A5_ANOS.Codigo,
+      DISCIPLINES_ENUM.DISCIPLINA_REG_CLASSE_SURDO_CEGUEIRA.Codigo,
+    ];
 
-    for(var disciplinaAtual in listaDisciplinas){      
-      if (disciplinasRegencia.includes(listaDisciplinas[disciplinaAtual].codigoComponenteCurricular))
-        return true;      
+    for (var disciplinaAtual in listaDisciplinas) {
+      if (
+        disciplinasRegencia.includes(
+          listaDisciplinas[disciplinaAtual].codigoComponenteCurricular
+        )
+      )
+        return true;
     }
-    return false;    
+    return false;
   },
 };

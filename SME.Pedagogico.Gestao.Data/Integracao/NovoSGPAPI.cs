@@ -138,5 +138,14 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
 
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authenticationToken);
         }
+
+        public async Task<IEnumerable<MenuRetornoDto>> ObterMenus(string token)
+        {
+            ResetarCabecalhoAutenticado(token);
+
+            var resposta = await httpClient.GetAsync(EndpointsNovoSGP.Menus());
+
+            return await TrataRetorno<IEnumerable<MenuRetornoDto>>(resposta);
+        }
     }
 }

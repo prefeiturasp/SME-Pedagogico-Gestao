@@ -9,6 +9,7 @@ import { bindActionCreators } from "redux";
 import { ROLES_ENUM } from "../../Enums";
 import TwoSteps from "../messaging/TwoSteps";
 import MensagemConfirmacaoAutoral from "./SondagemPortuguesAutoral/mensagemConfirmacaoAutoral";
+import permissoes from "../../utils/permissoes";
 
 class PollFilter extends Component {
   constructor(props) {
@@ -40,6 +41,7 @@ class PollFilter extends Component {
   }
 
   componentWillMount() {
+    debugger;
     var anoLetivo = new Date();
     var anoAtual = anoLetivo.getFullYear();
     this.setState({
@@ -51,32 +53,32 @@ class PollFilter extends Component {
 
     this.applyRole(anoAtual);
 
-    if (ROLES_ENUM.ApenasRelatorios(this.props.user.activeRole.roleName)) {
+    if (permissoes.ApenasRelatorios(this.props.user)) {
       this.props.pollRouterMethods.setActiveRoute("Relatórios");
     }
   }
 
   applyRole(ano) {
-    if (ROLES_ENUM.IsDRE(this.props.user.activeRole.roleName))
+    if (permissoes.IsDRE(this.props.user))
       this.props.filterMethods.getDreAdm(this.props.user.username);
-    else if (ROLES_ENUM.IsSME(this.props.user.activeRole.roleName))
+    else if (permissoes.IsSME(this.props.user))
       this.props.filterMethods.getListDres();
-    else if (ROLES_ENUM.IsUE(this.props.user.activeRole.roleName))
+    else if (permissoes.IsUE(this.props.user))
       this.getProfileInformationProf(ano);
   }
 
   getProfileInformationProf(anoAtual) {
     var role = this.props.user;
-
-    if (role.activeRole.roleName === ROLES_ENUM.PROFESSOR) {
-      var codeOccupations = this.props.user.listOccupations.Professor;
-    } else if (role.activeRole.roleName === ROLES_ENUM.COORDENADOR_PEDAGOGICO) {
-      var codeOccupations = this.props.user.listOccupations.CP;
-    } else if (role.activeRole.roleName === ROLES_ENUM.DIRETOR) {
-      var codeOccupations = this.props.user.listOccupations.Diretor;
-    } else if (role.activeRole.roleName === ROLES_ENUM.AD) {
-      var codeOccupations = this.props.user.listOccupations.AD;
-    }
+    const codeOccupations = null;
+    // if (this.props.user.ehProfessor) {
+    //   var codeOccupations = this.props.user.listOccupations.Professor;
+    // } else if (role.activeRole.roleName === ROLES_ENUM.COORDENADOR_PEDAGOGICO) {
+    //   var codeOccupations = this.props.user.listOccupations.CP;
+    // } else if (role.activeRole.roleName === ROLES_ENUM.DIRETOR) {
+    //   var codeOccupations = this.props.user.listOccupations.Diretor;
+    // } else if (role.activeRole.roleName === ROLES_ENUM.AD) {
+    //   var codeOccupations = this.props.user.listOccupations.AD;
+    // }
 
     var profileOccupatios = {
       codigoRF: this.props.user.username,
@@ -113,7 +115,7 @@ class PollFilter extends Component {
     //     classroom: "",
     // });
 
-    this.applyRole(label);
+    // this.applyRole(label);
   }
 
   selectedDreTeacher(event) {
@@ -125,23 +127,30 @@ class PollFilter extends Component {
 
     this.props.filterMethods.activeDreCode(schoolCode);
 
-    var listSchools = this.props.filters.filterTeachers.escolas.filter(
-      (x) => x.codigoDRE === label
-    );
+    if (
+      this.props.filters &&
+      this.props.filters.filterTeachers &&
+      this.props.filters.filterTeachers.escolas &&
+      this.props.filters.filterTeachers.escolas.length
+    ) {
+      var listSchools = this.props.filters.filterTeachers.escolas.filter(
+        (x) => x.codigoDRE === label
+      );
 
-    if (listSchools.length === 1) {
-      var filterSchool = {
-        schoolCodeEol: listSchools[0].codigo,
-      };
+      if (listSchools.length === 1) {
+        var filterSchool = {
+          schoolCodeEol: listSchools[0].codigo,
+        };
 
-      this.props.filterMethods.activeSchoolCode(filterSchool);
+        this.props.filterMethods.activeSchoolCode(filterSchool);
+      }
+
+      this.setState({
+        listSchools: listSchools,
+        yearClassroom: null,
+        classroom: "",
+      });
     }
-
-    this.setState({
-      listSchools: listSchools,
-      yearClassroom: null,
-      classroom: "",
-    });
   }
   selectedSchoolTeacher(event) {
     var listClassRoomTeacher = [];
@@ -154,13 +163,13 @@ class PollFilter extends Component {
 
     this.props.filterMethods.activeSchoolCode(classRoomFilter);
 
-    if (this.props.user.activeRole.roleName === ROLES_ENUM.PROFESSOR) {
+    if (this.props.user.ehProfessor) {
       listClassRoomTeacher = this.props.filters.filterTeachers.turmas.filter(
         (x) => x.codigoEscola === label
       );
     } else if (
-      ROLES_ENUM.IsUE(this.props.user.activeRole.roleName) ||
-      ROLES_ENUM.IsDRE(this.props.user.activeRole.roleName)
+      permissoes.IsUE(this.props.user) ||
+      permissoes.IsDRE(this.props.user)
     ) {
       var classRoomFilter = {
         schoolCodeEol: label,
@@ -287,12 +296,18 @@ class PollFilter extends Component {
 
   checkDisabledButton() {
     if (this.props.reports) {
-      if (this.state.classroom === null || !this.state.classroom || this.state.classroom === "")
+      if (
+        this.state.classroom === null ||
+        !this.state.classroom ||
+        this.state.classroom === ""
+      )
         return false;
 
-      return this.props.user.activeRole.roleName === ROLES_ENUM.PROFESSOR ? this.props.filters.listDisciplines.length > 0 : true;
+      return this.props.user.ehProfessor
+        ? this.props.filters.listDisciplines.length > 0
+        : true;
     } else {
-      if (this.props.user.activeRole.roleName !== ROLES_ENUM.PROFESSOR) {
+      if (!this.props.user.ehProfessor) {
         if (
           this.props.filters.activeDreCode !== null &&
           this.props.filters.activeSchollsCode !== null &&
@@ -338,13 +353,14 @@ class PollFilter extends Component {
     listYearsOptions.reverse();
 
     if (this.props.pollRouter.activeRoute !== "Sondagem") {
-      if (ROLES_ENUM.IsSME(this.props.user.activeRole.roleName)) {
+      if (this.props.user.possuiPerfilSme) {
         listDresOptions.push({ label: "Todas", value: "todas" });
       }
     }
 
     if (
       this.props.filters.filterTeachers !== null &&
+      this.props.filters.filterTeachers &&
       this.props.filters.filterTeachers.drEs !== undefined
     ) {
       var DreSelected;
@@ -392,7 +408,7 @@ class PollFilter extends Component {
         />
       );
 
-      if (this.props.user.activeRole.roleName === ROLES_ENUM.PROFESSOR) {
+      if (this.props.user.ehProfessor) {
         if (this.state.classroom !== null)
           for (var item in this.state.listClassRoomTeacher) {
             if (
