@@ -4,6 +4,7 @@ using SME.Pedagogico.Gestao.Data.DTO.Matematica.Relatorio;
 using SME.Pedagogico.Gestao.Data.DTO.Portugues.Relatorio;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO;
+using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using SME.Pedagogico.Gestao.Data.Relatorios.Querys;
 using System;
@@ -41,10 +42,12 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios
             return totalDeAlunos;
         }
 
-       
 
 
-        private static async Task<IEnumerable<DatasPeriodoFixoAnualDTO>> BuscaDatasPeriodoFixoAnual(filtrosRelatorioDTO filtro)
+
+
+
+        public static async Task<IEnumerable<DatasPeriodoFixoAnualDTO>> BuscaDatasPeriodoFixoAnual(filtrosRelatorioDTO filtro)
         {
             using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
             {
