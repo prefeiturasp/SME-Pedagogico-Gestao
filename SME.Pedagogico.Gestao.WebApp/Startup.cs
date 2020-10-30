@@ -77,6 +77,9 @@ namespace SME.Pedagogico.Gestao.WebApp
                         .Build());
             });
 
+            //Insights 
+            services.AddApplicationInsightsTelemetry(Configuration);
+
             // Registra o Swagger Generator (OpenAPI)
             services.AddSwaggerGen(options =>
             {
