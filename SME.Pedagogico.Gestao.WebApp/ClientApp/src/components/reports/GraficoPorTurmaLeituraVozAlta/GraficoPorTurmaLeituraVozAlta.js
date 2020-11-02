@@ -6,11 +6,6 @@ const GraficoPorTurmaLeituraVozAlta = (props) => {
 
   useEffect(() => construirGrafico(), [dados]);
 
-  const format = (data) => {
-    data = parseFloat(data);
-    return data.toLocaleString("pt-BR");
-  };
-
   const construirGrafico = () => {
     const myChart = echarts.init(
       document.getElementById(`grafico-leitura-voz-alta`)
@@ -25,12 +20,7 @@ const GraficoPorTurmaLeituraVozAlta = (props) => {
     });
 
     myChart.setOption({
-      tooltip: {
-        formatter: function (params) {
-          var val = format(params.value);
-          return `${params.marker}${params.name}: ${val}`;
-        },
-      },
+      tooltip: {},
       xAxis: {
         type: "category",
         data: dadosLabel,
