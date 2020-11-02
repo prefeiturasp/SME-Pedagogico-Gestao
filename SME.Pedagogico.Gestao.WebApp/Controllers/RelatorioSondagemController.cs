@@ -154,11 +154,11 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     }
                     else
                     {
-                        PollReportMathStudentResult result = BuscaDadosMathTurmaAsync(parameters.Proficiency,
+                        PollReportMathStudentResult result = await BuscaDadosMathTurmaAsync(parameters.Proficiency,
                                                                                                       parameters.Term,
                                                                                                       parameters.CodigoDRE,
                                                                                                       parameters.CodigoEscola,
-                                                                                                      parameters.CodigoTurmaEol, parameters.CodigoCurso);
+                                                                                                      parameters.CodigoTurmaEol, parameters.CodigoCurso, parameters.SchoolYear);
                         return (Ok(result));
                     }
 
@@ -192,11 +192,11 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return retorno;
         }
 
-        private PollReportMathStudentResult BuscaDadosMathTurmaAsync(string proficiency, string term, string codigoDre, string codigoEscola, string codigoTurma, string codigoCurso)
+        private async Task<PollReportMathStudentResult> BuscaDadosMathTurmaAsync(string proficiency, string term, string codigoDre, string codigoEscola, string codigoTurma, string codigoCurso, string schoolYear)
         {
             var businessPoll = new Data.Business.SondagemMatematicaTurma(_config);
 
-            return businessPoll.BuscarDadosMatematicaPorTurmaAsync(proficiency, term, codigoDre, codigoEscola, codigoTurma, codigoCurso);
+            return await businessPoll.BuscarDadosMatematicaPorTurmaAsync(proficiency, term, codigoDre, codigoEscola, codigoTurma, codigoCurso, schoolYear);
 
         }
         private async Task<PollReportMathStudentNumbersResult> BuscaDadosMathTurmaNumbersAsync(string proficiency, string term, string codigoDre, string codigoEscola, string codigoTurma, string codigoCurso, string schoolYear)
