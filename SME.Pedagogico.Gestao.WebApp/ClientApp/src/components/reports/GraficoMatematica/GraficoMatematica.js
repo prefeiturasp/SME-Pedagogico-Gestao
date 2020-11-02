@@ -6,6 +6,12 @@ const GraficoMatematica = (props) => {
 
   useEffect(() => construirGrafico(), [dados]);
 
+  const format = (data) =>
+  {
+    data = parseFloat(data);
+    return data.toLocaleString('pt-BR');
+  }
+
   const posicaoToolTip = (posicaoX, texto) => {
     return texto.length > 50
       ? posicaoX - 100
@@ -27,6 +33,10 @@ const GraficoMatematica = (props) => {
       tooltip: {
         position: function (posicao, conteudo) {
           return [posicaoToolTip(posicao[0], conteudo.name), 300];
+        },
+        formatter: function (params) {
+          var val = format(params.value);
+          return `${params.marker}${params.name}: ${val}`;
         },
       },
       xAxis: {
