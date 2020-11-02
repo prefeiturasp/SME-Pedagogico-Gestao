@@ -44,7 +44,8 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                     if (filtros.ProficienciaId == ProficienciaEnum.CampoAditivo || filtros.ProficienciaId == ProficienciaEnum.CampoMultiplicativo)
                     {
                         tipoRelatorio = TipoRelatorio.RelatorioMatematicaConsolidadoAdtMult;
-                    } else tipoRelatorio = TipoRelatorio.RelatorioMatematicaConsolidado;
+                    }
+                    else tipoRelatorio = TipoRelatorio.RelatorioMatematicaConsolidado;
                 }
             }
 
@@ -52,7 +53,10 @@ namespace SME.Pedagogico.Gestao.Aplicacao
             {
                 if (filtros.TurmaCodigo > 0)
                 {
-                    tipoRelatorio = TipoRelatorio.RelatorioPortuguesPorTurma;
+                    if (!string.IsNullOrEmpty(filtros.Ano) && int.Parse(filtros.Ano) >= 4 && filtros.GrupoId.Equals("e27b99a3-789d-43fb-a962-7df8793622b1"))
+                        tipoRelatorio = TipoRelatorio.RelatorioPortuguesCapLeituraPorTurma;
+                    else
+                        tipoRelatorio = TipoRelatorio.RelatorioPortuguesPorTurma;
                 }
                 else if (filtros.TurmaCodigo <= 0 && filtros.ProficienciaId == ProficienciaEnum.Autoral)
                 {
