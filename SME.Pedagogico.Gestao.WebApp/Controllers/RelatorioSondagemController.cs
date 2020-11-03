@@ -40,7 +40,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> ObterDados([FromBody]ParametersModel parameters)
         {
-
+            var businessPoll = new Data.Business.PollPortuguese(_config);
 
             if (int.Parse(parameters.CodigoCurso) >= 7 && parameters.Discipline == "Matemática")
             {
@@ -66,13 +66,11 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 return (Ok(relatorioConsolidado));
             }
 
+            Periodo periodo = await businessPoll.ObterPeriodoRelatorioPorDescricao(parameters.Term);
+
 
             if (parameters.Discipline == "Língua Portuguesa")
             {
-                var businessPoll = new Data.Business.PollPortuguese(_config);
-
-                Periodo periodo = await businessPoll.ObterPeriodoRelatorioPorDescricao(parameters.Term);
-
                 if (parameters.ClassroomReport)
                 {
                     if (Convert.ToInt32(parameters.CodigoCurso) < 4)
@@ -166,7 +164,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
                 else    // cONSOLIDADO
                 {
-                    var result = await BuscaDadosMathAsync(parameters, parameters.SchoolYear, parameters.CodigoDRE, parameters.CodigoEscola, parameters.CodigoCurso);
+                    var result = await BuscaDadosMathAsync(parameters, parameters.SchoolYear, parameters.CodigoDRE, parameters.CodigoEscola, parameters.CodigoCurso, periodo);
                     return Ok(result);
                 }
             }
@@ -207,7 +205,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
         }
 
-        private async Task<PollReportMathResult> BuscaDadosMathAsync(ParametersModel parameters, string anoLetivo, string codigoDre, string codigoEscola, string anoTurma)
+        private async Task<PollReportMathResult> BuscaDadosMathAsync(ParametersModel parameters, string anoLetivo, string codigoDre, string codigoEscola, string anoTurma, Periodo periodo)
         {
             var businessPoll = new Data.Business.SondagemMatematica(_config);
 
@@ -217,7 +215,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                                                      anoLetivo,
                                                      codigoDre,
                                                      codigoEscola,
-                                                     anoTurma);
+                                                     anoTurma,
+                                                     periodo);
         }
 
         private async Task<RelatorioAutoralLeituraProducaoDto> BuscarDadosAutoralAsync(ParametersModel parametersModel, string periodoId)

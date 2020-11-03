@@ -189,7 +189,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
-                periodoFixoAnual = await db.PeriodoFixoAnual.FirstOrDefaultAsync(fixo => fixo.PeriodoId == periodo.Id && fixo.Ano == anoLetivo);
+                periodoFixoAnual = await ObterPeriodoFixoAnual(periodo, anoLetivo, periodoFixoAnual, db);
 
                 var listStudentsPollPortuguese = new List<PortuguesePoll>();
                 switch (bimestre)
@@ -270,6 +270,15 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 return listStudentsPollPortuguese.OrderBy(a => a.studentNameEol).ToList();
                 //fazer order by por nome
             }
+        }
+
+        private static async Task<PeriodoFixoAnual> ObterPeriodoFixoAnual(Periodo periodo, int anoLetivo, PeriodoFixoAnual periodoFixoAnual, SMEManagementContextData db)
+        {
+            periodoFixoAnual = await db.PeriodoFixoAnual.FirstOrDefaultAsync(fixo => fixo.PeriodoId == periodo.Id && fixo.Ano == anoLetivo);
+
+            if (periodoFixoAnual == null)
+                throw new Exception("Não foi encontrado periodo de abertura da sondagem para os filtros informados");
+            return periodoFixoAnual;
         }
 
         public async Task<Periodo> ObterPeriodoRelatorioPorDescricao(string descricao)
