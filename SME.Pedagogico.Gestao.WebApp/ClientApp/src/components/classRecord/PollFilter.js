@@ -456,7 +456,9 @@ class PollFilter extends Component {
             }
           }
         }
-      } else if (ROLES_ENUM.IsUE(this.props.user.activeRole.roleName)) {
+
+      } else if (permissoes.IsUE(this.props.user)) {
+        //else if (ROLES_ENUM.IsUE(this.props.user.activeRole.roleName)) {
         if (
           selectedSchool !== "todas" &&
           this.props.filters.listClassRoom !== undefined

@@ -48,6 +48,7 @@
 };
 
 export const DISCIPLINES_ENUM = {
+
   DISCIPLINA_PORTUGUES: {
     Codigo: 138,
     Descricao: "Língua Portuguesa",

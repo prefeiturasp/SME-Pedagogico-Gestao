@@ -21,7 +21,9 @@ class AutenticacaoSgp extends Component {
       if (value) {
         const jsonStorageSgp = JSON.parse(value);
         const usuario = JSON.parse(jsonStorageSgp.usuario);
-        const perfil = JSON.parse(jsonStorageSgp.perfil);
+        debugger;
+       const perfil = JSON.parse(jsonStorageSgp.perfil);
+          
 
         const permissoes = {
           "/": usuario.permissoes["/sondagem"],

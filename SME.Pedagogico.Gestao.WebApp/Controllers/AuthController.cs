@@ -653,6 +653,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     PodeIncluir = false,
                 },
             };
+
             return Ok(retornoAutenticacao);
 
             ////cadastra usuario se não existir

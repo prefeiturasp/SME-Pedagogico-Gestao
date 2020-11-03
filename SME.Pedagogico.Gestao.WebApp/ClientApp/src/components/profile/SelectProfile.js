@@ -27,7 +27,7 @@ class SelectProfile extends Component {
     }
 
     selectRole(event) {
-console.log(event);
+
 
         var roleName = event.target.innerText;
         var roles = this.props.user.roles;
@@ -42,8 +42,8 @@ console.log(event);
     }
 
     render() {
-        var profiles = this.props.user.roles;
-
+        var profiles = this.props.user.perfil.perfis;
+        
         return (
             <div className="d-flex justify-content-center">
                 <Card className="col-5 px-4 py-4">
@@ -54,7 +54,7 @@ console.log(event);
                     <div className="py-2"></div>
 
                     {profiles.map(item =>
-                        <ChangeProfileButton key={item.roleId} profileName={item.roleName} roleId={item.roleId} onClick={this.selectRole} />
+                        <ChangeProfileButton key={item.codigoPerfil} profileName={item.nomePerfil} roleId={item.codigoPerfil} onClick={this.selectRole} />
                     )}
                 </Card>
             </div>
