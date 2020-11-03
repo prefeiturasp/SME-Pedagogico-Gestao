@@ -22,6 +22,7 @@ function* LoginUserSaga({ credential }) {
         "/Relatorios/Sondagem": usuario.permissoes[0],
         "/Usuario/TrocarPerfil": usuario.permissoes[1],
         };        
+        debugger;
       const user = {
         name: "",
         username: credential.username,
@@ -35,15 +36,15 @@ function* LoginUserSaga({ credential }) {
         activeRole: null,
         listOccupations: "",
         permissoes,
-        possuiPerfilSmeOuDre: usuario.possuiPerfilSmeOuDre,
-        possuiPerfilDre: usuario.possuiPerfilDre,
-        possuiPerfilSme: usuario.possuiPerfilSme,
-        ehProfessorCj: usuario.ehProfessorCj,
-        ehProfessor: usuario.ehProfessor,
-        ehProfessorPoa: usuario.ehProfessorPoa,
-        ehProfessorCjInfantil: usuario.ehProfessorCjInfantil,
-        ehProfessorInfantil: usuario.ehProfessorInfantil,
-        perfil: usuario.perfisUsuario,
+        possuiPerfilSmeOuDre: usuario.perfisUsuario.possuiPerfilSmeOuDre,
+        possuiPerfilDre: usuario.perfisUsuario.possuiPerfilDre,
+        possuiPerfilSme: usuario.perfisUsuario.possuiPerfilSme,
+        ehProfessorCj: usuario.perfisUsuario.ehProfessorCj,
+        ehProfessor: usuario.perfisUsuario.ehProfessor,
+        ehProfessorPoa: usuario.perfisUsuario.ehProfessorPoa,
+        ehProfessorCjInfantil: usuario.perfisUsuario.ehProfessorCjInfantil,
+        ehProfessorInfantil: usuario.perfisUsuario.ehProfessorInfantil,
+        perfil: { perfis : usuario.perfisUsuario.perfis }, 
       };      
       yield put({ type: User.types.FINISH_AUTHENTICATION_REQUEST });
       yield put({ type: User.types.SET_USER, user });
