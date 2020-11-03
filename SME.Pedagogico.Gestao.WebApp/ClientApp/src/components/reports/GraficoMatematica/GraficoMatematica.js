@@ -1,21 +1,19 @@
 import React, { useEffect } from "react";
 import echarts from "echarts";
+import { montarCampoToolTipGrafico } from "../../utils/utils";
 
 const GraficoMatematica = (props) => {
   const { dados, index } = props;
 
   useEffect(() => construirGrafico(), [dados]);
 
-  const format = (data) =>
-  {
+  const format = (data) => {
     data = parseFloat(data);
-    return data.toLocaleString('pt-BR');
-  }
+    return data.toLocaleString("pt-BR");
+  };
 
   const posicaoToolTip = (posicaoX, texto) => {
-    return texto.length > 50
-      ? posicaoX - 100
-      : posicaoX - 100;
+    return texto.length > 50 ? posicaoX - 100 : posicaoX - 100;
   };
 
   const construirGrafico = () => {
@@ -35,8 +33,8 @@ const GraficoMatematica = (props) => {
           return [posicaoToolTip(posicao[0], conteudo.name), 300];
         },
         formatter: function (params) {
-          var val = format(params.value);
-          return `${params.marker}${params.name}: ${val}`;
+          var valor = format(params.value);
+          return montarCampoToolTipGrafico(params.marker, params.name, valor);
         },
       },
       xAxis: {
