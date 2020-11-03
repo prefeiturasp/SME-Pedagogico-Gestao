@@ -241,11 +241,19 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return await businessPoll.BuscarDadosRelatorioPortugues(parameters.Proficiency, parameters.Term, anoLetivo, codigoDre, codigoEscola, codigoCurso, periodo);
         }
 
-        private async Task<PollReportPortugueseStudentResult> BuscarDadosPorTurmaAsync(ParametersModel parameters,Periodo periodo)
+        private async Task<PollReportPortugueseStudentResult> BuscarDadosPorTurmaAsync(ParametersModel parameters, Periodo periodo)
         {
             var BusinessPoll = new Data.Business.PollPortuguese(_config);
 
-            var listaAlunosTurma = await BusinessPoll.BuscarAlunosTurmaRelatorioPortugues(parameters.CodigoTurmaEol, parameters.Proficiency, parameters.Term,periodo);//ajustar para pegar a turma 
+            var listaAlunosTurma = await BusinessPoll.BuscarAlunosTurmaRelatorioPortugues(
+                parameters.CodigoTurmaEol,
+                parameters.Proficiency,
+                parameters.Term,
+                periodo,
+                Convert.ToInt32(parameters.SchoolYear),
+                parameters.CodigoDRE,
+                parameters.CodigoEscola,
+                parameters.CodigoCurso);//ajustar para pegar a turma 
 
             List<PollReportPortugueseStudentItem> result = new List<PollReportPortugueseStudentItem>();
 
@@ -279,7 +287,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 graficos.Add(new PortChartDataModel()
                 {
-                    Name = item.Label,
+                    Name = string.IsNullOrWhiteSpace(item.Label) ? "Sem Preenchimento" : item.Label,
                     Value = item.Value
                 });
             }

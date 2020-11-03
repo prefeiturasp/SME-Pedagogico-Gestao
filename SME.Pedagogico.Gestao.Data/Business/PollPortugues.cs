@@ -182,11 +182,15 @@ namespace SME.Pedagogico.Gestao.Data.Business
             studentDTO.t4l = string.Empty;
         }
 
-        public async Task<List<PortuguesePoll>> BuscarAlunosTurmaRelatorioPortugues(string turmaEol, string proficiencia, string bimestre, Periodo periodo)
+        public async Task<List<PortuguesePoll>> BuscarAlunosTurmaRelatorioPortugues(string turmaEol, string proficiencia, string bimestre, Periodo periodo, int anoLetivo, string codigoDre, string codigoUe, string anoTurma)
         {
             var liststudentPollPortuguese = new List<StudentPollPortuguese>();
+            PeriodoFixoAnual periodoFixoAnual = null;
+
             using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
+                periodoFixoAnual = await db.PeriodoFixoAnual.FirstOrDefaultAsync(fixo => fixo.PeriodoId == periodo.Id && fixo.Ano == anoLetivo);
+
                 var listStudentsPollPortuguese = new List<PortuguesePoll>();
                 switch (bimestre)
                 {
@@ -240,10 +244,27 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         break;
                 }
 
-                var alunos = await alunoAPI.ObterAlunosAtivosPorTurmaEPeriodo(turmaEol, periodo.DataFim);
+                var alunos = await alunoAPI.ObterAlunosAtivosPorTurmaEPeriodo(turmaEol, periodoFixoAnual.DataFim);
 
                 if (alunos == null || !alunos.Any())
                     throw new Exception("Não encontrado alunos para a turma informda");
+
+                alunos.ForEach(aluno =>
+                {
+                    if (listStudentsPollPortuguese.Any(x => x.studentCodeEol.Equals(aluno.CodigoAluno.ToString())))
+                        return;
+
+                    listStudentsPollPortuguese.Add(new PortuguesePoll
+                    {
+                        classroomCodeEol = turmaEol,
+                        dreCodeEol = codigoDre,
+                        schoolCodeEol = codigoUe,
+                        schoolYear = anoLetivo.ToString(),
+                        yearClassroom = anoTurma,
+                        studentCodeEol = aluno.CodigoAluno.ToString(),
+                        studentNameEol = aluno.NomeAluno,
+                    });
+                });
 
                 //return listStudentsPollPortuguese;
                 return listStudentsPollPortuguese.OrderBy(a => a.studentNameEol).ToList();
