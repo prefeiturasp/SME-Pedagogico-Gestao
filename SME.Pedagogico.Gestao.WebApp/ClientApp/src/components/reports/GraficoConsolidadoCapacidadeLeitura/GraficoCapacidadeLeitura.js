@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import echarts from "echarts";
+import { montarCampoToolTipGrafico } from "../../utils/utils";
 
 const GraficoCapacidadeLeitura = (props) => {
   const { dados, index, grupo } = props;
@@ -28,7 +29,7 @@ const GraficoCapacidadeLeitura = (props) => {
       tooltip: {
         formatter: function (params) {
           var val = format(params.value);
-          return `${params.marker}${params.name}: ${val}`;
+          return montarCampoToolTipGrafico(params.marker, params.name, val);
         },
       },
       xAxis: {
