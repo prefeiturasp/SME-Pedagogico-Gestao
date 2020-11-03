@@ -79,7 +79,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     {
 
                         PollReportPortugueseStudentResult result = new PollReportPortugueseStudentResult();
-                        result = await BuscarDadosPorTurmaAsync(parameters);
+                        result = await BuscarDadosPorTurmaAsync(parameters, periodo);
 
                         return (Ok(result));
                     }
@@ -241,12 +241,24 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return await businessPoll.BuscarDadosRelatorioPortugues(parameters.Proficiency, parameters.Term, anoLetivo, codigoDre, codigoEscola, codigoCurso, periodo);
         }
 
-        private async Task<PollReportPortugueseStudentResult> BuscarDadosPorTurmaAsync(ParametersModel parameters)
+        private async Task<PollReportPortugueseStudentResult> BuscarDadosPorTurmaAsync(ParametersModel parameters, Periodo periodo)
         {
             var BusinessPoll = new Data.Business.PollPortuguese(_config);
-            var listaAlunosTurma = await BusinessPoll.BuscarAlunosTurmaRelatorioPortugues(parameters.CodigoTurmaEol, parameters.Proficiency, parameters.Term);//ajustar para pegar a turma 
+
+            var listaAlunosTurma = await BusinessPoll.BuscarAlunosTurmaRelatorioPortugues(
+                parameters.CodigoTurmaEol,
+                parameters.Proficiency,
+                parameters.Term,
+                periodo,
+                Convert.ToInt32(parameters.SchoolYear),
+                parameters.CodigoDRE,
+                parameters.CodigoEscola,
+                parameters.CodigoCurso);//ajustar para pegar a turma 
+
             List<PollReportPortugueseStudentItem> result = new List<PollReportPortugueseStudentItem>();
+
             List<PortChartDataModel> graficos = new List<PortChartDataModel>();
+
             foreach (var sondagem in listaAlunosTurma)
             {
                 string tipo = ConverterProficienciaAluno(parameters.Proficiency, parameters.Term, sondagem);
@@ -275,7 +287,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 graficos.Add(new PortChartDataModel()
                 {
-                    Name = item.Label,
+                    Name = string.IsNullOrWhiteSpace(item.Label) ? "Sem Preenchimento" : item.Label,
                     Value = item.Value
                 });
             }

@@ -28,6 +28,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         private AlunosAPI alunoAPI;
         IMapper _mapper;
 
+
         private string _token;
         public PollPortuguese(IConfiguration config)
         {
@@ -181,74 +182,93 @@ namespace SME.Pedagogico.Gestao.Data.Business
             studentDTO.t4l = string.Empty;
         }
 
-        public async Task<List<PortuguesePoll>> BuscarAlunosTurmaRelatorioPortugues(string turmaEol, string proficiencia, string bimestre)
+        public async Task<List<PortuguesePoll>> BuscarAlunosTurmaRelatorioPortugues(string turmaEol, string proficiencia, string bimestre, Periodo periodo, int anoLetivo, string codigoDre, string codigoUe, string anoTurma)
         {
-            try
+            var liststudentPollPortuguese = new List<StudentPollPortuguese>();
+            PeriodoFixoAnual periodoFixoAnual = null;
+
+            using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
-                var liststudentPollPortuguese = new List<StudentPollPortuguese>();
-                using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
+                periodoFixoAnual = await db.PeriodoFixoAnual.FirstOrDefaultAsync(fixo => fixo.PeriodoId == periodo.Id && fixo.Ano == anoLetivo);
+
+                var listStudentsPollPortuguese = new List<PortuguesePoll>();
+                switch (bimestre)
                 {
-                    var listStudentsPollPortuguese = new List<PortuguesePoll>();
-                    switch (bimestre)
-                    {
-                        case "1° Bimestre":
-                            {
-                                if (proficiencia == "Escrita")
-                                {
-                                    listStudentsPollPortuguese = db.PortuguesePolls
-                                        .Where(x => x.classroomCodeEol == turmaEol && !
-                                        string.IsNullOrEmpty(x.writing1B)).ToList();
-                                }
-                                else
-                                {
-                                    listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.reading1B)).ToList();
-                                }
-                                break;
-                            }
-                        case "2° Bimestre":
-                            {
-                                if (proficiencia == "Escrita")
-                                {
-                                    listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.writing2B)).ToList();
-                                }
-                                else
-                                {
-                                    listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.reading2B)).ToList();
-                                }
-                                break;
-                            }
-                        case "3° Bimestre":
-                            {
-                                if (proficiencia == "Escrita")
-                                {
-                                    listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.writing3B)).ToList();
-                                }
-                                else
-                                {
-                                    listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.reading3B)).ToList();
-                                }
-                                break;
-                            }
-                        default:
+                    case "1° Bimestre":
+                        {
                             if (proficiencia == "Escrita")
                             {
-                                listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.writing4B)).ToList();
+                                listStudentsPollPortuguese = db.PortuguesePolls
+                                    .Where(x => x.classroomCodeEol == turmaEol && !
+                                    string.IsNullOrEmpty(x.writing1B)).ToList();
                             }
                             else
                             {
-                                listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.reading4B)).ToList();
+                                listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.reading1B)).ToList();
                             }
                             break;
-                    }
-
-                    //return listStudentsPollPortuguese;
-                    return listStudentsPollPortuguese.OrderBy(a => a.studentNameEol).ToList();
-                    //fazer order by por nome
+                        }
+                    case "2° Bimestre":
+                        {
+                            if (proficiencia == "Escrita")
+                            {
+                                listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.writing2B)).ToList();
+                            }
+                            else
+                            {
+                                listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.reading2B)).ToList();
+                            }
+                            break;
+                        }
+                    case "3° Bimestre":
+                        {
+                            if (proficiencia == "Escrita")
+                            {
+                                listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.writing3B)).ToList();
+                            }
+                            else
+                            {
+                                listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.reading3B)).ToList();
+                            }
+                            break;
+                        }
+                    default:
+                        if (proficiencia == "Escrita")
+                        {
+                            listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.writing4B)).ToList();
+                        }
+                        else
+                        {
+                            listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.reading4B)).ToList();
+                        }
+                        break;
                 }
-            }
-            catch (Exception ex)
-            {
-                throw;
+
+                var alunos = await alunoAPI.ObterAlunosAtivosPorTurmaEPeriodo(turmaEol, periodoFixoAnual.DataFim);
+
+                if (alunos == null || !alunos.Any())
+                    throw new Exception("Não encontrado alunos para a turma informda");
+
+                alunos.ForEach(aluno =>
+                {
+                    if (listStudentsPollPortuguese.Any(x => x.studentCodeEol.Equals(aluno.CodigoAluno.ToString())))
+                        return;
+
+                    listStudentsPollPortuguese.Add(new PortuguesePoll
+                    {
+                        classroomCodeEol = turmaEol,
+                        dreCodeEol = codigoDre,
+                        schoolCodeEol = codigoUe,
+                        schoolYear = anoLetivo.ToString(),
+                        yearClassroom = anoTurma,
+                        studentCodeEol = aluno.CodigoAluno.ToString(),
+                        studentNameEol = aluno.NomeAluno,
+                    });
+                });
+
+                //return listStudentsPollPortuguese;
+                return listStudentsPollPortuguese.OrderBy(a => a.studentNameEol).ToList();
+                //fazer order by por nome
             }
         }
 
