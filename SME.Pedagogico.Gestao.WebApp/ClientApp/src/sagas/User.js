@@ -22,7 +22,12 @@ function* LoginUserSaga({ credential }) {
         "/Relatorios/Sondagem": usuario.permissoes[0],
         "/Usuario/TrocarPerfil": usuario.permissoes[1],
         };        
-        debugger;
+        // debugger;
+
+      const perfilSelecionado = usuario.perfisUsuario.perfis.length > 1 ? 
+        {codigoPerfil: "", nomePerfil: ""} 
+        : usuario.perfisUsuario.perfis[0];
+      
       const user = {
         name: "",
         username: credential.username,
@@ -44,7 +49,7 @@ function* LoginUserSaga({ credential }) {
         ehProfessorPoa: usuario.perfisUsuario.ehProfessorPoa,
         ehProfessorCjInfantil: usuario.perfisUsuario.ehProfessorCjInfantil,
         ehProfessorInfantil: usuario.perfisUsuario.ehProfessorInfantil,
-        perfil: { perfis : usuario.perfisUsuario.perfis }, 
+        perfil: { perfis : usuario.perfisUsuario.perfis, perfilSelecionado }, 
       };      
       yield put({ type: User.types.FINISH_AUTHENTICATION_REQUEST });
       yield put({ type: User.types.SET_USER, user });

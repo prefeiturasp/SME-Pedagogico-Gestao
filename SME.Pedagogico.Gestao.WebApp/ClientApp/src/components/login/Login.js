@@ -3,6 +3,7 @@ import './Login.css'
 import { connect } from 'react-redux';
 import { actionCreators } from '../../store/User';
 import { bindActionCreators } from 'redux';
+import { withRouter } from "react-router";
 
 class Login extends Component {
     constructor() {
@@ -37,6 +38,9 @@ class Login extends Component {
         };
 
         this.props.login(credential);
+
+        const { history } = this.props;
+        history.push("/Usuario/TrocarPerfil");
     }
 
     render() {
@@ -95,4 +99,4 @@ class Login extends Component {
 export default connect(
     state => ({ user: state.user }),
     dispatch => bindActionCreators(actionCreators, dispatch)
-)(Login);
+)(withRouter(Login));
