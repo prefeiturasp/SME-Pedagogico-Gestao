@@ -147,10 +147,18 @@ class PollReportMathGrid extends Component {
                                         testQuantity={data.numerosResults[index].naoEscreveConvencionalmenteResultado}
                                         testPercentage={data.numerosResults[index].naoEscreveConvencionalmentePercentage}
                                     />
+                                    <PollReportMathGridItem
+                                        numbers={true}
+                                        secondColor={true}
+                                        classroomReport={this.props.classroomReport}
+                                        testName="Sem Preenchimento"
+                                        testQuantity={data.numerosResults[index].semPreenchimentoResultado}
+                                        testPercentage={data.numerosResults[index].semPreenchimentoPorcentagem}
+                                    />
                                     <PollReportGridTotal className="mb-4"
                                         numbers={true}
-                                        totalQuantity={data.numerosResults[index].escreveConvencionalmenteResultado + data.numerosResults[index].naoEscreveConvencionalmenteResultado}
-                                        totalPercentage={(data.numerosResults[index].escreveConvencionalmentePercentage + data.numerosResults[index].naoEscreveConvencionalmentePercentage).toFixed(2)}
+                                        totalQuantity={data.numerosResults[index].totalDeAlunos}
+                                        totalPercentage={data.numerosResults[index].totalPorcentagem.toFixed(2)}
                                     />
                                 </div>
                             );

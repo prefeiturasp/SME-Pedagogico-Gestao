@@ -13,7 +13,7 @@ namespace SME.Pedagogico.Gestao.Data.DTO
     public class PortChartDataModel
     {
         public string Name { get; set; }
-        public int Value { get; set; } 
+        public int Value { get; set; }
     }
 
     public class PollReportPortugueseItem
@@ -92,6 +92,13 @@ namespace SME.Pedagogico.Gestao.Data.DTO
         public double NaoEscreveConvencionalmentePercentage { get; set; }
         public string EscreveConvencionalmenteText { get; set; }
         public string NaoEscreveConvencionalmenteText { get; set; }
+        public string SemPreenchimentoText { get; set; }
+        public int SemPreenchimentoResultado { get; set; }
+        public double SemPreenchimentoPorcentagem { get; set; }
+        public int TotalDeAlunos { get; set; }
+        public double TotalPorcentagem { get; set; }
+
+
         public string OrderTitle { get; set; }
     }
 }

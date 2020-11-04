@@ -9,6 +9,7 @@ using SME.Pedagogico.Gestao.Data.Enums;
 using SME.Pedagogico.Gestao.Data.Functionalities;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
+using SME.Pedagogico.Gestao.Data.Relatorios;
 using SME.Pedagogico.Gestao.Models.Academic;
 using SME.Pedagogico.Gestao.Models.Autoral;
 
@@ -237,13 +238,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
             else if (proficiency.Equals("Números", StringComparison.InvariantCultureIgnoreCase))
             {
-                return await BuscaDadosRelatorioMatNumeros(semestre, anoLetivo, codigoDre, codigoEscola, anoTurma);
+                return await BuscaDadosRelatorioMatNumeros(semestre, anoLetivo, codigoDre, codigoEscola, anoTurma, periodo);
             }
 
             return default;
         }
 
-        private async Task<PollReportMathResult> BuscaDadosRelatorioMatNumeros(string semestre, string anoLetivo, string codigoDre, string codigoEscola, string anoTurma)
+        private async Task<PollReportMathResult> BuscaDadosRelatorioMatNumeros(string semestre, string anoLetivo, string codigoDre, string codigoEscola, string anoTurma, Periodo periodo)
         {
             using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
@@ -251,6 +252,10 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var numbers = new PollReportMathItem();
                 var relatorioRetorno = new PollReportMathResult();
                 var numberCharts = new List<MathNumeroChartDataModel>();
+                int totalAlunos = 0;
+                totalAlunos = await ObterQuantidadeAlunoTotal(anoLetivo, codigoDre, codigoEscola, anoTurma, periodo, totalAlunos, db);
+
+
 
                 query = db.MathPoolNumbers
                           .Where(x => x.AnoLetivo.ToString() == anoLetivo
@@ -285,13 +290,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                             .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
                                             .ToList();
 
-                    CreateNumberItem(familiaresAgrupados, grupo: "Familiares/Frequentes", ref numbers, ref numberCharts);
-                    CreateNumberItem(opacosAgrupados, grupo: "Opacos", ref numbers, ref numberCharts);
-                    CreateNumberItem(transparentesAgrupados, grupo: "Transparentes", ref numbers, ref numberCharts);
-                    CreateNumberItem(terminamZeroAgrupados, grupo: "Terminam em zero", ref numbers, ref numberCharts);
-                    CreateNumberItem(algarismosAgrupados, grupo: "Algarismos iguais", ref numbers, ref numberCharts);
-                    CreateNumberItem(processoAgrupados, grupo: "Processo de generalização", ref numbers, ref numberCharts);
-                    CreateNumberItem(zeroIntercaladosAgrupados, grupo: "Zero intercalado", ref numbers, ref numberCharts);
+                    CreateNumberItem(familiaresAgrupados, grupo: "Familiares/Frequentes", ref numbers, ref numberCharts, totalAlunos);
+                    CreateNumberItem(opacosAgrupados, grupo: "Opacos", ref numbers, ref numberCharts, totalAlunos);
+                    CreateNumberItem(transparentesAgrupados, grupo: "Transparentes", ref numbers, ref numberCharts, totalAlunos);
+                    CreateNumberItem(terminamZeroAgrupados, grupo: "Terminam em zero", ref numbers, ref numberCharts, totalAlunos);
+                    CreateNumberItem(algarismosAgrupados, grupo: "Algarismos iguais", ref numbers, ref numberCharts, totalAlunos);
+                    CreateNumberItem(processoAgrupados, grupo: "Processo de generalização", ref numbers, ref numberCharts, totalAlunos);
+                    CreateNumberItem(zeroIntercaladosAgrupados, grupo: "Zero intercalado", ref numbers, ref numberCharts, totalAlunos);
 
                     relatorioRetorno.Results = numbers;
                     relatorioRetorno.ChartNumberData.AddRange(numberCharts);
@@ -729,7 +734,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         private void CreateNumberItem(List<MathGroupByDTO> ordemIdeia,
                                   string grupo,
                                   ref PollReportMathItem numerosResults,
-                                  ref List<MathNumeroChartDataModel> numerosCharts)
+                                  ref List<MathNumeroChartDataModel> numerosCharts, int totalAlunosEol)
         {
             var numberRetorno = new MathNumberResult();
             var numeroResults = new List<NumeroChartDTO>();
@@ -749,20 +754,29 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         numberRetorno.NaoEscreveConvencionalmenteResultado = item.Value;
                         numberRetorno.NaoEscreveConvencionalmenteText = "Não escreve convencionalmente";
                     }
+
+                 
                 }
             }
 
             var ideaTotalStudents = numberRetorno.EscreveConvencionalmenteResultado + numberRetorno.NaoEscreveConvencionalmenteResultado;
 
+            numberRetorno.SemPreenchimentoText = "Sem Preenchimento";
+            numberRetorno.SemPreenchimentoResultado = totalAlunosEol - ideaTotalStudents;
+            numberRetorno.TotalDeAlunos = totalAlunosEol;
+            numberRetorno.TotalPorcentagem = 100;
+
             if (ideaTotalStudents > 0)
             {
-                numberRetorno.EscreveConvencionalmentePercentage = ((double)numberRetorno.EscreveConvencionalmenteResultado / ideaTotalStudents) * 100;
-                numberRetorno.NaoEscreveConvencionalmentePercentage = ((double)numberRetorno.NaoEscreveConvencionalmenteResultado / ideaTotalStudents) * 100;
+                numberRetorno.EscreveConvencionalmentePercentage = ((double)numberRetorno.EscreveConvencionalmenteResultado / totalAlunosEol) * 100;
+                numberRetorno.NaoEscreveConvencionalmentePercentage = ((double)numberRetorno.NaoEscreveConvencionalmenteResultado / totalAlunosEol) * 100;
+                numberRetorno.SemPreenchimentoPorcentagem = ((double)numberRetorno.SemPreenchimentoResultado / totalAlunosEol) * 100;
             }
             else
             {
                 numberRetorno.EscreveConvencionalmentePercentage = 0;
                 numberRetorno.NaoEscreveConvencionalmentePercentage = 0;
+                numberRetorno.SemPreenchimentoPorcentagem = 0;
             }
 
             numberRetorno.GroupName = grupo;
@@ -770,7 +784,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             numerosResults.NumerosResults.Add(numberRetorno);
             numeroResults.Add(new NumeroChartDTO() { Description = "Escreve convencionalmente", Quantity = numberRetorno.EscreveConvencionalmenteResultado });
             numeroResults.Add(new NumeroChartDTO() { Description = "Não escreve convencionalmente", Quantity = numberRetorno.NaoEscreveConvencionalmenteResultado });
-
+            numeroResults.Add(new NumeroChartDTO() { Description = "Sem Preenchimento", Quantity = numberRetorno.SemPreenchimentoResultado });
             numeroCharts.Order = grupo;
             numeroCharts.Numbers.AddRange(numeroResults);
             numerosCharts.Add(numeroCharts);
