@@ -27,18 +27,22 @@ class SelectProfile extends Component {
     }
 
     selectRole(event) {
-
-
-        var roleName = event.target.innerText;
-        var roles = this.props.user.roles;
-
-        for (var i = 0; i < roles.length; i++)
-            if (roles[i].roleName === roleName) {
-                this.props.setActiveRole(roles[i]);
-                break;
+        
+        const nomePerfil = event.target.innerText;
+        const {user, setUser, history} = this.props;
+        const {perfis} = user.perfil;        
+        const perfilSelecionado = perfis.find(item => nomePerfil === item.nomePerfil);
+        const newUser = {
+            ...user,
+            perfil: {
+                perfis,
+                perfilSelecionado
             }
+        }
 
-        window.location.href = "/";
+        setUser(newUser);
+
+        history.push(user.redirectUrl);
     }
 
     render() {
@@ -46,7 +50,7 @@ class SelectProfile extends Component {
         
         return (
             <div className="d-flex justify-content-center">
-                <Card className="col-5 px-4 py-4">
+                <Card className="col-5 px-4 py-4 mt-5">
                     <div className="d-flex flex-fill border-bottom sc-text-size-4 text-muted">
                         Mudar Perfil
                     </div>

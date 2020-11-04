@@ -77,7 +77,7 @@ class Poll extends Component {
       var period = this.props.filter.period;
     }
   }
-
+  
   toggleMessageBox() {
     this.setState({
       showMessageBox: !this.state.showMessageBox,
@@ -1045,7 +1045,7 @@ class Poll extends Component {
             this.openMathPoll();
           }}
         />
-        <Card className="mb-3">
+        <Card className="mb-3 mt-5">
           <PollFilter reports={false} savePollStudent={this.savePollStudent} />
         </Card>
         <Card id="classRecord-poll" hide={this.checkPollCard()}>

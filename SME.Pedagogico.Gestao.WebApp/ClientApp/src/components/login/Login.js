@@ -37,10 +37,20 @@ class Login extends Component {
             password: this.state.password
         };
 
-        this.props.login(credential);
-
         const { history } = this.props;
-        history.push("/Usuario/TrocarPerfil");
+        this.props.login(credential, history);
+    }
+    
+    componentDidUpdate(){
+        const { history, user, setRedirectUrl } = this.props;
+        
+        if(!user.redirectUrl){
+            const search = history.location.search;
+            const redirect = search.replace("?redirect=","");
+            const ehTrocarPerfil = redirect.indexOf("TrocarPerfil") > 0;
+            const redirectUrl = ehTrocarPerfil ? "/" : redirect;            
+            setRedirectUrl(redirectUrl);
+        }
     }
 
     render() {

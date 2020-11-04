@@ -8,7 +8,7 @@ export default function* () {
   ]);
 }
 
-function* LoginUserSaga({ credential }) {
+function* LoginUserSaga({ credential, history }) {
   try {
     yield put({ type: User.types.ON_AUTHENTICATION_REQUEST });
     const usuario = yield call(authenticateUser, credential);
@@ -22,12 +22,13 @@ function* LoginUserSaga({ credential }) {
         "/Relatorios/Sondagem": usuario.permissoes[0],
         "/Usuario/TrocarPerfil": usuario.permissoes[1],
         };        
-        // debugger;
-
-      const perfilSelecionado = usuario.perfisUsuario.perfis.length > 1 ? 
-        {codigoPerfil: "", nomePerfil: ""} 
-        : usuario.perfisUsuario.perfis[0];
       
+        
+      const perfisEhMaiorQueUm = usuario.perfisUsuario.perfis.length > 1; 
+      const perfilSelecionado = perfisEhMaiorQueUm ? {codigoPerfil: "", nomePerfil: ""} 
+        : usuario.perfisUsuario.perfis[0];
+      const rota = perfisEhMaiorQueUm ? "/Usuario/TrocarPerfil" : "/";
+
       const user = {
         name: "",
         username: credential.username,
@@ -53,6 +54,8 @@ function* LoginUserSaga({ credential }) {
       };      
       yield put({ type: User.types.FINISH_AUTHENTICATION_REQUEST });
       yield put({ type: User.types.SET_USER, user });
+
+      history.push(rota);
     }
   } catch (error) {
     yield put({ type: User.types.FINISH_AUTHENTICATION_REQUEST });
@@ -68,7 +71,7 @@ function authenticateUser(credential) {
   }).then((response) => response.json());
 }
 
-function* LogoutUserSaga({ credential }) {
+function* LogoutUserSaga({ credential, history }) {
   try {
     yield put({ type: User.types.LOGOUT_USER });
   } catch (error) {

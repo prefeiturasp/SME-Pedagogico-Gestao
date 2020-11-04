@@ -1072,7 +1072,7 @@ class PollReport extends Component {
 
     return (
       <>
-        <Card className="mb-3">
+        <Card className="mb-3 mt-5">
           <PollFilter reports={true} resultClick={this.openPollFilter} />
         </Card>
 

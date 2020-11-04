@@ -8,6 +8,8 @@
   FINISH_AUTHENTICATION_REQUEST: "FINISH_AUTHENTICATION_REQUEST",
   SET_ACTIVE_ROLE: "SET_ACTIVE_ROLE",
   LOGIN_SGP_REQUEST: "LOGIN_SGP_REQUEST",
+  SET_REDIRECT_URL: "SET_REDIRECT_URL",
+
 };
 const initialState = {
   name: null,
@@ -23,10 +25,11 @@ const initialState = {
   activeRole: null,
   onAuthenticationRequest: false,
   listOccupations: null,
+  redirectUrl: null,
 };
 
 export const actionCreators = {
-  login: (credential) => ({ type: types.LOGIN_REQUEST, credential }),
+  login: (credential, history) => ({ type: types.LOGIN_REQUEST, credential, history }),
   setUser: (user) => ({ type: types.SET_USER, user }),
   logout: (credential) => ({ type: types.LOGOUT_REQUEST, credential }),
   setActiveRole: (role) => ({ type: types.SET_ACTIVE_ROLE, role }),
@@ -35,6 +38,7 @@ export const actionCreators = {
     user,
     history,
   }),
+  setRedirectUrl: (redirectUrl) => ({ type: types.SET_REDIRECT_URL, redirectUrl }),
 };
 
 export const reducer = (state, action) => {
@@ -72,6 +76,11 @@ export const reducer = (state, action) => {
         ...state,
         activeRole: action.role,
       };
+    case types.SET_REDIRECT_URL:
+      return {
+        ...state,
+        redirectUrl: action.redirectUrl,
+      }  
     default:
       return state;
   }

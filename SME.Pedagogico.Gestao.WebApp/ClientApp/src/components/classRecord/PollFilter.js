@@ -2,6 +2,7 @@
 import SelectChangeColor from "../inputs/SelectChangeColor";
 import CircleButton from "../inputs/CircleButton";
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
 import { actionCreators as actionCreatorsPoll } from "../../store/Filters";
 import { actionCreators as actionCreatorsPoll2 } from "../../store/Poll";
 import { actionCreators as actionCreatorsPollRouter } from "../../store/PollRouter";
@@ -41,7 +42,6 @@ class PollFilter extends Component {
   }
 
   componentWillMount() {
-    debugger;
     var anoLetivo = new Date();
     var anoAtual = anoLetivo.getFullYear();
     this.setState({
@@ -56,6 +56,13 @@ class PollFilter extends Component {
     if (permissoes.ApenasRelatorios(this.props.user)) {
       this.props.pollRouterMethods.setActiveRoute("Relatórios");
     }
+  }
+
+  componentDidUpdate(){
+    const {user, history} = this.props;
+    if(user.perfil.perfilSelecionado.nomePerfil === ""){
+      history.push('/Usuario/TrocarPerfil');
+    } 
   }
 
   applyRole(ano) {
@@ -115,7 +122,7 @@ class PollFilter extends Component {
     //     classroom: "",
     // });
 
-    // this.applyRole(label);
+    this.applyRole(label);
   }
 
   selectedDreTeacher(event) {
@@ -712,4 +719,4 @@ export default connect(
     poll2: bindActionCreators(actionCreatorsPoll2, dispatch),
     pollRouterMethods: bindActionCreators(actionCreatorsPollRouter, dispatch),
   })
-)(PollFilter);
+)(withRouter(PollFilter));
