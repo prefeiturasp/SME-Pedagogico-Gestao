@@ -74,11 +74,17 @@ class PollReportMathGrid extends Component {
             for (var i = 0; i < data.ideaResults.length; i++) {
                 indexes.push(i);
                 data.totals.push({
-                    totalStudentIdeaQuantity: data.ideaResults[i].correctIdeaQuantity + data.ideaResults[i].incorrectIdeaQuantity + data.ideaResults[i].notAnsweredIdeaQuantity,
-                    totalStudentIdeaPercentage: data.ideaResults[i].correctIdeaPercentage + data.ideaResults[i].incorrectIdeaPercentage + data.ideaResults[i].notAnsweredIdeaPercentage,
-                    totalStudentResultQuantity: data.resultResults[i].correctResultQuantity + data.resultResults[i].incorrectResultQuantity + data.resultResults[i].notAnsweredResultQuantity,
-                    totalStudentResultPercentage: data.resultResults[i].correctResultPercentage + data.resultResults[i].incorrectResultPercentage + data.resultResults[i].notAnsweredResultPercentage,
-                });
+                    totalStudentIdeaQuantity:
+                      data.ideaResults[i].correctIdeaQuantity +
+                      data.ideaResults[i].incorrectIdeaQuantity +
+                      data.ideaResults[i].notAnsweredIdeaQuantity+
+                      data.ideaResults[i].semPreenchimento,
+                    totalStudentResultQuantity:
+                      data.resultResults[i].correctResultQuantity +
+                      data.resultResults[i].incorrectResultQuantity +
+                      data.resultResults[i].notAnsweredResultQuantity+
+                      data.resultResults[i].semPreenchimento,
+                  });
             }
         else if (data.numerosResults !== undefined && data.numerosResults.length > 0)
             for (var j = 0; j < data.numerosResults.length; j++)
@@ -116,16 +122,23 @@ class PollReportMathGrid extends Component {
                                         testResultPercentage={data.resultResults[index].incorrectResultPercentage} />
                                     <PollReportMathGridItem
                                         classroomReport={this.props.classroomReport}
-                                        testName="Não Resolveu"
+                                        testName="Não resolveu"
                                         testIdeaQuantity={data.ideaResults[index].notAnsweredIdeaQuantity}
                                         testIdeaPercentage={data.ideaResults[index].notAnsweredIdeaPercentage}
                                         testResultQuantity={data.resultResults[index].notAnsweredResultQuantity}
                                         testResultPercentage={data.resultResults[index].notAnsweredResultPercentage} />
+                                    <PollReportMathGridItem
+                                        classroomReport={this.props.classroomReport}
+                                        testName="Sem preenchimento"
+                                        testIdeaQuantity={data.ideaResults[index].semPreenchimento}
+                                        testIdeaPercentage={data.ideaResults[index].semPreenchimentoPorcentagem}
+                                        testResultQuantity={data.resultResults[index].semPreenchimento}
+                                        testResultPercentage={data.resultResults[index].semPreenchimentoPorcentagem} />
                                     <PollReportGridTotal className="mb-4"
                                         totalIdeaQuantity={data.totals[index].totalStudentIdeaQuantity}
-                                        totalIdeaPercentage={data.totals[index].totalStudentIdeaPercentage.toFixed(2)}
+                                        totalIdeaPercentage={(100).toFixed(2)}
                                         totalResultQuantity={data.totals[index].totalStudentResultQuantity}
-                                        totalResultPercentage={data.totals[index].totalStudentResultPercentage.toFixed(2)} />
+                                        totalResultPercentage={(100).toFixed(2)} />
                                 </div>
                             );
                         else
