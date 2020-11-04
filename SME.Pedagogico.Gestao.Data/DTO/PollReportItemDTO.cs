@@ -64,6 +64,8 @@ namespace SME.Pedagogico.Gestao.Data.DTO
         public int NotAnsweredIdeaQuantity { get; set; }
         public double CorrectIdeaPercentage { get; set; }
         public double IncorrectIdeaPercentage { get; set; }
+        public double SemPreenchimento { get; set; }
+        public double SemPreenchimentoPorcentagem { get; set; }
         public double NotAnsweredIdeaPercentage { get; set; }
     }
 
@@ -76,6 +78,8 @@ namespace SME.Pedagogico.Gestao.Data.DTO
         public double CorrectResultPercentage { get; set; }
         public double IncorrectResultPercentage { get; set; }
         public double NotAnsweredResultPercentage { get; set; }
+        public double SemPreenchimento { get; set; }
+        public double SemPreenchimentoPorcentagem { get; set; }
         public string OrderTitle { get; set; }
     }
 
