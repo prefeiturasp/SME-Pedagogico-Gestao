@@ -336,7 +336,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
-                quantidadeAlunoTotal = await ObterQuantidadeAlunoTotal(anoLetivo, codigoDre, codigoEscola, anoTurmaParam, periodo, quantidadeAlunoTotal, db);
+                quantidadeAlunoTotal  = await ObterQuantidadeAlunoTotal(anoLetivo, codigoDre, codigoEscola, anoTurmaParam, periodo, quantidadeAlunoTotal, db);
 
                 IQueryable<MathPoolCM> query = db.Set<MathPoolCM>();
                 var ideasAndResults = new PollReportMathItem();
