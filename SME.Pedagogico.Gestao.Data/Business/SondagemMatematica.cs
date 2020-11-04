@@ -233,7 +233,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
             else if (proficiency.Equals("Campo Aditivo", StringComparison.InvariantCultureIgnoreCase))
             {
-                return await BuscaDadosRelatorioMatCAAsync(semestre, anoLetivo, codigoDre, codigoEscola, anoTurma);
+                return await BuscaDadosRelatorioMatCAAsync(semestre, anoLetivo, codigoDre, codigoEscola, anoTurma, periodo);
             }
             else if (proficiency.Equals("Números", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -427,14 +427,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     var porcentagem = ideia.SemPreenchimento == 0 ? 0 : 100 - ((somatorio / (double)quantidadeAlunoTotal) * 100);
 
                     ideia.SemPreenchimentoPorcentagem = porcentagem;
-
-                    var grafico = relatorioRetorno.ChartIdeaData.FirstOrDefault(g => g.Order.Equals(ideia.OrderName));
-
-                    grafico.Idea.Add(new IdeaChartDTO
-                    {
-                        Description = "Sem Preenchimento",
-                        Quantity = Convert.ToInt32(ideia.SemPreenchimento)
-                    });
                 });
 
                 ideasAndResults.ResultResults.ForEach(result =>
@@ -446,14 +438,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     var porcentagem = result.SemPreenchimento == 0 ? 0 : 100 - ((somatorio / (double)quantidadeAlunoTotal) * 100);
 
                     result.SemPreenchimentoPorcentagem = porcentagem;
-
-                    var grafico = relatorioRetorno.ChartResultData.FirstOrDefault(g => g.Order.Equals(result.OrderName));
-
-                    grafico.Result.Add(new ResultChartDTO
-                    {
-                        Description = "Sem Preenchimento",
-                        Quantity = Convert.ToInt32(result.SemPreenchimento)
-                    });
                 });
 
                 relatorioRetorno.Results = ideasAndResults;
@@ -508,12 +492,17 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                                                                string anoLetivo,
                                                                                string codigoDre,
                                                                                string codigoEscola,
-                                                                               string anoTurmaParam)
+                                                                               string anoTurmaParam,
+                                                                               Periodo periodo)
         {
             var listReturn = new List<PollReportMathItem>();
 
+            int quantidadeAlunoTotal = 0;
+
             using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
+                quantidadeAlunoTotal = await ObterQuantidadeAlunoTotal(anoLetivo, codigoDre, codigoEscola, anoTurmaParam, periodo, quantidadeAlunoTotal, db);
+
                 IQueryable<MathPoolCA> query = db.Set<MathPoolCA>();
                 var ideasAndResults = new PollReportMathItem();
                 var relatorioRetorno = new PollReportMathResult();
@@ -552,8 +541,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                                     .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
                                                     .ToList();
 
-                        CreateIdeaItem(ordem3Ideia, order: "3", ref ideasAndResults, ref ideaCharts);
-                        CreateResultItem(ordem3Resultado, order: "3", ref ideasAndResults, ref resultCharts, PollTypeEnum.CA, anoTurma);
+                        CreateIdeaItem(ordem3Ideia, order: "3", ref ideasAndResults, ref ideaCharts, quantidadeAlunoTotal);
+                        CreateResultItem(ordem3Resultado, order: "3", ref ideasAndResults, ref resultCharts, PollTypeEnum.CA, anoTurma, quantidadeAlunoTotal);
                         if (anoTurma != (int)AnoTurmaEnum.PrimeiroAno && anoTurma != (int)AnoTurmaEnum.TerceiroAno)
                         {
                             var ordem4Ideia = query.GroupBy(fu => fu.Ordem4Ideia)
@@ -563,22 +552,37 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                                         .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() })
                                                         .ToList();
 
-                            CreateIdeaItem(ordem4Ideia, order: "4", ref ideasAndResults, ref ideaCharts);
-                            CreateResultItem(ordem4Resultado, order: "4", ref ideasAndResults, ref resultCharts, PollTypeEnum.CA, anoTurma);
+                            CreateIdeaItem(ordem4Ideia, order: "4", ref ideasAndResults, ref ideaCharts, quantidadeAlunoTotal);
+                            CreateResultItem(ordem4Resultado, order: "4", ref ideasAndResults, ref resultCharts, PollTypeEnum.CA, anoTurma, quantidadeAlunoTotal);
                         }
                     }
 
-                    CreateIdeaItem(ordem1Ideia, order: "1", ref ideasAndResults, ref ideaCharts);
-                    CreateIdeaItem(ordem2Ideia, order: "2", ref ideasAndResults, ref ideaCharts);
+                    CreateIdeaItem(ordem1Ideia, order: "1", ref ideasAndResults, ref ideaCharts, quantidadeAlunoTotal);
+                    CreateIdeaItem(ordem2Ideia, order: "2", ref ideasAndResults, ref ideaCharts, quantidadeAlunoTotal);
 
-                    CreateResultItem(ordem1Resultado, order: "1", ref ideasAndResults, ref resultCharts, PollTypeEnum.CA, anoTurma);
-                    CreateResultItem(ordem2Resultado, order: "2", ref ideasAndResults, ref resultCharts, PollTypeEnum.CA, anoTurma);
+                    CreateResultItem(ordem1Resultado, order: "1", ref ideasAndResults, ref resultCharts, PollTypeEnum.CA, anoTurma, quantidadeAlunoTotal);
+                    CreateResultItem(ordem2Resultado, order: "2", ref ideasAndResults, ref resultCharts, PollTypeEnum.CA, anoTurma, quantidadeAlunoTotal);
 
 
                     ideasAndResults.IdeaResults = ideasAndResults.IdeaResults.OrderBy(i => Convert.ToInt32(i.OrderName)).ToList();
                     ideasAndResults.ResultResults = ideasAndResults.ResultResults.OrderBy(i => Convert.ToInt32(i.OrderName)).ToList();
 
-                    Console.WriteLine(anoTurma + " ");
+                    ideasAndResults.IdeaResults.ForEach(ideia =>
+                    {
+                        double somatorio = ideia.CorrectIdeaQuantity + ideia.NotAnsweredIdeaQuantity + ideia.IncorrectIdeaQuantity;
+
+                        ideia.SemPreenchimento = somatorio >= quantidadeAlunoTotal ? 0 : quantidadeAlunoTotal - somatorio;
+                        var porcentagem = ideia.SemPreenchimento == 0 ? 0 : (100.00 / quantidadeAlunoTotal) * ideia.SemPreenchimento;
+                        ideia.SemPreenchimentoPorcentagem = porcentagem;
+                    });
+
+                    ideasAndResults.ResultResults.ForEach(result =>
+                    {
+                        double somatorio = result.CorrectResultQuantity + result.IncorrectResultQuantity + result.NotAnsweredResultQuantity;
+
+                        result.SemPreenchimento = somatorio >= quantidadeAlunoTotal ? 0 : quantidadeAlunoTotal - somatorio;
+                        result.SemPreenchimentoPorcentagem = result.SemPreenchimento == 0 ? 0 : (100.00 / quantidadeAlunoTotal) * result.SemPreenchimento;
+                    });
 
                     relatorioRetorno.Results = ideasAndResults;
                     relatorioRetorno.ChartIdeaData.AddRange(ideaCharts.OrderBy(i => Convert.ToInt32(i.Order)));
@@ -615,7 +619,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                     string order,
                                     ref PollReportMathItem ideasAndResults,
                                     ref List<MathIdeaChartDataModel> ideaCharts,
-                                    int ideaTotalStudents = 0)
+                                    int totalAlunos = 0)
         {
             var ideaResults = new List<IdeaChartDTO>();
             var ideaRetorno = new MathItemIdea();
@@ -640,10 +644,10 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 }
             }
 
-            if (ideaTotalStudents == 0)
-                ideaTotalStudents = ideaRetorno.CorrectIdeaQuantity + ideaRetorno.IncorrectIdeaQuantity + ideaRetorno.NotAnsweredIdeaQuantity;
+            if (totalAlunos == 0)
+                totalAlunos = ideaRetorno.CorrectIdeaQuantity + ideaRetorno.IncorrectIdeaQuantity + ideaRetorno.NotAnsweredIdeaQuantity;
 
-            if (ideaTotalStudents < 1)
+            if (totalAlunos < 1)
             {
                 ideaRetorno.CorrectIdeaPercentage = 0;
                 ideaRetorno.IncorrectIdeaPercentage = 0;
@@ -651,9 +655,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
             else
             {
-                ideaRetorno.CorrectIdeaPercentage = ((double)ideaRetorno.CorrectIdeaQuantity / ideaTotalStudents) * 100;
-                ideaRetorno.IncorrectIdeaPercentage = ((double)ideaRetorno.IncorrectIdeaQuantity / ideaTotalStudents) * 100;
-                ideaRetorno.NotAnsweredIdeaPercentage = ((double)ideaRetorno.NotAnsweredIdeaQuantity / ideaTotalStudents) * 100;
+                ideaRetorno.CorrectIdeaPercentage = ((double)ideaRetorno.CorrectIdeaQuantity / totalAlunos) * 100;
+                ideaRetorno.IncorrectIdeaPercentage = ((double)ideaRetorno.IncorrectIdeaQuantity / totalAlunos) * 100;
+                ideaRetorno.NotAnsweredIdeaPercentage = ((double)ideaRetorno.NotAnsweredIdeaQuantity / totalAlunos) * 100;
             }
             ideaRetorno.OrderName = order;
 
@@ -661,6 +665,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             ideaResults.Add(new IdeaChartDTO() { Description = "Acertou", Quantity = ideaRetorno.CorrectIdeaQuantity });
             ideaResults.Add(new IdeaChartDTO() { Description = "Errou", Quantity = ideaRetorno.IncorrectIdeaQuantity });
             ideaResults.Add(new IdeaChartDTO() { Description = "Não Resolveu", Quantity = ideaRetorno.NotAnsweredIdeaQuantity });
+            ideaResults.Add(new IdeaChartDTO() { Description = "Sem preenchimento", Quantity =  (totalAlunos-(ideaRetorno.CorrectIdeaQuantity+ ideaRetorno.IncorrectIdeaQuantity + ideaRetorno.NotAnsweredIdeaQuantity)) });
 
             ideaChart.Order = order;
             ideaChart.Idea.AddRange(ideaResults);
@@ -673,7 +678,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                       ref List<MathResultChartDataModel> resultCharts,
                                       PollTypeEnum pollType,
                                       int classroomYear,
-                                      int resultTotalStudents = 0)
+                                      int totalAlunos = 0)
         {
             var resultRetorno = new MathItemResult();
             var resultResults = new List<ResultChartDTO>();
@@ -698,10 +703,10 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 }
             }
 
-            if (resultTotalStudents == 0)
-                resultTotalStudents = resultRetorno.CorrectResultQuantity + resultRetorno.IncorrectResultQuantity + resultRetorno.NotAnsweredResultQuantity;
+            if (totalAlunos == 0)
+                totalAlunos = resultRetorno.CorrectResultQuantity + resultRetorno.IncorrectResultQuantity + resultRetorno.NotAnsweredResultQuantity;
 
-            if (resultTotalStudents < 1)
+            if (totalAlunos < 1)
             {
                 resultRetorno.CorrectResultPercentage = 0;
                 resultRetorno.IncorrectResultPercentage = 0;
@@ -709,9 +714,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
             else
             {
-                resultRetorno.CorrectResultPercentage = ((double)resultRetorno.CorrectResultQuantity / resultTotalStudents) * 100;
-                resultRetorno.IncorrectResultPercentage = ((double)resultRetorno.IncorrectResultQuantity / resultTotalStudents) * 100;
-                resultRetorno.NotAnsweredResultPercentage = ((double)resultRetorno.NotAnsweredResultQuantity / resultTotalStudents) * 100;
+                resultRetorno.CorrectResultPercentage = ((double)resultRetorno.CorrectResultQuantity / totalAlunos) * 100;
+                resultRetorno.IncorrectResultPercentage = ((double)resultRetorno.IncorrectResultQuantity / totalAlunos) * 100;
+                resultRetorno.NotAnsweredResultPercentage = ((double)resultRetorno.NotAnsweredResultQuantity / totalAlunos) * 100;
             }
             resultRetorno.OrderName = order;
             resultRetorno.OrderTitle = OrderTitle(pollType, classroomYear, int.Parse(order));
@@ -720,6 +725,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             resultResults.Add(new ResultChartDTO() { Description = "Acertou", Quantity = resultRetorno.CorrectResultQuantity });
             resultResults.Add(new ResultChartDTO() { Description = "Errou", Quantity = resultRetorno.IncorrectResultQuantity });
             resultResults.Add(new ResultChartDTO() { Description = "Não Resolveu", Quantity = resultRetorno.NotAnsweredResultQuantity });
+            resultResults.Add(new ResultChartDTO() { Description = "Sem preenchimento", Quantity = (totalAlunos - (resultRetorno.CorrectResultQuantity + resultRetorno.IncorrectResultQuantity + resultRetorno.NotAnsweredResultQuantity)) });
 
             resultChart.Order = order;
             resultChart.Result.AddRange(resultResults);
