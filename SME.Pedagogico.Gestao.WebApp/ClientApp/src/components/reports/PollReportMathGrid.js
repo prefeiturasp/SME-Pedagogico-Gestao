@@ -116,11 +116,18 @@ class PollReportMathGrid extends Component {
                                         testResultPercentage={data.resultResults[index].incorrectResultPercentage} />
                                     <PollReportMathGridItem
                                         classroomReport={this.props.classroomReport}
-                                        testName="Não Resolveu"
+                                        testName="Não resolveu"
                                         testIdeaQuantity={data.ideaResults[index].notAnsweredIdeaQuantity}
                                         testIdeaPercentage={data.ideaResults[index].notAnsweredIdeaPercentage}
                                         testResultQuantity={data.resultResults[index].notAnsweredResultQuantity}
                                         testResultPercentage={data.resultResults[index].notAnsweredResultPercentage} />
+                                    <PollReportMathGridItem
+                                        classroomReport={this.props.classroomReport}
+                                        testName="Sem preenchimento"
+                                        testIdeaQuantity={data.ideaResults[index].semPreenchimento}
+                                        testIdeaPercentage={data.ideaResults[index].semPreenchimentoPorcentagem}
+                                        testResultQuantity={data.resultResults[index].semPreenchimento}
+                                        testResultPercentage={data.resultResults[index].semPreenchimentoPorcentagem} />
                                     <PollReportGridTotal className="mb-4"
                                         totalIdeaQuantity={data.totals[index].totalStudentIdeaQuantity}
                                         totalIdeaPercentage={data.totals[index].totalStudentIdeaPercentage.toFixed(2)}
