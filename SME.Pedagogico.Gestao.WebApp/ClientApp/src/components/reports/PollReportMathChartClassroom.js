@@ -166,7 +166,7 @@ const ChartLabel = (props) => {
                                 name={item.name} 
                                 value1={item.idea[0]} 
                                 value2={item.result[0]} 
-                                value3={item.nofill && item.nofill[0]} 
+                                value3={item.noFill && item.noFill[0]} 
                             />
                         )}
                     </div>
