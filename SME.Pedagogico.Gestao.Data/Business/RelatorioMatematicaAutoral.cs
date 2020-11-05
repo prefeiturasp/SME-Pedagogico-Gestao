@@ -26,7 +26,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
             int totalDeAlunos = await ConsultaTotalDeAlunos.BuscaTotalDeAlunosEOl(filtro);
             var query = ConsultasRelatorios.QueryRelatorioMatematicaAutoral(filtro);
-            var relatorio = new RelatorioConsolidadoDTO();
+            var relatorio = new RelatorioConsolidadoDTO(); 
 
             using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
             {
