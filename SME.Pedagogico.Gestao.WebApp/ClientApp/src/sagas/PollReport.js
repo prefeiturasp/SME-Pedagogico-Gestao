@@ -1,4 +1,4 @@
-﻿import { takeLatest, call, put, all, select, cancelled } from "redux-saga/effects";
+﻿import { takeLatest, call, put, all, select } from "redux-saga/effects";
 import * as PollReport from "../store/PollReport";
 
 export default function* () {

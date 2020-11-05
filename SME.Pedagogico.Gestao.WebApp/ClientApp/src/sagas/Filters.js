@@ -1,4 +1,4 @@
-﻿import { takeLatest, call, put, all } from "redux-saga/effects";
+﻿import { takeLatest, call, put, all, select } from "redux-saga/effects";
 import * as Filters from "../store/Filters";
 
 export default function* () {
@@ -25,7 +25,9 @@ function* GetDreAdm({ userName }) {
 
 function* GetDres({ }) {
   try {
-    const data = yield call(getDresAPI);
+    const {user} = yield select();
+    const {token} =  user;
+    const data = yield call(getDresAPI, token);
     var listDres = data;
     yield put({ type: Filters.types.LIST_DRES, listDres });
   } catch (error) {
@@ -55,8 +57,10 @@ function* GetPeriod({ schoolYear }) {
 }
 
 function* GetSchools({ schoolCode }) {
-  try {
-    const data = yield call(getSchoolsAPI, schoolCode);
+  try {    
+    const {user} = yield select();
+    const {token} =  user;
+    const data = yield call(getSchoolsAPI, schoolCode, token);
     var listSchool = data;
     yield put({ type: Filters.types.LIST_SCHOOLS, listSchool });
     yield put({ type: Filters.types.ACTIVEDRECODE, schoolCode });
@@ -113,10 +117,10 @@ function getTeacherFiltersApi(profileOccupatios) {
     body: JSON.stringify(profileOccupatios)
   }).then(response => response.json());
 }
-function getSchoolsAPI(schoolCode) {
+function getSchoolsAPI(schoolCode, token) {
   return fetch("/api/Filtros/ListarEscolasPorDre", {
     method: "post",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", token },
     body: JSON.stringify(schoolCode)
   }).then(response => response.json());
 }
@@ -129,10 +133,10 @@ function getClassRoomAPI(classRoomFilter) {
   }).then(response => response.json());
 }
 
-function getDresAPI() {
+function getDresAPI(token) {
   return fetch("/api/Filtros/ListarDres", {
     method: "get",
-    headers: { "Content-Type": "application/json" }
+    headers: { "Content-Type": "application/json", token }
     //body: JSON.stringify(credential)
   }).then(response => response.json());
 }
