@@ -243,6 +243,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         private async Task<PollReportPortugueseStudentResult> BuscarDadosPorTurmaAsync(ParametersModel parameters, Periodo periodo)
         {
             var BusinessPoll = new Data.Business.PollPortuguese(_config);
+            var alunosBusiness = new AlunosBusiness(_config);
+
+            var alunosEol = await alunosBusiness.ObterAlunosEOL(parameters.SchoolYear, parameters.CodigoTurmaEol, parameters.Term);
 
             var listaAlunosTurma = await BusinessPoll.BuscarAlunosTurmaRelatorioPortugues(
                 parameters.CodigoTurmaEol,
@@ -258,14 +261,15 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
             List<PortChartDataModel> graficos = new List<PortChartDataModel>();
 
-            foreach (var sondagem in listaAlunosTurma)
+            foreach (var aluno in alunosEol)
             {
+                var sondagem = listaAlunosTurma.FirstOrDefault(s => s.studentCodeEol == aluno.CodigoAluno.ToString());
                 string tipo = ConverterProficienciaAluno(parameters.Proficiency, parameters.Term, sondagem);
                 result.Add(
                     new PollReportPortugueseStudentItem()
                     {
-                        Code = sondagem.studentCodeEol,
-                        StudentName = sondagem.studentNameEol,
+                        Code = aluno.CodigoAluno.ToString(),
+                        StudentName = aluno.NomeAlunoRelatorio,
                         StudentValue = tipo
                     }
                 );
