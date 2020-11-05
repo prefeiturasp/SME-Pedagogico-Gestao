@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -628,19 +629,46 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             if (retornoAutenticacao == null || !retornoAutenticacao.Autenticado)
                 return Unauthorized("Usuário e/ou senha invalida");
 
-            var perfisElegiveis = Perfil.ObterPerfis().Where(x => retornoAutenticacao.PerfisUsuario.Perfis.Any(y => y.CodigoPerfil.Equals(x.PerfilGuid)));
-
-            var perfilSelecionado = perfisElegiveis.FirstOrDefault(x => x.PerfilGuid.Equals(retornoAutenticacao.PerfisUsuario.PerfilSelecionado)) ?? perfisElegiveis.FirstOrDefault();
-
-            if (perfilSelecionado == null)
-                return Unauthorized("Perfil não permitido para acesso");
 
             if (retornoAutenticacao.ModificarSenha)
                 return Unauthorized("Você deve alterar a sua senha diretamente no Novo SGP");
 
+            
+            var perfisElegiveis = Perfil.ObterPerfis().Where(x => retornoAutenticacao.PerfisUsuario.Perfis.Any(y => y.CodigoPerfil.Equals(x.PerfilGuid))).ToList();
+
+            if (!perfisElegiveis.Any())
+                return Unauthorized("Usuário sem permissão de acesso na Sondagem.");
+
+            //Verificar se possui perfil professor
+            if (perfisElegiveis.Any(a => a.PerfilGuid == Guid.Parse("40E1E074-37D6-E911-ABD6-F81654FE895D")))
+            {
+                //TODO: Verificar se o mesmo tem acesso a PT e MT
+
+            }
+
+            //var perfilSelecionado = perfisElegiveis.FirstOrDefault(x => x.PerfilGuid.Equals(retornoAutenticacao.PerfisUsuario.PerfilSelecionado)) ?? perfisElegiveis.FirstOrDefault();
+
+            //if (perfilSelecionado == null)
+            //    return Unauthorized("Perfil não permitido para acesso");
+
+ 
             var menus = await _apiNovoSgp.ObterMenus(retornoAutenticacao.Token);
 
             var menussSondagem = menus.SelectMany(c => c.Menus).Where(c => c.Codigo < 9).ToDictionary(c => c.Url, k => k);
+
+            //Tratar os Perfis que podem visualizar
+            retornoAutenticacao.PerfisUsuario.Perfis.Clear();
+
+            foreach (var perfilElegivel in perfisElegiveis)
+            {
+                retornoAutenticacao.PerfisUsuario.Perfis.Add(new PerfilDto()
+                {
+                    CodigoPerfil = perfilElegivel.PerfilGuid,
+                     NomePerfil = perfilElegivel.RoleName
+                });
+            }
+            
+
 
             retornoAutenticacao.Permissoes = new List<MenuPermissaoDto>
             {
@@ -653,6 +681,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     PodeIncluir = false,
                 },
             };
+
+            //Verificar se o perfil de professor tem a disciplina Matematica ou PT 
+             //retornoAutenticacao.PerfisUsuario.Perfis
 
             return Ok(retornoAutenticacao);
 
