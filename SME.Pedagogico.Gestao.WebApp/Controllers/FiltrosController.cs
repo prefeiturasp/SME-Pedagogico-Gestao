@@ -5,7 +5,6 @@ using SME.Pedagogico.Gestao.Aplicacao;
 using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.Integracao;
-using System;
 using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
@@ -39,28 +38,18 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> ListarTurmasPorEscola(BuscarTurmasPorEscola classrooms, [FromServices]IMediator mediator)
         {
-            try
+
+            var listClassRoom = await mediator.Send(new ObterTurmasPorUeCodigoQuery(classrooms.schoolYear, classrooms.schoolCodeEol));
+
+            if (listClassRoom != null)
             {
-                //Necessário para gerar o Token temporariamente
-                //var filterBusiness = new Filters(_config);
-                //var listClassRoom = await filterBusiness.GetListClassRoomSchool(classrooms.schoolCodeEol, classrooms.schoolYear);
-
-                var listClassRoom =  await mediator.Send(new ObterTurmasPorUeCodigoQuery(classrooms.schoolYear, classrooms.schoolCodeEol));
-
-                if (listClassRoom != null)
-                {
-                    return (Ok(listClassRoom));
-                }
-                else
-                {
-                    return (NoContent());
-                }
-
+                return (Ok(listClassRoom));
             }
-            catch (Exception ex)
+            else
             {
-                return StatusCode(500, ex);
+                return (NoContent());
             }
+
         }
 
         /// <summary>
@@ -71,29 +60,23 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> ListarEscolasPorDre(BuscarEscolasPorDreDTO schoolFilters, [FromServices]IMediator mediator)
         {
-            try
+
+            if (string.IsNullOrEmpty(schoolFilters.dreCodeEol))
+                return (NoContent());
+
+            var listSchool = await mediator.Send(new ObterUesPorDreQuery(long.Parse(schoolFilters.dreCodeEol), long.Parse(schoolFilters.schoolYear)));
+
+
+            if (listSchool != null)
             {
-
-                 var listSchool = await  mediator.Send(new ObterUesPorDreQuery(long.Parse(schoolFilters.dreCodeEol), long.Parse(schoolFilters.schoolYear)));
-
-                //Necessário para gerar o Token temporariamente
-                //var filterBusiness = new Filters(_config);
-                //var listSchool = await filterBusiness.GetListSchoolDre(schoolFilters.dreCodeEol, schoolFilters.schoolYear);
-
-                if (listSchool != null)
-                {
-                    return (Ok(listSchool));
-                }
-                else
-                {
-                    return (NoContent());
-                }
-
+                return (Ok(listSchool));
             }
-            catch (Exception ex)
+            else
             {
-                return StatusCode(500, ex);
+                return (NoContent());
             }
+
+
         }
 
         /// <summary>
@@ -103,29 +86,15 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpGet]
         public async Task<ActionResult<string>> ListarDres([FromQuery]long anoLetivo, [FromServices]IMediator mediator)
         {
-            try
+            var listDres = await mediator.Send(new ObterDresQuery(anoLetivo));
+
+            if (listDres != null)
             {
-                //Necessário para gerar o Token temporariamente
-                //var filterBusiness = new Filters(_config);
-                //var listDres = await filterBusiness.GetListDre();
-
-                //TODO: Obter o Ano Letivo
-                
-                var listDres = await  mediator.Send(new ObterDresQuery(anoLetivo));
-
-                if (listDres != null)
-                {
-                    return (Ok(listDres));
-                }
-                else
-                {
-                    return (NoContent());
-                }
-
+                return (Ok(listDres));
             }
-            catch (Exception ex)
+            else
             {
-                return StatusCode(500, ex);
+                return (NoContent());
             }
         }
 

@@ -4,11 +4,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using SME.Pedagogico.Gestao.Aplicacao;
 using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP;
+using SME.Pedagogico.Gestao.Infra;
 using SME.Pedagogico.Gestao.Models.Authentication;
 using SME.Pedagogico.Gestao.WebApp.Contexts;
 using SME.Pedagogico.Gestao.WebApp.Models;
@@ -634,7 +636,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             if (retornoAutenticacao.ModificarSenha)
                 return Unauthorized("Você deve alterar a sua senha diretamente no Novo SGP");
 
-            
+
             var perfisElegiveis = Perfil.ObterPerfis().Where(x => retornoAutenticacao.PerfisUsuario.Perfis.Any(y => y.CodigoPerfil.Equals(x.PerfilGuid))).ToList();
 
             //Verificar se possui perfil professor
@@ -651,7 +653,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             if (!perfisElegiveis.Any())
                 return Unauthorized("Usuário sem permissão de acesso na Sondagem.");
 
-            
+
             // FIM Da verificação de perfis \\
 
             var menus = await _apiNovoSgp.ObterMenus(retornoAutenticacao.Token);
@@ -666,9 +668,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 retornoAutenticacao.PerfisUsuario.Perfis.Add(new PerfilDto()
                 {
                     CodigoPerfil = perfilElegivel.PerfilGuid,
-                     NomePerfil = perfilElegivel.RoleName
+                    NomePerfil = perfilElegivel.RoleName
                 });
-            }           
+            }
 
 
             retornoAutenticacao.Permissoes = new List<MenuPermissaoDto>
@@ -684,7 +686,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             };
 
             //Verificar se o perfil de professor tem a disciplina Matematica ou PT 
-             //retornoAutenticacao.PerfisUsuario.Perfis
+            //retornoAutenticacao.PerfisUsuario.Perfis
 
             return Ok(retornoAutenticacao);
 
@@ -837,7 +839,20 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     return (Ok());
             }
         }
+        /// <summary>
+        /// Método para fazer o logout utilizando o sistema http://identity.sme.prefeitura.sp.gov.br.
+        /// </summary>
+        /// <param name="credential">Objeto que contém informações da credencial do usuário, neste caso específico é necessário o atributo username</param>
+        /// <returns>Sucesso (status code 200) caso seja possível deslogar o usuário desejado.</returns>
+        [AllowAnonymous]
+        [HttpPut]
+        public async Task<IActionResult> ModificarPerfil([FromQuery] string perfil, [FromServices]IMediator mediator)
+        {
+            var token = await mediator.Send(new AtualizarPerfilCommand(perfil));
 
+            return Ok(token);
+          
+        }
         /// <summary>
         /// Método para resetar a senha do usuário desejado
         /// </summary>
