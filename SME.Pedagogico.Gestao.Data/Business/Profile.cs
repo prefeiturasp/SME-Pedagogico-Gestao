@@ -28,6 +28,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         EndpointsAPI endPoint = new EndpointsAPI();
 
+        public async Task<bool> VerificaSeProfessorTemAcesso(string rf)
+        {
+            var profileApi = new PerfilSgpAPI(endPoint);
+            return await profileApi.VerificaSeProfessorTemAcesso(rf, _token);
+        }
+
         public async Task<RetornoCargosServidorDTO> GetOccupationsRF(string rf)
         {
             if (string.IsNullOrWhiteSpace(rf))

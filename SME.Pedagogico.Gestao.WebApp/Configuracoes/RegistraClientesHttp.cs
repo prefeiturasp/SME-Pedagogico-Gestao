@@ -14,6 +14,12 @@ namespace SME.Pedagogico.Gestao.WebApp.Configuracoes
                 c.DefaultRequestHeaders.Add("Accept", "application/json");                
             });
 
+            services.AddHttpClient(name: "apiSGP", c =>
+            {
+                c.BaseAddress = new Uri(configuration.GetSection("urlApiSgp").Value);
+                c.DefaultRequestHeaders.Add("Accept", "application/json");
+            });
+
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -636,22 +637,23 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             
             var perfisElegiveis = Perfil.ObterPerfis().Where(x => retornoAutenticacao.PerfisUsuario.Perfis.Any(y => y.CodigoPerfil.Equals(x.PerfilGuid))).ToList();
 
+            //Verificar se possui perfil professor
+            var perfilProfessor = perfisElegiveis.FirstOrDefault(a => a.PerfilGuid == Guid.Parse("40E1E074-37D6-E911-ABD6-F81654FE895D"));
+
+            if (perfilProfessor != null)
+            {
+                //TODO: Verificar se o mesmo tem acesso a PT e MT
+                var temAcesso = await _profile.VerificaSeProfessorTemAcesso(credential.Username);
+                if (!temAcesso)
+                    perfisElegiveis.Remove(perfilProfessor);
+            }
+
             if (!perfisElegiveis.Any())
                 return Unauthorized("Usuário sem permissão de acesso na Sondagem.");
 
-            //Verificar se possui perfil professor
-            if (perfisElegiveis.Any(a => a.PerfilGuid == Guid.Parse("40E1E074-37D6-E911-ABD6-F81654FE895D")))
-            {
-                //TODO: Verificar se o mesmo tem acesso a PT e MT
+            
+            // FIM Da verificação de perfis \\
 
-            }
-
-            //var perfilSelecionado = perfisElegiveis.FirstOrDefault(x => x.PerfilGuid.Equals(retornoAutenticacao.PerfisUsuario.PerfilSelecionado)) ?? perfisElegiveis.FirstOrDefault();
-
-            //if (perfilSelecionado == null)
-            //    return Unauthorized("Perfil não permitido para acesso");
-
- 
             var menus = await _apiNovoSgp.ObterMenus(retornoAutenticacao.Token);
 
             var menussSondagem = menus.SelectMany(c => c.Menus).Where(c => c.Codigo < 9).ToDictionary(c => c.Url, k => k);
@@ -666,8 +668,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     CodigoPerfil = perfilElegivel.PerfilGuid,
                      NomePerfil = perfilElegivel.RoleName
                 });
-            }
-            
+            }           
 
 
             retornoAutenticacao.Permissoes = new List<MenuPermissaoDto>

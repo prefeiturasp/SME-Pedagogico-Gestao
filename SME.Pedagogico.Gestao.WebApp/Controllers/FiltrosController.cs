@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using SME.Pedagogico.Gestao.Aplicacao;
 using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.Integracao;
@@ -65,13 +67,16 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// <param name="schoolFilters"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<string>> ListarEscolasPorDre(BuscarEscolasPorDreDTO schoolFilters)
+        public async Task<ActionResult<string>> ListarEscolasPorDre(BuscarEscolasPorDreDTO schoolFilters, [FromServices]IMediator mediator)
         {
             try
             {
+
+                 var listSchool = await  mediator.Send(new ObterUesPorDreQuery(long.Parse(schoolFilters.dreCodeEol), long.Parse(schoolFilters.schoolYear)));
+
                 //Necessário para gerar o Token temporariamente
-                var filterBusiness = new Filters(_config);
-                var listSchool = await filterBusiness.GetListSchoolDre(schoolFilters.dreCodeEol, schoolFilters.schoolYear);
+                //var filterBusiness = new Filters(_config);
+                //var listSchool = await filterBusiness.GetListSchoolDre(schoolFilters.dreCodeEol, schoolFilters.schoolYear);
 
                 if (listSchool != null)
                 {
@@ -94,13 +99,16 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<string>> ListarDres()
+        public async Task<ActionResult<string>> ListarDres([FromQuery]long anoLetivo, [FromServices]IMediator mediator)
         {
             try
             {
                 //Necessário para gerar o Token temporariamente
-                var filterBusiness = new Filters(_config);
-                var listDres = await filterBusiness.GetListDre();
+                //var filterBusiness = new Filters(_config);
+                //var listDres = await filterBusiness.GetListDre();
+
+                //TODO: Obter o Ano Letivo
+                var listDres = await  mediator.Send(new ObterDresQuery(anoLetivo));
 
                 if (listDres != null)
                 {
