@@ -952,6 +952,10 @@ class PollReport extends Component {
                 chartData.totals[i].idea[2] =
                   chartData.chartIdeaData[i].idea[j].quantity;
                 break;
+              case "Sem preenchimento":
+                chartData.totals[i].idea[3] =
+                  chartData.chartIdeaData[i].idea[j].quantity;
+                break;
               default:
                 break;
             }
@@ -969,6 +973,10 @@ class PollReport extends Component {
                 break;
               case "Não Resolveu":
                 chartData.totals[i].result[2] =
+                  chartData.chartResultData[i].result[j].quantity;
+                break;
+              case "Sem preenchimento":
+                chartData.totals[i].result[3] =
                   chartData.chartResultData[i].result[j].quantity;
                 break;
               default:

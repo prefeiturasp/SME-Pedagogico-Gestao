@@ -14,7 +14,7 @@ class MathChart extends Component {
         myChart.setOption({
             tooltip: {},
             xAxis: {
-                data: ['Escreve conv.', 'Não escreve conv.']
+                data: ['Escreve conv.', 'Não escreve conv.', 'S. preenchimento']
             },
             yAxis: {},
             series: [{
@@ -22,10 +22,14 @@ class MathChart extends Component {
                 type: 'bar',
                 data: [{
                     value: this.props.value1,
-                    itemStyle: { color: '#9C96F6' },
+                    itemStyle: { color: '#0077BE' },
                 },
                 {
                     value: this.props.value2,
+                    itemStyle: { color: '#0077BE' },
+                },
+                {
+                    value: this.props.value3,
                     itemStyle: { color: '#0077BE' },
                 }]
             }]
@@ -53,69 +57,24 @@ class MathChart extends Component {
     }
 }
 
-export default class PollReportMathNumbersChart extends Component {
-    render() {
-        var familiares = null;
-        var opacos = null;
-        var transparentes = null;
-        var terminamZero = null;
-        var algarismos = null;
-        var processoGeneralizacao = null;
-        var zeroIntercalado = null;
-        if (this.props.data != undefined) {
-          
-             for (var i = 0; i < this.props.data.length; i++)
-                
-                 switch (this.props.data[i].order) {
-              
-                     case "Familiares/Frequentes":
-                    familiares = { name: "Familiares/Frequentes", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
-                    break;
-                case "Opacos":
-                    opacos = { name: "Opacos", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
-                    break;
-                case "Transparentes":
-                    transparentes = { name: "Transparentes", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
-                    break;
-                case "Terminam em zero":
-                    terminamZero = { name: "Terminam em zero", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
-                    break;
-                     case "Algarismos iguais":
-                    algarismos = { name: "Algarismos Iguais", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
-                    break;
-                case "Processo de generalização":
-                    processoGeneralizacao = { name: "Processo de generalização", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
-                    break;
-                case "Zero intercalado":
-                    zeroIntercalado = { name: "Zero intercalado", value1: this.props.data[i].numbers[0].quantity, value2: this.props.data[i].numbers[1].quantity }
-                    break;
-                default:
-                    break;
-            }
-         }
-       
+const PollReportMathNumbersChart = ({ data }) => (            
+    <div style={{display: "grid", gridTemplateColumns: "1fr 1fr"}}>
+        {
+            data && data.map(item => {
+                const obj = {
+                    name: item.order, 
+                    value1: item.numbers[0] && item.numbers[0].quantity, 
+                    value2: item.numbers[1] && item.numbers[1].quantity, 
+                    value3: item.numbers[2] && item.numbers[2].quantity 
+                };    
+                return (                          
+                    <div className="d-flex flex-fill justify-content-center">
+                        {item.order !== null && <MathChart {...obj} />}
+                    </div>                          
+                );
+            })
+        }
+    </div>
+);
 
-        return (
-            <div>
-                <div className="d-flex flex-column">
-                    <div className="d-flex flex-fill justify-content-center">
-                        {familiares !== null && <MathChart {...familiares} />}
-                        {opacos !== null && <MathChart {...opacos} />}
-                    </div>
-                    <div className="d-flex flex-fill justify-content-center">
-                        {transparentes !== null && <MathChart {...transparentes} />}
-                        {terminamZero !== null && <MathChart {...terminamZero} />}
-                    </div>
-                    <div className="d-flex flex-fill justify-content-center">
-                        {algarismos !== null && <MathChart {...algarismos} />}
-                        {processoGeneralizacao !== null && <MathChart {...processoGeneralizacao} />}
-                    </div>
-                    <div className="d-flex flex-fill justify-content-center">
-                        {zeroIntercalado !== null && <MathChart {...zeroIntercalado} />}
-                        <div style={{ height: 400, width: 517 }}></div>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-}
+export default PollReportMathNumbersChart;
