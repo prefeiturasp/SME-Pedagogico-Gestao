@@ -1,4 +1,4 @@
-import { takeLatest, call, put } from "redux-saga/effects";
+import { takeLatest, put } from "redux-saga/effects";
 import * as Frequency from '../store/Frequency';
 
 export default function* () {
@@ -17,11 +17,11 @@ function* FrequencySaga({ efetiveFrequency }) {
     }
 }
 
-function effectFrequency(efetiveFrequency) {
-    return (fetch("/api/TesteMalucao", {
-        method: "post",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(efetiveFrequency)
-    })
-        .then(response => response.json()));
-}
+// function effectFrequency(efetiveFrequency) {
+//     return (fetch("/api/TesteMalucao", {
+//         method: "post",
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify(efetiveFrequency)
+//     })
+//         .then(response => response.json()));
+// }

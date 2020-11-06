@@ -5,7 +5,7 @@ import { actionCreators } from "../../store/PollReport";
 import { bindActionCreators } from "redux";
 import { actionCreators as pollStoreActionCreators } from "../../store/SondagemPortuguesStore";
 import { DISCIPLINES_ENUM } from "../../Enums";
-import { ROLES_ENUM } from "../../Enums";
+// import { ROLES_ENUM } from "../../Enums";
 
 class PollReportFilter extends Component {
   constructor() {

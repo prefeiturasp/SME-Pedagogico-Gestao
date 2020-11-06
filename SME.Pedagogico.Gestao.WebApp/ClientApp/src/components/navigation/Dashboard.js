@@ -7,7 +7,7 @@ import { bindActionCreators } from "redux";
 import { Spring } from "react-spring/renderprops";
 import { animated } from "react-spring";
 import TopMenu from "./TopMenu";
-import LeftMenu from "./LeftMenu";
+// import LeftMenu from "./LeftMenu";
 import Loader from "../loader/Loader";
 import MensagemConfirmacao from "./MensagemConfirmacao";
 import { Route, Switch } from "react-router-dom";

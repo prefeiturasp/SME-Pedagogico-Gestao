@@ -7,8 +7,8 @@ import { actionCreators as actionCreatorsPoll } from "../../store/Filters";
 import { actionCreators as actionCreatorsPoll2 } from "../../store/Poll";
 import { actionCreators as actionCreatorsPollRouter } from "../../store/PollRouter";
 import { bindActionCreators } from "redux";
-import { ROLES_ENUM } from "../../Enums";
-import TwoSteps from "../messaging/TwoSteps";
+// import { ROLES_ENUM } from "../../Enums";
+// import TwoSteps from "../messaging/TwoSteps";
 import MensagemConfirmacaoAutoral from "./SondagemPortuguesAutoral/mensagemConfirmacaoAutoral";
 import permissoes from "../../utils/permissoes";
 
@@ -66,17 +66,19 @@ class PollFilter extends Component {
   }
 
   applyRole(ano) {
-    if (permissoes.IsDRE(this.props.user))
-      this.props.filterMethods.getDreAdm(this.props.user.username);
-    else if (permissoes.IsSME(this.props.user))
-      this.props.filterMethods.getListDres();
-    else if (permissoes.IsUE(this.props.user))
-      this.getProfileInformationProf(ano);
+    // if (permissoes.IsDRE(this.props.user))
+    //   this.props.filterMethods.getDreAdm(this.props.user.username);
+    // else if (permissoes.IsSME(this.props.user))
+    //   this.props.filterMethods.getListDres();
+    // else if (permissoes.IsUE(this.props.user))
+    //   this.getProfileInformationProf(ano);
+
+    this.props.filterMethods.getListDres();
   }
 
   getProfileInformationProf(anoAtual) {
-    var role = this.props.user;
-    const codeOccupations = null;
+    // var role = this.props.user;
+    // const codeOccupations = null;
     // if (this.props.user.ehProfessor) {
     //   var codeOccupations = this.props.user.listOccupations.Professor;
     // } else if (role.activeRole.roleName === ROLES_ENUM.COORDENADOR_PEDAGOGICO) {
@@ -87,14 +89,14 @@ class PollFilter extends Component {
     //   var codeOccupations = this.props.user.listOccupations.AD;
     // }
 
-    var profileOccupatios = {
-      codigoRF: this.props.user.username,
-      codigoCargo: codeOccupations,
-      anoLetivo: anoAtual,
-      activeRole: this.props.user.activeRole,
-    };
+    // var profileOccupatios = {
+    //   codigoRF: this.props.user.username,
+    //   codigoCargo: codeOccupations,
+    //   anoLetivo: anoAtual,
+    //   activeRole: this.props.user.activeRole,
+    // };
 
-    this.props.filterMethods.getFilters_teacher(profileOccupatios);
+    // this.props.filterMethods.getFilters_teacher(profileOccupatios);
   }
 
   selectedSchoolYear(event) {
@@ -178,11 +180,11 @@ class PollFilter extends Component {
       permissoes.IsUE(this.props.user) ||
       permissoes.IsDRE(this.props.user)
     ) {
-      var classRoomFilter = {
+      var classRoomFilterYear = {
         schoolCodeEol: label,
         schoolYear: this.props.filters.setSchoolYear,
       };
-      this.props.filterMethods.getClassroom(classRoomFilter);
+      this.props.filterMethods.getClassroom(classRoomFilterYear);
       listClassRoomTeacher = this.props.filters.listClassRoom;
     }
 
@@ -227,10 +229,10 @@ class PollFilter extends Component {
   }
 
   SelectedSchool(event) {
-    this.props.filterMethods.getSchool({
-      dreCodeEol: this.state.selectedDre,
-      schoolYear: this.props.filters.setSchoolYear,
-    });
+    // this.props.filterMethods.getSchool({
+    //   dreCodeEol: this.state.selectedDre,
+    //   schoolYear: this.props.filters.setSchoolYear,
+    // });
 
     var index = event.nativeEvent.target.selectedIndex;
     var label = event.nativeEvent.target[index].value;
@@ -359,11 +361,11 @@ class PollFilter extends Component {
 
     listYearsOptions.reverse();
 
-    if (this.props.pollRouter.activeRoute !== "Sondagem") {
-      if (this.props.user.possuiPerfilSme) {
-        listDresOptions.push({ label: "Todas", value: "todas" });
-      }
-    }
+    // if (this.props.pollRouter.activeRoute !== "Sondagem") {
+    //   if (this.props.user.possuiPerfilSme) {
+    //     listDresOptions.push({ label: "Todas", value: "todas" });
+    //   }
+    // }
 
     if (
       this.props.filters.filterTeachers !== null &&
@@ -375,7 +377,7 @@ class PollFilter extends Component {
       var enabledDre = false;
       var disabledSchool = false;
       // DRES de professor
-      for (var item in this.props.filters.filterTeachers.drEs) {
+      for (let item in this.props.filters.filterTeachers.drEs) {
         listDresOptions.push({
           value: this.props.filters.filterTeachers.drEs[item].codigo,
           label: this.props.filters.filterTeachers.drEs[item].nome.replace(
@@ -396,7 +398,7 @@ class PollFilter extends Component {
         />
       );
       // escolas de professor
-      for (var item in this.state.listSchools) {
+      for (let item in this.state.listSchools) {
         listSchoolOptions.push({
           value: this.state.listSchools[item].codigo,
           label: this.state.listSchools[item].nome,
@@ -417,7 +419,7 @@ class PollFilter extends Component {
 
       if (this.props.user.ehProfessor) {
         if (this.state.classroom !== null)
-          for (var item in this.state.listClassRoomTeacher) {
+          for (let item in this.state.listClassRoomTeacher) {
             if (
               this.state.listClassRoomTeacher[item].nome.startsWith(
                 this.state.classroom
@@ -429,7 +431,7 @@ class PollFilter extends Component {
               });
           }
         else
-          for (var item in this.state.listClassRoomTeacher) {
+          for (let item in this.state.listClassRoomTeacher) {
             listClassRoomOptions.push({
               value: this.state.listClassRoomTeacher[item].codigo,
               label: this.state.listClassRoomTeacher[item].nome,
@@ -454,7 +456,7 @@ class PollFilter extends Component {
           var temp = this.state.listClassRoomTeacher;
           var uniques = [];
 
-          for (var i = 0; i < temp.length; i++) {
+          for (let i = 0; i < temp.length; i++) {
             var classroom = temp[i].nome.substring(0, 1);
 
             if (uniques.indexOf(classroom) === -1) {
@@ -476,7 +478,7 @@ class PollFilter extends Component {
             this.props.filters.listClassRoom.length > 1
           ) {
             if (this.state.classroom !== null)
-              for (var item in this.props.filters.listClassRoom) {
+              for (let item in this.props.filters.listClassRoom) {
                 if (
                   this.props.filters.listClassRoom[item].nomeTurma.startsWith(
                     this.state.classroom
@@ -488,7 +490,7 @@ class PollFilter extends Component {
                   });
               }
             else
-              for (var item in this.props.filters.listClassRoom) {
+              for (let item in this.props.filters.listClassRoom) {
                 listClassRoomOptions.push({
                   value: this.props.filters.listClassRoom[item].codigoTurma,
                   label: this.props.filters.listClassRoom[item].nomeTurma,
@@ -513,11 +515,11 @@ class PollFilter extends Component {
           this.props.filters.listClassRoom !== null &&
           this.props.filters.listClassRoom !== undefined
         ) {
-          var temp = this.props.filters.listClassRoom;
-          var uniques = [];
+          const temp = this.props.filters.listClassRoom;
+          const uniques = [];
 
-          for (var i = 0; i < temp.length; i++) {
-            var classroom = temp[i].nomeTurma.substring(0, 1);
+          for (let i = 0; i < temp.length; i++) {
+            const classroom = temp[i].nomeTurma.substring(0, 1);
 
             if (uniques.indexOf(classroom) === -1) {
               yearClassrooms.push({ label: classroom, value: classroom });
@@ -550,12 +552,12 @@ class PollFilter extends Component {
           />
         );
 
-        if (this.props.filters.activeDreCode !== null) {
-          if (this.props.pollRouter.activeRoute !== "Sondagem") {
-            listSchoolOptions.push({ label: "Todas", value: "todas" });
-          }
-        }
-        for (var item in this.props.filters.listDres) {
+        // if (this.props.filters.activeDreCode !== null) {
+        //   if (this.props.pollRouter.activeRoute !== "Sondagem") {
+        //     listSchoolOptions.push({ label: "Todas", value: "todas" });
+        //   }
+        // }
+        for (let item in this.props.filters.listDres) {
           listDresOptions.push({
             value: this.props.filters.listDres[item].codigoDRE,
             label: this.props.filters.listDres[item].nomeDRE.replace(
@@ -567,7 +569,7 @@ class PollFilter extends Component {
 
         if (selectedDre !== "todas" && this.props.filters.scholls !== undefined)
           if (this.props.filters.scholls[0] !== undefined) {
-            for (var item in this.props.filters.scholls) {
+            for (let item in this.props.filters.scholls) {
               listSchoolOptions.push({
                 value: this.props.filters.scholls[item].codigoEscola,
                 label: this.props.filters.scholls[item].nomeEscola,
@@ -595,7 +597,7 @@ class PollFilter extends Component {
                 this.props.filters.listClassRoom.length > 1
               ) {
                 if (this.state.classroom !== null)
-                  for (var item in this.props.filters.listClassRoom) {
+                  for (let item in this.props.filters.listClassRoom) {
                     if (
                       this.props.filters.listClassRoom[
                         item
@@ -608,7 +610,7 @@ class PollFilter extends Component {
                       });
                   }
                 else
-                  for (var item in this.props.filters.listClassRoom) {
+                  for (let item in this.props.filters.listClassRoom) {
                     listClassRoomOptions.push({
                       value: this.props.filters.listClassRoom[item].codigoTurma,
                       label: this.props.filters.listClassRoom[item].nomeTurma,
@@ -633,11 +635,11 @@ class PollFilter extends Component {
               this.props.filters.listClassRoom !== null &&
               this.props.filters.listClassRoom !== undefined
             ) {
-              var temp = this.props.filters.listClassRoom;
-              var uniques = [];
+              const temp = this.props.filters.listClassRoom;
+              const uniques = [];
 
-              for (var i = 0; i < temp.length; i++) {
-                var classroom = temp[i].nomeTurma.substring(0, 1);
+              for (let i = 0; i < temp.length; i++) {
+                const classroom = temp[i].nomeTurma.substring(0, 1);
 
                 if (uniques.indexOf(classroom) === -1) {
                   yearClassrooms.push({ label: classroom, value: classroom });
@@ -650,8 +652,8 @@ class PollFilter extends Component {
         if (selectedSchool === "todas" || selectedDre === "todas") {
           hiddenDisabled = true;
 
-          var listyearClassrooms = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-          for (var item in listyearClassrooms) {
+          const listyearClassrooms = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+          for (let item in listyearClassrooms) {
             yearClassrooms.push({
               value: listyearClassrooms[item],
               label: listyearClassrooms[item],

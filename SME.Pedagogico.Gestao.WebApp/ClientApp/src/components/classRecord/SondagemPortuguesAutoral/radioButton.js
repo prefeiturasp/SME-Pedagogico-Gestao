@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { actionCreators as PortuguesStore } from "../../../store/SondagemPortuguesStore";
 import { useDispatch } from 'react-redux';
 

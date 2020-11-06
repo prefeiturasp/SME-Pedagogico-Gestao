@@ -1,10 +1,11 @@
-﻿import { takeLatest, call, put, all } from "redux-saga/effects";
+﻿import { takeLatest, call, put, all, select } from "redux-saga/effects";
 import * as User from "../store/User";
 
 export default function* () {
   yield all([
     takeLatest(User.types.LOGIN_REQUEST, LoginUserSaga),
     takeLatest(User.types.LOGOUT_REQUEST, LogoutUserSaga),
+    takeLatest(User.types.SET_PROFILE, SetProfileSaga),
   ]);
 }
 
@@ -71,10 +72,44 @@ function authenticateUser(credential) {
   }).then((response) => response.json());
 }
 
-function* LogoutUserSaga({ credential, history }) {
+function* LogoutUserSaga() {
   try {
     yield put({ type: User.types.LOGOUT_USER });
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
+  }
+}
+
+function* SetProfileSaga ({perfilSelecionado, history}){
+  try {
+    const {user} = yield select();
+    const {token: oldToken} =  user;
+    const {perfis} = user.perfil;
+    const {codigoPerfil: perfil} = perfilSelecionado;
+
+    const data = yield call(fetch, `/api/Auth/ModificarPerfil?perfil=${perfil}`,
+    {
+      method: "put",
+      headers: { "Content-Type": "application/json", token: oldToken },
+    });
+
+    const text = yield data.text();
+    const {token, ehProfessor} = yield JSON.parse(text);    
+    const newUser = {
+        ...user,
+        perfil: {
+            perfis,
+            perfilSelecionado
+        },
+        ehProfessor,
+        token,
+    }
+
+    yield put({ type: "SET_USER", user: newUser});   
+    
+    history.push(user.redirectUrl);
+    
+  } catch (error) {
+    yield put({ type: "API_CALL_ERROR" });    
   }
 }

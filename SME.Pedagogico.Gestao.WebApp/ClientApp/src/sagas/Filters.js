@@ -23,13 +23,18 @@ function* GetDreAdm({ userName }) {
   }
 }
 
-function* GetDres({ }) {
+function* GetDres() {
   try {
     const {user, filters} = yield select();
-    const {token} =  user;
+    const {token, possuiPerfilSme} =  user;
     const {setSchoolYear: anoLetivo} = filters;
-    const data = yield call(getDresAPI, token, anoLetivo);
-    var listDres = data;
+    const listDres = yield call(getDresAPI, token, anoLetivo);
+    const todas =  {codigoDRE: "todas", nomeDRE: "Todas", siglaDRE: "Todas"}
+    
+    if(possuiPerfilSme) {
+      listDres.unshift(todas)
+    }
+        
     yield put({ type: Filters.types.LIST_DRES, listDres });
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
@@ -60,9 +65,16 @@ function* GetPeriod({ schoolYear }) {
 function* GetSchools({ schoolCode }) {
   try {    
     const {user} = yield select();
-    const {token} =  user;
-    const data = yield call(getSchoolsAPI, schoolCode, token);
-    var listSchool = data;
+    const {token, possuiPerfilSme, possuiPerfilDre} =  user;
+    const ehTodas = schoolCode.dreCodeEol === "todas";
+    const listSchool = !ehTodas ? yield call(getSchoolsAPI, schoolCode, token) 
+      : [];
+    const todas =  {codigoEscola: "todas", nomeEscola: "Todas"}
+
+    if(possuiPerfilSme || possuiPerfilDre) {
+      listSchool.unshift(todas)
+    }
+
     yield put({ type: Filters.types.LIST_SCHOOLS, listSchool });
     yield put({ type: Filters.types.ACTIVEDRECODE, schoolCode });
   } catch (error) {
@@ -74,7 +86,9 @@ function* GetClassRoom({ classRoomFilter }) {
   try {
     const {user} = yield select();
     const {token} =  user;
-    const data = yield call(getClassRoomAPI, classRoomFilter, token);
+    const schoolCodeEolIsEmpty = classRoomFilter.schoolCodeEol.length;
+    const data = schoolCodeEolIsEmpty ? yield call(getClassRoomAPI, classRoomFilter, token) 
+      : [];
     var listClassRoom = data;
     yield put({ type: Filters.types.LIST_CLASSROOM, listClassRoom });
     yield put({ type: Filters.types.ACTIVESCHOOLCODE, classRoomFilter });

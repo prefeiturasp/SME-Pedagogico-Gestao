@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import Select from './select';
 import { actionCreators as PortuguesStore } from "../../../store/SondagemPortuguesStore";
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,7 +8,7 @@ import CheckBox from './checkbox';
 function Aluno({ aluno, perguntas, periodo, idOrdemSelecionada, grupoSelecionado }) {
     const dispatch = useDispatch();
 
-    const ehRadioButton = useMemo(() => grupoSelecionado === "6a3d323a-2c44-4052-ba68-13a8dead299a")
+    // const ehRadioButton = useMemo(() => grupoSelecionado === "6a3d323a-2c44-4052-ba68-13a8dead299a")
 
     const periodosAbertura = useSelector(store => store.filters.period);
     

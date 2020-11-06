@@ -9,7 +9,7 @@
   SET_ACTIVE_ROLE: "SET_ACTIVE_ROLE",
   LOGIN_SGP_REQUEST: "LOGIN_SGP_REQUEST",
   SET_REDIRECT_URL: "SET_REDIRECT_URL",
-
+  SET_PROFILE: "SET_PROFILE",
 };
 const initialState = {
   name: null,
@@ -39,6 +39,7 @@ export const actionCreators = {
     history,
   }),
   setRedirectUrl: (redirectUrl) => ({ type: types.SET_REDIRECT_URL, redirectUrl }),
+  setProfile: (perfilSelecionado, history) => ({ type: types.SET_PROFILE, perfilSelecionado, history }),
 };
 
 export const reducer = (state, action) => {

@@ -1,6 +1,4 @@
-﻿import { type } from "jquery";
-
-export const types = {
+﻿export const types = {
     SET_POLL_REPORT_FILTER: "SET_POLL_REPORT_FILTER",
     RESET_POLL_REPORT_FILTER: "RESET_POLL_REPORT_FILTER",
     SHOW_POLL_REPORT_REQUEST: "SHOW_POLL_REPORT_REQUEST",

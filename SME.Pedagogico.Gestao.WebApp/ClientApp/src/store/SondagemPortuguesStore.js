@@ -1,5 +1,3 @@
-import { type } from "jquery";
-
 export const types = {
   SELECIONAR_GRUPO: "SELECIONAR_GRUPO",
   SETAR_GRUPOS: "SETAR_GRUPOS",

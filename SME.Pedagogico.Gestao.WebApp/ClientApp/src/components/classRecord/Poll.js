@@ -31,7 +31,7 @@ import SondagemMatematicaAutoral from "./SondagemMatematicaAutoral";
 import SondagemPortuguesAutoral from "./SondagemPortuguesAutoral";
 
 import TwoStepsSave from "../messaging/TwoStepsSave";
-import TwoSteps from "../messaging/TwoSteps";
+// import TwoSteps from "../messaging/TwoSteps";
 import MensagemConfirmacaoAutoral from "./SondagemPortuguesAutoral/mensagemConfirmacaoAutoral";
 import Loader from "../loader/Loader";
 
@@ -71,12 +71,12 @@ class Poll extends Component {
     this.toggleMessageMathBox = this.toggleMessageMathBox.bind(this); //para botao matematica
   }
 
-  componentWillMount() {
-    var todayDate = new Date();
-    if (this.props.filter !== undefined) {
-      var period = this.props.filter.period;
-    }
-  }
+  // componentWillMount() {
+  //   var todayDate = new Date();
+  //   if (this.props.filter !== undefined) {
+  //     var period = this.props.filter.period;
+  //   }
+  // }
   
   toggleMessageBox() {
     this.setState({
@@ -203,7 +203,7 @@ class Poll extends Component {
 
   componentRender() {
     var componentRender;
-    var sondagemType = this.props.poll.pollSelected;
+    // var sondagemType = this.props.poll.pollSelected;
 
     if (this.props.poll.pollSelected === ClassRoomEnum.ClassPTAutoral) {
       componentRender = <SondagemPortuguesAutoral />;
@@ -356,8 +356,8 @@ class Poll extends Component {
 
   updatePollStudent(sequence, subjectName, propertyName, value) {
     if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
-      var pollStudents = this.props.poll.students;
-      for (var i = 0; i < pollStudents.length; i++) {
+      const pollStudents = this.props.poll.students;
+      for (let i = 0; i < pollStudents.length; i++) {
         if (pollStudents[i].studentCodeEol === sequence) {
           if (subjectName === "portuguese") {
             switch (propertyName) {
@@ -395,8 +395,8 @@ class Poll extends Component {
       this.props.pollMethods.update_poll_students(pollStudents);
     } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMT) {
       if (this.props.poll.pollTypeSelected === "Numeric") {
-        var pollStudents = this.props.poll.studentsPollMathNumbers;
-        for (var i = 0; i < pollStudents.length; i++) {
+        const pollStudents = this.props.poll.studentsPollMathNumbers;
+        for (let i = 0; i < pollStudents.length; i++) {
           if (pollStudents[i].studentCodeEol === sequence) {
             if (subjectName === "mathalfabetizacao") {
               switch (propertyName) {
@@ -451,8 +451,8 @@ class Poll extends Component {
         }
         this.props.pollMethods.update_poll_math_numbers_students(pollStudents);
       } else if (this.props.poll.pollTypeSelected === "CA") {
-        var pollStudents = this.props.poll.studentsPollMathCA;
-        for (var i = 0; i < pollStudents.length; i++) {
+        const pollStudents = this.props.poll.studentsPollMathCA;
+        for (let i = 0; i < pollStudents.length; i++) {
           if (pollStudents[i].studentCodeEol === sequence) {
             if (subjectName === "math") {
               switch (propertyName) {
@@ -568,8 +568,8 @@ class Poll extends Component {
         }
         this.props.pollMethods.update_poll_math_ca_students(pollStudents);
       } else if (this.props.poll.pollTypeSelected === "CM") {
-        var pollStudents = this.props.poll.studentsPollMathCM;
-        for (var i = 0; i < pollStudents.length; i++) {
+        const pollStudents = this.props.poll.studentsPollMathCM;
+        for (let i = 0; i < pollStudents.length; i++) {
           if (pollStudents[i].studentCodeEol === sequence) {
             if (subjectName === "math") {
               switch (propertyName) {
@@ -767,20 +767,20 @@ class Poll extends Component {
     ) {
     } else if (this.props.poll.pollSelected !== null) {
       if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
-        var response = this.props.pollMethods.save_poll_portuguese_student(
+        this.props.pollMethods.save_poll_portuguese_student(
           this.props.poll.students
         );
       } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMT) {
         if (this.props.poll.pollTypeSelected === "Numeric") {
-          var response = this.props.pollMethods.save_poll_math_numbers_students(
+          this.props.pollMethods.save_poll_math_numbers_students(
             this.props.poll.studentsPollMathNumbers
           );
         } else if (this.props.poll.pollTypeSelected === "CA") {
-          var response = this.props.pollMethods.save_poll_math_ca_students(
+          this.props.pollMethods.save_poll_math_ca_students(
             this.props.poll.studentsPollMathCA
           );
         } else if (this.props.poll.pollTypeSelected === "CM") {
-          var response = this.props.pollMethods.save_poll_math_cm_students(
+          this.props.pollMethods.save_poll_math_cm_students(
             this.props.poll.studentsPollMathCM
           );
         }

@@ -43,7 +43,7 @@ function ExcluirSondagemPortuguesApi(filtro) {
     });
 }
 
-function* ListarGrupos({ }) {
+function* ListarGrupos() {
     try {
         const data = yield call(listarGruposAPI);
         var payload = data;
@@ -60,7 +60,7 @@ function listarGruposAPI() {
         headers: { "Content-Type": "application/json" },
     }).then((response) => response.json());
 }
-function* ListarComponenteCurricular({ }) {
+function* ListarComponenteCurricular() {
     try {
         const data = yield call(listarComponenteCurricularAPI);
         var payload = data;
@@ -78,7 +78,7 @@ function listarComponenteCurricularAPI() {
     }).then((response) => response.json());
 }
 
-function* ListarBimestres({ }) {
+function* ListarBimestres() {
     try {
         const data = yield call(listarBimestresAPI);
         var payload = data;

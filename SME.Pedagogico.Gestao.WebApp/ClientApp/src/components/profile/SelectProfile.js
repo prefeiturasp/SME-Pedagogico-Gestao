@@ -26,23 +26,12 @@ class SelectProfile extends Component {
         this.selectRole = this.selectRole.bind(this);
     }
 
-    selectRole(event) {
-        
+    selectRole(event) {        
         const nomePerfil = event.target.innerText;
-        const {user, setUser, history} = this.props;
-        const {perfis} = user.perfil;        
-        const perfilSelecionado = perfis.find(item => nomePerfil === item.nomePerfil);
-        const newUser = {
-            ...user,
-            perfil: {
-                perfis,
-                perfilSelecionado
-            }
-        }
-
-        setUser(newUser);
-
-        history.push(user.redirectUrl);
+        const {user, setProfile, history} = this.props;   
+        const perfilSelecionado = user.perfil.perfis.find(item => nomePerfil === item.nomePerfil);
+        
+        setProfile(perfilSelecionado, history);
     }
 
     render() {

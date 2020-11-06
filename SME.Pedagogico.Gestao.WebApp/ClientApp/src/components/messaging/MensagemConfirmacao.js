@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Spring, Transition } from "react-spring/renderprops";
-import { useTransition, animated } from "react-spring";
+import { Spring } from "react-spring/renderprops";
+import { animated } from "react-spring";
 import "./TwoStepsSave.css";
 import { Card } from "reactstrap";
 

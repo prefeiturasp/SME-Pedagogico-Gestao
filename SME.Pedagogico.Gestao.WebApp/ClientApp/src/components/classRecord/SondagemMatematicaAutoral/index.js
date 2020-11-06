@@ -1,4 +1,4 @@
-﻿import React, { useState, useMemo, memo, useEffect } from "react";
+﻿import React, { useState, useMemo, useEffect } from "react";
 import AlunoSondagemMatematicaAutoral from "./aluno";
 import { useSelector, useDispatch } from "react-redux";
 import { actionCreators } from "../../../store/SondagemAutoral";
@@ -236,9 +236,9 @@ function SondagemMatematicaAutoral() {
     setIndexSelecionado(primeiraOrdenacao);
   }, [perguntas]);
 
-  const pStyle = {
-    color: "#DADADA",
-  };
+  // const pStyle = {
+  //   color: "#DADADA",
+  // };
 
   return (
     <table

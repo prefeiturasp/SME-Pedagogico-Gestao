@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import "../../polls/inputs/Common.css";
 import shortid from "shortid";
-import { Tooltip } from "reactstrap";
+// import { Tooltip } from "reactstrap";
 import { useSelector } from "react-redux";
 
 const AutoralSelect = ({
