@@ -37,13 +37,15 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// <param name="classrooms"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<string>> ListarTurmasPorEscola(BuscarTurmasPorEscola classrooms)
+        public async Task<ActionResult<string>> ListarTurmasPorEscola(BuscarTurmasPorEscola classrooms, [FromServices]IMediator mediator)
         {
             try
             {
                 //Necessário para gerar o Token temporariamente
-                var filterBusiness = new Filters(_config);
-                var listClassRoom = await filterBusiness.GetListClassRoomSchool(classrooms.schoolCodeEol, classrooms.schoolYear);
+                //var filterBusiness = new Filters(_config);
+                //var listClassRoom = await filterBusiness.GetListClassRoomSchool(classrooms.schoolCodeEol, classrooms.schoolYear);
+
+                var listClassRoom =  await mediator.Send(new ObterTurmasPorUeCodigoQuery(classrooms.schoolYear, classrooms.schoolCodeEol));
 
                 if (listClassRoom != null)
                 {
@@ -108,6 +110,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 //var listDres = await filterBusiness.GetListDre();
 
                 //TODO: Obter o Ano Letivo
+                
                 var listDres = await  mediator.Send(new ObterDresQuery(anoLetivo));
 
                 if (listDres != null)

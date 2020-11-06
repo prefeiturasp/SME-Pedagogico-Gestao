@@ -72,7 +72,9 @@ function* GetSchools({ schoolCode }) {
 
 function* GetClassRoom({ classRoomFilter }) {
   try {
-    const data = yield call(getClassRoomAPI, classRoomFilter);
+    const {user} = yield select();
+    const {token} =  user;
+    const data = yield call(getClassRoomAPI, classRoomFilter, token);
     var listClassRoom = data;
     yield put({ type: Filters.types.LIST_CLASSROOM, listClassRoom });
     yield put({ type: Filters.types.ACTIVESCHOOLCODE, classRoomFilter });
@@ -126,10 +128,10 @@ function getSchoolsAPI(schoolCode, token) {
   }).then(response => response.json());
 }
 
-function getClassRoomAPI(classRoomFilter) {
+function getClassRoomAPI(classRoomFilter, token) {
   return fetch("/api/Filtros/ListarTurmasPorEscola", {
     method: "post",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", token },
     body: JSON.stringify(classRoomFilter)
   }).then(response => response.json());
 }
