@@ -25,9 +25,10 @@ function* GetDreAdm({ userName }) {
 
 function* GetDres({ }) {
   try {
-    const {user} = yield select();
+    const {user, filters} = yield select();
     const {token} =  user;
-    const data = yield call(getDresAPI, token);
+    const {setSchoolYear: anoLetivo} = filters;
+    const data = yield call(getDresAPI, token, anoLetivo);
     var listDres = data;
     yield put({ type: Filters.types.LIST_DRES, listDres });
   } catch (error) {
@@ -133,8 +134,8 @@ function getClassRoomAPI(classRoomFilter) {
   }).then(response => response.json());
 }
 
-function getDresAPI(token) {
-  return fetch("/api/Filtros/ListarDres", {
+function getDresAPI(token, anoLetivo) {
+  return fetch(`/api/Filtros/ListarDres?anoLetivo=${anoLetivo}`, {
     method: "get",
     headers: { "Content-Type": "application/json", token }
     //body: JSON.stringify(credential)
