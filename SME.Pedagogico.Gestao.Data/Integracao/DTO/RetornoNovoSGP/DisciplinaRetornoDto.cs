@@ -5,7 +5,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP
     public class DisciplinaRetornoDto
     {
         [JsonProperty("codigoComponenteCurricular")]
-        public long CodigoComponenteCurricular { get; set; }
+        public string CodigoComponenteCurricular { get; set; }
 
         [JsonProperty("nome")]
         public string Nome { get; set; }

@@ -104,16 +104,16 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
             return await TrataRetorno<IList<AbrangenciaUeRetornoDto>>(resposta);
         }
 
-        public async Task<IList<DisciplinaRetornoDto>> DisciplinasPorTurma(BuscarDisciplinasPorRfTurmaDto buscarDisciplinasPorRfTurmaDto)
-        {
-            var loggedUser = await Authentication.GetLoggedUser(buscarDisciplinasPorRfTurmaDto.CodigoRf);
+        //public async Task<IList<DisciplinaRetornoDto>> DisciplinasPorTurma(BuscarDisciplinasPorRfTurmaDto buscarDisciplinasPorRfTurmaDto)
+        //{
+        //    var loggedUser = await Authentication.GetLoggedUser(buscarDisciplinasPorRfTurmaDto.CodigoRf);
 
-            ResetarCabecalhoAutenticado(loggedUser.RefreshToken);
+        //    ResetarCabecalhoAutenticado(loggedUser.RefreshToken);
 
-            var resposta = await httpClient.GetAsync(EndpointsNovoSGP.Disciplinas(buscarDisciplinasPorRfTurmaDto.CodigoTurmaEol));
+        //    var resposta = await httpClient.GetAsync(EndpointsNovoSGP.Disciplinas(buscarDisciplinasPorRfTurmaDto.CodigoTurmaEol));
 
-            return await TrataRetorno<IList<DisciplinaRetornoDto>>(resposta);
-        }
+        //    return await TrataRetorno<IList<DisciplinaRetornoDto>>(resposta);
+        //}
 
         private async Task<T> TrataRetorno<T>(HttpResponseMessage response)
         {

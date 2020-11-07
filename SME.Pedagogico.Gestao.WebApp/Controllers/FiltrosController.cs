@@ -104,10 +104,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// <param name="buscarDisciplinasPorRfTurmaDto">Parâmetro com o RF e código da turma.</param>
         /// <returns>Lista disciplinas com nome e código.</returns>
         [HttpPost]
-        public async Task<ActionResult<string>> ListarDisciplinasPorRfTurma(BuscarDisciplinasPorRfTurmaDto buscarDisciplinasPorRfTurmaDto)
+        public async Task<ActionResult<string>> ListarDisciplinasPorRfTurma(BuscarDisciplinasPorRfTurmaDto buscarDisciplinasPorRfTurmaDto, [FromServices]IMediator mediator)
         {
-            var novoSgpApi = new NovoSGPAPI();
-            var listDiscplines = await novoSgpApi.DisciplinasPorTurma(buscarDisciplinasPorRfTurmaDto);
+            var listDiscplines = await mediator.Send(new ObterCCPorTurmaUsuarioQuery(buscarDisciplinasPorRfTurmaDto.CodigoTurmaEol));
 
             if (listDiscplines != null)
                 return (Ok(listDiscplines));
