@@ -42,8 +42,10 @@ function* GetDres() {
 }
 
 function* GetDisciplinesByClassroom({ disciplinesFilter }) {
-  try {
-    const data = yield call(getDisciplinesByClassroomAPI, disciplinesFilter);    
+  try {    
+    const {user} = yield select();
+    const {token} =  user;
+    const data = yield call(getDisciplinesByClassroomAPI, disciplinesFilter, token);    
     var listDisciplines = data;
     yield put({ type: Filters.types.LIST_DISCIPLINES, listDisciplines });
     yield put({ type: Filters.types.DISCIPLINES_FILTER, disciplinesFilter });
@@ -65,13 +67,14 @@ function* GetPeriod({ schoolYear }) {
 function* GetSchools({ schoolCode }) {
   try {    
     const {user} = yield select();
-    const {token, possuiPerfilSme, possuiPerfilDre} =  user;
+    const {token, possuiPerfilSme, possuiPerfilDre, perfil} =  user;
+    const ehProfessor = perfil.perfilSelecionado.nomePerfil.indexOf("Professor") >= 0; 
     const ehTodas = schoolCode.dreCodeEol === "todas";
     const listSchool = !ehTodas ? yield call(getSchoolsAPI, schoolCode, token) 
       : [];
     const todas =  {codigoEscola: "todas", nomeEscola: "Todas"}
 
-    if(possuiPerfilSme || possuiPerfilDre) {
+    if((possuiPerfilSme || possuiPerfilDre) && !ehProfessor) {
       listSchool.unshift(todas)
     }
 
@@ -101,7 +104,6 @@ function* GetFiltersTeacher({ profileOccupatios }) {
   try {
     const data = yield call(getTeacherFiltersApi, profileOccupatios);
     var filters = data;
-    console.log(data);
     yield put({ type: Filters.types.SET_FILTERS_TEACHER, filters });
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
@@ -158,10 +160,10 @@ function getDresAPI(token, anoLetivo) {
   }).then(response => response.json());
 }
 
-function getDisciplinesByClassroomAPI(disciplinesFilter) {
+function getDisciplinesByClassroomAPI(disciplinesFilter, token) {
   return fetch("/api/Filtros/ListarDisciplinasPorRfTurma", {
     method: "post",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", token },
     body: JSON.stringify(disciplinesFilter)
   }).then(response => response.json());
 }

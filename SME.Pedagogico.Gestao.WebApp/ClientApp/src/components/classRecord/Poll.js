@@ -863,10 +863,10 @@ class Poll extends Component {
 
   checkButtonPortuguese() {
     var btn;
-
-    if (this.restricaoDisciplina(DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES))
-      return btn;
-
+console.log("A ===> ")
+    // if (this.restricaoDisciplina(DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES))
+    //   return btn;
+    
     if (
       this.props.poll.selectedFilter.yearClassroom !== null &&
       this.props.poll.selectedFilter.yearClassroom !== undefined
@@ -929,8 +929,8 @@ class Poll extends Component {
   checkButtonMath() {
     var btn;
 
-    if (this.restricaoDisciplina(DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA))
-      return btn;
+    // if (this.restricaoDisciplina(DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA))
+    //   return btn;
 
     if (
       this.props.poll.selectedFilter.yearClassroom !== null &&
@@ -1007,18 +1007,18 @@ class Poll extends Component {
     }
   }
 
-  restricaoDisciplina(disciplina) {
-    return (
-      this.props.user.ehProfessor &&
-      !DISCIPLINES_ENUM.PossuiDisciplinaRegencia(
-        this.props.filters.listDisciplines
-      ) &&
-      !DISCIPLINES_ENUM.PossuiDisciplina(
-        disciplina,
-        this.props.filters.listDisciplines
-      )
-    );
-  }
+  // restricaoDisciplina(disciplina) {
+  //   return (
+  //     this.props.user.ehProfessor &&
+  //     !DISCIPLINES_ENUM.PossuiDisciplinaRegencia(
+  //       this.props.filters.listDisciplines
+  //     ) &&
+  //     !DISCIPLINES_ENUM.PossuiDisciplina(
+  //       disciplina,
+  //       this.props.filters.listDisciplines
+  //     )
+  //   );
+  // }
 
   render() {
     return (

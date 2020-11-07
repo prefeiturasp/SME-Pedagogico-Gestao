@@ -93,22 +93,25 @@ function* SetProfileSaga ({perfilSelecionado, history}){
       headers: { "Content-Type": "application/json", token: oldToken },
     });
 
-    const text = yield data.text();
-    const {token, ehProfessor} = yield JSON.parse(text);    
     const newUser = {
-        ...user,
-        perfil: {
-            perfis,
-            perfilSelecionado
-        },
-        ehProfessor,
-        token,
+      ...user,
+      perfil: {
+          perfis,
+          perfilSelecionado
+      }
     }
+    
+    if(data.status === 200){
+      const text = yield data.text();
+      const {ehProfessor, token} = yield JSON.parse(text);
 
+      newUser.ehProfessor =  ehProfessor;
+      newUser.token = token;
+    }   
+      
     yield put({ type: "SET_USER", user: newUser});   
     
     history.push(user.redirectUrl);
-    
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });    
   }
