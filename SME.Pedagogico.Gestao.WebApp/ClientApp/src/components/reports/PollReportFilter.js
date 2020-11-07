@@ -6,6 +6,7 @@ import { bindActionCreators } from "redux";
 import { actionCreators as pollStoreActionCreators } from "../../store/SondagemPortuguesStore";
 import { DISCIPLINES_ENUM } from "../../Enums";
 // import { ROLES_ENUM } from "../../Enums";
+import { verificarDisciplina } from "../../utils/verificarDisciplina";
 
 class PollReportFilter extends Component {
   constructor() {
@@ -40,12 +41,17 @@ class PollReportFilter extends Component {
     this.props.pollReportsMethods.hidePollReport();
     this.props.sondagemPortuguesMethods.listarGrupos();
 
-    if (this.restricaoDisciplina(DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES))
-      delete this.props.pollReport.filters.port;
+    // if (this.restricaoDisciplina(DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES))
+    //   delete this.props.pollReport.filters.port;
 
-    if (this.restricaoDisciplina(DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA))
-      delete this.props.pollReport.filters.math;
-
+    // if (this.restricaoDisciplina(DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA))
+    //   delete this.props.pollReport.filters.math;
+    
+   
+    
+    this.mostrarDisciplina(DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA, 'math');
+    this.mostrarDisciplina(DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES, 'port');
+    
     for (var key in this.props.pollReport.filters)
       this.initialFilter.push({
         value: key,
@@ -66,6 +72,13 @@ class PollReportFilter extends Component {
     ) {
       this.limparDadosFiltro();
     }
+  }
+
+  mostrarDisciplina = (disciplina, disciplinaCurta) => {
+    const {listDisciplines} = this.props.filters;
+    const existDisciplina = verificarDisciplina(listDisciplines, disciplina.Descricao);
+    if(!existDisciplina)
+      delete this.props.pollReport.filters[disciplinaCurta];
   }
 
   limparDadosFiltro() {
@@ -229,18 +242,18 @@ class PollReportFilter extends Component {
     }
   }
 
-  restricaoDisciplina(disciplina) {
-    return (
-      this.props.user.ehProfessor &&
-      !DISCIPLINES_ENUM.PossuiDisciplinaRegencia(
-        this.props.filters.listDisciplines
-      ) &&
-      !DISCIPLINES_ENUM.PossuiDisciplina(
-        disciplina,
-        this.props.filters.listDisciplines
-      )
-    );
-  }
+  // restricaoDisciplina(disciplina) {
+  //   return (
+  //     this.props.user.ehProfessor &&
+  //     !DISCIPLINES_ENUM.PossuiDisciplinaRegencia(
+  //       this.props.filters.listDisciplines
+  //     ) &&
+  //     !DISCIPLINES_ENUM.PossuiDisciplina(
+  //       disciplina,
+  //       this.props.filters.listDisciplines
+  //     )
+  //   );
+  // }
 
   render() {
     return (
@@ -261,7 +274,7 @@ class PollReportFilter extends Component {
             defaultText="Proficiência"
             options={this.state.proficiencies}
             onChange={this.onChangeProficiency}
-            value={this.state.selectedProficiency}
+            value={this.state.selectedProficiency || ""}
             resetColor={!this.state.selectedProficiency}
             disabled={
               this.ehMatematicaAcimaDoSetimoAnoConsolidado() ||
@@ -287,7 +300,7 @@ class PollReportFilter extends Component {
             defaultText="Período"
             options={this.state.terms}
             onChange={this.onChangeTerm}
-            value={this.state.selectedTerm}
+            value={this.state.selectedTerm || ""}
             resetColor={this.state.selectedTerm === "" ? true : false}
           />
           <div className="px-2"></div>

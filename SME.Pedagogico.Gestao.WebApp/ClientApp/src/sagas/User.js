@@ -24,11 +24,11 @@ function* LoginUserSaga({ credential, history }) {
         "/Usuario/TrocarPerfil": usuario.permissoes[1],
         };        
       
-        
+      const store = yield select();  
       const perfisEhMaiorQueUm = usuario.perfisUsuario.perfis.length > 1; 
       const perfilSelecionado = perfisEhMaiorQueUm ? {codigoPerfil: "", nomePerfil: ""} 
         : usuario.perfisUsuario.perfis[0];
-      const rota = perfisEhMaiorQueUm ? "/Usuario/TrocarPerfil" : "/";
+      const rota = perfisEhMaiorQueUm ? "/Usuario/TrocarPerfil" : store.user.redirectUrl;
 
       const user = {
         name: "",

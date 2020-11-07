@@ -1250,9 +1250,9 @@ class PollReport extends Component {
                                   : "";
                               var chart1Id = order + "-ideaChart";
                               var chart2Id = order + "-resultChart";
-
                               return (
                                 <PollReportMathChartClassroom
+                                  key={item.name}
                                   data={item}
                                   chartIds={[chart1Id, chart2Id]}
                                   numbers={numbers}

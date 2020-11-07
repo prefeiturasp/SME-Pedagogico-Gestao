@@ -41,6 +41,10 @@ class PollFilter extends Component {
     // this.getPeriod = this.getPeriod.bind(this);
   }
 
+  componentDidMount(){
+    this.props.filterMethods.resetFilters();
+  }
+
   componentWillMount() {
     var anoLetivo = new Date();
     var anoAtual = anoLetivo.getFullYear();

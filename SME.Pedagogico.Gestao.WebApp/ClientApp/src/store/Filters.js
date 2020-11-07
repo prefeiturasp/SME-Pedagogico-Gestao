@@ -20,6 +20,7 @@ export const types = {
   GET_LIST_DISCIPLINES_BY_CLASSROOM: "GET_LIST_DISCIPLINES_BY_CLASSROOM",
   LIST_DISCIPLINES: "LIST_DISCIPLINES",
   DISCIPLINES_FILTER: "DISCIPLINES_FILTER",
+  RESET_FILTERS: "RESET_FILTERS",
   //UNAUTHORIZED: "UNAUTHORIZED",
   //LOGOUT_REQUEST: "LOGOUT_REQUEST",
   //LOGOUT_USER: "LOGOUT_USER",
@@ -77,6 +78,7 @@ export const actionCreators = {
     disciplinesFilter,
   }),
   listDisciplines: () => ({ type: types.LIST_DISCIPLINES }),
+  resetFilters: () => ({type: types.RESET_FILTERS}),
 };
 
 export const reducer = (state, action) => {
@@ -172,6 +174,13 @@ export const reducer = (state, action) => {
       return {
         ...state,
         listDisciplines: action.listDisciplines,
+      };
+    case types.RESET_FILTERS:
+      return {
+        ...state,
+        activeDreCode: null,
+        activeSchollsCode: null,
+        activeClassRoomCode: null,      
       };
     default:
       return state;

@@ -34,6 +34,7 @@ import TwoStepsSave from "../messaging/TwoStepsSave";
 // import TwoSteps from "../messaging/TwoSteps";
 import MensagemConfirmacaoAutoral from "./SondagemPortuguesAutoral/mensagemConfirmacaoAutoral";
 import Loader from "../loader/Loader";
+import { verificarDisciplina } from "../../utils/verificarDisciplina";
 
 class Poll extends Component {
   constructor(props) {
@@ -863,10 +864,15 @@ class Poll extends Component {
 
   checkButtonPortuguese() {
     var btn;
-console.log("A ===> ")
     // if (this.restricaoDisciplina(DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES))
     //   return btn;
     
+    const {listDisciplines} = this.props.filters;
+    const existDisciplina = 
+      verificarDisciplina(listDisciplines, DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES.Descricao);
+    if(!existDisciplina)
+      return;
+
     if (
       this.props.poll.selectedFilter.yearClassroom !== null &&
       this.props.poll.selectedFilter.yearClassroom !== undefined
@@ -931,6 +937,12 @@ console.log("A ===> ")
 
     // if (this.restricaoDisciplina(DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA))
     //   return btn;
+
+    const {listDisciplines} = this.props.filters;
+    const existDisciplina = 
+      verificarDisciplina(listDisciplines, DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao);
+    if(!existDisciplina)
+      return;
 
     if (
       this.props.poll.selectedFilter.yearClassroom !== null &&
