@@ -1,17 +1,14 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SME.Pedagogico.Gestao.Aplicacao;
 using SME.Pedagogico.Gestao.Data.Business;
-using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP;
 using SME.Pedagogico.Gestao.Infra;
-using SME.Pedagogico.Gestao.Models.Authentication;
 using SME.Pedagogico.Gestao.WebApp.Contexts;
 using SME.Pedagogico.Gestao.WebApp.Models;
 using SME.Pedagogico.Gestao.WebApp.Models.Auth;
@@ -420,7 +417,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
         #region -------------------- PUBLIC --------------------
 
-    
+
 
         /// <summary>
         /// Método para deslogar o usuário.
@@ -441,7 +438,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// <returns>Informações sobre o usuário que está tentando logar (tokens de acesso e cookies), caso não seja encontrado nenhum usuário correspondente à credencial, o método retorna usuário não autorizado.</returns>
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult<string>> LoginIdentity([FromBody] CredentialModel credential)
+        public async Task<ActionResult<string>> LoginIdentity([FromBody] CredentialModel credential, [FromServices]IMediator mediator)
         {
             var retornoAutenticacao = await _apiNovoSgp.Autenticar(credential.Username, credential.Password);
 
@@ -453,41 +450,15 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 return Unauthorized("Você deve alterar a sua senha diretamente no Novo SGP");
 
 
-            var perfisElegiveis = Perfil.ObterPerfis().Where(x => retornoAutenticacao.PerfisUsuario.Perfis.Any(y => y.CodigoPerfil.Equals(x.PerfilGuid))).ToList();
-
-            //Verificar se possui perfil professor
-            var perfilProfessor = perfisElegiveis.FirstOrDefault(a => a.PerfilGuid == Guid.Parse("40E1E074-37D6-E911-ABD6-F81654FE895D"));
-
-            if (perfilProfessor != null)
-            {
-                //TODO: Verificar se o mesmo tem acesso a PT e MT
-                var temAcesso = await _profile.VerificaSeProfessorTemAcesso(credential.Username);
-                if (!temAcesso)
-                    perfisElegiveis.Remove(perfilProfessor);
-            }
-
-            if (!perfisElegiveis.Any())
-                return Unauthorized("Usuário sem permissão de acesso na Sondagem.");
-
-
-            // FIM Da verificação de perfis \\
+            var perfisTratados = await mediator.Send(new ObterVerificarPerfisDoUsuarioLoginQuery(credential.Username, retornoAutenticacao.PerfisUsuario.Perfis));
+            
 
             var menus = await _apiNovoSgp.ObterMenus(retornoAutenticacao.Token);
 
             var menussSondagem = menus.SelectMany(c => c.Menus).Where(c => c.Codigo < 9).ToDictionary(c => c.Url, k => k);
 
             //Tratar os Perfis que podem visualizar
-            retornoAutenticacao.PerfisUsuario.Perfis.Clear();
-
-            foreach (var perfilElegivel in perfisElegiveis)
-            {
-                retornoAutenticacao.PerfisUsuario.Perfis.Add(new PerfilDto()
-                {
-                    CodigoPerfil = perfilElegivel.PerfilGuid,
-                    NomePerfil = perfilElegivel.RoleName
-                });
-            }
-
+            retornoAutenticacao.PerfisUsuario.Perfis = perfisTratados; 
 
             retornoAutenticacao.Permissoes = new List<MenuPermissaoDto>
             {
@@ -501,97 +472,11 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 },
             };
 
-            //Verificar se o perfil de professor tem a disciplina Matematica ou PT 
-            //retornoAutenticacao.PerfisUsuario.Perfis
-
             return Ok(retornoAutenticacao);
-
-            ////cadastra usuario se não existir
-            //await CadastraUsuario(credential);
-
-            //var meusDados = await _apiNovoSgp.MeusDados(retornoAutenticacao.Token);
-
-            //if (meusDados == null)
-            //    return Unauthorized("Não foi possivel obter os dados do usuário. Contate a SME");
-
-            //var ProfileBusiness = new Profile(_config);
-
-            //var privileged = new List<PrivilegedAccess>();
-
-            //if (retornoAutenticacao.PerfisUsuario.PossuiPerfilDre)
-            //{
-            //    var perfisDre = Perfil.ObterPerfis().Where(x => x.IsDre);
-
-            //    var perfilAbrangencia = perfisDre.FirstOrDefault(x => retornoAutenticacao.PerfisUsuario.Perfis.Any(z => z.CodigoPerfil.ToString().ToUpper().Equals(x.PerfilGuid.ToString().ToUpper())));
-
-            //    var abrangencia = await _abrangenciaAPI.ObterAbrangenciaCompactaDreDetalhes(retornoAutenticacao.Token, meusDados.CodigoRf, perfilAbrangencia.PerfilGuid);
-
-            //    if (abrangencia != null && abrangencia.Dres != null && abrangencia.Dres.Any())
-            //        privileged = abrangencia.Dres.Select(x => new PrivilegedAccess
-            //        {
-            //            DreCodeEol = x.CodigoDRE,
-            //            Login = credential.Username,
-            //            Name = meusDados.Nome,
-            //            OccupationPlace = x.NomeDRE,
-            //            OccupationPlaceCode = 3
-            //        }).ToList();
-
-            //    await Authentication.SetPrivilegedAccess(credential.Username, privileged);
-            //}
-
-            //if (retornoAutenticacao.PerfisUsuario.PossuiPerfilSme)
-            //{
-            //    privileged.Add(new PrivilegedAccess
-            //    {
-            //        Login = credential.Username,
-            //        Name = meusDados.Nome,
-            //        OccupationPlace = "SME",
-            //        OccupationPlaceCode = 2
-            //    });
-
-            //    await Authentication.SetPrivilegedAccess(credential.Username, privileged);
-            //}
-
-            //var listOccupations = new Dictionary<string, string>();
-            //var occupationRF = await ProfileBusiness.GetOccupationsRF(meusDados.CodigoRf);
-
-            //if (occupationRF != null)
-            //    listOccupations = await SetOccupationsRF(credential.Username, occupationRF);
-
-            //return Ok(retornoAutenticacao);
-
-            //var roles = await GetUserRoles(credential.Username);
-
-            //if (!roles.Any())
-            //    return Unauthorized("Usuario não autorizado");
-
-            //string session = Data.Functionalities.Cryptography.CreateHashKey(); // Cria a sessão
-            //string refreshToken = retornoAutenticacao.Token; // Usa token criado no novo SGP
-            //await Authentication.LoginUser(credential.Username, session, refreshToken, retornoAutenticacao.DataHoraExpiracao); // Loga o usuário no sistema
-
-
-            //    var permissoes = new {
-            //  "/": retornoAutenticacao.permissoes["/sondagem"],
-            //  "/Relatorios/Sondagem": usuario.permissoes["/Relatorios/Sondagem"],
-            //  "/Usuario/TrocarPerfil": {
-            //    podeAlterar: false,
-            //    podeConsultar: true,
-            //    podeExcluir: false,
-            //    podeIncluir: false,
-            //  },
-            //};
-
-            //return Ok(new
-            //{
-            //    //Token = CreateToken(credential.Username),
-            //    //Session = session,
-            //    //RefreshToken = refreshToken,
-            //    //roles,
-            //    ListOccupations = listOccupations,
-            //});
+          
         }
-     
-        
+
+
         [AllowAnonymous]
         [HttpPut]
         public async Task<IActionResult> ModificarPerfil([FromQuery] string perfil, [FromServices]IMediator mediator)
@@ -599,9 +484,17 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             var token = await mediator.Send(new AtualizarPerfilCommand(perfil));
 
             return Ok(token);
-          
-        }      
 
+        }
+
+
+        [AllowAnonymous]
+        [HttpPut]
+        public async Task<IActionResult> ValidarPerfisToken([FromBody] List<PerfilDto> perfis, [FromServices]IMediator mediator)
+        {
+            var perfisRetorno = await mediator.Send(new ObterVerificarPerfisTokenQuery(perfis));
+            return Ok(perfisRetorno);
+        }
         #endregion -------------------- PUBLIC --------------------
 
         #endregion ==================== METHODS ====================

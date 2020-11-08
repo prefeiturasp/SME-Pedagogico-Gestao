@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SME.Pedagogico.Gestao.WebApp.Models
+namespace SME.Pedagogico.Gestao.Infra
 {
     public class Perfil
     {

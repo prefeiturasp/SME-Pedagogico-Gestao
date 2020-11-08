@@ -28,7 +28,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
             if (perfilAtual == request.Perfil)
                 return default;
 
-            var token = await mediator.Send(new ObterObterTokenUsuarioLogadoQuery());            
+            var token = await mediator.Send(new ObterTokenUsuarioLogadoQuery());            
 
             using (var httpClient = httpClientFactory.CreateClient("apiSGP"))
             {

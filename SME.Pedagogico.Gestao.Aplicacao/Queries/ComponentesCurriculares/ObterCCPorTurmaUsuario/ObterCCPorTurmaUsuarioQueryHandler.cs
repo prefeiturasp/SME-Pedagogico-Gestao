@@ -33,7 +33,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
 
             if (perfilAtual.ToUpper() == "40E1E074-37D6-E911-ABD6-F81654FE895D")
             {
-                var token = await mediator.Send(new ObterObterTokenUsuarioLogadoQuery());
+                var token = await mediator.Send(new ObterTokenUsuarioLogadoQuery());
 
                 using (var httpClient = httpClientFactory.CreateClient("apiSGP"))
                 {

@@ -23,7 +23,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
 
         public async Task<List<DREsDTO>> Handle(ObterDresQuery request, CancellationToken cancellationToken)
         {
-            var token = await mediator.Send(new ObterObterTokenUsuarioLogadoQuery());
+            var token = await mediator.Send(new ObterTokenUsuarioLogadoQuery());
 
             var consideraHistorico = request.AnoLetivo != DateTime.Now.Year;
 

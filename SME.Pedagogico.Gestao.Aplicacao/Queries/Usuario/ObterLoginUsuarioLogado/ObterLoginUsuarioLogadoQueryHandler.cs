@@ -9,24 +9,22 @@ using MediatR;
 
 namespace SME.Pedagogico.Gestao.Aplicacao
 {
-    public class ObterPerfilUsuarioLogadoQueryHandler : IRequestHandler<ObterPerfilUsuarioLogadoQuery, string>
+    public class ObterLoginUsuarioLogadoQueryHandler : IRequestHandler<ObterLoginUsuarioLogado, string>
     {
         private readonly IMediator mediator;
-        public ObterPerfilUsuarioLogadoQueryHandler(IMediator mediator)
+        public ObterLoginUsuarioLogadoQueryHandler(IMediator mediator)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
-        public async Task<string> Handle(ObterPerfilUsuarioLogadoQuery request, CancellationToken cancellationToken)
+        public async Task<string> Handle(ObterLoginUsuarioLogado request, CancellationToken cancellationToken)
         {
            
            var token = await mediator.Send(new ObterTokenUsuarioLogadoQuery());
 
-            return ObterPerfilDoToken(token).ToString();
+            return ObterLoginDoToken(token).ToString();
         }
-        private Guid ObterPerfilDoToken(string token)
-    => Guid.Parse(ObterClaims(token)
-        .FirstOrDefault(claim => claim.Type == "perfil")?.Value
-        ?? string.Empty);
+        private string ObterLoginDoToken(string token)
+            =>  ObterClaims(token).FirstOrDefault(claim => claim.Type == "login")?.Value ?? string.Empty;
 
         private IEnumerable<Claim> ObterClaims(string token)
         {

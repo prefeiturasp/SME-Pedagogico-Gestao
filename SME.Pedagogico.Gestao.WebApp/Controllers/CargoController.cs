@@ -10,6 +10,7 @@ using System.Linq;
 using SME.Pedagogico.Gestao.WebApp.Models;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO;
+using SME.Pedagogico.Gestao.Infra;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
