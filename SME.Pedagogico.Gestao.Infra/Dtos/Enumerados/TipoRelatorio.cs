@@ -23,7 +23,10 @@ namespace SME.Pedagogico.Gestao.Infra
         RelatorioPortuguesConsolidado = 20,
 
         [Display(Name = "v1/sondagem/portugues-por-turma-capacidade-leitura", ShortName = "Português Por Turma (Capacidade Leitura)", Description = "Português Por Turma (Capacidade Leitura)")]
-        RelatorioPortuguesCapLeituraPorTurma = 21
+        RelatorioPortuguesCapLeituraPorTurma = 21,
+
+        [Display(Name = "v1/sondagem/portugues-consolidado-leitura-escrita-producao", ShortName = "PortuguesConsolidado", Description = "Português Consolidado")]
+        RelatorioPortuguesConsolidadoLeitEscProdTexto = 22
 
     }
 }

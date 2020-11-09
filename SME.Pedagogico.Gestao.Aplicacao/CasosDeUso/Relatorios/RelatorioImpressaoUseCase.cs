@@ -58,9 +58,17 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                     else
                         tipoRelatorio = TipoRelatorio.RelatorioPortuguesPorTurma;
                 }
-                else if (filtros.TurmaCodigo <= 0 && filtros.ProficienciaId == ProficienciaEnum.Autoral)
+                else if (filtros.TurmaCodigo <= 0)
                 {
-                    tipoRelatorio = TipoRelatorio.RelatorioPortuguesConsolidado;
+                    if (filtros.ProficienciaId == ProficienciaEnum.Escrita || filtros.ProficienciaId == ProficienciaEnum.Leitura ||
+                        filtros.GrupoId != GrupoEnum.CapacidadeLeitura.Name())
+                    {
+                        tipoRelatorio = TipoRelatorio.RelatorioPortuguesConsolidadoLeitEscProdTexto;
+                    }
+                    else
+                    {
+                        tipoRelatorio = TipoRelatorio.RelatorioPortuguesConsolidado;
+                    }
                 }
             }
 
