@@ -450,27 +450,12 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 return Unauthorized("Você deve alterar a sua senha diretamente no Novo SGP");
 
 
-            var perfisTratados = await mediator.Send(new ObterVerificarPerfisDoUsuarioLoginQuery(credential.Username, retornoAutenticacao.PerfisUsuario.Perfis));
+            var perfisMenus = await mediator.Send(new ObterVerificarPerfisDoUsuarioLoginQuery(credential.Username, retornoAutenticacao.PerfisUsuario.Perfis));
             
 
-            var menus = await _apiNovoSgp.ObterMenus(retornoAutenticacao.Token);
+            retornoAutenticacao.PerfisUsuario.Perfis = perfisMenus.Perfis;
+            retornoAutenticacao.Permissoes = perfisMenus.Menus;
 
-            var menussSondagem = menus.SelectMany(c => c.Menus).Where(c => c.Codigo < 9).ToDictionary(c => c.Url, k => k);
-
-            //Tratar os Perfis que podem visualizar
-            retornoAutenticacao.PerfisUsuario.Perfis = perfisTratados; 
-
-            retornoAutenticacao.Permissoes = new List<MenuPermissaoDto>
-            {
-                menussSondagem["/sondagem"],
-                new MenuPermissaoDto
-                {
-                    PodeAlterar = false,
-                    PodeConsultar = true,
-                    PodeExcluir = false,
-                    PodeIncluir = false,
-                },
-            };
 
             return Ok(retornoAutenticacao);
           

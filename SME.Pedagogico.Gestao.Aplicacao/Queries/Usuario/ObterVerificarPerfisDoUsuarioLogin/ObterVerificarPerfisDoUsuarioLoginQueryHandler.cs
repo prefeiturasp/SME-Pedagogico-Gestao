@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP;
 using SME.Pedagogico.Gestao.Dominio;
+using SME.Pedagogico.Gestao.Dominio.Enumerados;
 using SME.Pedagogico.Gestao.Infra;
 using System;
 using System.Collections.Generic;
@@ -10,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.Aplicacao
 {
-    public class ObterVerificarPerfisDoUsuarioLoginQueryHandler : IRequestHandler<ObterVerificarPerfisDoUsuarioLoginQuery, List<PerfilDto>>
+    public class ObterVerificarPerfisDoUsuarioLoginQueryHandler : IRequestHandler<ObterVerificarPerfisDoUsuarioLoginQuery, PerfisMenusAutenticacaoDto>
     {
         private readonly IMediator mediator;
         public ObterVerificarPerfisDoUsuarioLoginQueryHandler(IMediator mediator)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
-        public async Task<List<PerfilDto>> Handle(ObterVerificarPerfisDoUsuarioLoginQuery request, CancellationToken cancellationToken)
+        public async Task<PerfisMenusAutenticacaoDto> Handle(ObterVerificarPerfisDoUsuarioLoginQuery request, CancellationToken cancellationToken)
         {
             
             var perfisElegiveis = Perfil.ObterPerfis().Where(x => request.Perfis.Any(y => y.CodigoPerfil.Equals(x.PerfilGuid))).ToList();
@@ -50,8 +51,31 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 });
             }
 
-            return listaPerfisRetorno;
-         
+            var podeIncluir = false;
+
+            if (perfisElegiveis.Count == 1)
+            {   
+            
+                var perfilCodigo = listaPerfisRetorno.FirstOrDefault().CodigoPerfil;
+
+                if (perfilCodigo == Perfis.PERFIL_AD || perfilCodigo == Perfis.PERFIL_PROFESSOR || perfilCodigo == Perfis.PERFIL_CP
+                    || perfilCodigo == Perfis.PERFIL_ADMIN_SME_COPED || perfilCodigo == Perfis.PERFIL_ADMIN_COTIC)
+                        podeIncluir = true;
+
+            }
+            
+            var menus = new List<MenuPermissaoDto>
+            {
+                new MenuPermissaoDto
+                {
+                    PodeAlterar = false,
+                    PodeConsultar = podeIncluir,
+                    PodeExcluir = false,
+                    PodeIncluir = false,
+                },
+            };
+
+            return new PerfisMenusAutenticacaoDto(listaPerfisRetorno, menus);
         }
     }
 }

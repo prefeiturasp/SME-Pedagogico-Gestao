@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SME.Pedagogico.Gestao.Data\SME.Pedagogico.Gestao.Data.csproj" />
     <ProjectReference Include="..\SME.Pedagogico.Gestao.Dominio\SME.Pedagogico.Gestao.Dominio.csproj" />
   </ItemGroup>
 

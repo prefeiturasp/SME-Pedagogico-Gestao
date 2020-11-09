@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP;
+using SME.Pedagogico.Gestao.Infra;
 using System.Collections.Generic;
 
 namespace SME.Pedagogico.Gestao.Aplicacao
 {
-    public class ObterVerificarPerfisTokenQuery : IRequest<List<PerfilDto>>
+    public class ObterVerificarPerfisTokenQuery : IRequest<PerfisMenusAutenticacaoDto>
     {
         public ObterVerificarPerfisTokenQuery(IList<PerfilDto> perfis)
         {
