@@ -10,6 +10,7 @@
   LOGIN_SGP_REQUEST: "LOGIN_SGP_REQUEST",
   SET_REDIRECT_URL: "SET_REDIRECT_URL",
   SET_PROFILE: "SET_PROFILE",
+  VALIDATE_PROFILES_TOKEN: "VALIDATE_PROFILES_TOKEN",
 };
 const initialState = {
   name: null,
@@ -29,17 +30,34 @@ const initialState = {
 };
 
 export const actionCreators = {
-  login: (credential, history) => ({ type: types.LOGIN_REQUEST, credential, history }),
+  login: (credential, history) => ({
+    type: types.LOGIN_REQUEST,
+    credential,
+    history,
+  }),
   setUser: (user) => ({ type: types.SET_USER, user }),
   logout: (credential) => ({ type: types.LOGOUT_REQUEST, credential }),
   setActiveRole: (role) => ({ type: types.SET_ACTIVE_ROLE, role }),
-  loginSgp: (user, history) => ({
-    type: types.LOGIN_SGP_REQUEST,
-    user,
+  // loginSgp: (user, history) => ({
+  //   type: types.LOGIN_SGP_REQUEST,
+  //   user,
+  //   history,
+  // }),
+  setRedirectUrl: (redirectUrl) => ({
+    type: types.SET_REDIRECT_URL,
+    redirectUrl,
+  }),
+  setProfile: (perfilSelecionado, history) => ({
+    type: types.SET_PROFILE,
+    perfilSelecionado,
     history,
   }),
-  setRedirectUrl: (redirectUrl) => ({ type: types.SET_REDIRECT_URL, redirectUrl }),
-  setProfile: (perfilSelecionado, history) => ({ type: types.SET_PROFILE, perfilSelecionado, history }),
+  validateProfilesToken: ({ perfil, usuario, history }) => ({
+    type: types.VALIDATE_PROFILES_TOKEN,
+    perfil,
+    usuario,
+    history,
+  }),
 };
 
 export const reducer = (state, action) => {
@@ -81,7 +99,7 @@ export const reducer = (state, action) => {
       return {
         ...state,
         redirectUrl: action.redirectUrl,
-      }  
+      };
     default:
       return state;
   }
