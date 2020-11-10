@@ -30,7 +30,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
             using (var httpClient = httpClientFactory.CreateClient("apiSGP"))
             {
                 httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-                var resposta = await httpClient.GetAsync($"v1/abrangencias/{consideraHistorico}/dres/");
+                var resposta = await httpClient.GetAsync($"v1/abrangencias/{consideraHistorico}/dres?modalidade=5");
 
                 if (!resposta.IsSuccessStatusCode || resposta.StatusCode == HttpStatusCode.NoContent)
                 {
