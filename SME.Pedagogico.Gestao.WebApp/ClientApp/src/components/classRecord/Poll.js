@@ -72,10 +72,7 @@ class Poll extends Component {
   }
 
   componentWillMount() {
-    var todayDate = new Date();
-    if (this.props.filter !== undefined) {
-      var period = this.props.filter.period;
-    }
+    
   }
 
   toggleMessageBox() {
@@ -137,6 +134,7 @@ class Poll extends Component {
     if (this.props.filters !== undefined) {
       if (this.props.filters.period !== null) {
         var period = this.props.filters.period;
+        
         period.forEach((item) => {
           if (item.bimestre === 1) {
             if (
@@ -187,12 +185,12 @@ class Poll extends Component {
             ) {
               if (this.props.pollOptionSelectLock.poll_4b_lock !== false) {
                 this.props.pollOptionSelectLockMethods.set_poll_4b_lock(false);
-                this.props.pollOptionSelectLockMethods.set_poll_1s_lock(false);
+                this.props.pollOptionSelectLockMethods.set_poll_2s_lock(false);
               }
             } else {
               if (this.props.pollOptionSelectLock.poll_4b_lock !== true) {
                 this.props.pollOptionSelectLockMethods.set_poll_4b_lock(true);
-                this.props.pollOptionSelectLockMethods.set_poll_1s_lock(true);
+                this.props.pollOptionSelectLockMethods.set_poll_2s_lock(true);
               }
             }
           }
