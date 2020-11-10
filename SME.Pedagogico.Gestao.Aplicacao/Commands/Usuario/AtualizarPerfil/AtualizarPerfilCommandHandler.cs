@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Newtonsoft.Json;
+using SME.Pedagogico.Gestao.Dominio;
 using SME.Pedagogico.Gestao.Infra;
 
 namespace SME.Pedagogico.Gestao.Aplicacao
@@ -36,14 +37,20 @@ namespace SME.Pedagogico.Gestao.Aplicacao
 
                 var resposta = await httpClient.PutAsync($"v1/autenticacao/perfis/{request.Perfil}", new StringContent(string.Empty, Encoding.UTF8, "application/json-patch+json"));
 
-                if (!resposta.IsSuccessStatusCode || resposta.StatusCode == HttpStatusCode.NoContent)
+                if (resposta.StatusCode == HttpStatusCode.NoContent)
                 {
-                    return null;
+                    throw new NegocioException("Não foi possível obter o perfil.");
+                } else if (resposta.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    throw new NegocioException("É necessário autenticar novamente.", 401);
                 }
 
                 var json = await resposta.Content.ReadAsStringAsync();
+                var retornoSGP = JsonConvert.DeserializeObject<ModificarPerfilRetornoSGPDto>(json); 
+                
+                retornoSGP.Menus = await mediator.Send(new ObterPermissaoMenuPorPerfilQuery(Guid.Parse(perfilAtual)));
 
-                return JsonConvert.DeserializeObject<ModificarPerfilRetornoSGPDto>(json);
+                return retornoSGP;
 
             }
         }
