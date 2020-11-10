@@ -22,13 +22,16 @@ function* LoginUserSaga({ credential, history }) {
         "/": usuario.permissoes[0],
         "/Relatorios/Sondagem": usuario.permissoes[0],
         "/Usuario/TrocarPerfil": usuario.permissoes[1],
-        };        
-      
-      const store = yield select();  
-      const perfisEhMaiorQueUm = usuario.perfisUsuario.perfis.length > 1; 
-      const perfilSelecionado = perfisEhMaiorQueUm ? {codigoPerfil: "", nomePerfil: ""} 
+      };
+
+      const store = yield select();
+      const perfisEhMaiorQueUm = usuario.perfisUsuario.perfis.length > 1;
+      const perfilSelecionado = perfisEhMaiorQueUm
+        ? { codigoPerfil: "", nomePerfil: "" }
         : usuario.perfisUsuario.perfis[0];
-      const rota = perfisEhMaiorQueUm ? "/Usuario/TrocarPerfil" : store.user.redirectUrl;
+      const rota = perfisEhMaiorQueUm
+        ? "/Usuario/TrocarPerfil"
+        : store.user.redirectUrl;
 
       const user = {
         name: "",
@@ -51,8 +54,8 @@ function* LoginUserSaga({ credential, history }) {
         ehProfessorPoa: usuario.perfisUsuario.ehProfessorPoa,
         ehProfessorCjInfantil: usuario.perfisUsuario.ehProfessorCjInfantil,
         ehProfessorInfantil: usuario.perfisUsuario.ehProfessorInfantil,
-        perfil: { perfis : usuario.perfisUsuario.perfis, perfilSelecionado }, 
-      };      
+        perfil: { perfis: usuario.perfisUsuario.perfis, perfilSelecionado },
+      };
       yield put({ type: User.types.FINISH_AUTHENTICATION_REQUEST });
       yield put({ type: User.types.SET_USER, user });
 
@@ -80,39 +83,42 @@ function* LogoutUserSaga() {
   }
 }
 
-function* SetProfileSaga ({perfilSelecionado, history}){
+function* SetProfileSaga({ perfilSelecionado, history }) {
   try {
-    const {user} = yield select();
-    const {token: oldToken} =  user;
-    const {perfis} = user.perfil;
-    const {codigoPerfil: perfil} = perfilSelecionado;
+    const { user } = yield select();
+    const { token: oldToken } = user;
+    const { perfis } = user.perfil;
+    const { codigoPerfil: perfil } = perfilSelecionado;
 
-    const data = yield call(fetch, `/api/Auth/ModificarPerfil?perfil=${perfil}`,
-    {
-      method: "put",
-      headers: { "Content-Type": "application/json", token: oldToken },
-    });
+    const data = yield call(
+      fetch,
+      `/api/Auth/ModificarPerfil?perfil=${perfil}`,
+      {
+        method: "put",
+        headers: { "Content-Type": "application/json", token: oldToken },
+      }
+    );
 
     const newUser = {
       ...user,
       perfil: {
-          perfis,
-          perfilSelecionado
-      }
-    }
-    
-    if(data.status === 200){
-      const text = yield data.text();
-      const {ehProfessor, token} = yield JSON.parse(text);
+        perfis,
+        perfilSelecionado,
+      },
+    };
 
-      newUser.ehProfessor =  ehProfessor;
+    if (data.status === 200) {
+      const text = yield data.text();
+      const { ehProfessor, token } = yield JSON.parse(text);
+
+      newUser.ehProfessor = ehProfessor;
       newUser.token = token;
-    }   
-      
-    yield put({ type: "SET_USER", user: newUser});   
-    
+    }
+
+    yield put({ type: "SET_USER", user: newUser });
+
     history.push(user.redirectUrl);
   } catch (error) {
-    yield put({ type: "API_CALL_ERROR" });    
+    yield put({ type: "API_CALL_ERROR" });
   }
 }

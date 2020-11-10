@@ -1,23 +1,33 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { LoaderWrapper, DivLoading, SpinerLoading, ButtonClose } from "./Loader.css";
+import {
+  LoaderWrapper,
+  DivLoading,
+  SpinerLoading,
+  ButtonClose,
+} from "./Loader.css";
 
-function Loader({ children, loading, handleClose, isPrinting }) {
+function Loader({
+  children,
+  loading,
+  handleClose,
+  isPrinting,
+  tip,
+  showTip,
+  ...rest
+}) {
   return (
     <div>
       {loading ? (
-        <LoaderWrapper>
-         {
-            isPrinting && (<ButtonClose
-              className="btn btn-lg"
-              onClick={() => handleClose()}
-            >
+        <LoaderWrapper {...rest}>
+          {isPrinting && (
+            <ButtonClose className="btn btn-lg" onClick={() => handleClose()}>
               <i className="fas fa-times"></i>
-            </ButtonClose>)
-          }
+            </ButtonClose>
+          )}
           <DivLoading isPrinting={isPrinting}>
             <SpinerLoading className="spinner-border" role="status" />
-            <span>Carregando...</span>
+            {showTip && <span>{tip}</span>}
           </DivLoading>
         </LoaderWrapper>
       ) : null}
@@ -34,7 +44,7 @@ Loader.propTypes = {
   ]),
   loading: PropTypes.bool,
   tip: PropTypes.string,
-  ignorarTip: PropTypes.bool,
+  showTip: PropTypes.bool,
   className: PropTypes.string,
   handleClose: PropTypes.func,
   isPrinting: PropTypes.bool,
@@ -45,7 +55,7 @@ Loader.defaultProps = {
   children: () => {},
   tip: "Carregando...",
   className: "",
-  ignorarTip: false,
+  showTip: true,
   handleClose: () => {},
   isPrinting: false,
 };
