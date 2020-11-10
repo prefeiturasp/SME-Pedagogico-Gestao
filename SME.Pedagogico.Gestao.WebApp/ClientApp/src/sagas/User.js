@@ -1,7 +1,7 @@
 ﻿import { takeLatest, call, put, all, select } from "redux-saga/effects";
 
 import { types } from "../store/User";
-import { montarObjetoUsuario } from "../utils";
+import { montarObjetoUsuario, montarObjetoPermissoes } from "../utils";
 
 function* LoginUserSaga({ credential, history }) {
   try {
@@ -12,50 +12,26 @@ function* LoginUserSaga({ credential, history }) {
       yield put({ type: types.UNAUTHORIZED });
       yield put({ type: types.FINISH_AUTHENTICATION_REQUEST });
     } else {
-      const permissoes = {
-        "/": usuario.permissoes[0],
-        "/Relatorios/Sondagem": usuario.permissoes[0],
-        "/Usuario/TrocarPerfil": usuario.permissoes[0],
-      };
-
       const store = yield select();
+
+      const permissoes = montarObjetoPermissoes(usuario.permissoes[0]);
+
       const perfisEhMaiorQueUm = usuario.perfisUsuario.perfis.length > 1;
       const perfilSelecionado = perfisEhMaiorQueUm
         ? { codigoPerfil: "", nomePerfil: "" }
         : usuario.perfisUsuario.perfis[0];
+
       const rota = perfisEhMaiorQueUm
         ? "/Usuario/TrocarPerfil"
         : store.user.redirectUrl;
 
-      // const us = montarObjetoUsuario(
-      //   username,
-      //   usuario.perfisUsuario,
-      //   perfilSelecionado
-      // );
-
-      const user = {
-        name: "",
-        username: credential.username,
-        email: "",
-        token: usuario.token,
-        session: "",
-        refreshToken: "",
-        isAuthenticated: usuario.autenticado,
-        lastAuthentication: new Date(),
-        roles: "",
-        activeRole: null,
-        listOccupations: "",
+      const user = montarObjetoUsuario({
         permissoes,
-        possuiPerfilSmeOuDre: usuario.perfisUsuario.possuiPerfilSmeOuDre,
-        possuiPerfilDre: usuario.perfisUsuario.possuiPerfilDre,
-        possuiPerfilSme: usuario.perfisUsuario.possuiPerfilSme,
-        ehProfessorCj: usuario.perfisUsuario.ehProfessorCj,
-        ehProfessor: usuario.perfisUsuario.ehProfessor,
-        ehProfessorPoa: usuario.perfisUsuario.ehProfessorPoa,
-        ehProfessorCjInfantil: usuario.perfisUsuario.ehProfessorCjInfantil,
-        ehProfessorInfantil: usuario.perfisUsuario.ehProfessorInfantil,
-        perfil: { perfis: usuario.perfisUsuario.perfis, perfilSelecionado },
-      };
+        usuario: usuario.perfisUsuario,
+        username: credential.username,
+        isAuthenticated: usuario.autenticado,
+        perfil: { ...usuario.perfisUsuario, perfilSelecionado },
+      });
 
       yield put({ type: types.FINISH_AUTHENTICATION_REQUEST });
       yield put({ type: types.SET_USER, user });

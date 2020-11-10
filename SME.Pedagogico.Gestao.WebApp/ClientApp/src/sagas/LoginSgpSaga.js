@@ -1,15 +1,7 @@
 ﻿import { takeLatest, put, all, call } from "redux-saga/effects";
-import { types } from "../store/User";
 
-// function* LoginTokenSgpSaga({ user, history }) {
-//   try {
-//     yield put({ type: types.SET_USER, user });
-//     history.push("/Relatorios/Sondagem");
-//   } catch (error) {
-//     yield put({ type: types.FINISH_AUTHENTICATION_REQUEST });
-//     yield put({ type: "API_CALL_ERROR" });
-//   }
-// }
+import { types } from "../store/User";
+import { montarObjetoUsuario, montarObjetoPermissoes } from "../utils";
 
 function* ValidateProfilesSaga({ perfil, usuario, history }) {
   try {
@@ -34,43 +26,30 @@ function* ValidateProfilesSaga({ perfil, usuario, history }) {
         : perfis;
 
       const permissoesSondagem = usuario.permissoes["/sondagem"];
-      const permissoes = {
-        "/": permissoesSondagem,
-        "/Relatorios/Sondagem": permissoesSondagem,
-        "/Usuario/TrocarPerfil": {
-          podeAlterar: menus.podeAlterar,
-          podeConsultar: menus.podeConsultar,
-          podeExcluir: menus.podeExcluir,
-          podeIncluir: menus.podeIncluir,
-        },
-      };
+      console.log("usuario ===>", usuario);
+      const permissoes = montarObjetoPermissoes(permissoesSondagem);
 
-      const user = {
-        name: "",
+      // const permissoes = {
+      //   "/": permissoesSondagem,
+      //   "/Relatorios/Sondagem": permissoesSondagem,
+      //   "/Usuario/TrocarPerfil": {
+      //     podeAlterar: menus.podeAlterar,
+      //     podeConsultar: menus.podeConsultar,
+      //     podeExcluir: menus.podeExcluir,
+      //     podeIncluir: menus.podeIncluir,
+      //   },
+      // };
+
+      const user = montarObjetoUsuario({
+        permissoes,
+        usuario,
         username: usuario.rf,
-        email: "",
-        token: usuario.token,
-        session: "",
-        refreshToken: "",
         isAuthenticated: usuario.logado,
-        lastAuthentication: new Date(),
-        roles: "",
-        activeRole: null,
-        listOccupations: "",
-        permissoes: permissoes,
-        possuiPerfilSmeOuDre: usuario.possuiPerfilSmeOuDre,
-        possuiPerfilDre: usuario.possuiPerfilDre,
-        possuiPerfilSme: usuario.possuiPerfilSme,
-        ehProfessorCj: usuario.ehProfessorCj,
-        ehProfessor: usuario.ehProfessor,
-        ehProfessorPoa: usuario.ehProfessorPoa,
-        ehProfessorCjInfantil: usuario.ehProfessorCjInfantil,
-        ehProfessorInfantil: usuario.ehProfessorInfantil,
         perfil: {
           perfilSelecionado,
           perfis: novoPerfil,
         },
-      };
+      });
 
       yield put({ type: types.SET_USER, user });
     }
