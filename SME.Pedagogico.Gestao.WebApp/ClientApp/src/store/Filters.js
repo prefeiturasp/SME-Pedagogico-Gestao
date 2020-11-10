@@ -123,6 +123,7 @@ export const reducer = (state, action) => {
 
             });
         case types.PERIODO_ABERTURA_MAT:
+          debugger;
             var todayDate = new Date();
             let estadoRetorno = { state };
             state.period.forEach((item) => {
