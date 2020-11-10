@@ -13,35 +13,37 @@ import * as User from "../store/User";
 
 function* ValidateProfilesSaga({ perfil, usuario, history }) {
   try {
-    const { user: oldUser } = yield select();
-    const { token: oldToken } = oldUser;
     const { perfis } = perfil;
     let url = "/";
 
-    console.log("perfis ==> ", perfis);
-    console.log("perfi ==> ", perfil);
     const data = yield call(fetch, "/api/auth/ValidarPerfisToken", {
       method: "put",
-      headers: { "Content-Type": "application/json", token: oldToken },
+      headers: { "Content-Type": "application/json", token: usuario.token },
       body: JSON.stringify(perfis),
     });
 
     if (data.status === 200) {
       const text = yield data.text();
-      const { permissoes, perfil: novoPerfil } = yield JSON.parse(text);
-      url = "/Relatorios/Sondagem";
+      const { menus, perfis: novoPerfil } = yield JSON.parse(text);
+      const perfisEhMaiorQueUm = perfis.length > 1;
+      url = perfisEhMaiorQueUm
+        ? "/Usuario/TrocarPerfil"
+        : "/Relatorios/Sondagem";
+      const perfilSelecionado = perfisEhMaiorQueUm
+        ? { codigoPerfil: "", nomePerfil: "" }
+        : perfis;
 
-      // const permissoesSondagem = usuario.permissoes["/sondagem"];
-      // const permissoes = {
-      //   "/": permissoesSondagem,
-      //   "/Relatorios/Sondagem": permissoesSondagem,
-      //   "/Usuario/TrocarPerfil": {
-      //     podeAlterar: false,
-      //     podeConsultar: true,
-      //     podeExcluir: false,
-      //     podeIncluir: false,
-      //   },
-      // };
+      const permissoesSondagem = usuario.permissoes["/sondagem"];
+      const permissoes = {
+        "/": permissoesSondagem,
+        "/Relatorios/Sondagem": permissoesSondagem,
+        "/Usuario/TrocarPerfil": {
+          podeAlterar: menus.podeAlterar,
+          podeConsultar: menus.podeConsultar,
+          podeExcluir: menus.podeExcluir,
+          podeIncluir: menus.podeIncluir,
+        },
+      };
 
       const user = {
         name: "",
@@ -65,7 +67,7 @@ function* ValidateProfilesSaga({ perfil, usuario, history }) {
         ehProfessorCjInfantil: usuario.ehProfessorCjInfantil,
         ehProfessorInfantil: usuario.ehProfessorInfantil,
         perfil: {
-          ...perfil,
+          perfilSelecionado,
           perfis: novoPerfil,
         },
       };

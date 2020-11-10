@@ -11,6 +11,10 @@ const AuthenticatedDashboardProfileRoute = ({ component: C, ...rest }) => {
       {...rest}
       render={(props) => {
         if (user.isAuthenticated) {
+          console.log(
+            "A ===================>",
+            user.permissoes[props.location.pathname]
+          );
           if (user.permissoes && user.permissoes[props.location.pathname])
             return <Route component={C} />;
         }

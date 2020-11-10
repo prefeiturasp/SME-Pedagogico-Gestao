@@ -18,10 +18,11 @@ function* LoginUserSaga({ credential, history }) {
       yield put({ type: User.types.UNAUTHORIZED });
       yield put({ type: User.types.FINISH_AUTHENTICATION_REQUEST });
     } else {
+      console.log("us ===========>", usuario);
       const permissoes = {
         "/": usuario.permissoes[0],
         "/Relatorios/Sondagem": usuario.permissoes[0],
-        "/Usuario/TrocarPerfil": usuario.permissoes[1],
+        "/Usuario/TrocarPerfil": usuario.permissoes[0],
       };
 
       const store = yield select();
@@ -56,6 +57,7 @@ function* LoginUserSaga({ credential, history }) {
         ehProfessorInfantil: usuario.perfisUsuario.ehProfessorInfantil,
         perfil: { perfis: usuario.perfisUsuario.perfis, perfilSelecionado },
       };
+
       yield put({ type: User.types.FINISH_AUTHENTICATION_REQUEST });
       yield put({ type: User.types.SET_USER, user });
 
@@ -64,6 +66,7 @@ function* LoginUserSaga({ credential, history }) {
   } catch (error) {
     yield put({ type: User.types.FINISH_AUTHENTICATION_REQUEST });
     yield put({ type: "API_CALL_ERROR" });
+    console.log("error =============> ", error);
   }
 }
 
