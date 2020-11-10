@@ -1,12 +1,12 @@
-﻿import { takeLatest, put, all, call, select } from "redux-saga/effects";
-import * as User from "../store/User";
+﻿import { takeLatest, put, all, call } from "redux-saga/effects";
+import { types } from "../store/User";
 
 // function* LoginTokenSgpSaga({ user, history }) {
 //   try {
-//     yield put({ type: User.types.SET_USER, user });
+//     yield put({ type: types.SET_USER, user });
 //     history.push("/Relatorios/Sondagem");
 //   } catch (error) {
-//     yield put({ type: User.types.FINISH_AUTHENTICATION_REQUEST });
+//     yield put({ type: types.FINISH_AUTHENTICATION_REQUEST });
 //     yield put({ type: "API_CALL_ERROR" });
 //   }
 // }
@@ -72,19 +72,21 @@ function* ValidateProfilesSaga({ perfil, usuario, history }) {
         },
       };
 
-      yield put({ type: User.types.SET_USER, user });
+      yield put({ type: types.SET_USER, user });
     }
 
     history.push(url);
   } catch (error) {
-    yield put({ type: User.types.FINISH_AUTHENTICATION_REQUEST });
     yield put({ type: "API_CALL_ERROR" });
+    yield put({ type: types.FINISH_AUTHENTICATION_REQUEST });
+
+    history.push("Login?redirect=/");
   }
 }
 
 export default function* () {
   yield all([
-    // takeLatest(User.types.LOGIN_SGP_REQUEST, LoginTokenSgpSaga),
-    takeLatest(User.types.VALIDATE_PROFILES_TOKEN, ValidateProfilesSaga),
+    // takeLatest(types.LOGIN_SGP_REQUEST, LoginTokenSgpSaga),
+    takeLatest(types.VALIDATE_PROFILES_TOKEN, ValidateProfilesSaga),
   ]);
 }

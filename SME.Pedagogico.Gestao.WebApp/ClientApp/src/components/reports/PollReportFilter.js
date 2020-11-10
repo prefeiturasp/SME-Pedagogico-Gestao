@@ -6,7 +6,7 @@ import { bindActionCreators } from "redux";
 import { actionCreators as pollStoreActionCreators } from "../../store/SondagemPortuguesStore";
 import { DISCIPLINES_ENUM } from "../../Enums";
 // import { ROLES_ENUM } from "../../Enums";
-import { verificarDisciplina } from "../../utils/verificarDisciplina";
+import { verificarDisciplina } from "../../utils";
 
 class PollReportFilter extends Component {
   constructor() {
@@ -46,12 +46,10 @@ class PollReportFilter extends Component {
 
     // if (this.restricaoDisciplina(DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA))
     //   delete this.props.pollReport.filters.math;
-    
-   
-    
-    this.mostrarDisciplina(DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA, 'math');
-    this.mostrarDisciplina(DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES, 'port');
-    
+
+    this.mostrarDisciplina(DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA, "math");
+    this.mostrarDisciplina(DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES, "port");
+
     for (var key in this.props.pollReport.filters)
       this.initialFilter.push({
         value: key,
@@ -75,11 +73,13 @@ class PollReportFilter extends Component {
   }
 
   mostrarDisciplina = (disciplina, disciplinaCurta) => {
-    const {listDisciplines} = this.props.filters;
-    const existDisciplina = verificarDisciplina(listDisciplines, disciplina.Descricao);
-    if(!existDisciplina)
-      delete this.props.pollReport.filters[disciplinaCurta];
-  }
+    const { listDisciplines } = this.props.filters;
+    const existDisciplina = verificarDisciplina(
+      listDisciplines,
+      disciplina.Descricao
+    );
+    if (!existDisciplina) delete this.props.pollReport.filters[disciplinaCurta];
+  };
 
   limparDadosFiltro() {
     var novoFiltro = this.state.selectedFilter;

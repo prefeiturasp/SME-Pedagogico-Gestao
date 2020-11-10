@@ -1,24 +1,17 @@
 ﻿import { takeLatest, call, put, all, select } from "redux-saga/effects";
-import * as User from "../store/User";
 
-export default function* () {
-  yield all([
-    takeLatest(User.types.LOGIN_REQUEST, LoginUserSaga),
-    takeLatest(User.types.LOGOUT_REQUEST, LogoutUserSaga),
-    takeLatest(User.types.SET_PROFILE, SetProfileSaga),
-  ]);
-}
+import { types } from "../store/User";
+import { montarObjetoUsuario } from "../utils";
 
 function* LoginUserSaga({ credential, history }) {
   try {
-    yield put({ type: User.types.ON_AUTHENTICATION_REQUEST });
+    yield put({ type: types.ON_AUTHENTICATION_REQUEST });
     const usuario = yield call(authenticateUser, credential);
 
     if (usuario.status === 401) {
-      yield put({ type: User.types.UNAUTHORIZED });
-      yield put({ type: User.types.FINISH_AUTHENTICATION_REQUEST });
+      yield put({ type: types.UNAUTHORIZED });
+      yield put({ type: types.FINISH_AUTHENTICATION_REQUEST });
     } else {
-      console.log("us ===========>", usuario);
       const permissoes = {
         "/": usuario.permissoes[0],
         "/Relatorios/Sondagem": usuario.permissoes[0],
@@ -33,6 +26,12 @@ function* LoginUserSaga({ credential, history }) {
       const rota = perfisEhMaiorQueUm
         ? "/Usuario/TrocarPerfil"
         : store.user.redirectUrl;
+
+      // const us = montarObjetoUsuario(
+      //   username,
+      //   usuario.perfisUsuario,
+      //   perfilSelecionado
+      // );
 
       const user = {
         name: "",
@@ -58,15 +57,14 @@ function* LoginUserSaga({ credential, history }) {
         perfil: { perfis: usuario.perfisUsuario.perfis, perfilSelecionado },
       };
 
-      yield put({ type: User.types.FINISH_AUTHENTICATION_REQUEST });
-      yield put({ type: User.types.SET_USER, user });
+      yield put({ type: types.FINISH_AUTHENTICATION_REQUEST });
+      yield put({ type: types.SET_USER, user });
 
       history.push(rota);
     }
   } catch (error) {
-    yield put({ type: User.types.FINISH_AUTHENTICATION_REQUEST });
     yield put({ type: "API_CALL_ERROR" });
-    console.log("error =============> ", error);
+    yield put({ type: types.FINISH_AUTHENTICATION_REQUEST });
   }
 }
 
@@ -80,7 +78,7 @@ function authenticateUser(credential) {
 
 function* LogoutUserSaga() {
   try {
-    yield put({ type: User.types.LOGOUT_USER });
+    yield put({ type: types.LOGOUT_USER });
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
   }
@@ -124,4 +122,12 @@ function* SetProfileSaga({ perfilSelecionado, history }) {
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
   }
+}
+
+export default function* () {
+  yield all([
+    takeLatest(types.LOGIN_REQUEST, LoginUserSaga),
+    takeLatest(types.LOGOUT_REQUEST, LogoutUserSaga),
+    takeLatest(types.SET_PROFILE, SetProfileSaga),
+  ]);
 }

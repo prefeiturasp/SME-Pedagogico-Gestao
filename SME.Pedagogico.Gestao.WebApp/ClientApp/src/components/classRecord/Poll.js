@@ -34,7 +34,7 @@ import TwoStepsSave from "../messaging/TwoStepsSave";
 // import TwoSteps from "../messaging/TwoSteps";
 import MensagemConfirmacaoAutoral from "./SondagemPortuguesAutoral/mensagemConfirmacaoAutoral";
 import Loader from "../loader/Loader";
-import { verificarDisciplina } from "../../utils/verificarDisciplina";
+import { verificarDisciplina } from "../../utils";
 
 class Poll extends Component {
   constructor(props) {
@@ -78,7 +78,7 @@ class Poll extends Component {
   //     var period = this.props.filter.period;
   //   }
   // }
-  
+
   toggleMessageBox() {
     this.setState({
       showMessageBox: !this.state.showMessageBox,
@@ -866,12 +866,13 @@ class Poll extends Component {
     var btn;
     // if (this.restricaoDisciplina(DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES))
     //   return btn;
-    
-    const {listDisciplines} = this.props.filters;
-    const existDisciplina = 
-      verificarDisciplina(listDisciplines, DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES.Descricao);
-    if(!existDisciplina)
-      return;
+
+    const { listDisciplines } = this.props.filters;
+    const existDisciplina = verificarDisciplina(
+      listDisciplines,
+      DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES.Descricao
+    );
+    if (!existDisciplina) return;
 
     if (
       this.props.poll.selectedFilter.yearClassroom !== null &&
@@ -938,11 +939,12 @@ class Poll extends Component {
     // if (this.restricaoDisciplina(DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA))
     //   return btn;
 
-    const {listDisciplines} = this.props.filters;
-    const existDisciplina = 
-      verificarDisciplina(listDisciplines, DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao);
-    if(!existDisciplina)
-      return;
+    const { listDisciplines } = this.props.filters;
+    const existDisciplina = verificarDisciplina(
+      listDisciplines,
+      DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao
+    );
+    if (!existDisciplina) return;
 
     if (
       this.props.poll.selectedFilter.yearClassroom !== null &&
