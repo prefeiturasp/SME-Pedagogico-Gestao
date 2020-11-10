@@ -52,18 +52,6 @@ namespace SME.Pedagogico.Gestao.Aplicacao
             }
 
             var podeIncluir = false;
-
-            if (perfisElegiveis.Count == 1)
-            {   
-            
-                var perfilCodigo = listaPerfisRetorno.FirstOrDefault().CodigoPerfil;
-
-                if (perfilCodigo == Perfis.PERFIL_AD || perfilCodigo == Perfis.PERFIL_PROFESSOR || perfilCodigo == Perfis.PERFIL_CP
-                    || perfilCodigo == Perfis.PERFIL_ADMIN_SME_COPED || perfilCodigo == Perfis.PERFIL_ADMIN_COTIC)
-                        podeIncluir = true;
-
-            }
-            
             var menus = new List<MenuPermissaoDto>
             {
                 new MenuPermissaoDto
@@ -75,6 +63,17 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 },
             };
 
+            if (perfisElegiveis.Count == 1)
+            {   
+            
+                var perfilCodigo = listaPerfisRetorno.FirstOrDefault().CodigoPerfil;
+
+                if (perfilCodigo == Perfis.PERFIL_AD || perfilCodigo == Perfis.PERFIL_PROFESSOR || perfilCodigo == Perfis.PERFIL_CP
+                    || perfilCodigo == Perfis.PERFIL_ADMIN_SME_COPED || perfilCodigo == Perfis.PERFIL_ADMIN_COTIC)
+                        podeIncluir = true;
+                menus = await mediator.Send(new ObterPermissaoMenuPorPerfilQuery(perfilCodigo));
+
+            }            
             return new PerfisMenusAutenticacaoDto(listaPerfisRetorno, menus);
         }
     }
