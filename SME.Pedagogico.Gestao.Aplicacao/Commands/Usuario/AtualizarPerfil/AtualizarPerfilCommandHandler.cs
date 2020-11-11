@@ -24,10 +24,9 @@ namespace SME.Pedagogico.Gestao.Aplicacao
         public async Task<ModificarPerfilRetornoSGPDto> Handle(AtualizarPerfilCommand request, CancellationToken cancellationToken)
         {
 
-            var perfilAtual = await mediator.Send(new ObterPerfilUsuarioLogadoQuery());
-
-            if (perfilAtual == request.Perfil)
-                return default;
+            //var perfilAtual = await mediator.Send(new ObterPerfilUsuarioLogadoQuery());
+            //if (perfilAtual == request.Perfil)
+            //    return default;
 
             var token = await mediator.Send(new ObterTokenUsuarioLogadoQuery());            
 
@@ -48,7 +47,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 var json = await resposta.Content.ReadAsStringAsync();
                 var retornoSGP = JsonConvert.DeserializeObject<ModificarPerfilRetornoSGPDto>(json); 
                 
-                retornoSGP.Menus = await mediator.Send(new ObterPermissaoMenuPorPerfilQuery(Guid.Parse(perfilAtual)));
+                retornoSGP.Menus = await mediator.Send(new ObterPermissaoMenuPorPerfilQuery(Guid.Parse(request.Perfil)));
 
                 return retornoSGP;
 
