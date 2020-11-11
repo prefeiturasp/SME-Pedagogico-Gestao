@@ -11,6 +11,7 @@
   SET_REDIRECT_URL: "SET_REDIRECT_URL",
   SET_PROFILE: "SET_PROFILE",
   VALIDATE_PROFILES_TOKEN: "VALIDATE_PROFILES_TOKEN",
+  SET_LOADING_PROFILE: "SET_LOADING_PROFILE",
 };
 const initialState = {
   name: null,
@@ -27,6 +28,7 @@ const initialState = {
   onAuthenticationRequest: false,
   listOccupations: null,
   redirectUrl: null,
+  isLoadingProfile: false,
 };
 
 export const actionCreators = {
@@ -52,6 +54,10 @@ export const actionCreators = {
     perfil,
     usuario,
     history,
+  }),
+  setLoadingProfile: (isLoadingProfile) => ({
+    type: types.SET_LOADING_PROFILE,
+    isLoadingProfile,
   }),
 };
 
@@ -94,6 +100,11 @@ export const reducer = (state, action) => {
       return {
         ...state,
         redirectUrl: action.redirectUrl,
+      };
+    case types.SET_LOADING_PROFILE:
+      return {
+        ...state,
+        isLoadingProfile: action.isLoadingProfile,
       };
     default:
       return state;

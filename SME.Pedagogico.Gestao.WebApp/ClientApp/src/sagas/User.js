@@ -68,6 +68,8 @@ function* LogoutUserSaga() {
 
 function* SetProfileSaga({ perfilSelecionado, history }) {
   try {
+    yield put({ type: types.SET_LOADING_PROFILE, isLoadingProfile: true });
+
     const { user } = yield select();
     const { token: oldToken } = user;
     const { perfis } = user.perfil;
@@ -105,7 +107,9 @@ function* SetProfileSaga({ perfilSelecionado, history }) {
     history.push(user.redirectUrl);
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
-    yield put({ type: "LOGOUT_USER" });
+    yield put({ type: types.LOGOUT_USER });
+  } finally {
+    yield put({ type: types.SET_LOADING_PROFILE, isLoadingProfile: false });
   }
 }
 

@@ -39,7 +39,10 @@ class SelectProfile extends Component {
   }
 
   render() {
-    var profiles = this.props.user.perfil.perfis;
+    const {
+      isLoadingProfile,
+      perfil: { perfis },
+    } = this.props.user;
 
     return (
       <div className="d-flex justify-content-center">
@@ -50,14 +53,18 @@ class SelectProfile extends Component {
 
           <div className="py-2"></div>
 
-          {profiles.map((item) => (
-            <ChangeProfileButton
-              key={item.codigoPerfil}
-              profileName={item.nomePerfil}
-              roleId={item.codigoPerfil}
-              onClick={this.selectRole}
-            />
-          ))}
+          {isLoadingProfile ? (
+            <div className="spinner-border spinner-profile" role="status"></div>
+          ) : (
+            perfis.map((item) => (
+              <ChangeProfileButton
+                key={item.codigoPerfil}
+                profileName={item.nomePerfil}
+                roleId={item.codigoPerfil}
+                onClick={this.selectRole}
+              />
+            ))
+          )}
         </Card>
       </div>
     );
