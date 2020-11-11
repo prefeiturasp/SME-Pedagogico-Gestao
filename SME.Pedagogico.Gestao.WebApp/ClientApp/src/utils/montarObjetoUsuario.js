@@ -1,6 +1,7 @@
 export const montarObjetoUsuario = ({
   permissoes,
   usuario,
+  token,
   username,
   isAuthenticated,
   perfil,
@@ -8,7 +9,7 @@ export const montarObjetoUsuario = ({
   name: "",
   username,
   email: "",
-  token: usuario.token,
+  token,
   session: "",
   refreshToken: "",
   isAuthenticated,

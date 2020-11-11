@@ -38,11 +38,6 @@ export const actionCreators = {
   setUser: (user) => ({ type: types.SET_USER, user }),
   logout: (credential) => ({ type: types.LOGOUT_REQUEST, credential }),
   setActiveRole: (role) => ({ type: types.SET_ACTIVE_ROLE, role }),
-  // loginSgp: (user, history) => ({
-  //   type: types.LOGIN_SGP_REQUEST,
-  //   user,
-  //   history,
-  // }),
   setRedirectUrl: (redirectUrl) => ({
     type: types.SET_REDIRECT_URL,
     redirectUrl,

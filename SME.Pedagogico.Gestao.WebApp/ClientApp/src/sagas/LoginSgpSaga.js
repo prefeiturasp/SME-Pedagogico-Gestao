@@ -2,11 +2,12 @@
 
 import { types } from "../store/User";
 import { montarObjetoUsuario, montarObjetoPermissoes } from "../utils";
+import { STATUS_CODE } from "../Enums";
 
 function* ValidateProfilesSaga({ perfil, usuario, history }) {
   try {
-    const { perfis } = perfil;
     let url = "/";
+    const { perfis } = perfil;
 
     const data = yield call(fetch, "/api/auth/ValidarPerfisToken", {
       method: "put",
@@ -14,36 +15,29 @@ function* ValidateProfilesSaga({ perfil, usuario, history }) {
       body: JSON.stringify(perfis),
     });
 
-    if (data.status === 200) {
+    if (data.status === STATUS_CODE.OK) {
       const text = yield data.text();
-      const { menus, perfis: novoPerfil } = yield JSON.parse(text);
-      const perfisEhMaiorQueUm = perfis.length > 1;
+      const { perfis: novoPerfil } = yield JSON.parse(text);
+
+      const perfilVazio = { codigoPerfil: "", nomePerfil: "" };
+      const perfisEhMaiorQueUm = novoPerfil.length > 1;
+      const perfilSelecionado = perfisEhMaiorQueUm ? perfilVazio : perfis;
+
       url = perfisEhMaiorQueUm
         ? "/Usuario/TrocarPerfil"
         : "/Relatorios/Sondagem";
-      const perfilSelecionado = perfisEhMaiorQueUm
-        ? { codigoPerfil: "", nomePerfil: "" }
-        : perfis;
 
-      const permissoesSondagem = usuario.permissoes["/sondagem"];
-      console.log("usuario ===>", usuario);
-      const permissoes = montarObjetoPermissoes(permissoesSondagem);
-
-      // const permissoes = {
-      //   "/": permissoesSondagem,
-      //   "/Relatorios/Sondagem": permissoesSondagem,
-      //   "/Usuario/TrocarPerfil": {
-      //     podeAlterar: menus.podeAlterar,
-      //     podeConsultar: menus.podeConsultar,
-      //     podeExcluir: menus.podeExcluir,
-      //     podeIncluir: menus.podeIncluir,
-      //   },
-      // };
-
+      const permissoes = montarObjetoPermissoes({
+        podeAlterar: false,
+        podeConsultar: false,
+        podeExcluir: false,
+        podeIncluir: false,
+      });
       const user = montarObjetoUsuario({
         permissoes,
         usuario,
         username: usuario.rf,
+        token: usuario.token,
         isAuthenticated: usuario.logado,
         perfil: {
           perfilSelecionado,
@@ -58,14 +52,9 @@ function* ValidateProfilesSaga({ perfil, usuario, history }) {
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
     yield put({ type: types.FINISH_AUTHENTICATION_REQUEST });
-
-    history.push("Login?redirect=/");
   }
 }
 
 export default function* () {
-  yield all([
-    // takeLatest(types.LOGIN_SGP_REQUEST, LoginTokenSgpSaga),
-    takeLatest(types.VALIDATE_PROFILES_TOKEN, ValidateProfilesSaga),
-  ]);
+  yield all([takeLatest(types.VALIDATE_PROFILES_TOKEN, ValidateProfilesSaga)]);
 }

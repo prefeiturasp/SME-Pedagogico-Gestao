@@ -2,32 +2,38 @@
 
 import { types } from "../store/User";
 import { montarObjetoUsuario, montarObjetoPermissoes } from "../utils";
+import { STATUS_CODE } from "../Enums";
 
 function* LoginUserSaga({ credential, history }) {
   try {
     yield put({ type: types.ON_AUTHENTICATION_REQUEST });
     const usuario = yield call(authenticateUser, credential);
 
-    if (usuario.status === 401) {
+    if (usuario.status === STATUS_CODE.UNAUTHORIZED) {
       yield put({ type: types.UNAUTHORIZED });
       yield put({ type: types.FINISH_AUTHENTICATION_REQUEST });
     } else {
       const store = yield select();
 
-      const permissoes = montarObjetoPermissoes(usuario.permissoes[0]);
-
+      const perfilVazio = { codigoPerfil: "", nomePerfil: "" };
       const perfisEhMaiorQueUm = usuario.perfisUsuario.perfis.length > 1;
       const perfilSelecionado = perfisEhMaiorQueUm
-        ? { codigoPerfil: "", nomePerfil: "" }
+        ? perfilVazio
         : usuario.perfisUsuario.perfis[0];
-
       const rota = perfisEhMaiorQueUm
         ? "/Usuario/TrocarPerfil"
         : store.user.redirectUrl;
 
+      const permissoes = montarObjetoPermissoes({
+        podeAlterar: false,
+        podeConsultar: false,
+        podeExcluir: false,
+        podeIncluir: false,
+      });
       const user = montarObjetoUsuario({
         permissoes,
         usuario: usuario.perfisUsuario,
+        token: usuario.token,
         username: credential.username,
         isAuthenticated: usuario.autenticado,
         perfil: { ...usuario.perfisUsuario, perfilSelecionado },
@@ -84,7 +90,7 @@ function* SetProfileSaga({ perfilSelecionado, history }) {
       },
     };
 
-    if (data.status === 200) {
+    if (data.status === STATUS_CODE.OK) {
       const text = yield data.text();
       const { ehProfessor, token } = yield JSON.parse(text);
 
