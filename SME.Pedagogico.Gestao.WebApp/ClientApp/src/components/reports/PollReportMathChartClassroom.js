@@ -17,7 +17,7 @@ class MathChart extends Component {
         myChart.setOption({
             tooltip: {},
             xAxis: {
-                data: ['Escreve conv.', 'Não escreve conv.']
+                data: ['Escreve conv.', 'Não escreve conv.','S. preenchimento'],
             },
             yAxis: {},
             series: [{
@@ -25,10 +25,14 @@ class MathChart extends Component {
                 type: 'bar',
                 data: [{
                     value: this.props.value1,
-                    itemStyle: { color: '#9C96F6' },
+                    itemStyle: { color: '#0077BE' },
                 },
                 {
                     value: this.props.value2,
+                    itemStyle: { color: '#0077BE' },
+                },
+                {
+                    value: this.props.value3,
                     itemStyle: { color: '#0077BE' },
                 }]
             }]
@@ -91,7 +95,7 @@ const ChartLabel = (props) => {
             myChart.setOption({
                 tooltip: {},
                 xAxis: {
-                    data: ['Acertou', 'Errou', 'Não Resolveu']
+                    data: ['Acertou', 'Errou', 'Não Resolveu', 'S. preenchimento']
                 },
                 yAxis: {},
                 series: [{
@@ -109,7 +113,7 @@ const ChartLabel = (props) => {
             myChart2.setOption({
                 tooltip: {},
                 xAxis: {
-                    data: ['Acertou', 'Errou', 'Não Resolveu']
+                    data: ['Acertou', 'Errou', 'Não Resolveu', 'S. preenchimento']
                 },
                 yAxis: {},
                 series: [{
@@ -158,7 +162,12 @@ const ChartLabel = (props) => {
                 return (
                     <div className="d-flex flex-fill justify-content-center flex-wrap">
                         {data.map(item =>
-                            <MathChart name={item.name} value1={item.idea[0]} value2={item.result[0]} />
+                            <MathChart 
+                                name={item.name} 
+                                value1={item.idea[0]} 
+                                value2={item.result[0]} 
+                                value3={item.noFill && item.noFill[0]} 
+                            />
                         )}
                     </div>
                 );

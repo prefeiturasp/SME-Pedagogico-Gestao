@@ -262,7 +262,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             if (quantidade == 0)
                 throw new Exception("Não foi possivel obter os alunos ativos para o filtro especificado");
 
-            relatorio.Totais = new RelatorioPortuguesTotalizadores { Quantidade = quantidade };
+            relatorio.Totais = new RelatorioPortuguesTotalizadores { Quantidade = quantidade, Porcentagem = 100 };
 
             var listaRetorno = new List<RelatorioPortuguesPerguntasDto>();
 
@@ -278,9 +278,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 return relatorio;
             }
-
-            if (filtroRelatorioSondagem.GrupoId.Equals("6a3d323a-2c44-4052-ba68-13a8dead299a"))
-                relatorio.Totais.Porcentagem = 100;
 
             PopularListaRetorno(dados, quantidade, perguntas, listaRetorno);
 
