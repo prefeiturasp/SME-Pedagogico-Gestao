@@ -288,13 +288,28 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             graficos = new List<PortChartDataModel>();
             foreach (var item in listaGrafico)
             {
-                graficos.Add(new PortChartDataModel()
+                if (!string.IsNullOrWhiteSpace(item.Label))
                 {
-                    Name = string.IsNullOrWhiteSpace(item.Label) ? "Sem Preenchimento" : item.Label,
-                    Value = item.Value
+                    graficos.Add(new PortChartDataModel()
+                    {
+                        Name =  item.Label,
+                        Value = item.Value
+                    });
+                }
+                
+            }
+            retorno.ChartData = graficos.OrderBy(a => a.Name).ToList();
+
+
+            var semPreenchimento = listaGrafico.FirstOrDefault(a => string.IsNullOrWhiteSpace(a.Label));
+            if (semPreenchimento != null)
+            {
+                retorno.ChartData.Add(new PortChartDataModel()
+                {
+                    Name = "Sem Preenchimento",
+                    Value = semPreenchimento.Value
                 });
             }
-            retorno.ChartData = graficos;
 
             return retorno;
         }
