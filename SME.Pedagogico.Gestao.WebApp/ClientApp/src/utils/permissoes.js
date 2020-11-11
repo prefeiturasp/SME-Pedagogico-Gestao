@@ -1,17 +1,7 @@
 class Permissoes {
-  EditarEConsultar(user) {
-    return (
-      user.permissoes["/"].podeConsultar && user.permissoes["/"].podeAlterar
-    );
+  PodeVisualizarSondagem(user) {
+    return user.podeConsultar;
   }
-
-  ApenasConsultas(user) {
-    return user.permissoes["/"].podeConsultar;
-  }
-  ApenasRelatorios(user) {
-    return !user.permissoes["/"].podeConsultar;
-  }
-
   IsUE(user) {
     return !user.possuiPerfilSmeOuDre;
   }

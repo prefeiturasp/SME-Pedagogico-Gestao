@@ -1,18 +1,24 @@
 ﻿import { takeLatest, call, put, all, select } from "redux-saga/effects";
 
 import { types } from "../store/User";
-import { montarObjetoUsuario, montarObjetoPermissoes } from "../utils";
+import { montarObjetoUsuario } from "../utils";
 import { STATUS_CODE } from "../Enums";
 
 function* LoginUserSaga({ credential, history }) {
   try {
     yield put({ type: types.ON_AUTHENTICATION_REQUEST });
-    const usuario = yield call(authenticateUser, credential);
 
-    if (usuario.status === STATUS_CODE.UNAUTHORIZED) {
-      yield put({ type: types.UNAUTHORIZED });
-      yield put({ type: types.FINISH_AUTHENTICATION_REQUEST });
-    } else {
+    const data = yield call(fetch, "/api/Auth/LoginIdentity", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(credential),
+    });
+
+    if (data.status === STATUS_CODE.UNAUTHORIZED) throw new Error();
+    if (data.status === STATUS_CODE.OK) {
+      const text = yield data.text();
+      const usuario = yield JSON.parse(text);
+
       const store = yield select();
 
       const perfilVazio = { codigoPerfil: "", nomePerfil: "" };
@@ -24,12 +30,12 @@ function* LoginUserSaga({ credential, history }) {
         ? "/Usuario/TrocarPerfil"
         : store.user.redirectUrl;
 
-      const permissoes = montarObjetoPermissoes({
+      const permissoes = {
         podeAlterar: false,
         podeConsultar: false,
         podeExcluir: false,
         podeIncluir: false,
-      });
+      };
       const user = montarObjetoUsuario({
         permissoes,
         usuario: usuario.perfisUsuario,
@@ -46,16 +52,10 @@ function* LoginUserSaga({ credential, history }) {
     }
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
+    yield put({ type: types.UNAUTHORIZED });
+  } finally {
     yield put({ type: types.FINISH_AUTHENTICATION_REQUEST });
   }
-}
-
-function authenticateUser(credential) {
-  return fetch("/api/Auth/LoginIdentity", {
-    method: "post",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(credential),
-  }).then((response) => response.json());
 }
 
 function* LogoutUserSaga() {
@@ -90,12 +90,14 @@ function* SetProfileSaga({ perfilSelecionado, history }) {
       },
     };
 
+    if (data.status === STATUS_CODE.UNAUTHORIZED) throw new Error();
     if (data.status === STATUS_CODE.OK) {
       const text = yield data.text();
-      const { ehProfessor, token } = yield JSON.parse(text);
+      const { menus, ehProfessor, token } = yield JSON.parse(text);
 
       newUser.ehProfessor = ehProfessor;
       newUser.token = token;
+      newUser.permissoes.podeConsultar = menus[0].podeConsultar;
     }
 
     yield put({ type: "SET_USER", user: newUser });
@@ -103,6 +105,7 @@ function* SetProfileSaga({ perfilSelecionado, history }) {
     history.push(user.redirectUrl);
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
+    yield put({ type: "LOGOUT_USER" });
   }
 }
 

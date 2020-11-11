@@ -1,7 +1,7 @@
 ﻿import { takeLatest, put, all, call } from "redux-saga/effects";
 
 import { types } from "../store/User";
-import { montarObjetoUsuario, montarObjetoPermissoes } from "../utils";
+import { montarObjetoUsuario } from "../utils";
 import { STATUS_CODE } from "../Enums";
 
 function* ValidateProfilesSaga({ perfil, usuario, history }) {
@@ -27,12 +27,12 @@ function* ValidateProfilesSaga({ perfil, usuario, history }) {
         ? "/Usuario/TrocarPerfil"
         : "/Relatorios/Sondagem";
 
-      const permissoes = montarObjetoPermissoes({
+      const permissoes = {
         podeAlterar: false,
         podeConsultar: false,
         podeExcluir: false,
         podeIncluir: false,
-      });
+      };
       const user = montarObjetoUsuario({
         permissoes,
         usuario,
@@ -46,6 +46,8 @@ function* ValidateProfilesSaga({ perfil, usuario, history }) {
       });
 
       yield put({ type: types.SET_USER, user });
+    } else {
+      url = "/Login?Redirect=/";
     }
 
     history.push(url);
