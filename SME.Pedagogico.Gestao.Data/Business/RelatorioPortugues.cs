@@ -9,6 +9,7 @@ using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
+using SME.Pedagogico.Gestao.Infra;
 using SME.Pedagogico.Gestao.Models.Autoral;
 using System;
 using System.Collections.Generic;
@@ -249,7 +250,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 grupo = await contexto.Grupo.FirstOrDefaultAsync(x => x.Id == filtroRelatorioSondagem.GrupoId);
 
-                perguntas = await contexto.OrdemPergunta.Include(x => x.Pergunta).Where(x => x.GrupoId.Equals(filtroRelatorioSondagem.GrupoId)).Select(x => x.Pergunta).ToListAsync();
+                perguntas = await contexto.OrdemPergunta.Include(x => x.Pergunta).Where(x => x.GrupoId.Equals(filtroRelatorioSondagem.GrupoId)).OrderBy(p => p.OrdenacaoNaTela).Select(x => x.Pergunta).ToListAsync();
             }
 
             if (grupo == null)
@@ -262,7 +263,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
             if (quantidade == 0)
                 throw new Exception("Não foi possivel obter os alunos ativos para o filtro especificado");
 
-            relatorio.Totais = new RelatorioPortuguesTotalizadores { Quantidade = quantidade, Porcentagem = 100 };
+            relatorio.Totais = new RelatorioPortuguesTotalizadores { Quantidade = quantidade };
+            if (filtroRelatorioSondagem.GrupoId != GrupoEnum.ProducaoTexto.Name())
+                relatorio.Totais.Porcentagem = 100;
 
             var listaRetorno = new List<RelatorioPortuguesPerguntasDto>();
 
