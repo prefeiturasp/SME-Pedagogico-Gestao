@@ -7,6 +7,7 @@ import { STATUS_CODE } from "../Enums";
 function* LoginUserSaga({ credential, history }) {
   try {
     yield put({ type: types.ON_AUTHENTICATION_REQUEST });
+    yield put({ type: types.SET_ERROR, msgError: "" });
 
     const data = yield call(fetch, "/api/Auth/LoginIdentity", {
       method: "post",
@@ -14,7 +15,7 @@ function* LoginUserSaga({ credential, history }) {
       body: JSON.stringify(credential),
     });
 
-    if (data.status === STATUS_CODE.UNAUTHORIZED) throw new Error();
+    if (data.status === STATUS_CODE.UNAUTHORIZED) yield call(setError, data);
     if (data.status === STATUS_CODE.OK) {
       const text = yield data.text();
       const usuario = yield JSON.parse(text);
@@ -32,7 +33,7 @@ function* LoginUserSaga({ credential, history }) {
 
       const permissoes = {
         podeAlterar: false,
-        podeConsultar: false,
+        podeConsultar: usuario.permissoes[0].podeConsultar,
         podeExcluir: false,
         podeIncluir: false,
       };
@@ -52,10 +53,20 @@ function* LoginUserSaga({ credential, history }) {
     }
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
-    yield put({ type: types.UNAUTHORIZED });
+    yield put({ type: types.SET_ERROR, msgError: error.message });
   } finally {
     yield put({ type: types.FINISH_AUTHENTICATION_REQUEST });
   }
+}
+
+function* setError(data) {
+  const text = yield data.text();
+  let msgError = yield JSON.parse(text);
+
+  if (msgError.mensagens) {
+    msgError = msgError.mensagens[0];
+  }
+  throw new Error(msgError);
 }
 
 function* LogoutUserSaga() {
@@ -68,6 +79,7 @@ function* LogoutUserSaga() {
 
 function* SetProfileSaga({ perfilSelecionado, history }) {
   try {
+    yield put({ type: types.SET_ERROR, msgError: "" });
     yield put({ type: types.SET_LOADING_PROFILE, isLoadingProfile: true });
 
     const { user } = yield select();
@@ -92,7 +104,7 @@ function* SetProfileSaga({ perfilSelecionado, history }) {
       },
     };
 
-    if (data.status === STATUS_CODE.UNAUTHORIZED) throw new Error();
+    if (data.status === STATUS_CODE.UNAUTHORIZED) yield call(setError, data);
     if (data.status === STATUS_CODE.OK) {
       const text = yield data.text();
       const { menus, ehProfessor, token } = yield JSON.parse(text);
@@ -106,8 +118,9 @@ function* SetProfileSaga({ perfilSelecionado, history }) {
 
     history.push(user.redirectUrl);
   } catch (error) {
-    yield put({ type: "API_CALL_ERROR" });
     yield put({ type: types.LOGOUT_USER });
+    yield put({ type: "API_CALL_ERROR" });
+    yield put({ type: types.SET_ERROR, msgError: error.message });
   } finally {
     yield put({ type: types.SET_LOADING_PROFILE, isLoadingProfile: false });
   }

@@ -12,6 +12,7 @@
   SET_PROFILE: "SET_PROFILE",
   VALIDATE_PROFILES_TOKEN: "VALIDATE_PROFILES_TOKEN",
   SET_LOADING_PROFILE: "SET_LOADING_PROFILE",
+  SET_ERROR: "SET_ERROR",
 };
 const initialState = {
   name: null,
@@ -29,6 +30,7 @@ const initialState = {
   listOccupations: null,
   redirectUrl: null,
   isLoadingProfile: false,
+  msgError: "",
 };
 
 export const actionCreators = {
@@ -58,6 +60,10 @@ export const actionCreators = {
   setLoadingProfile: (isLoadingProfile) => ({
     type: types.SET_LOADING_PROFILE,
     isLoadingProfile,
+  }),
+  setError: (msgError) => ({
+    type: types.SET_ERROR,
+    msgError,
   }),
 };
 
@@ -105,6 +111,11 @@ export const reducer = (state, action) => {
       return {
         ...state,
         isLoadingProfile: action.isLoadingProfile,
+      };
+    case types.SET_ERROR:
+      return {
+        ...state,
+        msgError: action.msgError,
       };
     default:
       return state;

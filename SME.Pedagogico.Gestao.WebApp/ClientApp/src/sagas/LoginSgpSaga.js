@@ -9,19 +9,24 @@ function* ValidateProfilesSaga({ perfil, usuario, history }) {
     let url = "/";
     const { perfis } = perfil;
 
+    yield put({ type: types.SET_ERROR, msgError: "" });
+
     const data = yield call(fetch, "/api/auth/ValidarPerfisToken", {
       method: "put",
       headers: { "Content-Type": "application/json", token: usuario.token },
       body: JSON.stringify(perfis),
     });
 
+    if (data.status === STATUS_CODE.UNAUTHORIZED) yield call(setErrorSgp, data);
     if (data.status === STATUS_CODE.OK) {
       const text = yield data.text();
-      const { perfis: novoPerfil } = yield JSON.parse(text);
+      const { menus, perfis: novoPerfil } = yield JSON.parse(text);
 
       const perfilVazio = { codigoPerfil: "", nomePerfil: "" };
       const perfisEhMaiorQueUm = novoPerfil.length > 1;
-      const perfilSelecionado = perfisEhMaiorQueUm ? perfilVazio : perfis;
+      const perfilSelecionado = perfisEhMaiorQueUm
+        ? perfilVazio
+        : novoPerfil[0];
 
       url = perfisEhMaiorQueUm
         ? "/Usuario/TrocarPerfil"
@@ -29,7 +34,7 @@ function* ValidateProfilesSaga({ perfil, usuario, history }) {
 
       const permissoes = {
         podeAlterar: false,
-        podeConsultar: false,
+        podeConsultar: menus[0].podeConsultar,
         podeExcluir: false,
         podeIncluir: false,
       };
@@ -46,15 +51,25 @@ function* ValidateProfilesSaga({ perfil, usuario, history }) {
       });
 
       yield put({ type: types.SET_USER, user });
-    } else {
-      url = "/Login?Redirect=/";
     }
 
     history.push(url);
   } catch (error) {
+    yield put({ type: types.LOGOUT_USER });
     yield put({ type: "API_CALL_ERROR" });
     yield put({ type: types.FINISH_AUTHENTICATION_REQUEST });
+    yield put({ type: types.SET_ERROR, msgError: error.message });
   }
+}
+
+function* setErrorSgp(data) {
+  const text = yield data.text();
+  let msgError = yield JSON.parse(text);
+
+  if (msgError.mensagens) {
+    msgError = msgError.mensagens[0];
+  }
+  throw new Error(msgError);
 }
 
 export default function* () {
