@@ -56,8 +56,8 @@ function* ValidateProfilesSaga({ perfil, usuario, history }) {
     history.push(url);
   } catch (error) {
     yield put({ type: types.LOGOUT_USER });
+    history.push("Login?redirect=/Relatorios/Sondagem");
     yield put({ type: "API_CALL_ERROR" });
-    yield put({ type: types.FINISH_AUTHENTICATION_REQUEST });
     yield put({ type: types.SET_ERROR, msgError: error.message });
   }
 }

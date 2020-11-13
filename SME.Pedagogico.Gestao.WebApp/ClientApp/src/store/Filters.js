@@ -21,12 +21,8 @@ export const types = {
   LIST_DISCIPLINES: "LIST_DISCIPLINES",
   DISCIPLINES_FILTER: "DISCIPLINES_FILTER",
   RESET_FILTERS: "RESET_FILTERS",
-  //UNAUTHORIZED: "UNAUTHORIZED",
-  //LOGOUT_REQUEST: "LOGOUT_REQUEST",
-  //LOGOUT_USER: "LOGOUT_USER",
-  //ON_AUTHENTICATION_REQUEST: "ON_AUTHENTICATION_REQUEST",
-  //FINISH_AUTHENTICATION_REQUEST: "FINISH_AUTHENTICATION_REQUEST",
 };
+
 const initialState = {
   listDres: [],
   setSchoolYear: null,
@@ -78,7 +74,7 @@ export const actionCreators = {
     disciplinesFilter,
   }),
   listDisciplines: () => ({ type: types.LIST_DISCIPLINES }),
-  resetFilters: () => ({type: types.RESET_FILTERS}),
+  resetFilters: () => ({ type: types.RESET_FILTERS }),
 };
 
 export const reducer = (state, action) => {
@@ -180,7 +176,10 @@ export const reducer = (state, action) => {
         ...state,
         activeDreCode: null,
         activeSchollsCode: null,
-        activeClassRoomCode: null,      
+        activeClassRoomCode: null,
+        scholls: [],
+        listClassRoom: null,
+        yearClassRoom: null,
       };
     default:
       return state;
