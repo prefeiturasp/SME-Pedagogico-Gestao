@@ -3,6 +3,7 @@ using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP;
 using SME.Pedagogico.Gestao.Infra;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,7 +20,16 @@ namespace SME.Pedagogico.Gestao.Aplicacao
         {
             var loginRF = await mediator.Send(new ObterLoginUsuarioLogado());
 
-            return (await mediator.Send(new ObterVerificarPerfisDoUsuarioLoginQuery(loginRF, request.Perfis)));
+            var listaPerfis = await mediator.Send(new ObterVerificarPerfisDoUsuarioLoginQuery(loginRF, request.Perfis));
+            
+            if (listaPerfis.Perfis.Any() && listaPerfis.Perfis.Count == 1)
+            {
+                var retornoTokenPerfilUnico =  await mediator.Send(new AtualizarPerfilCommand(listaPerfis.Perfis.FirstOrDefault().CodigoPerfil.ToString()));
+                listaPerfis.Token = retornoTokenPerfilUnico.Token;
+
+            }
+
+            return listaPerfis;
 
         }
     }

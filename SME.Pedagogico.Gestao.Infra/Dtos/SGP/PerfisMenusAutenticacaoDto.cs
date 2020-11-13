@@ -1,4 +1,5 @@
 ﻿using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP;
+using System;
 using System.Collections.Generic;
 
 namespace SME.Pedagogico.Gestao.Infra
@@ -12,6 +13,9 @@ namespace SME.Pedagogico.Gestao.Infra
         }
 
         public List<PerfilDto> Perfis { get; set; }
-        public List<MenuPermissaoDto> Menus { get; set; }        
+        public List<MenuPermissaoDto> Menus { get; set; }
+        public string Token { get; set; }
+
+        
     }
 }

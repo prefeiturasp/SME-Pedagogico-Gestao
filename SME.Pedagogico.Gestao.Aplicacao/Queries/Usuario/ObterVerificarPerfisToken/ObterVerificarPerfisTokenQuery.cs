@@ -13,5 +13,6 @@ namespace SME.Pedagogico.Gestao.Aplicacao
         }
 
         public IList<PerfilDto> Perfis { get; set; }
+        public string Token { get; set; }
     }
 }
