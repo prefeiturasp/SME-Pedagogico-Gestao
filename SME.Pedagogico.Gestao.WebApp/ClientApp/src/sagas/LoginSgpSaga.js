@@ -2,7 +2,7 @@
 
 import { types } from "../store/User";
 import { montarObjetoUsuario } from "../utils";
-import { STATUS_CODE } from "../Enums";
+import { STATUS_CODE_ENUM } from "../Enums";
 
 function* ValidateProfilesSaga({ perfil, usuario, history }) {
   try {
@@ -17,10 +17,11 @@ function* ValidateProfilesSaga({ perfil, usuario, history }) {
       body: JSON.stringify(perfis),
     });
 
-    if (data.status === STATUS_CODE.UNAUTHORIZED) yield call(setErrorSgp, data);
-    if (data.status === STATUS_CODE.OK) {
+    if (data.status === STATUS_CODE_ENUM.UNAUTHORIZED)
+      yield call(setErrorSgp, data);
+    if (data.status === STATUS_CODE_ENUM.OK) {
       const text = yield data.text();
-      const { menus, perfis: novoPerfil } = yield JSON.parse(text);
+      const { menus, perfis: novoPerfil, token } = yield JSON.parse(text);
 
       const perfilVazio = { codigoPerfil: "", nomePerfil: "" };
       const perfisEhMaiorQueUm = novoPerfil.length > 1;
@@ -42,7 +43,7 @@ function* ValidateProfilesSaga({ perfil, usuario, history }) {
         permissoes,
         usuario,
         username: usuario.rf,
-        token: usuario.token,
+        token,
         isAuthenticated: usuario.logado,
         perfil: {
           perfilSelecionado,

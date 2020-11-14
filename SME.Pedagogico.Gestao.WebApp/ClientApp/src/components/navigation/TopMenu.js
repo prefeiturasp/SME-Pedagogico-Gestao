@@ -8,6 +8,7 @@ import { actionCreators as dataActionCreators } from "../../store/Data";
 
 import TwoSteps from "../messaging/TwoSteps";
 import permissoesMetodos from "../../utils/permissoes";
+import { ROUTES_ENUM } from "../../Enums";
 
 import "./TopMenu.css";
 
@@ -64,12 +65,12 @@ const TopMenu = ({ history }) => {
 
     if (permissoesMetodos.PodeVisualizarSondagem(permissoes)) {
       setIsVisiblePoll(true);
-      changeRoute("Sondagem");
+      changeRoute(ROUTES_ENUM.SONDAGEM);
       return;
     }
 
     setIsVisiblePoll(false);
-    changeRoute("Relatórios");
+    changeRoute(ROUTES_ENUM.RELATORIOS);
   }, [changeRoute, nomePerfil, permissoes, permissoes.podeConsultar]);
 
   return (
@@ -77,7 +78,7 @@ const TopMenu = ({ history }) => {
       <TwoSteps
         show={showMessageBox}
         showControl={toggleMessageBox}
-        runMethod={() => changeRoute("Sondagem")}
+        runMethod={() => changeRoute(ROUTES_ENUM.SONDAGEM)}
       />
 
       <div
@@ -99,7 +100,7 @@ const TopMenu = ({ history }) => {
           {isVisiblePoll && (
             <div
               className={
-                activeRoute === "Sondagem"
+                activeRoute === ROUTES_ENUM.SONDAGEM
                   ? "border-left top-navigation-button-selected"
                   : "border-left top-navigation-button"
               }
@@ -107,7 +108,7 @@ const TopMenu = ({ history }) => {
               <Link
                 className="d-flex align-items-center h-100 w-100"
                 to="/"
-                onClick={() => changeRoute("Sondagem")}
+                onClick={() => changeRoute(ROUTES_ENUM.SONDAGEM)}
               >
                 <small className="mx-3 font-weight-light text-muted">
                   Sondagem
@@ -118,7 +119,7 @@ const TopMenu = ({ history }) => {
           {isVisiblePollReport && (
             <div
               className={
-                activeRoute === "Relatórios"
+                activeRoute === ROUTES_ENUM.RELATORIOS
                   ? "mr-3 border border-top-0 border-bottom-0 top-navigation-button-selected"
                   : "mr-3 border border-top-0 border-bottom-0 top-navigation-button"
               }
@@ -126,7 +127,7 @@ const TopMenu = ({ history }) => {
               <Link
                 className="d-flex align-items-center h-100 w-100"
                 to="/Relatorios/Sondagem"
-                onClick={() => changeRoute("Relatórios")}
+                onClick={() => changeRoute(ROUTES_ENUM.RELATORIOS)}
               >
                 <small className="mx-3 font-weight-light text-muted">
                   Relat&oacute;rios

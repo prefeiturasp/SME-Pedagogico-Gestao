@@ -1,6 +1,6 @@
 ﻿import { takeLatest, call, put, all, select } from "redux-saga/effects";
 import * as PollReport from "../store/PollReport";
-import { STATUS_CODE } from "../Enums";
+import { STATUS_CODE_ENUM } from "../Enums";
 
 export default function* () {
   yield all([
@@ -132,7 +132,7 @@ function* PrintPollReportSaga({ parameters }) {
     const { cancelPollReportRequest } = pollReport;
     let mensagem = "Erro ao gerar relatório. Tente novamente mais tarde.";
 
-    if (data.status === STATUS_CODE.OK) {
+    if (data.status === STATUS_CODE_ENUM.OK) {
       const linkPdf = yield data.text();
 
       yield put({
@@ -152,8 +152,8 @@ function* PrintPollReportSaga({ parameters }) {
 
     if (
       !cancelPollReportRequest &&
-      (data.status === STATUS_CODE.INTERNAL_ERROR ||
-        data.status === STATUS_CODE.BUSINESS_ERROR)
+      (data.status === STATUS_CODE_ENUM.INTERNAL_ERROR ||
+        data.status === STATUS_CODE_ENUM.BUSINESS_ERROR)
     ) {
       const response = yield data.json();
       if (response) {

@@ -122,7 +122,7 @@ export const DISCIPLINES_ENUM = {
   },
 };
 
-export const STATUS_CODE = {
+export const STATUS_CODE_ENUM = {
   OK: 200,
   NO_CONTENT: 204,
   BAD_REQUEST: 400,
@@ -131,4 +131,9 @@ export const STATUS_CODE = {
   NOT_FOUND: 404,
   INTERNAL_ERROR: 500,
   BUSINESS_ERROR: 601,
+};
+
+export const ROUTES_ENUM = {
+  SONDAGEM: "Sondagem",
+  RELATORIOS: "Relatórios",
 };

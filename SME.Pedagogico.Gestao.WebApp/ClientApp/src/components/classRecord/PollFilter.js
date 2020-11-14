@@ -9,6 +9,7 @@ import { actionCreators as actionCreatorsPollRouter } from "../../store/PollRout
 import { bindActionCreators } from "redux";
 import MensagemConfirmacaoAutoral from "./SondagemPortuguesAutoral/mensagemConfirmacaoAutoral";
 import permissoes from "../../utils/permissoes";
+import { createTrue } from "typescript";
 
 class PollFilter extends Component {
   constructor(props) {
@@ -23,6 +24,7 @@ class PollFilter extends Component {
       listSchools: [],
       listClassRoomTeacher: [],
       schoolYear: "",
+      schoolAll: false,
     };
 
     this.SelectedDre = this.SelectedDre.bind(this);
@@ -188,17 +190,25 @@ class PollFilter extends Component {
     var index = event.nativeEvent.target.selectedIndex;
     var label = event.nativeEvent.target[index].value;
 
+    if (label === "todas") {
+      this.setState({
+        schoolAll: true,
+      });
+      return;
+    }
+
     var classRoomFilter = {
       schoolCodeEol: label,
       schoolYear: this.props.filters.setSchoolYear,
     };
-    if (label !== "todas")
-      this.props.filterMethods.getClassroom(classRoomFilter);
+
+    this.props.filterMethods.getClassroom(classRoomFilter);
     this.setState({
       selectedSchool: label,
       selectedClassRoom: "",
       yearClassroom: null,
       classroom: "",
+      schoolAll: false,
     });
   }
 
@@ -280,7 +290,7 @@ class PollFilter extends Component {
   }
 
   render() {
-    const { selectedDre, selectedClassRoom } = this.state;
+    const { selectedDre, selectedClassRoom, schoolAll } = this.state;
     let selectDre = null;
     let selectSchool = null;
     let selectClassRoom = null;
@@ -357,7 +367,10 @@ class PollFilter extends Component {
         );
       }
 
-      if (filters.listClassRoom || filters.scholls.length || user.ehProfessor) {
+      if (
+        selectedDre !== "todas" &&
+        (filters.listClassRoom || filters.scholls.length || user.ehProfessor)
+      ) {
         if (this.state.classroom)
           for (let item in filters.listClassRoom) {
             if (
@@ -402,6 +415,16 @@ class PollFilter extends Component {
               uniques.push(classroom);
             }
           }
+        }
+      }
+
+      if (selectedDre === "todas" || (schoolAll && !yearClassrooms.length)) {
+        const listYearClassrooms = [1, 2, 3, 4, 5, 6];
+        for (let item in listYearClassrooms) {
+          yearClassrooms.push({
+            value: listYearClassrooms[item],
+            label: listYearClassrooms[item],
+          });
         }
       }
     }

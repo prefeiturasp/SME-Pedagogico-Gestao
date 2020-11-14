@@ -5,7 +5,6 @@ import { actionCreators } from "../../store/PollReport";
 import { bindActionCreators } from "redux";
 import { actionCreators as pollStoreActionCreators } from "../../store/SondagemPortuguesStore";
 import { DISCIPLINES_ENUM } from "../../Enums";
-// import { ROLES_ENUM } from "../../Enums";
 import { verificarDisciplina } from "../../utils";
 
 class PollReportFilter extends Component {
@@ -40,21 +39,15 @@ class PollReportFilter extends Component {
   componentDidMount() {
     this.props.pollReportsMethods.hidePollReport();
     this.props.sondagemPortuguesMethods.listarGrupos();
-
-    // if (this.restricaoDisciplina(DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES))
-    //   delete this.props.pollReport.filters.port;
-
-    // if (this.restricaoDisciplina(DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA))
-    //   delete this.props.pollReport.filters.math;
-
     this.mostrarDisciplina(DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA, "math");
     this.mostrarDisciplina(DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES, "port");
 
-    for (var key in this.props.pollReport.filters)
+    for (let key in this.props.pollReport.filters) {
       this.initialFilter.push({
         value: key,
         label: this.props.pollReport.filters[key].name,
       });
+    }
   }
 
   componentDidUpdate() {
@@ -74,11 +67,16 @@ class PollReportFilter extends Component {
 
   mostrarDisciplina = (disciplina, disciplinaCurta) => {
     const { listDisciplines } = this.props.filters;
-    const existDisciplina = verificarDisciplina(
-      listDisciplines,
-      disciplina.Descricao
-    );
-    if (!existDisciplina) delete this.props.pollReport.filters[disciplinaCurta];
+
+    if (listDisciplines) {
+      const existDisciplina = verificarDisciplina(
+        listDisciplines,
+        disciplina.Descricao
+      );
+      if (!existDisciplina) {
+        delete this.props.pollReport.filters[disciplinaCurta];
+      }
+    }
   };
 
   limparDadosFiltro() {
@@ -241,19 +239,6 @@ class PollReportFilter extends Component {
       );
     }
   }
-
-  // restricaoDisciplina(disciplina) {
-  //   return (
-  //     this.props.user.ehProfessor &&
-  //     !DISCIPLINES_ENUM.PossuiDisciplinaRegencia(
-  //       this.props.filters.listDisciplines
-  //     ) &&
-  //     !DISCIPLINES_ENUM.PossuiDisciplina(
-  //       disciplina,
-  //       this.props.filters.listDisciplines
-  //     )
-  //   );
-  // }
 
   render() {
     return (

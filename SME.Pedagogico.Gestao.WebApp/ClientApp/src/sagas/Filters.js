@@ -1,5 +1,7 @@
 ﻿import { takeLatest, call, put, all, select } from "redux-saga/effects";
+
 import * as Filters from "../store/Filters";
+import { ROUTES_ENUM } from "../Enums";
 
 export default function* () {
   yield all([
@@ -9,7 +11,10 @@ export default function* () {
     takeLatest(Filters.types.GET_FILTERS_TEACHER, GetFiltersTeacher),
     takeLatest(Filters.types.GET_DRE_ADM, GetDreAdm),
     takeLatest(Filters.types.GET_PERIOD, GetPeriod),
-    takeLatest(Filters.types.GET_LIST_DISCIPLINES_BY_CLASSROOM, GetDisciplinesByClassroom)
+    takeLatest(
+      Filters.types.GET_LIST_DISCIPLINES_BY_CLASSROOM,
+      GetDisciplinesByClassroom
+    ),
   ]);
 }
 
@@ -25,16 +30,21 @@ function* GetDreAdm({ userName }) {
 
 function* GetDres() {
   try {
-    const {user, filters} = yield select();
-    const {token, possuiPerfilSme} =  user;
-    const {setSchoolYear: anoLetivo} = filters;
+    const {
+      user,
+      filters,
+      pollRouter: { activeRoute },
+    } = yield select();
+    const { token, possuiPerfilSme } = user;
+    const { setSchoolYear: anoLetivo } = filters;
     const listDres = yield call(getDresAPI, token, anoLetivo);
-    const todas =  {codigoDRE: "todas", nomeDRE: "Todas", siglaDRE: "Todas"}
-    
-    if(possuiPerfilSme) {
-      listDres.unshift(todas)
+    const isPollReport = activeRoute === ROUTES_ENUM.RELATORIOS;
+    const todas = { codigoDRE: "todas", nomeDRE: "Todas", siglaDRE: "Todas" };
+
+    if (isPollReport && possuiPerfilSme) {
+      listDres.unshift(todas);
     }
-        
+
     yield put({ type: Filters.types.LIST_DRES, listDres });
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
@@ -42,14 +52,18 @@ function* GetDres() {
 }
 
 function* GetDisciplinesByClassroom({ disciplinesFilter }) {
-  try {    
-    const {user} = yield select();
-    const {token} =  user;
-    const data = yield call(getDisciplinesByClassroomAPI, disciplinesFilter, token);    
+  try {
+    const { user } = yield select();
+    const { token } = user;
+    const data = yield call(
+      getDisciplinesByClassroomAPI,
+      disciplinesFilter,
+      token
+    );
     var listDisciplines = data;
     yield put({ type: Filters.types.LIST_DISCIPLINES, listDisciplines });
     yield put({ type: Filters.types.DISCIPLINES_FILTER, disciplinesFilter });
-  } catch (error) {    
+  } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
   }
 }
@@ -58,24 +72,30 @@ function* GetPeriod({ schoolYear }) {
   try {
     const data = yield call(getPeriodApi, schoolYear);
     var listPeriod = data;
-    yield put({ type: Filters.types.SET_PERIOD, listPeriod })
+    yield put({ type: Filters.types.SET_PERIOD, listPeriod });
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
   }
 }
 
 function* GetSchools({ schoolCode }) {
-  try {    
-    const {user} = yield select();
-    const {token, possuiPerfilSme, possuiPerfilDre, perfil} =  user;
-    const ehProfessor = perfil.perfilSelecionado.nomePerfil.indexOf("Professor") >= 0; 
+  try {
+    const {
+      user,
+      pollRouter: { activeRoute },
+    } = yield select();
+    const { token, possuiPerfilSme, possuiPerfilDre, perfil } = user;
+    const ehProfessor =
+      perfil.perfilSelecionado.nomePerfil.indexOf("Professor") >= 0;
     const ehTodas = schoolCode.dreCodeEol === "todas";
-    const listSchool = !ehTodas ? yield call(getSchoolsAPI, schoolCode, token) 
+    const listSchool = !ehTodas
+      ? yield call(getSchoolsAPI, schoolCode, token)
       : [];
-    const todas =  {codigoEscola: "todas", nomeEscola: "Todas"}
+    const isPollReport = activeRoute === ROUTES_ENUM.RELATORIOS;
+    const todas = { codigoEscola: "todas", nomeEscola: "Todas" };
 
-    if((possuiPerfilSme || possuiPerfilDre) && !ehProfessor) {
-      listSchool.unshift(todas)
+    if (isPollReport && !ehProfessor && (possuiPerfilSme || possuiPerfilDre)) {
+      listSchool.unshift(todas);
     }
 
     yield put({ type: Filters.types.LIST_SCHOOLS, listSchool });
@@ -87,10 +107,11 @@ function* GetSchools({ schoolCode }) {
 
 function* GetClassRoom({ classRoomFilter }) {
   try {
-    const {user} = yield select();
-    const {token} =  user;
+    const { user } = yield select();
+    const { token } = user;
     const schoolCodeEolIsEmpty = classRoomFilter.schoolCodeEol.length;
-    const data = schoolCodeEolIsEmpty ? yield call(getClassRoomAPI, classRoomFilter, token) 
+    const data = schoolCodeEolIsEmpty
+      ? yield call(getClassRoomAPI, classRoomFilter, token)
       : [];
     var listClassRoom = data;
     yield put({ type: Filters.types.LIST_CLASSROOM, listClassRoom });
@@ -116,54 +137,53 @@ function getPeriodApi(schoolYear) {
   var url = `/api/Filtros/ListarPeriodoDeAberturas/${schoolYear}`;
   return fetch(url, {
     method: "get",
-    headers: { "Content-Type": "application/json" }
-  }).then(response => response.json());
-};
+    headers: { "Content-Type": "application/json" },
+  }).then((response) => response.json());
+}
 
 function getDreAdmApi(userName) {
-
   return fetch("/api/Cargo/RetornaCodigoDREAdm", {
     method: "post",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(userName)
-  }).then(response => response.json());
-};
+    body: JSON.stringify(userName),
+  }).then((response) => response.json());
+}
 
 function getTeacherFiltersApi(profileOccupatios) {
   return fetch("/api/Cargo/PerfilServidor", {
     method: "post",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(profileOccupatios)
-  }).then(response => response.json());
+    body: JSON.stringify(profileOccupatios),
+  }).then((response) => response.json());
 }
 function getSchoolsAPI(schoolCode, token) {
   return fetch("/api/Filtros/ListarEscolasPorDre", {
     method: "post",
     headers: { "Content-Type": "application/json", token },
-    body: JSON.stringify(schoolCode)
-  }).then(response => response.json());
+    body: JSON.stringify(schoolCode),
+  }).then((response) => response.json());
 }
 
 function getClassRoomAPI(classRoomFilter, token) {
   return fetch("/api/Filtros/ListarTurmasPorEscola", {
     method: "post",
     headers: { "Content-Type": "application/json", token },
-    body: JSON.stringify(classRoomFilter)
-  }).then(response => response.json());
+    body: JSON.stringify(classRoomFilter),
+  }).then((response) => response.json());
 }
 
 function getDresAPI(token, anoLetivo) {
   return fetch(`/api/Filtros/ListarDres?anoLetivo=${anoLetivo}`, {
     method: "get",
-    headers: { "Content-Type": "application/json", token }
+    headers: { "Content-Type": "application/json", token },
     //body: JSON.stringify(credential)
-  }).then(response => response.json());
+  }).then((response) => response.json());
 }
 
 function getDisciplinesByClassroomAPI(disciplinesFilter, token) {
   return fetch("/api/Filtros/ListarDisciplinasPorRfTurma", {
     method: "post",
     headers: { "Content-Type": "application/json", token },
-    body: JSON.stringify(disciplinesFilter)
-  }).then(response => response.json());
+    body: JSON.stringify(disciplinesFilter),
+  }).then((response) => response.json());
 }

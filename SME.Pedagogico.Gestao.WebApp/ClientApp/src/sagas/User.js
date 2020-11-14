@@ -2,7 +2,7 @@
 
 import { types } from "../store/User";
 import { montarObjetoUsuario } from "../utils";
-import { STATUS_CODE } from "../Enums";
+import { STATUS_CODE_ENUM } from "../Enums";
 
 function* LoginUserSaga({ credential, history }) {
   try {
@@ -15,8 +15,9 @@ function* LoginUserSaga({ credential, history }) {
       body: JSON.stringify(credential),
     });
 
-    if (data.status === STATUS_CODE.UNAUTHORIZED) yield call(setError, data);
-    if (data.status === STATUS_CODE.OK) {
+    if (data.status === STATUS_CODE_ENUM.UNAUTHORIZED)
+      yield call(setError, data);
+    if (data.status === STATUS_CODE_ENUM.OK) {
       const text = yield data.text();
       const usuario = yield JSON.parse(text);
 
@@ -104,8 +105,9 @@ function* SetProfileSaga({ perfilSelecionado, history }) {
       },
     };
 
-    if (data.status === STATUS_CODE.UNAUTHORIZED) yield call(setError, data);
-    if (data.status === STATUS_CODE.OK) {
+    if (data.status === STATUS_CODE_ENUM.UNAUTHORIZED)
+      yield call(setError, data);
+    if (data.status === STATUS_CODE_ENUM.OK) {
       const text = yield data.text();
       const { menus, ehProfessor, token } = yield JSON.parse(text);
 
