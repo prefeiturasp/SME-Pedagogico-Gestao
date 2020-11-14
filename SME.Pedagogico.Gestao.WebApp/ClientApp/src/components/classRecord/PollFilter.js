@@ -9,7 +9,7 @@ import { actionCreators as actionCreatorsPollRouter } from "../../store/PollRout
 import { bindActionCreators } from "redux";
 import MensagemConfirmacaoAutoral from "./SondagemPortuguesAutoral/mensagemConfirmacaoAutoral";
 import permissoes from "../../utils/permissoes";
-import { createTrue } from "typescript";
+import { ROUTES_ENUM } from "../../Enums";
 
 class PollFilter extends Component {
   constructor(props) {
@@ -264,29 +264,16 @@ class PollFilter extends Component {
   }
 
   checkDisabledButton() {
-    if (this.props.reports) {
-      if (
-        this.state.classroom === null ||
-        !this.state.classroom ||
-        this.state.classroom === ""
-      )
-        return false;
+    const {
+      pollRouter: { activeRoute },
+      user: { ehProfessor },
+    } = this.props;
+    const { classroom, selectedClassRoom } = this.state;
 
-      return this.props.user.ehProfessor
-        ? this.props.filters.listDisciplines.length > 0
-        : true;
-    } else {
-      if (!this.props.user.ehProfessor) {
-        if (
-          this.props.filters.activeDreCode !== null &&
-          this.props.filters.activeSchollsCode !== null &&
-          this.props.filters.activeClassRoomCode !== null
-        )
-          return true;
-        else return false;
-      } else if (this.props.filters.activeClassRoomCode !== null) return true;
-      else return false;
+    if (activeRoute === ROUTES_ENUM.RELATORIOS) {
+      return ehProfessor ? selectedClassRoom : classroom;
     }
+    return selectedClassRoom;
   }
 
   render() {

@@ -68,7 +68,7 @@ class PollReportFilter extends Component {
   mostrarDisciplina = (disciplina, disciplinaCurta) => {
     const { listDisciplines } = this.props.filters;
 
-    if (listDisciplines) {
+    if (listDisciplines.length) {
       const existDisciplina = verificarDisciplina(
         listDisciplines,
         disciplina.Descricao
@@ -296,7 +296,14 @@ class PollReportFilter extends Component {
             onClick={this.setSelectedFilter}
             disabled={this.checkButton()}
           >
-            Buscar
+            {this.props.pollReport.loadingSearchPollReport ? (
+              <div
+                className="spinner-border spinner-border-sm"
+                style={{ marginLeft: 13.5, marginRight: 13.5 }}
+              ></div>
+            ) : (
+              "Buscar"
+            )}
           </button>
         </div>
       </div>

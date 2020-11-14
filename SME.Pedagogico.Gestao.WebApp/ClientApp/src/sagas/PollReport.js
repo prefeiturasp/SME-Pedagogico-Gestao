@@ -1,6 +1,7 @@
 ﻿import { takeLatest, call, put, all, select } from "redux-saga/effects";
 import * as PollReport from "../store/PollReport";
 import { STATUS_CODE_ENUM } from "../Enums";
+import { types } from "../store/Filters";
 
 export default function* () {
   yield all([
@@ -11,6 +12,10 @@ export default function* () {
 
 function* GetPollReportSaga({ parameters }) {
   try {
+    yield put({
+      type: PollReport.types.SET_LOADING_SEARCH_POLL_REPORT,
+      loadingSearchPollReport: true,
+    });
     const data = yield call(getPollReportData, parameters);
 
     if (data.status === 401)
@@ -60,9 +65,13 @@ function* GetPollReportSaga({ parameters }) {
     yield put({ type: PollReport.types.SHOW_POLL_REPORT_REQUEST });
   } catch (error) {
     yield put({ type: PollReport.types.POLL_REPORT_API_REQUEST_FAIL });
+  } finally {
+    yield put({
+      type: PollReport.types.SET_LOADING_SEARCH_POLL_REPORT,
+      loadingSearchPollReport: false,
+    });
   }
 }
-
 function getPollReportData(parameters) {
   return fetch("/api/RelatorioSondagem/ObterDados", {
     method: "post",
