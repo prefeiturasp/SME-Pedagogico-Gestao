@@ -406,7 +406,7 @@ class PollFilter extends Component {
       }
 
       if (selectedDre === "todas" || (schoolAll && !yearClassrooms.length)) {
-        const listYearClassrooms = [1, 2, 3, 4, 5, 6];
+        const listYearClassrooms = [1, 2, 3, 4, 5, 6, 7, 8, 9];
         for (let item in listYearClassrooms) {
           yearClassrooms.push({
             value: listYearClassrooms[item],
