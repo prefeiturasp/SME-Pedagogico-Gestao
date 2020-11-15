@@ -22,13 +22,7 @@ const ChangeProfileButton = (props) => {
 };
 
 class SelectProfile extends Component {
-  constructor() {
-    super();
-
-    this.selectRole = this.selectRole.bind(this);
-  }
-
-  selectRole(event) {
+  selectProfile = (event) => {
     const nomePerfil = event.target.innerText;
     const { user, setProfile, history } = this.props;
     const perfilSelecionado = user.perfil.perfis.find(
@@ -36,7 +30,7 @@ class SelectProfile extends Component {
     );
 
     setProfile(perfilSelecionado, history);
-  }
+  };
 
   render() {
     const {
@@ -61,7 +55,7 @@ class SelectProfile extends Component {
                 key={item.codigoPerfil}
                 profileName={item.nomePerfil}
                 roleId={item.codigoPerfil}
-                onClick={this.selectRole}
+                onClick={this.selectProfile}
               />
             ))
           )}

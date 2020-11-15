@@ -87,6 +87,7 @@ function* SetProfileSaga({ perfilSelecionado, history }) {
     const { token: oldToken } = user;
     const { perfis } = user.perfil;
     const { codigoPerfil: perfil } = perfilSelecionado;
+    let url = "/";
 
     const data = yield call(
       fetch,
@@ -111,6 +112,8 @@ function* SetProfileSaga({ perfilSelecionado, history }) {
       const text = yield data.text();
       const { menus, ehProfessor, token } = yield JSON.parse(text);
 
+      if (!ehProfessor) url = "/Relatorios/Sondagem";
+
       newUser.ehProfessor = ehProfessor;
       newUser.token = token;
       newUser.permissoes.podeConsultar = menus[0].podeConsultar;
@@ -118,7 +121,7 @@ function* SetProfileSaga({ perfilSelecionado, history }) {
 
     yield put({ type: "SET_USER", user: newUser });
 
-    history.push(user.redirectUrl);
+    history.push(url);
   } catch (error) {
     yield put({ type: types.LOGOUT_USER });
     yield put({ type: "API_CALL_ERROR" });
