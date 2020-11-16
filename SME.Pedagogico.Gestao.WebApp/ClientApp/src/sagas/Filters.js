@@ -176,7 +176,6 @@ function getDresAPI(token, anoLetivo) {
   return fetch(`/api/Filtros/ListarDres?anoLetivo=${anoLetivo}`, {
     method: "get",
     headers: { "Content-Type": "application/json", token },
-    //body: JSON.stringify(credential)
   }).then((response) => response.json());
 }
 

@@ -7,9 +7,6 @@ import CheckBox from './checkbox';
 
 function Aluno({ aluno, perguntas, periodo, idOrdemSelecionada, grupoSelecionado }) {
     const dispatch = useDispatch();
-
-    // const ehRadioButton = useMemo(() => grupoSelecionado === "6a3d323a-2c44-4052-ba68-13a8dead299a")
-
     const periodosAbertura = useSelector(store => store.filters.period);
     
     const verificarPeriodoAberto = (bimestre) => {
@@ -36,11 +33,9 @@ function Aluno({ aluno, perguntas, periodo, idOrdemSelecionada, grupoSelecionado
             default:
                 return true;
         }
-    }, [periodo])
+    }, [periodo.id, verificarPeriodoAberto])
 
     const onChange = (respostaId, perguntaId) => {
-
-        console.log(idOrdemSelecionada);
         dispatch(PortuguesStore.inserir_sequencia_ordem(idOrdemSelecionada));
 
         const dadosSalvar = {

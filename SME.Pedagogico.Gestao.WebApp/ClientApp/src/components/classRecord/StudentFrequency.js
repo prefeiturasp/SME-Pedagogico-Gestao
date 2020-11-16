@@ -3,7 +3,6 @@ import CheckInline from '../inputs/CheckInline'
 
 export default class StudentFrequency extends Component {
     render() {
-        console.log(this.props.disabled, this.props.numberLessons)
         return (
             <tr>
                 <td className="text-center align-middle" scope="row">

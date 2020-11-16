@@ -8,7 +8,6 @@ export const types = {
   ATUALIZAR_RESPOSTA: "ATUALIZAR_RESPOSTA",
   SETAR_BIMESTRES: "SETAR_BIMESTRES",
   SETAR_ALUNOS_PORTUGUES: "SETAR_ALUNOS_PORTUGUES",
-  //
   LISTAR_GRUPOS: "LISTAR_GRUPOS",
   LISTAR_COMPONENTE_CURRICULAR: "LISTAR_COMPONENTE_CURRICULAR",
   LISTAR_BIMESTRES: "LISTAR_BIMESTRES",
@@ -203,13 +202,8 @@ export const reducer = (state, action) => {
         return { ...state, sequenciaOrdens: sequenciaOrdem, ordemSelecionada: action.payload, emEdicao: true };
       }
 
-      for (let i = 0; i < 3; i++) {        
-        console.log(i + 1);
-
+      for (let i = 0; i < 3; i++) { 
         const ordemIndex = sequenciaOrdem.findIndex(x => x.sequenciaOrdemSalva === i + 1)
-
-        console.log(ordemIndex);
-
         if (ordemIndex > -1)
           continue;
 

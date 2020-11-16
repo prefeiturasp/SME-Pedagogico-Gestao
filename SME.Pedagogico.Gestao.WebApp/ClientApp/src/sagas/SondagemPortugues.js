@@ -99,7 +99,6 @@ function listarBimestresAPI() {
 function* ListarPerguntas({ payload }) {
     try {
         const data = yield call(listaPerguntasAPI, payload);
-        console.log("data", data);
         yield put({ type: Autoral.types.SETAR_PERGUNTAS, payload: data });
     } catch (error) {
         yield put({ type: "API_CALL_ERROR_PERGUNTAS" });
@@ -112,7 +111,7 @@ function listaPerguntasAPI({ sequenciaOrdem, grupoId }) {
         method: "get",
         headers: { "Content-Type": "application/json" },
     }).then((response) => response.json())
-        .catch((error) => console.log(error));
+        .catch((error) => {});
 }
 
 

@@ -31,7 +31,6 @@ import SondagemMatematicaAutoral from "./SondagemMatematicaAutoral";
 import SondagemPortuguesAutoral from "./SondagemPortuguesAutoral";
 
 import TwoStepsSave from "../messaging/TwoStepsSave";
-// import TwoSteps from "../messaging/TwoSteps";
 import MensagemConfirmacaoAutoral from "./SondagemPortuguesAutoral/mensagemConfirmacaoAutoral";
 import Loader from "../loader/Loader";
 import { verificarDisciplina } from "../../utils";
@@ -71,13 +70,6 @@ class Poll extends Component {
     ); //para botao portugues
     this.toggleMessageMathBox = this.toggleMessageMathBox.bind(this); //para botao matematica
   }
-
-  // componentWillMount() {
-  //   var todayDate = new Date();
-  //   if (this.props.filter !== undefined) {
-  //     var period = this.props.filter.period;
-  //   }
-  // }
 
   toggleMessageBox() {
     this.setState({
@@ -204,7 +196,6 @@ class Poll extends Component {
 
   componentRender() {
     var componentRender;
-    // var sondagemType = this.props.poll.pollSelected;
 
     if (this.props.poll.pollSelected === ClassRoomEnum.ClassPTAutoral) {
       componentRender = <SondagemPortuguesAutoral />;
@@ -705,8 +696,6 @@ class Poll extends Component {
         perguntaId: itemSelecionado && itemSelecionado.id,
       };
 
-      console.log(filtroSalvar);
-
       this.props.poll.onClickButtonSave(
         this.props.autoral.listaAlunosAutoralMatematica,
         this.props.autoral.listaPerguntas,
@@ -757,14 +746,14 @@ class Poll extends Component {
 
     if (
       this.props.pollStudents &&
-      this.props.pollStudents.pollSelected == ClassRoomEnum.ClassMTAutoral
+      this.props.pollStudents.pollSelected === ClassRoomEnum.ClassMTAutoral
     ) {
       this.props.autoralMethods.salvaSondagemAutoralMatematica(
         this.props.autoral.listaAlunosAutoralMatematica
       );
     } else if (
       this.props.pollStudents &&
-      this.props.pollStudents.pollSelected == ClassRoomEnum.ClassPTAutoral
+      this.props.pollStudents.pollSelected === ClassRoomEnum.ClassPTAutoral
     ) {
     } else if (this.props.poll.pollSelected !== null) {
       if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
@@ -787,8 +776,6 @@ class Poll extends Component {
         }
       }
       this.props.dataMethods.reset_new_data_state();
-    } else {
-      //alert(this.props.poll.pollSelected);
     }
   }
 
@@ -799,7 +786,6 @@ class Poll extends Component {
   }
 
   openPortuguesePoll() {
-    //this.toggleButton(element.currentTarget.id);//portugues-tab
     this.props.dataMethods.reset_new_data_state();
     this.toggleButton("portugues-tab");
     var classRoomMock = this.props.poll.selectedFilter;
@@ -823,7 +809,6 @@ class Poll extends Component {
   }
 
   openMathPoll() {
-    //this.toggleButton(element.currentTarget.id);
     this.props.dataMethods.reset_new_data_state();
     this.toggleButton("matematica-tab");
     var classRoomMock = this.props.poll.selectedFilter;
@@ -864,9 +849,6 @@ class Poll extends Component {
 
   checkButtonPortuguese() {
     var btn;
-    // if (this.restricaoDisciplina(DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES))
-    //   return btn;
-
     const { listDisciplines } = this.props.filters;
     const existDisciplina = verificarDisciplina(
       listDisciplines,
@@ -935,10 +917,6 @@ class Poll extends Component {
 
   checkButtonMath() {
     var btn;
-
-    // if (this.restricaoDisciplina(DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA))
-    //   return btn;
-
     const { listDisciplines } = this.props.filters;
     const existDisciplina = verificarDisciplina(
       listDisciplines,
@@ -982,7 +960,6 @@ class Poll extends Component {
     var btn;
     if (
       this.props.poll.selectedFilter.yearClassroom !== null &&
-      //parseInt(this.props.poll.selectedFilter.yearClassroom) < 7 &&
       this.props.poll.selectedFilter.yearClassroom !== undefined
     ) {
       btn = (
@@ -1012,7 +989,6 @@ class Poll extends Component {
     if (
       this.props.poll.selectedFilter.yearClassroom !== null &&
       this.props.poll.selectedFilter.classroomCodeEol !== "" &&
-      // parseInt(this.props.poll.selectedFilter.yearClassroom) < 7 &&
       this.props.poll.selectedFilter.yearClassroom !== undefined
     ) {
       return "false";
@@ -1020,19 +996,6 @@ class Poll extends Component {
       return "true";
     }
   }
-
-  // restricaoDisciplina(disciplina) {
-  //   return (
-  //     this.props.user.ehProfessor &&
-  //     !DISCIPLINES_ENUM.PossuiDisciplinaRegencia(
-  //       this.props.filters.listDisciplines
-  //     ) &&
-  //     !DISCIPLINES_ENUM.PossuiDisciplina(
-  //       disciplina,
-  //       this.props.filters.listDisciplines
-  //     )
-  //   );
-  // }
 
   render() {
     return (
