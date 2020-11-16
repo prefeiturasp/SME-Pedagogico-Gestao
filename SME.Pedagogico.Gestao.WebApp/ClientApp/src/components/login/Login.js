@@ -1,8 +1,10 @@
 ﻿import React, { useCallback, useEffect, useState } from "react";
-import "./Login.css";
 import { useDispatch, useSelector } from "react-redux";
-import { actionCreators } from "../../store/User";
 import { withRouter } from "react-router";
+
+import { actionCreators } from "../../store/User";
+
+import "./Login.css";
 
 const Login = ({ history }) => {
   const [state, setState] = useState({
