@@ -99,8 +99,6 @@ class PollFilter extends Component {
     ) {
       this.SelectedClassRoom(0);
     }
-
-    console.log("state ------------>", this.state);
   }
 
   applyRole(ano) {

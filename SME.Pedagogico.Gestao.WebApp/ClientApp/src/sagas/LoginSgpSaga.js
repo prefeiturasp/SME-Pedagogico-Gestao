@@ -73,6 +73,26 @@ function* setErrorSgp(data) {
   throw new Error(msgError);
 }
 
+function* GetUrlSgp({ history }) {
+  try {
+    const data = yield call(fetch, "/../../configuracoes/variaveis.json");
+
+    if (data.status === STATUS_CODE_ENUM.OK) {
+      const text = yield data.text();
+      const { URL_SGP } = yield JSON.parse(text);
+      yield put({ type: types.SET_URL_SGP, urlSgp: URL_SGP });
+    }
+  } catch (error) {
+    yield put({ type: types.LOGOUT_USER });
+    history.push("Login?redirect=/Relatorios/Sondagem");
+    const msgError = "Erro interno. Tente novamente.";
+    yield put({ type: types.SET_ERROR, msgError });
+  }
+}
+
 export default function* () {
-  yield all([takeLatest(types.VALIDATE_PROFILES_TOKEN, ValidateProfilesSaga)]);
+  yield all([
+    takeLatest(types.VALIDATE_PROFILES_TOKEN, ValidateProfilesSaga),
+    takeLatest(types.GET_URL_SGP, GetUrlSgp),
+  ]);
 }

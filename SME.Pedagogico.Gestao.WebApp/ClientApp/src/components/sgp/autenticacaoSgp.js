@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import createGuest from "cross-domain-storage/guest";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import { actionCreators } from "../../store/User";
@@ -8,14 +8,24 @@ import { actionCreators } from "../../store/User";
 import { CustomLoader } from "./autenticacaoSgp.css";
 
 const AutenticacaoSgp = ({ history }) => {
+  const { urlSgp } = useSelector((store) => store.user);
+
   const dispatch = useDispatch();
-  const validateProfilesToken = (payload) =>
-    dispatch(actionCreators.validateProfilesToken(payload));
+  const validateProfilesToken = useCallback(
+    (payload) => dispatch(actionCreators.validateProfilesToken(payload)),
+    [dispatch]
+  );
+  const getUrlSgp = useCallback(
+    (payload) => dispatch(actionCreators.getUrlSgp(payload)),
+    [dispatch]
+  );
 
   useEffect(() => {
-    const crossDomainStorage = createGuest(
-      "http://localhost:3000/accessStorage"
-    );
+    getUrlSgp(history);
+  }, [getUrlSgp, history]);
+
+  useEffect(() => {
+    const crossDomainStorage = createGuest(urlSgp);
 
     crossDomainStorage.get("persist:sme-sgp", (e, value) => {
       if (value) {
@@ -29,7 +39,7 @@ const AutenticacaoSgp = ({ history }) => {
         });
       }
     });
-  }, []);
+  }, [history, urlSgp, validateProfilesToken]);
 
   return (
     <CustomLoader loading={true}>
