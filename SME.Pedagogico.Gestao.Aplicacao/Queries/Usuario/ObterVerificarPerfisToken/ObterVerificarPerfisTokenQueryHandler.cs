@@ -22,7 +22,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
 
             var listaPerfis = await mediator.Send(new ObterVerificarPerfisDoUsuarioLoginQuery(loginRF, request.Perfis));
             
-            if (listaPerfis.Perfis.Any() )
+            if (listaPerfis.Perfis.Any())
             {
                 var retornoTokenPerfilUnico =  await mediator.Send(new AtualizarPerfilCommand(listaPerfis.Perfis.FirstOrDefault().CodigoPerfil.ToString()));
                 listaPerfis.Token = retornoTokenPerfilUnico.Token;
