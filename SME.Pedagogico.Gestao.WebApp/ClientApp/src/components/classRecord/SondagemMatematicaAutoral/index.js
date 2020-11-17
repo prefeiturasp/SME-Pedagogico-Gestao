@@ -1,4 +1,4 @@
-﻿import React, { useState, useMemo, useEffect } from "react";
+﻿import React, { useState, useMemo, useEffect,useCallback } from "react";
 import AlunoSondagemMatematicaAutoral from "./aluno";
 import { useSelector, useDispatch } from "react-redux";
 import { actionCreators } from "../../../store/SondagemAutoral";
@@ -34,11 +34,11 @@ function SondagemMatematicaAutoral() {
     dispatch(pollStore.setDataToSaveTrue());
   };
 
-  const sairModoEdicao = () => {
+  const sairModoEdicao = useCallback(() => {
     dispatch(dataStore.reset_new_data_state());
     dispatch(pollStore.set_poll_data_saved_state());
     dispatch(actionCreators.setarEmEdicao(false));
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     if (!perguntas || perguntas.length === 0) return;
@@ -48,7 +48,7 @@ function SondagemMatematicaAutoral() {
     if (!pergunta) return;
 
     dispatch(actionCreators.setarPerguntaSelecionada(pergunta));
-  }, [indexSelecionado]);
+  }, [dispatch, indexSelecionado, perguntas]);
 
   const filtrosBusca = useMemo(() => {
     if (!filtros || !itemSelecionado) return;
@@ -112,13 +112,12 @@ function SondagemMatematicaAutoral() {
     await persistencia(alunos, perguntas, periodosLista, filtrosBusca);
   };
 
-  const persistencia = async (
+  const persistencia = useCallback(async (
     listaAlunosRedux,
     perguntasRedux,
     periodosRedux,
     filtrosBuscaPersistencia
   ) => {
-    console.log(filtrosBuscaPersistencia);
 
     let alunosMutaveis = Object.assign([], listaAlunosRedux);
 
@@ -134,7 +133,7 @@ function SondagemMatematicaAutoral() {
     }
 
     sairModoEdicao();
-  };
+  },[dispatch, sairModoEdicao]);
 
   const obterIndexAlunoAlteracao = (alunoIdState) => {
     return alunos.findIndex((x) => x.codigoAluno === alunoIdState);
@@ -196,13 +195,13 @@ function SondagemMatematicaAutoral() {
 
   useEffect(() => {
     dispatch(filterStore.verificaPeriodosMatematica());
-  }, [periodosAbertura]);
+  }, [dispatch, periodosAbertura]);
 
   useEffect(() => {
     if (!filtrosBusca || !filtrosBusca.perguntaId) return;
 
     dispatch(actionCreators.listaAlunosAutoralMatematica(filtrosBusca));
-  }, [filtrosBusca]);
+  }, [dispatch, filtrosBusca]);
 
   useEffect(() => {
     dispatch(actionCreators.listarPeriodos());
@@ -230,15 +229,11 @@ function SondagemMatematicaAutoral() {
       sairModoEdicao();
       dispatch(pollStore.setFunctionButtonSave(null));
     };
-  }, []);
+  }, [dispatch, filtros.yearClassroom, persistencia, sairModoEdicao]);
 
   useEffect(() => {
     setIndexSelecionado(primeiraOrdenacao);
-  }, [perguntas]);
-
-  // const pStyle = {
-  //   color: "#DADADA",
-  // };
+  }, [perguntas, primeiraOrdenacao]);
 
   return (
     <table

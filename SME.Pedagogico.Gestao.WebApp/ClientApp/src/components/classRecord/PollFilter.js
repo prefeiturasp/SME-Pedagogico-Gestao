@@ -1,13 +1,17 @@
 ﻿import React, { Component } from "react";
-import SelectChangeColor from "../inputs/SelectChangeColor";
-import CircleButton from "../inputs/CircleButton";
-import { connect } from "react-redux";
 import { withRouter } from "react-router";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+
 import { actionCreators as actionCreatorsPoll } from "../../store/Filters";
 import { actionCreators as actionCreatorsPoll2 } from "../../store/Poll";
-import { actionCreators as actionCreatorsPollRouter } from "../../store/PollRouter";
-import { bindActionCreators } from "redux";
+
+import SelectChangeColor from "../inputs/SelectChangeColor";
+import CircleButton from "../inputs/CircleButton";
 import MensagemConfirmacaoAutoral from "./SondagemPortuguesAutoral/mensagemConfirmacaoAutoral";
+
+import { actionCreators as actionCreatorsPollRouter } from "../../store/PollRouter";
+
 import permissoes from "../../utils/permissoes";
 import { ROUTES_ENUM } from "../../Enums";
 
@@ -187,28 +191,25 @@ class PollFilter extends Component {
   }
 
   SelectedSchool(event) {
-    var index = event.nativeEvent.target.selectedIndex;
-    var label = event.nativeEvent.target[index].value;
+    const index = event.nativeEvent.target.selectedIndex;
+    const label = event.nativeEvent.target[index].value;
+    const schoolAll = label === "todas";
 
-    if (label === "todas") {
-      this.setState({
-        schoolAll: true,
+    if (schoolAll) {
+      this.props.filterMethods.listClassRoom();
+    } else {
+      this.props.filterMethods.getClassroom({
+        schoolCodeEol: label,
+        schoolYear: this.props.filters.setSchoolYear,
       });
-      return;
     }
 
-    var classRoomFilter = {
-      schoolCodeEol: label,
-      schoolYear: this.props.filters.setSchoolYear,
-    };
-
-    this.props.filterMethods.getClassroom(classRoomFilter);
     this.setState({
       selectedSchool: label,
       selectedClassRoom: "",
       yearClassroom: null,
       classroom: "",
-      schoolAll: false,
+      schoolAll,
     });
   }
 
@@ -358,6 +359,9 @@ class PollFilter extends Component {
         selectedDre !== "todas" &&
         (filters.listClassRoom || filters.scholls.length || user.ehProfessor)
       ) {
+        if (!filters.listClassRoom) {
+          hiddenDisabled = true;
+        }
         if (this.state.classroom)
           for (let item in filters.listClassRoom) {
             if (
@@ -406,7 +410,7 @@ class PollFilter extends Component {
       }
 
       if (selectedDre === "todas" || (schoolAll && !yearClassrooms.length)) {
-        const listYearClassrooms = [1, 2, 3, 4, 5, 6];
+        const listYearClassrooms = [1, 2, 3, 4, 5, 6, 7, 8, 9];
         for (let item in listYearClassrooms) {
           yearClassrooms.push({
             value: listYearClassrooms[item],

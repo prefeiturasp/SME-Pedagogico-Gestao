@@ -22,15 +22,12 @@ import * as Data from "./Data";
 import * as SondagemAutoral from "./SondagemAutoral";
 import * as SondagemPortugues from "./SondagemPortuguesStore";
 import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage"; // defaults to localStorage for web and AsyncStorage for react-native
+import storage from "redux-persist/lib/storage"; 
 import logger from "redux-logger";
 import LoginSgpSaga from "../sagas/LoginSgpSaga";
 
 export default function configureStore(history, initialState) {
   const reducers = {
-    //Inserir reducers necessários
-    //Ex.:
-    //counter: Counter.reducer,
     user: User.reducer,
     leftMenu: LeftMenu.reducer,
     calendar: Calendar.reducer,
@@ -55,13 +52,9 @@ export default function configureStore(history, initialState) {
   };
 
   const middleware = [
-    //Inserir middlewares necessários
-    //Ex.:
-    //thunk,
     reduxSaga,
   ];
 
-  // In development, use the browser's Redux dev tools extension if installed
   const enhancers = [];
   const isDevelopment = process.env.NODE_ENV === "development";
   if (
@@ -72,7 +65,6 @@ export default function configureStore(history, initialState) {
     enhancers.push(window.__REDUX_DEVTOOLS_EXTENSION__());
   }
 
-  // Redux-logger on development
   if (isDevelopment) middleware.push(logger);
 
   const appReducer = combineReducers({

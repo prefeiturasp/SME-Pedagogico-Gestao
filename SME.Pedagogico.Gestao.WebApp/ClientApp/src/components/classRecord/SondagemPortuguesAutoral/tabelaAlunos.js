@@ -2,10 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Aluno from './aluno';
 import { actionCreators as PortuguesStore } from "../../../store/SondagemPortuguesStore";
-import MensagemConfirmacaoAutoral from './mensagemConfirmacaoAutoral';
 import MensagemLimparSelecao from './mensagemLimparSelecao';
-
-// import { Container } from './styles';
 
 function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado, salvar }) {
     const dispatch = useDispatch();
@@ -21,15 +18,13 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
     const perguntas = useSelector(store => store.sondagemPortugues.perguntas);
 
     const periodoSelecionado = useSelector(store => store.sondagemPortugues.periodoSelecionado);
-
-    const grupos = useSelector(store => store.sondagemPortugues.grupos);
-
+    
     const exibirLimparCampos = useMemo(() => {
         if (!periodoSelecionado)
             return false;
 
         return grupoSelecionado === "e27b99a3-789d-43fb-a962-7df8793622b1";
-    }, [periodoSelecionado])
+    }, [grupoSelecionado, periodoSelecionado])
 
     const sequenciaOrdens = useSelector((store) => store.sondagemPortugues.sequenciaOrdens);
 
@@ -106,7 +101,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
             return;
 
         dispatch(PortuguesStore.listarPerguntasPortugues(sequenciaOrdemAtual, grupoSelecionado));
-    }, [sequenciaOrdemAtual])
+    }, [dispatch, grupoSelecionado, sequenciaOrdemAtual])
 
     useEffect(() => {
         if (ordenacaoAtual < 0)
@@ -118,7 +113,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
         }
 
         dispatch(PortuguesStore.setar_periodo_selecionado(periodos[ordenacaoAtual]));
-    }, [ordenacaoAtual])
+    }, [dispatch, emEdicao, ordenacaoAtual, periodos, salvar])
 
     useEffect(() => {
         if (!periodoSelecionado)
@@ -128,7 +123,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
 
         dispatch(PortuguesStore.listarAlunosPortugues(filtros));
 
-    }, [periodoSelecionado])
+    }, [dispatch, filtros, periodoSelecionado])
 
     useEffect(() => {
         if (!idOrdemSelecionada && periodoSelecionado)
@@ -136,11 +131,11 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
 
         setOrdenacaoAtual(0);
         dispatch(PortuguesStore.setar_periodo_selecionado(periodos[0]));
-    }, [idOrdemSelecionada, periodos])
+    }, [dispatch, idOrdemSelecionada, periodoSelecionado, periodos])
 
     useEffect(() => {
         dispatch(PortuguesStore.listarBimestres());
-    }, [])
+    }, [dispatch])
 
     const ehPrimeiraOrdenacao = ordenacaoAtual === 0;
     const ehUltimaOrdenacao = ordenacaoAtual === ultimaOrdenacao;

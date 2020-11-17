@@ -63,9 +63,11 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 },
             };
 
+            
+
+            //Verificando se pode acessar haba SONDAGEM
             if (perfisElegiveis.Count == 1)
             {   
-            
                 var perfilCodigo = listaPerfisRetorno.FirstOrDefault().CodigoPerfil;
 
                 if (perfilCodigo == Perfis.PERFIL_AD || perfilCodigo == Perfis.PERFIL_PROFESSOR || perfilCodigo == Perfis.PERFIL_CP
@@ -73,7 +75,15 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                         podeIncluir = true;
                 menus = await mediator.Send(new ObterPermissaoMenuPorPerfilQuery(perfilCodigo));
 
-            }            
+
+                //Verificando se o usuário tem abrangencia UE com tipos definidos
+                var podeAcessarTiposDeEscola = await mediator.Send(new ObterVerificarPerfisUesTiposQuery(request.UsuarioRF, perfilCodigo));
+                
+                if (!podeAcessarTiposDeEscola)
+                    throw new NegocioException("Usuário sem permissão de acesso na Sondagem.", 401);
+
+
+            }
             return new PerfisMenusAutenticacaoDto(listaPerfisRetorno, menus);
         }
     }

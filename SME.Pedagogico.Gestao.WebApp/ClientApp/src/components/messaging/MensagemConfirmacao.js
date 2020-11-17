@@ -24,13 +24,11 @@ function MesangemConfirmacao(props) {
   const proximoPasso = () => setPasso((oldState) => (oldState > 1 ? 1 : 2));
 
   const resetarPasso = () => {
-    console.log("resetarPasso");
     controleExibicao();
     setPasso(1);
   };
 
   const onBotaoSecundarioClick = () => {
-    console.log("onBotaoSecundarioClick");
     if (acaoSecundaria) {
       acaoSecundaria().then(() => resetarPasso());
       return;
@@ -40,14 +38,12 @@ function MesangemConfirmacao(props) {
   };
 
   const onBotaoPrincipalClick = () => {
-    console.log("onBotaoPrincipalClick");
     acaoPrincial().then(() => {
       proximoPasso();
     });
   };
 
   const onBotaoFeedBackClick = () => {
-    console.log("onBotaoFeedBackClick");
     if (acaoFeedBack) {
       acaoFeedBack().then(() => resetarPasso());
       return;
@@ -59,7 +55,7 @@ function MesangemConfirmacao(props) {
     return () => {
       if (exibir) controleExibicao();
     };
-  }, []);
+  }, [controleExibicao, exibir]);
 
   return (
     <div>

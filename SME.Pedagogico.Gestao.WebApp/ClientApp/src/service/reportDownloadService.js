@@ -1,7 +1,4 @@
-﻿
-import React, { Component } from 'react';
-
-const ApiService = {
+﻿const ApiService = {
 
   urlBase: "http://hom-latexservice.sme.prefeitura.sp.gov.br/api/Recipes/",
 

@@ -10,12 +10,10 @@ namespace SME.Pedagogico.Gestao.Aplicacao
 {
     public class ObterUsuarioProfessorTemAcessoQueryHandler : IRequestHandler<ObterUsuarioProfessorTemAcessoQuery, bool>
     {
-        private readonly IHttpClientFactory httpClientFactory;
-        private readonly IMediator mediator;
-        public ObterUsuarioProfessorTemAcessoQueryHandler(IHttpClientFactory httpClientFactory, IMediator mediator)
+        private readonly IHttpClientFactory httpClientFactory;        
+        public ObterUsuarioProfessorTemAcessoQueryHandler(IHttpClientFactory httpClientFactory)
         {
-            this.httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
-            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));            
         }
         public async Task<bool> Handle(ObterUsuarioProfessorTemAcessoQuery request, CancellationToken cancellationToken)
         {
