@@ -48,8 +48,8 @@ class PollFilter extends Component {
   }
 
   componentWillMount() {
-    var anoLetivo = new Date();
-    var anoAtual = anoLetivo.getFullYear();
+    const anoLetivo = new Date();
+    const anoAtual = anoLetivo.getFullYear();
     this.setState({
       schoolYear: anoAtual,
     });
@@ -61,10 +61,46 @@ class PollFilter extends Component {
   }
 
   componentDidUpdate() {
-    const { user, history } = this.props;
+    const { user, history, filters } = this.props;
+    const {
+      selectedDre,
+      selectedSchool,
+      classroom,
+      selectedClassRoom,
+    } = this.state;
     if (!user.perfil.perfilSelecionado.nomePerfil) {
       history.push("/Usuario/TrocarPerfil");
     }
+
+    if (
+      (!selectedDre ||
+        selectedDre.indexOf(filters.listDres[0].codigoDRE) < 0) &&
+      filters.listDres.length === 1
+    ) {
+      this.SelectedDre(0);
+    }
+    if (!selectedSchool && filters.scholls.length === 1) {
+      this.SelectedSchool(0);
+    }
+    if (!selectedSchool && filters.scholls.length === 1) {
+      this.SelectedSchool(0);
+    }
+    if (
+      !classroom &&
+      filters.listClassRoom &&
+      filters.listClassRoom.length === 1
+    ) {
+      this.getClassroom(0);
+    }
+    if (
+      !selectedClassRoom &&
+      filters.listClassRoom &&
+      filters.listClassRoom.length === 1
+    ) {
+      this.SelectedClassRoom(0);
+    }
+
+    console.log("state ------------>", this.state);
   }
 
   applyRole(ano) {
@@ -126,6 +162,7 @@ class PollFilter extends Component {
       });
     }
   }
+
   selectedSchoolTeacher(event) {
     var listClassRoomTeacher = [];
 
@@ -161,15 +198,18 @@ class PollFilter extends Component {
   }
 
   SelectedDre(event) {
-    var index = event.nativeEvent.target.selectedIndex;
-    var label = event.nativeEvent.target[index].value;
+    const { filters, filterMethods } = this.props;
+    const index = event && event.nativeEvent.target.selectedIndex;
+    const label = event
+      ? event.nativeEvent.target[index].value
+      : filters.listDres[0].codigoDRE;
 
-    var schoolCode = {
+    const schoolCode = {
       dreCodeEol: label,
-      schoolYear: this.props.filters.setSchoolYear,
+      schoolYear: filters.setSchoolYear,
     };
 
-    this.props.filterMethods.getSchool(schoolCode);
+    filterMethods.getSchool(schoolCode);
     this.setState({
       selectedDre: label,
       selectedClassRoom: "",
@@ -178,8 +218,8 @@ class PollFilter extends Component {
     });
 
     if (label === "todas") {
-      this.props.filterMethods.activeClassroom("");
-      this.props.filterMethods.getClassroom({
+      filterMethods.activeClassroom("");
+      filterMethods.getClassroom({
         schoolCodeEol: "",
         schoolYear: this.props.filters.setSchoolYear,
       });
@@ -191,16 +231,20 @@ class PollFilter extends Component {
   }
 
   SelectedSchool(event) {
-    const index = event.nativeEvent.target.selectedIndex;
-    const label = event.nativeEvent.target[index].value;
+    const { filters, filterMethods } = this.props;
+    const index = event && event.nativeEvent.target.selectedIndex;
+    const label = event
+      ? event.nativeEvent.target[index].value
+      : filters.scholls[0].codigoEscola;
+
     const schoolAll = label === "todas";
 
     if (schoolAll) {
-      this.props.filterMethods.listClassRoom();
+      filterMethods.listClassRoom();
     } else {
-      this.props.filterMethods.getClassroom({
+      filterMethods.getClassroom({
         schoolCodeEol: label,
-        schoolYear: this.props.filters.setSchoolYear,
+        schoolYear: filters.setSchoolYear,
       });
     }
 
@@ -213,29 +257,38 @@ class PollFilter extends Component {
     });
   }
 
+  subString = (value) => {
+    return value.substring(0, 1);
+  };
+
   SelectedClassRoom(event) {
-    var index = event.nativeEvent.target.selectedIndex;
-    var label = event.nativeEvent.target[index].value;
+    const { filters, filterMethods } = this.props;
+    const index = event && event.nativeEvent.target.selectedIndex;
+    const label = event
+      ? event.nativeEvent.target[index].value
+      : filters.listClassRoom[0].codigoTurma;
 
-    var codeClassRoom = label;
+    filterMethods.getDisciplinesByClassroom({ codigoTurmaEol: label });
+    filterMethods.activeClassroom(label);
 
-    var disciplinesFilter = {
-      codigoTurmaEol: codeClassRoom,
-    };
-
-    this.props.filterMethods.getDisciplinesByClassroom(disciplinesFilter);
-    this.props.filterMethods.activeClassroom(codeClassRoom);
-
+    const valueString = event
+      ? event.target[index].innerText
+      : filters.listClassRoom[0].nomeTurma;
     this.setState({
-      classroom: event.target[index].innerText.substring(0, 1),
-      selectedClassRoom: codeClassRoom,
+      classroom: this.subString(valueString),
+      selectedClassRoom: label,
     });
   }
 
   getClassroom(event) {
-    this.props.filterMethods.activeClassroom("");
+    const { filters, filterMethods } = this.props;
+    const label = event
+      ? event.target.value
+      : this.subString(filters.listClassRoom[0].nomeTurma);
+
+    filterMethods.activeClassroom("");
     this.setState({
-      classroom: event.target.value,
+      classroom: label,
       selectedClassRoom: "",
     });
   }
@@ -278,7 +331,15 @@ class PollFilter extends Component {
   }
 
   render() {
-    const { selectedDre, selectedClassRoom, schoolAll } = this.state;
+    const {
+      selectedDre,
+      selectedClassRoom,
+      schoolAll,
+      selectedSchool,
+      schoolYear,
+      classroom,
+      showMessageBox,
+    } = this.state;
     let selectDre = null;
     let selectSchool = null;
     let selectClassRoom = null;
@@ -310,8 +371,6 @@ class PollFilter extends Component {
     const { filters, user } = this.props;
 
     if (filters.listDres) {
-      let SchoolSelected;
-
       selectDre = (
         <SelectChangeColor
           className="col-4"
@@ -319,6 +378,7 @@ class PollFilter extends Component {
           value={selectedDre}
           options={listDresOptions}
           onChange={this.SelectedDre}
+          activeColor={selectedDre}
         />
       );
 
@@ -346,11 +406,12 @@ class PollFilter extends Component {
         selectSchool = (
           <SelectChangeColor
             className="col-4"
-            value={SchoolSelected}
+            value={selectedSchool}
             defaultText="Escola"
             options={listSchoolOptions}
             onChange={this.SelectedSchool}
-            resetColor={SchoolSelected === "" ? true : false}
+            activeColor={selectedSchool}
+            resetColor={!selectedSchool}
           />
         );
       }
@@ -390,7 +451,8 @@ class PollFilter extends Component {
             options={listClassRoomOptions}
             disabled={hiddenDisabled}
             onChange={this.SelectedClassRoom}
-            resetColor={selectedClassRoom === "" ? true : false}
+            activeColor={selectedClassRoom}
+            resetColor={!selectedClassRoom}
           />
         );
 
@@ -399,11 +461,11 @@ class PollFilter extends Component {
           const uniques = [];
 
           for (let i = 0; i < temp.length; i++) {
-            const classroom = temp[i].nomeTurma.substring(0, 1);
+            const room = temp[i].nomeTurma.substring(0, 1);
 
-            if (uniques.indexOf(classroom) === -1) {
-              yearClassrooms.push({ label: classroom, value: classroom });
-              uniques.push(classroom);
+            if (uniques.indexOf(room) === -1) {
+              yearClassrooms.push({ label: room, value: room });
+              uniques.push(room);
             }
           }
         }
@@ -424,9 +486,10 @@ class PollFilter extends Component {
       <div className="py-2 px-3 d-flex align-items-center">
         <SelectChangeColor
           className="col-1"
-          value={this.state.schoolYear}
+          value={schoolYear}
           options={listYearsOptions}
           onChange={this.selectedSchoolYear}
+          activeColor={schoolYear}
         />
         <div className="px-2"></div>
         {selectDre}
@@ -435,12 +498,12 @@ class PollFilter extends Component {
         <div className="px-2"></div>
         <SelectChangeColor
           className="col"
-          value={this.state.classroom}
+          value={classroom}
           defaultText="Ano"
           options={yearClassrooms}
           onChange={this.getClassroom}
-          activeColor={this.state.classroom === "" ? false : true}
-          resetColor={this.state.classroom === "" ? true : false}
+          activeColor={classroom}
+          resetColor={!classroom}
         />
         <div className="px-2"></div>
         {selectClassRoom}
@@ -460,7 +523,7 @@ class PollFilter extends Component {
           acaoSecundaria={async () => {
             this.setSelectedFilter();
           }}
-          exibir={this.state.showMessageBox}
+          exibir={showMessageBox}
         />
       </div>
     );
