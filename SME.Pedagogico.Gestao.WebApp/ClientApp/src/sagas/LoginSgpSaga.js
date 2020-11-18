@@ -73,14 +73,17 @@ function* setErrorSgp(data) {
   throw new Error(msgError);
 }
 
-function* GetUrlSgp({ history }) {
+function* GetUrlFrontSgp({ history }) {
   try {
     const data = yield call(fetch, "/../../configuracoes/variaveis.json");
 
     if (data.status === STATUS_CODE_ENUM.OK) {
       const text = yield data.text();
-      const { URL_SGP } = yield JSON.parse(text);
-      yield put({ type: types.SET_URL_SGP, urlSgp: URL_SGP });
+      const { URL_FRONT_SGP } = yield JSON.parse(text);
+      yield put({
+        type: types.SET_URL_FRONT_SGP,
+        urlFrontSgp: `${URL_FRONT_SGP}/accessStorage`,
+      });
     }
   } catch (error) {
     yield put({ type: types.LOGOUT_USER });
@@ -93,6 +96,6 @@ function* GetUrlSgp({ history }) {
 export default function* () {
   yield all([
     takeLatest(types.VALIDATE_PROFILES_TOKEN, ValidateProfilesSaga),
-    takeLatest(types.GET_URL_SGP, GetUrlSgp),
+    takeLatest(types.GET_URL_FRONT_SGP, GetUrlFrontSgp),
   ]);
 }

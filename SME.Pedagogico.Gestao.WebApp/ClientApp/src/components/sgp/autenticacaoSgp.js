@@ -8,24 +8,24 @@ import { actionCreators } from "../../store/User";
 import { CustomLoader } from "./autenticacaoSgp.css";
 
 const AutenticacaoSgp = ({ history }) => {
-  const { urlSgp } = useSelector((store) => store.user);
+  const { urlFrontSgp } = useSelector((store) => store.user);
 
   const dispatch = useDispatch();
   const validateProfilesToken = useCallback(
     (payload) => dispatch(actionCreators.validateProfilesToken(payload)),
     [dispatch]
   );
-  const getUrlSgp = useCallback(
-    (payload) => dispatch(actionCreators.getUrlSgp(payload)),
+  const getUrlFrontSgp = useCallback(
+    (payload) => dispatch(actionCreators.getUrlFrontSgp(payload)),
     [dispatch]
   );
 
   useEffect(() => {
-    getUrlSgp(history);
-  }, [getUrlSgp, history]);
+    getUrlFrontSgp(history);
+  }, [getUrlFrontSgp, history]);
 
   useEffect(() => {
-    const crossDomainStorage = createGuest(urlSgp);
+    const crossDomainStorage = createGuest(urlFrontSgp);
 
     crossDomainStorage.get("persist:sme-sgp", (e, value) => {
       if (value) {
@@ -39,7 +39,7 @@ const AutenticacaoSgp = ({ history }) => {
         });
       }
     });
-  }, [history, urlSgp, validateProfilesToken]);
+  }, [history, urlFrontSgp, validateProfilesToken]);
 
   return (
     <CustomLoader loading={true}>

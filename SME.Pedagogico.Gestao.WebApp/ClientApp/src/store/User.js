@@ -13,8 +13,8 @@
   VALIDATE_PROFILES_TOKEN: "VALIDATE_PROFILES_TOKEN",
   SET_LOADING_PROFILE: "SET_LOADING_PROFILE",
   SET_ERROR: "SET_ERROR",
-  GET_URL_SGP: "GET_URL_SGP",
-  SET_URL_SGP: "SET_URL_SGP",
+  GET_URL_FRONT_SGP: "GET_URL_FRONT_SGP",
+  SET_URL_FRONT_SGP: "SET_URL_FRONT_SGP",
 };
 const initialState = {
   name: null,
@@ -33,7 +33,7 @@ const initialState = {
   redirectUrl: null,
   isLoadingProfile: false,
   msgError: "",
-  urlSgp: "",
+  urlFrontSgp: "",
 };
 
 export const actionCreators = {
@@ -68,13 +68,13 @@ export const actionCreators = {
     type: types.SET_ERROR,
     msgError,
   }),
-  getUrlSgp: (history) => ({
-    type: types.GET_URL_SGP,
+  getUrlFrontSgp: (history) => ({
+    type: types.GET_URL_FRONT_SGP,
     history,
   }),
-  setUrlSgp: (urlSgp) => ({
-    type: types.SET_URL_SGP,
-    urlSgp,
+  setUrlFrontSgp: (urlFrontSgp) => ({
+    type: types.SET_URL_FRONT_SGP,
+    urlFrontSgp,
   }),
 };
 
@@ -128,10 +128,10 @@ export const reducer = (state, action) => {
         ...state,
         msgError: action.msgError,
       };
-    case types.SET_URL_SGP:
+    case types.SET_URL_FRONT_SGP:
       return {
         ...state,
-        urlSgp: action.urlSgp,
+        urlFrontSgp: action.urlFrontSgp,
       };
     default:
       return state;
