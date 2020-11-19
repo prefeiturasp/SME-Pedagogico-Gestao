@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import echarts from 'echarts';
+import echarts from "echarts";
 import { montarCampoToolTipGrafico } from "../../utils/utils";
 
-const GraficoPorTurmaProducaoTexto = (props) => {
-  const { dados } = props;
+function Grafico(props) {
+  const { dados, id } = props;
 
   useEffect(() => construirGrafico(), [dados]);
 
@@ -13,9 +13,7 @@ const GraficoPorTurmaProducaoTexto = (props) => {
   };
 
   const construirGrafico = () => {
-    const myChart = echarts.init(
-      document.getElementById(`grafico-producao-texto`)
-    );
+    const myChart = echarts.init(document.getElementById(id));
 
     const dadosLabel = [];
     const dadosValores = [];
@@ -72,14 +70,11 @@ const GraficoPorTurmaProducaoTexto = (props) => {
         style={{ position: "relative", top: -35 }}
       >
         <div>
-          <div
-            id={`grafico-producao-texto`}
-            style={{ height: 400, width: 1024 }}
-          ></div>
+          <div id={id} style={{ height: 400, width: 1024 }}></div>
         </div>
       </div>
     </div>
   );
-};
+}
 
-export default GraficoPorTurmaProducaoTexto;
+export default Grafico;

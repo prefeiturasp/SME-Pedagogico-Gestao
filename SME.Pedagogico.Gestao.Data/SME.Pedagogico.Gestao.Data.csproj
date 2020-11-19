@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SME.Pedagogico.Gestao.Infra\SME.Pedagogico.Gestao.Infra.csproj" />
     <ProjectReference Include="..\SME.Pedagogico.Gestao.Models\SME.Pedagogico.Gestao.Models.csproj" />
   </ItemGroup>
 

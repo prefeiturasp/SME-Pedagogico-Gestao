@@ -9,6 +9,7 @@ using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
+using SME.Pedagogico.Gestao.Infra;
 using SME.Pedagogico.Gestao.Models.Autoral;
 using System;
 using System.Collections.Generic;
@@ -131,7 +132,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             if (alunos == null || !alunos.Any())
                 throw new Exception("Não encontrado alunos para a turma informda");
-            
+
             return alunos;
         }
 
@@ -249,7 +250,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 grupo = await contexto.Grupo.FirstOrDefaultAsync(x => x.Id == filtroRelatorioSondagem.GrupoId);
 
-                perguntas = await contexto.OrdemPergunta.Include(x => x.Pergunta).Where(x => x.GrupoId.Equals(filtroRelatorioSondagem.GrupoId)).Select(x => x.Pergunta).ToListAsync();
+                perguntas = await contexto.OrdemPergunta.Include(x => x.Pergunta).Where(x => x.GrupoId.Equals(filtroRelatorioSondagem.GrupoId)).OrderBy(p => p.OrdenacaoNaTela).Select(x => x.Pergunta).ToListAsync();
             }
 
             if (grupo == null)
@@ -263,6 +264,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 throw new Exception("Não foi possivel obter os alunos ativos para o filtro especificado");
 
             relatorio.Totais = new RelatorioPortuguesTotalizadores { Quantidade = quantidade };
+            if (filtroRelatorioSondagem.GrupoId != GrupoEnum.ProducaoTexto.Name())
+                relatorio.Totais.Porcentagem = 100;
 
             var listaRetorno = new List<RelatorioPortuguesPerguntasDto>();
 
@@ -274,17 +277,33 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 relatorio.Perguntas = listaRetorno;
 
+                MapearGrafico(grupo, relatorio);
+
                 return relatorio;
             }
-
-            if (filtroRelatorioSondagem.GrupoId.Equals("6a3d323a-2c44-4052-ba68-13a8dead299a"))
-                relatorio.Totais.Porcentagem = 100;
 
             PopularListaRetorno(dados, quantidade, perguntas, listaRetorno);
 
             relatorio.Perguntas = listaRetorno;
 
+            MapearGrafico(grupo, relatorio);
+
             return relatorio;
+        }
+
+        private static void MapearGrafico(Grupo grupo, RelatorioAutoralLeituraProducaoDto relatorio)
+        {
+            var grafico = new Grafico
+            {
+                NomeGrafico = grupo.Descricao,
+                Barras = relatorio.Perguntas.Select(pergunta => new GraficoBarra
+                {
+                    Label = pergunta.Nome,
+                    Value = pergunta.Total.Quantidade
+                }).ToList()
+            };
+
+            relatorio.Graficos.Add(grafico);
         }
 
         private async Task<int> ObterQuantidadeAlunosAtivos(RelatorioPortuguesFiltroDto filtroRelatorioSondagem, PeriodoFixoAnual periodo)

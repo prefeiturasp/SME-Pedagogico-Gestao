@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import echarts from "echarts";
 import { montarCampoToolTipGrafico } from "../../utils/utils";
 
-const GraficoPorTurmaLeituraVozAlta = (props) => {
-  const { dados } = props;
+const GraficoMatematica = (props) => {
+  const { dados, index } = props;
 
   useEffect(() => construirGrafico(), [dados]);
 
@@ -12,10 +12,12 @@ const GraficoPorTurmaLeituraVozAlta = (props) => {
     return data.toLocaleString("pt-BR");
   };
 
+  const posicaoToolTip = (posicaoX, texto) => {
+    return texto.length > 50 ? posicaoX - 100 : posicaoX - 100;
+  };
+
   const construirGrafico = () => {
-    const myChart = echarts.init(
-      document.getElementById(`grafico-leitura-voz-alta`)
-    );
+    const myChart = echarts.init(document.getElementById(`grafico-${index}`));
 
     const dadosLabel = [];
     const dadosValores = [];
@@ -27,9 +29,12 @@ const GraficoPorTurmaLeituraVozAlta = (props) => {
 
     myChart.setOption({
       tooltip: {
+        position: function (posicao, conteudo) {
+          return [posicaoToolTip(posicao[0], conteudo.name), 300];
+        },
         formatter: function (params) {
-          var val = format(params.value);
-          return montarCampoToolTipGrafico(params.marker, params.name, val);
+          var valor = format(params.value);
+          return montarCampoToolTipGrafico(params.marker, params.name, valor);
         },
       },
       xAxis: {
@@ -58,9 +63,9 @@ const GraficoPorTurmaLeituraVozAlta = (props) => {
   };
 
   return (
-    <div className="d-flex flex-column col-12">
+    <div className="d-flex flex-column col-4">
       <div
-        className="d-flex justify-content-center align-items-center sc-gray"
+        className="d-flex flex-fill justify-content-center align-items-center sc-gray"
         style={{ height: 35 }}
       >
         <div className="sc-text-size-1 font-weight-bold">
@@ -73,8 +78,8 @@ const GraficoPorTurmaLeituraVozAlta = (props) => {
       >
         <div>
           <div
-            id={`grafico-leitura-voz-alta`}
-            style={{ height: 400, width: 1024 }}
+            id={`grafico-${index}`}
+            style={{ height: 400, width: 517 }}
           ></div>
         </div>
       </div>
@@ -82,4 +87,4 @@ const GraficoPorTurmaLeituraVozAlta = (props) => {
   );
 };
 
-export default GraficoPorTurmaLeituraVozAlta;
+export default GraficoMatematica;

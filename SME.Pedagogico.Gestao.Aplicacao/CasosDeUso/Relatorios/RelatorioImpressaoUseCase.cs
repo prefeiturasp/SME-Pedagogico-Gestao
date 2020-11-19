@@ -34,13 +34,18 @@ namespace SME.Pedagogico.Gestao.Aplicacao
 
             if (filtros.ComponenteCurricularId == ComponenteCurricularEnum.Matematica)
             {
-                if (filtros.TurmaCodigo > 0 && filtros.ProficienciaId == ProficienciaEnum.CampoAditivo || filtros.ProficienciaId == ProficienciaEnum.CampoMultiplicativo || filtros.ProficienciaId == ProficienciaEnum.Numeros)
+                if (filtros.TurmaCodigo > 0 && (filtros.ProficienciaId == ProficienciaEnum.CampoAditivo || filtros.ProficienciaId == ProficienciaEnum.CampoMultiplicativo 
+                    || filtros.ProficienciaId == ProficienciaEnum.Numeros || filtros.ProficienciaId == ProficienciaEnum.Autoral))
                 {
                     tipoRelatorio = TipoRelatorio.RelatorioMatematicaPorTurma;
                 }
                 else if (filtros.TurmaCodigo <= 0)
                 {
-                    tipoRelatorio = TipoRelatorio.RelatorioMatematicaConsolidado;
+                    if (filtros.ProficienciaId == ProficienciaEnum.CampoAditivo || filtros.ProficienciaId == ProficienciaEnum.CampoMultiplicativo)
+                    {
+                        tipoRelatorio = TipoRelatorio.RelatorioMatematicaConsolidadoAdtMult;
+                    }
+                    else tipoRelatorio = TipoRelatorio.RelatorioMatematicaConsolidado;
                 }
             }
 
@@ -48,11 +53,22 @@ namespace SME.Pedagogico.Gestao.Aplicacao
             {
                 if (filtros.TurmaCodigo > 0)
                 {
-                    tipoRelatorio = TipoRelatorio.RelatorioPortuguesPorTurma;
+                    if (!string.IsNullOrEmpty(filtros.Ano) && int.Parse(filtros.Ano) >= 4 && filtros.GrupoId.Equals("e27b99a3-789d-43fb-a962-7df8793622b1"))
+                        tipoRelatorio = TipoRelatorio.RelatorioPortuguesCapLeituraPorTurma;
+                    else
+                        tipoRelatorio = TipoRelatorio.RelatorioPortuguesPorTurma;
                 }
                 else if (filtros.TurmaCodigo <= 0)
                 {
-                    tipoRelatorio = TipoRelatorio.RelatorioPortuguesConsolidado;
+                    if (filtros.ProficienciaId == ProficienciaEnum.Escrita || filtros.ProficienciaId == ProficienciaEnum.Leitura ||
+                        filtros.GrupoId != GrupoEnum.CapacidadeLeitura.Name())
+                    {
+                        tipoRelatorio = TipoRelatorio.RelatorioPortuguesConsolidadoLeitEscProdTexto;
+                    }
+                    else
+                    {
+                        tipoRelatorio = TipoRelatorio.RelatorioPortuguesConsolidado;
+                    }
                 }
             }
 

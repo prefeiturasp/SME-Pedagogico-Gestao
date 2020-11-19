@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import echarts from 'echarts';
+import echarts from "echarts";
 import { montarCampoToolTipGrafico } from "../../utils/utils";
 
-const GraficoPorTurmaProducaoTexto = (props) => {
-  const { dados } = props;
+const GraficoCapacidadeLeitura = (props) => {
+  const { dados, index, grupo } = props;
 
   useEffect(() => construirGrafico(), [dados]);
 
@@ -14,7 +14,7 @@ const GraficoPorTurmaProducaoTexto = (props) => {
 
   const construirGrafico = () => {
     const myChart = echarts.init(
-      document.getElementById(`grafico-producao-texto`)
+      document.getElementById(`grafico-${grupo}-${index}`)
     );
 
     const dadosLabel = [];
@@ -58,14 +58,12 @@ const GraficoPorTurmaProducaoTexto = (props) => {
   };
 
   return (
-    <div className="d-flex flex-column col-12">
+    <div className="d-flex flex-column col-4">
       <div
         className="d-flex justify-content-center align-items-center sc-gray"
         style={{ height: 35 }}
       >
-        <div className="sc-text-size-1 font-weight-bold">
-          {dados.nomeGrafico}
-        </div>
+        <div className="sc-text-size-1 font-weight-bold">{dados.nomeGrafico}</div>
       </div>
       <div
         className="d-flex flex-fill justify-content-center"
@@ -73,8 +71,8 @@ const GraficoPorTurmaProducaoTexto = (props) => {
       >
         <div>
           <div
-            id={`grafico-producao-texto`}
-            style={{ height: 400, width: 1024 }}
+            id={`grafico-${grupo}-${index}`}
+            style={{ height: 400, width: 517 }}
           ></div>
         </div>
       </div>
@@ -82,4 +80,4 @@ const GraficoPorTurmaProducaoTexto = (props) => {
   );
 };
 
-export default GraficoPorTurmaProducaoTexto;
+export default GraficoCapacidadeLeitura;
