@@ -37,8 +37,7 @@ RUN cd ClientApp \
      && npm run build \ 
      && cd .. \
      && mv ClientApp/build /app/publish/ClientApp \     
-     && cp SME.Pedagogico.Gestao.WebApp.xml /app/publish/SME.Pedagogico.Gestao.WebApp.xml \
-     && mv ClientApp/docker/startup.sh /app/publish 
+     && cp SME.Pedagogico.Gestao.WebApp.xml /app/publish/SME.Pedagogico.Gestao.WebApp.xml 
 
 
 FROM base AS final
