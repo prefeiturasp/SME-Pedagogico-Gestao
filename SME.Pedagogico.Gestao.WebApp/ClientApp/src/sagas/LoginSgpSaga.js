@@ -75,14 +75,14 @@ function* setErrorSgp(data) {
 
 function* GetUrlFrontSgp({ history }) {
   try {
-    const data = yield call(fetch, "/../../configuracoes/variaveis.json");
+    const data = yield call(fetch, "/api/Variaveis/Url-Front-Sgp");
 
     if (data.status === STATUS_CODE_ENUM.OK) {
       const text = yield data.text();
-      const { URL_FRONT_SGP } = yield JSON.parse(text);
+      const url = yield JSON.parse(text);
       yield put({
         type: types.SET_URL_FRONT_SGP,
-        urlFrontSgp: `${URL_FRONT_SGP}/accessStorage`,
+        urlFrontSgp: `${url}accessStorage`,
       });
     }
   } catch (error) {

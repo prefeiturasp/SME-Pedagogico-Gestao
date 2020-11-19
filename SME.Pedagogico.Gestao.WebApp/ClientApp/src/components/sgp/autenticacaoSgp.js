@@ -19,6 +19,13 @@ const AutenticacaoSgp = ({ history }) => {
     (payload) => dispatch(actionCreators.getUrlFrontSgp(payload)),
     [dispatch]
   );
+  const setError = useCallback(
+    (payload) => dispatch(actionCreators.setError(payload)),
+    [dispatch]
+  );
+  const logout = useCallback(() => dispatch(actionCreators.logout()), [
+    dispatch,
+  ]);
 
   useEffect(() => {
     getUrlFrontSgp(history);
@@ -39,7 +46,16 @@ const AutenticacaoSgp = ({ history }) => {
         });
       }
     });
-  }, [history, urlFrontSgp, validateProfilesToken]);
+
+    const timeout = setTimeout(() => {
+      const msgError = "Erro interno. Tente novamente.";
+      logout();
+      setError(msgError);
+      history.push("Login?redirect=/Relatorios/Sondagem");
+    }, 180000);
+
+    return () => clearTimeout(timeout);
+  }, [history, logout, setError, urlFrontSgp, validateProfilesToken]);
 
   return (
     <CustomLoader loading={true}>
