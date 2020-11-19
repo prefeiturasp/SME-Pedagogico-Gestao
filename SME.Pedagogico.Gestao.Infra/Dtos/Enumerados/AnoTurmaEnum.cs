@@ -1,4 +1,4 @@
-﻿namespace SME.Pedagogico.Gestao.Data.Enums
+﻿namespace SME.Pedagogico.Gestao.Infra
 {
     public enum AnoTurmaEnum
     {

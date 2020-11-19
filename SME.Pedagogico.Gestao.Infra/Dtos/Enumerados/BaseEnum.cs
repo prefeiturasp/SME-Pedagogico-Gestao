@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace SME.Pedagogico.Gestao.Data.Enums
+namespace SME.Pedagogico.Gestao.Infra
 {
     public class BaseEnum<T, Y> where T : BaseEnum<T, Y>
     {

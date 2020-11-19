@@ -1,8 +1,7 @@
 ﻿using Newtonsoft.Json;
 using SME.Pedagogico.Gestao.Data.Business;
-using SME.Pedagogico.Gestao.Data.DTO;
-using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
+using SME.Pedagogico.Gestao.Infra;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SME.Pedagogico.Gestao.Data.Enums
+namespace SME.Pedagogico.Gestao.Infra
 {
     public class PasswordValidationMsgsEnum : BaseEnum<PasswordValidationMsgsEnum, string>
     {

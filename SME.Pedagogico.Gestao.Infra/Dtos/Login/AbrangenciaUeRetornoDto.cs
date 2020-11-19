@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP
+namespace SME.Pedagogico.Gestao.Infra
 {
     public class AbrangenciaUeRetornoDto
     {

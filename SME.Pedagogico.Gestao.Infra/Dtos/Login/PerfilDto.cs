@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP
+namespace SME.Pedagogico.Gestao.Infra
 {
     public class PerfilDto
     {

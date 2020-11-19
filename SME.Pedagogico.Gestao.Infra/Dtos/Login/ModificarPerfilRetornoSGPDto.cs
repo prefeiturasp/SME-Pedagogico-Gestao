@@ -1,6 +1,4 @@
-﻿using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace SME.Pedagogico.Gestao.Infra
 {
@@ -11,7 +9,7 @@ namespace SME.Pedagogico.Gestao.Infra
             Menus = new List<MenuPermissaoDto>();
         }
         public bool EhProfessor { get; set; }
-        
+
         public string Token { get; set; }
         public List<MenuPermissaoDto> Menus { get; set; }
 

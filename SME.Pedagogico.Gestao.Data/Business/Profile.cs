@@ -1,18 +1,14 @@
 ﻿using Microsoft.Extensions.Configuration;
-using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
+using MoreLinq;
 using SME.Pedagogico.Gestao.Data.Functionalities;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO;
+using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper.Configuration.Annotations;
-using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP;
-using Remotion.Linq.Clauses.ResultOperators;
-using Microsoft.EntityFrameworkCore;
-using MoreLinq;
 using static SME.Pedagogico.Gestao.Data.Constantes;
 
 namespace SME.Pedagogico.Gestao.Data.Business

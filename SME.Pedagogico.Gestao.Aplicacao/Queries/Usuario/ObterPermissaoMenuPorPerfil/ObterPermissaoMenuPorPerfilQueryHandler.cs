@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP;
 using SME.Pedagogico.Gestao.Dominio.Enumerados;
+using SME.Pedagogico.Gestao.Infra;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;

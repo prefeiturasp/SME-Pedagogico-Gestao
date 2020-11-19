@@ -1,9 +1,6 @@
-﻿using SME.Pedagogico.Gestao.Data.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
-namespace SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP
+namespace SME.Pedagogico.Gestao.Infra
 {
     public class PrioridadePerfilDto
     {

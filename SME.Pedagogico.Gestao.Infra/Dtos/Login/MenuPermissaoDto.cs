@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP
+namespace SME.Pedagogico.Gestao.Infra
 {
     public class MenuPermissaoDto
     {

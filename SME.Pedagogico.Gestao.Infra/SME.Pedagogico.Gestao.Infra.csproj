@@ -6,11 +6,11 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="9.2.2" />
+    <PackageReference Include="morelinq" Version="3.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SME.Pedagogico.Gestao.Data\SME.Pedagogico.Gestao.Data.csproj" />
     <ProjectReference Include="..\SME.Pedagogico.Gestao.Dominio\SME.Pedagogico.Gestao.Dominio.csproj" />
   </ItemGroup>
 

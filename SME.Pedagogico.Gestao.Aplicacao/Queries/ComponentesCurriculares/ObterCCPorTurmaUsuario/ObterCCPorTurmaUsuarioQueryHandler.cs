@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Newtonsoft.Json;
-using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP;
 using SME.Pedagogico.Gestao.Infra;
 using System;
 using System.Collections.Generic;

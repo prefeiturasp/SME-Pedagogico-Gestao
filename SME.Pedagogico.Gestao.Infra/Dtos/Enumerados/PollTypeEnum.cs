@@ -1,4 +1,4 @@
-﻿namespace SME.Pedagogico.Gestao.Data.Enums
+﻿namespace SME.Pedagogico.Gestao.Infra
 {
     /// <summary>
     /// Enum criado para trata os tipos de Sondagem de Matemática

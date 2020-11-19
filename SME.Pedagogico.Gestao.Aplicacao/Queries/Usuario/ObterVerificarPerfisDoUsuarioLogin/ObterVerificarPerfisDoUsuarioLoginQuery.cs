@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP;
 using SME.Pedagogico.Gestao.Infra;
 using System.Collections.Generic;
 
