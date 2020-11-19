@@ -11,6 +11,8 @@ RUN wget https://nodejs.org/dist/v8.17.0/node-v8.17.0-linux-x64.tar.gz \
     && ln -s /node-v8.17.0-linux-x64/bin/npm /usr/bin/npm \ 
     && ln -s /node-v8.17.0-linux-x64/bin/npx /usr/bin/npx
 
+WORKDIR /src
+
 COPY ["SME.Pedagogico.Gestao.Aplicacao/SME.Pedagogico.Gestao.Aplicacao.csproj", "/SME.Pedagogico.Gestao.Aplicacao/"]
 COPY ["SME.Pedagogico.Gestao.Data/SME.Pedagogico.Gestao.Data.csproj", "/SME.Pedagogico.Gestao.Data/"]
 COPY ["SME.Pedagogico.Gestao.Models/SME.Pedagogico.Gestao.Models.csproj", "SME.Pedagogico.Gestao.Models/"]
