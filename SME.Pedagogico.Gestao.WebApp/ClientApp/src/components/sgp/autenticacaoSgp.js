@@ -32,20 +32,22 @@ const AutenticacaoSgp = ({ history }) => {
   }, [getUrlFrontSgp, history]);
 
   useEffect(() => {
-    const crossDomainStorage = createGuest(urlFrontSgp);
+    if (urlFrontSgp) {
+      const crossDomainStorage = createGuest(urlFrontSgp);
 
-    crossDomainStorage.get("persist:sme-sgp", (e, value) => {
-      if (value) {
-        const data = JSON.parse(value);
-        const perfil = JSON.parse(data.perfil);
-        const usuario = JSON.parse(data.usuario);
-        validateProfilesToken({
-          perfil,
-          usuario,
-          history,
-        });
-      }
-    });
+      crossDomainStorage.get("persist:sme-sgp", (e, value) => {
+        if (value) {
+          const data = JSON.parse(value);
+          const perfil = JSON.parse(data.perfil);
+          const usuario = JSON.parse(data.usuario);
+          validateProfilesToken({
+            perfil,
+            usuario,
+            history,
+          });
+        }
+      });
+    }
 
     const timeout = setTimeout(() => {
       const msgError = "Erro interno. Tente novamente.";
