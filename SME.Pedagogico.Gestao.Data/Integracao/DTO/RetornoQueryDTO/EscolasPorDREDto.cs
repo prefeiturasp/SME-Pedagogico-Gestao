@@ -1,8 +1,12 @@
-﻿namespace SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO
+﻿using Newtonsoft.Json;
+
+namespace SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO
 {
     public class EscolasPorDREDTO
     {
+        
         public string CodigoEscola { get; set; }
+        
         public string NomeEscola { get; set; }
         public string CodigoDRE { get; set; }
         public string TipoEscola { get; set; }

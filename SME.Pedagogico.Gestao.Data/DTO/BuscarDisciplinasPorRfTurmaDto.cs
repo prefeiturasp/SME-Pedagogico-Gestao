@@ -2,7 +2,6 @@
 {
     public class BuscarDisciplinasPorRfTurmaDto
     {
-        public string CodigoRf { get; set; }
-        public string CodigoTurmaEol { get; set; }
+        public int CodigoTurmaEol { get; set; }
     }
 }

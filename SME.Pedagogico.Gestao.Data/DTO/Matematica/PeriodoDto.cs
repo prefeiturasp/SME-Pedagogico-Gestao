@@ -1,8 +1,4 @@
-﻿using SME.Pedagogico.Gestao.Data.Enums;
-using SME.Pedagogico.Gestao.Models.Autoral;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using SME.Pedagogico.Gestao.Models.Autoral;
 
 namespace SME.Pedagogico.Gestao.Data.DTO.Matematica
 {
@@ -11,7 +7,7 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Matematica
         public string Id { get; set; }
         public string Descricao { get; set; }
 
-        public bool  PeriodoAberto { get; set; }
+        public bool PeriodoAberto { get; set; }
 
 
         public static explicit operator PeriodoDto(Periodo periodo) =>

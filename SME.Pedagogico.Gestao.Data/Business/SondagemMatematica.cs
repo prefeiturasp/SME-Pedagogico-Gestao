@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.Contexts;
 using SME.Pedagogico.Gestao.Data.DTO;
-using SME.Pedagogico.Gestao.Data.Enums;
 using SME.Pedagogico.Gestao.Data.Functionalities;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
-using SME.Pedagogico.Gestao.Data.Relatorios;
+using SME.Pedagogico.Gestao.Infra;
 using SME.Pedagogico.Gestao.Models.Academic;
 using SME.Pedagogico.Gestao.Models.Autoral;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.Data.Business
 {
@@ -336,7 +335,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
-                quantidadeAlunoTotal  = await ObterQuantidadeAlunoTotal(anoLetivo, codigoDre, codigoEscola, anoTurmaParam, periodo, quantidadeAlunoTotal, db);
+                quantidadeAlunoTotal = await ObterQuantidadeAlunoTotal(anoLetivo, codigoDre, codigoEscola, anoTurmaParam, periodo, quantidadeAlunoTotal, db);
 
                 IQueryable<MathPoolCM> query = db.Set<MathPoolCM>();
                 var ideasAndResults = new PollReportMathItem();
@@ -670,7 +669,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             ideaResults.Add(new IdeaChartDTO() { Description = "Acertou", Quantity = ideaRetorno.CorrectIdeaQuantity });
             ideaResults.Add(new IdeaChartDTO() { Description = "Errou", Quantity = ideaRetorno.IncorrectIdeaQuantity });
             ideaResults.Add(new IdeaChartDTO() { Description = "Não Resolveu", Quantity = ideaRetorno.NotAnsweredIdeaQuantity });
-            ideaResults.Add(new IdeaChartDTO() { Description = "Sem preenchimento", Quantity =  (totalAlunos-(ideaRetorno.CorrectIdeaQuantity+ ideaRetorno.IncorrectIdeaQuantity + ideaRetorno.NotAnsweredIdeaQuantity)) });
+            ideaResults.Add(new IdeaChartDTO() { Description = "Sem preenchimento", Quantity = (totalAlunos - (ideaRetorno.CorrectIdeaQuantity + ideaRetorno.IncorrectIdeaQuantity + ideaRetorno.NotAnsweredIdeaQuantity)) });
 
             ideaChart.Order = order;
             ideaChart.Idea.AddRange(ideaResults);
@@ -761,7 +760,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         numberRetorno.NaoEscreveConvencionalmenteText = "Não escreve convencionalmente";
                     }
 
-                 
+
                 }
             }
 

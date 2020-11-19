@@ -1,8 +1,6 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { actionCreators as PortuguesStore } from "../../../store/SondagemPortuguesStore";
 import { useDispatch } from 'react-redux';
-
-// import { Container } from './styles';
 
 function RadioButtonGroup({ lista, valor, codigoAluno, bloqueado, periodoId }) {
     const dispatch = useDispatch();

@@ -10,6 +10,7 @@ using System.Linq;
 using SME.Pedagogico.Gestao.WebApp.Models;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO;
+using SME.Pedagogico.Gestao.Infra;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
@@ -51,15 +52,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 return StatusCode(500, ex);
             }
-        }
+       }
 
-        [HttpGet]
-        public async Task<ActionResult> Teste()
-        {
-            var autoral = new SondagemAutoralBusiness(_config);
-          var teste =  autoral.ObterPerguntas(2020);
-            return Ok();
-        }
 
         [HttpPost]
         public async Task<ActionResult> PerfilServidor(BuscaPerfilServidor occupationsProfile)

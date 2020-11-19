@@ -41,7 +41,7 @@ namespace SME.Pedagogico.Gestao.WebApp
                 options.Filters.Add(new FiltroExcecoesAttribute());
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-
+            services.AddHttpContextAccessor();
             RegistrarDependencias.Registrar(services);
             RegistraClientesHttp.Registrar(services, Configuration);
 

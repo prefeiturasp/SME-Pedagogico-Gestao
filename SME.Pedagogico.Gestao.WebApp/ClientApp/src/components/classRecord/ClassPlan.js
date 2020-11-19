@@ -15,8 +15,6 @@ class ClassPlan extends Component {
     constructor() {
         super();
         this.students = [];
-
-        console.log(this.props, 'xxx')
         this.state = {
             checkFrequency: false,
             disabled: false, // pegar do plano de aula se o dia da aula for maior que a data atual

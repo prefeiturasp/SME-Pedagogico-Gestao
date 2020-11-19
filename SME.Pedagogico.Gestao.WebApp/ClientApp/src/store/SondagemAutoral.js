@@ -1,5 +1,4 @@
-﻿// Store SondagemAutoral
-export const types = {
+﻿export const types = {
   LISTAR_PERIODOS: "LISTAR_PERIODOS",
   SETAR_PERIODOS: "SETAR_PERIODOS",
   LISTAR_PERGUNTAS: "LISTAR_PERGUNTAS",
