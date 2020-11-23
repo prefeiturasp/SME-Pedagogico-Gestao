@@ -301,18 +301,23 @@ class PollFilter extends Component {
   }
 
   setSelectedFilter() {
-    var selectedFilter = {
-      dreCodeEol: this.props.filters.activeDreCode,
-      schoolCodeEol: this.props.filters.activeSchollsCode,
-      classroomCodeEol: this.props.filters.activeClassRoomCode,
-      schoolYear: this.props.filters.setSchoolYear,
-      yearClassroom: this.state.classroom,
-      rfCode: this.props.user.username,
-    };
+    const { filters, user, poll2, resultClick } = this.props;
+    const { activeDreCode, activeClassRoomCode, setSchoolYear } = filters;
+    const { schoolAll, classroom: yearClassroom } = this.state;
+    const schoolCodeEol = schoolAll ? "" : this.props.filters.activeSchollsCode;
 
-    this.props.poll2.setSelectedFilter(selectedFilter);
+    poll2.setSelectedFilter({
+      dreCodeEol: activeDreCode,
+      schoolCodeEol,
+      classroomCodeEol: activeClassRoomCode,
+      schoolYear: setSchoolYear,
+      yearClassroom,
+      rfCode: user.username,
+    });
 
-    if (this.props.resultClick !== undefined) this.props.resultClick(true);
+    if (resultClick) {
+      resultClick(true);
+    }
   }
 
   checkDisabledButton() {
