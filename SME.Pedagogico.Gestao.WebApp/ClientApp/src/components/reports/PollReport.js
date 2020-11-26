@@ -154,7 +154,7 @@ class PollReport extends Component {
 
   acaoFeedBack = () => {
     this.setState({ showMessage: false });
-  }  
+  };
 
   openPollFilter(value) {
     this.setState({
@@ -346,11 +346,9 @@ class PollReport extends Component {
         case GrupoDto.CAPACIDADE_LEITURA:
           return (
             <div className="row">
-              {
-                graficos.map((dados) => {
-                 return <GraficoConsolidadoCapacidadeLeitura dados={dados} />
-                })
-              }
+              {graficos.map((dados) => {
+                return <GraficoConsolidadoCapacidadeLeitura dados={dados} />;
+              })}
             </div>
           );
         case GrupoDto.LEITURA_EM_VOZ_ALTA:
@@ -465,7 +463,7 @@ class PollReport extends Component {
                   ) : null}
 
                   <PollReportBreadcrumb className="mt-5" name="Gráfico" />
-                  {chartData && chartData.length ? (
+                  {chartData ? (
                     this.props.pollReport.selectedFilter.discipline ===
                     "Língua Portuguesa" ? (
                       Number(
