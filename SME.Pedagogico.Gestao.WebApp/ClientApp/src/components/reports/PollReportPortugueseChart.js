@@ -9,7 +9,7 @@ export default class PollReportPortugueseChart extends Component {
 
   updateChart() {
     const { data } = this.props;
-    const labels = data.map((item) => item.label);
+    const labels = data.map((item) => item.name);
     const values = data.map((item) => item.value);
 
     const echarts = require("echarts");
