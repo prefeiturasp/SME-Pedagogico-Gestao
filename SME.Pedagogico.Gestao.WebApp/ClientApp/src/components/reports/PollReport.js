@@ -474,7 +474,13 @@ class PollReport extends Component {
                           chartData
                         )
                       ) : (
-                        <PollReportPortugueseChart data={chartData} />
+                        chartData.map((dados) => {
+                          return (
+                            <div className="row">
+                              <PollReportPortugueseChart data={dados.barras} />
+                            </div>
+                          );
+                        })
                       )
                     ) : this.props.pollReport.selectedFilter.discipline ===
                         "Matemática" &&
