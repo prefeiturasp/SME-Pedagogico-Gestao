@@ -82,9 +82,6 @@ class PollFilter extends Component {
     if (!selectedSchool && filters.scholls.length === 1) {
       this.SelectedSchool(0);
     }
-    if (!selectedSchool && filters.scholls.length === 1) {
-      this.SelectedSchool(0);
-    }
     if (
       !classroom &&
       filters.listClassRoom &&
@@ -202,24 +199,25 @@ class PollFilter extends Component {
       ? event.nativeEvent.target[index].value
       : filters.listDres[0].codigoDRE;
 
-    const schoolCode = {
+    filterMethods.getSchool({
       dreCodeEol: label,
       schoolYear: filters.setSchoolYear,
-    };
+    });
 
-    filterMethods.getSchool(schoolCode);
     this.setState({
       selectedDre: label,
       selectedClassRoom: "",
       yearClassroom: null,
       classroom: "",
+      selectedSchool: "",
+      schoolAll: false,
     });
 
     if (label === "todas") {
       filterMethods.activeClassroom("");
       filterMethods.getClassroom({
         schoolCodeEol: "",
-        schoolYear: this.props.filters.setSchoolYear,
+        schoolYear: filters.setSchoolYear,
       });
     }
   }
@@ -237,21 +235,22 @@ class PollFilter extends Component {
 
     const schoolAll = label === "todas";
 
-    if (schoolAll) {
-      filterMethods.listClassRoom();
-    } else {
-      filterMethods.getClassroom({
-        schoolCodeEol: label,
-        schoolYear: filters.setSchoolYear,
-      });
-    }
-
     this.setState({
       selectedSchool: label,
       selectedClassRoom: "",
       yearClassroom: null,
       classroom: "",
       schoolAll,
+    });
+
+    if (schoolAll) {
+      filterMethods.listClassRoom();
+      return;
+    }
+
+    filterMethods.getClassroom({
+      schoolCodeEol: label,
+      schoolYear: filters.setSchoolYear,
     });
   }
 

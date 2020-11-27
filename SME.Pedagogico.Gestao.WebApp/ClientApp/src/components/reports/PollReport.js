@@ -374,7 +374,7 @@ class PollReport extends Component {
 
     return (
       <>
-        <Card className="mb-3">
+        <Card className="mb-3 mt-5">
           <PollFilter reports={true} resultClick={this.openPollFilter} />
         </Card>
 
@@ -482,13 +482,7 @@ class PollReport extends Component {
                           )
                         )
                       ) : (
-                        chartData.map((dados) => {
-                          return (
-                            <div className="row">
-                              <PollReportPortugueseChart data={dados.barras} />
-                            </div>
-                          );
-                        })
+                        <PollReportPortugueseChart data={chartData} />
                       )
                     ) : this.props.pollReport.selectedFilter.discipline ===
                         "Matemática" &&
@@ -532,7 +526,7 @@ class PollReport extends Component {
                             this.props.pollReport.selectedFilter.proficiency !==
                               "Números" &&
                             indexes.map((index) => {
-                              var chartId =
+                              const chartId =
                                 "ordem" + chartData.chartIdeaData[index].order;
 
                               return (
@@ -567,13 +561,13 @@ class PollReport extends Component {
                               "Números" &&
                             chartData !== undefined &&
                             Array.isArray(chartData) &&
-                            chartData.map((item) => {
-                              var order =
+                            chartData.map((item, index) => {
+                              const order =
                                 item.name !== null
                                   ? item.name.replace(" ", "").toLowerCase()
                                   : "";
-                              var chart1Id = order + "-ideaChart";
-                              var chart2Id = order + "-resultChart";
+                              const chart1Id = order + "-ideaChart" + index;
+                              const chart2Id = order + "-resultChart" + index;
 
                               return (
                                 <PollReportMathChartClassroom
