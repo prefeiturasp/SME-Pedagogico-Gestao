@@ -374,7 +374,7 @@ class PollReport extends Component {
 
     return (
       <>
-        <Card className="mb-3 mt-5">
+        <Card className="mb-3">
           <PollFilter reports={true} resultClick={this.openPollFilter} />
         </Card>
 
@@ -422,7 +422,8 @@ class PollReport extends Component {
                           )
                         ) : this.props.pollReport.selectedFilter.grupoId ===
                           GrupoDto.CAPACIDADE_LEITURA ? (
-                          reportData.map((dados) =>
+                          reportData &&
+                          reportData.relatorioPorOrdem.map((dados) =>
                             montarRelatorioConsolidadosAcimaDoQuartoAno(dados)
                           )
                         ) : (
@@ -447,7 +448,8 @@ class PollReport extends Component {
                         />
                       ) : (
                         reportData &&
-                        reportData.map((dados) => {
+                        reportData.perguntas &&
+                        reportData.perguntas.map((dados) => {
                           return (
                             <RelatorioMatematicaConsolidado dados={dados} />
                           );
@@ -469,9 +471,15 @@ class PollReport extends Component {
                       Number(
                         this.props.pollReport.selectedFilter &&
                           this.props.pollReport.selectedFilter.CodigoCurso
-                      ) >= 4 && this.classroomReport ? (
-                        montarGraficoPorTurmaPortuguesAcimaDoQuartoAno(
-                          chartData
+                      ) >= 4 ? (
+                        this.classroomReport ? (
+                          montarGraficoPorTurmaPortuguesAcimaDoQuartoAno(
+                            chartData
+                          )
+                        ) : (
+                          montarGraficoConsolidadosPortuguesAcimaDoQuartoAno(
+                            chartData
+                          )
                         )
                       ) : (
                         <PollReportPortugueseChart data={chartData} />
@@ -481,18 +489,25 @@ class PollReport extends Component {
                       Number(
                         this.props.pollReport.selectedFilter.CodigoCurso
                       ) >= 7 ? (
-                      this.classroomReport ? (
-                        <div className="row">
-                          {chartData.map((dados, index) => {
-                            return (
-                              <GraficoMatematicaPorTurma
-                                dados={dados}
-                                index={index}
-                              />
-                            );
-                          })}
-                        </div>
-                      ) : null
+                      <div className="row">
+                        {this.classroomReport
+                          ? chartData.map((dados, index) => {
+                              return (
+                                <GraficoMatematicaPorTurma
+                                  dados={dados}
+                                  index={index}
+                                />
+                              );
+                            })
+                          : chartData.map((dados, index) => {
+                              return (
+                                <GraficoConsolidadoMatematica
+                                  dados={dados}
+                                  index={index}
+                                />
+                              );
+                            })}
+                      </div>
                     ) : (
                       <div className="mt-4">
                         {
@@ -518,8 +533,8 @@ class PollReport extends Component {
                                 <PollReportMathChart
                                   key={chartId}
                                   chartIds={[
-                                    chartId + "idea",
-                                    chartId + "result",
+                                    chartId + "idea" + index,
+                                    chartId + "result" + index,
                                   ]}
                                   data={chartData.totals[index]}
                                 />
@@ -553,9 +568,9 @@ class PollReport extends Component {
                                   : "";
                               var chart1Id = order + "-ideaChart";
                               var chart2Id = order + "-resultChart";
+
                               return (
                                 <PollReportMathChartClassroom
-                                  key={item.name}
                                   data={item}
                                   chartIds={[chart1Id, chart2Id]}
                                   numbers={numbers}
