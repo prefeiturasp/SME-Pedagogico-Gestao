@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useMemo, useState } from "react";
 import Select from "./select";
 import { actionCreators as PortuguesStore } from "../../../store/SondagemPortuguesStore";
@@ -42,7 +43,8 @@ function SondagemPortuguesAutoral() {
       !grupoSelecionado ||
       grupoSelecionado === "" ||
       !grupos ||
-      grupos.length === 0
+      grupos.length === 0 ||
+      grupoSelecionado.indexOf("Selecione o grupo") >=0
     )
       return [];
 

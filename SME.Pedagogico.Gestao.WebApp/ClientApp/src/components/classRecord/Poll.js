@@ -130,13 +130,12 @@ class Poll extends Component {
     }
   }
 
-  
   componentWillUpdate() {
     var todayDate = new Date();
     if (this.props.filters !== undefined) {
       if (this.props.filters.period && this.props.filters.period.length) {
         var period = this.props.filters.period;
-        
+
         period.forEach((item) => {
           if (item.bimestre === 1) {
             if (
