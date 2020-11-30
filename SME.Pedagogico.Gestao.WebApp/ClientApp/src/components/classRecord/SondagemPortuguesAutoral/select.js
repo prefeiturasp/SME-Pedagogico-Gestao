@@ -22,7 +22,12 @@ function Select({
       disabled={bloqueado}
       onChange={onChange}
     >
-      <option className={"custom-select custom-select-sm"} value=""></option>
+      <option
+        className={"custom-select custom-select-sm"}
+        value="Selecione o grupo"
+      >
+        Selecione o grupo
+      </option>
       {lista &&
         lista.length &&
         lista.map((item) => {
