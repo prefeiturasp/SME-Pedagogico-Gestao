@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
+using SME.Pedagogico.Gestao.Dominio;
 
 namespace SME.Pedagogico.Gestao.Aplicacao
 {
@@ -34,7 +35,9 @@ namespace SME.Pedagogico.Gestao.Aplicacao
 
                 if (!resposta.IsSuccessStatusCode || resposta.StatusCode == HttpStatusCode.NoContent)
                 {
-                    return null;
+                    if (resposta.StatusCode == HttpStatusCode.Unauthorized)
+                        throw new NegocioException("Não autorizado", 401);
+                    else return null;
                 }
 
                 var json = await resposta.Content.ReadAsStringAsync();

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Newtonsoft.Json;
+using SME.Pedagogico.Gestao.Dominio;
 using SME.Pedagogico.Gestao.Infra;
 using System;
 using System.Collections.Generic;
@@ -41,7 +42,9 @@ namespace SME.Pedagogico.Gestao.Aplicacao
 
                     if (!resposta.IsSuccessStatusCode || resposta.StatusCode == HttpStatusCode.NoContent)
                     {
-                        return null;
+                        if (resposta.StatusCode == HttpStatusCode.Unauthorized)
+                            throw new NegocioException("Não autorizado", 401);
+                        else return null;
                     }
 
                     var json = await resposta.Content.ReadAsStringAsync();
