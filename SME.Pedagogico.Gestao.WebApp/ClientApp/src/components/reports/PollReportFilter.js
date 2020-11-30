@@ -4,7 +4,11 @@ import { connect } from "react-redux";
 import { actionCreators } from "../../store/PollReport";
 import { bindActionCreators } from "redux";
 import { actionCreators as pollStoreActionCreators } from "../../store/SondagemPortuguesStore";
-import { DISCIPLINES_ENUM } from "../../Enums";
+import {
+  DISCIPLINES_ENUM,
+  SHORT_DISCIPLINES_ENUM,
+  MATH_EXCLUDE_PROFICIENCIES_ID,
+} from "../../Enums";
 import { verificarDisciplina } from "../../utils";
 
 class PollReportFilter extends Component {
@@ -39,8 +43,14 @@ class PollReportFilter extends Component {
   componentDidMount() {
     this.props.pollReportsMethods.hidePollReport();
     this.props.sondagemPortuguesMethods.listarGrupos();
-    this.mostrarDisciplina(DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA, "math");
-    this.mostrarDisciplina(DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES, "port");
+    this.mostrarDisciplina(
+      DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA,
+      SHORT_DISCIPLINES_ENUM.MATH
+    );
+    this.mostrarDisciplina(
+      DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES,
+      SHORT_DISCIPLINES_ENUM.PORT
+    );
 
     for (let key in this.props.pollReport.filters) {
       this.initialFilter.push({
@@ -62,6 +72,13 @@ class PollReportFilter extends Component {
       this.state.selectedFilter.proficiency
     ) {
       this.limparDadosFiltro();
+    }
+    
+    const { yearClassroom } = this.props.poll.selectedFilter;
+    const { yearClassroom: prevYearClassroom } = prevProps.poll.selectedFilter;
+
+    if (prevYearClassroom !== yearClassroom) {
+      this.carregarProficiencia(this.state.campoDisciplina);
     }
   }
 
@@ -88,6 +105,83 @@ class PollReportFilter extends Component {
       selectedProficiency: "",
     });
   }
+
+  excluirProficienciaId = (ano) => {
+    switch (ano) {
+      case 1:
+        return MATH_EXCLUDE_PROFICIENCIES_ID.CAMPO_ADITIVO;
+      case 4:
+      case 5:
+      case 6:
+        return MATH_EXCLUDE_PROFICIENCIES_ID.NUMEROS;
+      case 7:
+      case 8:
+      case 9:
+        return MATH_EXCLUDE_PROFICIENCIES_ID.INEXISTENTE;
+      default:
+        return 0;
+    }
+  };
+
+  carregarProficiencia = (disciplina) => {
+    let { selectedProficiency, selectedFilter } = this.state;
+    const { pollReport, poll } = this.props;
+    const { filters } = pollReport;
+    const { yearClassroom } = poll.selectedFilter;
+    let { proficiency, discipline: prevDiscipline } = selectedFilter;
+    let term = selectedFilter.term;
+
+    const ano = Number(yearClassroom);
+    let proficiencies = disciplina && filters[disciplina].proficiencies;
+    const discipline = disciplina && filters[disciplina].name;
+    const ehMath = disciplina === SHORT_DISCIPLINES_ENUM.MATH;
+    const proficienciaId = ehMath && this.excluirProficienciaId(ano);
+
+    if (proficienciaId) {
+      const proficienciaSelecionada = proficiencies.filter(
+        (item) => item.id === proficienciaId
+      );
+
+      proficiencies = proficiencies.filter(
+        (item) => item.id !== proficienciaId
+      );
+      proficiency = proficienciaSelecionada.length
+        ? proficienciaSelecionada[0].label
+        : null;
+
+      if (proficienciaSelecionada.length) {
+        selectedProficiency =
+          selectedProficiency === proficienciaSelecionada[0].value
+            ? null
+            : selectedProficiency;
+      }
+
+      if (proficienciaId === 9 || !proficienciaSelecionada.length) {
+        selectedProficiency = null;
+      }
+    }
+
+    if (!ehMath && ano >= 4) {
+      selectedProficiency = null;
+    }
+
+    if (prevDiscipline !== discipline) {
+      selectedProficiency = null;
+      proficiency = null;
+      term = null;
+    }
+
+    this.setState({
+      proficiencies,
+      selectedProficiency,
+      selectedFilter: {
+        discipline,
+        term,
+        grupoId: selectedFilter.grupoId,
+        proficiency,
+      },
+    });
+  };
 
   initialFilterChange(event) {
     var filters = this.props.pollReport.filters;
