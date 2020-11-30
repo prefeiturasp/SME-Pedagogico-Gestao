@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useMemo, useState } from "react";
 import Select from "./select";
 import { actionCreators as PortuguesStore } from "../../../store/SondagemPortuguesStore";
