@@ -2,6 +2,7 @@
 
 import * as Filters from "../store/Filters";
 import { ROUTES_ENUM } from "../Enums";
+import { types } from "../store/User";
 
 export default function* () {
   yield all([
@@ -41,13 +42,19 @@ function* GetDres() {
     const isPollReport = activeRoute === ROUTES_ENUM.RELATORIOS;
     const todas = { codigoDRE: "todas", nomeDRE: "Todas", siglaDRE: "Todas" };
 
+    if (listDres.mensagens) {
+      throw new Error(listDres.mensagens);
+    }
+
     if (isPollReport && possuiPerfilSme) {
       listDres.unshift(todas);
     }
 
     yield put({ type: Filters.types.LIST_DRES, listDres });
   } catch (error) {
+    yield put({ type: types.LOGOUT_USER });
     yield put({ type: "API_CALL_ERROR" });
+    yield put({ type: types.SET_ERROR, msgError: error.message });
   }
 }
 
@@ -60,11 +67,18 @@ function* GetDisciplinesByClassroom({ disciplinesFilter }) {
       disciplinesFilter,
       token
     );
-    var listDisciplines = data;
+
+    if (data.mensagens) {
+      throw new Error(data.mensagens);
+    }
+
+    const listDisciplines = data;
     yield put({ type: Filters.types.LIST_DISCIPLINES, listDisciplines });
     yield put({ type: Filters.types.DISCIPLINES_FILTER, disciplinesFilter });
   } catch (error) {
+    yield put({ type: types.LOGOUT_USER });
     yield put({ type: "API_CALL_ERROR" });
+    yield put({ type: types.SET_ERROR, msgError: error.message });
   }
 }
 
@@ -94,6 +108,10 @@ function* GetSchools({ schoolCode }) {
     const isPollReport = activeRoute === ROUTES_ENUM.RELATORIOS;
     const todas = { codigoEscola: "todas", nomeEscola: "Todas" };
 
+    if (listSchool.mensagens) {
+      throw new Error(listSchool.mensagens);
+    }
+
     if (isPollReport && !ehProfessor && (possuiPerfilSme || possuiPerfilDre)) {
       listSchool.unshift(todas);
     }
@@ -101,7 +119,9 @@ function* GetSchools({ schoolCode }) {
     yield put({ type: Filters.types.LIST_SCHOOLS, listSchool });
     yield put({ type: Filters.types.ACTIVEDRECODE, schoolCode });
   } catch (error) {
+    yield put({ type: types.LOGOUT_USER });
     yield put({ type: "API_CALL_ERROR" });
+    yield put({ type: types.SET_ERROR, msgError: error.message });
   }
 }
 
@@ -113,11 +133,18 @@ function* GetClassRoom({ classRoomFilter }) {
     const data = schoolCodeEolIsEmpty
       ? yield call(getClassRoomAPI, classRoomFilter, token)
       : [];
-    var listClassRoom = data;
+
+    if (data.mensagens) {
+      throw new Error(data.mensagens);
+    }
+
+    const listClassRoom = data;
     yield put({ type: Filters.types.LIST_CLASSROOM, listClassRoom });
     yield put({ type: Filters.types.ACTIVESCHOOLCODE, classRoomFilter });
   } catch (error) {
+    yield put({ type: types.LOGOUT_USER });
     yield put({ type: "API_CALL_ERROR" });
+    yield put({ type: types.SET_ERROR, msgError: error.message });
   }
 }
 

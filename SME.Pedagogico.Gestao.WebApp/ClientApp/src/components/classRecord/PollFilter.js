@@ -384,14 +384,14 @@ class PollFilter extends Component {
         />
       );
 
-      for (let item in filters.listDres) {
+      for (let item in filters.listDres) {        
         listDresOptions.push({
           value: filters.listDres[item].codigoDRE,
           label: filters.listDres[item].nomeDRE.replace(
             "DIRETORIA REGIONAL DE EDUCACAO",
             "DRE -"
           ),
-        });
+        });        
       }
 
       if (
