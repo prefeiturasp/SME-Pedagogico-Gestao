@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { actionCreators } from "../../store/PollReport";
 import { bindActionCreators } from "redux";
 import { actionCreators as pollStoreActionCreators } from "../../store/SondagemPortuguesStore";
-import { DISCIPLINES_ENUM, SHORT_DISCIPLINES_ENUM, MATH_EXCLUDE_PROFICIENCIES_ID } from "../../Enums";
+import { DISCIPLINES_ENUM } from "../../Enums";
 import { verificarDisciplina } from "../../utils";
 
 class PollReportFilter extends Component {
@@ -25,7 +25,6 @@ class PollReportFilter extends Component {
       grupoSelecionado: null,
       selectedProficiency: null,
       selectedTerm: null,
-      campoDisciplina: "",
     };
 
     this.initialFilterChange = this.initialFilterChange.bind(this);
@@ -40,8 +39,8 @@ class PollReportFilter extends Component {
   componentDidMount() {
     this.props.pollReportsMethods.hidePollReport();
     this.props.sondagemPortuguesMethods.listarGrupos();
-    this.mostrarDisciplina(DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA, SHORT_DISCIPLINES_ENUM.MATH);
-    this.mostrarDisciplina(DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES, SHORT_DISCIPLINES_ENUM.PORT);
+    this.mostrarDisciplina(DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA, "math");
+    this.mostrarDisciplina(DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES, "port");
 
     for (let key in this.props.pollReport.filters) {
       this.initialFilter.push({
@@ -51,7 +50,7 @@ class PollReportFilter extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     if (
       this.ehMatematicaAcimaDoSetimoAnoConsolidado() &&
       (this.state.selectedFilter.proficiency ||
@@ -63,13 +62,6 @@ class PollReportFilter extends Component {
       this.state.selectedFilter.proficiency
     ) {
       this.limparDadosFiltro();
-    }
-
-    const { yearClassroom } = this.props.poll.selectedFilter;
-    const { yearClassroom: prevYearClassroom } = prevProps.poll.selectedFilter;
-
-    if(prevYearClassroom !== yearClassroom){
-      this.carregarProficiencia(this.state.campoDisciplina);
     }
   }
 
@@ -88,7 +80,7 @@ class PollReportFilter extends Component {
   };
 
   limparDadosFiltro() {
-    const novoFiltro = this.state.selectedFilter;
+    var novoFiltro = this.state.selectedFilter;
     novoFiltro.proficiency = "";
     novoFiltro.grupoId = "";
     this.setState({
@@ -97,82 +89,11 @@ class PollReportFilter extends Component {
     });
   }
 
-  excluirProficienciaId = (ano) => {
-    switch (ano) {
-      case 1:
-        return MATH_EXCLUDE_PROFICIENCIES_ID.CAMPO_ADITIVO;
-      case 4:  
-      case 5:  
-      case 6:  
-        return MATH_EXCLUDE_PROFICIENCIES_ID.NUMEROS;
-      case 7:  
-      case 8:  
-      case 9:  
-        return MATH_EXCLUDE_PROFICIENCIES_ID.INEXISTENTE;
-      default:
-        return 0;
-    }
-  }
-
-  carregarProficiencia = (disciplina) => { 
-    let { selectedProficiency, selectedFilter } = this.state;
-    const { pollReport, poll} = this.props;
-    const { filters}  = pollReport;
-    const { yearClassroom } = poll.selectedFilter;
-    let { proficiency, discipline: prevDiscipline } =  selectedFilter;
-    let term = selectedFilter.term;
-    
-    const ano = Number(yearClassroom)
-    let proficiencies = disciplina && filters[disciplina].proficiencies;
-    const discipline = disciplina && filters[disciplina].name;
-    const ehMath = disciplina === SHORT_DISCIPLINES_ENUM.MATH;    
-    const proficienciaId = ehMath && this.excluirProficienciaId(ano);
-
-    if(proficienciaId){
-      const proficienciaSelecionada = proficiencies.filter(item => item.id === proficienciaId);
-      
-      proficiencies = proficiencies.filter(item => item.id !== proficienciaId); 
-      proficiency = 
-        proficienciaSelecionada.length ? proficienciaSelecionada[0].label : null;    
-      
-      if(proficienciaSelecionada.length){
-        selectedProficiency = selectedProficiency === proficienciaSelecionada[0].value
-          ? null : selectedProficiency
-      }
-
-      if(proficienciaId === 9 || !proficienciaSelecionada.length){
-        selectedProficiency = null;
-      }
-    }
-
-    if(!ehMath && ano >= 4){
-      selectedProficiency = null;
-    }
-
-    if(prevDiscipline !== discipline){
-      selectedProficiency = null;
-      proficiency = null;
-      term = null;
-    }
-
-    this.setState({
-      proficiencies,
-      selectedProficiency,
-      selectedFilter: {
-        discipline,
-        term,
-        grupoId: selectedFilter.grupoId,
-        proficiency,
-      },
-    })
-  }
-
   initialFilterChange(event) {
-    const filters = this.props.pollReport.filters;
-    const index = event.nativeEvent.target.selectedIndex;
-    const label = event.nativeEvent.target[index].text;
-
-    const grupos = [{ value: "", label: "" }].concat(
+    var filters = this.props.pollReport.filters;
+    var index = event.nativeEvent.target.selectedIndex;
+    var label = event.nativeEvent.target[index].text;
+    var grupos = [{ value: "", label: "" }].concat(
       this.props.sondagemPortugues.grupos
     )
       ? this.props.sondagemPortugues.grupos.map((grupo) => {
@@ -182,7 +103,7 @@ class PollReportFilter extends Component {
           };
         })
       : [];
-    
+
     this.setState({
       selectedFilter: {
         discipline: label,
@@ -190,43 +111,42 @@ class PollReportFilter extends Component {
         term: null,
         grupoId: null,
       },
+      selectedProficiency: "",
       selectedTerm: "",
+      proficiencies: filters[event.target.value].proficiencies,
       grupos,
       grupoSelecionado: "",
       terms: filters[event.target.value].terms,
-      campoDisciplina: event.target.value,
     });
-
-    this.carregarProficiencia(event.target.value);
   }
 
   onChangeProficiency(event) {
-    const proficiencies = this.state.proficiencies;
-    const index = event.nativeEvent.target.selectedIndex;
-    const label = event.nativeEvent.target[index].text;
-    const selectedFilter = this.state.selectedFilter;
-    let selectedProficiency = null;
+    var proficiencies = this.state.proficiencies;
+    var index = event.nativeEvent.target.selectedIndex;
+    var label = event.nativeEvent.target[index].text;
+    var selectedFilter = this.state.selectedFilter;
+    var selectedProficiency = null;
 
-    for (let i = 0; i < proficiencies.length; i++)
+    for (var i = 0; i < proficiencies.length; i++)
       if (proficiencies[i].label === label) {
         selectedProficiency = proficiencies[i].value;
         break;
       }
 
-      this.setState({
+    this.setState({
       selectedFilter: {
         discipline: selectedFilter.discipline,
         proficiency: label,
         term: selectedFilter.term,
         grupoId: selectedFilter.grupoId,
       },
-      selectedProficiency,
+      selectedProficiency: selectedProficiency,
       grupoSelecionado: "",
     });
   }
 
   onChangeGrupo(event) {
-    const selectedFilter = this.state.selectedFilter;
+    var selectedFilter = this.state.selectedFilter;
     this.setState({
       selectedFilter: {
         discipline: selectedFilter.discipline,
@@ -239,13 +159,13 @@ class PollReportFilter extends Component {
   }
 
   onChangeTerm(event) {
-    const terms = this.state.terms;
-    const index = event.nativeEvent.target.selectedIndex;
-    const label = event.nativeEvent.target[index].text;
-    const selectedFilter = this.state.selectedFilter;
-    let selectedTerm = null;
+    var terms = this.state.terms;
+    var index = event.nativeEvent.target.selectedIndex;
+    var label = event.nativeEvent.target[index].text;
+    var selectedFilter = this.state.selectedFilter;
+    var selectedTerm = null;
 
-    for (let i = 0; i < terms.length; i++)
+    for (var i = 0; i < terms.length; i++)
       if (terms[i].label === label) {
         selectedTerm = terms[i].value;
         break;
@@ -268,7 +188,7 @@ class PollReportFilter extends Component {
       this.state.selectedFilter
     );
 
-    const parameters = this.state.selectedFilter;
+    var parameters = this.state.selectedFilter;
     parameters.classroomReport =
       this.props.poll.selectedFilter.classroomCodeEol === "" ? false : true;
     parameters.codigoDRE =
@@ -307,7 +227,7 @@ class PollReportFilter extends Component {
   }
 
   checkButton() {
-    const parameters = this.state.selectedFilter;
+    var parameters = this.state.selectedFilter;
 
     if (this.ehMatematicaAcimaDoSetimoAnoConsolidado()) {
       return !parameters.discipline || !parameters.term;
