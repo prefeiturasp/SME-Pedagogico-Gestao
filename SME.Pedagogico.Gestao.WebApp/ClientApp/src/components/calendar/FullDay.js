@@ -35,7 +35,6 @@ class FullDay extends Component {
                     overflow: 'hidden',
                 }}
                 leave={{
-                    //display: 'none',
                     height: 0,
                     overflow: 'hidden',
                 }}>

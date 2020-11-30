@@ -16,6 +16,19 @@ namespace SME.Pedagogico.Gestao.WebApp.Configuracoes
                 c.Timeout = Timeout.InfiniteTimeSpan;
             });
 
+            services.AddHttpClient(name: "apiSGP", c =>
+            {
+                c.BaseAddress = new Uri(configuration.GetSection("urlApiSgp").Value);
+                c.DefaultRequestHeaders.Add("Accept", "application/json");
+            });
+
+            services.AddHttpClient(name: "apiEOL", c =>
+            {
+                c.BaseAddress = new Uri(configuration.GetSection("urlApiEol").Value);
+                c.DefaultRequestHeaders.Add("x-api-eol-key", configuration.GetSection("API_EOL_KEY_ENV").Value);
+                c.DefaultRequestHeaders.Add("Accept", "application/json");
+            });
+
         }
     }
 }
