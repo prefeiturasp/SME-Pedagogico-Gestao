@@ -42,7 +42,8 @@ function SondagemPortuguesAutoral() {
       !grupoSelecionado ||
       grupoSelecionado === "" ||
       !grupos ||
-      grupos.length === 0
+      grupos.length === 0 ||
+      grupoSelecionado.indexOf("Selecione o grupo") >=0
     )
       return [];
 
