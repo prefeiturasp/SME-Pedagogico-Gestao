@@ -137,3 +137,14 @@ export const ROUTES_ENUM = {
   SONDAGEM: "Sondagem",
   RELATORIOS: "Relatórios",
 };
+
+export const SHORT_DISCIPLINES_ENUM = {
+  MATH: 'math',
+  PORT: 'port',
+}
+
+export const MATH_EXCLUDE_PROFICIENCIES_ID = {
+  CAMPO_ADITIVO: 2,
+  NUMEROS: 3, 
+  INEXISTENTE: 77,
+};
