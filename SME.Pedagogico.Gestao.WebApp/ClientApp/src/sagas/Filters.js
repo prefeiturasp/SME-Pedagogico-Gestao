@@ -2,7 +2,7 @@
 
 import * as Filters from "../store/Filters";
 import { types } from "../store/User";
-import { ROUTES_ENUM } from "../Enums";
+import { ROUTES_ENUM, STATUS_CODE_ENUM } from "../Enums";
 
 export default function* () {
   yield all([
@@ -102,23 +102,35 @@ function* GetSchools({ schoolCode }) {
     const ehProfessor =
       perfil.perfilSelecionado.nomePerfil.indexOf("Professor") >= 0;
     const ehTodas = schoolCode.dreCodeEol === "todas";
-    const listSchool = !ehTodas
-      ? yield call(getSchoolsAPI, schoolCode, token)
+    const data = !ehTodas
+      ? yield call(fetch, "/api/Filtros/ListarEscolasPorDre", {
+          method: "post",
+          headers: { "Content-Type": "application/json", token },
+          body: JSON.stringify(schoolCode),
+        })
       : [];
     const isPollReport = activeRoute === ROUTES_ENUM.RELATORIOS;
     const todas = { codigoEscola: "todas", nomeEscola: "Todas" };
 
-    if (listSchool.mensagens) {
-      throw new Error(listSchool.mensagens);
-    }
+    if (data.status === STATUS_CODE_ENUM.UNAUTHORIZED)
+      throw new Error(data.mensagens);
+    if (data.status === STATUS_CODE_ENUM.OK) {
+      const text = yield data.text();
+      const listSchool = yield JSON.parse(text);
 
-    if (isPollReport && !ehProfessor && (possuiPerfilSme || possuiPerfilDre)) {
-      listSchool.unshift(todas);
-    }
+      if (
+        isPollReport &&
+        !ehProfessor &&
+        (possuiPerfilSme || possuiPerfilDre)
+      ) {
+        listSchool.unshift(todas);
+      }
 
-    yield put({ type: Filters.types.LIST_SCHOOLS, listSchool });
-    yield put({ type: Filters.types.ACTIVEDRECODE, schoolCode });
+      yield put({ type: Filters.types.LIST_SCHOOLS, listSchool });
+      yield put({ type: Filters.types.ACTIVEDRECODE, schoolCode });
+    }
   } catch (error) {
+    console.log("AQUI ======>", error);
     yield put({ type: types.LOGOUT_USER });
     yield put({ type: "API_CALL_ERROR" });
     yield put({ type: types.SET_ERROR, msgError: error.message });
@@ -181,13 +193,6 @@ function getTeacherFiltersApi(profileOccupatios) {
     method: "post",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(profileOccupatios),
-  }).then((response) => response.json());
-}
-function getSchoolsAPI(schoolCode, token) {
-  return fetch("/api/Filtros/ListarEscolasPorDre", {
-    method: "post",
-    headers: { "Content-Type": "application/json", token },
-    body: JSON.stringify(schoolCode),
   }).then((response) => response.json());
 }
 
