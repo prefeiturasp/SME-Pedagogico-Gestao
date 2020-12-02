@@ -38,19 +38,31 @@ function* GetDres() {
     } = yield select();
     const { token, possuiPerfilSme } = user;
     const { setSchoolYear: anoLetivo } = filters;
-    const listDres = yield call(getDresAPI, token, anoLetivo);
+    const data = yield call(
+      fetch,
+      `/api/Filtros/ListarDres?anoLetivo=${anoLetivo}`,
+      {
+        method: "get",
+        headers: { "Content-Type": "application/json", token },
+      }
+    );
     const isPollReport = activeRoute === ROUTES_ENUM.RELATORIOS;
     const todas = { codigoDRE: "todas", nomeDRE: "Todas", siglaDRE: "Todas" };
 
-    if (listDres.mensagens) {
-      throw new Error(listDres.mensagens);
+    if (data.status === STATUS_CODE_ENUM.UNAUTHORIZED) {
+      const text = yield data.text();
+      const messages = yield JSON.parse(text);
+      throw new Error(messages.mensagens);
     }
+    if (data.status === STATUS_CODE_ENUM.OK) {
+      const text = yield data.text();
+      const listDres = yield JSON.parse(text);
 
-    if (isPollReport && possuiPerfilSme) {
-      listDres.unshift(todas);
+      if (isPollReport && possuiPerfilSme) {
+        listDres.unshift(todas);
+      }
+      yield put({ type: Filters.types.LIST_DRES, listDres });
     }
-
-    yield put({ type: Filters.types.LIST_DRES, listDres });
   } catch (error) {
     yield put({ type: types.LOGOUT_USER });
     yield put({ type: "API_CALL_ERROR" });
@@ -62,19 +74,23 @@ function* GetDisciplinesByClassroom({ disciplinesFilter }) {
   try {
     const { user } = yield select();
     const { token } = user;
-    const data = yield call(
-      getDisciplinesByClassroomAPI,
-      disciplinesFilter,
-      token
-    );
 
-    if (data.mensagens) {
-      throw new Error(data.mensagens);
+    const data = yield call(fetch, "/api/Filtros/ListarDisciplinasPorRfTurma", {
+      method: "post",
+      headers: { "Content-Type": "application/json", token },
+      body: JSON.stringify(disciplinesFilter),
+    });
+
+    if (data.status === STATUS_CODE_ENUM.UNAUTHORIZED) {
+      const text = yield data.text();
+      const messages = yield JSON.parse(text);
+      throw new Error(messages.mensagens);
     }
-
-    const listDisciplines = data;
-    yield put({ type: Filters.types.LIST_DISCIPLINES, listDisciplines });
-    yield put({ type: Filters.types.DISCIPLINES_FILTER, disciplinesFilter });
+    if (data.status === STATUS_CODE_ENUM.OK) {
+      const listDisciplines = data;
+      yield put({ type: Filters.types.LIST_DISCIPLINES, listDisciplines });
+      yield put({ type: Filters.types.DISCIPLINES_FILTER, disciplinesFilter });
+    }
   } catch (error) {
     yield put({ type: types.LOGOUT_USER });
     yield put({ type: "API_CALL_ERROR" });
@@ -112,8 +128,11 @@ function* GetSchools({ schoolCode }) {
     const isPollReport = activeRoute === ROUTES_ENUM.RELATORIOS;
     const todas = { codigoEscola: "todas", nomeEscola: "Todas" };
 
-    if (data.status === STATUS_CODE_ENUM.UNAUTHORIZED)
-      throw new Error(data.mensagens);
+    if (data.status === STATUS_CODE_ENUM.UNAUTHORIZED) {
+      const text = yield data.text();
+      const messages = yield JSON.parse(text);
+      throw new Error(messages.mensagens);
+    }
     if (data.status === STATUS_CODE_ENUM.OK) {
       const text = yield data.text();
       const listSchool = yield JSON.parse(text);
@@ -130,7 +149,6 @@ function* GetSchools({ schoolCode }) {
       yield put({ type: Filters.types.ACTIVEDRECODE, schoolCode });
     }
   } catch (error) {
-    console.log("AQUI ======>", error);
     yield put({ type: types.LOGOUT_USER });
     yield put({ type: "API_CALL_ERROR" });
     yield put({ type: types.SET_ERROR, msgError: error.message });
@@ -142,17 +160,27 @@ function* GetClassRoom({ classRoomFilter }) {
     const { user } = yield select();
     const { token } = user;
     const schoolCodeEolIsEmpty = classRoomFilter.schoolCodeEol.length;
+
     const data = schoolCodeEolIsEmpty
-      ? yield call(getClassRoomAPI, classRoomFilter, token)
+      ? yield call(fetch, "/api/Filtros/ListarTurmasPorEscola", {
+          method: "post",
+          headers: { "Content-Type": "application/json", token },
+          body: JSON.stringify(classRoomFilter),
+        })
       : [];
 
-    if (data.mensagens) {
-      throw new Error(data.mensagens);
+    if (data.status === STATUS_CODE_ENUM.UNAUTHORIZED) {
+      const text = yield data.text();
+      const messages = yield JSON.parse(text);
+      throw new Error(messages.mensagens);
     }
+    if (data.status === STATUS_CODE_ENUM.OK) {
+      const text = yield data.text();
+      const listClassRoom = yield JSON.parse(text);
 
-    const listClassRoom = data;
-    yield put({ type: Filters.types.LIST_CLASSROOM, listClassRoom });
-    yield put({ type: Filters.types.ACTIVESCHOOLCODE, classRoomFilter });
+      yield put({ type: Filters.types.LIST_CLASSROOM, listClassRoom });
+      yield put({ type: Filters.types.ACTIVESCHOOLCODE, classRoomFilter });
+    }
   } catch (error) {
     yield put({ type: types.LOGOUT_USER });
     yield put({ type: "API_CALL_ERROR" });
@@ -193,28 +221,5 @@ function getTeacherFiltersApi(profileOccupatios) {
     method: "post",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(profileOccupatios),
-  }).then((response) => response.json());
-}
-
-function getClassRoomAPI(classRoomFilter, token) {
-  return fetch("/api/Filtros/ListarTurmasPorEscola", {
-    method: "post",
-    headers: { "Content-Type": "application/json", token },
-    body: JSON.stringify(classRoomFilter),
-  }).then((response) => response.json());
-}
-
-function getDresAPI(token, anoLetivo) {
-  return fetch(`/api/Filtros/ListarDres?anoLetivo=${anoLetivo}`, {
-    method: "get",
-    headers: { "Content-Type": "application/json", token },
-  }).then((response) => response.json());
-}
-
-function getDisciplinesByClassroomAPI(disciplinesFilter, token) {
-  return fetch("/api/Filtros/ListarDisciplinasPorRfTurma", {
-    method: "post",
-    headers: { "Content-Type": "application/json", token },
-    body: JSON.stringify(disciplinesFilter),
   }).then((response) => response.json());
 }
