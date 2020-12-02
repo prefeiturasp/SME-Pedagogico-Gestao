@@ -337,6 +337,23 @@ class PollReportFilter extends Component {
     }
   }
 
+  verificaAno = (ano, anoEscolhido) => {
+    return ano >= anoEscolhido;
+  };
+
+  mostrarProficiencia = () => {
+    const anoEscolhido = Number(this.props.poll.selectedFilter.yearClassroom);
+
+    switch (this.state.selectedFilter.discipline) {
+      case DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao:
+        return !this.verificaAno(anoEscolhido, 7);
+      case DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES.Descricao:
+        return !this.verificaAno(anoEscolhido, 4);
+      default:
+        return true;
+    }
+  };
+
   render() {
     return (
       <div className="d-flex flex-column d-inline-flex">
@@ -350,19 +367,19 @@ class PollReportFilter extends Component {
             options={this.initialFilter}
             onChange={this.initialFilterChange}
           />
-          <div className="px-2"></div>
-          <SelectChangeColor
-            className="custom-select-sm"
-            defaultText="Proficiência"
-            options={this.state.proficiencies}
-            onChange={this.onChangeProficiency}
-            value={this.state.selectedProficiency || ""}
-            resetColor={!this.state.selectedProficiency}
-            disabled={
-              this.ehMatematicaAcimaDoSetimoAnoConsolidado() ||
-              this.ehPortuguesAcimaDoQuartoAnoConsolidado()
-            }
-          />
+          {this.mostrarProficiencia() && (
+            <>
+              <div className="px-2"></div>
+              <SelectChangeColor
+                className="custom-select-sm"
+                defaultText="Proficiência"
+                options={this.state.proficiencies}
+                onChange={this.onChangeProficiency}
+                value={this.state.selectedProficiency || ""}
+                resetColor={!this.state.selectedProficiency}
+              />
+            </>
+          )}
           {this.ehPortuguesAcimaDoQuartoAnoConsolidado() && (
             <>
               <div className="px-2" />
