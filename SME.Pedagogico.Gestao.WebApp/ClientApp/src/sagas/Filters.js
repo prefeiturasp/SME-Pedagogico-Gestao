@@ -87,7 +87,9 @@ function* GetDisciplinesByClassroom({ disciplinesFilter }) {
       throw new Error(messages.mensagens);
     }
     if (data.status === STATUS_CODE_ENUM.OK) {
-      const listDisciplines = data;
+      const text = yield data.text();
+      const listDisciplines = yield JSON.parse(text);
+
       yield put({ type: Filters.types.LIST_DISCIPLINES, listDisciplines });
       yield put({ type: Filters.types.DISCIPLINES_FILTER, disciplinesFilter });
     }
