@@ -17,22 +17,20 @@ function SeletorDeOrdem({ ordens, ordemSelecionada, onClick, ordensSalvas }) {
 
     return index === -1;
   }, [sequenciaOrdens]);
-  
-  const obterSequenciaOrdem = useCallback((ordemId) => {
-    return sequenciaOrdens ? sequenciaOrdens.findIndex(ordem => ordem && ordem.ordemId === ordemId) : -1;
-  },[sequenciaOrdens])
-
 
   const ehDesabilitado = useCallback((ordemId) => {
     const index = obterSequenciaOrdem(ordemId);
 
     return index === -1 && limiteOrdens;
-  }, [limiteOrdens, obterSequenciaOrdem])
+  }, [sequenciaOrdens])
 
- 
+  const obterSequenciaOrdem = (ordemId) => {
+    return sequenciaOrdens ? sequenciaOrdens.findIndex(ordem => ordem && ordem.ordemId === ordemId) : -1;
+  }
+
   const ordensLista = useMemo(() => {
     return ordens && ordens.map(ordem => { return { ...ordem, desabilitado: ehDesabilitado(ordem.id), sequenciaOrdem: obterSequenciaOrdem(ordem.id) } });
-  }, [ehDesabilitado, obterSequenciaOrdem, ordens]);
+  }, [ordens, sequenciaOrdens]);
 
   const obterBordas = (index) => {
     if (index === 0) return "btn-double-left border-right-0";
@@ -45,7 +43,7 @@ function SeletorDeOrdem({ ordens, ordemSelecionada, onClick, ordensSalvas }) {
   useEffect(() => {
     if (ordens && ordens.length === 1)
       onClick(ordens[0].id);
-  }, [onClick, ordens])
+  }, [ordens])
 
   const onClickOrdem = (event) => {
     onClick(event.target.id)

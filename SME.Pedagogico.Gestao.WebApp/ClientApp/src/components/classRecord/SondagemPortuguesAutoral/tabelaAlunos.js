@@ -11,6 +11,8 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
 
     const [exibirConfirmacaoExclusao, setExibirConfirmacaoExclusao] = useState(false);
 
+    const [mostrarMensagemConfirmacao, setMostrarMensagemConfirmacao] = useState(false);
+
     const alunos = useSelector(store => store.sondagemPortugues.alunos);
 
     const emEdicao = useSelector(store => store.sondagemPortugues.emEdicao);
@@ -18,13 +20,13 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
     const perguntas = useSelector(store => store.sondagemPortugues.perguntas);
 
     const periodoSelecionado = useSelector(store => store.sondagemPortugues.periodoSelecionado);
-    
+
     const exibirLimparCampos = useMemo(() => {
         if (!periodoSelecionado)
             return false;
 
         return grupoSelecionado === "e27b99a3-789d-43fb-a962-7df8793622b1";
-    }, [grupoSelecionado, periodoSelecionado])
+    }, [periodoSelecionado])
 
     const sequenciaOrdens = useSelector((store) => store.sondagemPortugues.sequenciaOrdens);
 
@@ -67,7 +69,14 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
         return periodos.length - periodos.length;
     }, [periodos]);
 
-    const trocarExibirConfirmacaoExclusao = () => setExibirConfirmacaoExclusao((oldState) => !oldState);
+    const trocarExibirConfirmacaoExclusao = () => {        
+        if(mostrarMensagemConfirmacao){
+            setMostrarMensagemConfirmacao(false);
+            setExibirConfirmacaoExclusao(true);
+            return;
+        }
+        setExibirConfirmacaoExclusao(false);
+    }
 
     const avancar = () => {
         if (ordenacaoAtual == ultimaOrdenacao)
@@ -84,7 +93,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
     }
 
     const solicitarLimparSelecao = () => {
-        trocarExibirConfirmacaoExclusao();
+        setExibirConfirmacaoExclusao(true);
     }
 
     const limparSelecao = () => {
@@ -101,7 +110,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
             return;
 
         dispatch(PortuguesStore.listarPerguntasPortugues(sequenciaOrdemAtual, grupoSelecionado));
-    }, [dispatch, grupoSelecionado, sequenciaOrdemAtual])
+    }, [sequenciaOrdemAtual])
 
     useEffect(() => {
         if (ordenacaoAtual < 0)
@@ -113,7 +122,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
         }
 
         dispatch(PortuguesStore.setar_periodo_selecionado(periodos[ordenacaoAtual]));
-    }, [dispatch, emEdicao, ordenacaoAtual, periodos, salvar])
+    }, [ordenacaoAtual])
 
     useEffect(() => {
         if (!periodoSelecionado)
@@ -123,7 +132,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
 
         dispatch(PortuguesStore.listarAlunosPortugues(filtros));
 
-    }, [dispatch, filtros, periodoSelecionado])
+    }, [periodoSelecionado])
 
     useEffect(() => {
         if (!idOrdemSelecionada && periodoSelecionado)
@@ -131,11 +140,11 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
 
         setOrdenacaoAtual(0);
         dispatch(PortuguesStore.setar_periodo_selecionado(periodos[0]));
-    }, [dispatch, idOrdemSelecionada, periodoSelecionado, periodos])
+    }, [idOrdemSelecionada, periodos])
 
     useEffect(() => {
         dispatch(PortuguesStore.listarBimestres());
-    }, [dispatch])
+    }, [])
 
     const ehPrimeiraOrdenacao = ordenacaoAtual === 0;
     const ehUltimaOrdenacao = ordenacaoAtual === ultimaOrdenacao;
@@ -212,9 +221,13 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
             </table>
             <MensagemLimparSelecao
                 controleExibicao={trocarExibirConfirmacaoExclusao}
-                acaoPrincipal={async () => { limparSelecao() }}
+                acaoPrincipal={async () => {
+                    setMostrarMensagemConfirmacao(true);
+                    limparSelecao();
+                }}
                 exibir={exibirConfirmacaoExclusao}
                 ehEdicao={ehEdicao}
+                acaoSecundaria={() => Promise.resolve()}
             />
                 
         </>
