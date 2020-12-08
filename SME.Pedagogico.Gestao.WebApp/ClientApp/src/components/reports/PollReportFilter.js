@@ -146,11 +146,11 @@ class PollReportFilter extends Component {
       proficiencies = proficiencies.filter(
         (item) => item.id !== proficienciaId
       );
-      proficiency = proficienciaSelecionada.length
-        ? proficienciaSelecionada[0].label
-        : null;
 
       if (proficienciaSelecionada.length) {
+        proficiency =
+          proficiency === proficienciaSelecionada[0].label ? null : proficiency;
+
         selectedProficiency =
           selectedProficiency === proficienciaSelecionada[0].value
             ? null
