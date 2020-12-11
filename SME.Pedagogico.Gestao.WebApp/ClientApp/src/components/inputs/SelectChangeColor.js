@@ -60,7 +60,7 @@ export default class Select extends Component {
         return (
             <select className={className} {...rest} onChange={onChange} style={style} disabled={disabled} >
                 <option defaultValue hidden className="text-muted" value="">{defaultText}</option>
-                {options.map(option =>
+                {options && options.map(option =>
                     <option key={option.label} value={option.value}>{option.label}</option>
                 )};
             </select>
