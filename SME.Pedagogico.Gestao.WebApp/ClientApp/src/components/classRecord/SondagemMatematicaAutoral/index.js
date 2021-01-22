@@ -198,14 +198,15 @@ function SondagemMatematicaAutoral() {
   }, [dispatch, periodosAbertura]);
 
   useEffect(() => {
-    if (!filtrosBusca || !filtrosBusca.perguntaId) return;
+    if (!filtrosBusca || !filtrosBusca.perguntaId || !filtrosBusca.anoLetivo || !filtrosBusca.anoEscolar)  return;
 
     dispatch(actionCreators.listaAlunosAutoralMatematica(filtrosBusca));
   }, [dispatch, filtrosBusca]);
 
-  useEffect(() => {
-    dispatch(actionCreators.listarPeriodos());
-    dispatch(actionCreators.listarPerguntas(filtros.yearClassroom));
+  useEffect(() => {    
+    dispatch(actionCreators.listarPeriodos());    
+    if (filtros.yearClassroom)
+        dispatch(actionCreators.listarPerguntas(filtros.yearClassroom));
     dispatch(
       pollStore.setFunctionButtonSave(
         (
