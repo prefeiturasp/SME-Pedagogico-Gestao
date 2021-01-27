@@ -72,10 +72,10 @@ class PollFilter extends Component {
       history.push("/Usuario/TrocarPerfil");
     }
 
-    if (
-      (!selectedDre ||
-        selectedDre.indexOf(filters.listDres[0].codigoDRE) < 0) &&
-      filters.listDres.length === 1
+    if (filters.listDres &&
+        filters.listDres.length === 1 &&
+        (!selectedDre ||
+        selectedDre.indexOf(filters.listDres[0].codigoDRE) < 0)      
     ) {
       this.SelectedDre(0);
     }
@@ -396,6 +396,7 @@ class PollFilter extends Component {
 
       if (
         selectedDre !== "todas" &&
+        filters.scholls &&
         (filters.scholls.length || user.ehProfessor)
       ) {
         for (let item in filters.scholls) {
