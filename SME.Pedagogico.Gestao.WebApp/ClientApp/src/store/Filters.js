@@ -124,7 +124,13 @@ export const reducer = (state, action) => {
             });
         case types.PERIODO_ABERTURA_MAT:
             var todayDate = new Date();
-            let estadoRetorno = { state };
+            let estadoRetorno = { 
+                ...state 
+            };
+            
+            state &&
+            state.period &&
+            state.period.length &&
             state.period.forEach((item) => {
                 if (item.bimestre === 2) {
                     if (todayDate >= new Date(item.dataInicio) && todayDate <= new Date(item.dataFim)) {

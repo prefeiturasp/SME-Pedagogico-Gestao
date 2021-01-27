@@ -204,7 +204,7 @@ function SondagemMatematicaAutoral() {
     }, [periodosAbertura]);
 
     useEffect(() => {
-        if (!filtrosBusca || !filtrosBusca.perguntaId)
+        if (!filtrosBusca || !filtrosBusca.perguntaId || !filtrosBusca.anoLetivo || !filtrosBusca.anoEscolar)
             return;
 
         dispatch(actionCreators.listaAlunosAutoralMatematica(filtrosBusca));
@@ -212,7 +212,8 @@ function SondagemMatematicaAutoral() {
 
     useEffect(() => {
         dispatch(actionCreators.listarPeriodos());
-        dispatch(actionCreators.listarPerguntas(filtros.yearClassroom));
+        if (filtros.yearClassroom)
+            dispatch(actionCreators.listarPerguntas(filtros.yearClassroom));
         dispatch(
             pollStore.setFunctionButtonSave(
                 (alunosRedux, perguntasRedux, periodosRedux, filtrosSelecionadosSalvar) => {
