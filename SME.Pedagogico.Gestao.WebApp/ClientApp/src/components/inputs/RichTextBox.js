@@ -7,7 +7,6 @@ export class RichTextBox extends Component {
         super(props);
 
         this.focus = () => this.refs.editor.focus();
-        //this.onChange = (editorState) => this.setState({ editorState });
         this.onChange = (editorState) => props.changeText(editorState);
 
         this.handleKeyCommand = (command) => this._handleKeyCommand(command);
@@ -18,7 +17,6 @@ export class RichTextBox extends Component {
 
     _handleKeyCommand(command) {
         const editorState = this.props.value;
-        //const { editorState } = this.state;
         const newState = RichUtils.handleKeyCommand(editorState, command);
         if (newState) {
             this.onChange(newState);
@@ -30,14 +28,12 @@ export class RichTextBox extends Component {
     _onTab(e) {
         const maxDepth = 4;
         this.onChange(RichUtils.onTab(e, this.props.value, maxDepth));
-        //this.onChange(RichUtils.onTab(e, this.state.editorState, maxDepth));
     }
 
     _toggleBlockType(blockType) {
         this.onChange(
             RichUtils.toggleBlockType(
                 this.props.value,
-                //this.state.editorState,
                 blockType
             )
         );
@@ -47,7 +43,6 @@ export class RichTextBox extends Component {
         this.onChange(
             RichUtils.toggleInlineStyle(
                 this.props.value,
-                //this.state.editorState,
                 inlineStyle
             )
         );
@@ -55,10 +50,6 @@ export class RichTextBox extends Component {
 
     render() {
         const editorState = this.props.value;
-        //const { editorState } = this.state;
-
-        // If the user changes block type before entering any text, we can
-        // either style the placeholder or hide it. Let's just hide it now.
         let className = 'RichEditor-editor';
         var contentState = editorState.getCurrentContent();
         if (!contentState.hasText()) {
@@ -77,7 +68,6 @@ export class RichTextBox extends Component {
                         handleKeyCommand={this.handleKeyCommand}
                         onChange={this.onChange}
                         onTab={this.onTab}
-                        //placeholder="Tell a story..."
                         ref="editor"
                         spellCheck={true}
                     />
@@ -100,7 +90,6 @@ export class RichTextBox extends Component {
     }
 }
 
-// Custom overrides for "code" style.
 const styleMap = {
     CODE: {
         backgroundColor: 'rgba(0, 0, 0, 0.05)',
@@ -142,16 +131,8 @@ class StyleButton extends React.Component {
 }
 
 const BLOCK_TYPES = [
-    //{ label: 'H1', style: 'header-one' },
-    //{ label: 'H2', style: 'header-two' },
-    //{ label: 'H3', style: 'header-three' },
-    //{ label: 'H4', style: 'header-four' },
-    //{ label: 'H5', style: 'header-five' },
-    //{ label: 'H6', style: 'header-six' },
-    //{ label: 'Blockquote', style: 'blockquote' },
     { label: <i className="fas fa-list-ul"></i>, style: 'unordered-list-item' },
-    { label: <i className="fas fa-list-ol"></i>, style: 'ordered-list-item' },
-    //{ label: 'Code Block', style: 'code-block' },
+    { label: <i className="fas fa-list-ol"></i>, style: 'ordered-list-item' },  
 ];
 
 const BlockStyleControls = (props) => {
@@ -181,7 +162,6 @@ var INLINE_STYLES = [
     { label: <b>B</b>, style: 'BOLD' },
     { label: <i>I</i>, style: 'ITALIC' },
     { label: <ins>U</ins>, style: 'UNDERLINE' },
-    //{ label: 'Monospace', style: 'CODE' },
 ];
 
 const InlineStyleControls = (props) => {

@@ -1,14 +1,19 @@
 ﻿import React, { Component } from "react";
-import SelectChangeColor from "../inputs/SelectChangeColor";
-import CircleButton from "../inputs/CircleButton";
+import { withRouter } from "react-router";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+
 import { actionCreators as actionCreatorsPoll } from "../../store/Filters";
 import { actionCreators as actionCreatorsPoll2 } from "../../store/Poll";
-import { actionCreators as actionCreatorsPollRouter } from "../../store/PollRouter";
-import { bindActionCreators } from "redux";
-import { ROLES_ENUM } from "../../Enums";
-import TwoSteps from "../messaging/TwoSteps";
+
+import SelectChangeColor from "../inputs/SelectChangeColor";
+import CircleButton from "../inputs/CircleButton";
 import MensagemConfirmacaoAutoral from "./SondagemPortuguesAutoral/mensagemConfirmacaoAutoral";
+
+import { actionCreators as actionCreatorsPollRouter } from "../../store/PollRouter";
+
+import permissoes from "../../utils/permissoes";
+import { ROUTES_ENUM } from "../../Enums";
 
 class PollFilter extends Component {
   constructor(props) {
@@ -23,6 +28,7 @@ class PollFilter extends Component {
       listSchools: [],
       listClassRoomTeacher: [],
       schoolYear: "",
+      schoolAll: false,
     };
 
     this.SelectedDre = this.SelectedDre.bind(this);
@@ -35,13 +41,15 @@ class PollFilter extends Component {
     this.toggleMessageBox = this.toggleMessageBox.bind(this);
     this.selectedSchoolTeacher = this.selectedSchoolTeacher.bind(this);
     this.selectedSchoolYear = this.selectedSchoolYear.bind(this);
-    this.getProfileInformationProf = this.getProfileInformationProf.bind(this);
-    // this.getPeriod = this.getPeriod.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.filterMethods.resetFilters();
   }
 
   componentWillMount() {
-    var anoLetivo = new Date();
-    var anoAtual = anoLetivo.getFullYear();
+    const anoLetivo = new Date();
+    const anoAtual = anoLetivo.getFullYear();
     this.setState({
       schoolYear: anoAtual,
     });
@@ -50,42 +58,48 @@ class PollFilter extends Component {
     this.props.filterMethods.setSchoolYear(anoAtual);
 
     this.applyRole(anoAtual);
+  }
 
-    if (ROLES_ENUM.ApenasRelatorios(this.props.user.activeRole.roleName)) {
-      this.props.pollRouterMethods.setActiveRoute("Relatórios");
+  componentDidUpdate() {
+    const { user, history, filters } = this.props;
+    const {
+      selectedDre,
+      selectedSchool,
+      classroom,
+      selectedClassRoom,
+    } = this.state;
+    if (!user.perfil.perfilSelecionado.nomePerfil) {
+      history.push("/Usuario/TrocarPerfil");
+    }
+
+    if (filters.listDres &&
+        filters.listDres.length === 1 &&
+        (!selectedDre ||
+        selectedDre.indexOf(filters.listDres[0].codigoDRE) < 0)      
+    ) {
+      this.SelectedDre(0);
+    }
+    if (!selectedSchool && filters.scholls.length === 1) {
+      this.SelectedSchool(0);
+    }
+    if (
+      !classroom &&
+      filters.listClassRoom &&
+      filters.listClassRoom.length === 1
+    ) {
+      this.getClassroom(0);
+    }
+    if (
+      !selectedClassRoom &&
+      filters.listClassRoom &&
+      filters.listClassRoom.length === 1
+    ) {
+      this.SelectedClassRoom(0);
     }
   }
 
   applyRole(ano) {
-    if (ROLES_ENUM.IsDRE(this.props.user.activeRole.roleName))
-      this.props.filterMethods.getDreAdm(this.props.user.username);
-    else if (ROLES_ENUM.IsSME(this.props.user.activeRole.roleName))
-      this.props.filterMethods.getListDres();
-    else if (ROLES_ENUM.IsUE(this.props.user.activeRole.roleName))
-      this.getProfileInformationProf(ano);
-  }
-
-  getProfileInformationProf(anoAtual) {
-    var role = this.props.user;
-
-    if (role.activeRole.roleName === ROLES_ENUM.PROFESSOR) {
-      var codeOccupations = this.props.user.listOccupations.Professor;
-    } else if (role.activeRole.roleName === ROLES_ENUM.COORDENADOR_PEDAGOGICO) {
-      var codeOccupations = this.props.user.listOccupations.CP;
-    } else if (role.activeRole.roleName === ROLES_ENUM.DIRETOR) {
-      var codeOccupations = this.props.user.listOccupations.Diretor;
-    } else if (role.activeRole.roleName === ROLES_ENUM.AD) {
-      var codeOccupations = this.props.user.listOccupations.AD;
-    }
-
-    var profileOccupatios = {
-      codigoRF: this.props.user.username,
-      codigoCargo: codeOccupations,
-      anoLetivo: anoAtual,
-      activeRole: this.props.user.activeRole,
-    };
-
-    this.props.filterMethods.getFilters_teacher(profileOccupatios);
+    this.props.filterMethods.getListDres();
   }
 
   selectedSchoolYear(event) {
@@ -106,13 +120,6 @@ class PollFilter extends Component {
       classroom: "",
     });
 
-    // this.setState({
-    //     selectedDre: "",
-    //     selectedClassRoom: "",
-    //     yearClassroom: null,
-    //     classroom: "",
-    // });
-
     this.applyRole(label);
   }
 
@@ -125,24 +132,32 @@ class PollFilter extends Component {
 
     this.props.filterMethods.activeDreCode(schoolCode);
 
-    var listSchools = this.props.filters.filterTeachers.escolas.filter(
-      (x) => x.codigoDRE === label
-    );
+    if (
+      this.props.filters &&
+      this.props.filters.filterTeachers &&
+      this.props.filters.filterTeachers.escolas &&
+      this.props.filters.filterTeachers.escolas.length
+    ) {
+      var listSchools = this.props.filters.filterTeachers.escolas.filter(
+        (x) => x.codigoDRE === label
+      );
 
-    if (listSchools.length === 1) {
-      var filterSchool = {
-        schoolCodeEol: listSchools[0].codigo,
-      };
+      if (listSchools.length === 1) {
+        var filterSchool = {
+          schoolCodeEol: listSchools[0].codigo,
+        };
 
-      this.props.filterMethods.activeSchoolCode(filterSchool);
+        this.props.filterMethods.activeSchoolCode(filterSchool);
+      }
+
+      this.setState({
+        listSchools: listSchools,
+        yearClassroom: null,
+        classroom: "",
+      });
     }
-
-    this.setState({
-      listSchools: listSchools,
-      yearClassroom: null,
-      classroom: "",
-    });
   }
+
   selectedSchoolTeacher(event) {
     var listClassRoomTeacher = [];
 
@@ -154,19 +169,19 @@ class PollFilter extends Component {
 
     this.props.filterMethods.activeSchoolCode(classRoomFilter);
 
-    if (this.props.user.activeRole.roleName === ROLES_ENUM.PROFESSOR) {
+    if (this.props.user.ehProfessor) {
       listClassRoomTeacher = this.props.filters.filterTeachers.turmas.filter(
         (x) => x.codigoEscola === label
       );
     } else if (
-      ROLES_ENUM.IsUE(this.props.user.activeRole.roleName) ||
-      ROLES_ENUM.IsDRE(this.props.user.activeRole.roleName)
+      permissoes.IsUE(this.props.user) ||
+      permissoes.IsDRE(this.props.user)
     ) {
-      var classRoomFilter = {
+      var classRoomFilterYear = {
         schoolCodeEol: label,
         schoolYear: this.props.filters.setSchoolYear,
       };
-      this.props.filterMethods.getClassroom(classRoomFilter);
+      this.props.filterMethods.getClassroom(classRoomFilterYear);
       listClassRoomTeacher = this.props.filters.listClassRoom;
     }
 
@@ -178,30 +193,31 @@ class PollFilter extends Component {
   }
 
   SelectedDre(event) {
-    //  this.props.filterMethods.resetPollFilters();
-    //  this.props.filterMethods.getDre();
-    var index = event.nativeEvent.target.selectedIndex;
-    var label = event.nativeEvent.target[index].value;
+    const { filters, filterMethods } = this.props;
+    const index = event && event.nativeEvent.target.selectedIndex;
+    const label = event
+      ? event.nativeEvent.target[index].value
+      : filters.listDres[0].codigoDRE;
 
-    var schoolCode = {
+    filterMethods.getSchool({
       dreCodeEol: label,
-      schoolYear: this.props.filters.setSchoolYear,
-    };
+      schoolYear: filters.setSchoolYear,
+    });
 
-    this.props.filterMethods.getSchool(schoolCode);
     this.setState({
       selectedDre: label,
-      // selectedSchool: "",
       selectedClassRoom: "",
       yearClassroom: null,
       classroom: "",
+      selectedSchool: "",
+      schoolAll: false,
     });
 
     if (label === "todas") {
-      this.props.filterMethods.activeClassroom("");
-      this.props.filterMethods.getClassroom({
+      filterMethods.activeClassroom("");
+      filterMethods.getClassroom({
         schoolCodeEol: "",
-        schoolYear: this.props.filters.setSchoolYear,
+        schoolYear: filters.setSchoolYear,
       });
     }
   }
@@ -211,52 +227,65 @@ class PollFilter extends Component {
   }
 
   SelectedSchool(event) {
-    this.props.filterMethods.getSchool({
-      dreCodeEol: this.state.selectedDre,
-      schoolYear: this.props.filters.setSchoolYear,
-    });
+    const { filters, filterMethods } = this.props;
+    const index = event && event.nativeEvent.target.selectedIndex;
+    const label = event
+      ? event.nativeEvent.target[index].value
+      : filters.scholls[0].codigoEscola;
 
-    var index = event.nativeEvent.target.selectedIndex;
-    var label = event.nativeEvent.target[index].value;
+    const schoolAll = label === "todas";
 
-    var classRoomFilter = {
-      schoolCodeEol: label,
-      schoolYear: this.props.filters.setSchoolYear,
-    };
-    if (label !== "todas")
-      this.props.filterMethods.getClassroom(classRoomFilter);
     this.setState({
       selectedSchool: label,
       selectedClassRoom: "",
       yearClassroom: null,
       classroom: "",
+      schoolAll,
+    });
+
+    if (schoolAll) {
+      filterMethods.listClassRoom();
+      return;
+    }
+
+    filterMethods.getClassroom({
+      schoolCodeEol: label,
+      schoolYear: filters.setSchoolYear,
     });
   }
 
+  subString = (value) => {
+    return value.substring(0, 1);
+  };
+
   SelectedClassRoom(event) {
-    var index = event.nativeEvent.target.selectedIndex;
-    var label = event.nativeEvent.target[index].value;
+    const { filters, filterMethods } = this.props;
+    const index = event && event.nativeEvent.target.selectedIndex;
+    const label = event
+      ? event.nativeEvent.target[index].value
+      : filters.listClassRoom[0].codigoTurma;
 
-    var codeClassRoom = label;
+    filterMethods.getDisciplinesByClassroom({ codigoTurmaEol: label });
+    filterMethods.activeClassroom(label);
 
-    var disciplinesFilter = {
-      codigoRf: this.props.user.username,
-      codigoTurmaEol: codeClassRoom,
-    };
-
-    this.props.filterMethods.getDisciplinesByClassroom(disciplinesFilter);
-    this.props.filterMethods.activeClassroom(codeClassRoom);
-
+    const valueString = event
+      ? event.target[index].innerText
+      : filters.listClassRoom[0].nomeTurma;
     this.setState({
-      classroom: event.target[index].innerText.substring(0, 1),
-      selectedClassRoom: codeClassRoom,
+      classroom: this.subString(valueString),
+      selectedClassRoom: label,
     });
   }
 
   getClassroom(event) {
-    this.props.filterMethods.activeClassroom("");
+    const { filters, filterMethods } = this.props;
+    const label = event
+      ? event.target.value
+      : this.subString(filters.listClassRoom[0].nomeTurma);
+
+    filterMethods.activeClassroom("");
     this.setState({
-      classroom: event.target.value,
+      classroom: label,
       selectedClassRoom: "",
     });
   }
@@ -271,63 +300,67 @@ class PollFilter extends Component {
   }
 
   setSelectedFilter() {
-    var selectedFilter = {
-      dreCodeEol: this.props.filters.activeDreCode,
-      schoolCodeEol: this.props.filters.activeSchollsCode,
-      classroomCodeEol: this.props.filters.activeClassRoomCode,
-      schoolYear: this.props.filters.setSchoolYear,
-      yearClassroom: this.state.classroom,
-      rfCode: this.props.user.username,
-    };
+    const { filters, user, poll2, resultClick } = this.props;
+    const { activeDreCode, activeClassRoomCode, setSchoolYear } = filters;
+    const { schoolAll, classroom: yearClassroom } = this.state;
+    const schoolCodeEol = schoolAll ? "" : this.props.filters.activeSchollsCode;
 
-    this.props.poll2.setSelectedFilter(selectedFilter);
+    poll2.setSelectedFilter({
+      dreCodeEol: activeDreCode,
+      schoolCodeEol,
+      classroomCodeEol: activeClassRoomCode,
+      schoolYear: setSchoolYear,
+      yearClassroom,
+      rfCode: user.username,
+    });
 
-    if (this.props.resultClick !== undefined) this.props.resultClick(true);
-  }
-
-  checkDisabledButton() {
-    if (this.props.reports) {
-      if (this.state.classroom === null || !this.state.classroom || this.state.classroom === "")
-        return false;
-
-      return this.props.user.activeRole.roleName === ROLES_ENUM.PROFESSOR ? this.props.filters.listDisciplines.length > 0 : true;
-    } else {
-      if (this.props.user.activeRole.roleName !== ROLES_ENUM.PROFESSOR) {
-        if (
-          this.props.filters.activeDreCode !== null &&
-          this.props.filters.activeSchollsCode !== null &&
-          this.props.filters.activeClassRoomCode !== null
-        )
-          return true;
-        else return false;
-      } else if (this.props.filters.activeClassRoomCode !== null) return true;
-      else return false;
+    if (resultClick) {
+      resultClick(true);
     }
   }
 
+  checkDisabledButton() {
+    const {
+      pollRouter: { activeRoute },
+      user: { ehProfessor },
+    } = this.props;
+    const { classroom, selectedClassRoom } = this.state;
+
+    if (activeRoute === ROUTES_ENUM.RELATORIOS) {
+      return ehProfessor ? selectedClassRoom : classroom;
+    }
+    return selectedClassRoom;
+  }
+
   render() {
-    const { selectedDre } = this.state;
-    const { selectedSchool } = this.state;
-    const { selectedClassRoom } = this.state;
-    var selectDre = null;
-    var selectSchool = null;
-    var selectClassRoom = null;
-    var yearClassrooms = [];
-    var hiddenDisabled = false;
+    const {
+      selectedDre,
+      selectedClassRoom,
+      schoolAll,
+      selectedSchool,
+      schoolYear,
+      classroom,
+      showMessageBox,
+    } = this.state;
+    let selectDre = null;
+    let selectSchool = null;
+    let selectClassRoom = null;
+    const yearClassrooms = [];
     const listDresOptions = [];
     const listSchoolOptions = [];
     const listClassRoomOptions = [];
     const listYearsOptions = [];
+    let hiddenDisabled = false;
 
-    var dataAtual = new Date();
-    var anoAtual = dataAtual.getFullYear();
-    var aux = anoAtual;
+    const dataAtual = new Date();
+    const anoAtual = dataAtual.getFullYear();
+    let aux = anoAtual;
     listYearsOptions.push({
       value: anoAtual,
       label: anoAtual,
     });
 
-    for (var i = 2019; i < anoAtual; i++) {
+    for (let i = 2019; i < anoAtual; i++) {
       aux = aux - 1;
       listYearsOptions.push({
         value: aux,
@@ -337,79 +370,79 @@ class PollFilter extends Component {
 
     listYearsOptions.reverse();
 
-    if (this.props.pollRouter.activeRoute !== "Sondagem") {
-      if (ROLES_ENUM.IsSME(this.props.user.activeRole.roleName)) {
-        listDresOptions.push({ label: "Todas", value: "todas" });
-      }
-    }
+    const { filters, user } = this.props;
 
-    if (
-      this.props.filters.filterTeachers !== null &&
-      this.props.filters.filterTeachers.drEs !== undefined
-    ) {
-      var DreSelected;
-      var SchoolSelected;
-      var enabledDre = false;
-      var disabledSchool = false;
-      // DRES de professor
-      for (var item in this.props.filters.filterTeachers.drEs) {
+    if (filters.listDres) {
+      selectDre = (
+        <SelectChangeColor
+          className="col-4"
+          defaultText="Selecione a DRE"
+          value={selectedDre}
+          options={listDresOptions}
+          onChange={this.SelectedDre}
+          activeColor={selectedDre}
+        />
+      );
+
+      for (let item in filters.listDres) {
         listDresOptions.push({
-          value: this.props.filters.filterTeachers.drEs[item].codigo,
-          label: this.props.filters.filterTeachers.drEs[item].nome.replace(
+          value: filters.listDres[item].codigoDRE,
+          label: filters.listDres[item].nomeDRE.replace(
             "DIRETORIA REGIONAL DE EDUCACAO",
             "DRE -"
           ),
         });
       }
 
-      selectDre = (
-        <SelectChangeColor
-          className="col-4"
-          defaultText="Selecione a DRE"
-          value={DreSelected}
-          options={listDresOptions}
-          disabled={enabledDre}
-          onChange={this.selectedDreTeacher}
-        />
-      );
-      // escolas de professor
-      for (var item in this.state.listSchools) {
-        listSchoolOptions.push({
-          value: this.state.listSchools[item].codigo,
-          label: this.state.listSchools[item].nome,
-        });
+      if (
+        selectedDre !== "todas" &&
+        filters.scholls &&
+        (filters.scholls.length || user.ehProfessor)
+      ) {
+        for (let item in filters.scholls) {
+          listSchoolOptions.push({
+            value: filters.scholls[item].codigoEscola,
+            label: filters.scholls[item].nomeEscola,
+          });
+        }
+
+        selectSchool = (
+          <SelectChangeColor
+            className="col-4"
+            value={selectedSchool}
+            defaultText="Escola"
+            options={listSchoolOptions}
+            onChange={this.SelectedSchool}
+            activeColor={selectedSchool}
+            resetColor={!selectedSchool}
+          />
+        );
       }
 
-      selectSchool = (
-        <SelectChangeColor
-          className="col-4"
-          value={SchoolSelected}
-          defaultText="Escola"
-          options={listSchoolOptions}
-          disabled={disabledSchool}
-          onChange={this.selectedSchoolTeacher}
-          resetColor={SchoolSelected === "" ? true : false}
-        />
-      );
-
-      if (this.props.user.activeRole.roleName === ROLES_ENUM.PROFESSOR) {
-        if (this.state.classroom !== null)
-          for (var item in this.state.listClassRoomTeacher) {
+      if (
+        selectedDre !== "todas" &&
+        (filters.listClassRoom || filters.scholls.length || user.ehProfessor)
+      ) {
+        if (!filters.listClassRoom) {
+          hiddenDisabled = true;
+        }
+        if (this.state.classroom)
+          for (let item in filters.listClassRoom) {
             if (
-              this.state.listClassRoomTeacher[item].nome.startsWith(
+              filters.listClassRoom[item].nomeTurma.startsWith(
                 this.state.classroom
               )
             )
               listClassRoomOptions.push({
-                value: this.state.listClassRoomTeacher[item].codigo,
-                label: this.state.listClassRoomTeacher[item].nome,
+                value: filters.listClassRoom[item].codigoTurma,
+                label: filters.listClassRoom[item].nomeTurma,
               });
           }
         else
-          for (var item in this.state.listClassRoomTeacher) {
+          for (let item in filters.listClassRoom) {
             listClassRoomOptions.push({
-              value: this.state.listClassRoomTeacher[item].codigo,
-              label: this.state.listClassRoomTeacher[item].nome,
+              value: filters.listClassRoom[item].codigoTurma,
+              label: filters.listClassRoom[item].nomeTurma,
             });
           }
 
@@ -421,227 +454,45 @@ class PollFilter extends Component {
             options={listClassRoomOptions}
             disabled={hiddenDisabled}
             onChange={this.SelectedClassRoom}
-            resetColor={selectedClassRoom === "" ? true : false}
+            activeColor={selectedClassRoom}
+            resetColor={!selectedClassRoom}
           />
         );
 
-        // var yearClassrooms = [];
+        if (filters.listClassRoom) {
+          const temp = filters.listClassRoom;
+          const uniques = [];
 
-        if (this.state.listClassRoomTeacher !== null) {
-          var temp = this.state.listClassRoomTeacher;
-          var uniques = [];
+          for (let i = 0; i < temp.length; i++) {
+            const room = temp[i].nomeTurma.substring(0, 1);
 
-          for (var i = 0; i < temp.length; i++) {
-            var classroom = temp[i].nome.substring(0, 1);
-
-            if (uniques.indexOf(classroom) === -1) {
-              yearClassrooms.push({ label: classroom, value: classroom });
-              uniques.push(classroom);
-            }
-          }
-        }
-      } else if (ROLES_ENUM.IsUE(this.props.user.activeRole.roleName)) {
-        if (
-          selectedSchool !== "todas" &&
-          this.props.filters.listClassRoom !== undefined
-        ) {
-          if (
-            this.props.filters.listClassRoom !== [] &&
-            this.props.filters.listClassRoom !== null &&
-            this.props.filters.listClassRoom.length > 1
-          ) {
-            if (this.state.classroom !== null)
-              for (var item in this.props.filters.listClassRoom) {
-                if (
-                  this.props.filters.listClassRoom[item].nomeTurma.startsWith(
-                    this.state.classroom
-                  )
-                )
-                  listClassRoomOptions.push({
-                    value: this.props.filters.listClassRoom[item].codigoTurma,
-                    label: this.props.filters.listClassRoom[item].nomeTurma,
-                  });
-              }
-            else
-              for (var item in this.props.filters.listClassRoom) {
-                listClassRoomOptions.push({
-                  value: this.props.filters.listClassRoom[item].codigoTurma,
-                  label: this.props.filters.listClassRoom[item].nomeTurma,
-                });
-              }
-          }
-        }
-
-        selectClassRoom = (
-          <SelectChangeColor
-            className="col"
-            value={selectedClassRoom}
-            defaultText="Turma"
-            options={listClassRoomOptions}
-            disabled={hiddenDisabled}
-            onChange={this.SelectedClassRoom}
-            resetColor={selectedClassRoom === "" ? true : false}
-          />
-        );
-
-        if (
-          this.props.filters.listClassRoom !== null &&
-          this.props.filters.listClassRoom !== undefined
-        ) {
-          var temp = this.props.filters.listClassRoom;
-          var uniques = [];
-
-          for (var i = 0; i < temp.length; i++) {
-            var classroom = temp[i].nomeTurma.substring(0, 1);
-
-            if (uniques.indexOf(classroom) === -1) {
-              yearClassrooms.push({ label: classroom, value: classroom });
-              uniques.push(classroom);
+            if (uniques.indexOf(room) === -1) {
+              yearClassrooms.push({ label: room, value: room });
+              uniques.push(room);
             }
           }
         }
       }
 
-      if (selectedSchool === "todas" || selectedDre === "todas") {
-        hiddenDisabled = true;
-
-        var listyearClassrooms = [1, 2, 3, 4, 5, 6];
-        for (var item in listyearClassrooms) {
+      if (selectedDre === "todas" || (schoolAll && !yearClassrooms.length)) {
+        const listYearClassrooms = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        for (let item in listYearClassrooms) {
           yearClassrooms.push({
-            value: listyearClassrooms[item],
-            label: listyearClassrooms[item],
+            value: listYearClassrooms[item],
+            label: listYearClassrooms[item],
           });
-        }
-      }
-    } else {
-      if (this.props.filters.listDres !== null) {
-        selectDre = (
-          <SelectChangeColor
-            className="col-4"
-            defaultText="Selecione a DRE"
-            value={selectedDre}
-            options={listDresOptions}
-            onChange={this.SelectedDre}
-          />
-        );
-
-        if (this.props.filters.activeDreCode !== null) {
-          if (this.props.pollRouter.activeRoute !== "Sondagem") {
-            listSchoolOptions.push({ label: "Todas", value: "todas" });
-          }
-        }
-        for (var item in this.props.filters.listDres) {
-          listDresOptions.push({
-            value: this.props.filters.listDres[item].codigoDRE,
-            label: this.props.filters.listDres[item].nomeDRE.replace(
-              "DIRETORIA REGIONAL DE EDUCACAO",
-              "DRE -"
-            ),
-          });
-        }
-
-        if (selectedDre !== "todas" && this.props.filters.scholls !== undefined)
-          if (this.props.filters.scholls[0] !== undefined) {
-            for (var item in this.props.filters.scholls) {
-              listSchoolOptions.push({
-                value: this.props.filters.scholls[item].codigoEscola,
-                label: this.props.filters.scholls[item].nomeEscola,
-              });
-            }
-
-            selectSchool = (
-              <SelectChangeColor
-                className="col-4"
-                value={SchoolSelected}
-                defaultText="Escola"
-                options={listSchoolOptions}
-                onChange={this.SelectedSchool}
-                resetColor={SchoolSelected === "" ? true : false}
-              />
-            );
-
-            if (
-              selectedSchool !== "todas" &&
-              this.props.filters.listClassRoom !== undefined
-            ) {
-              if (
-                this.props.filters.listClassRoom !== [] &&
-                this.props.filters.listClassRoom !== null &&
-                this.props.filters.listClassRoom.length > 1
-              ) {
-                if (this.state.classroom !== null)
-                  for (var item in this.props.filters.listClassRoom) {
-                    if (
-                      this.props.filters.listClassRoom[
-                        item
-                      ].nomeTurma.startsWith(this.state.classroom)
-                    )
-                      listClassRoomOptions.push({
-                        value: this.props.filters.listClassRoom[item]
-                          .codigoTurma,
-                        label: this.props.filters.listClassRoom[item].nomeTurma,
-                      });
-                  }
-                else
-                  for (var item in this.props.filters.listClassRoom) {
-                    listClassRoomOptions.push({
-                      value: this.props.filters.listClassRoom[item].codigoTurma,
-                      label: this.props.filters.listClassRoom[item].nomeTurma,
-                    });
-                  }
-              }
-            }
-
-            selectClassRoom = (
-              <SelectChangeColor
-                className="col"
-                value={selectedClassRoom}
-                defaultText="Turma"
-                options={listClassRoomOptions}
-                disabled={hiddenDisabled}
-                onChange={this.SelectedClassRoom}
-                resetColor={selectedClassRoom === "" ? true : false}
-              />
-            );
-
-            if (
-              this.props.filters.listClassRoom !== null &&
-              this.props.filters.listClassRoom !== undefined
-            ) {
-              var temp = this.props.filters.listClassRoom;
-              var uniques = [];
-
-              for (var i = 0; i < temp.length; i++) {
-                var classroom = temp[i].nomeTurma.substring(0, 1);
-
-                if (uniques.indexOf(classroom) === -1) {
-                  yearClassrooms.push({ label: classroom, value: classroom });
-                  uniques.push(classroom);
-                }
-              }
-            }
-          }
-
-        if (selectedSchool === "todas" || selectedDre === "todas") {
-          hiddenDisabled = true;
-
-          var listyearClassrooms = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-          for (var item in listyearClassrooms) {
-            yearClassrooms.push({
-              value: listyearClassrooms[item],
-              label: listyearClassrooms[item],
-            });
-          }
         }
       }
     }
+
     return (
       <div className="py-2 px-3 d-flex align-items-center">
         <SelectChangeColor
           className="col-1"
-          value={this.state.schoolYear}
+          value={schoolYear}
           options={listYearsOptions}
           onChange={this.selectedSchoolYear}
+          activeColor={schoolYear}
         />
         <div className="px-2"></div>
         {selectDre}
@@ -650,12 +501,12 @@ class PollFilter extends Component {
         <div className="px-2"></div>
         <SelectChangeColor
           className="col"
-          value={this.state.classroom}
+          value={classroom}
           defaultText="Ano"
           options={yearClassrooms}
           onChange={this.getClassroom}
-          activeColor={this.state.classroom === "" ? false : true}
-          resetColor={this.state.classroom === "" ? true : false}
+          activeColor={classroom}
+          resetColor={!classroom}
         />
         <div className="px-2"></div>
         {selectClassRoom}
@@ -675,7 +526,7 @@ class PollFilter extends Component {
           acaoSecundaria={async () => {
             this.setSelectedFilter();
           }}
-          exibir={this.state.showMessageBox}
+          exibir={showMessageBox}
         />
       </div>
     );
@@ -694,4 +545,4 @@ export default connect(
     poll2: bindActionCreators(actionCreatorsPoll2, dispatch),
     pollRouterMethods: bindActionCreators(actionCreatorsPollRouter, dispatch),
   })
-)(PollFilter);
+)(withRouter(PollFilter));

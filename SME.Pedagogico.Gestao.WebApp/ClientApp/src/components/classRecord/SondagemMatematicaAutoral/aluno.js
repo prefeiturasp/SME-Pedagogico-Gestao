@@ -1,4 +1,4 @@
-import React, { useEffect, memo, useMemo } from "react";
+import React from "react";
 import AutoralSelect from "./select";
 
 function AlunoSondagemMatematicaAutoral({

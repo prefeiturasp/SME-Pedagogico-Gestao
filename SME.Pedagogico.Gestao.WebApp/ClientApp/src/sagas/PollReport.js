@@ -1,5 +1,7 @@
-﻿import { takeLatest, call, put, all, select, cancelled } from "redux-saga/effects";
+﻿import { takeLatest, call, put, all, select } from "redux-saga/effects";
 import * as PollReport from "../store/PollReport";
+import { STATUS_CODE_ENUM } from "../Enums";
+import { types } from "../store/Filters";
 
 export default function* () {
   yield all([
@@ -10,40 +12,49 @@ export default function* () {
 
 function* GetPollReportSaga({ parameters }) {
   try {
+    yield put({
+      type: PollReport.types.SET_LOADING_SEARCH_POLL_REPORT,
+      loadingSearchPollReport: true,
+    });
     const data = yield call(getPollReportData, parameters);
 
-        if (data.status === 401)
-            yield put({ type: PollReport.types.POLL_REPORT_REQUEST_NOT_FOUND });
-        else {
-            var pollReportResponse = null;
+    if (data.status === 401)
+      yield put({ type: PollReport.types.POLL_REPORT_REQUEST_NOT_FOUND });
+    else {
+      var pollReportResponse = null;
 
-
-            if ((parameters.discipline === "Língua Portuguesa" && Number(parameters.CodigoCurso)>=4) ||
-              (parameters.discipline === "Matemática" && Number(parameters.CodigoCurso)>=7)){
-                pollReportResponse = {
-                  data: data,
-                  chartData: data.graficos
-                }
-            } 
-            else if (!parameters.classroomReport && parameters.discipline === "Matemática") {
-              pollReportResponse = {
-                  data: {
-                      numerosResults: data.results.numerosResults,
-                      ideaResults: data.results.ideaResults,
-                      resultResults: data.results.resultResults
-                  },
-                  chartData: {
-                      chartIdeaData: data.chartIdeaData,
-                      chartNumberData: data.chartNumberData,
-                      chartResultData: data.chartResultData
-                  }
-              }
-            } else {
-              pollReportResponse = {
-                data: data.results,
-                chartData: data.chartData,
-              };
-            }
+      if (
+        (parameters.discipline === "Língua Portuguesa" &&
+          Number(parameters.CodigoCurso) >= 4) ||
+        (parameters.discipline === "Matemática" &&
+          Number(parameters.CodigoCurso) >= 7)
+      ) {
+        pollReportResponse = {
+          data: data,
+          chartData: data.graficos,
+        };
+      } else if (
+        !parameters.classroomReport &&
+        parameters.discipline === "Matemática"
+      ) {
+        pollReportResponse = {
+          data: {
+            numerosResults: data.results.numerosResults,
+            ideaResults: data.results.ideaResults,
+            resultResults: data.results.resultResults,
+          },
+          chartData: {
+            chartIdeaData: data.chartIdeaData,
+            chartNumberData: data.chartNumberData,
+            chartResultData: data.chartResultData,
+          },
+        };
+      } else {
+        pollReportResponse = {
+          data: data.results,
+          chartData: data.chartData,
+        };
+      }
 
       yield put({
         type: PollReport.types.SET_POLL_REPORT_DATA,
@@ -54,9 +65,13 @@ function* GetPollReportSaga({ parameters }) {
     yield put({ type: PollReport.types.SHOW_POLL_REPORT_REQUEST });
   } catch (error) {
     yield put({ type: PollReport.types.POLL_REPORT_API_REQUEST_FAIL });
+  } finally {
+    yield put({
+      type: PollReport.types.SET_LOADING_SEARCH_POLL_REPORT,
+      loadingSearchPollReport: false,
+    });
   }
 }
-
 function getPollReportData(parameters) {
   return fetch("/api/RelatorioSondagem/ObterDados", {
     method: "post",
@@ -71,10 +86,7 @@ async function fetchWithTimeout(url, options, delay) {
       timeout: true,
     });
   });
-  const response = await Promise.race([
-    fetch(url, options),
-    timer
-  ]);
+  const response = await Promise.race([fetch(url, options), timer]);
   return response;
 }
 
@@ -88,10 +100,10 @@ function* setError(mensagem) {
     type: PollReport.types.SHOW_POLL_REPORT_MESSAGE_ERROR,
     showMessageError: true,
     messageError: mensagem,
-  });  
-} 
+  });
+}
 
-function* resetPollReport () {
+function* resetPollReport() {
   yield put({
     type: PollReport.types.CANCEL_POLL_REPORT_REQUEST,
     cancelPollReportRequest: false,
@@ -112,60 +124,67 @@ function* PrintPollReportSaga({ parameters }) {
       type: PollReport.types.ABORT_CONTROLLER_POLL_REPORT_REQUEST,
       abortController,
     });
-        
-    const data = yield call(fetchWithTimeout, "api/v1/relatorios/sync", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(parameters),
-      signal: abortController.signal
-    }, 300000);
-   
+
+    const data = yield call(
+      fetchWithTimeout,
+      "api/v1/relatorios/sync",
+      {
+        method: "post",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(parameters),
+        signal: abortController.signal,
+      },
+      300000
+    );
+
     const { pollReport } = yield select();
-    const { cancelPollReportRequest  } = pollReport; 
-    let mensagem ="Erro ao gerar relatório. Tente novamente mais tarde."  
-      
-    if(data.status === 200){
+    const { cancelPollReportRequest } = pollReport;
+    let mensagem = "Erro ao gerar relatório. Tente novamente mais tarde.";
+
+    if (data.status === STATUS_CODE_ENUM.OK) {
       const linkPdf = yield data.text();
-     
+
       yield put({
         type: PollReport.types.SET_POLL_REPORT_LINK_PDF,
         linkPdf,
       });
 
-      if(!cancelPollReportRequest){
+      if (!cancelPollReportRequest) {
         yield put({
           type: PollReport.types.SHOW_POLL_REPORT_MESSAGE_SUCCESS,
           showMessageSuccess: true,
-        });   
+        });
       }
-      
+
       return;
-    } 
+    }
 
-    if(!cancelPollReportRequest && (data.status === 500 || data.status === 601) ){
+    if (
+      !cancelPollReportRequest &&
+      (data.status === STATUS_CODE_ENUM.INTERNAL_ERROR ||
+        data.status === STATUS_CODE_ENUM.BUSINESS_ERROR)
+    ) {
       const response = yield data.json();
-      if(response) {
-         mensagem = response.mensagens.reduce(msg => msg.concat());         
+      if (response) {
+        mensagem = response.mensagens.reduce((msg) => msg.concat());
       }
     }
-    
-    if(!cancelPollReportRequest){
-      yield call(setError, mensagem);      
+
+    if (!cancelPollReportRequest) {
+      yield call(setError, mensagem);
     }
 
-    if(data.timeout){
+    if (data.timeout) {
       abortController.abort();
     }
-
-  } catch (error) {   
+  } catch (error) {
     const { pollReport } = yield select();
-    const { cancelPollReportRequest } = pollReport;   
-    let mensagem = "Erro ao gerar relatório. Tente novamente mais tarde."  
-    
-    if(!cancelPollReportRequest){
-      yield call(setError, mensagem);      
-    }  
+    const { cancelPollReportRequest } = pollReport;
+    let mensagem = "Erro ao gerar relatório. Tente novamente mais tarde.";
 
+    if (!cancelPollReportRequest) {
+      yield call(setError, mensagem);
+    }
   } finally {
     yield put({
       type: PollReport.types.PRINTING_POLL_REPORT,

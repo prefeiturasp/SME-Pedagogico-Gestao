@@ -42,7 +42,8 @@ function SondagemPortuguesAutoral() {
       !grupoSelecionado ||
       grupoSelecionado === "" ||
       !grupos ||
-      grupos.length === 0
+      grupos.length === 0 ||
+      grupoSelecionado.indexOf("Selecione o grupo") >=0
     )
       return [];
 
@@ -91,16 +92,15 @@ function SondagemPortuguesAutoral() {
     let filtrosMutaveis = Object.assign({}, filtrosBusca);
 
     const sequenciaOrdemSelecionada = sequenciasOrdens ? sequenciasOrdens.findIndex(sequencia => sequencia.ordemId === idOrdemSelecionada) : 0;
-
+    
     executarSalvamento({ perguntasSalvar: perguntas, alunosMutaveis, filtrosMutaveis, sequenciaOrdemSelecionada, novaOrdem, periodoSelecionadoSalvar: periodoSelecionado, novoPeriodoId, idOrdem: idOrdemSelecionada, grupo: grupoSelecionado });
   }
 
   const executarSalvamento = ({ perguntasSalvar, alunosMutaveis, filtrosMutaveis, sequenciaOrdemSelecionada, novaOrdem, novoPeriodoId, periodoSelecionadoSalvar, grupo, idOrdem }) => {
-
     alunosMutaveis.forEach(aluno => {
       aluno.grupoId = grupo;
       aluno.ordemId = idOrdem;
-      aluno.sequenciaOrdemSalva = sequenciaOrdemSelecionada + 1;
+      aluno.sequenciaOrdemSalva = sequenciaOrdemSelecionada;
     });
     try {
       dispatch(PortuguesStore.salvarSondagemPortugues({ alunos: alunosMutaveis, filtro: filtrosMutaveis, novaOrdem, novoPeriodoId }));

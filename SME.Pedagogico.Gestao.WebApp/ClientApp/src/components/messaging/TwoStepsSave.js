@@ -1,8 +1,8 @@
 ﻿import React, { Component } from 'react';
 import './TwoStepsSave.css';
 import Card from '../containers/Card';
-import { Spring, Transition } from 'react-spring/renderprops';
-import { useTransition, animated } from 'react-spring';
+import { Spring } from 'react-spring/renderprops';
+import { animated } from 'react-spring';
 
 export default class TwoStepsSave extends Component {
     constructor() {

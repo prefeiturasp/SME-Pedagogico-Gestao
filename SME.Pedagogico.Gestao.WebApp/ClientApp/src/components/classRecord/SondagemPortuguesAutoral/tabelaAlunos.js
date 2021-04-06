@@ -2,10 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Aluno from './aluno';
 import { actionCreators as PortuguesStore } from "../../../store/SondagemPortuguesStore";
-import MensagemConfirmacaoAutoral from './mensagemConfirmacaoAutoral';
 import MensagemLimparSelecao from './mensagemLimparSelecao';
-
-// import { Container } from './styles';
 
 function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado, salvar }) {
     const dispatch = useDispatch();
@@ -14,6 +11,8 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
 
     const [exibirConfirmacaoExclusao, setExibirConfirmacaoExclusao] = useState(false);
 
+    const [mostrarMensagemConfirmacao, setMostrarMensagemConfirmacao] = useState(false);
+
     const alunos = useSelector(store => store.sondagemPortugues.alunos);
 
     const emEdicao = useSelector(store => store.sondagemPortugues.emEdicao);
@@ -21,8 +20,6 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
     const perguntas = useSelector(store => store.sondagemPortugues.perguntas);
 
     const periodoSelecionado = useSelector(store => store.sondagemPortugues.periodoSelecionado);
-
-    const grupos = useSelector(store => store.sondagemPortugues.grupos);
 
     const exibirLimparCampos = useMemo(() => {
         if (!periodoSelecionado)
@@ -72,7 +69,14 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
         return periodos.length - periodos.length;
     }, [periodos]);
 
-    const trocarExibirConfirmacaoExclusao = () => setExibirConfirmacaoExclusao((oldState) => !oldState);
+    const trocarExibirConfirmacaoExclusao = () => {        
+        if(mostrarMensagemConfirmacao){
+            setMostrarMensagemConfirmacao(false);
+            setExibirConfirmacaoExclusao(true);
+            return;
+        }
+        setExibirConfirmacaoExclusao(false);
+    }
 
     const avancar = () => {
         if (ordenacaoAtual == ultimaOrdenacao)
@@ -89,7 +93,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
     }
 
     const solicitarLimparSelecao = () => {
-        trocarExibirConfirmacaoExclusao();
+        setExibirConfirmacaoExclusao(true);
     }
 
     const limparSelecao = () => {
@@ -217,9 +221,13 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
             </table>
             <MensagemLimparSelecao
                 controleExibicao={trocarExibirConfirmacaoExclusao}
-                acaoPrincipal={async () => { limparSelecao() }}
+                acaoPrincipal={async () => {
+                    setMostrarMensagemConfirmacao(true);
+                    limparSelecao();
+                }}
                 exibir={exibirConfirmacaoExclusao}
                 ehEdicao={ehEdicao}
+                acaoSecundaria={() => Promise.resolve()}
             />
                 
         </>

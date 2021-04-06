@@ -3,15 +3,33 @@ import React from "react";
 import "../../polls/inputs/Common.css";
 import shortid from "shortid";
 
-function Select({ valorId, lista, onChangeSelect, dados, bloqueado, className }) {
+function Select({
+  valorId,
+  lista,
+  onChangeSelect,
+  dados,
+  bloqueado,
+  className,
+}) {
   const onChange = (event) => {
     onChangeSelect(event.target.value, dados);
   };
 
   return (
-    <select className={`form-control ${className}`} value={valorId} disabled={bloqueado} onChange={onChange}>
-      <option className={"custom-select custom-select-sm"} value=""></option>
+    <select
+      className={`form-control ${className}`}
+      value={valorId}
+      disabled={bloqueado}
+      onChange={onChange}
+    >
+      <option
+        className={"custom-select custom-select-sm"}
+        value="Selecione o grupo"
+      >
+        Selecione o grupo
+      </option>
       {lista &&
+        lista.length &&
         lista.map((item) => {
           return (
             <option

@@ -1,4 +1,4 @@
-﻿export const ClassRoomEnum = {//
+﻿export const ClassRoomEnum = {
     Class1A: "1A",
     Class2ACA: "2ACA",
     Class2ACM: "2ACM",
