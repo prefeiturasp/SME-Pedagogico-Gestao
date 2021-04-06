@@ -1,10 +1,16 @@
 import React, { useEffect } from "react";
 import echarts from "echarts";
+import { montarCampoToolTipGrafico } from "../../utils/utils";
 
 const GraficoPorTurmaLeituraVozAlta = (props) => {
   const { dados } = props;
 
   useEffect(() => construirGrafico(), [dados]);
+
+  const format = (data) => {
+    data = parseFloat(data);
+    return data.toLocaleString("pt-BR");
+  };
 
   const construirGrafico = () => {
     const myChart = echarts.init(
@@ -20,7 +26,12 @@ const GraficoPorTurmaLeituraVozAlta = (props) => {
     });
 
     myChart.setOption({
-      tooltip: {},
+      tooltip: {
+        formatter: function (params) {
+          var val = format(params.value);
+          return montarCampoToolTipGrafico(params.marker, params.name, val);
+        },
+      },
       xAxis: {
         type: "category",
         data: dadosLabel,

@@ -40,8 +40,6 @@ function SeletorDeOrdem({ ordens, ordemSelecionada, onClick, ordensSalvas }) {
     return "border-left-0 border-right-0";
   };
 
-  console.log(ordensSalvas);
-
   useEffect(() => {
     if (ordens && ordens.length === 1)
       onClick(ordens[0].id);

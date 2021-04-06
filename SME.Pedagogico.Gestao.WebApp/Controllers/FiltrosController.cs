@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using SME.Pedagogico.Gestao.Aplicacao;
 using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.Integracao;
-using System;
 using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
@@ -35,28 +36,20 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// <param name="classrooms"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<string>> ListarTurmasPorEscola(BuscarTurmasPorEscola classrooms)
+        public async Task<ActionResult<string>> ListarTurmasPorEscola(BuscarTurmasPorEscola classrooms, [FromServices]IMediator mediator)
         {
-            try
-            {
-                //Necessário para gerar o Token temporariamente
-                var filterBusiness = new Filters(_config);
-                var listClassRoom = await filterBusiness.GetListClassRoomSchool(classrooms.schoolCodeEol, classrooms.schoolYear);
 
-                if (listClassRoom != null)
-                {
-                    return (Ok(listClassRoom));
-                }
-                else
-                {
-                    return (NoContent());
-                }
+            var listClassRoom = await mediator.Send(new ObterTurmasPorUeCodigoQuery(classrooms.schoolYear, classrooms.schoolCodeEol));
 
-            }
-            catch (Exception ex)
+            if (listClassRoom != null)
             {
-                return StatusCode(500, ex);
+                return (Ok(listClassRoom));
             }
+            else
+            {
+                return (NoContent());
+            }
+
         }
 
         /// <summary>
@@ -65,28 +58,25 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// <param name="schoolFilters"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<string>> ListarEscolasPorDre(BuscarEscolasPorDreDTO schoolFilters)
+        public async Task<ActionResult<string>> ListarEscolasPorDre(BuscarEscolasPorDreDTO schoolFilters, [FromServices]IMediator mediator)
         {
-            try
-            {
-                //Necessário para gerar o Token temporariamente
-                var filterBusiness = new Filters(_config);
-                var listSchool = await filterBusiness.GetListSchoolDre(schoolFilters.dreCodeEol, schoolFilters.schoolYear);
 
-                if (listSchool != null)
-                {
-                    return (Ok(listSchool));
-                }
-                else
-                {
-                    return (NoContent());
-                }
+            if (string.IsNullOrEmpty(schoolFilters.dreCodeEol))
+                return (NoContent());
 
-            }
-            catch (Exception ex)
+            var listSchool = await mediator.Send(new ObterUesPorDreQuery(long.Parse(schoolFilters.dreCodeEol), long.Parse(schoolFilters.schoolYear)));
+
+
+            if (listSchool != null)
             {
-                return StatusCode(500, ex);
+                return (Ok(listSchool));
             }
+            else
+            {
+                return (NoContent());
+            }
+
+
         }
 
         /// <summary>
@@ -94,27 +84,17 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<string>> ListarDres()
+        public async Task<ActionResult<string>> ListarDres([FromQuery]long anoLetivo, [FromServices]IMediator mediator)
         {
-            try
+            var listDres = await mediator.Send(new ObterDresQuery(anoLetivo));
+
+            if (listDres != null)
             {
-                //Necessário para gerar o Token temporariamente
-                var filterBusiness = new Filters(_config);
-                var listDres = await filterBusiness.GetListDre();
-
-                if (listDres != null)
-                {
-                    return (Ok(listDres));
-                }
-                else
-                {
-                    return (NoContent());
-                }
-
+                return (Ok(listDres));
             }
-            catch (Exception ex)
+            else
             {
-                return StatusCode(500, ex);
+                return (NoContent());
             }
         }
 
@@ -124,22 +104,14 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// <param name="buscarDisciplinasPorRfTurmaDto">Parâmetro com o RF e código da turma.</param>
         /// <returns>Lista disciplinas com nome e código.</returns>
         [HttpPost]
-        public async Task<ActionResult<string>> ListarDisciplinasPorRfTurma(BuscarDisciplinasPorRfTurmaDto buscarDisciplinasPorRfTurmaDto)
+        public async Task<ActionResult<string>> ListarDisciplinasPorRfTurma(BuscarDisciplinasPorRfTurmaDto buscarDisciplinasPorRfTurmaDto, [FromServices]IMediator mediator)
         {
-            try
-            {
-                var novoSgpApi = new NovoSGPAPI();
-                var listDiscplines = await novoSgpApi.DisciplinasPorTurma(buscarDisciplinasPorRfTurmaDto);
+            var listDiscplines = await mediator.Send(new ObterCCPorTurmaUsuarioQuery(buscarDisciplinasPorRfTurmaDto.CodigoTurmaEol));
 
-                if (listDiscplines != null)
-                    return (Ok(listDiscplines));
+            if (listDiscplines != null)
+                return (Ok(listDiscplines));
 
-                return (NoContent());
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex);
-            }
+            return (NoContent());
         }
     }
 }

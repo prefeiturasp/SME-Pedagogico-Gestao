@@ -54,18 +54,6 @@ class SondagemPortuguesAutoral extends Component {
             color: '#DADADA'
         };
 
-        //if (this.props.poll.pollYear === "3") {
-        //    componentLegendRender = <LegendsReadWrite3A />
-        //    rendererStudentPollPortuguese = this.props.students.map(student => (
-        //        <StudentPollPortuguese3A key={student.sequenceNumber} student={student} updatePollStudent={this.props.updatePollStudent} editLock1b={this.props.editLock1b} editLock2b={this.props.editLock2b} editLock3b={this.props.editLock3b} editLock4b={this.props.editLock4b} />
-        //    ));
-        //} else {
-        //    componentLegendRender = <LegendsReadWrite />;
-        //    rendererStudentPollPortuguese = this.props.students.map(student => (
-        //        <StudentPollPortuguese key={student.sequenceNumber} student={student} updatePollStudent={this.props.updatePollStudent} editLock1b={this.props.editLock1b} editLock2b={this.props.editLock2b} editLock3b={this.props.editLock3b} editLock4b={this.props.editLock4b} />
-        //    ));
-        //}
-
         return (
             <div>
                 <table className="table table-sm table-bordered table-hover table-sondagem-matematica" style={{ overflow: "hidden", overflowX: "auto" }}>
@@ -91,12 +79,12 @@ class SondagemPortuguesAutoral extends Component {
 
                     <tbody>
 
-                      //  {rendererStudentPollPortuguese}
+                        {rendererStudentPollPortuguese}
 
                     </tbody>
                 </table>
 
-            //   {componentLegendRender}
+               {componentLegendRender}
 
 
             </div>

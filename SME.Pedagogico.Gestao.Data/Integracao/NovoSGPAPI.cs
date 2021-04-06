@@ -1,8 +1,7 @@
 ﻿using Newtonsoft.Json;
 using SME.Pedagogico.Gestao.Data.Business;
-using SME.Pedagogico.Gestao.Data.DTO;
-using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoNovoSGP;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
+using SME.Pedagogico.Gestao.Infra;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -104,16 +103,16 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
             return await TrataRetorno<IList<AbrangenciaUeRetornoDto>>(resposta);
         }
 
-        public async Task<IList<DisciplinaRetornoDto>> DisciplinasPorTurma(BuscarDisciplinasPorRfTurmaDto buscarDisciplinasPorRfTurmaDto)
-        {
-            var loggedUser = await Authentication.GetLoggedUser(buscarDisciplinasPorRfTurmaDto.CodigoRf);
+        //public async Task<IList<DisciplinaRetornoDto>> DisciplinasPorTurma(BuscarDisciplinasPorRfTurmaDto buscarDisciplinasPorRfTurmaDto)
+        //{
+        //    var loggedUser = await Authentication.GetLoggedUser(buscarDisciplinasPorRfTurmaDto.CodigoRf);
 
-            ResetarCabecalhoAutenticado(loggedUser.RefreshToken);
+        //    ResetarCabecalhoAutenticado(loggedUser.RefreshToken);
 
-            var resposta = await httpClient.GetAsync(EndpointsNovoSGP.Disciplinas(buscarDisciplinasPorRfTurmaDto.CodigoTurmaEol));
+        //    var resposta = await httpClient.GetAsync(EndpointsNovoSGP.Disciplinas(buscarDisciplinasPorRfTurmaDto.CodigoTurmaEol));
 
-            return await TrataRetorno<IList<DisciplinaRetornoDto>>(resposta);
-        }
+        //    return await TrataRetorno<IList<DisciplinaRetornoDto>>(resposta);
+        //}
 
         private async Task<T> TrataRetorno<T>(HttpResponseMessage response)
         {
@@ -137,6 +136,15 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
             ResetarCabecalho();
 
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authenticationToken);
+        }
+
+        public async Task<IEnumerable<MenuRetornoDto>> ObterMenus(string token)
+        {
+            ResetarCabecalhoAutenticado(token);
+
+            var resposta = await httpClient.GetAsync(EndpointsNovoSGP.Menus());
+
+            return await TrataRetorno<IEnumerable<MenuRetornoDto>>(resposta);
         }
     }
 }

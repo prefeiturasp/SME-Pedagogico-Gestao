@@ -1,28 +1,33 @@
 ﻿.profile-button {
-    height: 36px;
-    background-color: #E8E8E8;
-    border-radius: 4px;
+  height: 36px;
+  background-color: #e8e8e8;
+  border-radius: 4px;
 }
 
-    .profile-button:hover {
-        background-color: #33B082;
-        border-radius: 4px;
-    }
+.profile-button:hover {
+  background-color: #33b082;
+  border-radius: 4px;
+}
 
 .profile-button-separator {
-    width: 1px;
-    height: 26px;
-    background-color: #A8A8A8;
+  width: 1px;
+  height: 26px;
+  background-color: #a8a8a8;
 }
 
 .profile-button:hover .profile-button-separator {
-    background-color: #ffffff;
+  background-color: #ffffff;
 }
 
 .profile-button:hover .profile-button-text {
-    color: #ffffff;
+  color: #ffffff;
 }
 
 .profile-button-icon {
-    color: #A8A8A8;
+  color: #a8a8a8;
+}
+.spinner-profile {
+  color: #1890ff;
+  align-self: center;
+  margin: 36px;
 }

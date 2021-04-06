@@ -24,7 +24,16 @@ export default class Select extends Component {
     }
 
     render() {
-        var { defaultText, options, className, disabled, onChange, ...rest } = this.props;
+        let { 
+            defaultText,
+            options,
+            className,
+            disabled,
+            onChange,
+            activeColor,
+            resetColor,
+            ...rest 
+        } = this.props;
         defaultText = (defaultText === undefined ? "Selecione uma opção" : " " + defaultText);
         options = options === undefined ? [] : options;
         className = className === undefined ? "custom-select" : className + " custom-select";
@@ -36,13 +45,13 @@ export default class Select extends Component {
 
         var style = {};
 
-        if (this.state.optionChanged || this.props.activeColor)
+        if (this.state.optionChanged || activeColor)
             style = {
                 backgroundColor: "#1E90FF",
                 color: "white"
             };
 
-        if (this.props.resetColor)
+        if (resetColor)
             style = {
                 backgroundColor: "white",
                 color: "black"
@@ -51,8 +60,8 @@ export default class Select extends Component {
         return (
             <select className={className} {...rest} onChange={onChange} style={style} disabled={disabled} >
                 <option defaultValue hidden className="text-muted" value="">{defaultText}</option>
-                {options.map(option =>
-                    <option value={option.value}>{option.label}</option>
+                {options && options.map(option =>
+                    <option key={option.label} value={option.value}>{option.label}</option>
                 )};
             </select>
         );

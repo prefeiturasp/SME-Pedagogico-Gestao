@@ -1,59 +1,56 @@
-﻿import React, { Component } from 'react';
+﻿import React, { Component } from "react";
 
 export default class PollReportPortugueseChart extends Component {
-    constructor() {
-        super();
+  constructor() {
+    super();
 
-        this.updateChart = this.updateChart.bind(this);
-    }
+    this.updateChart = this.updateChart.bind(this);
+  }
 
-    updateChart() {
-        var labels = [];
-        var values = [];
+  updateChart() {
+    const { data } = this.props;
+    const labels = data.map((item) => item.name);
+    const values = data.map((item) => item.value);
 
-        for (var i = 0; i < this.props.data.length; i++) {
-            labels.push(this.props.data[i].name);
-            values.push(this.props.data[i].value);
-        }
+    const echarts = require("echarts");
 
-
-        var echarts = require('echarts');
-
-        // initialize echarts instance with prepared DOM
-        var myChart = echarts.init(document.getElementById('chart'));
-        // draw chart
-        myChart.setOption({
-            tooltip: {},
-            xAxis: {
-                data: labels
+    // initialize echarts instance with prepared DOM
+    const myChart = echarts.init(document.getElementById("chart"));
+    // draw chart
+    myChart.setOption({
+      tooltip: {},
+      xAxis: {
+        data: labels,
+      },
+      yAxis: {},
+      series: [
+        {
+          name: "Alunos",
+          type: "bar",
+          itemStyle: {
+            normal: {
+              color: "#0077BE",
             },
-            yAxis: {},
-            series: [{
-                name: 'Alunos',
-                type: 'bar',
-                itemStyle: {
-                    normal: {
-                        color: '#0077BE'
-                    },
-                },
-                data: values
-            }]
-        });
-    }
+          },
+          data: values,
+        },
+      ],
+    });
+  }
 
-    componentDidMount() {
-        this.updateChart();
-    }
+  componentDidMount() {
+    this.updateChart();
+  }
 
-    componentDidUpdate() {
-        this.updateChart();
-    }
+  componentDidUpdate() {
+    this.updateChart();
+  }
 
-    render() {
-        return (
-            <div className="d-flex flex-fill justify-content-center">
-                <div id="chart" style={{ height: 400, width: 1156 }}></div>
-            </div>
-        );
-    }
+  render() {
+    return (
+      <div className="d-flex flex-fill justify-content-center">
+        <div id="chart" style={{ height: 400, width: 1156 }}></div>
+      </div>
+    );
+  }
 }

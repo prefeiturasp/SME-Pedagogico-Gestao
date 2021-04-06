@@ -70,11 +70,9 @@ class FullMonth extends Component {
                 enter={{
                     display: 'block',
                     height: 'auto',
-                    //maxHeight: 433,
                     overflow: 'hidden',
                 }}
                 leave={{
-                    //display: 'none',
                     height: 0,
                     overflow: 'hidden',
                 }}>
