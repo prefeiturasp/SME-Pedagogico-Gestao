@@ -123,7 +123,9 @@ class PollFilter extends Component {
     this.applyRole(label);
   }
 
-  selectedDreTeacher(event) {
+    selectedDreTeacher(event) {
+
+
     var index = event.nativeEvent.target.selectedIndex;
     var label = event.nativeEvent.target[index].value;
     var schoolCode = {
@@ -192,7 +194,9 @@ class PollFilter extends Component {
     });
   }
 
-  SelectedDre(event) {
+    SelectedDre(event) {
+
+        
     const { filters, filterMethods } = this.props;
     const index = event && event.nativeEvent.target.selectedIndex;
     const label = event
@@ -214,7 +218,9 @@ class PollFilter extends Component {
     });
 
     if (label === "todas") {
-      filterMethods.activeClassroom("");
+        filterMethods.activeClassroom("");
+        filterMethods.activeSchoolCode("");
+        filterMethods.activeDreCode("");
       filterMethods.getClassroom({
         schoolCodeEol: "",
         schoolYear: filters.setSchoolYear,
@@ -299,7 +305,8 @@ class PollFilter extends Component {
     });
   }
 
-  setSelectedFilter() {
+    setSelectedFilter() {
+      
     const { filters, user, poll2, resultClick } = this.props;
     const { activeDreCode, activeClassRoomCode, setSchoolYear } = filters;
     const { schoolAll, classroom: yearClassroom } = this.state;
