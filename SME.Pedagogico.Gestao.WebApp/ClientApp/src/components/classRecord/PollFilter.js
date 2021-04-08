@@ -196,7 +196,7 @@ class PollFilter extends Component {
 
     SelectedDre(event) {
 
-        debugger
+        
     const { filters, filterMethods } = this.props;
     const index = event && event.nativeEvent.target.selectedIndex;
     const label = event
@@ -306,7 +306,7 @@ class PollFilter extends Component {
   }
 
     setSelectedFilter() {
-      debugger
+      
     const { filters, user, poll2, resultClick } = this.props;
     const { activeDreCode, activeClassRoomCode, setSchoolYear } = filters;
     const { schoolAll, classroom: yearClassroom } = this.state;
