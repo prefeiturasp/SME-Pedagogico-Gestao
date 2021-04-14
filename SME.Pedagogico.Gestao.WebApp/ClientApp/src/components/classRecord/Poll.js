@@ -67,6 +67,9 @@ class Poll extends Component {
     // tempo para setar o valores default no state
     setTimeout(() => { }, 500);
 
+    // tempo para setar o valores default no state
+    setTimeout(() => { }, 500);
+
     this.toggleMessageBox = this.toggleMessageBox.bind(this); //para salvar
     this.toggleMessagePortugueseBox = this.toggleMessagePortugueseBox.bind(
       this
