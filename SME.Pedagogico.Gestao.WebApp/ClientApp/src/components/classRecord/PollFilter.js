@@ -369,11 +369,12 @@ class PollFilter extends Component {
 
     for (let i = 2019; i < anoAtual; i++) {
       aux = aux - 1;
+      if(aux != 2020) {  // 2020 retirado pois não existiu sondagem esse ano
       listYearsOptions.push({
         value: aux,
         label: aux,
       });
-    }
+    }}
 
     listYearsOptions.reverse();
 
