@@ -5,7 +5,7 @@ import { montarCampoToolTipGrafico } from "../../utils/utils";
 const GraficoMatematica = (props) => {
   const { dados, index } = props;
 
-  useEffect(() => construirGrafico(), [construirGrafico, dados]);
+  useEffect(() => construirGrafico(), [dados]);
 
   const format = (data) => {
     data = parseFloat(data);
@@ -63,7 +63,7 @@ const GraficoMatematica = (props) => {
   };
 
   return (
-    <div className="d-flex flex-column col-sm-6 col-xl-4">
+    <div className="d-flex flex-column col-4">
       <div
         className="d-flex flex-fill justify-content-center align-items-center sc-gray"
         style={{ height: 35 }}
