@@ -63,7 +63,7 @@ const GraficoMatematica = (props) => {
   };
 
   return (
-    <div className="d-flex flex-column col-4">
+    <div className="d-flex flex-column col-sm-6 col-xl-4">
       <div
         className="d-flex flex-fill justify-content-center align-items-center sc-gray"
         style={{ height: 35 }}

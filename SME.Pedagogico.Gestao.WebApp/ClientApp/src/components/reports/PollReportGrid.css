@@ -1,7 +1,7 @@
 ﻿.poll-report-grid-header {
-    height: 31px;
+  min-height: 31px;
 }
 
 .poll-report-grid-item {
-    height: 44px;
+  height: 44px;
 }
