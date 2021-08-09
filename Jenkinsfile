@@ -10,7 +10,7 @@ pipeline {
     }
 
     options {
-      buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
+      buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
       disableConcurrentBuilds()
       skipDefaultCheckout()
     }
@@ -70,7 +70,18 @@ pipeline {
                     }
                 }
             }           
-        }   
+        }
+
+      stage('Flyway') {
+        agent { label 'master' }
+        steps{
+          withCredentials([string(credentialsId: "flyway_pedagogicogestao_${branchname}", variable: 'url')]) {
+            checkout scm
+            sh 'docker run --rm -v $(pwd)/scripts:/opt/scripts boxfuse/flyway:5.2.4 -url=$url -locations="filesystem:/opt/scripts" -outOfOrder=true migrate'
+          }
+        }		
+      }    
+
     }
 
   post {
