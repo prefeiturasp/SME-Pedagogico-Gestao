@@ -106,7 +106,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
     }
 
     useEffect(() => {
-        if (sequenciaOrdemAtual === 0)
+        if (sequenciaOrdemAtual === 0 || sequenciaOrdemAtual === -1)
             return;
 
         dispatch(PortuguesStore.listarPerguntasPortugues(sequenciaOrdemAtual, grupoSelecionado));
@@ -201,7 +201,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
                         </th>
                     </tr>
                     <tr>
-                        {perguntas &&
+                        {perguntas && perguntas.length &&
                             perguntas.map((pergunta) => (
                                 <th
                                     style={{width: '10%'}}
