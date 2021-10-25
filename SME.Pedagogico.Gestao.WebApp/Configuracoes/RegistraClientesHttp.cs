@@ -12,6 +12,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Configuracoes
             services.AddHttpClient(name: "apiSR", c =>
             {
                 c.BaseAddress = new Uri(configuration.GetSection("UrlApiServidorRelatorios").Value);
+                c.DefaultRequestHeaders.Add("x-sr-api-key", configuration.GetSection("ApiKeySr").Value);
                 c.DefaultRequestHeaders.Add("Accept", "application/json");
                 c.Timeout = Timeout.InfiniteTimeSpan;
             });
