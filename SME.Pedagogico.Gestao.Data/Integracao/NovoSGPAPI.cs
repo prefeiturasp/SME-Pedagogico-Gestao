@@ -55,17 +55,28 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
 
         public async Task<UsuarioAutenticacaoRetornoDto> Autenticar(string login, string senha)
         {
-            ResetarCabecalho();
+            try
+            {
+                ResetarCabecalho();
 
-            var valoresParaEnvio = new Dictionary<string, string>
+                var valoresParaEnvio = new Dictionary<string, string>
             {
                 {"Login", login },
                 {"Senha", senha }
             };
 
-            var resposta = await httpClient.PostAsync(EndpointsNovoSGP.AutenticacaoEndpoint(), new StringContent(JsonConvert.SerializeObject(valoresParaEnvio), Encoding.UTF8, "application/json-patch+json"));
+                var resposta = await httpClient.PostAsync(EndpointsNovoSGP.AutenticacaoEndpoint(), new StringContent(JsonConvert.SerializeObject(valoresParaEnvio), Encoding.UTF8, "application/json-patch+json"));
 
-            return await TrataRetorno<UsuarioAutenticacaoRetornoDto>(resposta);
+                return await TrataRetorno<UsuarioAutenticacaoRetornoDto>(resposta);
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+
+            
         }
 
         public async Task<AutenticacaoRevalidarRetornoDto> RevalidarAutenticacao(string token)
