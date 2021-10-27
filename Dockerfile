@@ -1,9 +1,9 @@
-FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base
+FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-stretch-slim AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM microsoft/dotnet:2.2-sdk AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch AS build
 
 RUN wget https://nodejs.org/dist/v8.17.0/node-v8.17.0-linux-x64.tar.gz \ 
     && tar -xzf node-v8.17.0-linux-x64.tar.gz \ 
@@ -45,6 +45,7 @@ RUN cd ClientApp \
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+RUN apt-get update && apt-get upgrade -y && update-ca-certificates --fresh
 ENTRYPOINT ["dotnet", "SME.Pedagogico.Gestao.WebApp.dll"]
 
 
