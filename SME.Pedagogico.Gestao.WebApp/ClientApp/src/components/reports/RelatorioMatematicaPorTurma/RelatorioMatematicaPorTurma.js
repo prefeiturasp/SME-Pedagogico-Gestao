@@ -43,18 +43,22 @@ const RelatorioMatematicaPorTurma = (props) => {
             {nomeEstudante}
           </div>
         </div>
-        {perguntas.map((pergunta) => {
-          const resposta = perguntasAluno.find((p) => p.id === pergunta.id);
+        {
+         perguntas.map((pergunta, index) => {
+          const resposta = perguntasAluno.find((p) => p.id === pergunta.id); 
+          const par = index % 2 === 0;
+          const corCelula = par ? 'sc-lightpurple' : 'sc-darkblue';
           return (
-            <div className="col overflow-hidden">
-              <div className="sc-text-size-00 d-flex flex-fill h-100 align-items-center">
+            <div className={`col overflow-hidden ${corCelula}`}>
+              <div className="sc-text-size-00 d-flex flex-fill h-100 align-items-center text-white font-weight-light">
                 <span className="item-celula" data-toggle="tooltip" data-placement="bottom" title={resposta.valor || ""}>
                   {resposta.valor || ""}
                 </span>
               </div>
             </div>
           );
-        })}
+        })
+        }
       </div>
     );
   };

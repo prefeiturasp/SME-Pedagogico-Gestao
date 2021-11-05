@@ -22,10 +22,10 @@ function RelatorioPortuguesAutoral({ dados }) {
                             <div className="col">
                                 <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-light">{pergunta.nome}</div>
                             </div>
-                            <div className="col-7 sc-darkblue border-right border-white">
+                            <div className="col-7 sc-lightpurple border-right border-white">
                                 <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center text-white font-weight-light">{pergunta.total.quantidade} Alunos</div>
                             </div>
-                            <div className="col-1 sc-darkblue border-right border-white">
+                            <div className="col-1 sc-darkgray border-right border-white">
                                 <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center text-white font-weight-light">{pergunta.total.porcentagem}%</div>
                             </div>
                         </div>
