@@ -12,13 +12,13 @@ const RelatorioMatematicaConsolidado = (props) => {
             {nome}
           </div>
         </div>
-        <div className="col-7">
-          <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center font-weight-light">
+        <div className="col-7 sc-lightpurple">
+          <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center font-weight-light text-white">
             {quantidade} Alunos
           </div>
         </div>
-        <div className="col-1">
-          <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center font-weight-light">
+        <div className="col-1 sc-darkgray">
+          <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center font-weight-light text-white">
             {porcentagem} %
           </div>
         </div>
