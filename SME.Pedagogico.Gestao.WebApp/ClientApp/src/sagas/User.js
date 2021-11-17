@@ -15,6 +15,8 @@ function* LoginUserSaga({ credential, history }) {
       body: JSON.stringify(credential),
     });
 
+    console.log(data);
+
     if (data.status === STATUS_CODE_ENUM.UNAUTHORIZED)
       yield call(setError, data);
     if (data.status === STATUS_CODE_ENUM.OK) {
