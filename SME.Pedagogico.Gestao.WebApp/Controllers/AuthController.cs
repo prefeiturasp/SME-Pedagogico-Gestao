@@ -438,25 +438,31 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> LoginIdentity([FromBody] CredentialModel credential, [FromServices]IMediator mediator)
         {
-            var retornoAutenticacao = await _apiNovoSgp.Autenticar(credential.Username, credential.Password);
+            try
+            {
+                var retornoAutenticacao = await _apiNovoSgp.Autenticar(credential.Username, credential.Password);
 
-            if (retornoAutenticacao == null || !retornoAutenticacao.Autenticado)
-                return Unauthorized("Usuário e/ou senha invalida");
-
-
-            if (retornoAutenticacao.ModificarSenha)
-                return Unauthorized("Você deve alterar a sua senha diretamente no Novo SGP");
+                if (retornoAutenticacao == null || !retornoAutenticacao.Autenticado)
+                    return Unauthorized("Usuário e/ou senha invalida");
 
 
-            var perfisMenus = await mediator.Send(new ObterVerificarPerfisDoUsuarioLoginQuery(credential.Username, retornoAutenticacao.PerfisUsuario.Perfis));
-            
-
-            retornoAutenticacao.PerfisUsuario.Perfis = perfisMenus.Perfis;
-            retornoAutenticacao.Permissoes = perfisMenus.Menus;
+                if (retornoAutenticacao.ModificarSenha)
+                    return Unauthorized("Você deve alterar a sua senha diretamente no Novo SGP");
 
 
-            return Ok(retornoAutenticacao);
-          
+                var perfisMenus = await mediator.Send(new ObterVerificarPerfisDoUsuarioLoginQuery(credential.Username, retornoAutenticacao.PerfisUsuario.Perfis));
+
+
+                retornoAutenticacao.PerfisUsuario.Perfis = perfisMenus.Perfis;
+                retornoAutenticacao.Permissoes = perfisMenus.Menus;
+
+
+                return Ok(retornoAutenticacao);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
 
