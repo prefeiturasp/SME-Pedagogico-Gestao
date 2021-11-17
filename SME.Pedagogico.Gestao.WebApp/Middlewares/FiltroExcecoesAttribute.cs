@@ -18,7 +18,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Middlewares
                     context.Result = new ResultadoBaseResult(new RetornoBaseDto(validacaoException.Erros));
                     break;
                 default:
-                    context.Result = new ResultadoBaseResult($"Ocorreu um erro interno. Favor contatar o suporte. {context.Exception}", 500);
+                    var detalheExcecao = context.Exception?.ToString() ?? "Exceção nula";
+                    context.Result = new ResultadoBaseResult($"Ocorreu um erro interno. Favor contatar o suporte. {detalheExcecao}", 500);
                     break;
             }
 
