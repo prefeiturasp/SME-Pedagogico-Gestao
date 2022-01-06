@@ -24,25 +24,13 @@ namespace SME.Pedagogico.Gestao.Aplicacao
         }
         public async Task<List<SalasPorUEDTO>> Handle(ObterTurmasPorUeCodigoQuery request, CancellationToken cancellationToken)
         {
-            var token = await mediator.Send(new ObterTokenUsuarioLogadoQuery());
-
-            var consideraHistorico = request.AnoLetivo != DateTime.Now.Year;
-
             using (var httpClient = httpClientFactory.CreateClient("apiSGP"))
             {
-                httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-                var resposta = await httpClient.GetAsync($"v1/abrangencias/{consideraHistorico}/dres/ues/{request.UeCodigo}/turmas?modalidade=5&anoLetivo={request.AnoLetivo}");
+                var listaRetornoTurmas = new List<TurmaSGPDto>();
 
-                if (!resposta.IsSuccessStatusCode || resposta.StatusCode == HttpStatusCode.NoContent)
-                {
-                    if (resposta.StatusCode == HttpStatusCode.Unauthorized)
-                        throw new NegocioException("Não autorizado", 401);
-                    else return null;
-                }
-
-                var json = await resposta.Content.ReadAsStringAsync();
-
-                var listaRetornoTurmas = JsonConvert.DeserializeObject<List<TurmaSGPDto>>(json);
+                for (int i = 0; i < 2; i++)
+                    listaRetornoTurmas.AddRange(await EnviarRequisicao(httpClient, i % 2 != 0, request.UeCodigo, request.AnoLetivo));
+                
                 var listaRetornoFinal = new List<SalasPorUEDTO>();
 
                 foreach (var item in listaRetornoTurmas.Where(a => a.Ano != "0"))
@@ -55,8 +43,33 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 }
 
                 return listaRetornoFinal;
-
             }
+        }
+
+        private async Task<IEnumerable<TurmaSGPDto>> EnviarRequisicao(HttpClient httpClient, bool consideraHistorico, string ueCodigo, int anoLetivo)
+        {
+            var modalidade = 5;
+
+            if (!httpClient.DefaultRequestHeaders.Contains("Authorization"))
+            {
+                var token = await mediator.Send(new ObterTokenUsuarioLogadoQuery());
+                httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            }
+
+            var resposta = await httpClient
+                .GetAsync($"v1/abrangencias/{consideraHistorico}/dres/ues/{ueCodigo}/turmas?modalidade={modalidade}&anoLetivo={anoLetivo}");
+
+            if (!resposta.IsSuccessStatusCode || resposta.StatusCode == HttpStatusCode.NoContent)
+            {
+                if (resposta.StatusCode == HttpStatusCode.Unauthorized)
+                    throw new NegocioException("Não autorizado", 401);
+
+                else return await Task.FromResult(Enumerable.Empty<TurmaSGPDto>());
+            }
+
+            var json = await resposta.Content.ReadAsStringAsync();
+
+            return await Task.FromResult(JsonConvert.DeserializeObject<List<TurmaSGPDto>>(json));
         }
     }
 }
