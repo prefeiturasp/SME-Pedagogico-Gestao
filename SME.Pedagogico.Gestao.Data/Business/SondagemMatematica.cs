@@ -245,7 +245,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private async Task<PollReportMathResult> BuscaDadosRelatorioMatNumeros(string semestre, string anoLetivo, string codigoDre, string codigoEscola, string anoTurma, Periodo periodo)
         {
-            using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
+            using (SMEManagementContextData db = new SMEManagementContextData())
             {
                 IQueryable<MathPoolNumber> query = db.Set<MathPoolNumber>();
                 var numbers = new PollReportMathItem();
@@ -253,8 +253,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var numberCharts = new List<MathNumeroChartDataModel>();
                 int totalAlunos = 0;
                 totalAlunos = await ObterQuantidadeAlunoTotal(anoLetivo, codigoDre, codigoEscola, anoTurma, periodo, totalAlunos, db);
-
-
 
                 query = db.MathPoolNumbers
                           .Where(x => x.AnoLetivo.ToString() == anoLetivo
@@ -503,7 +501,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             int quantidadeAlunoTotal = 0;
 
-            using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
+            using (SMEManagementContextData db = new SMEManagementContextData())
             {
                 quantidadeAlunoTotal = await ObterQuantidadeAlunoTotal(anoLetivo, codigoDre, codigoEscola, anoTurmaParam, periodo, quantidadeAlunoTotal, db);
 

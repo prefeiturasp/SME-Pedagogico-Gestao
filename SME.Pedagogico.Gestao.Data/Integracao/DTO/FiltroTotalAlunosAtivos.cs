@@ -12,5 +12,6 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.DTO
         public DateTime DataFim { get; set; }
         public string UeId { get; set; }
         public string DreId { get; set; }
+        public int CodigoModalidade { get; set; }
     }
 }
