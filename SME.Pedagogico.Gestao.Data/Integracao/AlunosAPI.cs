@@ -23,18 +23,18 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
 
             var parametros = new List<string>();
 
+            parametros.Add("modalidades=5"); //ENSINO FUNDAMENTAL DE 9 ANOS
+            parametros.Add("modalidades=13"); //ENSINO FUNDAMENTAL 9 ANOS
 
             if (!string.IsNullOrWhiteSpace(filtro.UeId))
                 parametros.Add($"ueId={filtro.UeId}");
-
             else
             {
                 if (!string.IsNullOrWhiteSpace(filtro.DreId))
                     parametros.Add($"dreId={filtro.DreId}");
             }
-          
 
-           
+            parametros.Add("historico=false");
 
             var parametrosString = string.Join('&', parametros);
 
@@ -43,7 +43,11 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
             if (!string.IsNullOrWhiteSpace(parametrosString))
                 urlCompleta += $"?{parametrosString}";
 
-            return await HttpHelper.GetAsync<int>(urlCompleta);
+            var quantidade = await HttpHelper.GetAsync<int>(urlCompleta);
+
+            urlCompleta = urlCompleta.Replace("historico=false", "historico=true");
+
+            return quantidade + await HttpHelper.GetAsync<int>(urlCompleta);
         }
 
         public async Task<IEnumerable<AlunosNaTurmaDTO>> ObterAlunosAtivosPorTurmaEPeriodo(string codigoTurma, DateTime dataReferencia)
