@@ -34,20 +34,14 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
                     parametros.Add($"dreId={filtro.DreId}");
             }
 
-            parametros.Add("historico=false");
-
             var parametrosString = string.Join('&', parametros);
 
             var urlCompleta = string.Format(url, filtro.AnoTurma, filtro.AnoLetivo, filtro.DataInicio.ToString("yyyy-MM-dd"), filtro.DataFim.ToString("yyyy-MM-dd"));
 
             if (!string.IsNullOrWhiteSpace(parametrosString))
-                urlCompleta += $"?{parametrosString}";
+                urlCompleta += $"?{parametrosString}";            
 
-            var quantidade = await HttpHelper.GetAsync<int>(urlCompleta);
-
-            urlCompleta = urlCompleta.Replace("historico=false", "historico=true");
-
-            return quantidade + await HttpHelper.GetAsync<int>(urlCompleta);
+            return await HttpHelper.GetAsync<int>(urlCompleta);
         }
 
         public async Task<IEnumerable<AlunosNaTurmaDTO>> ObterAlunosAtivosPorTurmaEPeriodo(string codigoTurma, DateTime dataReferencia)
