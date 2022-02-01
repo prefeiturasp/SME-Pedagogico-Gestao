@@ -29,7 +29,6 @@ namespace SME.Pedagogico.Gestao.Aplicacao
 
         public async Task<string> Handle(ObterRelatorioSincronoQuery request, CancellationToken cancellationToken)
         {
-
             var mensagem = JsonConvert.SerializeObject(new { Mensagem = request.Filtros });
 
             using (var httpClient = httpClientFactory.CreateClient("apiSR"))
@@ -37,9 +36,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 var resposta = await httpClient.PostAsync(request.TipoRelatorio.Name(), new StringContent(mensagem, Encoding.UTF8, "application/json-patch+json"));
 
                 if (!resposta.IsSuccessStatusCode || resposta.StatusCode == HttpStatusCode.NoContent)
-                {
                     return null;
-                }
 
                 var json = await resposta.Content.ReadAsStringAsync();
 
