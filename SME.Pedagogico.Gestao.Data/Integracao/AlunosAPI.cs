@@ -23,25 +23,23 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
 
             var parametros = new List<string>();
 
+            parametros.Add("modalidades=5"); //ENSINO FUNDAMENTAL DE 9 ANOS
+            parametros.Add("modalidades=13"); //ENSINO FUNDAMENTAL 9 ANOS
 
             if (!string.IsNullOrWhiteSpace(filtro.UeId))
                 parametros.Add($"ueId={filtro.UeId}");
-
             else
             {
                 if (!string.IsNullOrWhiteSpace(filtro.DreId))
                     parametros.Add($"dreId={filtro.DreId}");
             }
-          
-
-           
 
             var parametrosString = string.Join('&', parametros);
 
             var urlCompleta = string.Format(url, filtro.AnoTurma, filtro.AnoLetivo, filtro.DataInicio.ToString("yyyy-MM-dd"), filtro.DataFim.ToString("yyyy-MM-dd"));
 
             if (!string.IsNullOrWhiteSpace(parametrosString))
-                urlCompleta += $"?{parametrosString}";
+                urlCompleta += $"?{parametrosString}";            
 
             return await HttpHelper.GetAsync<int>(urlCompleta);
         }
