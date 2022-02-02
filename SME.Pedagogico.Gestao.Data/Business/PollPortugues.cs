@@ -341,19 +341,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                                 foreach (var item in writing1B)
                                 {
-                                    if (!item.Label.Trim().Equals(""))
-                                    {
-                                        PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
-                                        itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                        itemRetorno.studentQuantity = item.Value;
-                                        listReturn.Add(itemRetorno);
+                                    PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                    itemRetorno.studentQuantity = item.Value;
+                                    listReturn.Add(itemRetorno);
 
-                                        graficos.Add(new PortChartDataModel()
-                                        {
-                                            Name = MontarTextoProficiencia(item.Label),
-                                            Value = item.Value
-                                        });
-                                    }
+                                    graficos.Add(new PortChartDataModel()
+                                    {
+                                        Name = MontarTextoProficiencia(item.Label),
+                                        Value = item.Value
+                                    });
                                 }
                             }
 
@@ -363,19 +360,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                                 foreach (var item in reading1B)
                                 {
-                                    if (!item.Label.Trim().Equals(""))
-                                    {
-                                        PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
-                                        itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                        itemRetorno.studentQuantity = item.Value;
-                                        listReturn.Add(itemRetorno);
+                                    PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                    itemRetorno.studentQuantity = item.Value;
+                                    listReturn.Add(itemRetorno);
 
-                                        graficos.Add(new PortChartDataModel()
-                                        {
-                                            Name = MontarTextoProficiencia(item.Label),
-                                            Value = item.Value
-                                        });
-                                    }
+                                    graficos.Add(new PortChartDataModel()
+                                    {
+                                        Name = MontarTextoProficiencia(item.Label),
+                                        Value = item.Value
+                                    });
                                 }
                             }
                         }
@@ -388,19 +382,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                                 foreach (var item in writing2B)
                                 {
-                                    if (!item.Label.Trim().Equals(""))
-                                    {
-                                        PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
-                                        itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                        itemRetorno.studentQuantity = item.Value;
-                                        listReturn.Add(itemRetorno);
+                                    PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                    itemRetorno.studentQuantity = item.Value;
+                                    listReturn.Add(itemRetorno);
 
-                                        graficos.Add(new PortChartDataModel()
-                                        {
-                                            Name = MontarTextoProficiencia(item.Label),
-                                            Value = item.Value
-                                        });
-                                    }
+                                    graficos.Add(new PortChartDataModel()
+                                    {
+                                        Name = MontarTextoProficiencia(item.Label),
+                                        Value = item.Value
+                                    });
                                 }
 
                             }
@@ -410,19 +401,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                                 foreach (var item in reading2B)
                                 {
-                                    if (!item.Label.Trim().Equals(""))
-                                    {
-                                        PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
-                                        itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                        itemRetorno.studentQuantity = item.Value;
-                                        listReturn.Add(itemRetorno);
+                                    PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                    itemRetorno.studentQuantity = item.Value;
+                                    listReturn.Add(itemRetorno);
 
-                                        graficos.Add(new PortChartDataModel()
-                                        {
-                                            Name = MontarTextoProficiencia(item.Label),
-                                            Value = item.Value
-                                        });
-                                    }
+                                    graficos.Add(new PortChartDataModel()
+                                    {
+                                        Name = MontarTextoProficiencia(item.Label),
+                                        Value = item.Value
+                                    });
                                 }
                             }
                         }
@@ -435,19 +423,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                                 foreach (var item in writing3B)
                                 {
-                                    if (!item.Label.Trim().Equals(""))
-                                    {
-                                        PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
-                                        itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                        itemRetorno.studentQuantity = item.Value;
-                                        listReturn.Add(itemRetorno);
+                                    PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                    itemRetorno.studentQuantity = item.Value;
+                                    listReturn.Add(itemRetorno);
 
-                                        graficos.Add(new PortChartDataModel()
-                                        {
-                                            Name = MontarTextoProficiencia(item.Label),
-                                            Value = item.Value
-                                        });
-                                    }
+                                    graficos.Add(new PortChartDataModel()
+                                    {
+                                        Name = MontarTextoProficiencia(item.Label),
+                                        Value = item.Value
+                                    });
                                 }
 
                             }
@@ -457,19 +442,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                                 foreach (var item in reading3B)
                                 {
-                                    if (!item.Label.Trim().Equals(""))
-                                    {
-                                        PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
-                                        itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                        itemRetorno.studentQuantity = item.Value;
-                                        listReturn.Add(itemRetorno);
+                                    PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                    itemRetorno.studentQuantity = item.Value;
+                                    listReturn.Add(itemRetorno);
 
-                                        graficos.Add(new PortChartDataModel()
-                                        {
-                                            Name = MontarTextoProficiencia(item.Label),
-                                            Value = item.Value
-                                        });
-                                    }
+                                    graficos.Add(new PortChartDataModel()
+                                    {
+                                        Name = MontarTextoProficiencia(item.Label),
+                                        Value = item.Value
+                                    });
                                 }
                             }
                         }
@@ -482,19 +464,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                                 foreach (var item in writing4B)
                                 {
-                                    if (!item.Label.Trim().Equals(""))
-                                    {
-                                        PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
-                                        itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                        itemRetorno.studentQuantity = item.Value;
-                                        listReturn.Add(itemRetorno);
+                                    PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                    itemRetorno.studentQuantity = item.Value;
+                                    listReturn.Add(itemRetorno);
 
-                                        graficos.Add(new PortChartDataModel()
-                                        {
-                                            Name = MontarTextoProficiencia(item.Label),
-                                            Value = item.Value
-                                        });
-                                    }
+                                    graficos.Add(new PortChartDataModel()
+                                    {
+                                        Name = MontarTextoProficiencia(item.Label),
+                                        Value = item.Value
+                                    });
                                 }
 
                             }
@@ -526,7 +505,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     item.StudentPercentage = ((double)item.studentQuantity / total) * 100;
                     if (string.IsNullOrWhiteSpace(item.OptionName))
                         item.OptionName = "Sem preechimento";
-                }                
+                }
 
                 PollReportPortugueseResult retorno = new PollReportPortugueseResult();
                 retorno.Results = listReturn.OrderBy(lr => lr.OptionName).ToList();
@@ -542,7 +521,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         Name = string.IsNullOrWhiteSpace(item.Label) ? "Sem preenchimento" : item.Label,
                         Value = item.Value
                     });
-                }                
+                }
 
                 retorno.ChartData = graficos.OrderBy(g => g.Name).ToList();
 
