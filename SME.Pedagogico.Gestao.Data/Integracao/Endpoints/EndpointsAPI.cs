@@ -11,7 +11,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
         
         public string BaseEndpoint { get; set; } = Environment.GetEnvironmentVariable("urlApiEol"); 
 
-        public string BuscaAlunosNaTurma { get; set; } = "turmas/{0}/alunos/anosLetivos/{1}";
+        public string BuscaAlunosNaTurma { get; set; } = "turmas/{0}/considera-inativos/{1}";
 
         public string AbrangenciaCompacta { get; set; } = "abrangencia/compacta-vigente/{0}/perfil/{1}/DreDetalhes";
 
