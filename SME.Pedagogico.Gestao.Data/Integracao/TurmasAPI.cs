@@ -24,7 +24,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
 
             return await HttpHelper
                 .GetAsync<List<AlunosNaTurmaDTO>>
-                      (token, string.Format(url, codigoTurma, anoLetivo));
+                      (token, string.Format(url, codigoTurma, false));
         }
 
     }
