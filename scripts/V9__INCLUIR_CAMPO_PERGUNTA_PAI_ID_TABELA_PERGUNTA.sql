@@ -1,1 +1,1 @@
-delete  from public."MathPoolCAs" where "AnoLetivo" = 2020;
+alter table "Pergunta" add column "PerguntaPaiId" text;
