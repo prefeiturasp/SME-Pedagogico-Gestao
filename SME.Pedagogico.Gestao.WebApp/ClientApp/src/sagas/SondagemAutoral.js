@@ -19,18 +19,26 @@ export default function* () {
   ]);
 }
 
-function* ListarPerguntas({ anoEscolar }) {
+const setCarregandoListaPerguntas = (loadingPerguntas) => ({
+  type: Poll.types.SET_LOADING_PERGUNTAS,
+  loadingPerguntas,
+});
+
+function* ListarPerguntas({ filtros }) {
   try {
-    const data = yield call(listaPerguntasAPI, anoEscolar);
+    yield put(setCarregandoListaPerguntas(true));
+    const data = yield call(listaPerguntasAPI, filtros);
     var listaPerguntas = data;
     yield put({ type: Autoral.types.SETAR_PERGUNTAS, listaPerguntas });
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
+  } finally {
+    yield put(setCarregandoListaPerguntas(false));
   }
 }
 
-function listaPerguntasAPI(anoEscolar) {
-  var url = `/api/SondagemAutoral/Matematica/Perguntas?anoEscolar=${anoEscolar}`;
+function listaPerguntasAPI(filtros) {
+  const url = `/api/SondagemAutoral/Matematica/Perguntas?anoEscolar=${filtros.yearClassroom}&anoLetivo=${filtros.schoolYear}`;
   return fetch(url, {
     method: "get",
     headers: { "Content-Type": "application/json" },

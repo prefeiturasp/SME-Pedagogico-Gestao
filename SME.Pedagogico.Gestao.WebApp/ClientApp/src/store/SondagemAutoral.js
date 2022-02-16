@@ -23,9 +23,9 @@ const initialState = {
 
 export const actionCreators = {
   listarPeriodos: () => ({ type: types.LISTAR_PERIODOS }),
-  listarPerguntas: (anoEscolar) => ({
+  listarPerguntas: (filtros) => ({
     type: types.LISTAR_PERGUNTAS,
-    anoEscolar,
+    filtros,
   }),
   setarPerguntas: (perguntas) => ({
     type: types.SETAR_PERGUNTAS,
@@ -53,7 +53,7 @@ export const actionCreators = {
   setarPerguntaSelecionada: (pergunta) => ({
     type: types.SETAR_PERGUNTA_SELECIONADA,
     payload: pergunta,
-  })
+  }),
 };
 
 export const reducer = (state, action) => {
@@ -79,7 +79,7 @@ export const reducer = (state, action) => {
       return {
         ...state,
         emEdicao: action.payload,
-      }
+      };
     case types.SETAR_ALUNOS_AUTORAL_MATEMATICA:
       return {
         ...state,
@@ -94,7 +94,7 @@ export const reducer = (state, action) => {
       return {
         ...state,
         perguntaSelecionada: action.payload,
-      }
+      };
     default:
       return state;
   }

@@ -30,6 +30,8 @@
 
   SET_FUNCTION_BUTTON_SAVE: "SET_FUNCTION_BUTTON_SAVE",
   SET_LOADING_SALVAR: "SET_LOADING_SALVAR",
+  SET_BIMESTRE: "SET_BIMESTRE",
+  SET_LOADING_PERGUNTAS: "SET_LOADING_PERGUNTAS",
 };
 
 const initialState = {
@@ -48,10 +50,12 @@ const initialState = {
     classroomCodeEol: null,
     schoolYear: null,
     yearClassroom: null,
-    rfCode: null
+    rfCode: null,
   },
   newDataToSave: false,
   loadingSalvar: false,
+  bimestre: null,
+  loadingPerguntas: false,
 };
 
 export const actionCreators = {
@@ -156,7 +160,12 @@ export const actionCreators = {
 
   setLoadingSalvar: (payload) => ({
     type: types.SET_LOADING_SALVAR,
-    payload
+    payload,
+  }),
+
+  setBimestre: (payload) => ({
+    type: types.SET_BIMESTRE,
+    payload,
   }),
 };
 
@@ -264,11 +273,25 @@ export const reducer = (state, action) => {
         studentsPollMathCM: initialState.studentsPollMathCM,
         newDataToSave: false,
       };
-      case types.SET_LOADING_SALVAR:
-        return {
-          ...state,
-          loadingSalvar: action.filters,
-        };
+    case types.SET_LOADING_SALVAR:
+      return {
+        ...state,
+        loadingSalvar: action.filters,
+      };
+
+    case types.SET_BIMESTRE:
+      return {
+        ...state,
+        bimestre: action.payload,
+      };
+
+    case types.SET_LOADING_PERGUNTAS:
+      console.log("action", action);
+      return {
+        ...state,
+        loadingPerguntas: action.loadingPerguntas,
+      };
+
     default:
       return state;
   }
