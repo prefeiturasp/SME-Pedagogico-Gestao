@@ -9,7 +9,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
         private string baseEndPoint = "";
         private string buscaAlunosNaTurma = "";
         
-        public string BaseEndpoint { get; set; } = Environment.GetEnvironmentVariable("urlApiEol"); 
+        public string BaseEndpoint { get; set; } = Environment.GetEnvironmentVariable("urlApiEol");
 
         public string BuscaAlunosNaTurma { get; set; } = "turmas/{0}/considera-inativos/{1}";
 
