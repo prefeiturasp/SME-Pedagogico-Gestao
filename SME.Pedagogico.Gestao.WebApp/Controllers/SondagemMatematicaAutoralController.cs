@@ -28,17 +28,23 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return Ok(await sondagemAutoralBusiness.ObterPeriodoMatematica());
         }
 
-        [HttpGet("Matematica/Perguntas")]
-        public async Task<IActionResult> ObterPerguntas([FromQuery]int anoEscolar)
+        [HttpGet("Matematica/Periodo/Aberto")]
+        public async Task<IActionResult> ConsultarSePeriodoEstaAberto([FromQuery] int bimestre, [FromQuery] string anoEscolar)
         {
-            return Ok(await sondagemAutoralBusiness.ObterPerguntas(anoEscolar));
+            return Ok(await sondagemAutoralBusiness.ConsultarSePeriodoEstaAberto(bimestre, anoEscolar));
+        }
+
+        [HttpGet("Matematica/Perguntas")]
+        public async Task<IActionResult> ObterPerguntas([FromQuery]int anoEscolar, [FromQuery]int anoLetivo)
+        {
+            return Ok(await sondagemAutoralBusiness.ObterPerguntas(anoEscolar, anoLetivo));
         }
 
         [HttpGet("Matematica")]
         public async Task<IActionResult> ObterSondagemAutoral([FromQuery]FiltrarListagemMatematicaDTO filtrarListagemDto)
         {
-
-            return Ok(await sondagemAutoralBusiness.ObterListagemAutoral(filtrarListagemDto));
+            var retorno = await sondagemAutoralBusiness.ObterListagemAutoral(filtrarListagemDto);
+            return Ok(retorno);
         }
 
         [HttpPost("Matematica")]

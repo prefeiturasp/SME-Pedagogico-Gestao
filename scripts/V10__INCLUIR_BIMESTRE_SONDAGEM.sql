@@ -1,0 +1,1 @@
+alter table "SondagemAlunoRespostas" add column "Bimestre" int4;
