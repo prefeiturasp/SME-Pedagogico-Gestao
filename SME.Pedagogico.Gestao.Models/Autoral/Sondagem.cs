@@ -16,7 +16,6 @@ namespace SME.Pedagogico.Gestao.Models.Autoral
         public string CodigoUe { get; set; }
         public string CodigoDre { get; set; }
         public int AnoLetivo { get; set; }
-        public int? Bimestre { get; set; }
         public virtual Ordem Ordem { get; set; }
         public string OrdemId { get; set; }
         public virtual Grupo Grupo { get; set; }

@@ -1,1 +1,1 @@
-alter table "Sondagem" add column "Bimestre" int4;
+alter table "SondagemAlunoRespostas" add column "Bimestre" int4;
