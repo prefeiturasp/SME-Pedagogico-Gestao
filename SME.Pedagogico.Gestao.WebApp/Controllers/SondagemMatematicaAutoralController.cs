@@ -29,9 +29,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
         [HttpGet("Matematica/Perguntas")]
-        public async Task<IActionResult> ObterPerguntas([FromQuery]int anoEscolar)
+        public async Task<IActionResult> ObterPerguntas([FromQuery]int anoEscolar, [FromQuery]int anoLetivo)
         {
-            return Ok(await sondagemAutoralBusiness.ObterPerguntas(anoEscolar));
+            return Ok(await sondagemAutoralBusiness.ObterPerguntas(anoEscolar, anoLetivo));
         }
 
         [HttpGet("Matematica")]

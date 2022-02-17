@@ -30,14 +30,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
             TurmaApi = new TurmasAPI(new EndpointsAPI());
         }
 
-        public async Task<IEnumerable<PerguntaDto>> ObterPerguntas(int anoEscolar)
+        public async Task<IEnumerable<PerguntaDto>> ObterPerguntas(int anoEscolar, int anoLetivo)
         {
             List<PerguntaDto> perguntas = default;
             List<PerguntaResposta> perguntasResposta = default;
 
             using (var contexto = new SMEManagementContextData())
             {
-                perguntas = await ObterPerguntas(anoEscolar, perguntas, contexto);
+                perguntas = await ObterPerguntas(anoEscolar, perguntas, anoLetivo, contexto);
 
                 perguntasResposta = await ObterPerguntasRespostas(perguntas, perguntasResposta, contexto);
             }
@@ -540,9 +540,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
             return perguntasResposta;
         }
 
-        private async Task<List<PerguntaDto>> ObterPerguntas(int anoEscolar, List<PerguntaDto> perguntas, SMEManagementContextData contexto)
+        private async Task<List<PerguntaDto>> ObterPerguntas(int anoEscolar, List<PerguntaDto> perguntas, int anoLetivo, SMEManagementContextData contexto)
         {
-            perguntas = await contexto.PerguntaAnoEscolar.Include(x => x.Pergunta).Where(perguntaAnoEscolar => perguntaAnoEscolar.AnoEscolar == anoEscolar).Select(x => MapearPergunta(x)).ToListAsync();
+            perguntas = await contexto.PerguntaAnoEscolar.Include(x => x.Pergunta).Where(perguntaAnoEscolar => perguntaAnoEscolar.AnoEscolar == anoEscolar 
+            && ((perguntaAnoEscolar.FimVigencia == null && perguntaAnoEscolar.InicioVigencia.Year <= anoLetivo) 
+            || (perguntaAnoEscolar.FimVigencia.HasValue ? perguntaAnoEscolar.FimVigencia.Value.Year : 0) >= anoLetivo))
+                .Select(x => MapearPergunta(x)).ToListAsync();
 
             if (perguntas == null || !perguntas.Any())
                 throw new Exception("Não foi possivel obter as perguntas da sondagem");
