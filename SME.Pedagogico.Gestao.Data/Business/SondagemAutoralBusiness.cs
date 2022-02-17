@@ -88,7 +88,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             var listagem = new List<AlunoSondagemMatematicaDto>();
             if (listaSondagem.Count > 0)
-                MapearAlunosListagemMatematica(listagem, listaSondagem);
+                MapearAlunosListagemMatematica(listagem, listaSondagem, filtrarListagemDto.Bimestre);
 
             AdicionarAlunosEOL(filtrarListagemDto, alunos, listagem);
             return listagem.OrderBy(x => x.NumeroChamada);
@@ -275,7 +275,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 CodigoTurma = alunoFiltro.CodigoTurma,
                 ComponenteCurricularId = alunoFiltro.ComponenteCurricular,
                 AlunosSondagem = new List<SondagemAluno>(),
-                Bimestre = listaAlunosComRespostasDoPeriodoDto?.FirstOrDefault()?.Bimestre,
                 PeriodoId = periodoId
             };
 
@@ -297,6 +296,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             resposta.PerguntaId = respostaDto.Pergunta;
             resposta.RespostaId = respostaDto.Resposta;
             resposta.SondagemAlunoId = aluno.Id;
+            resposta.Bimestre = resposta.Bimestre;
             return resposta;
         }
 
@@ -370,7 +370,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        private void MapearAlunosListagemMatematica(List<AlunoSondagemMatematicaDto> listagem, List<Sondagem> lsondagem)
+        private void MapearAlunosListagemMatematica(List<AlunoSondagemMatematicaDto> listagem, List<Sondagem> lsondagem, int bimestre)
         {
 
             var listaAlunosDto = new List<AlunoSondagemMatematicaDto>();
@@ -413,8 +413,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 var listaResposta = new List<AlunoRespostaDto>();
                 var alunoDto = listaAlunosDto.Where(a => a.CodigoAluno == codigoAluno).FirstOrDefault();
-
-                var listaAlunoResposta = listaAlunosDto.Where(a => a.CodigoAluno == codigoAluno).ToList();
+                var listaAlunoResposta = listaAlunosDto.Where(a => a.CodigoAluno == codigoAluno && (a.Bimestre.HasValue ? a.Bimestre.Value : 0) == bimestre).ToList();
                 listaAlunoResposta.ForEach(lr =>
                 {
                     lr.Respostas.ForEach(r =>
@@ -556,15 +555,22 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private async Task<List<PerguntaDto>> ObterPerguntas(int anoEscolar, List<PerguntaDto> perguntas, int anoLetivo, SMEManagementContextData contexto)
         {
-            perguntas = await contexto.PerguntaAnoEscolar.Include(x => x.Pergunta).Where(perguntaAnoEscolar => perguntaAnoEscolar.AnoEscolar == anoEscolar 
-            && ((perguntaAnoEscolar.FimVigencia == null && perguntaAnoEscolar.InicioVigencia.Year <= anoLetivo) 
-            || (perguntaAnoEscolar.FimVigencia.HasValue ? perguntaAnoEscolar.FimVigencia.Value.Year : 0) >= anoLetivo))
-                .Select(x => MapearPergunta(x)).ToListAsync();
+            try
+            {
+                perguntas = await contexto.PerguntaAnoEscolar.Include(x => x.Pergunta).Where(perguntaAnoEscolar => perguntaAnoEscolar.AnoEscolar == anoEscolar
+                    && ((perguntaAnoEscolar.FimVigencia == null && (perguntaAnoEscolar.InicioVigencia.HasValue ? perguntaAnoEscolar.InicioVigencia.Value.Year : 0) <= anoLetivo)
+                    || (perguntaAnoEscolar.FimVigencia.HasValue ? perguntaAnoEscolar.FimVigencia.Value.Year : 0) >= anoLetivo))
+                        .Select(x => MapearPergunta(x)).ToListAsync();
 
-            if (perguntas == null || !perguntas.Any())
-                throw new Exception("Não foi possivel obter as perguntas da sondagem");
+                if (perguntas == null || !perguntas.Any())
+                    throw new Exception("Não foi possivel obter as perguntas da sondagem");
 
-            return perguntas;
+                return perguntas;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Não foi possivel obter as perguntas da sondagem, {ex.Message}");
+            }
         }
 
         private PerguntaDto MapearPergunta(PerguntaAnoEscolar perguntaAnoEscolar)

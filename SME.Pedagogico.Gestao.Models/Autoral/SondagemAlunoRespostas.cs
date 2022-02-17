@@ -1,11 +1,8 @@
-﻿using SME.Pedagogico.Gestao.Models.Base.Abstracts;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace SME.Pedagogico.Gestao.Models.Autoral
 {
-   public class SondagemAlunoRespostas 
+    public class SondagemAlunoRespostas 
     {
         public Guid Id
         {
@@ -17,6 +14,6 @@ namespace SME.Pedagogico.Gestao.Models.Autoral
         public string PerguntaId { get; set; }
         public virtual Resposta Resposta { get; set; }
         public string RespostaId { get; set; }
-
+        public int Bimestre { get; set; }
     }
 }
