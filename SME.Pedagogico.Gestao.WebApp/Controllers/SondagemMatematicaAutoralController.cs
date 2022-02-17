@@ -28,7 +28,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return Ok(await sondagemAutoralBusiness.ObterPeriodoMatematica());
         }
 
-        [HttpGet("Matematica/ConsultarSePeriodoEstaAberto")]
+        [HttpGet("Matematica/Periodo/Aberto")]
         public async Task<IActionResult> ConsultarSePeriodoEstaAberto([FromQuery] int bimestre, [FromQuery] string anoEscolar)
         {
             return Ok(await sondagemAutoralBusiness.ConsultarSePeriodoEstaAberto(bimestre, anoEscolar));
