@@ -63,12 +63,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public async Task<bool> ConsultarSePeriodoEstaAberto(int bimestre, string anoEscolar)
+        public async Task<bool> ConsultarSePeriodoEstaAberto(int bimestre, string anoLetivo)
         {
             bool periodoAberto = false;
             using (var contexto = new SMEManagementContextData())
             {
-                var periodos = await contexto.PeriodoDeAberturas.Where(x => x.Bimestre.Equals(bimestre) && x.Ano.Equals(anoEscolar) && DateTime.Now >= x.DataInicio && DateTime.Now <= x.DataFim).ToListAsync();
+                var periodos = await contexto.PeriodoDeAberturas.Where(x => x.Bimestre.Equals(bimestre) && x.Ano.Equals(anoLetivo) && DateTime.Now >= x.DataInicio && DateTime.Now <= x.DataFim).ToListAsync();
                 if (periodos?.Count() > 0)
                     periodoAberto = true;
             }
