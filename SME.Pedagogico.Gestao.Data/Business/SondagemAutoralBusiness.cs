@@ -63,6 +63,19 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
+        public async Task<bool> ConsultarSePeriodoEstaAberto(int bimestre, string anoEscolar)
+        {
+            bool periodoAberto = false;
+            using (var contexto = new SMEManagementContextData())
+            {
+                var periodos = await contexto.PeriodoDeAberturas.Where(x => x.Bimestre.Equals(bimestre) && x.Ano.Equals(anoEscolar) && DateTime.Now >= x.DataInicio && DateTime.Now <= x.DataFim).ToListAsync();
+                if (periodos?.Count() > 0)
+                    periodoAberto = true;
+            }
+
+            return periodoAberto;
+        }
+
         public async Task<IEnumerable<AlunoSondagemMatematicaDto>> ObterListagemAutoral(FiltrarListagemMatematicaDTO filtrarListagemDto)
         {
             var listaSondagem = await ObterSondagemAutoralMatematica(filtrarListagemDto);
@@ -114,7 +127,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var perguntaId = await ObterPeriodosDasRespostasEhPerguntaDaSondagem(alunoSondagemMatematicaDto, periodosRespostas);
                 var listaIdPeriodos = periodosRespostas.Distinct();
                 var filtroSondagem = CriaFiltroListagemMatematica(alunoSondagemMatematicaDto, perguntaId);
-               
+
 
 
                 foreach (var periodoId in listaIdPeriodos)
@@ -262,6 +275,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 CodigoTurma = alunoFiltro.CodigoTurma,
                 ComponenteCurricularId = alunoFiltro.ComponenteCurricular,
                 AlunosSondagem = new List<SondagemAluno>(),
+                Bimestre = listaAlunosComRespostasDoPeriodoDto?.FirstOrDefault()?.Bimestre,
                 PeriodoId = periodoId
             };
 
