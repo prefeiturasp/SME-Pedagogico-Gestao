@@ -9,5 +9,6 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Matematica
         public string PeriodoId { get; set; }
         public string Pergunta { get; set; }
         public string Resposta { get; set; }
+        public int Bimestre { get; set; }
     }
 }

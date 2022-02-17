@@ -296,7 +296,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             resposta.PerguntaId = respostaDto.Pergunta;
             resposta.RespostaId = respostaDto.Resposta;
             resposta.SondagemAlunoId = aluno.Id;
-            resposta.Bimestre = resposta.Bimestre;
+            resposta.Bimestre = respostaDto.Bimestre;
             return resposta;
         }
 
@@ -313,7 +313,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             };
 
             var listaRespostasPeriodo = alunoDto.Respostas.Where(r => r.PeriodoId == sondagem.PeriodoId);
-
+            
             foreach (var respostaDto in listaRespostasPeriodo)
             {
                 var resposta = CriaNovaRespostaAluno(aluno, respostaDto);
