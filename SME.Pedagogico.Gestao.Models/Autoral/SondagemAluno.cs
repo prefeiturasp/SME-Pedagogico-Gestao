@@ -15,7 +15,7 @@ namespace SME.Pedagogico.Gestao.Models.Autoral
         public Guid SondagemId { get; set; }
         public string CodigoAluno { get; set; }
         public string NomeAluno { get; set; }
-        public int Bimestre { get; set; }
+        public int? Bimestre { get; set; }
         public  List<SondagemAlunoRespostas> ListaRespostas { get; set; }
     }
 }
