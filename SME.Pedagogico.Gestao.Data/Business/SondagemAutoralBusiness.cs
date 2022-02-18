@@ -148,27 +148,35 @@ namespace SME.Pedagogico.Gestao.Data.Business
         private async Task SalvarSonsagemMatermaticaPorBimestre(IEnumerable<AlunoSondagemMatematicaDto> alunoSondagemMatematicaDto, FiltrarListagemMatematicaDTO filtroSondagem)
         {
 
-            using (var contexto = new SMEManagementContextData())
+            try
             {
-                var sondagem = await ObterSondagemAutoralMatematicaPorBimestre(filtroSondagem, contexto);
-                if (sondagem != null)
+                using (var contexto = new SMEManagementContextData())
                 {
-                    foreach (var aluno in alunoSondagemMatematicaDto)
+                    var sondagem = await ObterSondagemAutoralMatematicaPorBimestre(filtroSondagem, contexto);
+                    if (sondagem != null)
                     {
-                        AdicionaOUAlteraAlunosERespostas(contexto, sondagem, aluno,filtroSondagem.Bimestre);
+                        foreach (var aluno in alunoSondagemMatematicaDto)
+                        {
+                            AdicionaOUAlteraAlunosERespostas(contexto, sondagem, aluno, filtroSondagem.Bimestre);
+                        }
+                        contexto.Sondagem.Update(sondagem);
+                        await contexto.SaveChangesAsync();
                     }
-                    contexto.Sondagem.Update(sondagem);
-                    await contexto.SaveChangesAsync();
-                }
 
-                else
-                {
-                    var novaSondagem = CriaNovaSondagem(alunoSondagemMatematicaDto, null, filtroSondagem);
-                    novaSondagem.PeriodoId = novaSondagem.PeriodoId == null ? string.Empty : novaSondagem.PeriodoId;
-                    contexto.Sondagem.Add(novaSondagem);
-                    await contexto.SaveChangesAsync();
+                    else
+                    {
+                        var novaSondagem = CriaNovaSondagem(alunoSondagemMatematicaDto, null, filtroSondagem);
+                        novaSondagem.PeriodoId = novaSondagem.PeriodoId == null ? string.Empty : novaSondagem.PeriodoId;
+                        contexto.Sondagem.Add(novaSondagem);
+                        await contexto.SaveChangesAsync();
 
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
             }
 
         }
@@ -245,7 +253,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         sondagem.AlunosSondagem.Add(alunoNovoSondagem);
                     }
                 }
-                else if(sondagem.AnoLetivo >=2022 && aluno.Respostas.Count()>0)
+                else if(sondagem.AnoLetivo >=2022 && aluno.Respostas?.Count() > 0)
                 {
                     var alunoNovoSondagem = CriaNovoAlunoSondagem(sondagem, aluno, bimestre);
                     sondagem.AlunosSondagem.Add(alunoNovoSondagem);
