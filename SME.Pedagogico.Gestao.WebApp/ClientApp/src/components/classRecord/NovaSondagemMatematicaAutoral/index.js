@@ -42,7 +42,7 @@ function NovaSondagemMatematicaAutoral() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (!perguntas || perguntas.length === 0) return;
+    if (!perguntas || perguntas.length === 0 || perguntas.mensagens) return;
 
     const pergunta = perguntas.find((x) => x.ordenacao == indexSelecionado);
 
@@ -70,13 +70,14 @@ function NovaSondagemMatematicaAutoral() {
   );
 
   const ultimaOrdenacao = useMemo(() => {
-    if (!perguntas || perguntas.length === 0) return 0;
+    console.log("perguntas", perguntas);
+    if (!perguntas || perguntas.length === 0 || perguntas.mensagens) return 0;
 
     return perguntas[perguntas.length - 1].ordenacao;
   }, [perguntas]);
 
   const primeiraOrdenacao = useMemo(() => {
-    if (!perguntas || perguntas.length === 0) return 0;
+    if (!perguntas || perguntas.length === 0 || perguntas.mensagens) return 0;
 
     return perguntas[0].ordenacao;
   }, [perguntas]);
