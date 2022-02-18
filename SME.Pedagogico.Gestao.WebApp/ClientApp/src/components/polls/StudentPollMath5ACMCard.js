@@ -226,7 +226,7 @@ export default class StudentPollMath5ACMCard extends Component {
 
                     <tbody>
 
-                        {this.props.students.map(student => (
+                        {!!this.props.students.length && this.props.students.map(student => (
                             <StudentPollMath5A6ACM key={student.studentCodeEol} student={student} updatePollStudent={this.props.updatePollStudent} editLock1S={this.props.editLock1S} editLock2S={this.props.editLock2S}/>
                         ))}
 
