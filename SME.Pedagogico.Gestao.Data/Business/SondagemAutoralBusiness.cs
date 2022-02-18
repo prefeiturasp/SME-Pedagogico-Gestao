@@ -597,29 +597,20 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private static async Task<List<Sondagem>> ObterSondagemAutoralMatematicaBimestre(FiltrarListagemMatematicaDTO filtrarListagemDto)
         {
-            try
+
+            using (var contexto = new SMEManagementContextData())
             {
-                using (var contexto = new SMEManagementContextData())
-                {
-                    var retorno = await contexto.Sondagem.Where(s => s.AnoLetivo == filtrarListagemDto.AnoLetivo &&
-                                                              s.Bimestre == filtrarListagemDto.Bimestre &&
-                                                              s.AnoTurma == filtrarListagemDto.AnoEscolar &&
-                                                              s.CodigoDre == filtrarListagemDto.CodigoDre &&
-                                                              s.CodigoUe == filtrarListagemDto.CodigoUe &&
-                                                              s.ComponenteCurricularId.Equals(filtrarListagemDto.ComponenteCurricular.ToString()) &&
-                                                              s.CodigoTurma == filtrarListagemDto.CodigoTurma).
-                                                              Include(x => x.AlunosSondagem).ThenInclude(x => x.ListaRespostas).ThenInclude(x => x.Resposta).ToListAsync();
+                return await contexto.Sondagem.Where(s => s.AnoLetivo == filtrarListagemDto.AnoLetivo &&
+                                                          s.Bimestre == filtrarListagemDto.Bimestre &&
+                                                          s.AnoTurma == filtrarListagemDto.AnoEscolar &&
+                                                          s.CodigoDre == filtrarListagemDto.CodigoDre &&
+                                                          s.CodigoUe == filtrarListagemDto.CodigoUe &&
+                                                          s.ComponenteCurricularId.Equals(filtrarListagemDto.ComponenteCurricular.ToString()) &&
+                                                          s.CodigoTurma == filtrarListagemDto.CodigoTurma).
+                                                          Include(x => x.AlunosSondagem).ThenInclude(x => x.ListaRespostas).ThenInclude(x => x.Resposta).ToListAsync();
 
-
-                    return retorno;
-
-                }
             }
-            catch (Exception ex)
-            {
 
-                throw;
-            }
         }
 
         private static IEnumerable<PerguntaResposta> ObterRespostaDaPergunta(PerguntaDto pergunta, List<PerguntaResposta> perguntasResposta)
