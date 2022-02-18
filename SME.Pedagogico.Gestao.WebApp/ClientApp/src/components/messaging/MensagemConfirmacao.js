@@ -51,12 +51,6 @@ function MesangemConfirmacao(props) {
     resetarPasso();
   };
 
-  useEffect(() => {
-    return () => {
-      if (exibir) controleExibicao();
-    };
-  }, [controleExibicao, exibir]);
-
   return (
     <div>
       <Spring
