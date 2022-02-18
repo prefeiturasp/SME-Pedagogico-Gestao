@@ -1,1 +1,2 @@
-alter table "SondagemAlunoRespostas" add column "Bimestre" int4;
+alter table "SondagemAlunoRespostas" add column if not exists "Bimestre" int4;
+alter table "SondagemAluno" add column if not exists "Bimestre" int4;

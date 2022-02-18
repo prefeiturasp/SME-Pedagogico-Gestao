@@ -21,6 +21,7 @@ namespace SME.Pedagogico.Gestao.Models.Autoral
         public virtual Grupo Grupo { get; set; }
         public string GrupoId { get; set; }
         public int? SequenciaDeOrdemSalva { get; set; }
+        public int Bimestre { get; set; }
         public  List<SondagemAluno> AlunosSondagem { get; set; }
 
         //public Sondagem()
