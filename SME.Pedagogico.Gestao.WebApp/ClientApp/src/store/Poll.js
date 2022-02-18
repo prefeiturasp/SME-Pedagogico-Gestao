@@ -32,6 +32,7 @@
   SET_LOADING_SALVAR: "SET_LOADING_SALVAR",
   SET_BIMESTRE: "SET_BIMESTRE",
   SET_LOADING_PERGUNTAS: "SET_LOADING_PERGUNTAS",
+  SET_NAVEGACAO_SELECIONADA: "SET_NAVEGACAO_SELECIONADA",
 };
 
 const initialState = {
@@ -56,6 +57,7 @@ const initialState = {
   loadingSalvar: false,
   bimestre: null,
   loadingPerguntas: false,
+  navSelected: "",
 };
 
 export const actionCreators = {
@@ -165,6 +167,11 @@ export const actionCreators = {
 
   setBimestre: (payload) => ({
     type: types.SET_BIMESTRE,
+    payload,
+  }),
+
+  setNavegacaoSelecionada: (payload) => ({
+    type: types.SET_NAVEGACAO_SELECIONADA,
     payload,
   }),
 };
@@ -286,10 +293,15 @@ export const reducer = (state, action) => {
       };
 
     case types.SET_LOADING_PERGUNTAS:
-      console.log("action", action);
       return {
         ...state,
         loadingPerguntas: action.loadingPerguntas,
+      };
+
+    case types.SET_NAVEGACAO_SELECIONADA:
+      return {
+        ...state,
+        navSelected: action.payload,
       };
 
     default:

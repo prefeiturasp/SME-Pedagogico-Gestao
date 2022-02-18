@@ -1,29 +1,22 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
+import { useSelector } from "react-redux";
 import "../../polls/inputs/Common.css";
 import shortid from "shortid";
-import { useSelector } from "react-redux";
 
 const AutoralSelect = ({
   onChange,
   lista,
-  disabled,
   valor,
   perguntaId,
-  periodoId,
   alunoId,
-  id,
   sondagemId,
   mostraToolTipItens,
 }) => {
   function onOptionChange(event) {
-    onChange(event.target.value, perguntaId, periodoId, alunoId, sondagemId);
+    onChange(event.target.value, perguntaId, alunoId, sondagemId);
   }
 
-  const [tooltipOpen, setTooltipOpen] = useState(false);
-
-  const toggle = () => setTooltipOpen(!tooltipOpen);
-
-  const [idSelect, setIdSelect] = useState(null);
+  const periodoAberto = useSelector((store) => store.autoral.periodoAberto);
 
   const descricao = useMemo(() => {
     if (!valor || !lista || lista.length === 0) return null;
@@ -32,10 +25,6 @@ const AutoralSelect = ({
 
     return option && option.descricao;
   }, [lista, valor]);
-
-  useEffect(() => {
-    setIdSelect(shortid.generate());
-  }, [tooltipOpen]);
 
   const construirItens = (itens) => {
     if (itens) {
@@ -82,7 +71,7 @@ const AutoralSelect = ({
           perguntaId={perguntaId}
           value={valor}
           onChange={onOptionChange}
-          // disabled={!verificaPeriodo}
+          disabled={!periodoAberto}
           key={shortid.generate()}
         >
           <option
@@ -97,7 +86,7 @@ const AutoralSelect = ({
           perguntaId={perguntaId}
           value={valor}
           onChange={onOptionChange}
-          // disabled={!verificaPeriodo}
+          disabled={!periodoAberto}
           key={shortid.generate()}
         >
           <option

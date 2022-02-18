@@ -44,12 +44,22 @@ const escolherComponentesMatematica = (props, updatePollStudent) => {
   );
 };
 
+const escolherComponentesMatematicaAutoral = (props) => {
+  if (
+    Number(props.poll.pollYear) > 3 &&
+    props.poll.selectedFilter.schoolYear === 2022
+  ) {
+    return <NovaSondagemMatematicaAutoral />;
+  }
+  return <SondagemMatematicaAutoral />;
+};
+
 const escolherComponentes = (props, updatePollStudent) => {
   switch (props.poll.pollSelected) {
     case ClassRoomEnum.ClassPTAutoral:
       return <SondagemPortuguesAutoral />;
     case ClassRoomEnum.ClassMTAutoral:
-      return <SondagemMatematicaAutoral />;
+      return escolherComponentesMatematicaAutoral(props);
     case ClassRoomEnum.ClassPT:
       return (
         <StudentPollPortugueseCard
@@ -69,12 +79,5 @@ const escolherComponentes = (props, updatePollStudent) => {
 };
 
 export const componentRenderPoll = (props, updatePollStudent) => {
-  if (
-    Number(props.poll.pollYear) > 3 &&
-    props.poll.selectedFilter.schoolYear === 2022
-  ) {
-    return <NovaSondagemMatematicaAutoral />;
-  }
-
   return escolherComponentes(props, updatePollStudent);
 };

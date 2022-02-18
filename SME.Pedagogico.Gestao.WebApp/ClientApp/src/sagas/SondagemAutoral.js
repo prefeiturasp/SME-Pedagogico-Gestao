@@ -2,6 +2,7 @@
 import * as Autoral from "../store/SondagemAutoral";
 import * as Filters from "../store/Filters";
 import * as Poll from "../store/Poll";
+import { parametrosParaUrl } from "../utils";
 
 export default function* () {
   yield all([
@@ -16,6 +17,7 @@ export default function* () {
       SalvaSondagemAutoralMat
     ),
     takeLatest(Filters.types.GET_PERIOD, GetPeriod),
+    takeLatest(Autoral.types.OBTER_PERIODO_ABERTO, obterPeriodoAberto),
   ]);
 }
 
@@ -38,7 +40,11 @@ function* ListarPerguntas({ filtros }) {
 }
 
 function listaPerguntasAPI(filtros) {
-  const url = `/api/SondagemAutoral/Matematica/Perguntas?anoEscolar=${filtros.yearClassroom}&anoLetivo=${filtros.schoolYear}`;
+  const params = parametrosParaUrl({
+    anoEscolar: filtros.yearClassroom,
+    anoLetivo: filtros.schoolYear,
+  });
+  const url = `/api/SondagemAutoral/Matematica/Perguntas?${params}`;
   return fetch(url, {
     method: "get",
     headers: { "Content-Type": "application/json" },
@@ -63,9 +69,9 @@ function listarPeriodosAPI() {
   }).then((response) => response.json());
 }
 
-function* ListarAlunosAutoralMat({ filtro }) {
+function* ListarAlunosAutoralMat({ payload }) {
   try {
-    const data = yield call(listarAlunosMatApi, filtro);
+    const data = yield call(listarAlunosMatApi, payload);
     var listaAlunosAutoralMatematica = data;
     yield put({
       type: Autoral.types.SETAR_ALUNOS_AUTORAL_MATEMATICA,
@@ -76,8 +82,9 @@ function* ListarAlunosAutoralMat({ filtro }) {
   }
 }
 
-function listarAlunosMatApi(filtro) {
-  var url = `/api/SondagemAutoral/Matematica?${new URLSearchParams(filtro)}`;
+function listarAlunosMatApi({ filtro, bimestre }) {
+  const params = parametrosParaUrl({ ...filtro, bimestre });
+  var url = `/api/SondagemAutoral/Matematica?${params}`;
   return fetch(url, {
     method: "get",
     headers: { "Content-Type": "application/json" },
@@ -121,6 +128,24 @@ function* GetPeriod({ schoolYear }) {
 
 function getPeriodApi(schoolYear) {
   var url = `/api/Filtros/ListarPeriodoDeAberturas/${schoolYear}`;
+  return fetch(url, {
+    method: "get",
+    headers: { "Content-Type": "application/json" },
+  }).then((response) => response.json());
+}
+
+function* obterPeriodoAberto({ payload }) {
+  try {
+    const periodoAberto = yield call(obterPeriodAbertoApi, payload);
+    yield put({ type: Autoral.types.SETAR_PERIODO_ABERTO, periodoAberto });
+  } catch (error) {
+    yield put({ type: "API_CALL_ERROR" });
+  }
+}
+
+function obterPeriodAbertoApi({ bimestre, anoLetivo }) {
+  const params = parametrosParaUrl({ bimestre, anoLetivo });
+  var url = `/api/SondagemAutoral/Matematica/Periodo/Aberto?${params}`;
   return fetch(url, {
     method: "get",
     headers: { "Content-Type": "application/json" },

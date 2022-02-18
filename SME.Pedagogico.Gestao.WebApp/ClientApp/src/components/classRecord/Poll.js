@@ -27,7 +27,6 @@ class Poll extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      navSelected: "",
       didAnswerPoll: false, //usar para perguntar para salvar sondagem
       sondagemType: ClassRoomEnum.ClassEmpty,
       showMessageBox: false, //para botao save
@@ -106,35 +105,39 @@ class Poll extends Component {
   }
 
   componentDidUpdate() {
+    const portuguesTab = document.getElementById("portugues-tab");
+    const matematicaTab = document.getElementById("matematica-tab");
+    const btnSave = document.getElementById("btnSave");
+
     if (
-      this.state.navSelected === "portugues-tab" &&
-      document.getElementById("portugues-tab") !== null &&
-      document.getElementById("matematica-tab") !== null
+      this.props.poll.navSelected === "portugues-tab" &&
+      portuguesTab &&
+      matematicaTab
     ) {
-      document.getElementById("portugues-tab").className =
+      portuguesTab.className =
         "btn btn-outline-primary btn-sm btn-planning active";
-      document.getElementById("matematica-tab").className =
-        "btn btn-outline-primary btn-sm btn-planning";
+      matematicaTab.className = "btn btn-outline-primary btn-sm btn-planning";
     } else if (
-      this.state.navSelected === "matematica-tab" &&
-      document.getElementById("portugues-tab") !== null &&
-      document.getElementById("matematica-tab") !== null
+      this.props.poll.navSelected === "matematica-tab" &&
+      portuguesTab &&
+      matematicaTab
     ) {
-      document.getElementById("portugues-tab").className =
-        "btn btn-outline-primary btn-sm btn-planning";
-      document.getElementById("matematica-tab").className =
+      portuguesTab.className = "btn btn-outline-primary btn-sm btn-planning";
+      matematicaTab.className =
         "btn btn-outline-primary btn-sm btn-planning active";
+    } else if (portuguesTab && matematicaTab) {
+      portuguesTab.className = "btn btn-outline-primary btn-sm btn-planning";
+      matematicaTab.className = "btn btn-outline-primary btn-sm btn-planning";
     }
 
     if (this.props.poll.newDataToSave) {
-      if (document.getElementById("btnSave") !== null) {
+      if (btnSave) {
         document.getElementById("btnSave").className =
           "btn btn-save text-white";
       }
     } else {
-      if (document.getElementById("btnSave") !== null) {
-        document.getElementById("btnSave").className =
-          "btn btn-save text-white deactive";
+      if (btnSave) {
+        btnSave.className = "btn btn-save text-white deactive";
       }
     }
   }
@@ -316,9 +319,8 @@ class Poll extends Component {
   }
 
   toggleButton(elementSeleted) {
-    this.setState({
-      navSelected: elementSeleted,
-    });
+    this.props.pollMethods.setNavegacaoSelecionada(elementSeleted);
+    this.props.pollMethods.setBimestre("");
   }
 
   openPortuguesePoll() {
@@ -573,7 +575,7 @@ class Poll extends Component {
             </ul>
             <ul className="nav navbar-nav ml-auto">{this.checkButtonSave()}</ul>
           </nav>
-          {this.state.navSelected === "matematica-tab" &&
+          {this.props.poll.navSelected === "matematica-tab" &&
             this.props.poll.selectedFilter.schoolYear === 2022 && (
               <div className="col-md-2 pb-2">
                 <SelectChangeColor

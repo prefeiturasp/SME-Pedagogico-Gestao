@@ -10,15 +10,11 @@ import Loader from "../../loader/Loader";
 function NovaSondagemMatematicaAutoral() {
   const dispatch = useDispatch();
 
-  const periodosAbertura = useSelector((store) => store.filters.period);
-
   const filtros = useSelector((store) => store.poll.selectedFilter);
 
   const [indexSelecionado, setIndexSelecionado] = useState(1);
 
   const emEdicao = useSelector((store) => store.autoral.emEdicao);
-
-  const periodosLista = useSelector((store) => store.autoral.listaPeriodos);
 
   const itemSelecionado = useSelector(
     (store) => store.autoral.perguntaSelecionada
@@ -114,16 +110,11 @@ function NovaSondagemMatematicaAutoral() {
   };
 
   const salvar = async () => {
-    await persistencia(alunos, perguntas, periodosLista, filtrosBusca);
+    await persistencia(alunos, filtrosBusca);
   };
 
   const persistencia = useCallback(
-    async (
-      listaAlunosRedux,
-      perguntasRedux,
-      periodosRedux,
-      filtrosBuscaPersistencia
-    ) => {
+    async (listaAlunosRedux, filtrosBuscaPersistencia) => {
       let alunosMutaveis = Object.assign([], listaAlunosRedux);
 
       try {
@@ -146,21 +137,13 @@ function NovaSondagemMatematicaAutoral() {
     return alunos.findIndex((x) => x.codigoAluno === alunoIdState);
   };
 
-  const obterIndexRespostasAluno = (aluno, perguntaId, periodoId) => {
+  const obterIndexRespostasAluno = (aluno, perguntaId) => {
     if (!aluno.respostas || aluno.respostas.length === 0) return null;
 
-    return aluno.respostas.findIndex(
-      (x) => x.pergunta === perguntaId && x.periodoId === periodoId
-    );
+    return aluno.respostas.findIndex((x) => x.pergunta === perguntaId);
   };
 
-  const onChangeAluno = (
-    novoValor,
-    perguntaIdState,
-    periodoIdState,
-    alunoIdState,
-    sondagemIdState
-  ) => {
+  const onChangeAluno = (novoValor, perguntaIdState, alunoIdState) => {
     setarModoEdicao();
 
     let alunosMutaveis = Object.assign([], alunos);
@@ -171,8 +154,7 @@ function NovaSondagemMatematicaAutoral() {
 
     const indexResposta = obterIndexRespostasAluno(
       alunosMutaveis[indexAluno],
-      perguntaIdState,
-      periodoIdState
+      perguntaIdState
     );
 
     if (
@@ -185,7 +167,7 @@ function NovaSondagemMatematicaAutoral() {
       }
 
       alunosMutaveis[indexAluno].respostas.push({
-        periodoId: periodoIdState,
+        bimestre,
         pergunta: perguntaIdState,
         resposta: novoValor,
       });
@@ -201,24 +183,23 @@ function NovaSondagemMatematicaAutoral() {
   };
 
   useEffect(() => {
-    dispatch(filterStore.verificaPeriodosMatematica());
-  }, [dispatch, periodosAbertura]);
-
-  useEffect(() => {
     if (
       !filtrosBusca ||
       !filtrosBusca.perguntaId ||
       !filtrosBusca.anoLetivo ||
-      !filtrosBusca.anoEscolar
+      !filtrosBusca.anoEscolar ||
+      !bimestre
     )
       return;
 
-    dispatch(actionCreators.listaAlunosAutoralMatematica(filtrosBusca));
-  }, [dispatch, filtrosBusca]);
+    dispatch(
+      actionCreators.listaAlunosAutoralMatematica(filtrosBusca, bimestre)
+    );
+  }, [bimestre, dispatch, filtrosBusca]);
 
   useEffect(() => {
-    dispatch(actionCreators.listarPeriodos());
     if (filtros.yearClassroom && bimestre) {
+      dispatch(actionCreators.obterPeriodoAberto(filtros.schoolYear, bimestre));
       dispatch(actionCreators.listarPerguntas(filtros));
       dispatch(
         pollStore.setFunctionButtonSave(
@@ -323,13 +304,11 @@ function NovaSondagemMatematicaAutoral() {
         </tr>
       </thead>
       <tbody>
-        {periodosLista &&
-          alunos &&
+        {alunos &&
           !!alunos.length &&
           alunos.map((aluno) => (
             <NovoAlunoSondagemMatematicaAutoral
               aluno={aluno}
-              periodos={periodosLista}
               salvar={salvar}
               perguntaSelecionada={itemSelecionado}
               onChangeAluno={onChangeAluno}

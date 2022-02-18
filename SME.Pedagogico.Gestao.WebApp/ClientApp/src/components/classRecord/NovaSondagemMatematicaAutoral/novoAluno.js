@@ -3,7 +3,6 @@ import AutoralSelect from "./select";
 
 function NovoAlunoSondagemMatematicaAutoral({
   perguntaSelecionada,
-  periodos,
   aluno,
   onChangeAluno,
 }) {
@@ -22,7 +21,6 @@ function NovoAlunoSondagemMatematicaAutoral({
           perguntaId={perguntaSelecionada.id}
           alunoId={aluno.codigoAluno}
           sondagemId={aluno.id}
-          //periodoId={periodo.id}
           key={aluno.id}
           id={aluno.id}
           onChange={onChangeAluno}
