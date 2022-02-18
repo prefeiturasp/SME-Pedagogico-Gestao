@@ -74,8 +74,11 @@ class Poll extends Component {
     this.toggleMessagePortugueseBox = this.toggleMessagePortugueseBox.bind(
       this
     ); //para botao portugues
-    this.toggleMessageMathBox = this.toggleMessageMathBox.bind(this); //para botao matematica
-  }
+      this.toggleMessageMathBox = this.toggleMessageMathBox.bind(this); //para botao matematica
+
+ 
+    }
+
 
   componentWillMount() {
     var todayDate = new Date();
@@ -84,17 +87,18 @@ class Poll extends Component {
     }
   }
 
-  toggleMessageBox() {
+    toggleMessageBox() {
     this.setState({
       showMessageBox: !this.state.showMessageBox,
     });
   }
 
-  toggleMessagePortugueseBox() {
-    this.setState({
-      showMessagePortugueseBox: !this.state.showMessagePortugueseBox,
-    });
-  }
+    toggleMessagePortugueseBox() {
+        console.log("VALOR PORTUGUES", this.state.showMessagePortugueseBox);
+        this.setState({
+          showMessagePortugueseBox: !this.state.showMessagePortugueseBox,
+        });
+    }
 
   toggleMessageMathBox() {
     this.setState({
