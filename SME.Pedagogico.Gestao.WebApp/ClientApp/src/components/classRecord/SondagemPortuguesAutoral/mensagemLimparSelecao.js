@@ -21,7 +21,6 @@ function MensagemLimparSelecao({ controleExibicao, acaoPrincipal, acaoSecundaria
     controleExibicao={controleExibicao}
     acaoPrincial={acaoPrincipal}
     acaoSecundaria={acaoSecundaria} />
-
 }
 
 export default MensagemLimparSelecao;
