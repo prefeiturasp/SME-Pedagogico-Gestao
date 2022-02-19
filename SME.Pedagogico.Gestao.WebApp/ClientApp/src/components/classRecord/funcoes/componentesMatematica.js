@@ -39,4 +39,5 @@ export const componenteMatematica = {
 export const escolherPropriedade = {
   CA: "studentsPollMathCA",
   CM: "studentsPollMathCM",
+  Numeric: "Numeric",
 };

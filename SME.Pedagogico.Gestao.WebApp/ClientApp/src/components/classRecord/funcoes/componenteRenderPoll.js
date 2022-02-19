@@ -16,7 +16,7 @@ import {
 const escolherComponentesMatematica = (props, updatePollStudent) => {
   if (
     Number(props.poll.pollYear) > 3 &&
-    props.poll.selectedFilter.schoolYear === 2022
+    props.poll.selectedFilter.schoolYear >= 2022
   ) {
     return <NovaSondagemMatematicaAutoral />;
   }
@@ -26,7 +26,7 @@ const escolherComponentesMatematica = (props, updatePollStudent) => {
   }
 
   if (
-    props.poll.pollTypeSelected === "Numeric" &&
+    props.poll.pollTypeSelected === escolherPropriedade.Numeric &&
     (props.poll.pollYear === "1" ||
       props.poll.pollYear === "2" ||
       props.poll.pollYear === "3")
