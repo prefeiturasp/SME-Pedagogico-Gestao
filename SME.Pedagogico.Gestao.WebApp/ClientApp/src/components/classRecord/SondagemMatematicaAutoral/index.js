@@ -1,4 +1,4 @@
-﻿import React, { useState, useMemo, useEffect,useCallback } from "react";
+﻿import React, { useState, useMemo, useEffect, useCallback } from "react";
 import AlunoSondagemMatematicaAutoral from "./aluno";
 import { useSelector, useDispatch } from "react-redux";
 import { actionCreators } from "../../../store/SondagemAutoral";
@@ -112,28 +112,30 @@ function SondagemMatematicaAutoral() {
     await persistencia(alunos, perguntas, periodosLista, filtrosBusca);
   };
 
-  const persistencia = useCallback(async (
-    listaAlunosRedux,
-    perguntasRedux,
-    periodosRedux,
-    filtrosBuscaPersistencia
-  ) => {
+  const persistencia = useCallback(
+    async (
+      listaAlunosRedux,
+      perguntasRedux,
+      periodosRedux,
+      filtrosBuscaPersistencia
+    ) => {
+      let alunosMutaveis = Object.assign([], listaAlunosRedux);
 
-    let alunosMutaveis = Object.assign([], listaAlunosRedux);
+      try {
+        await dispatch(
+          actionCreators.salvaSondagemAutoralMatematica(
+            alunosMutaveis,
+            filtrosBuscaPersistencia
+          )
+        );
+      } catch (e) {
+        dispatch(pollStore.setLoadingSalvar(false));
+      }
 
-    try {
-      await dispatch(
-        actionCreators.salvaSondagemAutoralMatematica(
-          alunosMutaveis,
-          filtrosBuscaPersistencia
-        )
-      );
-    } catch (e) {
-      dispatch(pollStore.setLoadingSalvar(false));
-    }
-
-    sairModoEdicao();
-  },[dispatch, sairModoEdicao]);
+      sairModoEdicao();
+    },
+    [dispatch, sairModoEdicao]
+  );
 
   const obterIndexAlunoAlteracao = (alunoIdState) => {
     return alunos.findIndex((x) => x.codigoAluno === alunoIdState);
@@ -198,15 +200,21 @@ function SondagemMatematicaAutoral() {
   }, [dispatch, periodosAbertura]);
 
   useEffect(() => {
-    if (!filtrosBusca || !filtrosBusca.perguntaId || !filtrosBusca.anoLetivo || !filtrosBusca.anoEscolar)  return;
+    if (
+      !filtrosBusca ||
+      !filtrosBusca.perguntaId ||
+      !filtrosBusca.anoLetivo ||
+      !filtrosBusca.anoEscolar
+    )
+      return;
 
     dispatch(actionCreators.listaAlunosAutoralMatematica(filtrosBusca));
   }, [dispatch, filtrosBusca]);
 
-  useEffect(() => {    
-    dispatch(actionCreators.listarPeriodos());    
+  useEffect(() => {
+    dispatch(actionCreators.listarPeriodos());
     if (filtros.yearClassroom)
-        dispatch(actionCreators.listarPerguntas(filtros.yearClassroom));
+      dispatch(actionCreators.listarPerguntas(filtros));
     dispatch(
       pollStore.setFunctionButtonSave(
         (
@@ -230,7 +238,7 @@ function SondagemMatematicaAutoral() {
       sairModoEdicao();
       dispatch(pollStore.setFunctionButtonSave(null));
     };
-  }, [dispatch, filtros.yearClassroom, persistencia, sairModoEdicao]);
+  }, [dispatch, filtros, filtros.yearClassroom, persistencia, sairModoEdicao]);
 
   useEffect(() => {
     setIndexSelecionado(primeiraOrdenacao);
