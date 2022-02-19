@@ -15,7 +15,18 @@ import {
 
 const escolherComponentesMatematica = (props, updatePollStudent) => {
   if (
-    props.poll.pollTypeSelected === "Numeric" &&
+    Number(props.poll.pollYear) > 3 &&
+    props.poll.selectedFilter.schoolYear >= 2022
+  ) {
+    return <NovaSondagemMatematicaAutoral />;
+  }
+
+  if (props.poll.pollSelected === ClassRoomEnum.ClassMTAutoral) {
+    return <SondagemMatematicaAutoral />;
+  }
+
+  if (
+    props.poll.pollTypeSelected === escolherPropriedade.Numeric &&
     (props.poll.pollYear === "1" ||
       props.poll.pollYear === "2" ||
       props.poll.pollYear === "3")
@@ -44,31 +55,29 @@ const escolherComponentesMatematica = (props, updatePollStudent) => {
   );
 };
 
-const escolherComponentes = (props, updatePollStudent) => {
-  if (
-    Number(props.poll.pollYear) > 3 &&
-    props.poll.selectedFilter.schoolYear === 2022
-  ) {
-    return <NovaSondagemMatematicaAutoral />;
+const escolherComponentesPortugues = (props, updatePollStudent) => {
+  if (props.poll.pollSelected === ClassRoomEnum.ClassPTAutoral) {
+    return <SondagemPortuguesAutoral />;
   }
+  return (
+    <StudentPollPortugueseCard
+      students={props.poll.students}
+      updatePollStudent={updatePollStudent}
+      editLock1b={props.pollOptionSelectLock.poll_1b_lock}
+      editLock2b={props.pollOptionSelectLock.poll_2b_lock}
+      editLock3b={props.pollOptionSelectLock.poll_3b_lock}
+      editLock4b={props.pollOptionSelectLock.poll_4b_lock}
+    />
+  );
+};
 
+const escolherComponentes = (props, updatePollStudent) => {
   switch (props.poll.pollSelected) {
     case ClassRoomEnum.ClassPTAutoral:
-      return <SondagemPortuguesAutoral />;
-    case ClassRoomEnum.ClassMTAutoral:
-      return <SondagemMatematicaAutoral />;
     case ClassRoomEnum.ClassPT:
-      return (
-        <StudentPollPortugueseCard
-          students={props.poll.students}
-          updatePollStudent={updatePollStudent}
-          editLock1b={props.pollOptionSelectLock.poll_1b_lock}
-          editLock2b={props.pollOptionSelectLock.poll_2b_lock}
-          editLock3b={props.pollOptionSelectLock.poll_3b_lock}
-          editLock4b={props.pollOptionSelectLock.poll_4b_lock}
-        />
-      );
+      return escolherComponentesPortugues(props, updatePollStudent);
     case ClassRoomEnum.ClassMT:
+    case ClassRoomEnum.ClassMTAutoral:
       return escolherComponentesMatematica(props, updatePollStudent);
     default:
       return "";
