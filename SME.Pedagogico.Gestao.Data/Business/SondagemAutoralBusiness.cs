@@ -39,7 +39,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 perguntas = await ObterPerguntas(anoEscolar, perguntas, anoLetivo, contexto);
 
-                perguntasResposta = await ObterPerguntasRespostas(perguntas, perguntasResposta, contexto);
+                perguntasResposta = await ObterPerguntasRespostas(perguntas, perguntasResposta, contexto, anoEscolar);
             }
 
             perguntas.ForEach(pergunta =>
@@ -647,7 +647,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private static IEnumerable<PerguntaResposta> ObterRespostaDaPergunta(PerguntaDto pergunta, List<PerguntaResposta> perguntasResposta)
         {
-            var respostasDaPergunta = perguntasResposta.Where(perguntaResposta => perguntaResposta.Pergunta.Id.Equals(pergunta.Id));
+            var respostasDaPergunta = perguntasResposta.Where(perguntaResposta => perguntaResposta.PerguntaAnoEscolar.Id.Equals(pergunta.PerguntaAnoEscolar));
 
             if (respostasDaPergunta == null || !respostasDaPergunta.Any())
                 throw new Exception($"Não foi possivel obter as respostas da pergunta '{pergunta.Descricao}'");
@@ -655,14 +655,45 @@ namespace SME.Pedagogico.Gestao.Data.Business
             return respostasDaPergunta;
         }
 
-        private static async Task<List<PerguntaResposta>> ObterPerguntasRespostas(List<PerguntaDto> perguntas, List<PerguntaResposta> perguntasResposta, SMEManagementContextData contexto)
+        private static async Task<List<PerguntaResposta>> ObterPerguntasRespostas(List<PerguntaDto> perguntas, List<PerguntaResposta> perguntasResposta, SMEManagementContextData contexto, int anoEscolar)
         {
-            perguntasResposta = await contexto.PerguntaResposta.Include(x => x.Pergunta).Include(x => x.Resposta).Where(resposta => perguntas.Any(z => z.Id.Equals(resposta.Pergunta.Id))).ToListAsync();
+            var perguntasRespostas = await (from p in contexto.Pergunta
+                                      join pae in contexto.PerguntaAnoEscolar on p.Id equals pae.Pergunta.Id
+                                      join pr in contexto.PerguntaResposta on new { PerguntaId = p.Id, PerguntaAnoEscolarId = pae.Id } equals new { PerguntaId = pr.Pergunta.Id, PerguntaAnoEscolarId = pr.PerguntaAnoEscolar.Id }
+                                      join r in contexto.Resposta on pr.Resposta.Id equals r.Id
+                                      join filtro in perguntas on new { PerguntaId = pr.Pergunta.Id, PerguntaAnoEscolarId = pr.PerguntaAnoEscolar.Id } equals new { PerguntaId = filtro.Id, PerguntaAnoEscolarId = filtro.PerguntaAnoEscolar }
+                                      where pae.AnoEscolar == anoEscolar
+                                      select new PerguntaResposta
+                                      {
+                                          Id = pr.Id,
+                                          Pergunta = new Pergunta()
+                                          {
+                                              Id = p.Id,
+                                              Descricao = p.Descricao,
+                                              OrdemPergunta = p.OrdemPergunta,
+                                              ComponenteCurricular = p.ComponenteCurricular,
+                                              ComponenteCurricularId = p.ComponenteCurricularId,
+                                              Excluido = p.Excluido
+                                          },
+                                          Resposta = new Resposta()
+                                          {
+                                              Id = r.Id,
+                                              Descricao = r.Descricao,
+                                              Excluido = r.Excluido,
+                                              Verdadeiro = r.Verdadeiro
+                                          },
+                                          Ordenacao = pr.Ordenacao,
+                                          Excluido = pr.Excluido,
+                                          PerguntaAnoEscolar = new PerguntaAnoEscolar()
+                                          {
+                                              Id = pr.PerguntaAnoEscolar.Id
+                                          }
+                                      }).ToListAsync();
 
-            if (perguntasResposta == null || !perguntasResposta.Any())
+            if (perguntasRespostas == null || !perguntasRespostas.Any())
                 throw new Exception("Não foi possivel obter as respostas da sondagem");
 
-            return perguntasResposta;
+            return perguntasRespostas;
         }
 
         private async Task<List<PerguntaDto>> ObterPerguntas(int anoEscolar, List<PerguntaDto> perguntas, int anoLetivo, SMEManagementContextData contexto)
@@ -693,6 +724,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 return default;
 
             retorno.Ordenacao = perguntaAnoEscolar.Ordenacao;
+            retorno.PerguntaAnoEscolar = perguntaAnoEscolar.Id;
 
             return retorno;
         }

@@ -682,8 +682,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Pr
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou o resultado utilizando estratégias convencionais/ cálculo mental';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 4,1,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 4 and "Ordenacao" = 1)
+values (uuid_generate_v4()::text, perguntaId, 4,1,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -725,8 +724,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Pr
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou o resultado utilizando estratégias convencionais/ cálculo mental';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 4,2,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 4 and "Ordenacao" = 2)
+values (uuid_generate_v4()::text, perguntaId, 4,2,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -768,8 +766,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Pa
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia de regularidade e acertou a sequência';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 4,3,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 4 and "Ordenacao" = 3)
+values (uuid_generate_v4()::text, perguntaId, 4,3,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -811,8 +808,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Pa
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia de regularidade e acertou a sequência';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 4,4,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 4 and "Ordenacao" = 4)
+values (uuid_generate_v4()::text, perguntaId, 4,4,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -854,8 +850,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Lo
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia de localização e movimentação';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 4,5,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 4 and "Ordenacao" = 5)
+values (uuid_generate_v4()::text, perguntaId, 4,5,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -898,8 +893,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Lo
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia de localização e movimentação';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 4,6,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 4 and "Ordenacao" = 6)
+values (uuid_generate_v4()::text, perguntaId, 4,6,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -941,8 +935,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Me
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia de perímetro e acertou o resultado';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 4,7,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 4 and "Ordenacao" = 7)
+values (uuid_generate_v4()::text, perguntaId, 4,7,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -984,8 +977,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Me
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia de perímetro';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 4,8,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 4 and "Ordenacao" = 8)
+values (uuid_generate_v4()::text, perguntaId, 4,8,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -1027,8 +1019,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Pr
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Realizou a leitura de dados explícitos e implícitos';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 4,9,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 4 and "Ordenacao" = 9)
+values (uuid_generate_v4()::text, perguntaId, 4,9,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -1071,8 +1062,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Pr
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia, explicitando adequadamente na tabela os dados do gráfico';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 4,10,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 4 and "Ordenacao" = 10)
+values (uuid_generate_v4()::text, perguntaId, 4,10,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -1082,11 +1072,11 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Co
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 2,perguntaAnoEscolarId);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não realizou a leitura de dados explícitos no gráfico';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não correlacionou corretamente os dados de linha e coluna';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 3,perguntaAnoEscolarId);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não realizou a leitura de dados explícitos em gráficos';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não realizou a leitura de dados explícitos no gráfico';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4,perguntaAnoEscolarId);
 
@@ -1114,8 +1104,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Pr
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou o resultado utilizando estratégias convencionais/ cálculo mental';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 5,1,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 5 and "Ordenacao" = 1)
+values (uuid_generate_v4()::text, perguntaId, 5,1,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -1157,8 +1146,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Pr
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou o resultado utilizando estratégias convencionais/ cálculo mental';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 5,2,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 5 and "Ordenacao" = 2)
+values (uuid_generate_v4()::text, perguntaId, 5,2,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -1200,8 +1188,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Á
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia de igualdade e acertou o resultado';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 5,3,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 5 and "Ordenacao" = 3)
+values (uuid_generate_v4()::text, perguntaId, 5,3,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -1243,8 +1230,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Á
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia de igualdade e acertou o resultado';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 5,4,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 5 and "Ordenacao" = 4)
+values (uuid_generate_v4()::text, perguntaId, 5,4,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -1286,8 +1272,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Lo
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia de localização e movimentação';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 5,5,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 5 and "Ordenacao" = 5)
+values (uuid_generate_v4()::text, perguntaId, 5,5,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -1329,8 +1314,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Lo
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia de localização e movimentação';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 5,6,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 5 and "Ordenacao" = 6)
+values (uuid_generate_v4()::text, perguntaId, 5,6,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -1372,8 +1356,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Me
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia de perímetro';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 5,7,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 5 and "Ordenacao" = 7)
+values (uuid_generate_v4()::text, perguntaId, 5,7,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -1415,22 +1398,21 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Me
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia de perímetro';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 5,8,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 5 and "Ordenacao" = 8)
+values (uuid_generate_v4()::text, perguntaId, 5,8,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 1,perguntaAnoEscolarId);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia de perímetro';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia, mas errou o cálculo';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 2,perguntaAnoEscolarId);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia, mas errou o cálculo';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Calculou apenas com os valores apresentados na questão';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 3,perguntaAnoEscolarId);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Calculou apenas com os valores apresentados na questão';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreendeu a ideia';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4,perguntaAnoEscolarId);
 
@@ -1458,8 +1440,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Pr
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Realiza a leitura de dados explícitos e implícitos';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 5,9,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 5 and "Ordenacao" = 9)
+values (uuid_generate_v4()::text, perguntaId, 5,9,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -1501,8 +1482,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Pr
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia, explicitando adequadamente na tabela os dados do gráfico';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 5,10,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 5 and "Ordenacao" = 10)
+values (uuid_generate_v4()::text, perguntaId, 5,10,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -1544,8 +1524,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'N�
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Comparou e/ou ordenou números racionais na representação decimal';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 6,1,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 6 and "Ordenacao" = 1)
+values (uuid_generate_v4()::text, perguntaId, 6,1,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -1587,8 +1566,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'N�
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou o resultado utilizando estratégias convencionais/ cálculo mental';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 6,2,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 6 and "Ordenacao" = 2)
+values (uuid_generate_v4()::text, perguntaId, 6,2,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -1630,8 +1608,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Á
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia e acertou o resultado';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 6,3,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 6 and "Ordenacao" = 3)
+values (uuid_generate_v4()::text, perguntaId, 6,3,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -1673,8 +1650,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Á
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia e acertou o resultado';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 6,4,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 6 and "Ordenacao" = 4)
+values (uuid_generate_v4()::text, perguntaId, 6,4,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -1716,8 +1692,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Lo
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia de plano cartesiano e acertou as coordenadas';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 6,5,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 6 and "Ordenacao" = 5)
+values (uuid_generate_v4()::text, perguntaId, 6,5,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -1759,8 +1734,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Lo
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia de plano cartesiano e acertou as coordenadas';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 6,6,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 6 and "Ordenacao" = 6)
+values (uuid_generate_v4()::text, perguntaId, 6,6,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -1802,8 +1776,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Me
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia de área';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 6,7,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 6 and "Ordenacao" = 7)
+values (uuid_generate_v4()::text, perguntaId, 6,7,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -1845,8 +1818,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Me
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia de área';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 6,8,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 6 and "Ordenacao" = 8)
+values ( uuid_generate_v4()::text, perguntaId, 6,8,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -1888,8 +1860,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Pr
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Realizou a leitura de dados explícitos e implícitos';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 6,9,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 6 and "Ordenacao" = 9)
+values ( uuid_generate_v4()::text, perguntaId, 6,9,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -1931,8 +1902,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Pr
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Realizou a leitura de dados explícitos e implícitos';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 6,10,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 6 and "Ordenacao" = 10)
+values ( uuid_generate_v4()::text, perguntaId, 6,10,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -1974,8 +1944,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Pl
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não conheceu as terminologias envolvendo uma pesquisa que apareceram na questão';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 7,1,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 7 and "Ordenacao" = 1)
+values ( uuid_generate_v4()::text, perguntaId, 7,1,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -2017,8 +1986,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Pl
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Calculou o valor da renda familiar per capita (em reais) e o número de pessoas na família';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 7,2,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 7 and "Ordenacao" = 2)
+values ( uuid_generate_v4()::text, perguntaId, 7,2,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -2060,8 +2028,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Po
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não reconheceu os sólidos geométricos';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 7,3,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 7 and "Ordenacao" = 3)
+values ( uuid_generate_v4()::text, perguntaId, 7,3,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -2103,8 +2070,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Â
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não identificou medidas de ângulos';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 7,4,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 7 and "Ordenacao" = 4)
+values ( uuid_generate_v4()::text, perguntaId, 7,4,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -2146,8 +2112,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Me
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não identificou medidas de tempo';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 7,5,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 7 and "Ordenacao" = 5)
+values ( uuid_generate_v4()::text, perguntaId, 7,5,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -2189,8 +2154,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Ob
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não reconheceu o significado de perímetro e área';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 7,6,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 7 and "Ordenacao" = 6)
+values ( uuid_generate_v4()::text, perguntaId, 7,6,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -2232,8 +2196,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Pr
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Calculou o valor da massa de cada bola de tênis para manter o equilíbrio da balança utilizando a propriedade da igualdade';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 7,7,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 7 and "Ordenacao" = 7)
+values ( uuid_generate_v4()::text, perguntaId, 7,7,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -2275,8 +2238,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Pr
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Calculou a idade de Osmir';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 7,8,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 7 and "Ordenacao" = 8)
+values ( uuid_generate_v4()::text, perguntaId, 7,8,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -2315,25 +2277,24 @@ declare
 begin
 	
 select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Números naturais e inteiros: significados, reta numerada e significado das operações';
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Calculou a idade de Osmir';	
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Resolveu o problema envolvendo um dos significados dos números inteiros';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 7,9,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 7 and "Ordenacao" = 9)
+values ( uuid_generate_v4()::text, perguntaId, 7,9,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 1,perguntaAnoEscolarId);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Resolveu o problema envolvendo um dos significados dos números inteiros';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolveu o problema envolvendo um dos significados dos números inteiros';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 2,perguntaAnoEscolarId);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolveu o problema envolvendo um dos significados dos números inteiros';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Identificou a temperatura correta no termômetro';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 3,perguntaAnoEscolarId);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Identificou a temperatura correta no termômetro';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não identificar a temperatura no termômetro';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4,perguntaAnoEscolarId);
 
@@ -2361,8 +2322,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'N�
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Resolveu o problema corretamente utilizando alguma operação numérica';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 7,10,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 7 and "Ordenacao" = 10)
+values ( uuid_generate_v4()::text, perguntaId, 7,10,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -2404,8 +2364,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Pl
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não reconheceu as terminologias envolvendo uma pesquisa que apareceram na questão';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 8,1,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 8 and "Ordenacao" = 1)
+values ( uuid_generate_v4()::text, perguntaId, 8,1,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -2448,8 +2407,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Pl
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Calculou o valor da renda familiar per capita (em reais) e o número de pessoas na família';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 8,2,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 8 and "Ordenacao" = 2)
+values ( uuid_generate_v4()::text, perguntaId, 8,2,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -2491,8 +2449,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Po
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não identificou elementos geométricos presentes nos sólidos geométricos como altura, largura e profundidade';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 8,3,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 8 and "Ordenacao" = 3)
+values ( uuid_generate_v4()::text, perguntaId, 8,3,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -2534,8 +2491,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Â
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não reconheceu os tipos de ângulos no triângulo';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 8,4,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 8 and "Ordenacao" = 4)
+values ( uuid_generate_v4()::text, perguntaId, 8,4,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -2577,8 +2533,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Va
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Calculou a variação de duas grandezas inversamente proporcionais expressando a relação por meio de uma sentença algébrica';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 8,5,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 8 and "Ordenacao" = 5)
+values ( uuid_generate_v4()::text, perguntaId, 8,5,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -2620,8 +2575,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Va
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Calculou o valor do Capital Inicial, registrando como pensou';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 8,6,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 8 and "Ordenacao" = 6)
+values ( uuid_generate_v4()::text, perguntaId, 8,6,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -2663,8 +2617,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Pr
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não determinou a fração de um número dado';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 8,7,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 8 and "Ordenacao" = 7)
+values ( uuid_generate_v4()::text, perguntaId, 8,7,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -2706,8 +2659,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Pr
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não interpretou problemas que compara dois fluxos de cálculo';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 8,8,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 8 and "Ordenacao" = 8)
+values ( uuid_generate_v4()::text, perguntaId, 8,8,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -2749,8 +2701,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'C�
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não estabeleceu relação entre os dados numéricos fornecidos com as características da forma tridimensional apresentada';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 8,9,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 8 and "Ordenacao" = 9)
+values ( uuid_generate_v4()::text, perguntaId, 8,9,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -2792,8 +2743,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'C�
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não estabeleceu relação entre os dados numéricos fornecidos com as características da forma tridimensional apresentada';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 8,10,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 8 and "Ordenacao" = 10)
+values ( uuid_generate_v4()::text, perguntaId, 8,10,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -2835,8 +2785,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Pl
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não reconheceu as terminologias envolvendo uma pesquisa que apareceram na questão';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 9,1,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 9 and "Ordenacao" = 1)
+values ( uuid_generate_v4()::text, perguntaId, 9,1,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -2878,8 +2827,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Pl
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Calculou o valor da renda familiar per capita (em reais) e o número de pessoas na família';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 9,2,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 9 and "Ordenacao" = 2)
+values ( uuid_generate_v4()::text, perguntaId, 9,2,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -2921,8 +2869,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Me
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreendeu a ideia, realizando registros aleatórios';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 9,3,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 9 and "Ordenacao" = 3)
+values ( uuid_generate_v4()::text, perguntaId, 9,3,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -2964,8 +2911,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Â
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreendeu a ideia, realizando registros aleatórios';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 9,4,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 9 and "Ordenacao" = 4)
+values ( uuid_generate_v4()::text, perguntaId, 9,4,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -3007,8 +2953,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Re
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreendeu a ideia da situação-problema';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 9,5,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 9 and "Ordenacao" = 5)
+values ( uuid_generate_v4()::text, perguntaId, 9,5,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -3050,8 +2995,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Re
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreendeu a ideia da situação-problema';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 9,6,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 9 and "Ordenacao" = 6)
+values ( uuid_generate_v4()::text, perguntaId, 9,6,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -3093,8 +3037,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Me
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreendeu a ideia de área';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 9,7,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 9 and "Ordenacao" = 7)
+values ( uuid_generate_v4()::text, perguntaId, 9,7,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -3136,8 +3079,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Me
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreendeu a ideia de área';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 9,8,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 9 and "Ordenacao" = 8)
+values ( uuid_generate_v4()::text, perguntaId, 9,8,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -3179,8 +3121,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Pr
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreendeu a ideia da situação-problema';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 9,9,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 9 and "Ordenacao" = 9)
+values ( uuid_generate_v4()::text, perguntaId, 9,9,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
@@ -3208,6 +3149,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6,perguntaAnoEscolarId
 
 end $$;
 
+
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Inserindo PerguntaAnoEscolar e PerguntaResposta - 9º Ano - Ordem 10
 
@@ -3222,8 +3164,7 @@ select p."Id" into perguntaId from public."Pergunta" p where p."Descricao" = 'Pr
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreendeu a ideia da situação-problema';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
-select uuid_generate_v4()::text, perguntaId, 9,10,'2022-01-01'
-where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 9 and "Ordenacao" = 10)
+values ( uuid_generate_v4()::text, perguntaId, 9,10,'2022-01-01')
 returning "Id" into perguntaAnoEscolarId;
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao","PerguntaAnoEscolarId")
