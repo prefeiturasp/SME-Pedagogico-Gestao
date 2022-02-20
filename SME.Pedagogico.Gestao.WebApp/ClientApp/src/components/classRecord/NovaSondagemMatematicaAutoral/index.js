@@ -69,8 +69,15 @@ function NovaSondagemMatematicaAutoral() {
     (store) => store.poll.selectedFilter.yearClassroom
   );
 
+  const perguntaAnoEscolar = useMemo(() => {
+    if (perguntas && itemSelecionado) {
+      const pergunta = perguntas.find((item) => item.id === itemSelecionado.id);
+      return pergunta && pergunta.perguntaAnoEscolar;
+    }
+    return "";
+  }, [itemSelecionado, perguntas]);
+
   const ultimaOrdenacao = useMemo(() => {
-    console.log("perguntas", perguntas);
     if (!perguntas || perguntas.length === 0 || perguntas.mensagens) return 0;
 
     return perguntas[perguntas.length - 1].ordenacao;
@@ -144,19 +151,12 @@ function NovaSondagemMatematicaAutoral() {
     return aluno.respostas.findIndex((x) => x.pergunta === perguntaId);
   };
 
-  console.log("perguntas ===> ", perguntas);
-
   const onChangeAluno = (novoValor, perguntaIdState, alunoIdState) => {
     setarModoEdicao();
 
     let alunosMutaveis = Object.assign([], alunos);
 
     const indexAluno = obterIndexAlunoAlteracao(alunoIdState);
-
-    const pergunta =
-      perguntas && perguntas.find((item) => item.id === perguntaIdState);
-
-    console.log("pergunta", pergunta);
 
     if (indexAluno < 0) return;
 
@@ -178,7 +178,7 @@ function NovaSondagemMatematicaAutoral() {
         bimestre,
         pergunta: perguntaIdState,
         resposta: novoValor,
-        perguntaAnoEscolar: pergunta && pergunta.perguntaAnoEscolar,
+        perguntaAnoEscolar,
       });
     } else {
       alunosMutaveis[indexAluno].respostas[indexResposta].resposta = novoValor;
@@ -197,14 +197,19 @@ function NovaSondagemMatematicaAutoral() {
       !filtrosBusca.perguntaId ||
       !filtrosBusca.anoLetivo ||
       !filtrosBusca.anoEscolar ||
-      !bimestre
+      !bimestre ||
+      !perguntaAnoEscolar
     )
       return;
 
     dispatch(
-      actionCreators.listaAlunosAutoralMatematica(filtrosBusca, bimestre)
+      actionCreators.listaAlunosAutoralMatematica(
+        filtrosBusca,
+        bimestre,
+        perguntaAnoEscolar
+      )
     );
-  }, [bimestre, dispatch, filtrosBusca]);
+  }, [bimestre, dispatch, filtrosBusca, perguntaAnoEscolar]);
 
   useEffect(() => {
     if (filtros.yearClassroom && bimestre) {
