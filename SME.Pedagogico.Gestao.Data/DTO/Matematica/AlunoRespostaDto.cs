@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SME.Pedagogico.Gestao.Data.DTO.Matematica
+﻿namespace SME.Pedagogico.Gestao.Data.DTO.Matematica
 {
     public class AlunoRespostaDto
     {
@@ -10,5 +6,6 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Matematica
         public string Pergunta { get; set; }
         public string Resposta { get; set; }
         public int? Bimestre { get; set; }
+        public string PerguntaAnoEscolar { get; set; }
     }
 }

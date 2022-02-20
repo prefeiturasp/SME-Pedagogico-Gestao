@@ -7,6 +7,10 @@ alter table "Sondagem" add column if not exists "Bimestre" int4;
 alter table "PerguntaResposta" add "PerguntaAnoEscolarId" text NULL;
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Incluindo o campo 'PerguntaAnoEscolarId' na tabela 'SondagemAlunoRespostas'
+alter table "SondagemAlunoRespostas" add "PerguntaAnoEscolarId" text NULL;
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Referenciando campo criado
 update "PerguntaResposta" set "PerguntaAnoEscolarId" = '1361d4d5-09c0-45c5-b6a8-a586e7b45a33' where "Id" in ('7d071fc3-accc-4133-8cbf-1f20332ff5c1','a11ad326-34f1-4bb9-9dbe-5fb8ef049514','cb133766-a446-4c95-a65d-2d26b1a4068a','8320dc58-bef3-4f3c-b077-7ce54e6a5d09');
 update "PerguntaResposta" set "PerguntaAnoEscolarId" = 'f2d4de2f-e66b-43de-be42-af63ada710ef' where "Id" in ('aff9e7c3-3a5d-45c3-8f54-aab5315761b6','fc4eeadb-0d13-4e2b-8b56-4a90e10c9709','bbc15078-22bf-4262-8b08-cc7b3634fcb6','238b0422-8337-408d-a4a2-d9e15b20e999');

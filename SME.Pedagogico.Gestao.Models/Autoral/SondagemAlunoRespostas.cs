@@ -15,5 +15,7 @@ namespace SME.Pedagogico.Gestao.Models.Autoral
         public virtual Resposta Resposta { get; set; }
         public string RespostaId { get; set; }
         public int? Bimestre { get; set; }
+        public virtual PerguntaAnoEscolar PerguntaAnoEscolar { get; set; }
+        public virtual string PerguntaAnoEscolarId { get; set; }
     }
 }
