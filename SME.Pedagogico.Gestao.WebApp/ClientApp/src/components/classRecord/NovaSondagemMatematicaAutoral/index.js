@@ -144,12 +144,19 @@ function NovaSondagemMatematicaAutoral() {
     return aluno.respostas.findIndex((x) => x.pergunta === perguntaId);
   };
 
+  console.log("perguntas ===> ", perguntas);
+
   const onChangeAluno = (novoValor, perguntaIdState, alunoIdState) => {
     setarModoEdicao();
 
     let alunosMutaveis = Object.assign([], alunos);
 
     const indexAluno = obterIndexAlunoAlteracao(alunoIdState);
+
+    const pergunta =
+      perguntas && perguntas.find((item) => item.id === perguntaIdState);
+
+    console.log("pergunta", pergunta);
 
     if (indexAluno < 0) return;
 
@@ -171,6 +178,7 @@ function NovaSondagemMatematicaAutoral() {
         bimestre,
         pergunta: perguntaIdState,
         resposta: novoValor,
+        perguntaAnoEscolar: pergunta && pergunta.perguntaAnoEscolar,
       });
     } else {
       alunosMutaveis[indexAluno].respostas[indexResposta].resposta = novoValor;
