@@ -2,7 +2,7 @@
 
 namespace SME.Pedagogico.Gestao.Data.DTO.Matematica
 {
-    public class AlunoSondagemMatematicaPersistenciaDto
+    public class SondagemAlunoRespostaPersistenciaDto
     {     
         public Guid SondagemAlunoRespostaId { get; set; }
 
@@ -22,7 +22,7 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Matematica
     public enum TipoAcao
     {
         Atualizar = 1,
-        Remover = 2,
+        Excluir = 2,
         Inserir = 3
     }
 }
