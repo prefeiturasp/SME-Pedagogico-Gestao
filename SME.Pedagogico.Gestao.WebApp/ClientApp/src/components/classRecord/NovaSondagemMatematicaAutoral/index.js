@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { actionCreators } from "../../../store/SondagemAutoral";
 import { actionCreators as dataStore } from "../../../store/Data";
 import { actionCreators as pollStore } from "../../../store/Poll";
-import { actionCreators as filterStore } from "../../../store/Filters";
 import Loader from "../../loader/Loader";
 
 function NovaSondagemMatematicaAutoral() {
@@ -62,20 +61,13 @@ function NovaSondagemMatematicaAutoral() {
       codigoTurma: filtros.classroomCodeEol,
       componenteCurricular: "9f3d8467-2f6e-4bcb-a8e9-12e840426aba",
       perguntaId: itemSelecionado && itemSelecionado.id,
+      perguntaAnoEscolar: itemSelecionado && itemSelecionado.perguntaAnoEscolar,
     };
   }, [filtros, itemSelecionado]);
 
   const anoEscolar = useSelector(
     (store) => store.poll.selectedFilter.yearClassroom
   );
-
-  const perguntaAnoEscolar = useMemo(() => {
-    if (perguntas && itemSelecionado) {
-      const pergunta = perguntas.find((item) => item.id === itemSelecionado.id);
-      return pergunta && pergunta.perguntaAnoEscolar;
-    }
-    return "";
-  }, [itemSelecionado, perguntas]);
 
   const ultimaOrdenacao = useMemo(() => {
     if (!perguntas || perguntas.length === 0 || perguntas.mensagens) return 0;
@@ -178,7 +170,7 @@ function NovaSondagemMatematicaAutoral() {
         bimestre,
         pergunta: perguntaIdState,
         resposta: novoValor,
-        perguntaAnoEscolar,
+        perguntaAnoEscolar: filtrosBusca.perguntaAnoEscolar,
       });
     } else {
       alunosMutaveis[indexAluno].respostas[indexResposta].resposta = novoValor;
@@ -197,19 +189,15 @@ function NovaSondagemMatematicaAutoral() {
       !filtrosBusca.perguntaId ||
       !filtrosBusca.anoLetivo ||
       !filtrosBusca.anoEscolar ||
-      !bimestre ||
-      !perguntaAnoEscolar
+      !filtrosBusca.perguntaAnoEscolar ||
+      !bimestre
     )
       return;
 
     dispatch(
-      actionCreators.listaAlunosAutoralMatematica(
-        filtrosBusca,
-        bimestre,
-        perguntaAnoEscolar
-      )
+      actionCreators.listaAlunosAutoralMatematica(filtrosBusca, bimestre)
     );
-  }, [bimestre, dispatch, filtrosBusca, perguntaAnoEscolar]);
+  }, [bimestre, dispatch, filtrosBusca]);
 
   useEffect(() => {
     if (filtros.yearClassroom && bimestre) {
