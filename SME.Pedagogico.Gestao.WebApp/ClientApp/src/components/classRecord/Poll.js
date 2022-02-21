@@ -14,37 +14,42 @@ import { actionCreators as actionCreatorAutoral } from "../../store/SondagemAuto
 
 import { bindActionCreators } from "redux";
 
-import StudentPollMathAlfabetizacaoCard from "../polls/StudentPollMathAlfabetizacaoCard";
-import StudentPollMath1ACard from "../polls/StudentPollMath1ACard";
-import StudentPollMath2ACard from "../polls/StudentPollMath2ACard";
-import StudentPollMath2ACMCard from "../polls/StudentPollMath2ACMCard";
-import StudentPollMath3ACACard from "../polls/StudentPollMath3ACACard";
-import StudentPollMath3ACMCard from "../polls/StudentPollMath3ACMCard";
-import StudentPollMath4ACACard from "../polls/StudentPollMath4ACACard";
-import StudentPollMath4ACMCard from "../polls/StudentPollMath4ACMCard";
-import StudentPollMath5ACACard from "../polls/StudentPollMath5ACACard";
-import StudentPollMath5ACMCard from "../polls/StudentPollMath5ACMCard";
-import StudentPollMath6ACACard from "../polls/StudentPollMath6ACACard";
-import StudentPollMath6ACMCard from "../polls/StudentPollMath6ACMCard";
-import StudentPollPortugueseCard from "../polls/StudentPollPortugueseCard";
-import SondagemMatematicaAutoral from "./SondagemMatematicaAutoral";
-import SondagemPortuguesAutoral from "./SondagemPortuguesAutoral";
-
 import TwoStepsSave from "../messaging/TwoStepsSave";
 import MensagemConfirmacaoAutoral from "./SondagemPortuguesAutoral/mensagemConfirmacaoAutoral";
 import Loader from "../loader/Loader";
 import { verificarDisciplina } from "../../utils";
 
+import { componentRenderPoll } from "./funcoes/componenteRenderPoll";
+import { updatePollStudent } from "./funcoes/updatePollStudent";
+import SelectChangeColor from "../inputs/SelectChangeColor";
+
 class Poll extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      navSelected: "",
       didAnswerPoll: false, //usar para perguntar para salvar sondagem
       sondagemType: ClassRoomEnum.ClassEmpty,
       showMessageBox: false, //para botao save
       showMessagePortugueseBox: false, //para botao para abrir portugues
       showMessageMathBox: false, //para botao para abrir matematica
+      bimestres: [
+        {
+          value: "1",
+          label: "1º Bimestre",
+        },
+        {
+          value: "2",
+          label: "2º Bimestre",
+        },
+        {
+          value: "3",
+          label: "3º Bimestre",
+        },
+        {
+          value: "4",
+          label: "4º Bimestre",
+        },
+      ],
     };
     this.componentRender = this.componentRender.bind(this);
 
@@ -61,20 +66,17 @@ class Poll extends Component {
     this.checkButtonSave = this.checkButtonSave.bind(this);
     this.checkPollCard = this.checkPollCard.bind(this);
 
-    this.props.pollMethods.set_poll_info(null, null, null);   
+    this.props.pollMethods.set_poll_info(null, null, null);
     this.props.pollMethods.reset_poll_selected_filter_state();
-    
-    // tempo para setar o valores default no state
-    setTimeout(() => { }, 500);
 
     // tempo para setar o valores default no state
-    setTimeout(() => { }, 500);
+    setTimeout(() => {}, 500);
 
     this.toggleMessageBox = this.toggleMessageBox.bind(this); //para salvar
-    this.toggleMessagePortugueseBox = this.toggleMessagePortugueseBox.bind(
-      this
-    ); //para botao portugues
+    this.toggleMessagePortugueseBox =
+      this.toggleMessagePortugueseBox.bind(this); //para botao portugues
     this.toggleMessageMathBox = this.toggleMessageMathBox.bind(this); //para botao matematica
+    this.onChangeBimestre = this.onChangeBimestre.bind(this);
   }
 
   componentWillMount() {
@@ -103,35 +105,39 @@ class Poll extends Component {
   }
 
   componentDidUpdate() {
+    const portuguesTab = document.getElementById("portugues-tab");
+    const matematicaTab = document.getElementById("matematica-tab");
+    const btnSave = document.getElementById("btnSave");
+
     if (
-      this.state.navSelected === "portugues-tab" &&
-      document.getElementById("portugues-tab") !== null &&
-      document.getElementById("matematica-tab") !== null
+      this.props.poll.navSelected === "portugues-tab" &&
+      portuguesTab &&
+      matematicaTab
     ) {
-      document.getElementById("portugues-tab").className =
+      portuguesTab.className =
         "btn btn-outline-primary btn-sm btn-planning active";
-      document.getElementById("matematica-tab").className =
-        "btn btn-outline-primary btn-sm btn-planning";
+      matematicaTab.className = "btn btn-outline-primary btn-sm btn-planning";
     } else if (
-      this.state.navSelected === "matematica-tab" &&
-      document.getElementById("portugues-tab") !== null &&
-      document.getElementById("matematica-tab") !== null
+      this.props.poll.navSelected === "matematica-tab" &&
+      portuguesTab &&
+      matematicaTab
     ) {
-      document.getElementById("portugues-tab").className =
-        "btn btn-outline-primary btn-sm btn-planning";
-      document.getElementById("matematica-tab").className =
+      portuguesTab.className = "btn btn-outline-primary btn-sm btn-planning";
+      matematicaTab.className =
         "btn btn-outline-primary btn-sm btn-planning active";
+    } else if (portuguesTab && matematicaTab) {
+      portuguesTab.className = "btn btn-outline-primary btn-sm btn-planning";
+      matematicaTab.className = "btn btn-outline-primary btn-sm btn-planning";
     }
 
     if (this.props.poll.newDataToSave) {
-      if (document.getElementById("btnSave") !== null) {
+      if (btnSave) {
         document.getElementById("btnSave").className =
           "btn btn-save text-white";
       }
     } else {
-      if (document.getElementById("btnSave") !== null) {
-        document.getElementById("btnSave").className =
-          "btn btn-save text-white deactive";
+      if (btnSave) {
+        btnSave.className = "btn btn-save text-white deactive";
       }
     }
   }
@@ -207,490 +213,11 @@ class Poll extends Component {
   }
 
   componentRender() {
-    var componentRender;
-
-    if (this.props.poll.pollSelected === ClassRoomEnum.ClassPTAutoral) {
-      componentRender = <SondagemPortuguesAutoral />;
-    } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMTAutoral) {
-      componentRender = <SondagemMatematicaAutoral />;
-    } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
-      componentRender = (
-        <StudentPollPortugueseCard
-          students={this.props.poll.students}
-          updatePollStudent={this.updatePollStudent}
-          editLock1b={this.props.pollOptionSelectLock.poll_1b_lock}
-          editLock2b={this.props.pollOptionSelectLock.poll_2b_lock}
-          editLock3b={this.props.pollOptionSelectLock.poll_3b_lock}
-          editLock4b={this.props.pollOptionSelectLock.poll_4b_lock}
-        />
-      );
-    } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMT) {
-      if (
-        this.props.poll.pollTypeSelected === "Numeric" &&
-        (this.props.poll.pollYear === "1" ||
-          this.props.poll.pollYear === "2" ||
-          this.props.poll.pollYear === "3")
-      ) {
-        componentRender = (
-          <StudentPollMathAlfabetizacaoCard
-            students={this.props.poll.studentsPollMathNumbers}
-            updatePollStudent={this.updatePollStudent}
-            editLock1S={this.props.pollOptionSelectLock.poll_1s_lock}
-            editLock2S={this.props.pollOptionSelectLock.poll_2s_lock}
-          />
-        );
-      } else if (this.props.poll.pollYear === "1") {
-        if (this.props.poll.pollTypeSelected === "CA") {
-          componentRender = (
-            <StudentPollMath1ACard
-              students={this.props.poll.studentsPollMathCA}
-              updatePollStudent={this.updatePollStudent}
-              editLock1S={this.props.pollOptionSelectLock.poll_1s_lock}
-              editLock2S={this.props.pollOptionSelectLock.poll_2s_lock}
-            />
-          );
-        }
-      } else if (this.props.poll.pollYear === "2") {
-        if (this.props.poll.pollTypeSelected === "CA") {
-          componentRender = (
-            <StudentPollMath2ACard
-              students={this.props.poll.studentsPollMathCA}
-              updatePollStudent={this.updatePollStudent}
-              editLock1S={this.props.pollOptionSelectLock.poll_1s_lock}
-              editLock2S={this.props.pollOptionSelectLock.poll_2s_lock}
-            />
-          );
-        } else if (this.props.poll.pollTypeSelected === "CM") {
-          componentRender = (
-            <StudentPollMath2ACMCard
-              students={this.props.poll.studentsPollMathCM}
-              updatePollStudent={this.updatePollStudent}
-              editLock1S={this.props.pollOptionSelectLock.poll_1s_lock}
-              editLock2S={this.props.pollOptionSelectLock.poll_2s_lock}
-            />
-          );
-        }
-      } else if (this.props.poll.pollYear === "3") {
-        if (this.props.poll.pollTypeSelected === "CA") {
-          componentRender = (
-            <StudentPollMath3ACACard
-              students={this.props.poll.studentsPollMathCA}
-              updatePollStudent={this.updatePollStudent}
-              editLock1S={this.props.pollOptionSelectLock.poll_1s_lock}
-              editLock2S={this.props.pollOptionSelectLock.poll_2s_lock}
-            />
-          );
-        } else if (this.props.poll.pollTypeSelected === "CM") {
-          componentRender = (
-            <StudentPollMath3ACMCard
-              students={this.props.poll.studentsPollMathCM}
-              updatePollStudent={this.updatePollStudent}
-              editLock1S={this.props.pollOptionSelectLock.poll_1s_lock}
-              editLock2S={this.props.pollOptionSelectLock.poll_2s_lock}
-            />
-          );
-        }
-      } else if (this.props.poll.pollYear === "4") {
-        if (this.props.poll.pollTypeSelected === "CA") {
-          componentRender = (
-            <StudentPollMath4ACACard
-              students={this.props.poll.studentsPollMathCA}
-              updatePollStudent={this.updatePollStudent}
-              editLock1S={this.props.pollOptionSelectLock.poll_1s_lock}
-              editLock2S={this.props.pollOptionSelectLock.poll_2s_lock}
-            />
-          );
-        } else if (this.props.poll.pollTypeSelected === "CM") {
-          componentRender = (
-            <StudentPollMath4ACMCard
-              students={this.props.poll.studentsPollMathCM}
-              updatePollStudent={this.updatePollStudent}
-              editLock1S={this.props.pollOptionSelectLock.poll_1s_lock}
-              editLock2S={this.props.pollOptionSelectLock.poll_2s_lock}
-            />
-          );
-        }
-      } else if (this.props.poll.pollYear === "5") {
-        if (this.props.poll.pollTypeSelected === "CA") {
-          componentRender = (
-            <StudentPollMath5ACACard
-              students={this.props.poll.studentsPollMathCA}
-              updatePollStudent={this.updatePollStudent}
-              editLock1S={this.props.pollOptionSelectLock.poll_1s_lock}
-              editLock2S={this.props.pollOptionSelectLock.poll_2s_lock}
-            />
-          );
-        } else if (this.props.poll.pollTypeSelected === "CM") {
-          componentRender = (
-            <StudentPollMath5ACMCard
-              students={this.props.poll.studentsPollMathCM}
-              updatePollStudent={this.updatePollStudent}
-              editLock1S={this.props.pollOptionSelectLock.poll_1s_lock}
-              editLock2S={this.props.pollOptionSelectLock.poll_2s_lock}
-            />
-          );
-        }
-      } else if (this.props.poll.pollYear === "6") {
-        if (this.props.poll.pollTypeSelected === "CA") {
-          componentRender = (
-            <StudentPollMath6ACACard
-              students={this.props.poll.studentsPollMathCA}
-              updatePollStudent={this.updatePollStudent}
-              editLock1S={this.props.pollOptionSelectLock.poll_1s_lock}
-              editLock2S={this.props.pollOptionSelectLock.poll_2s_lock}
-            />
-          );
-        } else if (this.props.poll.pollTypeSelected === "CM") {
-          componentRender = (
-            <StudentPollMath6ACMCard
-              students={this.props.poll.studentsPollMathCM}
-              updatePollStudent={this.updatePollStudent}
-              editLock1S={this.props.pollOptionSelectLock.poll_1s_lock}
-              editLock2S={this.props.pollOptionSelectLock.poll_2s_lock}
-            />
-          );
-        }
-      }
-    } else {
-      componentRender = "";
-    }
-
-    return componentRender;
+    return componentRenderPoll(this.props, this.updatePollStudent);
   }
 
   updatePollStudent(sequence, subjectName, propertyName, value) {
-    if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
-      const pollStudents = this.props.poll.students;
-      for (let i = 0; i < pollStudents.length; i++) {
-        if (pollStudents[i].studentCodeEol === sequence) {
-          if (subjectName === "portuguese") {
-            switch (propertyName) {
-              case "t1e":
-                pollStudents[i].t1e = value;
-                break;
-              case "t1l":
-                pollStudents[i].t1l = value;
-                break;
-              case "t2e":
-                pollStudents[i].t2e = value;
-                break;
-              case "t2l":
-                pollStudents[i].t2l = value;
-                break;
-              case "t3e":
-                pollStudents[i].t3e = value;
-                break;
-              case "t3l":
-                pollStudents[i].t3l = value;
-                break;
-              case "t4e":
-                pollStudents[i].t4e = value;
-                break;
-              case "t4l":
-                pollStudents[i].t4l = value;
-                break;
-              default:
-                break;
-            }
-            break;
-          }
-        }
-      }
-      this.props.pollMethods.update_poll_students(pollStudents);
-    } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMT) {
-      if (this.props.poll.pollTypeSelected === "Numeric") {
-        const pollStudents = this.props.poll.studentsPollMathNumbers;
-        for (let i = 0; i < pollStudents.length; i++) {
-          if (pollStudents[i].studentCodeEol === sequence) {
-            if (subjectName === "mathalfabetizacao") {
-              switch (propertyName) {
-                case "familiares1S":
-                  pollStudents[i].familiares1S = value;
-                  break;
-                case "familiares2S":
-                  pollStudents[i].familiares2S = value;
-                  break;
-                case "opacos1S":
-                  pollStudents[i].opacos1S = value;
-                  break;
-                case "opacos2S":
-                  pollStudents[i].opacos2S = value;
-                  break;
-                case "transparentes1S":
-                  pollStudents[i].transparentes1S = value;
-                  break;
-                case "transparentes2S":
-                  pollStudents[i].transparentes2S = value;
-                  break;
-                case "terminamzero1S":
-                  pollStudents[i].terminamzero1S = value;
-                  break;
-                case "terminamzero2S":
-                  pollStudents[i].terminamzero2S = value;
-                  break;
-                case "algarismos1S":
-                  pollStudents[i].algarismos1S = value;
-                  break;
-                case "algarismos2S":
-                  pollStudents[i].algarismos2S = value;
-                  break;
-                case "processo1S":
-                  pollStudents[i].processo1S = value;
-                  break;
-                case "processo2S":
-                  pollStudents[i].processo2S = value;
-                  break;
-                case "zerointercalados1S":
-                  pollStudents[i].zerointercalados1S = value;
-                  break;
-                case "zerointercalados2S":
-                  pollStudents[i].zerointercalados2S = value;
-                  break;
-                default:
-                  break;
-              }
-              break;
-            }
-          }
-        }
-        this.props.pollMethods.update_poll_math_numbers_students(pollStudents);
-      } else if (this.props.poll.pollTypeSelected === "CA") {
-        const pollStudents = this.props.poll.studentsPollMathCA;
-        for (let i = 0; i < pollStudents.length; i++) {
-          if (pollStudents[i].studentCodeEol === sequence) {
-            if (subjectName === "math") {
-              switch (propertyName) {
-                case "orderm1Ideia1S":
-                  pollStudents[i].orderm1Ideia1S = value;
-                  break;
-                case "orderm1Resultado1S":
-                  pollStudents[i].orderm1Resultado1S = value;
-                  break;
-                case "orderm1Ideia2S":
-                  pollStudents[i].orderm1Ideia2S = value;
-                  break;
-                case "orderm1Resultado2S":
-                  pollStudents[i].orderm1Resultado2S = value;
-                  break;
-
-                case "orderm2Ideia1S":
-                  pollStudents[i].orderm2Ideia1S = value;
-                  break;
-                case "orderm2Resultado1S":
-                  pollStudents[i].orderm2Resultado1S = value;
-                  break;
-                case "orderm2Ideia2S":
-                  pollStudents[i].orderm2Ideia2S = value;
-                  break;
-                case "orderm2Resultado2S":
-                  pollStudents[i].orderm2Resultado2S = value;
-                  break;
-
-                case "orderm3Ideia1S":
-                  pollStudents[i].orderm3Ideia1S = value;
-                  break;
-                case "orderm3Resultado1S":
-                  pollStudents[i].orderm3Resultado1S = value;
-                  break;
-                case "orderm3Ideia2S":
-                  pollStudents[i].orderm3Ideia2S = value;
-                  break;
-                case "orderm3Resultado2S":
-                  pollStudents[i].orderm3Resultado2S = value;
-                  break;
-
-                case "orderm4Ideia1S":
-                  pollStudents[i].orderm4Ideia1S = value;
-                  break;
-                case "orderm4Resultado1S":
-                  pollStudents[i].orderm4Resultado1S = value;
-                  break;
-                case "orderm4Ideia2S":
-                  pollStudents[i].orderm4Ideia2S = value;
-                  break;
-                case "orderm4Resultado2S":
-                  pollStudents[i].orderm4Resultado2S = value;
-                  break;
-
-                case "orderm5Ideia1S":
-                  pollStudents[i].orderm5Ideia1S = value;
-                  break;
-                case "orderm5Resultado1S":
-                  pollStudents[i].orderm5Resultado1S = value;
-                  break;
-                case "orderm5Ideia2S":
-                  pollStudents[i].orderm5Ideia2S = value;
-                  break;
-                case "orderm5Resultado2S":
-                  pollStudents[i].orderm5Resultado2S = value;
-                  break;
-
-                case "orderm6Ideia1S":
-                  pollStudents[i].orderm6Ideia1S = value;
-                  break;
-                case "orderm6Resultado1S":
-                  pollStudents[i].orderm6Resultado1S = value;
-                  break;
-                case "orderm6Ideia2S":
-                  pollStudents[i].orderm6Ideia2S = value;
-                  break;
-                case "orderm6Resultado2S":
-                  pollStudents[i].orderm6Resultado2S = value;
-                  break;
-
-                case "orderm7Ideia1S":
-                  pollStudents[i].orderm7Ideia1S = value;
-                  break;
-                case "orderm7Resultado1S":
-                  pollStudents[i].orderm7Resultado1S = value;
-                  break;
-                case "orderm7Ideia2S":
-                  pollStudents[i].orderm7Ideia2S = value;
-                  break;
-                case "orderm7Resultado2S":
-                  pollStudents[i].orderm7Resultado2S = value;
-                  break;
-
-                case "orderm8Ideia1S":
-                  pollStudents[i].orderm8Ideia1S = value;
-                  break;
-                case "orderm8Resultado1S":
-                  pollStudents[i].orderm8Resultado1S = value;
-                  break;
-                case "orderm8Ideia2S":
-                  pollStudents[i].orderm8Ideia2S = value;
-                  break;
-                case "orderm8Resultado2S":
-                  pollStudents[i].orderm8Resultado2S = value;
-                  break;
-                default:
-                  break;
-              }
-              break;
-            }
-          }
-        }
-        this.props.pollMethods.update_poll_math_ca_students(pollStudents);
-      } else if (this.props.poll.pollTypeSelected === "CM") {
-        const pollStudents = this.props.poll.studentsPollMathCM;
-        for (let i = 0; i < pollStudents.length; i++) {
-          if (pollStudents[i].studentCodeEol === sequence) {
-            if (subjectName === "math") {
-              switch (propertyName) {
-                case "orderm1Ideia1S":
-                  pollStudents[i].orderm1Ideia1S = value;
-                  break;
-                case "orderm1Resultado1S":
-                  pollStudents[i].orderm1Resultado1S = value;
-                  break;
-                case "orderm1Ideia2S":
-                  pollStudents[i].orderm1Ideia2S = value;
-                  break;
-                case "orderm1Resultado2S":
-                  pollStudents[i].orderm1Resultado2S = value;
-                  break;
-
-                case "orderm2Ideia1S":
-                  pollStudents[i].orderm2Ideia1S = value;
-                  break;
-                case "orderm2Resultado1S":
-                  pollStudents[i].orderm2Resultado1S = value;
-                  break;
-                case "orderm2Ideia2S":
-                  pollStudents[i].orderm2Ideia2S = value;
-                  break;
-                case "orderm2Resultado2S":
-                  pollStudents[i].orderm2Resultado2S = value;
-                  break;
-
-                case "orderm3Ideia1S":
-                  pollStudents[i].orderm3Ideia1S = value;
-                  break;
-                case "orderm3Resultado1S":
-                  pollStudents[i].orderm3Resultado1S = value;
-                  break;
-                case "orderm3Ideia2S":
-                  pollStudents[i].orderm3Ideia2S = value;
-                  break;
-                case "orderm3Resultado2S":
-                  pollStudents[i].orderm3Resultado2S = value;
-                  break;
-
-                case "orderm4Ideia1S":
-                  pollStudents[i].orderm4Ideia1S = value;
-                  break;
-                case "orderm4Resultado1S":
-                  pollStudents[i].orderm4Resultado1S = value;
-                  break;
-                case "orderm4Ideia2S":
-                  pollStudents[i].orderm4Ideia2S = value;
-                  break;
-                case "orderm4Resultado2S":
-                  pollStudents[i].orderm4Resultado2S = value;
-                  break;
-
-                case "orderm5Ideia1S":
-                  pollStudents[i].orderm5Ideia1S = value;
-                  break;
-                case "orderm5Resultado1S":
-                  pollStudents[i].orderm5Resultado1S = value;
-                  break;
-                case "orderm5Ideia2S":
-                  pollStudents[i].orderm5Ideia2S = value;
-                  break;
-                case "orderm5Resultado2S":
-                  pollStudents[i].orderm5Resultado2S = value;
-                  break;
-
-                case "orderm6Ideia1S":
-                  pollStudents[i].orderm6Ideia1S = value;
-                  break;
-                case "orderm6Resultado1S":
-                  pollStudents[i].orderm6Resultado1S = value;
-                  break;
-                case "orderm6Ideia2S":
-                  pollStudents[i].orderm6Ideia2S = value;
-                  break;
-                case "orderm6Resultado2S":
-                  pollStudents[i].orderm6Resultado2S = value;
-                  break;
-
-                case "orderm7Ideia1S":
-                  pollStudents[i].orderm7Ideia1S = value;
-                  break;
-                case "orderm7Resultado1S":
-                  pollStudents[i].orderm7Resultado1S = value;
-                  break;
-                case "orderm7Ideia2S":
-                  pollStudents[i].orderm7Ideia2S = value;
-                  break;
-                case "orderm7Resultado2S":
-                  pollStudents[i].orderm7Resultado2S = value;
-                  break;
-
-                case "orderm8Ideia1S":
-                  pollStudents[i].orderm8Ideia1S = value;
-                  break;
-                case "orderm8Resultado1S":
-                  pollStudents[i].orderm8Resultado1S = value;
-                  break;
-                case "orderm8Ideia2S":
-                  pollStudents[i].orderm8Ideia2S = value;
-                  break;
-                case "orderm8Resultado2S":
-                  pollStudents[i].orderm8Resultado2S = value;
-                  break;
-                default:
-                  break;
-              }
-              break;
-            }
-          }
-        }
-        this.props.pollMethods.update_poll_math_cm_students(pollStudents);
-      }
-    }
-    this.props.dataMethods.set_new_data_state();
+    updatePollStudent(this.props, sequence, subjectName, propertyName, value);
   }
 
   async savePollStudent() {
@@ -720,8 +247,8 @@ class Poll extends Component {
     if (this.props.sondagemPortugues.salvar) {
       const sequenciasOrdens = this.props.sondagemPortugues.sequenciaOrdens;
       const idOrdemSelecionada = this.props.sondagemPortugues.ordemSelecionada;
-      const periodoSelecionadoSalvar = this.props.sondagemPortugues
-        .periodoSelecionado;
+      const periodoSelecionadoSalvar =
+        this.props.sondagemPortugues.periodoSelecionado;
       const grupo = this.props.sondagemPortugues.grupoSelecionado;
       const idOrdem = this.props.sondagemPortugues.ordemSelecionada;
 
@@ -792,9 +319,8 @@ class Poll extends Component {
   }
 
   toggleButton(elementSeleted) {
-    this.setState({
-      navSelected: elementSeleted,
-    });
+    this.props.pollMethods.setNavegacaoSelecionada(elementSeleted);
+    this.props.pollMethods.setBimestre("");
   }
 
   openPortuguesePoll() {
@@ -1009,6 +535,10 @@ class Poll extends Component {
     }
   }
 
+  onChangeBimestre(e) {
+    this.props.pollMethods.setBimestre(e.target.value);
+  }
+
   render() {
     return (
       <>
@@ -1045,6 +575,18 @@ class Poll extends Component {
             </ul>
             <ul className="nav navbar-nav ml-auto">{this.checkButtonSave()}</ul>
           </nav>
+          {this.props.poll.navSelected === "matematica-tab" &&
+            this.props.poll.selectedFilter.schoolYear === 2022 && (
+              <div className="col-md-2 pb-2">
+                <SelectChangeColor
+                  className="custom-select-sm"
+                  defaultText="Bimestre"
+                  options={this.state.bimestres}
+                  onChange={this.onChangeBimestre}
+                  value={this.props.poll.bimestre}
+                />
+              </div>
+            )}
           <Loader loading={this.props.poll.loadingSalvar}>
             {this.componentRender()}
           </Loader>
@@ -1053,6 +595,7 @@ class Poll extends Component {
     );
   }
 }
+
 export default connect(
   (state) => ({
     poll: state.poll,

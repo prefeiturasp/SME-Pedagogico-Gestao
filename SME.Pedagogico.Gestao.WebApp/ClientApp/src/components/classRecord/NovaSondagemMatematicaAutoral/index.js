@@ -1,23 +1,20 @@
 ﻿import React, { useState, useMemo, useEffect, useCallback } from "react";
-import AlunoSondagemMatematicaAutoral from "./aluno";
+import NovoAlunoSondagemMatematicaAutoral from "./novoAluno";
 import { useSelector, useDispatch } from "react-redux";
 import { actionCreators } from "../../../store/SondagemAutoral";
 import { actionCreators as dataStore } from "../../../store/Data";
 import { actionCreators as pollStore } from "../../../store/Poll";
 import { actionCreators as filterStore } from "../../../store/Filters";
+import Loader from "../../loader/Loader";
 
-function SondagemMatematicaAutoral() {
+function NovaSondagemMatematicaAutoral() {
   const dispatch = useDispatch();
-
-  const periodosAbertura = useSelector((store) => store.filters.period);
 
   const filtros = useSelector((store) => store.poll.selectedFilter);
 
   const [indexSelecionado, setIndexSelecionado] = useState(1);
 
   const emEdicao = useSelector((store) => store.autoral.emEdicao);
-
-  const periodosLista = useSelector((store) => store.autoral.listaPeriodos);
 
   const itemSelecionado = useSelector(
     (store) => store.autoral.perguntaSelecionada
@@ -28,6 +25,10 @@ function SondagemMatematicaAutoral() {
   const alunos = useSelector(
     (store) => store.autoral.listaAlunosAutoralMatematica
   );
+
+  const bimestre = useSelector((store) => store.poll.bimestre);
+
+  const loadingPerguntas = useSelector((store) => store.poll.loadingPerguntas);
 
   const setarModoEdicao = () => {
     dispatch(dataStore.set_new_data_state());
@@ -41,7 +42,7 @@ function SondagemMatematicaAutoral() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (!perguntas || perguntas.length === 0) return;
+    if (!perguntas || perguntas.length === 0 || perguntas.mensagens) return;
 
     const pergunta = perguntas.find((x) => x.ordenacao == indexSelecionado);
 
@@ -68,14 +69,22 @@ function SondagemMatematicaAutoral() {
     (store) => store.poll.selectedFilter.yearClassroom
   );
 
+  const perguntaAnoEscolar = useMemo(() => {
+    if (perguntas && itemSelecionado) {
+      const pergunta = perguntas.find((item) => item.id === itemSelecionado.id);
+      return pergunta && pergunta.perguntaAnoEscolar;
+    }
+    return "";
+  }, [itemSelecionado, perguntas]);
+
   const ultimaOrdenacao = useMemo(() => {
-    if (!perguntas || perguntas.length === 0) return 0;
+    if (!perguntas || perguntas.length === 0 || perguntas.mensagens) return 0;
 
     return perguntas[perguntas.length - 1].ordenacao;
   }, [perguntas]);
 
   const primeiraOrdenacao = useMemo(() => {
-    if (!perguntas || perguntas.length === 0) return 0;
+    if (!perguntas || perguntas.length === 0 || perguntas.mensagens) return 0;
 
     return perguntas[0].ordenacao;
   }, [perguntas]);
@@ -109,16 +118,11 @@ function SondagemMatematicaAutoral() {
   };
 
   const salvar = async () => {
-    await persistencia(alunos, perguntas, periodosLista, filtrosBusca);
+    await persistencia(alunos, filtrosBusca);
   };
 
   const persistencia = useCallback(
-    async (
-      listaAlunosRedux,
-      perguntasRedux,
-      periodosRedux,
-      filtrosBuscaPersistencia
-    ) => {
+    async (listaAlunosRedux, filtrosBuscaPersistencia) => {
       let alunosMutaveis = Object.assign([], listaAlunosRedux);
 
       try {
@@ -141,21 +145,13 @@ function SondagemMatematicaAutoral() {
     return alunos.findIndex((x) => x.codigoAluno === alunoIdState);
   };
 
-  const obterIndexRespostasAluno = (aluno, perguntaId, periodoId) => {
+  const obterIndexRespostasAluno = (aluno, perguntaId) => {
     if (!aluno.respostas || aluno.respostas.length === 0) return null;
 
-    return aluno.respostas.findIndex(
-      (x) => x.pergunta === perguntaId && x.periodoId === periodoId
-    );
+    return aluno.respostas.findIndex((x) => x.pergunta === perguntaId);
   };
 
-  const onChangeAluno = (
-    novoValor,
-    perguntaIdState,
-    periodoIdState,
-    alunoIdState,
-    sondagemIdState
-  ) => {
+  const onChangeAluno = (novoValor, perguntaIdState, alunoIdState) => {
     setarModoEdicao();
 
     let alunosMutaveis = Object.assign([], alunos);
@@ -166,8 +162,7 @@ function SondagemMatematicaAutoral() {
 
     const indexResposta = obterIndexRespostasAluno(
       alunosMutaveis[indexAluno],
-      perguntaIdState,
-      periodoIdState
+      perguntaIdState
     );
 
     if (
@@ -180,9 +175,10 @@ function SondagemMatematicaAutoral() {
       }
 
       alunosMutaveis[indexAluno].respostas.push({
-        periodoId: periodoIdState,
+        bimestre,
         pergunta: perguntaIdState,
         resposta: novoValor,
+        perguntaAnoEscolar,
       });
     } else {
       alunosMutaveis[indexAluno].respostas[indexResposta].resposta = novoValor;
@@ -196,53 +192,74 @@ function SondagemMatematicaAutoral() {
   };
 
   useEffect(() => {
-    dispatch(filterStore.verificaPeriodosMatematica());
-  }, [dispatch, periodosAbertura]);
-
-  useEffect(() => {
     if (
       !filtrosBusca ||
       !filtrosBusca.perguntaId ||
       !filtrosBusca.anoLetivo ||
-      !filtrosBusca.anoEscolar
+      !filtrosBusca.anoEscolar ||
+      !bimestre ||
+      !perguntaAnoEscolar
     )
       return;
 
-    dispatch(actionCreators.listaAlunosAutoralMatematica(filtrosBusca));
-  }, [dispatch, filtrosBusca]);
+    dispatch(
+      actionCreators.listaAlunosAutoralMatematica(
+        filtrosBusca,
+        bimestre,
+        perguntaAnoEscolar
+      )
+    );
+  }, [bimestre, dispatch, filtrosBusca, perguntaAnoEscolar]);
 
   useEffect(() => {
-    dispatch(actionCreators.listarPeriodos());
-    if (filtros.yearClassroom)
+    if (filtros.yearClassroom && bimestre) {
+      dispatch(actionCreators.obterPeriodoAberto(filtros.schoolYear, bimestre));
       dispatch(actionCreators.listarPerguntas(filtros));
-    dispatch(
-      pollStore.setFunctionButtonSave(
-        (
-          alunosRedux,
-          perguntasRedux,
-          periodosRedux,
-          filtrosSelecionadosSalvar
-        ) => {
-          persistencia(
+      dispatch(
+        pollStore.setFunctionButtonSave(
+          (
             alunosRedux,
             perguntasRedux,
             periodosRedux,
             filtrosSelecionadosSalvar
-          );
-        }
-      )
-    );
+          ) => {
+            persistencia(
+              alunosRedux,
+              perguntasRedux,
+              periodosRedux,
+              filtrosSelecionadosSalvar
+            );
+          }
+        )
+      );
+    }
 
     return () => {
       dispatch(actionCreators.setarAlunosAutoralmatematicaPreSalvar([]));
       sairModoEdicao();
       dispatch(pollStore.setFunctionButtonSave(null));
     };
-  }, [dispatch, filtros, filtros.yearClassroom, persistencia, sairModoEdicao]);
+  }, [
+    bimestre,
+    dispatch,
+    filtros,
+    filtros.yearClassroom,
+    persistencia,
+    sairModoEdicao,
+  ]);
 
   useEffect(() => {
     setIndexSelecionado(primeiraOrdenacao);
   }, [perguntas, primeiraOrdenacao]);
+
+  if (!bimestre) return "";
+  if (loadingPerguntas) {
+    return (
+      <div style={{ paddingBottom: 120 }}>
+        <Loader loading={loadingPerguntas}> </Loader>
+      </div>
+    );
+  }
 
   return (
     <table
@@ -259,55 +276,53 @@ function SondagemMatematicaAutoral() {
             key={itemSelecionado && itemSelecionado.id}
             id={`col_head_${itemSelecionado && itemSelecionado.id}`}
             className="text-center border text-color-purple"
+            style={{ maxWidth: 40 }}
           >
-            <span
-              value="opacos_col"
-              onClick={() => recuar()}
-              className="testcursor"
+            <div
+              className="d-flex justify-content-center align-items-center"
+              style={{
+                height: 30,
+              }}
             >
-              <img
-                src="./img/icon_2_pt_7C4DFF.svg"
-                alt="seta esquerda ativa"
-                style={{ height: 20 }}
-              />
-            </span>
-            <b className="p-4">
-              {itemSelecionado && itemSelecionado.descricao}
-            </b>
-            <span
-              value="zero_col"
-              onClick={() => avancar()}
-              className="testcursor"
-            >
-              <img
-                src="./img/icon_pt_7C4DFF.svg"
-                alt="seta direita ativa"
-                style={{ height: 20 }}
-              />
-            </span>
-          </th>
-        </tr>
-        <tr>
-          {periodosLista &&
-            periodosLista.length &&
-            periodosLista.map((periodo) => (
-              <th
-                key={periodo.id}
-                className="text-center border poll-select-container"
+              <span
+                value="opacos_col"
+                onClick={() => recuar()}
+                className="testcursor"
               >
-                <small className="text-muted">{periodo.descricao}</small>
-              </th>
-            ))}
+                <img
+                  src="./img/icon_2_pt_7C4DFF.svg"
+                  alt="seta esquerda ativa"
+                  style={{ height: 20 }}
+                />
+              </span>
+              <b
+                className="p-4 text-nowrap overflow-hidden text-truncate"
+                data-bs-toggle="tooltip"
+                title={itemSelecionado && itemSelecionado.descricao}
+              >
+                {itemSelecionado && itemSelecionado.descricao}
+              </b>
+              <span
+                value="zero_col"
+                onClick={() => avancar()}
+                className="testcursor"
+              >
+                <img
+                  src="./img/icon_pt_7C4DFF.svg"
+                  alt="seta direita ativa"
+                  style={{ height: 20 }}
+                />
+              </span>
+            </div>
+          </th>
         </tr>
       </thead>
       <tbody>
-        {periodosLista &&
-          alunos &&
-          alunos.length &&
+        {alunos &&
+          !!alunos.length &&
           alunos.map((aluno) => (
-            <AlunoSondagemMatematicaAutoral
+            <NovoAlunoSondagemMatematicaAutoral
               aluno={aluno}
-              periodos={periodosLista}
               salvar={salvar}
               perguntaSelecionada={itemSelecionado}
               onChangeAluno={onChangeAluno}
@@ -318,4 +333,4 @@ function SondagemMatematicaAutoral() {
   );
 }
 
-export default SondagemMatematicaAutoral;
+export default NovaSondagemMatematicaAutoral;

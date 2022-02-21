@@ -11,6 +11,8 @@
   SETAR_EM_EDICAO: "SETAR_EM_EDICAO",
   SETAR_ALUNOS_AUTORAL_MATEMATICA_PRE_SALVAR:
     "SETAR_ALUNOS_AUTORAL_MATEMATICA_PRE_SALVAR",
+  OBTER_PERIODO_ABERTO: "OBTER_PERIODO_ABERTO",
+  SETAR_PERIODO_ABERTO: "SETAR_PERIODO_ABERTO",
 };
 const initialState = {
   listaPeriodos: [],
@@ -19,21 +21,26 @@ const initialState = {
   emEdicao: false,
   perguntaSelecionada: null,
   period: null,
+  periodoAberto: false,
 };
 
 export const actionCreators = {
   listarPeriodos: () => ({ type: types.LISTAR_PERIODOS }),
-  listarPerguntas: (anoEscolar) => ({
+  listarPerguntas: (filtros) => ({
     type: types.LISTAR_PERGUNTAS,
-    anoEscolar,
+    filtros,
   }),
   setarPerguntas: (perguntas) => ({
     type: types.SETAR_PERGUNTAS,
     payload: perguntas,
   }),
-  listaAlunosAutoralMatematica: (filtro) => ({
-    type: types.LISTAR_ALUNOS_AUTORAL_MATEMATICA,
+  listaAlunosAutoralMatematica: (
     filtro,
+    bimestre = null,
+    perguntaAnoEscolar = ""
+  ) => ({
+    type: types.LISTAR_ALUNOS_AUTORAL_MATEMATICA,
+    payload: { bimestre, filtro, perguntaAnoEscolar },
   }),
   salvaSondagemAutoralMatematica: (alunos, filtro) => ({
     type: types.SALVAR_SONDAGEM_AUTORAL_MATEMATICA,
@@ -53,7 +60,11 @@ export const actionCreators = {
   setarPerguntaSelecionada: (pergunta) => ({
     type: types.SETAR_PERGUNTA_SELECIONADA,
     payload: pergunta,
-  })
+  }),
+  obterPeriodoAberto: (anoLetivo, bimestre) => ({
+    type: types.OBTER_PERIODO_ABERTO,
+    payload: { anoLetivo, bimestre },
+  }),
 };
 
 export const reducer = (state, action) => {
@@ -79,7 +90,7 @@ export const reducer = (state, action) => {
       return {
         ...state,
         emEdicao: action.payload,
-      }
+      };
     case types.SETAR_ALUNOS_AUTORAL_MATEMATICA:
       return {
         ...state,
@@ -94,7 +105,12 @@ export const reducer = (state, action) => {
       return {
         ...state,
         perguntaSelecionada: action.payload,
-      }
+      };
+    case types.SETAR_PERIODO_ABERTO:
+      return {
+        ...state,
+        periodoAberto: action.periodoAberto,
+      };
     default:
       return state;
   }
