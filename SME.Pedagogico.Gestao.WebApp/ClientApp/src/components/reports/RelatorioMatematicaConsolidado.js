@@ -1,5 +1,8 @@
 import React from "react";
-import { CabecalhoRelatorio, TotalRelatorio } from "./RelatorioMatematicaConsolidado.css";
+import {
+  CabecalhoRelatorio,
+  TotalRelatorio,
+} from "./RelatorioMatematicaConsolidado.css";
 
 const RelatorioMatematicaConsolidado = (props) => {
   const { dados } = props;
