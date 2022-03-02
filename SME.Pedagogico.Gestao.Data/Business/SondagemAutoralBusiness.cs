@@ -32,6 +32,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task<IEnumerable<PerguntaDto>> ObterPerguntas(int anoEscolar, int anoLetivo)
         {
+
             List<PerguntaDto> perguntas = default;
             List<PerguntaResposta> perguntasResposta = default;
 
@@ -50,7 +51,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
             });
 
             return perguntas.OrderBy(x => x.Ordenacao);
-
         }
 
         public async Task<IEnumerable<PeriodoDto>> ObterPeriodoMatematica()
@@ -192,7 +192,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     {
                         foreach (var aluno in alunoSondagemMatematicaDto)
                         {
-                            AdicionaOUAlteraAlunosERespostas(contexto, sondagem, aluno,filtroSondagem.Bimestre);
+                            AdicionaOUAlteraAlunosERespostas(contexto, sondagem, aluno, filtroSondagem.Bimestre);
                         }
                         contexto.Sondagem.Update(sondagem);
                         await contexto.SaveChangesAsync();
@@ -226,7 +226,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             return filtroSondagem;
         }
 
-        private static void AdicionaOUAlteraAlunosERespostas(SMEManagementContextData contexto, Sondagem sondagem, AlunoSondagemMatematicaDto aluno,int? bimestre)
+        private static void AdicionaOUAlteraAlunosERespostas(SMEManagementContextData contexto, Sondagem sondagem, AlunoSondagemMatematicaDto aluno, int? bimestre)
         {
 
             var alunoSondagem = sondagem.AlunosSondagem.Where(a => a.CodigoAluno == aluno.CodigoAluno).FirstOrDefault();
@@ -249,7 +249,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         sondagem.AlunosSondagem.Add(alunoNovoSondagem);
                     }
                 }
-                else if(sondagem.AnoLetivo >=2022 && aluno.Respostas?.Count() > 0)
+                else if (sondagem.AnoLetivo >= 2022 && aluno.Respostas?.Count() > 0)
                 {
                     var alunoNovoSondagem = CriaNovoAlunoSondagem(sondagem, aluno, bimestre);
                     sondagem.AlunosSondagem.Add(alunoNovoSondagem);
@@ -265,7 +265,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 if (resposta.PeriodoId == periodoId)
                 {
                     var respostaSondagem = alunoSondagem.ListaRespostas.Where(x => x.PerguntaId == resposta.Pergunta).FirstOrDefault();
-                    if (respostaSondagem != null && (aluno.Respostas.Any(r => r.PeriodoId == periodoId) || aluno.Respostas.Any(r=> r.Bimestre == bimestre)))
+                    if (respostaSondagem != null && (aluno.Respostas.Any(r => r.PeriodoId == periodoId) || aluno.Respostas.Any(r => r.Bimestre == bimestre)))
                     {
                         respostaSondagem.RespostaId = resposta.Resposta;
                     }
@@ -366,7 +366,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         }
 
 
-        private static SondagemAluno CriaNovoAlunoSondagem(Sondagem sondagem, AlunoSondagemMatematicaDto alunoDto,int? bimestre)
+        private static SondagemAluno CriaNovoAlunoSondagem(Sondagem sondagem, AlunoSondagemMatematicaDto alunoDto, int? bimestre)
         {
             var aluno = new SondagemAluno()
             {
@@ -463,7 +463,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     alunoDto.Bimestre = bimestre;
                     alunoDto.CodigoTurma = s.CodigoTurma;
                     alunoDto.Respostas = new List<AlunoRespostaDto>();
-                    a.ListaRespostas.ForEach(r =>
+                    a.ListaRespostas.Where(x => x.Bimestre == bimestre).ToList().ForEach(r =>
                     {
                         var Resposta = new AlunoRespostaDto()
                         {
@@ -476,8 +476,11 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         alunoDto.Respostas.Add(Resposta);
                     });
 
-                    listaAlunosDto.Add(alunoDto);
-                    listCodigoAlunoEol.Add(a.CodigoAluno);
+                    if (alunoDto.Respostas.Count() > 0)
+                    {
+                        listaAlunosDto.Add(alunoDto);
+                        listCodigoAlunoEol.Add(a.CodigoAluno);
+                    }
                 });
             });
 
@@ -593,6 +596,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             try
             {
                 return await contexto.Sondagem.Where(s => s.AnoLetivo == filtrarListagemDto.AnoLetivo &&
+                                                  s.Bimestre == filtrarListagemDto.Bimestre &&
                                                   s.AnoTurma == filtrarListagemDto.AnoEscolar &&
                                                   s.CodigoDre == filtrarListagemDto.CodigoDre &&
                                                   s.CodigoUe == filtrarListagemDto.CodigoUe &&
