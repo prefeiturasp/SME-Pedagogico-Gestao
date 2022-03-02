@@ -913,7 +913,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Co
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não realizou a leitura de dados explícitos no gráfico';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não correlacionou corretamente os dados de linha e coluna';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
@@ -1197,17 +1197,17 @@ where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia de perímetro';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia, mas errou o cálculo';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreendeu a ideia, mas errou o cálculo';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Calculou apenas com os valores apresentados na questão';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Calculou apenas com os valores apresentados na questão';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreendeu a ideia';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
-values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
 
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolveu a questão';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
@@ -1949,7 +1949,7 @@ insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId")
 values (uuid_generate_v4()::text,'Números naturais e inteiros: significados, reta numerada e significado das operações','9f3d8467-2f6e-4bcb-a8e9-12e840426aba') 
 returning "Id" into perguntaId;
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Calculou a idade de Osmir';	
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Resolveu o problema envolvendo um dos significados dos números inteiros';	
 
 insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
 select uuid_generate_v4()::text, perguntaId, 7,9,'2022-01-01'
@@ -1958,15 +1958,15 @@ where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Resolveu o problema envolvendo um dos significados dos números inteiros';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolveu o problema envolvendo um dos significados dos números inteiros';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolveu o problema envolvendo um dos significados dos números inteiros';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Identificou a temperatura correta no termômetro';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Identificou a temperatura correta no termômetro';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não identificar a temperatura no termômetro';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
 
@@ -2364,7 +2364,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Re
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Texto da opção 4 – Relacionou os dados numéricos fornecidos com as características da forma geométrica apresentada, determinou a área de uma face e o volume da figura';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Relacionou os dados numéricos fornecidos com as características da forma geométrica apresentada, determinou a área de uma face e o volume da figura';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
 
@@ -2452,7 +2452,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 --> Inserindo PerguntaAnoEscolar e PerguntaResposta - 9º Ano - Ordem 3
 	
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
-values(uuid_generate_v4()::text,'Poliedros e Medidas de comprimento, massa, tempo, temperatura e área/volume','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values(uuid_generate_v4()::text,'Medidas de comprimento, massa, tempo, temperatura e área/volume','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreendeu a ideia, realizando registros aleatórios';	
