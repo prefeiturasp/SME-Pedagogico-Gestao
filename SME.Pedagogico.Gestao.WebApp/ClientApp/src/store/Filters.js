@@ -42,24 +42,24 @@ const initialState = {
 
 export const actionCreators = {
   getListDres: () => ({
-    type: types.GET_DRE
+    type: types.GET_DRE,
   }),
   listDre: () => ({
-    type: types.LIST_DRES
+    type: types.LIST_DRES,
   }),
   getSchool: (schoolCode) => ({
     type: types.GET_SCHOOL,
-    schoolCode
+    schoolCode,
   }),
   listSchool: () => ({
-    type: types.LIST_SCHOOLS
+    type: types.LIST_SCHOOLS,
   }),
   getClassroom: (classRoomFilter) => ({
     type: types.GET_CLASSROOM,
     classRoomFilter,
   }),
   listClassRoom: () => ({
-    type: types.LIST_CLASSROOM
+    type: types.LIST_CLASSROOM,
   }),
   activeClassroom: (codeClass) => ({
     type: types.ACTIVECLASSROOMCODE,
@@ -67,10 +67,10 @@ export const actionCreators = {
   }),
   setSchoolYear: (schoolYear) => ({
     type: types.SET_SCHOOLYEAR,
-    schoolYear
+    schoolYear,
   }),
   resetPollFilters: () => ({
-    type: types.RESET_POLL_FILTERS
+    type: types.RESET_POLL_FILTERS,
   }),
   getFilters_teacher: (profileOccupatios) => ({
     type: types.GET_FILTERS_TEACHER,
@@ -78,7 +78,7 @@ export const actionCreators = {
   }),
   activeDreCode: (schoolCode) => ({
     type: types.ACTIVEDRECODE,
-    schoolCode
+    schoolCode,
   }),
   activeSchoolCode: (classRoomFilter) => ({
     type: types.ACTIVESCHOOLCODE,
@@ -86,27 +86,27 @@ export const actionCreators = {
   }),
   getDreAdm: (userName) => ({
     type: types.GET_DRE_ADM,
-    userName
+    userName,
   }),
   getPeriod: (schoolYear) => ({
     type: types.GET_PERIOD,
-    schoolYear
+    schoolYear,
   }),
   setPeriod: () => ({
-    type: types.SET_PERIOD
+    type: types.SET_PERIOD,
   }),
   verificaPeriodosMatematica: () => ({
-    type: types.PERIODO_ABERTURA_MAT
+    type: types.PERIODO_ABERTURA_MAT,
   }),
   getDisciplinesByClassroom: (disciplinesFilter) => ({
     type: types.GET_LIST_DISCIPLINES_BY_CLASSROOM,
     disciplinesFilter,
   }),
   listDisciplines: () => ({
-    type: types.LIST_DISCIPLINES
+    type: types.LIST_DISCIPLINES,
   }),
   resetFilters: () => ({
-    type: types.RESET_FILTERS
+    type: types.RESET_FILTERS,
   }),
 };
 
@@ -147,14 +147,15 @@ export const reducer = (state, action) => {
       return {
         ...state,
         ...initialState,
+        listDisciplines: state.listDisciplines,
       };
     case types.SET_FILTERS_TEACHER:
       return {
         ...state,
         filterTeachers: action.filters,
-          scholls: action.filters.escolas,
-          listDres: action.filters.drEs,
-          listClassRoom: action.filters.turmas,
+        scholls: action.filters.escolas,
+        listDres: action.filters.drEs,
+        listClassRoom: action.filters.turmas,
       };
     case types.SET_SCHOOLYEAR:
       return {
@@ -169,7 +170,7 @@ export const reducer = (state, action) => {
     case types.PERIODO_ABERTURA_MAT:
       var todayDate = new Date();
       let estadoRetorno = {
-        ...state
+        ...state,
       };
 
       state &&
@@ -200,7 +201,7 @@ export const reducer = (state, action) => {
             }
           }
         });
-        return estadoRetorno;      
+      return estadoRetorno;
     case types.LIST_DISCIPLINES:
       return {
         ...state,
@@ -210,11 +211,11 @@ export const reducer = (state, action) => {
       return {
         ...state,
         activeDreCode: null,
-          activeSchollsCode: null,
-          activeClassRoomCode: null,
-          scholls: [],
-          listClassRoom: null,
-          yearClassRoom: null,
+        activeSchollsCode: null,
+        activeClassRoomCode: null,
+        scholls: [],
+        listClassRoom: null,
+        yearClassRoom: null,
       };
     default:
       return state;
