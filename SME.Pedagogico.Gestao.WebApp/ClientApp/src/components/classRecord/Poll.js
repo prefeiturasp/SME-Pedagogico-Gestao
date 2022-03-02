@@ -576,7 +576,8 @@ class Poll extends Component {
             <ul className="nav navbar-nav ml-auto">{this.checkButtonSave()}</ul>
           </nav>
           {this.props.poll.navSelected === "matematica-tab" &&
-            this.props.poll.selectedFilter.schoolYear === 2022 && (
+            this.props.poll.selectedFilter.schoolYear >= 2022 &&
+            Number(this.props.poll.selectedFilter.yearClassroom) > 3 && (
               <div className="col-md-2 pb-2">
                 <SelectChangeColor
                   className="custom-select-sm"
