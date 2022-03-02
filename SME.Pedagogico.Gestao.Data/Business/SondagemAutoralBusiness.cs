@@ -232,11 +232,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             var alunoSondagem = sondagem.AlunosSondagem.Where(a => a.CodigoAluno == aluno.CodigoAluno).FirstOrDefault();
             if (alunoSondagem != null)
             {
-                if (aluno.Respostas == null || aluno.Respostas.Count == 0)
-                {
-                    contexto.SondagemAluno.Remove(alunoSondagem);
-                }
-                else
+                if (aluno.Respostas != null)
                 {
                     AtualizaNovasRespostas(aluno, alunoSondagem, sondagem.PeriodoId, bimestre);
                     RemoveRespostasSemValor(contexto, aluno, alunoSondagem);
@@ -269,7 +265,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 if (resposta.PeriodoId == periodoId)
                 {
                     var respostaSondagem = alunoSondagem.ListaRespostas.Where(x => x.PerguntaId == resposta.Pergunta).FirstOrDefault();
-                    if (respostaSondagem != null && aluno.Respostas.Any(r => r.PeriodoId == periodoId))
+                    if (respostaSondagem != null && (aluno.Respostas.Any(r => r.PeriodoId == periodoId) || aluno.Respostas.Any(r=> r.Bimestre == bimestre)))
                     {
                         respostaSondagem.RespostaId = resposta.Resposta;
                     }
@@ -633,14 +629,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             using (var contexto = new SMEManagementContextData())
             {
-                return await contexto.Sondagem.Where(s => s.AnoLetivo == filtrarListagemDto.AnoLetivo &&
+                var listaSondagem = await contexto.Sondagem.Where(s => s.AnoLetivo == filtrarListagemDto.AnoLetivo &&
                                                           s.AnoTurma == filtrarListagemDto.AnoEscolar &&
                                                           s.CodigoDre == filtrarListagemDto.CodigoDre &&
                                                           s.CodigoUe == filtrarListagemDto.CodigoUe &&
                                                           s.ComponenteCurricularId.Equals(filtrarListagemDto.ComponenteCurricular.ToString()) &&
-                                                          s.CodigoTurma == filtrarListagemDto.CodigoTurma).
+                                                          s.AlunosSondagem.Any(a => a.ListaRespostas.Any(lr => lr.PerguntaId.Equals(filtrarListagemDto.PerguntaId))) &&
+                                                          s.CodigoTurma == filtrarListagemDto.CodigoTurma).Where(s => s.AlunosSondagem.Any(a => a.ListaRespostas.Any(lr => lr.Bimestre == filtrarListagemDto.Bimestre))).
                                                           Include(x => x.AlunosSondagem).ThenInclude(x => x.ListaRespostas).ThenInclude(x => x.Resposta).ToListAsync();
 
+                return listaSondagem;
             }
 
         }
