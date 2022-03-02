@@ -30,6 +30,9 @@
 
   SET_FUNCTION_BUTTON_SAVE: "SET_FUNCTION_BUTTON_SAVE",
   SET_LOADING_SALVAR: "SET_LOADING_SALVAR",
+  SET_BIMESTRE: "SET_BIMESTRE",
+  SET_LOADING_PERGUNTAS: "SET_LOADING_PERGUNTAS",
+  SET_NAVEGACAO_SELECIONADA: "SET_NAVEGACAO_SELECIONADA",
 };
 
 const initialState = {
@@ -48,10 +51,13 @@ const initialState = {
     classroomCodeEol: null,
     schoolYear: null,
     yearClassroom: null,
-    rfCode: null
+    rfCode: null,
   },
   newDataToSave: false,
   loadingSalvar: false,
+  bimestre: null,
+  loadingPerguntas: false,
+  navSelected: "",
 };
 
 export const actionCreators = {
@@ -156,7 +162,17 @@ export const actionCreators = {
 
   setLoadingSalvar: (payload) => ({
     type: types.SET_LOADING_SALVAR,
-    payload
+    payload,
+  }),
+
+  setBimestre: (payload) => ({
+    type: types.SET_BIMESTRE,
+    payload,
+  }),
+
+  setNavegacaoSelecionada: (payload) => ({
+    type: types.SET_NAVEGACAO_SELECIONADA,
+    payload,
   }),
 };
 
@@ -264,11 +280,30 @@ export const reducer = (state, action) => {
         studentsPollMathCM: initialState.studentsPollMathCM,
         newDataToSave: false,
       };
-      case types.SET_LOADING_SALVAR:
-        return {
-          ...state,
-          loadingSalvar: action.filters,
-        };
+    case types.SET_LOADING_SALVAR:
+      return {
+        ...state,
+        loadingSalvar: action.filters,
+      };
+
+    case types.SET_BIMESTRE:
+      return {
+        ...state,
+        bimestre: action.payload,
+      };
+
+    case types.SET_LOADING_PERGUNTAS:
+      return {
+        ...state,
+        loadingPerguntas: action.loadingPerguntas,
+      };
+
+    case types.SET_NAVEGACAO_SELECIONADA:
+      return {
+        ...state,
+        navSelected: action.payload,
+      };
+
     default:
       return state;
   }
