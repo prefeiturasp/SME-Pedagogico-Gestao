@@ -555,8 +555,8 @@ select uuid_generate_v4()::text,'Resolveu o problema envolvendo um dos significa
 where not exists (select 1 from public."Resposta" where "Descricao" = 'Resolveu o problema envolvendo um dos significados dos números inteiros');
  
 insert into public."Resposta" ("Id", "Descricao")  
-select uuid_generate_v4()::text,'Texto da opção 4 – Relacionou os dados numéricos fornecidos com as características da forma geométrica apresentada, determinou a área de uma face e o volume da figura' 
-where not exists (select 1 from public."Resposta" where "Descricao" = 'Texto da opção 4 – Relacionou os dados numéricos fornecidos com as características da forma geométrica apresentada, determinou a área de uma face e o volume da figura');
+select uuid_generate_v4()::text,'Relacionou os dados numéricos fornecidos com as características da forma geométrica apresentada, determinou a área de uma face e o volume da figura' 
+where not exists (select 1 from public."Resposta" where "Descricao" = 'Relacionou os dados numéricos fornecidos com as características da forma geométrica apresentada, determinou a área de uma face e o volume da figura');
  
 insert into public."Resposta" ("Id", "Descricao")  
 select uuid_generate_v4()::text,'Utilizou a escrita algébrica para encontrar a idade de Osmir' 
