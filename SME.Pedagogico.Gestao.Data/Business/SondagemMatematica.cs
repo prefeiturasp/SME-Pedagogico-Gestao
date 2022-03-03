@@ -132,7 +132,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                     var turmApi = new TurmasAPI(new EndpointsAPI());
 
-                    var classroomStudentsFromAPI = await turmApi.GetAlunosNaTurma(Convert.ToInt32(filtroSondagem.TurmaEolCode), Convert.ToInt32(filtroSondagem.AnoLetivo), _token);
+                    var classroomStudentsFromAPI = await turmApi.GetAlunosNaTurma(Convert.ToInt32(filtroSondagem.TurmaEolCode), _token);
 
                     classroomStudentsFromAPI = classroomStudentsFromAPI.Where(x => x.CodigoSituacaoMatricula == 1 || x.CodigoSituacaoMatricula == 10 || x.CodigoSituacaoMatricula == 6 || x.CodigoSituacaoMatricula == 13 || x.CodigoSituacaoMatricula == 5).ToList();
                     if (classroomStudentsFromAPI == null)
@@ -1037,7 +1037,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                     var turmApi = new TurmasAPI(new EndpointsAPI());
 
-                    var classroomStudentsFromAPI = await turmApi.GetAlunosNaTurma(Convert.ToInt32(filtroSondagem.TurmaEolCode), Convert.ToInt32(filtroSondagem.AnoLetivo), _token);
+                    var classroomStudentsFromAPI = await turmApi.GetAlunosNaTurma(Convert.ToInt32(filtroSondagem.TurmaEolCode), _token);
 
                     classroomStudentsFromAPI = classroomStudentsFromAPI.Where(x => x.CodigoSituacaoMatricula == 1 || x.CodigoSituacaoMatricula == 10 || x.CodigoSituacaoMatricula == 6 || x.CodigoSituacaoMatricula == 13 || x.CodigoSituacaoMatricula == 5).ToList();
                     if (classroomStudentsFromAPI == null)
@@ -1124,29 +1124,32 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 var retornoSondagem = new List<SondagemMatematicaNumerosDTO>();
 
-                using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
+                using (SMEManagementContextData db = new SMEManagementContextData())
                 {
                     var sondagemDaTurma = db.MathPoolNumbers
-                                            .Where(x => x.TurmaEolCode.Equals(filtroSondagem.TurmaEolCode))
-                                            .ToList();
-
+                        .Where(x => x.TurmaEolCode.Equals(filtroSondagem.TurmaEolCode))
+                        .ToList();
 
                     var turmApi = new TurmasAPI(new EndpointsAPI());
 
-                    var classroomStudentsFromAPI = await turmApi.GetAlunosNaTurma(Convert.ToInt32(filtroSondagem.TurmaEolCode), Convert.ToInt32(filtroSondagem.AnoLetivo), _token);
+                    var classroomStudentsFromAPI = await turmApi
+                        .GetAlunosNaTurma(Convert.ToInt32(filtroSondagem.TurmaEolCode), _token);
 
-                    classroomStudentsFromAPI = classroomStudentsFromAPI.Where(x => x.CodigoSituacaoMatricula == 1 || x.CodigoSituacaoMatricula == 10 || x.CodigoSituacaoMatricula == 6 || x.CodigoSituacaoMatricula == 13 || x.CodigoSituacaoMatricula == 5).ToList();
+                    classroomStudentsFromAPI = classroomStudentsFromAPI
+                        .Where(x => x.CodigoSituacaoMatricula == 1 || x.CodigoSituacaoMatricula == 10 || x.CodigoSituacaoMatricula == 6 || x.CodigoSituacaoMatricula == 13 || x.CodigoSituacaoMatricula == 5).ToList();
+
                     if (classroomStudentsFromAPI == null)
-                    {
                         return null;
-                    }
 
                     foreach (var studentClassRoom in classroomStudentsFromAPI)
                     {
                         var studentDTO = new SondagemMatematicaNumerosDTO();
                         if (sondagemDaTurma != null)
                         {
-                            var studentPollsMath = sondagemDaTurma.Where(x => x.AlunoEolCode == studentClassRoom.CodigoAluno.ToString()).ToList();
+                            var studentPollsMath = sondagemDaTurma
+                                .Where(x => x.AlunoEolCode == studentClassRoom.CodigoAluno.ToString())
+                                .ToList();
+
                             studentDTO.NomeAluno = studentClassRoom.NomeAluno;
                             studentDTO.CodigoEolAluno = studentClassRoom.CodigoAluno.ToString();
                             studentDTO.NumeroAlunoChamada = studentClassRoom.NumeroAlunoChamada.ToString();
@@ -1161,8 +1164,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                 for (int semestre = 1; semestre <= 2; semestre++)
                                 {
                                     var studentPollMath = studentPollsMath
-                                                            .Where(s => s.Semestre == semestre)
-                                                            .FirstOrDefault();
+                                        .Where(s => s.Semestre == semestre)
+                                        .FirstOrDefault();
 
                                     if (semestre.Equals(1))
                                     {
@@ -1185,20 +1188,20 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                         studentDTO.Algarismos2S = studentPollMath.Algarismos;
                                     }
                                 }
-
                             }
                             else
-                            {
                                 AddEmptyNumberPoolTo(studentDTO);
-                            }
 
                             retornoSondagem.Add(studentDTO);
                         }
                     }
                 }
-                return retornoSondagem.OrderBy(r => Convert.ToInt32(r.NumeroAlunoChamada)).ToList();
+
+                return retornoSondagem
+                    .OrderBy(r => Convert.ToInt32(r.NumeroAlunoChamada))
+                    .ToList();
             }
-            catch (Exception)
+            catch
             {
                 throw;
             }
