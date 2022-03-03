@@ -35,7 +35,8 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Matematica
         public string ComponenteCurricular { get; set; }
 
         public int NumeroChamada { get; set; }
-        
+        public int? Bimestre { get; set; }
+
         public List<AlunoRespostaDto> Respostas { get; set; }
 
 
@@ -50,7 +51,8 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Matematica
                 CodigoUe = alunoSondagemMatematicaDto.CodigoUe,
                 ComponenteCurricularId = alunoSondagemMatematicaDto.ComponenteCurricular,
                 Id = alunoSondagemMatematicaDto.Id,
-                NomeAluno = alunoSondagemMatematicaDto.NomeAluno                
+                NomeAluno = alunoSondagemMatematicaDto.NomeAluno   
+                
             };
     }
 }

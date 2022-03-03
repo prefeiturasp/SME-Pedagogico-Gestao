@@ -62,20 +62,16 @@ class PollFilter extends Component {
 
   componentDidUpdate() {
     const { user, history, filters } = this.props;
-    const {
-      selectedDre,
-      selectedSchool,
-      classroom,
-      selectedClassRoom,
-    } = this.state;
+    const { selectedDre, selectedSchool, classroom, selectedClassRoom } =
+      this.state;
     if (!user.perfil.perfilSelecionado.nomePerfil) {
       history.push("/Usuario/TrocarPerfil");
     }
 
-    if (filters.listDres &&
-        filters.listDres.length === 1 &&
-        (!selectedDre ||
-        selectedDre.indexOf(filters.listDres[0].codigoDRE) < 0)      
+    if (
+      filters.listDres &&
+      filters.listDres.length === 1 &&
+      (!selectedDre || selectedDre.indexOf(filters.listDres[0].codigoDRE) < 0)
     ) {
       this.SelectedDre(0);
     }
@@ -123,9 +119,7 @@ class PollFilter extends Component {
     this.applyRole(label);
   }
 
-    selectedDreTeacher(event) {
-
-
+  selectedDreTeacher(event) {
     var index = event.nativeEvent.target.selectedIndex;
     var label = event.nativeEvent.target[index].value;
     var schoolCode = {
@@ -194,9 +188,7 @@ class PollFilter extends Component {
     });
   }
 
-    SelectedDre(event) {
-
-        
+  SelectedDre(event) {
     const { filters, filterMethods } = this.props;
     const index = event && event.nativeEvent.target.selectedIndex;
     const label = event
@@ -218,9 +210,9 @@ class PollFilter extends Component {
     });
 
     if (label === "todas") {
-        filterMethods.activeClassroom("");
-        filterMethods.activeSchoolCode("");
-        filterMethods.activeDreCode("");
+      filterMethods.activeClassroom("");
+      filterMethods.activeSchoolCode("");
+      filterMethods.activeDreCode("");
       filterMethods.getClassroom({
         schoolCodeEol: "",
         schoolYear: filters.setSchoolYear,
@@ -297,7 +289,11 @@ class PollFilter extends Component {
   }
 
   toggleMessageBox() {
-    if (!this.props.data.newDataToSave) this.setSelectedFilter();
+    if (!this.props.data.newDataToSave) {
+      this.setSelectedFilter();
+      this.props.poll2.setBimestre("");
+      this.props.poll2.setNavegacaoSelecionada(null);
+    }
 
     this.setState({
       showMessageBox:
@@ -305,8 +301,7 @@ class PollFilter extends Component {
     });
   }
 
-    setSelectedFilter() {
-      
+  setSelectedFilter() {
     const { filters, user, poll2, resultClick } = this.props;
     const { activeDreCode, activeClassRoomCode, setSchoolYear } = filters;
     const { schoolAll, classroom: yearClassroom } = this.state;
@@ -369,12 +364,14 @@ class PollFilter extends Component {
 
     for (let i = 2019; i < anoAtual; i++) {
       aux = aux - 1;
-      if(aux != 2020) {  // 2020 retirado pois não existiu sondagem esse ano
-      listYearsOptions.push({
-        value: aux,
-        label: aux,
-      });
-    }}
+      if (aux != 2020) {
+        // 2020 retirado pois não existiu sondagem esse ano
+        listYearsOptions.push({
+          value: aux,
+          label: aux,
+        });
+      }
+    }
 
     listYearsOptions.reverse();
 
