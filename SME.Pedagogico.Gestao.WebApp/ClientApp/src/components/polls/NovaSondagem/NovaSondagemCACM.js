@@ -5,7 +5,12 @@ import { actionCreators } from "../../../store/SondagemAutoral";
 import { actionCreators as dataStore } from "../../../store/Data";
 import { actionCreators as pollStore } from "../../../store/Poll";
 import Loader from "../../loader/Loader";
-import AutoralSelect from "../../classRecord/NovaSondagemMatematicaAutoral/select";
+import CabecalhoPerguntaAutoral from "../../classRecord/NovaSondagemMatematicaAutoral/cabecalhoPerguntaAutoral";
+import {
+  setasDireitaAlfabetizacao,
+  setasEsquerdaAlfabetizacao,
+} from "../../utils/utils";
+import NovoAlunoSondagemMatematicaAutoral from "../../classRecord/NovaSondagemMatematicaAutoral/novoAluno";
 
 function NovaSondagemCACM() {
   const dispatch = useDispatch();
@@ -31,8 +36,8 @@ function NovaSondagemCACM() {
 
   const loadingPerguntas = useSelector((store) => store.poll.loadingPerguntas);
 
-  const tamanhoLinhas = itemSelecionado.subperguntas
-    ? itemSelecionado.subperguntas.length
+  const tamanhoLinhas = itemSelecionado.perguntas
+    ? itemSelecionado.perguntas.length
     : 0;
 
   const setarModoEdicao = () => {
@@ -49,7 +54,9 @@ function NovaSondagemCACM() {
   useEffect(() => {
     if (!perguntas || perguntas.length === 0 || perguntas.mensagens) return;
 
-    const pergunta = perguntas.find((x) => x.ordenacao == indexSelecionado);
+    const pergunta = perguntas.find(
+      (x) => x.ordenacao === Number(indexSelecionado)
+    );
 
     if (!pergunta) return;
 
@@ -142,21 +149,22 @@ function NovaSondagemCACM() {
     return alunos.findIndex((x) => x.codigoAluno === alunoIdState);
   };
 
-  const obterIndexRespostasAluno = (aluno, perguntaId) => {
+  const obterIndexRespostasAluno = (aluno, perguntaId, subPerguntaId) => {
     if (!aluno.respostas || aluno.respostas.length === 0) return null;
 
-    return aluno.respostas.findIndex((x) => x.pergunta === perguntaId);
+    return aluno.respostas.findIndex(
+      (item) =>
+        item.pergunta === perguntaId && item.subPerguntaId === subPerguntaId
+    );
   };
 
-  const perguntaAnoEscolar = useMemo(() => {
-    if (perguntas && itemSelecionado) {
-      const pergunta = perguntas.find((item) => item.id === itemSelecionado.id);
-      return pergunta && pergunta.perguntaAnoEscolar;
-    }
-    return "";
-  }, [itemSelecionado, perguntas]);
-
-  const onChangeAluno = (novoValor, perguntaIdState, alunoIdState) => {
+  const onChangeAluno = (
+    novoValor,
+    perguntaIdState,
+    alunoIdState,
+    sondagemId,
+    subPerguntaId
+  ) => {
     setarModoEdicao();
 
     let alunosMutaveis = Object.assign([], alunos);
@@ -167,7 +175,8 @@ function NovaSondagemCACM() {
 
     const indexResposta = obterIndexRespostasAluno(
       alunosMutaveis[indexAluno],
-      perguntaIdState
+      perguntaIdState,
+      subPerguntaId
     );
 
     if (
@@ -183,7 +192,7 @@ function NovaSondagemCACM() {
         bimestre,
         pergunta: perguntaIdState,
         resposta: novoValor,
-        perguntaAnoEscolar,
+        subPerguntaId,
       });
     } else {
       alunosMutaveis[indexAluno].respostas[indexResposta].resposta = novoValor;
@@ -202,19 +211,14 @@ function NovaSondagemCACM() {
       !filtrosBusca.perguntaId ||
       !filtrosBusca.anoLetivo ||
       !filtrosBusca.anoEscolar ||
-      !bimestre ||
-      !perguntaAnoEscolar
+      !bimestre
     )
       return;
 
     dispatch(
-      actionCreators.listaAlunosAutoralMatematica(
-        filtrosBusca,
-        bimestre,
-        perguntaAnoEscolar
-      )
+      actionCreators.listaAlunosAutoralMatematica(filtrosBusca, bimestre)
     );
-  }, [bimestre, dispatch, filtrosBusca, perguntaAnoEscolar]);
+  }, [bimestre, dispatch, filtrosBusca]);
 
   useEffect(() => {
     if (filtros.yearClassroom && bimestre) {
@@ -339,63 +343,29 @@ function NovaSondagemCACM() {
     >
       <thead>
         <tr>
-          <th
-            rowSpan={2 + tamanhoLinhas}
-            className="align-middle border text-color-purple"
-          >
-            <div className="ml-2">Sondagem - {anoEscolar}º ano</div>
-          </th>
-          <th
-            colSpan={2 + tamanhoLinhas}
-            key={itemSelecionado && itemSelecionado.id}
-            id={`col_head_${itemSelecionado && itemSelecionado.id}`}
-            className="text-center border text-color-purple text-center border sondagem-matematica-title"
-            style={{ maxWidth: 40 }}
-          >
-            <div
-              className="d-flex justify-content-center align-items-center"
-              style={{
-                height: 30,
-              }}
-            >
-              <span
-                value="opacos_col"
-                onClick={() => recuar()}
-                className="testcursor"
-              >
-                <img
-                  src="./img/icon_2_mat_FFFFFF.svg"
-                  alt="seta esquerda ativa"
-                  style={{ height: 20, color: "#DADADA" }}
-                />
-              </span>
-              <b
-                className="p-4 text-nowrap overflow-hidden text-truncate"
-                data-bs-toggle="tooltip"
-                title={itemSelecionado && itemSelecionado.descricao}
-              >
-                {itemSelecionado && itemSelecionado.descricao}
-              </b>
-              <span
-                value="zero_col"
-                onClick={() => avancar()}
-                className="testcursor"
-              >
-                <img
-                  src="./img/icon_mat_FFFFFF.svg"
-                  alt="seta direita ativa"
-                  style={{ height: 20, color: "#DADADA" }}
-                />
-              </span>
-            </div>
-          </th>
+          <CabecalhoPerguntaAutoral
+            props={{
+              tamanhoLinhas,
+              anoEscolar,
+              itemSelecionado,
+              recuar,
+              avancar,
+              tipoSondagem,
+              primeiraOrdenacao,
+              ultimaOrdenacao,
+              indexSelecionado,
+              setasDireita: setasDireitaAlfabetizacao,
+              setasEsquerda: setasEsquerdaAlfabetizacao,
+              classes: "sondagem-matematica-title",
+            }}
+          />
         </tr>
         <tr>{montarDadosCabecalhoCACM()}</tr>
-        {itemSelecionado.subperguntas && !!itemSelecionado.subperguntas.length && (
+        {itemSelecionado.perguntas && !!itemSelecionado.perguntas.length && (
           <tr>
-            {itemSelecionado.subperguntas.map((item) => (
+            {itemSelecionado.perguntas.map((item) => (
               <td className="text-center border poll-select-container ordem3_col">
-                <small className="text-muted">{item.name}</small>
+                <small className="text-muted">{item.descricao}</small>
               </td>
             ))}
           </tr>
@@ -405,38 +375,13 @@ function NovaSondagemCACM() {
         {alunos &&
           !!alunos.length &&
           alunos.map((aluno) => (
-            // <NovoAlunoSondagemMatematicaAutoral
-            //   aluno={aluno}
-            //   salvar={salvar}
-            //   perguntaSelecionada={itemSelecionado}
-            //   onChangeAluno={onChangeAluno}
-            // />
-            <tr>
-              <td className="align-middle">
-                <small className="ml-2 pr-4">
-                  <b>{aluno.numeroChamada}</b>
-                </small>
-                <small>{aluno.nomeAluno}</small>
-              </td>
-              {itemSelecionado.subperguntas &&
-                !!itemSelecionado.subperguntas.length &&
-                itemSelecionado.subperguntas.map(() => (
-                  <td className="text-center align-center">
-                    <AutoralSelect
-                      lista={itemSelecionado.respostas}
-                      valor={aluno.respostas && aluno.respostas[0].resposta}
-                      perguntaId={itemSelecionado.id}
-                      alunoId={aluno.codigoAluno}
-                      sondagemId={aluno.id}
-                      key={aluno.id}
-                      id={aluno.id}
-                      onChange={onChangeAluno}
-                      disabled={false}
-                      mostraToolTipItens
-                    ></AutoralSelect>
-                  </td>
-                ))}
-            </tr>
+            <NovoAlunoSondagemMatematicaAutoral
+              aluno={aluno}
+              salvar={salvar}
+              perguntaSelecionada={itemSelecionado}
+              onChangeAluno={onChangeAluno}
+              ehAutoral={false}
+            />
           ))}
       </tbody>
     </table>

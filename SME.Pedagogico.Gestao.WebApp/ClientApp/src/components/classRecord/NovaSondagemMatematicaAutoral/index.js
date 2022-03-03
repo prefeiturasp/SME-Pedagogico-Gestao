@@ -1,15 +1,19 @@
 ﻿import React, { useState, useMemo, useEffect, useCallback } from "react";
-import NovoAlunoSondagemMatematicaAutoral from "./novoAluno";
 import { useSelector, useDispatch } from "react-redux";
+
+import NovoAlunoSondagemMatematicaAutoral from "./novoAluno";
 import { actionCreators } from "../../../store/SondagemAutoral";
 import { actionCreators as dataStore } from "../../../store/Data";
 import { actionCreators as pollStore } from "../../../store/Poll";
 import Loader from "../../loader/Loader";
+import CabecalhoPerguntaAutoral from "./cabecalhoPerguntaAutoral";
+import { setasDireitaAutoral, setasEsquerdaAutoral } from "../../utils/utils";
 
 function NovaSondagemMatematicaAutoral() {
   const dispatch = useDispatch();
 
   const filtros = useSelector((store) => store.poll.selectedFilter);
+  const tipoSondagem = useSelector((store) => store.poll.pollTypeSelected);
 
   const [indexSelecionado, setIndexSelecionado] = useState(1);
 
@@ -67,14 +71,6 @@ function NovaSondagemMatematicaAutoral() {
   const anoEscolar = useSelector(
     (store) => store.poll.selectedFilter.yearClassroom
   );
-
-  const perguntaAnoEscolar = useMemo(() => {
-    if (perguntas && itemSelecionado) {
-      const pergunta = perguntas.find((item) => item.id === itemSelecionado.id);
-      return pergunta && pergunta.perguntaAnoEscolar;
-    }
-    return "";
-  }, [itemSelecionado, perguntas]);
 
   const ultimaOrdenacao = useMemo(() => {
     if (!perguntas || perguntas.length === 0 || perguntas.mensagens) return 0;
@@ -177,7 +173,6 @@ function NovaSondagemMatematicaAutoral() {
         bimestre,
         pergunta: perguntaIdState,
         resposta: novoValor,
-        perguntaAnoEscolar,
       });
     } else {
       alunosMutaveis[indexAluno].respostas[indexResposta].resposta = novoValor;
@@ -196,19 +191,14 @@ function NovaSondagemMatematicaAutoral() {
       !filtrosBusca.perguntaId ||
       !filtrosBusca.anoLetivo ||
       !filtrosBusca.anoEscolar ||
-      !bimestre ||
-      !perguntaAnoEscolar
+      !bimestre
     )
       return;
 
     dispatch(
-      actionCreators.listaAlunosAutoralMatematica(
-        filtrosBusca,
-        bimestre,
-        perguntaAnoEscolar
-      )
+      actionCreators.listaAlunosAutoralMatematica(filtrosBusca, bimestre)
     );
-  }, [bimestre, dispatch, filtrosBusca, perguntaAnoEscolar]);
+  }, [bimestre, dispatch, filtrosBusca]);
 
   useEffect(() => {
     if (filtros.yearClassroom && bimestre) {
@@ -267,53 +257,20 @@ function NovaSondagemMatematicaAutoral() {
     >
       <thead>
         <tr>
-          <th rowSpan="2" className="align-middle border text-color-purple">
-            <div className="ml-2">Sondagem - {anoEscolar}º ano</div>
-          </th>
-          <th
-            colSpan="2"
-            key={itemSelecionado && itemSelecionado.id}
-            id={`col_head_${itemSelecionado && itemSelecionado.id}`}
-            className="text-center border text-color-purple"
-            style={{ maxWidth: 40 }}
-          >
-            <div
-              className="d-flex justify-content-center align-items-center"
-              style={{
-                height: 30,
-              }}
-            >
-              <span
-                value="opacos_col"
-                onClick={() => recuar()}
-                className="testcursor"
-              >
-                <img
-                  src="./img/icon_2_pt_7C4DFF.svg"
-                  alt="seta esquerda ativa"
-                  style={{ height: 20 }}
-                />
-              </span>
-              <b
-                className="p-4 text-nowrap overflow-hidden text-truncate"
-                data-bs-toggle="tooltip"
-                title={itemSelecionado && itemSelecionado.descricao}
-              >
-                {itemSelecionado && itemSelecionado.descricao}
-              </b>
-              <span
-                value="zero_col"
-                onClick={() => avancar()}
-                className="testcursor"
-              >
-                <img
-                  src="./img/icon_pt_7C4DFF.svg"
-                  alt="seta direita ativa"
-                  style={{ height: 20 }}
-                />
-              </span>
-            </div>
-          </th>
+          <CabecalhoPerguntaAutoral
+            props={{
+              anoEscolar,
+              itemSelecionado,
+              recuar,
+              avancar,
+              tipoSondagem,
+              primeiraOrdenacao,
+              ultimaOrdenacao,
+              indexSelecionado,
+              setasDireita: setasDireitaAutoral,
+              setasEsquerda: setasEsquerdaAutoral,
+            }}
+          />
         </tr>
       </thead>
       <tbody>
@@ -325,6 +282,7 @@ function NovaSondagemMatematicaAutoral() {
               salvar={salvar}
               perguntaSelecionada={itemSelecionado}
               onChangeAluno={onChangeAluno}
+              ehAutoral
             />
           ))}
       </tbody>
