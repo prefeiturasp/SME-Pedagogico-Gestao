@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { actionCreators } from "../../../store/SondagemAutoral";
 import { actionCreators as dataStore } from "../../../store/Data";
 import { actionCreators as pollStore } from "../../../store/Poll";
-import { actionCreators as filterStore } from "../../../store/Filters";
 import Loader from "../../loader/Loader";
 
 function NovaSondagemMatematicaAutoral() {

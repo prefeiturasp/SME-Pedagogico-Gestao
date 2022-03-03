@@ -108,10 +108,12 @@ function* SalvaSondagemAutoralMat({ payload }) {
     filters: false,
   });
 
-  yield put({
-    type: Autoral.types.LISTAR_ALUNOS_AUTORAL_MATEMATICA,
-    filtro: payload.filtro,
-  });
+  if (payload.yearClassroom < 2022) {
+    yield put({
+      type: Autoral.types.LISTAR_ALUNOS_AUTORAL_MATEMATICA,
+      filtro: payload.filtro,
+    });
+  }
 }
 
 function* GetPeriod({ schoolYear }) {

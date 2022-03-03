@@ -6,6 +6,5 @@
         public string Pergunta { get; set; }
         public string Resposta { get; set; }
         public int? Bimestre { get; set; }
-        public string PerguntaAnoEscolar { get; set; }
     }
 }
