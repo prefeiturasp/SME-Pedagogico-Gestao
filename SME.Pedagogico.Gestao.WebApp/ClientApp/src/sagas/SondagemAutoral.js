@@ -30,7 +30,135 @@ function* ListarPerguntas({ filtros }) {
   try {
     yield put(setCarregandoListaPerguntas(true));
     const data = yield call(listaPerguntasAPI, filtros);
-    var listaPerguntas = data;
+    let listaPerguntas = [
+      {
+        id: 1,
+        descricao: "Ordem 1 - COMPOSIÇÃO",
+        ordenacao: 1,
+        sequenciaOrdem: 1,
+        perguntas: [
+          {
+            id: 1,
+            descricao: "Ideia",
+            ordenacao: 1,
+            sequenciaOrdem: 1,
+            respostas: [
+              {
+                id: 1,
+                descricao: "Acertou",
+                ordenacao: 1,
+                sequenciaOrdem: 1,
+              },
+              {
+                id: 2,
+                descricao: "Errou",
+                ordenacao: 2,
+                sequenciaOrdem: 2,
+              },
+              {
+                id: 3,
+                descricao: "Não resolveu",
+                ordenacao: 3,
+                sequenciaOrdem: 3,
+              },
+            ],
+          },
+          {
+            id: 2,
+            descricao: "Resultado",
+            ordenacao: 2,
+            sequenciaOrdem: 2,
+            respostas: [
+              {
+                id: 1,
+                descricao: "Acertou",
+                ordenacao: 1,
+                sequenciaOrdem: 1,
+              },
+              {
+                id: 2,
+                descricao: "Errou",
+                ordenacao: 2,
+                sequenciaOrdem: 2,
+              },
+              {
+                id: 3,
+                descricao: "Não resolveu",
+                ordenacao: 3,
+                sequenciaOrdem: 3,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 2,
+        descricao: "Ordem 2 - COMPOSIÇÃO",
+        ordenacao: 2,
+        sequenciaOrdem: 2,
+        perguntas: [
+          {
+            id: 1,
+            descricao: "Ideia",
+            ordenacao: 1,
+            sequenciaOrdem: 1,
+            respostas: [
+              {
+                id: 1,
+                descricao: "Acertou",
+                ordenacao: 1,
+                sequenciaOrdem: 1,
+                respostas: null,
+              },
+              {
+                id: 2,
+                descricao: "AErrou certou",
+                ordenacao: 2,
+                sequenciaOrdem: 2,
+                respostas: null,
+              },
+              {
+                id: 3,
+                descricao: "Não resolveu",
+                ordenacao: 3,
+                sequenciaOrdem: 3,
+                respostas: null,
+              },
+            ],
+          },
+          {
+            id: 2,
+            descricao: "Resultado",
+            ordenacao: 2,
+            sequenciaOrdem: 2,
+            respostas: [
+              {
+                id: 1,
+                descricao: "Acertou",
+                ordenacao: 1,
+                sequenciaOrdem: 1,
+                respostas: null,
+              },
+              {
+                id: 2,
+                descricao: "AErrou certou",
+                ordenacao: 2,
+                sequenciaOrdem: 2,
+                respostas: null,
+              },
+              {
+                id: 3,
+                descricao: "Não resolveu",
+                ordenacao: 3,
+                sequenciaOrdem: 3,
+                respostas: null,
+              },
+            ],
+          },
+        ],
+      },
+    ];
+    listaPerguntas = Number(filtros.yearClassroom) > 4 ? data : listaPerguntas;
     yield put({ type: Autoral.types.SETAR_PERGUNTAS, listaPerguntas });
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
