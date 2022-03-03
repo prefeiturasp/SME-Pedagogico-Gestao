@@ -117,6 +117,110 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
+        public async Task<List<SondagemMatematicaOrdemDTO>> ObterPerguntas(FiltroSondagemMatematicaDTO filtroSondagem)
+        {
+            try
+            {
+                var retornoSondagem = new List<SondagemMatematicaOrdemDTO>();
+
+                using (SMEManagementContextData db = new SMEManagementContextData())
+                {
+                    var sondagemDaTurma = db.MathPoolCMs.Where(x => x.TurmaEolCode.Equals(filtroSondagem.TurmaEolCode)).ToList();
+
+                    var turmApi = new TurmasAPI(new EndpointsAPI());
+
+                    var classroomStudentsFromAPI = (await turmApi.GetAlunosNaTurma(Convert.ToInt32(filtroSondagem.TurmaEolCode), Convert.ToInt32(filtroSondagem.AnoLetivo), _token))
+                                                   .Where(x => x.CodigoSituacaoMatricula == 1 || x.CodigoSituacaoMatricula == 10 || x.CodigoSituacaoMatricula == 6 || x.CodigoSituacaoMatricula == 13 || x.CodigoSituacaoMatricula == 5)
+                                                   .ToList();
+
+                    if (classroomStudentsFromAPI == null)
+                        return null;
+
+                    foreach (var studentClassRoom in classroomStudentsFromAPI)
+                    {
+                        var studentDTO = new SondagemMatematicaOrdemDTO();
+                        if (sondagemDaTurma != null)
+                        {
+                            var studentPollsMath = sondagemDaTurma.Where(x => x.AlunoEolCode == studentClassRoom.CodigoAluno.ToString()).ToList();
+                            studentDTO.NomeAluno = studentClassRoom.NomeAluno;
+                            studentDTO.CodigoEolAluno = studentClassRoom.CodigoAluno.ToString();
+                            studentDTO.NumeroAlunoChamada = studentClassRoom.NumeroAlunoChamada.ToString();
+                            studentDTO.AnoLetivo = filtroSondagem.AnoLetivo;
+                            studentDTO.CodigoEolDRE = filtroSondagem.DreEolCode;
+                            studentDTO.CodigoEolEscola = filtroSondagem.EscolaEolCode;
+                            studentDTO.AnoTurma = filtroSondagem.AnoTurma;
+                            studentDTO.CodigoEolTurma = filtroSondagem.TurmaEolCode;
+
+                            if (studentPollsMath?.Count > 0)
+                            {
+                                for (int semestre = 1; semestre <= 2; semestre++)
+                                {
+                                    var studentPollMath = studentPollsMath
+                                                            .Where(s => s.Semestre == semestre)
+                                                            .FirstOrDefault();
+
+                                    if (semestre.Equals(1))
+                                    {
+                                        if (studentPollMath.AnoTurma == (int)AnoTurmaEnum.SegundoAno)
+                                        {
+                                            studentDTO.Ideia3Semestre1 = studentPollMath.Ordem3Ideia;
+                                            studentDTO.Resultado3Semestre1 = studentPollMath.Ordem3Resultado;
+                                        }
+                                        else
+                                        {
+                                            studentDTO.Ideia4Semestre1 = studentPollMath.Ordem4Ideia;
+                                            studentDTO.Ideia5Semestre1 = studentPollMath.Ordem5Ideia;
+                                            studentDTO.Ideia6Semestre1 = studentPollMath.Ordem6Ideia;
+                                            studentDTO.Ideia7Semestre1 = studentPollMath.Ordem7Ideia;
+                                            studentDTO.Ideia8Semestre1 = studentPollMath.Ordem8Ideia;
+                                            studentDTO.Resultado4Semestre1 = studentPollMath.Ordem4Resultado;
+                                            studentDTO.Resultado6Semestre1 = studentPollMath.Ordem5Resultado;
+                                            studentDTO.Resultado7Semestre1 = studentPollMath.Ordem6Resultado;
+                                            studentDTO.Resultado5Semestre1 = studentPollMath.Ordem7Resultado;
+                                            studentDTO.Resultado8Semestre1 = studentPollMath.Ordem8Resultado;
+                                        }
+                                    }
+                                    else if (semestre.Equals(2))
+                                    {
+                                        if (studentPollMath.AnoTurma == (int)AnoTurmaEnum.SegundoAno)
+                                        {
+                                            studentDTO.Ideia3Semestre2 = studentPollMath.Ordem3Ideia;
+                                            studentDTO.Resultado3Semestre2 = studentPollMath.Ordem3Resultado;
+                                        }
+                                        else
+                                        {
+                                            studentDTO.Ideia4Semestre2 = studentPollMath.Ordem4Ideia;
+                                            studentDTO.Ideia5Semestre2 = studentPollMath.Ordem5Ideia;
+                                            studentDTO.Ideia6Semestre2 = studentPollMath.Ordem6Ideia;
+                                            studentDTO.Ideia7Semestre2 = studentPollMath.Ordem7Ideia;
+                                            studentDTO.Ideia8Semestre2 = studentPollMath.Ordem8Ideia;
+                                            studentDTO.Resultado4Semestre2 = studentPollMath.Ordem4Resultado;
+                                            studentDTO.Resultado6Semestre2 = studentPollMath.Ordem5Resultado;
+                                            studentDTO.Resultado7Semestre2 = studentPollMath.Ordem6Resultado;
+                                            studentDTO.Resultado5Semestre2 = studentPollMath.Ordem7Resultado;
+                                            studentDTO.Resultado8Semestre2 = studentPollMath.Ordem8Resultado;
+                                        }
+                                    }
+                                }
+
+                            }
+                            else
+                            {
+                                AddEmptyCMPoolTo(studentDTO);
+                            }
+
+                            retornoSondagem.Add(studentDTO);
+                        }
+                    }
+                }
+                return retornoSondagem.OrderBy(r => Convert.ToInt32(r.NumeroAlunoChamada)).ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<List<SondagemMatematicaOrdemDTO>> ListPoolCMAsync(FiltroSondagemMatematicaDTO filtroSondagem)
         {
             try
