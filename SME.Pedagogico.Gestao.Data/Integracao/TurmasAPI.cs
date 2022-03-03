@@ -17,15 +17,14 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
             this.endpointsAPI = endpointsAPI;
         }
 
-        public async Task<List<AlunosNaTurmaDTO>> GetAlunosNaTurma(int codigoTurma,
-                                                int anoLetivo, string token)
+        public async Task<List<AlunosNaTurmaDTO>> GetAlunosNaTurma(int codigoTurma, string token)
         {
-            var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.BuscaAlunosNaTurma);
+            var url = HttpHelper
+                .ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.BuscaAlunosNaTurma);
 
             return await HttpHelper
                 .GetAsync<List<AlunosNaTurmaDTO>>
-                      (token, string.Format(url, codigoTurma, anoLetivo));
+                      (token, string.Format(url, codigoTurma, false));
         }
-
     }
 }
