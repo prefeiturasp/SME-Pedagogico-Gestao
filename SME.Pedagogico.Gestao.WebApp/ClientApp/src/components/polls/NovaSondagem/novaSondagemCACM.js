@@ -209,12 +209,22 @@ function NovaSondagemCACM() {
       !filtrosBusca.perguntaId ||
       !filtrosBusca.anoLetivo ||
       !filtrosBusca.anoEscolar ||
-      !bimestre
+      !bimestre ||
+      !perguntas
     )
       return;
 
-    dispatch(pollStore.obterAlunosAlfabetizacao({ filtrosBusca, bimestre }));
-  }, [bimestre, dispatch, filtrosBusca]);
+    const idSubPerguntas =
+      perguntas[0].perguntas && perguntas[0].perguntas.map((item) => item.id);
+
+    dispatch(
+      pollStore.obterAlunosAlfabetizacao({
+        filtrosBusca,
+        bimestre,
+        perguntas: idSubPerguntas,
+      })
+    );
+  }, [bimestre, dispatch, filtrosBusca, perguntas]);
 
   useEffect(() => {
     if (filtros.yearClassroom && bimestre) {
