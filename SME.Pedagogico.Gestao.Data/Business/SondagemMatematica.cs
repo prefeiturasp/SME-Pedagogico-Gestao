@@ -29,6 +29,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             alunoAPI = new AlunosAPI(new EndpointsAPI());
             var createToken = new CreateToken(config);
             _token = createToken.CreateTokenProvisorio();
+            TurmaApi = new TurmasAPI(new EndpointsAPI());
         }
 
         public async Task InsertPoolCMAsync(List<SondagemMatematicaOrdemDTO> dadosSondagem)
