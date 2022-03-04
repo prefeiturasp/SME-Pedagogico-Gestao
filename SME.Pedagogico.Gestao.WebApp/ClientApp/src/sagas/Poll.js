@@ -169,8 +169,7 @@ function* obterAlunosAlfabetizacao({ payload }) {
 
 async function obterAlunosAlfabetizacaoApi({ filtrosBusca, bimestre }) {
   const params = parametrosParaUrl({ ...filtrosBusca, bimestre });
-  //   const url = `/api/SondagemAlfabetizacao/Matematica/Alunos?${params}`;
-  const url = `/api/SondagemAutoral/Matematica?${params}`;
+  const url = `/api/SondagemAlfabetizacao/Matematica/Alunos?${params}`;
   return fetch(url, {
     method: "get",
     headers: { "Content-Type": "application/json" },
