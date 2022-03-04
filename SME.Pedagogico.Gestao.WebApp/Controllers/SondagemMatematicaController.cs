@@ -56,7 +56,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult> ListaSondagemCA([FromBody]FiltroSondagemMatematicaDTO filtroSondagem)
         {
-            await sondagemAlfabetizacaoBusiness.ObterPerguntas(int.Parse(filtroSondagem.AnoTurma), int.Parse(filtroSondagem.AnoLetivo), 2);
             return Ok(await sondagemAlfabetizacaoBusiness.ListPoolCAAsync(filtroSondagem));
         }
 
@@ -68,7 +67,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> ListaSondagemNumeros([FromBody]FiltroSondagemMatematicaDTO filtroSondagem)
         {
-            await sondagemAlfabetizacaoBusiness.ObterPerguntas(2, int.Parse(filtroSondagem.AnoLetivo), 2);
             return Ok(await sondagemAlfabetizacaoBusiness.ListPoolNumerosAsync(filtroSondagem));
         }
 
