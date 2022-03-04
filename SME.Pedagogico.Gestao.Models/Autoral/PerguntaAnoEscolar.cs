@@ -13,5 +13,6 @@ namespace SME.Pedagogico.Gestao.Models.Autoral
         public bool Excluido { get; set; }
         public DateTime? InicioVigencia { get; set; }
         public DateTime? FimVigencia { get; set; }
+        public int? Grupo { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DTO;
+using SME.Pedagogico.Gestao.Data.DTO.Matematica;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -93,9 +94,16 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
         [HttpGet("Matematica/Perguntas")]
-        public async Task<IActionResult> ObterPerguntas([FromQuery] FiltroSondagemMatematicaDTO filtroSondagemMatematica)
+        public async Task<IActionResult> ObterPerguntas([FromQuery] int anoEscolar, [FromQuery] int anoLetivo, [FromQuery] int grupo)
         {
-            return Ok(await sondagemAlfabetizacaoBusiness.ObterPerguntas(filtroSondagemMatematica));
+            return Ok(await sondagemAlfabetizacaoBusiness.ObterPerguntas(anoEscolar, anoLetivo, grupo));
+        }
+
+        [HttpGet("Matematica/Alunos")]
+        public async Task<IActionResult> ObterAlunos([FromQuery] FiltrarListagemMatematicaDTO filtrarListagemDto)
+        {
+            var retorno = await sondagemAlfabetizacaoBusiness.ObterAlunos(filtrarListagemDto);
+            return Ok(retorno);
         }
     }
 }
