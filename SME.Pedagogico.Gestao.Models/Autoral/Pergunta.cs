@@ -10,6 +10,6 @@ namespace SME.Pedagogico.Gestao.Models.Autoral
         public string ComponenteCurricularId { get; set; }
         public virtual ComponenteCurricular ComponenteCurricular { get; set; }
         public bool Excluido { get; set; }
-        public Pergunta PerguntaPai { get; set; }
+        public virtual Pergunta PerguntaPai { get; set; }
     }
 }

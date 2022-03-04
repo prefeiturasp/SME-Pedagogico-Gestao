@@ -278,56 +278,83 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private async Task<List<PerguntaDto>> ObterPerguntasGrupoCACM(SMEManagementContextData db, int anoEscolar, int anoLetivo, int grupo)
         {
-            var perguntas = await (from pae in db.PerguntaAnoEscolar
-                                   join p in db.Pergunta on pae.Pergunta.Id equals p.Id
-                                   where pae.AnoEscolar == anoEscolar && pae.Grupo == grupo
-                                                       && ((pae.FimVigencia == null && (pae.InicioVigencia.HasValue ? pae.InicioVigencia.Value.Year : 0) <= anoLetivo)
-                                                            || (pae.FimVigencia.HasValue ? pae.FimVigencia.Value.Year : 0) >= anoLetivo)
-                                   select new
-                                   {
-                                       pae.AnoEscolar,
-                                       OrdemPergunta = pae.Ordenacao,
-                                       PerguntaPaiId = p.Id,
-                                       PerguntaDescricao = p.Descricao
-                                   }).ToListAsync();
+            try
+            {
+                var perguntasAlfabetizacao = new List<PerguntaAlfabetizacaoDto>();
 
-            var subPerguntas = await (from sp in db.Pergunta
-                               join p in perguntas on sp.PerguntaPai.Id equals p.PerguntaPaiId
-                               join pr in db.PerguntaResposta on sp.Id equals pr.Pergunta.Id
-                               join r in db.Resposta on pr.Resposta.Id equals r.Id
-                               select new
-                               {
-                                   PerguntaPai = p.PerguntaPaiId,
-                                   SubPergunta = sp.Id,
-                                   SubPerguntaDescricao = sp.Descricao,
-                                   //SubPerguntaOrdem = sp.,
-                                   RespostaId = r.Id,
-                                   RespostaDescricao = r.Descricao,
-                                   RespostaOrdem = pr.Ordenacao
-                               }).ToListAsync();
+                var sql = $@"select p.""Id"" as ""PerguntaPrincipalId"",
+                                    p.""Descricao"" as ""PerguntaPrincipalDescricao"", 
+                                    pae.""Ordenacao"" as ""PerguntaPrincipalOrdenacao"",
+                                    ps.""Id"" as ""PerguntaSecundariaId"",                                    
+                                    ps.""Descricao"" as ""PerguntaSecundariaDescricao"",                                     
+                                    pae2.""Ordenacao"" as ""PerguntaSecundariaOrdenacao"",                                   
+                                    rs.""Id"" as ""RespostaId"", 
+                                    rs.""Descricao"" as ""RespostaDescricao"", 
+                                    prs.""Ordenacao"" as ""RespostaOrdenacao""
+                            from ""PerguntaAnoEscolar"" pae
+                            join ""Pergunta"" p on p.""Id"" = pae.""PerguntaId""
+                            join ""Pergunta"" ps on ps.""PerguntaId"" = pae.""PerguntaId""
+                            join ""PerguntaAnoEscolar"" pae2 on pae2.""PerguntaId"" = ps.""Id""
+                            join ""PerguntaResposta"" prs on prs.""PerguntaId"" = ps.""Id""
+                            join ""Resposta"" rs on rs.""Id"" = prs.""RespostaId""
+                            where pae.""AnoEscolar"" in ({anoEscolar}) and pae.""Grupo"" = {grupo}";
 
-            var retornoPerguntasRespostas = (from p in perguntas
-                                            select new PerguntaDto()
-                                            {
-                                                Id = p.PerguntaPaiId,
-                                                Descricao = p.PerguntaDescricao,
-                                                Ordenacao = p.OrdemPergunta,
-                                                SequenciaOrdem = p.OrdemPergunta,
-                                                Perguntas = subPerguntas.Where(w => w.PerguntaPai.Equals(p.PerguntaPaiId)).Select(s => new PerguntaDto()
-                                                {
-                                                    Id = s.SubPergunta,
-                                                    Descricao = s.SubPerguntaDescricao,
-                                                    //Ordenacao = s.SubPerguntaOrdem,
-                                                    Respostas = subPerguntas.Where(w => w.PerguntaPai.Equals(p.PerguntaPaiId)).Select(r => new RespostaDto()
-                                                    {
-                                                        Id = r.RespostaId,
-                                                        Descricao = r.RespostaDescricao,
-                                                        Ordenacao = r.RespostaOrdem
-                                                    }).ToList()
-                                                }).ToList()
-                                            }).ToList();
+                using (var command = db.Database.GetDbConnection().CreateCommand())
+                {
+                    command.CommandText = sql;
+                    db.Database.OpenConnection();
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                var pergunta = new PerguntaAlfabetizacaoDto() 
+                                {
+                                    PerguntaPrincipalId = reader["PerguntaPrincipalId"].ToString(),
+                                    PerguntaPrincipalDescricao = reader["PerguntaPrincipalDescricao"].ToString(),
+                                    PerguntaPrincipalOrdenacao = int.Parse(reader["PerguntaPrincipalOrdenacao"].ToString()),
+                                    PerguntaSecundariaId = reader["PerguntaSecundariaId"].ToString(),
+                                    PerguntaSecundariaDescricao = reader["PerguntaSecundariaDescricao"].ToString(),
+                                    PerguntaSecundariaOrdenacao = int.Parse(reader["PerguntaSecundariaOrdenacao"].ToString()),
+                                    RespostaId = reader["RespostaId"].ToString(),
+                                    RespostaDescricao = reader["RespostaDescricao"].ToString(),
+                                    RespostaOrdenacao = int.Parse(reader["RespostaOrdenacao"].ToString()),
+                                };
+                                perguntasAlfabetizacao.Add(pergunta);
+                            }
+                            reader.NextResult();
+                        }
+                    }
+                }
 
-            return retornoPerguntasRespostas;
+                var perguntasRespostas = perguntasAlfabetizacao.GroupBy(g => new { g.PerguntaPrincipalId, g.PerguntaPrincipalDescricao, g.PerguntaPrincipalOrdenacao }, (key, group) =>
+                new PerguntaDto()
+                {
+                    Id = key.PerguntaPrincipalId,
+                    Descricao = key.PerguntaPrincipalDescricao,
+                    Ordenacao = key.PerguntaPrincipalOrdenacao,
+                    Perguntas = group.GroupBy(g => new { g.PerguntaSecundariaId, g.PerguntaSecundariaDescricao, g.PerguntaSecundariaOrdenacao }, (key2, group2) =>
+                    new PerguntaDto()
+                    {
+                        Id = key2.PerguntaSecundariaId,
+                        Descricao = key2.PerguntaSecundariaDescricao,
+                        Ordenacao = key2.PerguntaSecundariaOrdenacao,
+                        Respostas = group2.Select(s => new RespostaDto()
+                        {
+                            Id = s.RespostaId,
+                            Descricao = s.RespostaDescricao,
+                            Ordenacao = s.RespostaOrdenacao
+                        }).OrderBy(o=> o.Ordenacao)
+                    }).OrderBy(o => o.Ordenacao)
+                }).ToList();
+
+                return perguntasRespostas;               
+            } 
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
 
         private async Task<List<PerguntaDto>> ObterPerguntasGrupoNumeros(SMEManagementContextData db, int anoEscolar, int anoLetivo, int grupo)

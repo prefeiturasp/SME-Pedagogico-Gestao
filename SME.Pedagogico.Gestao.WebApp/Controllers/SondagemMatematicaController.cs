@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
     [Produces("application/json")]
-    [Route("api/SondagemAlfabetizacao/")]
+    //[Route("api/SondagemAlfabetizacao/")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class SondagemMatematicaController : Controller
     {
@@ -55,6 +56,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult> ListaSondagemCA([FromBody]FiltroSondagemMatematicaDTO filtroSondagem)
         {
+            await sondagemAlfabetizacaoBusiness.ObterPerguntas(int.Parse(filtroSondagem.AnoTurma), int.Parse(filtroSondagem.AnoLetivo), 2);
             return Ok(await sondagemAlfabetizacaoBusiness.ListPoolCAAsync(filtroSondagem));
         }
 
@@ -66,6 +68,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> ListaSondagemNumeros([FromBody]FiltroSondagemMatematicaDTO filtroSondagem)
         {
+            await sondagemAlfabetizacaoBusiness.ObterPerguntas(2, int.Parse(filtroSondagem.AnoLetivo), 2);
             return Ok(await sondagemAlfabetizacaoBusiness.ListPoolNumerosAsync(filtroSondagem));
         }
 
@@ -89,6 +92,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> GravaSondagemNumeros([FromBody]List<SondagemMatematicaNumerosDTO> dadosSondagem)
         {
+            
             await sondagemAlfabetizacaoBusiness.InsertPoolNumerosAsync(dadosSondagem);
             return Ok();
         }
