@@ -1,7 +1,5 @@
 ﻿using SME.Pedagogico.Gestao.Data.DTO.Matematica.Relatorio;
 using SME.Pedagogico.Gestao.Data.DTO.Portugues.Relatorio;
-using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
@@ -273,5 +271,51 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
             		        )";
         }
 
+        public static string QueryRelatorioMatematicaProficiencia(bool filtroPorDre, bool filtroPorUe)
+        {
+            var query = new StringBuilder();
+
+            query.AppendLine("SELECT pae.\"AnoEscolar\",");
+            query.AppendLine("pae.\"Ordenacao\" AS \"OrdemPergunta\",");
+            query.AppendLine("ppai.\"Id\" AS \"PerguntaId\",");
+            query.AppendLine("ppai.\"Descricao\" AS \"PerguntaDescricao\",");
+            query.AppendLine("pfilho.\"Id\" AS \"SubPerguntaId\",");
+            query.AppendLine("pfilho.\"Descricao\" AS \"SubPerguntaDescricao\",");
+            query.AppendLine("pr.\"Ordenacao\" AS \"OrdemResposta\",");
+            query.AppendLine("r.\"Id\" AS \"RespostaId\",");
+            query.AppendLine("r.\"Descricao\" AS \"RespostaDescricao\",");
+            query.AppendLine("COUNT(tabela.\"RespostaId\") AS \"QtdRespostas\"");
+            query.AppendLine(" FROM \"PerguntaAnoEscolar\" pae");
+            query.AppendLine(" INNER JOIN \"Pergunta\" ppai ON ppai.\"Id\" = pae.\"PerguntaId\" AND pae.\"AnoEscolar\" = @AnoDaTurma");
+            query.AppendLine(" INNER JOIN \"Pergunta\" pfilho ON pfilho.\"PerguntaId\" = pae.\"PerguntaId\"");
+            query.AppendLine(" INNER JOIN \"PerguntaResposta\" pr ON pr.\"PerguntaId\" = pfilho.\"Id\"");
+            query.AppendLine(" LEFT JOIN \"Resposta\" r ON r.\"Id\" = pr.\"RespostaId\"");
+            query.AppendLine(" LEFT JOIN ( SELECT sar.\"PerguntaId\", sar.\"RespostaId\"");
+            query.AppendLine(" FROM \"SondagemAlunoRespostas\" sar");
+            query.AppendLine(" INNER JOIN \"SondagemAluno\" sa ON sa.\"Id\" = \"SondagemAlunoId\"");
+            query.AppendLine(" INNER JOIN \"Sondagem\" s ON s.\"Id\" = sa.\"SondagemId\"");
+            query.AppendLine(" INNER JOIN \"Periodo\" per ON per.\"Id\" = s.\"PeriodoId\"");
+            query.AppendLine(" INNER JOIN  \"ComponenteCurricular\" c ON c.\"Id\" = s.\"ComponenteCurricularId\"");
+            query.AppendLine(" WHERE s.\"Id\" IN ( SELECT \"Id\"");
+            query.AppendLine(" FROM \"Sondagem\"");
+            query.AppendLine(" WHERE \"ComponenteCurricularId\" = @ComponenteCurricularId");
+
+            if (filtroPorDre)
+                query.AppendLine(" AND \"CodigoDre\" =  @CodigoDRE");
+            if (filtroPorUe)
+                query.AppendLine(" AND \"CodigoUe\" =  @CodigoEscola");
+
+            query.AppendLine(" AND \"AnoLetivo\" = @AnoLetivo");
+            query.AppendLine(" AND \"AnoTurma\"  = @AnoDaTurma");
+            query.AppendLine(" AND \"PeriodoId\" = @PeriodoId");
+            query.AppendLine(") ) AS tabela ON pfilho.\"Id\" = tabela.\"PerguntaId\"");
+            query.AppendLine(" AND r.\"Id\" = tabela.\"RespostaId\"");
+            query.AppendLine(" WHERE pae.\"Grupo\" = @Grupo");
+            query.AppendLine(" GROUP BY pae.\"AnoEscolar\", pae.\"Ordenacao\", ppai.\"Descricao\",");
+            query.AppendLine("          pfilho.\"Descricao\", pr.\"Ordenacao\", r.\"Descricao\",  ppai.\"Id\", pfilho.\"Id\", r.\"Id\"");
+            query.AppendLine(" ORDER BY pae.\"Ordenacao\", pr.\"Ordenacao\", ppai.\"Id\", pfilho.\"Id\", r.\"Id\"");
+
+            return query.ToString();
+        }
     }
 }
