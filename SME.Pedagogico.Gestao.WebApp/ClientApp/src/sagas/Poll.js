@@ -176,12 +176,20 @@ async function obterAlunosAlfabetizacaoApi({ filtrosBusca, bimestre }) {
   }).then((response) => response.json());
 }
 
+const setCarregandoListaPerguntas = (loadingPerguntas) => ({
+  type: Poll.types.SET_LOADING_PERGUNTAS,
+  loadingPerguntas,
+});
+
 function* obterPerguntasAlfabetizacao({ payload }) {
   try {
+    yield put(setCarregandoListaPerguntas(true));
     const listaPerguntas = yield call(obterPerguntasAlfabetizacaoApi, payload);
     yield put({ type: Autoral.types.SETAR_PERGUNTAS, listaPerguntas });
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
+  } finally {
+    yield put(setCarregandoListaPerguntas(false));
   }
 }
 
