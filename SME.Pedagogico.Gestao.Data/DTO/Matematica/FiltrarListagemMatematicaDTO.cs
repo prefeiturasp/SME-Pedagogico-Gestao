@@ -10,5 +10,6 @@
         public string ComponenteCurricular { get; set; }
         public string PerguntaId { get; set; }
         public int? Bimestre { get; set; }
+        public int? Grupo { get; set; }
     }
 }
