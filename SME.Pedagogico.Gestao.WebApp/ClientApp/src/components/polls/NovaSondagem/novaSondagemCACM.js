@@ -154,10 +154,7 @@ function NovaSondagemCACM() {
   const obterIndexRespostasAluno = (aluno, perguntaId, subPerguntaId) => {
     if (!aluno.respostas || aluno.respostas.length === 0) return null;
 
-    return aluno.respostas.findIndex(
-      (item) =>
-        item.pergunta === perguntaId && item.subPerguntaId === subPerguntaId
-    );
+    return aluno.respostas.findIndex((item) => item.pergunta === subPerguntaId);
   };
 
   const onChangeAluno = (
@@ -192,9 +189,8 @@ function NovaSondagemCACM() {
 
       alunosMutaveis[indexAluno].respostas.push({
         bimestre,
-        pergunta: perguntaIdState,
+        pergunta: subPerguntaId,
         resposta: novoValor,
-        subPerguntaId,
       });
     } else {
       alunosMutaveis[indexAluno].respostas[indexResposta].resposta = novoValor;

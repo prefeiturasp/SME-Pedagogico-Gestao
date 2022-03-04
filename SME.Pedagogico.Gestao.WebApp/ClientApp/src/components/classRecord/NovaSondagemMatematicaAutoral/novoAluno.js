@@ -47,9 +47,7 @@ function NovoAlunoSondagemMatematicaAutoral({
               perguntaSelecionada.perguntas.map((item) => {
                 const acharReposta =
                   aluno.respostas &&
-                  aluno.respostas.find(
-                    (resp) => resp.subPerguntaId === item.id
-                  );
+                  aluno.respostas.find((resp) => resp.pergunta === item.id);
 
                 return (
                   <td className="text-center align-center">
