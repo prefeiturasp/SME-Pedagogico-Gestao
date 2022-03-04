@@ -495,6 +495,10 @@ insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId", "Perg
 values (uuid_generate_v4()::text,'Ideia','9f3d8467-2f6e-4bcb-a8e9-12e840426aba', perguntaPaiId)
 returning "Id" into perguntaId;
 
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia", "Grupo")
+select uuid_generate_v4()::text, perguntaId, 1,1,'2022-01-01',2
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 1 and "Ordenacao" = 1 and "Grupo" = 2);
+
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou';	
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
@@ -512,6 +516,10 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId", "PerguntaId") 
 values (uuid_generate_v4()::text,'Resultado','9f3d8467-2f6e-4bcb-a8e9-12e840426aba', perguntaPaiId)
 returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia", "Grupo")
+select uuid_generate_v4()::text, perguntaId, 1,2,'2022-01-01',2
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 1 and "Ordenacao" = 2 and "Grupo" = 2);
 
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou';	
 
@@ -543,6 +551,10 @@ insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId", "Perg
 values (uuid_generate_v4()::text,'Ideia','9f3d8467-2f6e-4bcb-a8e9-12e840426aba', perguntaPaiId)
 returning "Id" into perguntaId;
 
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia", "Grupo")
+select uuid_generate_v4()::text, perguntaId, 1,1,'2022-01-01',2
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 1 and "Ordenacao" = 1 and "Grupo" = 2);
+
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou';	
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
@@ -560,6 +572,10 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId", "PerguntaId") 
 values (uuid_generate_v4()::text,'Resultado','9f3d8467-2f6e-4bcb-a8e9-12e840426aba', perguntaPaiId)
 returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia", "Grupo")
+select uuid_generate_v4()::text, perguntaId, 1,2,'2022-01-01',2
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 1 and "Ordenacao" = 2 and "Grupo" = 2);
 
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou';	
 
@@ -591,6 +607,10 @@ insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId", "Perg
 values (uuid_generate_v4()::text,'Ideia','9f3d8467-2f6e-4bcb-a8e9-12e840426aba', perguntaPaiId)
 returning "Id" into perguntaId;
 
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia", "Grupo")
+select uuid_generate_v4()::text, perguntaId, 1,1,'2022-01-01',2
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 1 and "Ordenacao" = 1 and "Grupo" = 2);
+
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou';	
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
@@ -608,6 +628,10 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId", "PerguntaId") 
 values (uuid_generate_v4()::text,'Resultado','9f3d8467-2f6e-4bcb-a8e9-12e840426aba', perguntaPaiId)
 returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia", "Grupo")
+select uuid_generate_v4()::text, perguntaId, 1,2,'2022-01-01',2
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 1 and "Ordenacao" = 2 and "Grupo" = 2);
 
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou';	
 
@@ -640,6 +664,10 @@ insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId", "Perg
 values (uuid_generate_v4()::text,'Ideia','9f3d8467-2f6e-4bcb-a8e9-12e840426aba', perguntaPaiId)
 returning "Id" into perguntaId;
 
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia", "Grupo")
+select uuid_generate_v4()::text, perguntaId, 2,1,'2022-01-01',2
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 2 and "Ordenacao" = 1 and "Grupo" = 2);
+
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou';	
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
@@ -657,6 +685,10 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId", "PerguntaId") 
 values (uuid_generate_v4()::text,'Resultado','9f3d8467-2f6e-4bcb-a8e9-12e840426aba', perguntaPaiId)
 returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia", "Grupo")
+select uuid_generate_v4()::text, perguntaId, 2,2,'2022-01-01',2
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 2 and "Ordenacao" = 2 and "Grupo" = 2);
 
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou';	
 
@@ -687,6 +719,10 @@ insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId", "Perg
 values (uuid_generate_v4()::text,'Ideia','9f3d8467-2f6e-4bcb-a8e9-12e840426aba', perguntaPaiId)
 returning "Id" into perguntaId;
 
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia", "Grupo")
+select uuid_generate_v4()::text, perguntaId, 2,1,'2022-01-01',2
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 2 and "Ordenacao" = 1 and "Grupo" = 2);
+
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou';	
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
@@ -704,6 +740,10 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId", "PerguntaId") 
 values (uuid_generate_v4()::text,'Resultado','9f3d8467-2f6e-4bcb-a8e9-12e840426aba', perguntaPaiId)
 returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia", "Grupo")
+select uuid_generate_v4()::text, perguntaId, 2,2,'2022-01-01',2
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 2 and "Ordenacao" = 2 and "Grupo" = 2);
 
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou';	
 
@@ -734,6 +774,10 @@ insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId", "Perg
 values (uuid_generate_v4()::text,'Ideia','9f3d8467-2f6e-4bcb-a8e9-12e840426aba', perguntaPaiId)
 returning "Id" into perguntaId;
 
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia", "Grupo")
+select uuid_generate_v4()::text, perguntaId, 2,1,'2022-01-01',3
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 2 and "Ordenacao" = 1 and "Grupo" = 3);
+
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou';	
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
@@ -751,6 +795,10 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId", "PerguntaId") 
 values (uuid_generate_v4()::text,'Resultado','9f3d8467-2f6e-4bcb-a8e9-12e840426aba', perguntaPaiId)
 returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia", "Grupo")
+select uuid_generate_v4()::text, perguntaId, 2,2,'2022-01-01',3
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 2 and "Ordenacao" = 2 and "Grupo" = 3);
 
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou';	
 
@@ -781,6 +829,10 @@ insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId", "Perg
 values (uuid_generate_v4()::text,'Ideia','9f3d8467-2f6e-4bcb-a8e9-12e840426aba', perguntaPaiId)
 returning "Id" into perguntaId;
 
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia", "Grupo")
+select uuid_generate_v4()::text, perguntaId, 3,1,'2022-01-01',3
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 3 and "Ordenacao" = 1 and "Grupo" = 3);
+
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou';	
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
@@ -798,6 +850,10 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId", "PerguntaId") 
 values (uuid_generate_v4()::text,'Resultado','9f3d8467-2f6e-4bcb-a8e9-12e840426aba', perguntaPaiId)
 returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia", "Grupo")
+select uuid_generate_v4()::text, perguntaId, 3,2,'2022-01-01',3
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 3 and "Ordenacao" = 2 and "Grupo" = 3);
 
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou';	
 
@@ -828,6 +884,10 @@ insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId", "Perg
 values (uuid_generate_v4()::text,'Ideia','9f3d8467-2f6e-4bcb-a8e9-12e840426aba', perguntaPaiId)
 returning "Id" into perguntaId;
 
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia", "Grupo")
+select uuid_generate_v4()::text, perguntaId, 3,1,'2022-01-01',2
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 3 and "Ordenacao" = 1 and "Grupo" = 2);
+
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou';	
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
@@ -845,6 +905,10 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId", "PerguntaId") 
 values (uuid_generate_v4()::text,'Resultado','9f3d8467-2f6e-4bcb-a8e9-12e840426aba', perguntaPaiId)
 returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia", "Grupo")
+select uuid_generate_v4()::text, perguntaId, 3,2,'2022-01-01',2
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 3 and "Ordenacao" = 2 and "Grupo" = 2);
 
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou';	
 
@@ -875,6 +939,10 @@ insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId", "Perg
 values (uuid_generate_v4()::text,'Ideia','9f3d8467-2f6e-4bcb-a8e9-12e840426aba', perguntaPaiId)
 returning "Id" into perguntaId;
 
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia", "Grupo")
+select uuid_generate_v4()::text, perguntaId, 3,1,'2022-01-01',2
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 3 and "Ordenacao" = 1 and "Grupo" = 2);
+
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou';	
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
@@ -892,6 +960,10 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId", "PerguntaId") 
 values (uuid_generate_v4()::text,'Resultado','9f3d8467-2f6e-4bcb-a8e9-12e840426aba', perguntaPaiId)
 returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia", "Grupo")
+select uuid_generate_v4()::text, perguntaId, 3,2,'2022-01-01',2
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 3 and "Ordenacao" = 2 and "Grupo" = 2);
 
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou';	
 
@@ -922,6 +994,10 @@ insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId", "Perg
 values (uuid_generate_v4()::text,'Ideia','9f3d8467-2f6e-4bcb-a8e9-12e840426aba', perguntaPaiId)
 returning "Id" into perguntaId;
 
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia", "Grupo")
+select uuid_generate_v4()::text, perguntaId, 3,1,'2022-01-01',3
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 3 and "Ordenacao" = 1 and "Grupo" = 3);
+
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou';	
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
@@ -939,6 +1015,10 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId", "PerguntaId") 
 values (uuid_generate_v4()::text,'Resultado','9f3d8467-2f6e-4bcb-a8e9-12e840426aba', perguntaPaiId)
 returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia", "Grupo")
+select uuid_generate_v4()::text, perguntaId, 3,2,'2022-01-01',3
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 3 and "Ordenacao" = 2 and "Grupo" = 3);
 
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou';	
 
@@ -969,6 +1049,10 @@ insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId", "Perg
 values (uuid_generate_v4()::text,'Ideia','9f3d8467-2f6e-4bcb-a8e9-12e840426aba', perguntaPaiId)
 returning "Id" into perguntaId;
 
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia", "Grupo")
+select uuid_generate_v4()::text, perguntaId, 3,1,'2022-01-01',3
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 3 and "Ordenacao" = 1 and "Grupo" = 3);
+
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou';	
 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
@@ -986,6 +1070,10 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId", "PerguntaId") 
 values (uuid_generate_v4()::text,'Resultado','9f3d8467-2f6e-4bcb-a8e9-12e840426aba', perguntaPaiId)
 returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia", "Grupo")
+select uuid_generate_v4()::text, perguntaId, 3,2,'2022-01-01',3
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 3 and "Ordenacao" = 2 and "Grupo" = 3);
 
 select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acertou';	
 
