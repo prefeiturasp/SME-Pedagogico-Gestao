@@ -29,8 +29,7 @@ const setCarregandoListaPerguntas = (loadingPerguntas) => ({
 function* ListarPerguntas({ filtros }) {
   try {
     yield put(setCarregandoListaPerguntas(true));
-    const data = yield call(listaPerguntasAPI, filtros);
-    var listaPerguntas = data;
+    const listaPerguntas = yield call(listaPerguntasAPI, filtros);
     yield put({ type: Autoral.types.SETAR_PERGUNTAS, listaPerguntas });
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });

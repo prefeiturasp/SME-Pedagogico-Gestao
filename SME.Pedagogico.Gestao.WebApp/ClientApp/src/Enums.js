@@ -148,3 +148,21 @@ export const MATH_EXCLUDE_PROFICIENCIES_ID = {
   NUMEROS: 3,
   INEXISTENTE: 77,
 };
+
+export const TIPO_SONDAGEM = {
+  Numeric: "Números",
+  CA: "Campo Aditivo",
+  CM: "Campo Multiplicativo",
+};
+
+export const ENUM_TIPO_SONDAGEM = {
+  NUMEROS: "Numeric",
+  CAMPO_ADITIVO: "CA",
+  CAMPO_MULTIPLICATIVO: "CM",
+};
+
+export const GRUPO_SONDAGEM = {
+  Numeric: 1,
+  CA: 2,
+  CM: 3,
+};

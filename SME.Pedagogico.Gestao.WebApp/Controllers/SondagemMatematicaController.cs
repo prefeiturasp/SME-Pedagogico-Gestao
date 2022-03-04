@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
     [Produces("application/json")]
-    //[Route("api/SondagemAlfabetizacao/")]
-    [Route("api/[controller]/[action]")]
+    [Route("api/SondagemAlfabetizacao/")]
+    //[Route("api/[controller]/[action]")]
     [ApiController]
     public class SondagemMatematicaController : Controller
     {
@@ -42,7 +42,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// </summary>
         /// <param name="filtroSondagem">Objeto que contém filtro para retorno de sondagem de CM</param>
         /// <returns>Dados da sondagem</returns>
-        [HttpPost]
+        [HttpPost("ListaSondagemCM")]
         public async Task<IActionResult> ListaSondagemCM([FromBody]FiltroSondagemMatematicaDTO filtroSondagem)
         {
             return Ok(await sondagemAlfabetizacaoBusiness.ListPoolCMAsync(filtroSondagem));
@@ -53,7 +53,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// </summary>
         /// <param name="filtroSondagem">Objeto que contém filtro para retorno de sondagem de CA</param>
         /// <returns>Dados da sondagem</returns>
-        [HttpPost]
+        [HttpPost("ListaSondagemCA")]
         public async Task<ActionResult> ListaSondagemCA([FromBody]FiltroSondagemMatematicaDTO filtroSondagem)
         {
             return Ok(await sondagemAlfabetizacaoBusiness.ListPoolCAAsync(filtroSondagem));
@@ -64,7 +64,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// </summary>
         /// <param name="filtroSondagem">Objeto que contém filtro para retorno de sondagem de Numeros</param>
         /// <returns>Dados da sondagem</returns>
-        [HttpPost]
+        [HttpPost("ListaSondagemNumeros")]
         public async Task<IActionResult> ListaSondagemNumeros([FromBody]FiltroSondagemMatematicaDTO filtroSondagem)
         {
             return Ok(await sondagemAlfabetizacaoBusiness.ListPoolNumerosAsync(filtroSondagem));
