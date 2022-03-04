@@ -210,7 +210,6 @@ function NovaSondagemMatematicaAutoral() {
     if (filtros.yearClassroom && bimestre) {
       dispatch(actionCreators.obterPeriodoAberto(filtros.schoolYear, bimestre));
 
-      console.log("ehTipoNumerico", ehTipoNumerico);
       if (ehTipoNumerico) {
         dispatch(
           pollStore.obterPerguntasAlfabetizacao({
