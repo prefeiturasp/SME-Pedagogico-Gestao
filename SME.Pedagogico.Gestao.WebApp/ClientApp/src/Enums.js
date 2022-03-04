@@ -154,3 +154,15 @@ export const TIPO_SONDAGEM = {
   CA: "Campo Aditivo",
   CM: "Campo Multiplicativo",
 };
+
+export const ENUM_TIPO_SONDAGEM = {
+  NUMEROS: "Numeric",
+  CAMPO_ADITIVO: "CA",
+  CAMPO_MULTIPLICATIVO: "CM",
+};
+
+export const GRUPO_SONDAGEM = {
+  Numeric: 1,
+  CA: 2,
+  CM: 3,
+};

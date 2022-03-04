@@ -376,6 +376,8 @@ class Poll extends Component {
       );
     }
 
+    if (classRoomMock.schoolYear >= 2022) return;
+
     if (this.props.poll.pollTypeSelected === "Numeric") {
       this.props.pollMethods.get_poll_math_numbers_students(classRoomMock);
     } else if (this.props.poll.pollTypeSelected === "CA") {

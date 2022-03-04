@@ -33,6 +33,8 @@
   SET_BIMESTRE: "SET_BIMESTRE",
   SET_LOADING_PERGUNTAS: "SET_LOADING_PERGUNTAS",
   SET_NAVEGACAO_SELECIONADA: "SET_NAVEGACAO_SELECIONADA",
+  OBTER_ALUNOS_ALFABETIZACAO: "OBTER_ALUNOS_ALFABETIZACAO",
+  OBTER_PERGUNTAS_ALFABETIZACAO: "OBTER_PERGUNTAS_ALFABETIZACAO",
 };
 
 const initialState = {
@@ -172,6 +174,16 @@ export const actionCreators = {
 
   setNavegacaoSelecionada: (payload) => ({
     type: types.SET_NAVEGACAO_SELECIONADA,
+    payload,
+  }),
+
+  obterAlunosAlfabetizacao: (payload) => ({
+    type: types.OBTER_ALUNOS_ALFABETIZACAO,
+    payload,
+  }),
+
+  obterPerguntasAlfabetizacao: (payload) => ({
+    type: types.OBTER_PERGUNTAS_ALFABETIZACAO,
     payload,
   }),
 };

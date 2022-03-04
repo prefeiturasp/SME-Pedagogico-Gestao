@@ -8,12 +8,14 @@ import { actionCreators as pollStore } from "../../../store/Poll";
 import Loader from "../../loader/Loader";
 import CabecalhoPerguntaAutoral from "./cabecalhoPerguntaAutoral";
 import { setasDireitaAutoral, setasEsquerdaAutoral } from "../../utils/utils";
+import { GRUPO_SONDAGEM, ENUM_TIPO_SONDAGEM } from "../../../Enums";
 
 function NovaSondagemMatematicaAutoral() {
   const dispatch = useDispatch();
 
   const filtros = useSelector((store) => store.poll.selectedFilter);
   const tipoSondagem = useSelector((store) => store.poll.pollTypeSelected);
+  const ehTipoNumerico = tipoSondagem === ENUM_TIPO_SONDAGEM.NUMEROS;
 
   const [indexSelecionado, setIndexSelecionado] = useState(1);
 
@@ -47,7 +49,7 @@ function NovaSondagemMatematicaAutoral() {
   useEffect(() => {
     if (!perguntas || perguntas.length === 0 || perguntas.mensagens) return;
 
-    const pergunta = perguntas.find((x) => x.ordenacao == indexSelecionado);
+    const pergunta = perguntas.find((x) => x.ordenacao === indexSelecionado);
 
     if (!pergunta) return;
 
@@ -85,7 +87,7 @@ function NovaSondagemMatematicaAutoral() {
   }, [perguntas]);
 
   const avancar = () => {
-    if (indexSelecionado == ultimaOrdenacao) return;
+    if (indexSelecionado === ultimaOrdenacao) return;
 
     if (!emEdicao) {
       setIndexSelecionado((oldState) => oldState + 1);
@@ -99,7 +101,7 @@ function NovaSondagemMatematicaAutoral() {
   };
 
   const recuar = () => {
-    if (indexSelecionado == primeiraOrdenacao) return;
+    if (indexSelecionado === primeiraOrdenacao) return;
 
     if (!emEdicao) {
       setIndexSelecionado((oldState) => oldState - 1);
@@ -195,15 +197,31 @@ function NovaSondagemMatematicaAutoral() {
     )
       return;
 
-    dispatch(
-      actionCreators.listaAlunosAutoralMatematica(filtrosBusca, bimestre)
-    );
-  }, [bimestre, dispatch, filtrosBusca]);
+    if (ehTipoNumerico) {
+      dispatch(pollStore.obterAlunosAlfabetizacao({ filtrosBusca, bimestre }));
+    } else {
+      dispatch(
+        actionCreators.listaAlunosAutoralMatematica(filtrosBusca, bimestre)
+      );
+    }
+  }, [bimestre, dispatch, ehTipoNumerico, filtrosBusca]);
 
   useEffect(() => {
     if (filtros.yearClassroom && bimestre) {
       dispatch(actionCreators.obterPeriodoAberto(filtros.schoolYear, bimestre));
-      dispatch(actionCreators.listarPerguntas(filtros));
+
+      console.log("ehTipoNumerico", ehTipoNumerico);
+      if (ehTipoNumerico) {
+        dispatch(
+          pollStore.obterPerguntasAlfabetizacao({
+            ...filtros,
+            grupo: GRUPO_SONDAGEM[tipoSondagem],
+          })
+        );
+      } else {
+        dispatch(actionCreators.listarPerguntas(filtros));
+      }
+
       dispatch(
         pollStore.setFunctionButtonSave(
           (
@@ -231,10 +249,12 @@ function NovaSondagemMatematicaAutoral() {
   }, [
     bimestre,
     dispatch,
+    ehTipoNumerico,
     filtros,
     filtros.yearClassroom,
     persistencia,
     sairModoEdicao,
+    tipoSondagem,
   ]);
 
   useEffect(() => {

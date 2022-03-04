@@ -11,6 +11,7 @@ import {
   setasEsquerdaAlfabetizacao,
 } from "../../utils/utils";
 import NovoAlunoSondagemMatematicaAutoral from "../../classRecord/NovaSondagemMatematicaAutoral/novoAluno";
+import { GRUPO_SONDAGEM } from "../../../Enums";
 
 function NovaSondagemCACM() {
   const dispatch = useDispatch();
@@ -36,9 +37,10 @@ function NovaSondagemCACM() {
 
   const loadingPerguntas = useSelector((store) => store.poll.loadingPerguntas);
 
-  const tamanhoLinhas = itemSelecionado.perguntas
-    ? itemSelecionado.perguntas.length
-    : 0;
+  const tamanhoLinhas =
+    itemSelecionado && itemSelecionado.perguntas
+      ? itemSelecionado.perguntas.length
+      : 0;
 
   const setarModoEdicao = () => {
     dispatch(dataStore.set_new_data_state());
@@ -94,7 +96,7 @@ function NovaSondagemCACM() {
   }, [perguntas]);
 
   const avancar = () => {
-    if (indexSelecionado == ultimaOrdenacao) return;
+    if (indexSelecionado === ultimaOrdenacao) return;
 
     if (!emEdicao) {
       setIndexSelecionado((oldState) => oldState + 1);
@@ -108,7 +110,7 @@ function NovaSondagemCACM() {
   };
 
   const recuar = () => {
-    if (indexSelecionado == primeiraOrdenacao) return;
+    if (indexSelecionado === primeiraOrdenacao) return;
 
     if (!emEdicao) {
       setIndexSelecionado((oldState) => oldState - 1);
@@ -215,16 +217,17 @@ function NovaSondagemCACM() {
     )
       return;
 
-    dispatch(
-      actionCreators.listaAlunosAutoralMatematica(filtrosBusca, bimestre)
-    );
+    dispatch(pollStore.obterAlunosAlfabetizacao({ filtrosBusca, bimestre }));
   }, [bimestre, dispatch, filtrosBusca]);
 
   useEffect(() => {
     if (filtros.yearClassroom && bimestre) {
       dispatch(actionCreators.obterPeriodoAberto(filtros.schoolYear, bimestre));
       dispatch(
-        actionCreators.listarPerguntas({ ...filtros, yearClassroom: 4 })
+        pollStore.obterPerguntasAlfabetizacao({
+          ...filtros,
+          grupo: GRUPO_SONDAGEM[tipoSondagem],
+        })
       );
       dispatch(
         pollStore.setFunctionButtonSave(
@@ -250,82 +253,11 @@ function NovaSondagemCACM() {
       sairModoEdicao();
       dispatch(pollStore.setFunctionButtonSave(null));
     };
-  }, [
-    bimestre,
-    dispatch,
-    filtros,
-    filtros.yearClassroom,
-    persistencia,
-    sairModoEdicao,
-  ]);
+  }, [bimestre, dispatch, filtros, persistencia, sairModoEdicao, tipoSondagem]);
 
   useEffect(() => {
     setIndexSelecionado(primeiraOrdenacao);
   }, [perguntas, primeiraOrdenacao]);
-
-  const montarDadosCabecalhoCACM = () => {
-    if (tipoSondagem === "CA") {
-      return (
-        <th colSpan={2 + tamanhoLinhas}>
-          <div className="container">
-            <div className="row">
-              <div className="col table-column-sondagem">
-                <small>Todo</small>
-              </div>
-              <div className="col table-column-sondagem">
-                <small>Parte</small>
-              </div>
-              <div className="col table-column-sondagem">
-                <small>Parte</small>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col table-column-sondagem">
-                <small>Dado</small>
-              </div>
-              <div className="col table-column-sondagem">
-                <small>?</small>
-              </div>
-              <div className="col table-column-sondagem">
-                <small>Dada</small>
-              </div>
-            </div>
-          </div>
-        </th>
-      );
-    }
-
-    return (
-      <th colSpan={2 + tamanhoLinhas} id="ordem3_table">
-        <div className="container">
-          <div className="row">
-            <div className="col table-column-sondagem">
-              <small>Grandeza I</small>
-            </div>
-            <div className="col table-column-sondagem">
-              <small>Grandeza II</small>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col table-column-sondagem">
-              <small>Dada</small>
-            </div>
-            <div className="col table-column-sondagem">
-              <small>Dada</small>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col table-column-sondagem">
-              <small>Dada</small>
-            </div>
-            <div className="col table-column-sondagem">
-              <small>?</small>
-            </div>
-          </div>
-        </div>
-      </th>
-    );
-  };
 
   if (!bimestre) return "";
   if (loadingPerguntas) {
@@ -360,16 +292,17 @@ function NovaSondagemCACM() {
             }}
           />
         </tr>
-        <tr>{montarDadosCabecalhoCACM()}</tr>
-        {itemSelecionado.perguntas && !!itemSelecionado.perguntas.length && (
-          <tr>
-            {itemSelecionado.perguntas.map((item) => (
-              <td className="text-center border poll-select-container ordem3_col">
-                <small className="text-muted">{item.descricao}</small>
-              </td>
-            ))}
-          </tr>
-        )}
+        {itemSelecionado &&
+          itemSelecionado.perguntas &&
+          !!itemSelecionado.perguntas.length && (
+            <tr>
+              {itemSelecionado.perguntas.map((item) => (
+                <td className="text-center border poll-select-container ordem3_col">
+                  <small className="text-muted">{item.descricao}</small>
+                </td>
+              ))}
+            </tr>
+          )}
       </thead>
       <tbody>
         {alunos &&
