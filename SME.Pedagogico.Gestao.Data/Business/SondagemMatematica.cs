@@ -126,7 +126,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             var listaSondagem = await ObterSondagemAutoralMatematicaBimestre(filtrarListagemDto);
 
-            var alunos = (await TurmaApi.GetAlunosNaTurma(Convert.ToInt32(filtrarListagemDto.CodigoTurma), filtrarListagemDto.AnoLetivo, _token))
+            var alunos = (await TurmaApi.GetAlunosNaTurma(Convert.ToInt32(filtrarListagemDto.CodigoTurma), _token))
                               .Where(x => x.CodigoSituacaoMatricula == 10 || x.CodigoSituacaoMatricula == 1 || x.CodigoSituacaoMatricula == 6 || x.CodigoSituacaoMatricula == 13 || x.CodigoSituacaoMatricula == 5)
                               .ToList();
 
