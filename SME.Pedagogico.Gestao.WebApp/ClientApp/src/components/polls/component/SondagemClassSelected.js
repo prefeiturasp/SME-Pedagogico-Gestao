@@ -23,17 +23,18 @@ class SondagemClassSelected extends Component {
         this.btnCheckCA = this.btnCheckCA.bind(this);
         this.btnCheckCM = this.btnCheckCM.bind(this);
 
-        if (this.props.poll.pollTypeSelected === "Numeric") {
+        if(this.props.poll.selectedFilter.schoolYear < 2022){
+            if (this.props.poll.pollTypeSelected === "Numeric") {
 
-            this.props.pollMethods.get_poll_math_numbers_students(this.props.poll.selectedFilter);
-        } else if (this.props.poll.pollTypeSelected === "CA") {
+                this.props.pollMethods.get_poll_math_numbers_students(this.props.poll.selectedFilter);
+            } else if (this.props.poll.pollTypeSelected === "CA") {
 
-            this.props.pollMethods.get_poll_math_ca_students(this.props.poll.selectedFilter);
-        } else if (this.props.poll.pollTypeSelected === "CM") {
+                this.props.pollMethods.get_poll_math_ca_students(this.props.poll.selectedFilter);
+            } else if (this.props.poll.pollTypeSelected === "CM") {
 
-            this.props.pollMethods.get_poll_math_cm_students(this.props.poll.selectedFilter);
+                this.props.pollMethods.get_poll_math_cm_students(this.props.poll.selectedFilter);
+            }
         }
-
         
         this.toggleMessageMathNumericBox = this.toggleMessageMathNumericBox.bind(this); 
         this.toggleMessageMathCaBox = this.toggleMessageMathCaBox.bind(this); 
