@@ -11,9 +11,16 @@ const AutoralSelect = ({
   alunoId,
   sondagemId,
   mostraToolTipItens,
+  subPerguntaId,
 }) => {
   function onOptionChange(event) {
-    onChange(event.target.value, perguntaId, alunoId, sondagemId);
+    onChange(
+      event.target.value,
+      perguntaId,
+      alunoId,
+      sondagemId,
+      subPerguntaId
+    );
   }
 
   const periodoAberto = useSelector((store) => store.autoral.periodoAberto);

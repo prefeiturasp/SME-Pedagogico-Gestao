@@ -12,25 +12,24 @@ import {
   componenteMatematica,
   escolherPropriedade,
 } from "./componentesMatematica";
+import NovaSondagemAlfabetizacao from "../../polls/NovaSondagem/novaSondagemAlfabetizacao";
 
 const escolherComponentesMatematica = (props, updatePollStudent) => {
-  if (
-    Number(props.poll.pollYear) > 3 &&
-    props.poll.selectedFilter.schoolYear >= 2022
-  ) {
+  const ehNovaSondagem = props.poll.selectedFilter.schoolYear >= 2022;
+  const ehAlfabetizacao = Number(props.poll.pollYear) < 4;
+  const ehInterAutoral = Number(props.poll.pollYear) > 3;
+  const ehAutoral = props.poll.pollSelected === ClassRoomEnum.ClassMTAutoral;
+  const ehTipoNumerico =
+    props.poll.pollTypeSelected === escolherPropriedade.Numeric;
+
+  if (ehNovaSondagem && ehAlfabetizacao) {
+    return <NovaSondagemAlfabetizacao />;
+  }
+  if (ehNovaSondagem && ehInterAutoral) {
     return <NovaSondagemMatematicaAutoral />;
   }
 
-  if (props.poll.pollSelected === ClassRoomEnum.ClassMTAutoral) {
-    return <SondagemMatematicaAutoral />;
-  }
-
-  if (
-    props.poll.pollTypeSelected === escolherPropriedade.Numeric &&
-    (props.poll.pollYear === "1" ||
-      props.poll.pollYear === "2" ||
-      props.poll.pollYear === "3")
-  ) {
+  if (ehTipoNumerico) {
     return (
       <StudentPollMathAlfabetizacaoCard
         students={props.poll.studentsPollMathNumbers}
@@ -39,6 +38,10 @@ const escolherComponentesMatematica = (props, updatePollStudent) => {
         editLock2S={props.pollOptionSelectLock.poll_2s_lock}
       />
     );
+  }
+
+  if (ehAutoral) {
+    return <SondagemMatematicaAutoral />;
   }
 
   const Component =
