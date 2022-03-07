@@ -51,6 +51,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     CodigoTurmaEol = parameters.CodigoTurmaEol,
                     DescricaoDisciplina = parameters.Discipline,
                     DescricaoPeriodo = parameters.Term,
+                    ConsiderarBimestre = int.Parse(parameters.SchoolYear) >= 2022
                 };
                 var obj = new RelatorioMatematicaAutoral();
 

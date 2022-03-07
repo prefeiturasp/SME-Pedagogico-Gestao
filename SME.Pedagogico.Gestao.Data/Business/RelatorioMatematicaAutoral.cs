@@ -26,7 +26,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
             int totalDeAlunos = await ConsultaTotalDeAlunos.BuscaTotalDeAlunosEOl(filtro);
-            var query = ConsultasRelatorios.QueryRelatorioMatematicaAutoral(filtro);
+            var query = ObtenhaQueryRelatorioMatematica(filtro);
             var relatorio = new RelatorioConsolidadoDTO(); 
 
             using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
@@ -61,8 +61,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     CodigoDRE = filtro.CodigoDre,
                     AnoLetivo = filtro.AnoLetivo,
                     PeriodoId = filtro.PeriodoId,
-                    ComponenteCurricularId = filtro.ComponenteCurricularId
-
+                    ComponenteCurricularId = filtro.ComponenteCurricularId,
+                    Bimestre = filtro.Bimestre
                 });
 
             var relatorioAgrupado = ListaPerguntaEhRespostasRelatorio.GroupBy(p => p.PerguntaId).ToList();
@@ -132,6 +132,11 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 filtro.ComponenteCurricularId = componenteCurricular.Id;
                 var periodo = contexto.Periodo.Where(x => x.Descricao == filtro.DescricaoPeriodo).FirstOrDefault();
                 filtro.PeriodoId = periodo.Id;
+
+                if (filtro.ConsiderarBimestre)
+                {
+                    filtro.Bimestre = int.Parse(filtro.DescricaoPeriodo.Substring(0, 1));
+                } 
             }
         }
 
@@ -377,10 +382,21 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                     AnoLetivo = filtro.AnoLetivo,
                                     PeriodoId = filtro.PeriodoId,
                                     ComponenteCurricularId = filtro.ComponenteCurricularId,
-                                    Grupo = ObtenhaProficiencia(proficiencia)
+                                    Grupo = ObtenhaProficiencia(proficiencia),
+                                    Bimestre = filtro.Bimestre
                                 })
                         ).ToList();
             }
+        }
+
+        private string ObtenhaQueryRelatorioMatematica(filtrosRelatorioDTO filtro)
+        {
+            if (filtro.ConsiderarBimestre)
+            {
+                return ConsultasRelatorios.QueryRelatorioMatematicaAutoralBimestre(filtro);
+            }
+
+            return ConsultasRelatorios.QueryRelatorioMatematicaAutoral(filtro);
         }
     }
 }

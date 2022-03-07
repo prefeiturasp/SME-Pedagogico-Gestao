@@ -168,14 +168,14 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
 										";
 
 
-                  var query = new StringBuilder();
-                  query.Append(queryRelatorio);
-                  if (!string.IsNullOrEmpty(filtro.CodigoDre))
-                      query.AppendLine(@" and ""CodigoDre"" =  @CodigoDRE");
-                  if (!string.IsNullOrEmpty(filtro.CodigoUe))
-                      query.AppendLine(@"and ""CodigoUe"" =  @CodigoEscola");
-             
-                  query.Append(@" and ""AnoLetivo"" = @AnoLetivo
+            var query = new StringBuilder();
+            query.Append(queryRelatorio);
+            if (!string.IsNullOrEmpty(filtro.CodigoDre))
+                query.AppendLine(@" and ""CodigoDre"" =  @CodigoDRE");
+            if (!string.IsNullOrEmpty(filtro.CodigoUe))
+                query.AppendLine(@"and ""CodigoUe"" =  @CodigoEscola");
+
+            query.Append(@" and ""AnoLetivo"" = @AnoLetivo
 	         	                and ""AnoTurma"" =  @AnoDaTurma
                                   and ""PeriodoId"" = @PeriodoId
                                                           ) ) as tabela on
@@ -193,7 +193,82 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
                                     pr.""Ordenacao"",
 	         						p.""Descricao"",
 	         						r.""Descricao"" ");
-                  return query.ToString();
+            return query.ToString();
+        }
+
+        public static string QueryRelatorioMatematicaAutoralBimestre(filtrosRelatorioDTO filtro)
+        {
+            var queryRelatorio = @"SELECT
+								p.""Id"" as ""PerguntaId"",
+							    p.""Descricao"" as ""PerguntaDescricao"",
+								r.""Id"" as ""RespostaId"",
+								r.""Descricao"" as ""RespostaDescricao"",
+	                            pa.""Ordenacao"",
+                                pr.""Ordenacao"",
+								count(tabela.""RespostaId"") as ""QtdRespostas""
+							    from
+								""Pergunta"" p
+								inner join ""PerguntaAnoEscolar"" pa on
+							    pa.""PerguntaId"" = p.""Id""
+
+								and pa.""AnoEscolar"" = @AnoDaTurma
+								inner join ""PerguntaResposta"" pr on
+								pr.""PerguntaId"" = p.""Id""
+								inner join ""Resposta"" r on
+								r.""Id"" = pr.""RespostaId""
+								left join (
+									select
+									p.""Id"" as""PerguntaId"",
+									r.""Id"" as ""RespostaId""
+								from
+									""SondagemAlunoRespostas"" sar
+								inner join ""SondagemAluno"" sa on
+									sa.""Id"" = ""SondagemAlunoId""
+								inner join ""Sondagem"" s on
+									s.""Id"" = sa.""SondagemId""
+								inner join ""Pergunta"" p on
+									p.""Id"" = sar.""PerguntaId""
+								inner join ""Resposta"" r on
+									r.""Id"" = sar.""RespostaId""
+								inner join ""ComponenteCurricular"" c on
+									c.""Id"" = s.""ComponenteCurricularId""
+								where
+									s.""Id"" in (
+									select
+										""Id""
+									from
+										""Sondagem""
+									where
+									   ""ComponenteCurricularId"" = @ComponenteCurricularId
+										";
+
+
+            var query = new StringBuilder();
+            query.Append(queryRelatorio);
+            if (!string.IsNullOrEmpty(filtro.CodigoDre))
+                query.AppendLine(@" and ""CodigoDre"" =  @CodigoDRE");
+            if (!string.IsNullOrEmpty(filtro.CodigoUe))
+                query.AppendLine(@"and ""CodigoUe"" =  @CodigoEscola");
+
+            query.Append(@" and ""AnoLetivo"" = @AnoLetivo
+	         	                and ""AnoTurma"" =  @AnoDaTurma
+                                  and ""Bimestre"" = @Bimestre
+                                                          ) ) as tabela on
+	         						p.""Id"" = tabela.""PerguntaId"" and
+	         						r.""Id""= tabela.""RespostaId""
+	         					group by
+	         						r.""Id"",
+	         						r.""Descricao"",
+	         						p.""Id"",
+	         						p.""Descricao"",
+                                    pa.""Ordenacao"",
+                                    pr.""Ordenacao""
+	         					order by
+                                    pa.""Ordenacao"",
+                                    pr.""Ordenacao"",
+	         						p.""Descricao"",
+	         						r.""Descricao"" ");
+            return query.ToString();
         }
 
         public static string QueryRelatorioPorTurmaMatematica()
@@ -294,7 +369,6 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
             query.AppendLine(" FROM \"SondagemAlunoRespostas\" sar");
             query.AppendLine(" INNER JOIN \"SondagemAluno\" sa ON sa.\"Id\" = \"SondagemAlunoId\"");
             query.AppendLine(" INNER JOIN \"Sondagem\" s ON s.\"Id\" = sa.\"SondagemId\"");
-            query.AppendLine(" INNER JOIN \"Periodo\" per ON per.\"Id\" = s.\"PeriodoId\"");
             query.AppendLine(" INNER JOIN  \"ComponenteCurricular\" c ON c.\"Id\" = s.\"ComponenteCurricularId\"");
             query.AppendLine(" WHERE s.\"Id\" IN ( SELECT \"Id\"");
             query.AppendLine(" FROM \"Sondagem\"");
@@ -307,7 +381,7 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
 
             query.AppendLine(" AND \"AnoLetivo\" = @AnoLetivo");
             query.AppendLine(" AND \"AnoTurma\"  = @AnoDaTurma");
-            query.AppendLine(" AND \"PeriodoId\" = @PeriodoId");
+            query.AppendLine(" AND \"Bimestre\" = @Bimestre");
             query.AppendLine(") ) AS tabela ON pfilho.\"Id\" = tabela.\"PerguntaId\"");
             query.AppendLine(" AND r.\"Id\" = tabela.\"RespostaId\"");
             query.AppendLine(" WHERE pae.\"Grupo\" = @Grupo");
