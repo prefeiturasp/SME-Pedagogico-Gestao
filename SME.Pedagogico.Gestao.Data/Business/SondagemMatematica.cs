@@ -148,7 +148,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 using (var contexto = new SMEManagementContextData())
                 {
-                    var subPerguntas = filtrarListagemDto.Perguntas.Split(',').ToArray();
+                    var subPerguntas = filtrarListagemDto.Perguntas != null ? filtrarListagemDto.Perguntas.Split(',').ToArray() : new string[] { filtrarListagemDto.PerguntaId };
 
                     var listaSondagem = await contexto.Sondagem.Where(s => s.AnoLetivo == filtrarListagemDto.AnoLetivo &&
                                                               s.AnoTurma == filtrarListagemDto.AnoEscolar &&
