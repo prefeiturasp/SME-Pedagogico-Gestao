@@ -19,13 +19,20 @@ const CabecalhoPerguntaAutoral = ({ props }) => {
   } = props;
 
   const ehNumeric = tipoSondagem === escolherPropriedade.Numeric;
-  const textoNumero = ehNumeric ? (
+  const ehAlfabetizacao = anoEscolar < 4;
+  const textoNumero = ehAlfabetizacao ? (
     <>
       | <b>{TIPO_SONDAGEM[tipoSondagem]}</b>
     </>
   ) : (
     ""
   );
+
+  const descricao =
+    ehAlfabetizacao && itemSelecionado && !ehNumeric
+      ? `Ordem ${itemSelecionado.ordenacao} - ${itemSelecionado.descricao}`
+      : itemSelecionado && itemSelecionado.descricao;
+
   const estiloSetas = { height: 20, color: "#DADADA" };
 
   const setaEsquerda =
@@ -73,7 +80,7 @@ const CabecalhoPerguntaAutoral = ({ props }) => {
             data-bs-toggle="tooltip"
             title={itemSelecionado && itemSelecionado.descricao}
           >
-            {itemSelecionado && itemSelecionado.descricao}
+            {descricao}
           </b>
           <span onClick={() => avancar()} className={setaDireita.classe}>
             <img src={setaDireita.src} alt="seta direita" style={estiloSetas} />
