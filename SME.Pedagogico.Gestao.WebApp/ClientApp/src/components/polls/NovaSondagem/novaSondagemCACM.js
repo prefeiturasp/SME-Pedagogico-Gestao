@@ -215,7 +215,9 @@ function NovaSondagemCACM() {
       return;
 
     const idSubPerguntas =
-      perguntas[0].perguntas && perguntas[0].perguntas.map((item) => item.id);
+      itemSelecionado &&
+      itemSelecionado.perguntas &&
+      itemSelecionado.perguntas.map((item) => item.id);
 
     dispatch(
       pollStore.obterAlunosAlfabetizacao({
@@ -224,7 +226,7 @@ function NovaSondagemCACM() {
         perguntas: idSubPerguntas,
       })
     );
-  }, [bimestre, dispatch, filtrosBusca, perguntas]);
+  }, [bimestre, dispatch, filtrosBusca, itemSelecionado, perguntas]);
 
   useEffect(() => {
     if (filtros.yearClassroom && bimestre) {
