@@ -306,13 +306,11 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private int ObtenhaProficiencia(string proficiencia)
         {
-            if (proficiencia.Equals("Campo Multiplicativo", StringComparison.InvariantCultureIgnoreCase))
+            ProficienciaEnum valorEnum;
+
+            if (Enum.TryParse(proficiencia.Replace(" ", String.Empty), out valorEnum))
             {
-                return (int)ProficienciaEnum.CampoMultiplicativo;
-            }
-            else if (proficiencia.Equals("Campo Aditivo", StringComparison.InvariantCultureIgnoreCase))
-            {
-                return (int)ProficienciaEnum.CampoMultiplicativo;
+                return (int)valorEnum;
             }
 
             return (int)ProficienciaEnum.Numeros;

@@ -20,6 +20,13 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
     public class RelatorioSondagemController : ControllerBase
     {
         public IConfiguration _config;
+
+        private const string DISCIPLINA_MATEMATICA = "Matemática";
+        private const int SETIMO_ANO = 7;
+        private const int TERCEIRO_ANO = 3;
+        private const int ANO_ESCOLAR_2022 = 2022;
+        private const string PROFICIENCIA_NUMERO = "Números";
+
         public RelatorioSondagemController(IConfiguration config)
         {
 
@@ -51,7 +58,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     CodigoTurmaEol = parameters.CodigoTurmaEol,
                     DescricaoDisciplina = parameters.Discipline,
                     DescricaoPeriodo = parameters.Term,
-                    ConsiderarBimestre = int.Parse(parameters.SchoolYear) >= 2022
+                    ConsiderarBimestre = int.Parse(parameters.SchoolYear) >= ANO_ESCOLAR_2022
                 };
                 var obj = new RelatorioMatematicaAutoral();
 
@@ -384,20 +391,20 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
         private bool EhRelatorioDeMatematicaAutoral(ParametersModel parameters)
         {
-            return parameters.Discipline == "Matemática" &&
-                 (int.Parse(parameters.CodigoCurso) >= 7 || int.Parse(parameters.SchoolYear) >= 2022);
+            return parameters.Discipline == DISCIPLINA_MATEMATICA &&
+                 (int.Parse(parameters.CodigoCurso) >= SETIMO_ANO || int.Parse(parameters.SchoolYear) >= ANO_ESCOLAR_2022);
         }
 
         private bool ProficienciaEhNumero(string proficiencia)
         {
-            return proficiencia.Equals("Números", StringComparison.InvariantCultureIgnoreCase);
+            return proficiencia.Equals(PROFICIENCIA_NUMERO, StringComparison.InvariantCultureIgnoreCase);
         }
 
         private async Task<ActionResult<string>> ObtenhaRelatorioMatematicaAutoral(filtrosRelatorioDTO filtro, string proficiencia)
         {
             var relatorio = new RelatorioMatematicaAutoral();
 
-            if (filtro.AnoEscolar <= 3 && !ProficienciaEhNumero(proficiencia))
+            if (filtro.AnoEscolar <= TERCEIRO_ANO && !ProficienciaEhNumero(proficiencia))
             {
                 return Ok(await relatorio.ObtenhaRelatorioMatematicaProficiencia(filtro, proficiencia));
             }
