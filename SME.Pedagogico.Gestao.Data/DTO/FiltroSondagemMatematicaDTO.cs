@@ -18,5 +18,8 @@ namespace SME.Pedagogico.Gestao.Data.DTO
 
         [JsonProperty(PropertyName = "yearClassroom")]
         public string AnoTurma { get; set; }
+
+        [JsonProperty(PropertyName = "grupoClassroom")]
+        public int Grupo { get; set; }
     }
 }
