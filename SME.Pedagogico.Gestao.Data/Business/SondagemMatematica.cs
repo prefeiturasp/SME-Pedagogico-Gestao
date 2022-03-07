@@ -148,13 +148,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 using (var contexto = new SMEManagementContextData())
                 {
+                    var subPerguntas = filtrarListagemDto.Perguntas.Split(',').ToArray();
+
                     var listaSondagem = await contexto.Sondagem.Where(s => s.AnoLetivo == filtrarListagemDto.AnoLetivo &&
                                                               s.AnoTurma == filtrarListagemDto.AnoEscolar &&
                                                               s.CodigoDre == filtrarListagemDto.CodigoDre &&
                                                               s.CodigoUe == filtrarListagemDto.CodigoUe &&
                                                               s.ComponenteCurricularId.Equals(filtrarListagemDto.ComponenteCurricular.ToString()) &&
-                                                              //s.AlunosSondagem.Any(a => a.ListaRespostas.Any(lr => lr.PerguntaId.Equals(filtrarListagemDto.PerguntaId))) &&
-                                                              s.AlunosSondagem.Any(a => a.ListaRespostas.Any(lr => filtrarListagemDto.Perguntas.Contains(lr.PerguntaId))) &&
+                                                              s.AlunosSondagem.Any(a => a.ListaRespostas.Any(lr => subPerguntas.Contains(lr.PerguntaId))) &&
                                                               s.CodigoTurma == filtrarListagemDto.CodigoTurma).Where(s => s.AlunosSondagem.Any(a => a.ListaRespostas.Any(lr => lr.Bimestre == filtrarListagemDto.Bimestre))).
                                                               Include(x => x.AlunosSondagem).ThenInclude(x => x.ListaRespostas).ThenInclude(x => x.Resposta).ToListAsync();
 
