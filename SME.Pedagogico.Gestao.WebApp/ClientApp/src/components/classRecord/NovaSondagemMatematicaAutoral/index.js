@@ -198,7 +198,6 @@ function NovaSondagemMatematicaAutoral() {
       return;
 
     if (ehTipoNumerico) {
-      console.log("AB ===> ");
       dispatch(pollStore.obterAlunosAlfabetizacao({ filtrosBusca, bimestre }));
     } else {
       dispatch(
