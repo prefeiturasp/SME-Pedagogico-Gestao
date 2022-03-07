@@ -153,7 +153,9 @@ function* SavePollMathCM(students) {
 }
 
 function* obterAlunosAlfabetizacao({ payload }) {
+  const tipoCarregandoAlunos = Poll.types.SET_CARREGANDO_ALUNOS;
   try {
+    yield put({ type: tipoCarregandoAlunos, carregandoAlunos: true });
     const listaAlunosAutoralMatematica = yield call(
       obterAlunosAlfabetizacaoApi,
       payload
@@ -164,6 +166,8 @@ function* obterAlunosAlfabetizacao({ payload }) {
     });
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
+  } finally {
+    yield put({ type: tipoCarregandoAlunos, carregandoAlunos: false });
   }
 }
 
@@ -187,20 +191,16 @@ async function obterAlunosAlfabetizacaoApi({
   }).then((response) => response.json());
 }
 
-const setCarregandoListaPerguntas = (loadingPerguntas) => ({
-  type: Poll.types.SET_LOADING_PERGUNTAS,
-  loadingPerguntas,
-});
-
 function* obterPerguntasAlfabetizacao({ payload }) {
+  const tipoCarregandoPerguntas = Poll.types.SET_LOADING_PERGUNTAS;
   try {
-    yield put(setCarregandoListaPerguntas(true));
+    yield put({ type: tipoCarregandoPerguntas, carregandoPerguntas: true });
     const listaPerguntas = yield call(obterPerguntasAlfabetizacaoApi, payload);
     yield put({ type: Autoral.types.SETAR_PERGUNTAS, listaPerguntas });
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
   } finally {
-    yield put(setCarregandoListaPerguntas(false));
+    yield put({ type: tipoCarregandoPerguntas, carregandoPerguntas: false });
   }
 }
 
