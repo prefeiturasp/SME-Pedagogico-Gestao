@@ -32,23 +32,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task<IEnumerable<PerguntaDto>> ObterPerguntas(int anoEscolar, int anoLetivo)
         {
-
             List<PerguntaDto> perguntas = default;
-            List<PerguntaResposta> perguntasResposta = default;
 
             using (var contexto = new SMEManagementContextData())
             {
                 perguntas = await ObterPerguntas(anoEscolar, perguntas, anoLetivo, contexto);
-
-                perguntasResposta = await ObterPerguntasRespostas(perguntas, perguntasResposta, contexto);
             }
-
-            perguntas.ForEach(pergunta =>
-            {
-                IEnumerable<PerguntaResposta> respostasDaPergunta = ObterRespostaDaPergunta(pergunta, perguntasResposta);
-
-                MapearRespostas(pergunta, respostasDaPergunta);
-            });
 
             return perguntas.OrderBy(x => x.Ordenacao);
         }
@@ -671,10 +660,62 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             try
             {
-                perguntas = await contexto.PerguntaAnoEscolar.Include(x => x.Pergunta).Where(perguntaAnoEscolar => perguntaAnoEscolar.AnoEscolar == anoEscolar
-                    && ((perguntaAnoEscolar.FimVigencia == null && (perguntaAnoEscolar.InicioVigencia.HasValue ? perguntaAnoEscolar.InicioVigencia.Value.Year : 0) <= anoLetivo)
-                    || (perguntaAnoEscolar.FimVigencia.HasValue ? perguntaAnoEscolar.FimVigencia.Value.Year : 0) >= anoLetivo))
-                        .Select(x => MapearPergunta(x)).ToListAsync();
+                var perguntasAlfabetizacao = new List<PerguntaAlfabetizacaoDto>();
+
+                var sql = $@"select p.""Id"" as ""PerguntaId"",
+							p.""Descricao"" as ""PerguntaDescricao"", 
+							pae.""Ordenacao"" as ""PerguntaOrdenacao"",                                                                        
+							rs.""Id"" as ""RespostaId"", 
+							rs.""Descricao"" as ""RespostaDescricao"", 
+							prs.""Ordenacao"" as ""RespostaOrdenacao""
+					from ""PerguntaAnoEscolar"" pae
+					join ""Pergunta"" p on p.""Id"" = pae.""PerguntaId""                                                        
+					join ""PerguntaResposta"" prs on prs.""PerguntaId"" = p.""Id""
+					join ""Resposta"" rs on rs.""Id"" = prs.""RespostaId""
+					where pae.""AnoEscolar"" in ({anoEscolar}) 
+					and (pae.""FimVigencia"" is null and extract(year from pae.""InicioVigencia"") <= {anoLetivo})";
+
+                using (var command = contexto.Database.GetDbConnection().CreateCommand())
+                {
+                    command.CommandText = sql;
+                    contexto.Database.OpenConnection();
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                var pergunta = new PerguntaAlfabetizacaoDto()
+                                {
+                                    PerguntaPrincipalId = reader["PerguntaId"].ToString(),
+                                    PerguntaPrincipalDescricao = reader["PerguntaDescricao"].ToString(),
+                                    PerguntaPrincipalOrdenacao = int.Parse(reader["PerguntaOrdenacao"].ToString()),
+                                    RespostaId = reader["RespostaId"].ToString(),
+                                    RespostaDescricao = reader["RespostaDescricao"].ToString(),
+                                    RespostaOrdenacao = int.Parse(reader["RespostaOrdenacao"].ToString()),
+                                };
+                                perguntasAlfabetizacao.Add(pergunta);
+                            }
+                            reader.NextResult();
+                        }
+                    }
+                }
+
+                perguntas = perguntasAlfabetizacao.GroupBy(g => new { g.PerguntaPrincipalId, g.PerguntaPrincipalDescricao, g.PerguntaPrincipalOrdenacao }, (key, group) =>
+                new PerguntaDto()
+                {
+                    Id = key.PerguntaPrincipalId,
+                    Descricao = key.PerguntaPrincipalDescricao,
+                    Ordenacao = key.PerguntaPrincipalOrdenacao,
+                    Respostas = group.Select(s => new RespostaDto()
+                    {
+                        Id = s.RespostaId,
+                        Descricao = s.RespostaDescricao,
+                        Ordenacao = s.RespostaOrdenacao
+                    }).OrderBy(o => o.Ordenacao)
+                }).ToList();
+
+
 
                 if (perguntas == null || !perguntas.Any())
                     throw new Exception("Não foi possivel obter as perguntas da sondagem");
