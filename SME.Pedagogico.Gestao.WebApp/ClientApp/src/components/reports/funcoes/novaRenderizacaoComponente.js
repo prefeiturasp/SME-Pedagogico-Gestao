@@ -2,23 +2,28 @@ import React from "react";
 
 import PollReportBreadcrumb from "../PollReportBreadcrumb";
 import RelatorioMatematicaConsolidado from "../RelatorioMatematicaConsolidado";
+import RelatorioMatematicaConsolidadoCACM from "../RelatorioMatematicaConsolidadoCACM";
 import GraficoConsolidadoMatematica from "../GraficoConsolidadoMatematica/GraficoConsolidadoMatematica";
+import GraficoMatematicaCACM from "../GraficoMatematicaCACM/GraficoMatematicaCACM";
 
 export const novaRenderizacaoComponente = (props) => {
   const { data, selectedFilter } = props.pollReport;
   const { CodigoCurso, proficiency } = selectedFilter;
 
+  const ehAlfabetizacaoNumeros = CodigoCurso < 4 && proficiency !== "Números";
+
   const montarPlanilha = () => {
-    if (CodigoCurso < 4 && proficiency !== "Números") {
-      return "menor P";
-    }
+    const Componente = ehAlfabetizacaoNumeros
+      ? RelatorioMatematicaConsolidadoCACM
+      : RelatorioMatematicaConsolidado;
+
     return (
       data &&
       data.perguntas && (
         <>
           <PollReportBreadcrumb className="mt-4" name="Planilha" />
           {data.perguntas.map((dados) => (
-            <RelatorioMatematicaConsolidado dados={dados} />
+            <Componente dados={dados} />
           ))}
         </>
       )
@@ -26,17 +31,22 @@ export const novaRenderizacaoComponente = (props) => {
   };
 
   const montarGraficos = () => {
-    if (CodigoCurso < 4 && proficiency !== "Números") {
-      return "menor G";
-    }
+    const Componente = ehAlfabetizacaoNumeros
+      ? GraficoMatematicaCACM
+      : GraficoConsolidadoMatematica;
+    const classes = ehAlfabetizacaoNumeros ? "" : "row";
+
     return (
       data &&
       data.graficos && (
-        <div className="row">
-          {data.graficos.map((dados, index) => (
-            <GraficoConsolidadoMatematica dados={dados} index={index} />
-          ))}
-        </div>
+        <>
+          <PollReportBreadcrumb className="mt-4" name="Sondagem Gráfico" />
+          <div className={classes}>
+            {data.graficos.map((dados, index) => (
+              <Componente dados={dados} index={index} />
+            ))}
+          </div>
+        </>
       )
     );
   };

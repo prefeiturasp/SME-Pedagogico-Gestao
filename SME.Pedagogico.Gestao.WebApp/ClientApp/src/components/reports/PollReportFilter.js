@@ -312,36 +312,7 @@ class PollReportFilter extends Component {
       : null;
     this.props.pollReportsMethods.resetData();
 
-    console.log("parameters =======> ", parameters);
-    const params = {
-      CodigoCurso: "7",
-      CodigoEscola: undefined,
-      CodigoTurmaEol: "",
-      SchoolYear: "2021",
-      classroomReport: false,
-      codigoDRE: undefined,
-      discipline: "Matemática",
-      grupoId: null,
-      proficiency: "",
-      term: "1° Semestre",
-    };
-
-    const params1 = {
-      CodigoCurso: "1",
-      CodigoTurmaEol: "",
-      SchoolYear: 2022,
-      classroomReport: false,
-      discipline: "Matemática",
-      grupoId: null,
-      proficiency: "Campo Aditivo",
-      term: "1° Bimestre",
-    };
-    this.props.pollReportsMethods.getPollReport(
-      this.state.selectedFilter.discipline ===
-        DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao
-        ? params1
-        : parameters
-    );
+    this.props.pollReportsMethods.getPollReport(parameters);
   }
 
   ehMatematicaAcimaDoSetimoAnoConsolidado() {
