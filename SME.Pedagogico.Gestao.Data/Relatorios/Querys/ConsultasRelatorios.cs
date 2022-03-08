@@ -387,7 +387,7 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
             query.AppendLine(" WHERE pae.\"Grupo\" = @Grupo");
             query.AppendLine(" GROUP BY pae.\"AnoEscolar\", pae.\"Ordenacao\", ppai.\"Descricao\",");
             query.AppendLine("          pfilho.\"Descricao\", pr.\"Ordenacao\", r.\"Descricao\",  ppai.\"Id\", pfilho.\"Id\", r.\"Id\"");
-            query.AppendLine(" ORDER BY pae.\"Ordenacao\", pr.\"Ordenacao\", ppai.\"Id\", pfilho.\"Id\", r.\"Id\"");
+            query.AppendLine(" ORDER BY pae.\"Ordenacao\", pr.\"Ordenacao\", pfilho.\"Descricao\"");
 
             return query.ToString();
         }

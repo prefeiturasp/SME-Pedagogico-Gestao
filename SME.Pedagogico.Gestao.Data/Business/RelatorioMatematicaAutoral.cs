@@ -338,6 +338,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             return new PerguntaProficienciaDTO()
             {
                 Nome = perguntaAgrupador.PerguntaDescricao,
+                Ordenacao = perguntaAgrupador.OrdemPergunta,
                 SubPerguntas = ObtenhaListaDtoPerguntaProficiencia(grupoPerguntaResposta, totalDeAlunos)
             };
         }

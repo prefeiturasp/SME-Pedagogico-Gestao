@@ -5,5 +5,7 @@
         public string SubPerguntaId { get; set; }
 
         public string SubPerguntaDescricao { get; set; }
+
+        public int OrdemPergunta { get; set; }
     }
 }
