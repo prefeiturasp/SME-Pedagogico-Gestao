@@ -32,6 +32,8 @@ class Poll extends Component {
       showMessageBox: false, //para botao save
       showMessagePortugueseBox: false, //para botao para abrir portugues
       showMessageMathBox: false, //para botao para abrir matematica
+      controleEdicaoBimestre: false,
+      bimestreAtualControleEdicao: null,
       bimestres: [
         {
           value: "1",
@@ -538,7 +540,25 @@ class Poll extends Component {
   }
 
   onChangeBimestre(e) {
-    this.props.pollMethods.setBimestre(e.target.value);
+    const bimestre = e.target.value;
+    if (this.props.data.newDataToSave) {
+      this.toggleMessageMathBox();
+      this.setState({
+        controleEdicaoBimestre: true,
+        bimestreAtualControleEdicao: bimestre,
+      });
+
+      return;
+    }
+    this.props.pollMethods.setBimestre(bimestre);
+  }
+
+  atualizarBimestre() {
+    this.setState({
+      controleEdicaoBimestre: false,
+      bimestreAtualControleEdicao: null,
+    });
+    this.props.pollMethods.setBimestre(this.state.bimestreAtualControleEdicao);
   }
 
   render() {
@@ -559,11 +579,19 @@ class Poll extends Component {
           controleExibicao={this.toggleMessageMathBox}
           acaoPrincipal={this.savePollStudent}
           acaoSecundaria={async () => {
-            this.openMathPoll();
+            if (!this.state.controleEdicaoBimestre) {
+              this.openMathPoll();
+              return;
+            }
+            this.atualizarBimestre();
           }}
           exibir={this.state.showMessageMathBox}
           acaoFeedBack={async () => {
-            this.openMathPoll();
+            if (!this.state.controleEdicaoBimestre) {
+              this.openMathPoll();
+              return;
+            }
+            this.atualizarBimestre();
           }}
         />
         <Card className="mb-3 mt-5">
