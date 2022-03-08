@@ -11,6 +11,7 @@ import {
   setasEsquerdaAlfabetizacao,
 } from "../../utils/utils";
 import NovoAlunoSondagemMatematicaAutoral from "../../classRecord/NovaSondagemMatematicaAutoral/novoAluno";
+import { GRUPO_SONDAGEM } from "../../../Enums";
 
 function NovaSondagemCACM() {
   const dispatch = useDispatch();
@@ -40,9 +41,10 @@ function NovaSondagemCACM() {
 
   const carregandoAlunos = useSelector((store) => store.poll.carregandoAlunos);
 
-  const tamanhoLinhas = itemSelecionado.perguntas
-    ? itemSelecionado.perguntas.length
-    : 0;
+  const tamanhoLinhas =
+    itemSelecionado && itemSelecionado.perguntas
+      ? itemSelecionado.perguntas.length
+      : 0;
 
   const setarModoEdicao = () => {
     dispatch(dataStore.set_new_data_state());
@@ -78,7 +80,6 @@ function NovaSondagemCACM() {
       codigoTurma: filtros.classroomCodeEol,
       componenteCurricular: "9f3d8467-2f6e-4bcb-a8e9-12e840426aba",
       perguntaId: itemSelecionado && itemSelecionado.id,
-      perguntaAnoEscolar: itemSelecionado && itemSelecionado.perguntaAnoEscolar,
     };
   }, [filtros, itemSelecionado]);
 
@@ -99,7 +100,7 @@ function NovaSondagemCACM() {
   }, [perguntas]);
 
   const avancar = () => {
-    if (indexSelecionado == ultimaOrdenacao) return;
+    if (indexSelecionado === ultimaOrdenacao) return;
 
     if (!emEdicao) {
       setIndexSelecionado((oldState) => oldState + 1);
@@ -113,7 +114,7 @@ function NovaSondagemCACM() {
   };
 
   const recuar = () => {
-    if (indexSelecionado == primeiraOrdenacao) return;
+    if (indexSelecionado === primeiraOrdenacao) return;
 
     if (!emEdicao) {
       setIndexSelecionado((oldState) => oldState - 1);
@@ -157,10 +158,7 @@ function NovaSondagemCACM() {
   const obterIndexRespostasAluno = (aluno, perguntaId, subPerguntaId) => {
     if (!aluno.respostas || aluno.respostas.length === 0) return null;
 
-    return aluno.respostas.findIndex(
-      (item) =>
-        item.pergunta === perguntaId && item.subPerguntaId === subPerguntaId
-    );
+    return aluno.respostas.findIndex((item) => item.pergunta === subPerguntaId);
   };
 
   const onChangeAluno = (
@@ -195,10 +193,8 @@ function NovaSondagemCACM() {
 
       alunosMutaveis[indexAluno].respostas.push({
         bimestre,
-        pergunta: perguntaIdState,
+        pergunta: subPerguntaId,
         resposta: novoValor,
-        perguntaAnoEscolar: filtrosBusca.perguntaAnoEscolar,
-        subPerguntaId,
       });
     } else {
       alunosMutaveis[indexAluno].respostas[indexResposta].resposta = novoValor;
@@ -217,24 +213,33 @@ function NovaSondagemCACM() {
       !filtrosBusca.perguntaId ||
       !filtrosBusca.anoLetivo ||
       !filtrosBusca.anoEscolar ||
-      !bimestre
+      !bimestre ||
+      !perguntas
     )
       return;
 
+    const idSubPerguntas =
+      itemSelecionado &&
+      itemSelecionado.perguntas &&
+      itemSelecionado.perguntas.map((item) => item.id);
+
     dispatch(
-      actionCreators.listaAlunosAutoralMatematica(
+      pollStore.obterAlunosAlfabetizacao({
         filtrosBusca,
         bimestre,
-        filtrosBusca.perguntaAnoEscolar
-      )
+        perguntas: idSubPerguntas,
+      })
     );
-  }, [bimestre, dispatch, filtrosBusca]);
+  }, [bimestre, dispatch, filtrosBusca, itemSelecionado, perguntas]);
 
   useEffect(() => {
     if (filtros.yearClassroom && bimestre) {
       dispatch(actionCreators.obterPeriodoAberto(filtros.schoolYear, bimestre));
       dispatch(
-        actionCreators.listarPerguntas({ ...filtros, yearClassroom: 4 })
+        pollStore.obterPerguntasAlfabetizacao({
+          ...filtros,
+          grupo: GRUPO_SONDAGEM[tipoSondagem],
+        })
       );
       dispatch(
         pollStore.setFunctionButtonSave(
@@ -260,14 +265,7 @@ function NovaSondagemCACM() {
       sairModoEdicao();
       dispatch(pollStore.setFunctionButtonSave(null));
     };
-  }, [
-    bimestre,
-    dispatch,
-    filtros,
-    filtros.yearClassroom,
-    persistencia,
-    sairModoEdicao,
-  ]);
+  }, [bimestre, dispatch, filtros, persistencia, sairModoEdicao, tipoSondagem]);
 
   useEffect(() => {
     setIndexSelecionado(primeiraOrdenacao);
@@ -331,15 +329,17 @@ function NovaSondagemCACM() {
             }}
           />
         </tr>
-        {itemSelecionado.perguntas && !!itemSelecionado.perguntas.length && (
-          <tr>
-            {itemSelecionado.perguntas.map((item) => (
-              <td className="text-center border poll-select-container ordem3_col">
-                <small className="text-muted">{item.descricao}</small>
-              </td>
-            ))}
-          </tr>
-        )}
+        {itemSelecionado &&
+          itemSelecionado.perguntas &&
+          !!itemSelecionado.perguntas.length && (
+            <tr>
+              {itemSelecionado.perguntas.map((item) => (
+                <td className="text-center border poll-select-container ordem3_col">
+                  <small className="text-muted">{item.descricao}</small>
+                </td>
+              ))}
+            </tr>
+          )}
       </thead>
       <tbody>{montarDados()}</tbody>
     </table>
