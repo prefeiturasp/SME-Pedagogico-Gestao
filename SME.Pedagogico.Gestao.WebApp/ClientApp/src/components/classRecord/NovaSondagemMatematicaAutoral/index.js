@@ -67,6 +67,7 @@ function NovaSondagemMatematicaAutoral() {
       codigoTurma: filtros.classroomCodeEol,
       componenteCurricular: "9f3d8467-2f6e-4bcb-a8e9-12e840426aba",
       perguntaId: itemSelecionado && itemSelecionado.id,
+      perguntaAnoEscolar: itemSelecionado && itemSelecionado.perguntaAnoEscolar,
     };
   }, [filtros, itemSelecionado]);
 
@@ -175,6 +176,7 @@ function NovaSondagemMatematicaAutoral() {
         bimestre,
         pergunta: perguntaIdState,
         resposta: novoValor,
+        perguntaAnoEscolar: filtrosBusca.perguntaAnoEscolar,
       });
     } else {
       alunosMutaveis[indexAluno].respostas[indexResposta].resposta = novoValor;
@@ -193,6 +195,7 @@ function NovaSondagemMatematicaAutoral() {
       !filtrosBusca.perguntaId ||
       !filtrosBusca.anoLetivo ||
       !filtrosBusca.anoEscolar ||
+      !filtrosBusca.perguntaAnoEscolar ||
       !bimestre
     )
       return;

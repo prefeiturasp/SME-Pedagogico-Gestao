@@ -32,6 +32,12 @@ const initialState = {
         { label: "1° Semestre", value: "semestre1" },
         { label: "2° Semestre", value: "semestre2" },
       ],
+      newTerms: [
+        { label: "1° Bimestre", value: "bimestre1" },
+        { label: "2° Bimestre", value: "bimestre2" },
+        { label: "3° Bimestre", value: "bimestre3" },
+        { label: "4° Bimestre", value: "bimestre4" },
+      ],
     },
     port: {
       id: 2,
