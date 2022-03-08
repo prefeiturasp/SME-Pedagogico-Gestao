@@ -33,13 +33,16 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 
                 var listaRetornoFinal = new List<SalasPorUEDTO>();
 
-                foreach (var item in listaRetornoTurmas.Where(a => a.Ano != "0"))
+                foreach (var item in listaRetornoTurmas.Where(a => a.Ano != "0").OrderBy(a => a.Nome))
                 {
-                    listaRetornoFinal.Add(new SalasPorUEDTO()
+                    if (!listaRetornoFinal.Any(l => l.CodigoTurma.Equals(item.Codigo)))
                     {
-                        CodigoTurma = item.Codigo,
-                        NomeTurma = item.Nome
-                    });
+                        listaRetornoFinal.Add(new SalasPorUEDTO()
+                        {
+                            CodigoTurma = item.Codigo,
+                            NomeTurma = item.Nome
+                        });
+                    }
                 }
 
                 return listaRetornoFinal;
