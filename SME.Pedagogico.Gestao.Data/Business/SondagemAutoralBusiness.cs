@@ -32,14 +32,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task<IEnumerable<PerguntaDto>> ObterPerguntas(int anoEscolar, int anoLetivo)
         {
-            List<PerguntaDto> perguntas = default;
-
+            List<PerguntaDto> perguntas = new List<PerguntaDto>();
+            IEnumerable<PerguntaDto> retorno = null;
             using (var contexto = new SMEManagementContextData())
             {
                 perguntas = await ObterPerguntas(anoEscolar, perguntas, anoLetivo, contexto);
             }
-
-            return perguntas.OrderBy(x => x.Ordenacao);
+            retorno = perguntas.OrderBy(x => x.Ordenacao);
+            if (retorno == null)
+                retorno = new List<PerguntaDto>();
+            return retorno;
         }
 
         public async Task<IEnumerable<PeriodoDto>> ObterPeriodoMatematica()
@@ -714,11 +716,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         Ordenacao = s.RespostaOrdenacao
                     }).OrderBy(o => o.Ordenacao)
                 }).ToList();
-
-
-
-                if (perguntas == null || !perguntas.Any())
-                    throw new Exception("Não foi possivel obter as perguntas da sondagem");
 
                 return perguntas;
             }
