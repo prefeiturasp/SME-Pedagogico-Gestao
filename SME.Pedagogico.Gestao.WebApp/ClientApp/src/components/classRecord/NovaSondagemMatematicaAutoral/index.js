@@ -33,7 +33,11 @@ function NovaSondagemMatematicaAutoral() {
 
   const bimestre = useSelector((store) => store.poll.bimestre);
 
-  const loadingPerguntas = useSelector((store) => store.poll.loadingPerguntas);
+  const carregandoPerguntas = useSelector(
+    (store) => store.poll.carregandoPerguntas
+  );
+
+  const carregandoAlunos = useSelector((store) => store.poll.carregandoAlunos);
 
   const setarModoEdicao = () => {
     dispatch(dataStore.set_new_data_state());
@@ -260,11 +264,36 @@ function NovaSondagemMatematicaAutoral() {
     setIndexSelecionado(primeiraOrdenacao);
   }, [perguntas, primeiraOrdenacao]);
 
-  if (!bimestre) return "";
-  if (loadingPerguntas) {
+  const montarDados = () => {
+    if (carregandoAlunos) {
+      return (
+        <div style={{ paddingBottom: 170 }}>
+          <Loader loading={carregandoAlunos}> </Loader>
+        </div>
+      );
+    }
     return (
-      <div style={{ paddingBottom: 120 }}>
-        <Loader loading={loadingPerguntas}> </Loader>
+      <>
+        {alunos &&
+          !!alunos.length &&
+          alunos.map((aluno) => (
+            <NovoAlunoSondagemMatematicaAutoral
+              aluno={aluno}
+              salvar={salvar}
+              perguntaSelecionada={itemSelecionado}
+              onChangeAluno={onChangeAluno}
+              ehAutoral
+            />
+          ))}
+      </>
+    );
+  };
+
+  if (!bimestre) return "";
+  if (carregandoPerguntas) {
+    return (
+      <div style={{ paddingBottom: 140 }}>
+        <Loader loading={carregandoPerguntas}> </Loader>
       </div>
     );
   }
@@ -292,19 +321,7 @@ function NovaSondagemMatematicaAutoral() {
           />
         </tr>
       </thead>
-      <tbody>
-        {alunos &&
-          !!alunos.length &&
-          alunos.map((aluno) => (
-            <NovoAlunoSondagemMatematicaAutoral
-              aluno={aluno}
-              salvar={salvar}
-              perguntaSelecionada={itemSelecionado}
-              onChangeAluno={onChangeAluno}
-              ehAutoral
-            />
-          ))}
-      </tbody>
+      <tbody>{montarDados()}</tbody>
     </table>
   );
 }
