@@ -84,7 +84,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 MapearAlunosListagemMatematica(listagem, listaSondagem, filtrarListagemDto.Bimestre);
 
             AdicionarAlunosEOL(filtrarListagemDto, alunos, listagem);
-            return listagem.OrderBy(x => x.NumeroChamada);
+            return listagem.OrderBy(x => x.NumeroChamada).ThenBy(x=> x.NomeAluno);
         }
 
         public async Task SalvarSondagem(IEnumerable<AlunoSondagemMatematicaDto> alunoSondagemMatematicaDto)
