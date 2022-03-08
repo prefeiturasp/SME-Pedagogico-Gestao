@@ -35,6 +35,7 @@
   SET_NAVEGACAO_SELECIONADA: "SET_NAVEGACAO_SELECIONADA",
   OBTER_ALUNOS_ALFABETIZACAO: "OBTER_ALUNOS_ALFABETIZACAO",
   OBTER_PERGUNTAS_ALFABETIZACAO: "OBTER_PERGUNTAS_ALFABETIZACAO",
+  SET_CARREGANDO_ALUNOS: "SET_CARREGANDO_ALUNOS",
 };
 
 const initialState = {
@@ -58,7 +59,8 @@ const initialState = {
   newDataToSave: false,
   loadingSalvar: false,
   bimestre: null,
-  loadingPerguntas: false,
+  carregandoPerguntas: false,
+  carregandoAlunos: false,
   navSelected: "",
 };
 
@@ -307,7 +309,13 @@ export const reducer = (state, action) => {
     case types.SET_LOADING_PERGUNTAS:
       return {
         ...state,
-        loadingPerguntas: action.loadingPerguntas,
+        carregandoPerguntas: action.carregandoPerguntas,
+      };
+
+    case types.SET_CARREGANDO_ALUNOS:
+      return {
+        ...state,
+        carregandoAlunos: action.carregandoAlunos,
       };
 
     case types.SET_NAVEGACAO_SELECIONADA:

@@ -21,20 +21,20 @@ export default function* () {
   ]);
 }
 
-const setCarregandoListaPerguntas = (loadingPerguntas) => ({
-  type: Poll.types.SET_LOADING_PERGUNTAS,
-  loadingPerguntas,
+const setCarregandoLista = (type, carregandoPerguntas) => ({
+  type,
+  carregandoPerguntas,
 });
 
 function* ListarPerguntas({ filtros }) {
   try {
-    yield put(setCarregandoListaPerguntas(true));
+    yield put(setCarregandoLista(Poll.types.SET_LOADING_PERGUNTAS, true));
     const listaPerguntas = yield call(listaPerguntasAPI, filtros);
     yield put({ type: Autoral.types.SETAR_PERGUNTAS, listaPerguntas });
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
   } finally {
-    yield put(setCarregandoListaPerguntas(false));
+    yield put(setCarregandoLista(Poll.types.SET_LOADING_PERGUNTAS, false));
   }
 }
 
@@ -70,6 +70,7 @@ function listarPeriodosAPI() {
 
 function* ListarAlunosAutoralMat({ payload }) {
   try {
+    yield put(setCarregandoLista(Poll.types.SET_CARREGANDO_ALUNOS, true));
     const data = yield call(listarAlunosMatApi, payload);
     var listaAlunosAutoralMatematica = data;
     yield put({
@@ -78,6 +79,8 @@ function* ListarAlunosAutoralMat({ payload }) {
     });
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
+  } finally {
+    yield put(setCarregandoLista(Poll.types.SET_CARREGANDO_ALUNOS, false));
   }
 }
 
