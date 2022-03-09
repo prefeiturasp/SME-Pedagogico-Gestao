@@ -106,8 +106,8 @@ const GraficoMatematicaCACM = (props) => {
       >
         {dados &&
           dados.listaDeGrafico &&
-          dados.listaDeGrafico.map(({ nomeGrafico }) => (
-            <>
+          dados.listaDeGrafico.map(({ nomeGrafico }, indexGrafico) => (
+            <React.Fragment key={indexGrafico}>
               <div>
                 <div
                   id={`grafico-${nomeGrafico}-${index}`}
@@ -115,7 +115,7 @@ const GraficoMatematicaCACM = (props) => {
                 ></div>
                 <ChartLabel label={nomeGrafico} />
               </div>
-            </>
+            </React.Fragment>
           ))}
       </div>
     </div>

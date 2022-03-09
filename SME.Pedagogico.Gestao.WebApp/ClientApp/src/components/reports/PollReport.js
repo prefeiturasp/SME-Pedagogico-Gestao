@@ -106,12 +106,13 @@ class PollReport extends Component {
       (item) => item.label === proficiency
     );
 
+    const anoLetivo = parseInt(SchoolYear);
+    const ehSondagemAntiga = anoLetivo < 2022;
     const ehMatematica =
       discipline === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao;
-    const semestre = ehMatematica ? SEMESTRES[term] : 0;
-    const bimestre = ehMatematica ? 0 : BIMESTRES[term];
+    const semestre = ehMatematica && ehSondagemAntiga ? SEMESTRES[term] : 0;
+    const bimestre = ehMatematica && ehSondagemAntiga ? 0 : BIMESTRES[term];
     const proficienciaId = proficiencia.length ? proficiencia[0].id : 0;
-    const anoLetivo = parseInt(SchoolYear);
     const dreCodigo = parseInt(codigoDRE) || 0;
     const turmaCodigo = parseInt(CodigoTurmaEol) || 0;
     const componenteCurricularId = componenteCurricular[0].id;

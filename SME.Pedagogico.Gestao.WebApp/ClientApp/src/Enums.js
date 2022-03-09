@@ -162,7 +162,7 @@ export const ENUM_TIPO_SONDAGEM = {
 };
 
 export const GRUPO_SONDAGEM = {
-  Numeric: 1,
-  CA: 2,
-  CM: 3,
+  CA: 1,
+  CM: 2,
+  Numeric: 3,
 };
