@@ -92,7 +92,6 @@ function listarAlunosMatApi({ filtro, bimestre }) {
         params = parametrosParaUrl({ ...filtro});
 
     var url = `/api/SondagemAutoral/Matematica?${params}`;
-    console.log(url);
 
   return fetch(url, {
     method: "get",
