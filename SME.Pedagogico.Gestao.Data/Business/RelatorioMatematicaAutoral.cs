@@ -272,6 +272,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var grafico = new GraficosRelatorioProficienciaDTO()
                 {
                     Nome = pergunta.Nome,
+                    Ordenacao = pergunta.Ordenacao,
                     ListaDeGrafico = ObtenhaListaDeGrafico(pergunta.SubPerguntas)
                 };
 
