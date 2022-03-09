@@ -1,11 +1,14 @@
 ﻿using SME.Pedagogico.Gestao.Data.DTO.Matematica.Relatorio;
 using SME.Pedagogico.Gestao.Data.DTO.Portugues.Relatorio;
+using SME.Pedagogico.Gestao.Infra;
 using System.Text;
 
 namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
 {
     public static class ConsultasRelatorios
     {
+
+        private const int TERCEIRO_ANO = 3;
 
         public static string QueryPeriodoFixoAnual = @"select
 										     ""DataInicio"",
@@ -255,8 +258,12 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
                                   and ""Bimestre"" = @Bimestre
                                                           ) ) as tabela on
 	         						p.""Id"" = tabela.""PerguntaId"" and
-	         						r.""Id""= tabela.""RespostaId""
-	         					group by
+	         						r.""Id""= tabela.""RespostaId""");
+
+            if (filtro.AnoEscolar <= TERCEIRO_ANO)
+                query.AppendLine(" WHERE pa.\"Grupo\" = " + (int)ProficienciaEnum.Numeros);
+
+            query.AppendLine(@"group by
 	         						r.""Id"",
 	         						r.""Descricao"",
 	         						p.""Id"",
@@ -387,7 +394,7 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
             query.AppendLine(" WHERE pae.\"Grupo\" = @Grupo");
             query.AppendLine(" GROUP BY pae.\"AnoEscolar\", pae.\"Ordenacao\", ppai.\"Descricao\",");
             query.AppendLine("          pfilho.\"Descricao\", pr.\"Ordenacao\", r.\"Descricao\",  ppai.\"Id\", pfilho.\"Id\", r.\"Id\"");
-            query.AppendLine(" ORDER BY pae.\"Ordenacao\", pr.\"Ordenacao\", ppai.\"Id\", pfilho.\"Id\", r.\"Id\"");
+            query.AppendLine(" ORDER BY pae.\"Ordenacao\", pr.\"Ordenacao\", pfilho.\"Descricao\"");
 
             return query.ToString();
         }

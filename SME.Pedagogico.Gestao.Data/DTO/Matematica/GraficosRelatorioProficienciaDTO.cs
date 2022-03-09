@@ -6,6 +6,7 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Matematica
     {
         public string Nome { get; set; }
 
+        public int Ordenacao { get; set; }
         public List<GraficosRelatorioDTO> ListaDeGrafico { get; set; }
     }
 }

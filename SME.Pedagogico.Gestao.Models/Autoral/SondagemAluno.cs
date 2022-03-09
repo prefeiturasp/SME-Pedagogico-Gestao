@@ -17,5 +17,10 @@ namespace SME.Pedagogico.Gestao.Models.Autoral
         public string NomeAluno { get; set; }
         public int? Bimestre { get; set; }
         public  List<SondagemAlunoRespostas> ListaRespostas { get; set; }
+
+        public static implicit operator List<object>(SondagemAluno v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
