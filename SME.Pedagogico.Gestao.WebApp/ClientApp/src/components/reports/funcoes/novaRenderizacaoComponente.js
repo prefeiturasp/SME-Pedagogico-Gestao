@@ -10,10 +10,11 @@ export const novaRenderizacaoComponente = (props) => {
   const { data, selectedFilter } = props.pollReport;
   const { CodigoCurso, proficiency } = selectedFilter;
 
-  const ehAlfabetizacaoNumeros = CodigoCurso < 4 && proficiency !== "Números";
+  const ehAlfabetizacaoCACM = CodigoCurso < 4 && proficiency !== "Números";
+  const ehAlfabetizacaoNumero = CodigoCurso < 4 && proficiency === "Números";
 
   const montarPlanilha = () => {
-    const Componente = ehAlfabetizacaoNumeros
+    const Componente = ehAlfabetizacaoCACM
       ? RelatorioMatematicaConsolidadoCACM
       : RelatorioMatematicaConsolidado;
 
@@ -31,10 +32,10 @@ export const novaRenderizacaoComponente = (props) => {
   };
 
   const montarGraficos = () => {
-    const Componente = ehAlfabetizacaoNumeros
+    const Componente = ehAlfabetizacaoCACM
       ? GraficoMatematicaCACM
       : GraficoConsolidadoMatematica;
-    const classes = ehAlfabetizacaoNumeros ? "mt-4" : "row mt-4";
+    const classes = ehAlfabetizacaoCACM ? "mt-4" : "row mt-4";
 
     return (
       data &&
@@ -43,7 +44,12 @@ export const novaRenderizacaoComponente = (props) => {
           <PollReportBreadcrumb className="mt-5" name="Sondagem Gráfico" />
           <div className={classes}>
             {data.graficos.map((dados, index) => (
-              <Componente dados={dados} index={index} key={index} />
+              <Componente
+                dados={dados}
+                index={index}
+                key={index}
+                esconderTresLinhas={ehAlfabetizacaoNumero}
+              />
             ))}
           </div>
         </>

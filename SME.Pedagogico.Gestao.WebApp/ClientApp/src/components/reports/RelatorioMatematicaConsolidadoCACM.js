@@ -36,7 +36,7 @@ const RelatorioMatematicaConsolidado = (props) => {
           </div>
         </div>
         <div className="col-8 sc-gray border-left border-white">
-          <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center font-weight-bold">
+          <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center">
             PROBLEMAS DE {dados.nome.toUpperCase()}
           </div>
         </div>
