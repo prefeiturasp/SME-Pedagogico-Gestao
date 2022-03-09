@@ -305,7 +305,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             join ""PerguntaAnoEscolar"" pae2 on pae2.""PerguntaId"" = ps.""Id""
                             join ""PerguntaResposta"" prs on prs.""PerguntaId"" = ps.""Id""
                             join ""Resposta"" rs on rs.""Id"" = prs.""RespostaId""
-                            where pae.""AnoEscolar"" in ({anoEscolar}) and pae.""Grupo"" = {grupo}";
+                            where pae.""AnoEscolar"" in ({anoEscolar}) and pae.""Grupo"" = {grupo}
+                                  and (pae.""FimVigencia"" is null and extract(year from pae.""InicioVigencia"") <= {anoLetivo})";
 
                 using (var command = db.Database.GetDbConnection().CreateCommand())
                 {

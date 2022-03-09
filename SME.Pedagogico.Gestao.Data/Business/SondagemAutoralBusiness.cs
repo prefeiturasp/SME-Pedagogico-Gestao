@@ -253,32 +253,15 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             foreach (var resposta in aluno.Respostas)
             {
-                if (resposta.PeriodoId == periodoId)
-                {
-                    var respostaSondagem = alunoSondagem.ListaRespostas.Where(x => x.PerguntaId == resposta.Pergunta).FirstOrDefault();
-                    if (respostaSondagem != null && (aluno.Respostas.Any(r => r.PeriodoId == periodoId) || aluno.Respostas.Any(r => r.Bimestre == bimestre)))
-                    {
-                        respostaSondagem.RespostaId = resposta.Resposta;
-                    }
-                    else
-                    {
-                        var respostaNova = CriaNovaRespostaAluno(alunoSondagem, resposta);
-                        alunoSondagem.ListaRespostas.Add(respostaNova);
-                    }
-                }
+                
+                var respostaSondagem = alunoSondagem.ListaRespostas.Where(x => x.PerguntaId == resposta.Pergunta).FirstOrDefault();
+                if (respostaSondagem != null && (aluno.Respostas.Any(r => r.PeriodoId == periodoId) || aluno.Respostas.Any(r => r.Bimestre == bimestre)))
+                    respostaSondagem.RespostaId = resposta.Resposta;
                 else
                 {
-                    var respostaSondagem = alunoSondagem.ListaRespostas.FirstOrDefault();
-                    if (respostaSondagem != null && aluno.Respostas.Any(r => r.Bimestre == bimestre))
-                    {
-                        respostaSondagem.RespostaId = resposta.Resposta;
-                    }
-                    else
-                    {
-                        var respostaNova = CriaNovaRespostaAluno(alunoSondagem, resposta);
-                        alunoSondagem.ListaRespostas.Add(respostaNova);
-                    }
-                }
+                    var respostaNova = CriaNovaRespostaAluno(alunoSondagem, resposta);
+                    alunoSondagem.ListaRespostas.Add(respostaNova);
+                }                
             }
         }
 
