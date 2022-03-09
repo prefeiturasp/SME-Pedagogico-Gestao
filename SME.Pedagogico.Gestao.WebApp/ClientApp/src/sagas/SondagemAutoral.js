@@ -69,8 +69,9 @@ function listarPeriodosAPI() {
 }
 
 function* ListarAlunosAutoralMat({ payload }) {
+  const tipoCarregandoAlunos = Poll.types.SET_CARREGANDO_ALUNOS;
   try {
-    yield put(setCarregandoLista(Poll.types.SET_CARREGANDO_ALUNOS, true));
+    yield put({ type: tipoCarregandoAlunos, carregandoAlunos: true });
     const data = yield call(listarAlunosMatApi, payload);
     var listaAlunosAutoralMatematica = data;
     yield put({
@@ -80,7 +81,7 @@ function* ListarAlunosAutoralMat({ payload }) {
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
   } finally {
-    yield put(setCarregandoLista(Poll.types.SET_CARREGANDO_ALUNOS, false));
+    yield put({ type: tipoCarregandoAlunos, carregandoAlunos: false });
   }
 }
 

@@ -1,11 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import echarts from "echarts";
 import { montarCampoToolTipGrafico } from "../../utils/utils";
 
 const GraficoMatematica = (props) => {
-  const { dados, index } = props;
+  const { dados, index, esconderTresLinhas } = props;
 
-  useEffect(() => construirGrafico(), [dados]);
+  const classes = esconderTresLinhas ? "" : "col-xl-4";
+
+  useEffect(() => construirGrafico(), [construirGrafico, dados]);
 
   const format = (data) => {
     data = parseFloat(data);
@@ -16,7 +18,7 @@ const GraficoMatematica = (props) => {
     return texto.length > 50 ? posicaoX - 100 : posicaoX - 100;
   };
 
-  const construirGrafico = () => {
+  const construirGrafico = useCallback(() => {
     const myChart = echarts.init(document.getElementById(`grafico-${index}`));
 
     const dadosLabel = [];
@@ -60,10 +62,10 @@ const GraficoMatematica = (props) => {
         },
       ],
     });
-  };
+  }, [dados.barras, index]);
 
   return (
-    <div className="d-flex flex-column col-sm-6 col-xl-4">
+    <div className={`d-flex flex-column col-sm-6 ${classes}`}>
       <div
         className="d-flex flex-fill justify-content-center align-items-center sc-gray"
         style={{ height: 35 }}

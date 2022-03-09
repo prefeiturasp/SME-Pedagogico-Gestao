@@ -1,18 +1,16 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using SME.Pedagogico.Gestao.Data.Business;
+using SME.Pedagogico.Gestao.Data.DTO;
+using SME.Pedagogico.Gestao.Data.DTO.Matematica.Relatorio;
+using SME.Pedagogico.Gestao.Data.DTO.Portugues.Relatorio;
+using SME.Pedagogico.Gestao.Models.Academic;
+using SME.Pedagogico.Gestao.Models.Autoral;
+using SME.Pedagogico.Gestao.WebApp.Models.RelatorioSondagem;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using SME.Pedagogico.Gestao.Data.Business;
-using SME.Pedagogico.Gestao.Data.DTO.Matematica.Relatorio;
-
-using SME.Pedagogico.Gestao.Data.DTO;
-using SME.Pedagogico.Gestao.Data.DTO.Portugues.Relatorio;
-using SME.Pedagogico.Gestao.Models.Academic;
-using SME.Pedagogico.Gestao.WebApp.Models.RelatorioSondagem;
-using SME.Pedagogico.Gestao.Models.Autoral;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
@@ -22,6 +20,13 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
     public class RelatorioSondagemController : ControllerBase
     {
         public IConfiguration _config;
+
+        private const string DISCIPLINA_MATEMATICA = "Matemática";
+        private const int SETIMO_ANO = 7;
+        private const int TERCEIRO_ANO = 3;
+        private const int ANO_ESCOLAR_2022 = 2022;
+        private const string PROFICIENCIA_NUMERO = "Números";
+
         public RelatorioSondagemController(IConfiguration config)
         {
 
@@ -42,7 +47,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         {
             var businessPoll = new Data.Business.PollPortuguese(_config);
 
-            if (int.Parse(parameters.CodigoCurso) >= 7 && parameters.Discipline == "Matemática")
+            if (EhRelatorioDeMatematicaAutoral(parameters))
             {
                 var filtro = new filtrosRelatorioDTO()
                 {
@@ -53,6 +58,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     CodigoTurmaEol = parameters.CodigoTurmaEol,
                     DescricaoDisciplina = parameters.Discipline,
                     DescricaoPeriodo = parameters.Term,
+                    ConsiderarBimestre = int.Parse(parameters.SchoolYear) >= ANO_ESCOLAR_2022
                 };
                 var obj = new RelatorioMatematicaAutoral();
 
@@ -61,9 +67,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     var relatorioPorTurma = await obj.ObterRelatorioPorTurma(filtro);
                     return (Ok(relatorioPorTurma));
                 }
-                var relatorioConsolidado = await obj.ObterRelatorioMatematicaAutoral(filtro);
 
-                return (Ok(relatorioConsolidado));
+                return await ObtenhaRelatorioMatematicaAutoral(filtro, parameters.Proficiency);
             }
 
             Periodo periodo = await businessPoll.ObterPeriodoRelatorioPorDescricao(parameters.Term);
@@ -384,9 +389,28 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     return proficiencia;
             }
         }
+        private bool EhRelatorioDeMatematicaAutoral(ParametersModel parameters)
+        {
+            return parameters.Discipline == DISCIPLINA_MATEMATICA &&
+                 (int.Parse(parameters.CodigoCurso) >= SETIMO_ANO || int.Parse(parameters.SchoolYear) >= ANO_ESCOLAR_2022);
+        }
 
+        private bool ProficienciaEhNumero(string proficiencia)
+        {
+            return proficiencia.Equals(PROFICIENCIA_NUMERO, StringComparison.InvariantCultureIgnoreCase);
+        }
 
+        private async Task<ActionResult<string>> ObtenhaRelatorioMatematicaAutoral(filtrosRelatorioDTO filtro, string proficiencia)
+        {
+            var relatorio = new RelatorioMatematicaAutoral();
 
+            if (filtro.AnoEscolar <= TERCEIRO_ANO && !ProficienciaEhNumero(proficiencia))
+            {
+                return Ok(await relatorio.ObtenhaRelatorioMatematicaProficiencia(filtro, proficiencia));
+            }
+
+            return Ok(await relatorio.ObterRelatorioMatematicaAutoral(filtro));
+        }
         #endregion ==================== METHODS ====================
     }
 }
