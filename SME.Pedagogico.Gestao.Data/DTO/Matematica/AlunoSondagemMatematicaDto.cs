@@ -36,7 +36,7 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Matematica
 
         public int NumeroChamada { get; set; }
         public int? Bimestre { get; set; }
-
+        
         public List<AlunoRespostaDto> Respostas { get; set; }
 
 

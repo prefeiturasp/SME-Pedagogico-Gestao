@@ -268,7 +268,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 using (SMEManagementContextData db = new SMEManagementContextData())
                 {
-                    var perguntas = (GrupoPerguntaEnum)grupo == GrupoPerguntaEnum.Numeros 
+                    var perguntas = (ProficienciaEnum)grupo == ProficienciaEnum.Numeros 
                                     ? await ObterPerguntasGrupoNumeros(db, anoEscolar, anoLetivo, grupo)
                                     : await ObterPerguntasGrupoCACM(db, anoEscolar, anoLetivo, grupo);
 

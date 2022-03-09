@@ -1,35 +1,17 @@
 ﻿import React, { Component } from "react";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+
 import Card from "../containers/Card";
 import PollFilter from "../classRecord/PollFilter";
 import PollReportFilter from "./PollReportFilter";
-import PollReportBreadcrumb from "./PollReportBreadcrumb";
-import PollReportPortugueseGrid from "./PollReportPortugueseGrid";
-import PollReportMathGrid from "./PollReportMathGrid";
-import PollReportPortugueseChart from "./PollReportPortugueseChart";
-import PollReportMathChart from "./PollReportMathChart";
-import PollReportMathNumbersChart from "./PollReportMathNumbersChart";
-import PollReportMathChartClassroom from "./PollReportMathChartClassroom";
-import { connect } from "react-redux";
-import { actionCreators } from "../../store/PollReport";
-import { bindActionCreators } from "redux";
-import RelatorioPortuguesAutoral from "./RelatorioAutoral/RelatorioPortuguesAutoral";
 import MensagemConfirmacaoImprimir from "./MensagemConfirmacaoImprimir";
-import RelatorioMatematicaConsolidado from "./RelatorioMatematicaConsolidado";
-import { GrupoDto } from "../dtos/grupoDto";
-import RelatorioConsolidadoCapacidadeLeitura from "./RelatorioConsolidadeCapacidadeLeitura/RelatorioConsolidadoCapacidadeLeitura";
-import RelatorioPorTurmaLeituraVozAlta from "./RelatorioPorTurmaLeituraVozAlta/RelatorioPorTurmaLeituraVozAlta";
-import GraficoPorTurmaLeituraVozAlta from "./GraficoPorTurmaLeituraVozAlta/GraficoPorTurmaLeituraVozAlta";
-import RelatorioMatematicaPorTurma from "./RelatorioMatematicaPorTurma/RelatorioMatematicaPorTurma";
-import GraficoMatematicaPorTurma from "./GraficoMatematicaPorTurma/GraficoMatematicaPorTurma";
-import RelatorioPorTurmaProducaoTexto from "./RelatorioPorTurmaProducaoTexto/RelatorioPorTurmaProducaoTexto";
-import GraficoPorTurmaProducaoTexto from "./GraficoPorTurmaProducaoTexto/GraficoPorTurmaProducaoTexto";
-import RelatorioPorTurmaCapacidadeLeitura from "./RelatorioPorTurmaCapacidadeLeitura/RelatorioPorTurmaCapacidadeLeitura";
-import GraficoPorTurmaCapacidadeLeitura from "./GraficoPorTurmaCapacidadeLeitura/GraficoPorTurmaCapacidadeLeitura";
-import GraficoConsolidadoLeituraVozAlta from "./GraficoConsolidadoLeituraVozAlta";
-import GraficoConsolidadoProducaoTexto from "./GraficoConsolidadoProducaoTexto";
-import GraficoConsolidadoMatematica from "./GraficoConsolidadoMatematica/GraficoConsolidadoMatematica";
-import GraficoConsolidadoCapacidadeLeitura from "./GraficoConsolidadoCapacidadeLeitura";
+
+import { actionCreators } from "../../store/PollReport";
+
 import { DISCIPLINES_ENUM } from "../../Enums";
+import { componentRenderReport } from "./funcoes/componentRenderReport";
+import { novaRenderizacaoComponente } from "./funcoes/novaRenderizacaoComponente";
 
 class PollReport extends Component {
   constructor(props) {
@@ -55,10 +37,8 @@ class PollReport extends Component {
         showMessageError,
         messageError,
       } = this.props.pollReport;
-      const {
-        showMessageSuccessPollReport,
-        showMessageErrorPollReport,
-      } = this.props.pollReportMethods;
+      const { showMessageSuccessPollReport, showMessageErrorPollReport } =
+        this.props.pollReportMethods;
       const {
         discipline: componenteCurricular,
         proficiency: proficiencia,
@@ -126,12 +106,13 @@ class PollReport extends Component {
       (item) => item.label === proficiency
     );
 
+    const anoLetivo = parseInt(SchoolYear);
+    const ehSondagemAntiga = anoLetivo < 2022;
     const ehMatematica =
       discipline === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao;
-    const semestre = ehMatematica ? SEMESTRES[term] : 0;
-    const bimestre = ehMatematica ? 0 : BIMESTRES[term];
+    const semestre = ehMatematica && ehSondagemAntiga ? SEMESTRES[term] : 0;
+    const bimestre = ehMatematica && ehSondagemAntiga ? 0 : BIMESTRES[term];
     const proficienciaId = proficiencia.length ? proficiencia[0].id : 0;
-    const anoLetivo = parseInt(SchoolYear);
     const dreCodigo = parseInt(codigoDRE) || 0;
     const turmaCodigo = parseInt(CodigoTurmaEol) || 0;
     const componenteCurricularId = componenteCurricular[0].id;
@@ -162,215 +143,19 @@ class PollReport extends Component {
     });
   }
 
-  render() {
-    var reportData = null;
-    var chartData = null;
-    let mathType = null;
-    const { linkPdf } = this.props.pollReport;
-
-    if (this.props.pollReport.showReport === true) {
-      reportData = this.props.pollReport.data;
-      chartData = this.props.pollReport.chartData;
-    } else {
-      reportData = [];
-      chartData = [];
-    }
-
-    this.classroomReport = this.props.pollReport.selectedFilter.classroomReport;
-
-    var indexes = [];
-
-    if (this.props.pollReport.showReport === true) {
-      if (
-        chartData &&
-        chartData.chartIdeaData !== undefined &&
-        chartData.chartIdeaData.length > 0
-      ) {
-        chartData.totals = [];
-        mathType = "consolidado";
-
-        for (let i = 0; i < chartData.chartIdeaData.length; i++) {
-          indexes.push(i);
-          chartData.totals.push({
-            name: "ORDEM " + chartData.chartIdeaData[i].order,
-            idea: new Array(chartData.chartIdeaData[i].idea.length),
-            result: new Array(chartData.chartResultData[i].result.length),
-          });
-
-          for (let j = 0; j < chartData.chartIdeaData[i].idea.length; j++) {
-            switch (chartData.chartIdeaData[i].idea[j].description) {
-              case "Acertou":
-                chartData.totals[i].idea[0] =
-                  chartData.chartIdeaData[i].idea[j].quantity;
-                break;
-              case "Errou":
-                chartData.totals[i].idea[1] =
-                  chartData.chartIdeaData[i].idea[j].quantity;
-                break;
-              case "Não Resolveu":
-                chartData.totals[i].idea[2] =
-                  chartData.chartIdeaData[i].idea[j].quantity;
-                break;
-              case "Sem preenchimento":
-                chartData.totals[i].idea[3] =
-                  chartData.chartIdeaData[i].idea[j].quantity;
-                break;
-              default:
-                break;
-            }
-          }
-
-          for (let j = 0; j < chartData.chartResultData[i].result.length; j++) {
-            switch (chartData.chartResultData[i].result[j].description) {
-              case "Acertou":
-                chartData.totals[i].result[0] =
-                  chartData.chartResultData[i].result[j].quantity;
-                break;
-              case "Errou":
-                chartData.totals[i].result[1] =
-                  chartData.chartResultData[i].result[j].quantity;
-                break;
-              case "Não Resolveu":
-                chartData.totals[i].result[2] =
-                  chartData.chartResultData[i].result[j].quantity;
-                break;
-              case "Sem preenchimento":
-                chartData.totals[i].result[3] =
-                  chartData.chartResultData[i].result[j].quantity;
-                break;
-              default:
-                break;
-            }
-          }
-        }
-      } else {
-        mathType = "turma";
-      }
-    }
-
-    var numbers = false;
-
+  componentRender() {
+    const { SchoolYear, discipline } = this.props.pollReport.selectedFilter;
     if (
-      reportData &&
-      reportData !== [] &&
-      reportData.length > 0 &&
-      reportData[0].poll !== undefined
-    )
-      if (reportData[0].poll[0].order === 0) numbers = true;
+      SchoolYear >= 2022 &&
+      discipline === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao
+    ) {
+      return novaRenderizacaoComponente(this.props);
+    }
+    return componentRenderReport(this.props);
+  }
 
-    const montarRelatorioConsolidadosAcimaDoQuartoAno = (dados) => {
-      switch (this.props.pollReport.selectedFilter.grupoId) {
-        case GrupoDto.CAPACIDADE_LEITURA:
-          return (
-            <div className="mb-4">
-              <RelatorioConsolidadoCapacidadeLeitura dados={dados} />
-            </div>
-          );
-        case GrupoDto.LEITURA_EM_VOZ_ALTA:
-          return <RelatorioPortuguesAutoral dados={dados} />;
-        case GrupoDto.PRODUCAO_DE_TEXTO:
-          return <RelatorioPortuguesAutoral dados={dados} />;
-        default:
-          break;
-      }
-    };
-
-    const montarRelatorioPorTurmaPortuguesAcimaDoQuartoAno = (dados) => {
-      switch (this.props.pollReport.selectedFilter.grupoId) {
-        case GrupoDto.CAPACIDADE_LEITURA:
-          return (
-            <div className="mb-4">
-              <RelatorioPorTurmaCapacidadeLeitura
-                ordens={dados.ordens}
-                perguntas={dados.perguntas}
-                alunos={dados.alunos}
-              />
-            </div>
-          );
-        case GrupoDto.LEITURA_EM_VOZ_ALTA:
-          return (
-            <div className="mb-4">
-              <RelatorioPorTurmaLeituraVozAlta
-                perguntas={dados.perguntas}
-                alunos={dados.alunos}
-              />
-            </div>
-          );
-        case GrupoDto.PRODUCAO_DE_TEXTO:
-          return (
-            <div className="mb-4">
-              <RelatorioPorTurmaProducaoTexto
-                perguntas={dados.perguntas}
-                alunos={dados.alunos}
-              />
-            </div>
-          );
-        default:
-          break;
-      }
-    };
-
-    const montarGraficoPorTurmaPortuguesAcimaDoQuartoAno = (graficos) => {
-      switch (this.props.pollReport.selectedFilter.grupoId) {
-        case GrupoDto.CAPACIDADE_LEITURA:
-          return (
-            <div className="row">
-              {graficos.map((dados) => {
-                return <GraficoPorTurmaCapacidadeLeitura dados={dados} />;
-              })}
-            </div>
-          );
-        case GrupoDto.LEITURA_EM_VOZ_ALTA:
-          return (
-            <div className="row">
-              {graficos.map((dados) => {
-                return <GraficoPorTurmaLeituraVozAlta dados={dados} />;
-              })}
-            </div>
-          );
-        case GrupoDto.PRODUCAO_DE_TEXTO:
-          return (
-            <div className="mb-4">
-              {graficos.map((dados) => {
-                return <GraficoPorTurmaProducaoTexto dados={dados} />;
-              })}
-            </div>
-          );
-        default:
-          break;
-      }
-    };
-
-    const montarGraficoConsolidadosPortuguesAcimaDoQuartoAno = (graficos) => {
-      switch (this.props.pollReport.selectedFilter.grupoId) {
-        case GrupoDto.CAPACIDADE_LEITURA:
-          return (
-            <div className="row">
-              {graficos.map((dados) => {
-                return <GraficoConsolidadoCapacidadeLeitura dados={dados} />;
-              })}
-            </div>
-          );
-        case GrupoDto.LEITURA_EM_VOZ_ALTA:
-          return (
-            <div className="row">
-              {graficos.map((dados) => {
-                return <GraficoConsolidadoLeituraVozAlta dados={dados} />;
-              })}
-            </div>
-          );
-        case GrupoDto.PRODUCAO_DE_TEXTO:
-          return (
-            <div className="mb-4">
-              {graficos.map((dados) => {
-                return <GraficoConsolidadoProducaoTexto dados={dados} />;
-              })}
-            </div>
-          );
-        default:
-          break;
-      }
-    };
+  render() {
+    const { linkPdf } = this.props.pollReport;
 
     return (
       <>
@@ -384,7 +169,6 @@ class PollReport extends Component {
           acaoFeedBack={() => this.acaoFeedBack()}
           linkPdf={linkPdf}
         />
-
         {this.state.showPollFilter && (
           <Card id="pollReport-card">
             <div className="py-2 px-3">
@@ -404,185 +188,7 @@ class PollReport extends Component {
                   </div>
                 </div>
               </div>
-
-              {this.props.pollReport.showReport ? (
-                <div>
-                  <PollReportBreadcrumb className="mt-4" name="Planilha" />
-
-                  {reportData ? (
-                    this.props.pollReport.selectedFilter.discipline ===
-                    "Língua Portuguesa" ? (
-                      Number(
-                        this.props.pollReport.selectedFilter &&
-                          this.props.pollReport.selectedFilter.CodigoCurso
-                      ) >= 4 ? (
-                        this.classroomReport ? (
-                          montarRelatorioPorTurmaPortuguesAcimaDoQuartoAno(
-                            reportData
-                          )
-                        ) : this.props.pollReport.selectedFilter.grupoId ===
-                          GrupoDto.CAPACIDADE_LEITURA ? (
-                          reportData &&
-                          reportData.relatorioPorOrdem.map((dados) =>
-                            montarRelatorioConsolidadosAcimaDoQuartoAno(dados)
-                          )
-                        ) : (
-                          montarRelatorioConsolidadosAcimaDoQuartoAno(
-                            reportData
-                          )
-                        )
-                      ) : (
-                        <PollReportPortugueseGrid
-                          className="mt-3"
-                          classroomReport={this.classroomReport}
-                          data={reportData}
-                        />
-                      )
-                    ) : Number(
-                        this.props.pollReport.selectedFilter.CodigoCurso
-                      ) >= 7 ? (
-                      this.classroomReport ? (
-                        <RelatorioMatematicaPorTurma
-                          alunos={reportData.alunos}
-                          perguntas={reportData.perguntas}
-                        />
-                      ) : (
-                        reportData &&
-                        reportData.perguntas &&
-                        reportData.perguntas.map((dados) => {
-                          return (
-                            <RelatorioMatematicaConsolidado dados={dados} />
-                          );
-                        })
-                      )
-                    ) : (
-                      <PollReportMathGrid
-                        className="mt-3"
-                        classroomReport={this.classroomReport}
-                        data={reportData}
-                      />
-                    )
-                  ) : null}
-
-                  <PollReportBreadcrumb className="mt-5" name="Gráfico" />
-                  {chartData ? (
-                    this.props.pollReport.selectedFilter.discipline ===
-                    "Língua Portuguesa" ? (
-                      Number(
-                        this.props.pollReport.selectedFilter &&
-                          this.props.pollReport.selectedFilter.CodigoCurso
-                      ) >= 4 ? (
-                        this.classroomReport ? (
-                          montarGraficoPorTurmaPortuguesAcimaDoQuartoAno(
-                            chartData
-                          )
-                        ) : (
-                          montarGraficoConsolidadosPortuguesAcimaDoQuartoAno(
-                            chartData
-                          )
-                        )
-                      ) : (
-                        <PollReportPortugueseChart data={chartData} />
-                      )
-                    ) : this.props.pollReport.selectedFilter.discipline ===
-                        "Matemática" &&
-                      Number(
-                        this.props.pollReport.selectedFilter.CodigoCurso
-                      ) >= 7 ? (
-                      <div className="row">
-                        {this.classroomReport
-                          ? chartData.map((dados, index) => {
-                              return (
-                                <GraficoMatematicaPorTurma
-                                  dados={dados}
-                                  index={index}
-                                />
-                              );
-                            })
-                          : chartData.map((dados, index) => {
-                              return (
-                                <GraficoConsolidadoMatematica
-                                  dados={dados}
-                                  index={index}
-                                />
-                              );
-                            })}
-                      </div>
-                    ) : (
-                      <div className="mt-4">
-                        {
-                          //Consilidado de Numeros
-                          this.classroomReport === false &&
-                            this.props.pollReport.selectedFilter.proficiency ===
-                              "Números" && (
-                              <PollReportMathNumbersChart
-                                data={chartData.chartNumberData}
-                              />
-                            )
-                        }
-                        {
-                          //Consilidado de Aditivo e Multiplicativo
-                          this.classroomReport === false &&
-                            this.props.pollReport.selectedFilter.proficiency !==
-                              "Números" &&
-                            indexes.map((index) => {
-                              const chartId =
-                                "ordem" + chartData.chartIdeaData[index].order;
-
-                              return (
-                                <PollReportMathChart
-                                  key={chartId}
-                                  chartIds={[
-                                    chartId + "idea" + index,
-                                    chartId + "result" + index,
-                                  ]}
-                                  data={chartData.totals[index]}
-                                />
-                              );
-                            })
-                        }
-                        {
-                          // Por Turma de Numeros
-                          this.classroomReport === true &&
-                            this.props.pollReport.selectedFilter.proficiency ===
-                              "Números" &&
-                            chartData !== undefined &&
-                            Array.isArray(chartData) && (
-                              <PollReportMathChartClassroom
-                                data={chartData}
-                                numbers={numbers}
-                              />
-                            )
-                        }
-                        {
-                          // Por Turma Aditivo e Multiplicativo
-                          this.classroomReport === true &&
-                            this.props.pollReport.selectedFilter.proficiency !==
-                              "Números" &&
-                            chartData !== undefined &&
-                            Array.isArray(chartData) &&
-                            chartData.map((item, index) => {
-                              const order =
-                                item.name !== null
-                                  ? item.name.replace(" ", "").toLowerCase()
-                                  : "";
-                              const chart1Id = order + "-ideaChart" + index;
-                              const chart2Id = order + "-resultChart" + index;
-
-                              return (
-                                <PollReportMathChartClassroom
-                                  data={item}
-                                  chartIds={[chart1Id, chart2Id]}
-                                  numbers={numbers}
-                                />
-                              );
-                            })
-                        }
-                      </div>
-                    )
-                  ) : null}
-                </div>
-              ) : null}
+              {this.componentRender()}
             </div>
           </Card>
         )}

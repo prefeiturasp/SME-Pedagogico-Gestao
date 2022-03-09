@@ -34,13 +34,9 @@ export const actionCreators = {
     type: types.SETAR_PERGUNTAS,
     payload: perguntas,
   }),
-  listaAlunosAutoralMatematica: (
-    filtro,
-    bimestre = null,
-    perguntaAnoEscolar = ""
-  ) => ({
+  listaAlunosAutoralMatematica: (filtro, bimestre = null) => ({
     type: types.LISTAR_ALUNOS_AUTORAL_MATEMATICA,
-    payload: { bimestre, filtro, perguntaAnoEscolar },
+    payload: { bimestre, filtro },
   }),
   salvaSondagemAutoralMatematica: (alunos, filtro) => ({
     type: types.SALVAR_SONDAGEM_AUTORAL_MATEMATICA,

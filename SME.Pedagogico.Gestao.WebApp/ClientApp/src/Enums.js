@@ -1,4 +1,4 @@
-﻿export const ROLES_ENUM = {
+export const ROLES_ENUM = {
   PROFESSOR: "Professor",
   COORDENADOR_PEDAGOGICO: "CP",
   ADM_DRE: "Adm DRE",
@@ -162,7 +162,7 @@ export const ENUM_TIPO_SONDAGEM = {
 };
 
 export const GRUPO_SONDAGEM = {
-  Numeric: 1,
-  CA: 2,
-  CM: 3,
+  CA: 1,
+  CM: 2,
+  Numeric: 3,
 };
