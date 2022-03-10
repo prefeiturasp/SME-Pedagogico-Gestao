@@ -201,13 +201,9 @@ function NovaSondagemMatematicaAutoral() {
     )
       return;
 
-    if (ehTipoNumerico) {
-      dispatch(pollStore.obterAlunosAlfabetizacao({ filtrosBusca, bimestre }));
-    } else {
-      dispatch(
-        actionCreators.listaAlunosAutoralMatematica(filtrosBusca, bimestre)
-      );
-    }
+    dispatch(
+      actionCreators.listaAlunosAutoralMatematica(filtrosBusca, bimestre)
+    );
   }, [bimestre, dispatch, ehTipoNumerico, filtrosBusca]);
 
   useEffect(() => {
