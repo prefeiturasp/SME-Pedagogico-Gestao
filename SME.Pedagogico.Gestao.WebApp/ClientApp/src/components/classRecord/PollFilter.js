@@ -302,6 +302,7 @@ class PollFilter extends Component {
   }
 
   setSelectedFilter() {
+    this.limparSpanInfro();
     const { filters, user, poll2, resultClick } = this.props;
     const { activeDreCode, activeClassRoomCode, setSchoolYear } = filters;
     const { schoolAll, classroom: yearClassroom } = this.state;
@@ -321,6 +322,12 @@ class PollFilter extends Component {
     }
   }
 
+  limparSpanInfro() {
+    var info = document.getElementById("span-matematica-tab");
+    if (info != null) {
+      info.innerHTML = "";
+    }
+  }
   checkDisabledButton() {
     const {
       pollRouter: { activeRoute },

@@ -85,13 +85,11 @@ function* ListarAlunosAutoralMat({ payload }) {
 }
 
 function listarAlunosMatApi({ filtro, bimestre }) {
-    var params;
-    if (bimestre != null)
-        params = parametrosParaUrl({ ...filtro, bimestre });
-    else
-        params = parametrosParaUrl({ ...filtro});
+  var params;
+  if (bimestre != null) params = parametrosParaUrl({ ...filtro, bimestre });
+  else params = parametrosParaUrl({ ...filtro });
 
-    var url = `/api/SondagemAutoral/Matematica?${params}`;
+  var url = `/api/SondagemAutoral/Matematica?${params}`;
 
   return fetch(url, {
     method: "get",

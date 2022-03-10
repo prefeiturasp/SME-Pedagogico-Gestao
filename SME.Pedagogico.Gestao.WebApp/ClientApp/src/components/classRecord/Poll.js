@@ -70,7 +70,7 @@ class Poll extends Component {
 
     this.props.pollMethods.set_poll_info(null, null, null);
     this.props.pollMethods.reset_poll_selected_filter_state();
-
+    this.msnNaoExisteSondagem = "";
     // tempo para setar o valores default no state
     setTimeout(() => {}, 500);
 
@@ -348,44 +348,58 @@ class Poll extends Component {
     this.props.pollMethods.get_poll_portuguese_students(classRoomMock);
   }
 
+  PreencherSpanInfro() {
+    var info = document.getElementById("span-matematica-tab");
+    if (info != null) {
+      info.innerHTML = "Sondagem não disponível neste ano letivo.";
+    }
+  }
   openMathPoll() {
     this.props.dataMethods.reset_new_data_state();
     this.toggleButton("matematica-tab");
     var classRoomMock = this.props.poll.selectedFilter;
-
-    this.props.pollMethods.set_poll_list_initial_state();
-    if (classRoomMock.yearClassroom > 6) {
-      this.props.pollMethods.set_poll_info(
-        ClassRoomEnum.ClassMTAutoral,
-        "",
-        classRoomMock.yearClassroom
-      );
-    } else if (
-      classRoomMock.yearClassroom === "1" ||
-      classRoomMock.yearClassroom === "2" ||
-      classRoomMock.yearClassroom === "3"
-    ) {
-      this.props.pollMethods.set_poll_info(
-        ClassRoomEnum.ClassMT,
-        "Numeric",
-        classRoomMock.yearClassroom
-      );
+    this.msnNaoExisteSondagem = "";
+    var naoExibeBotao =
+      parseInt(this.props.poll.selectedFilter.schoolYear) === 2019 &&
+      parseInt(this.props.poll.selectedFilter.yearClassroom) >= 7 &&
+      parseInt(this.props.poll.selectedFilter.yearClassroom) <= 9;
+    if (naoExibeBotao) {
+      this.PreencherSpanInfro();
     } else {
-      this.props.pollMethods.set_poll_info(
-        ClassRoomEnum.ClassMT,
-        "CA",
-        classRoomMock.yearClassroom
-      );
-    }
+      this.props.pollMethods.set_poll_list_initial_state();
+      if (classRoomMock.yearClassroom > 6) {
+        this.props.pollMethods.set_poll_info(
+          ClassRoomEnum.ClassMTAutoral,
+          "",
+          classRoomMock.yearClassroom
+        );
+      } else if (
+        classRoomMock.yearClassroom === "1" ||
+        classRoomMock.yearClassroom === "2" ||
+        classRoomMock.yearClassroom === "3"
+      ) {
+        this.props.pollMethods.set_poll_info(
+          ClassRoomEnum.ClassMT,
+          "Numeric",
+          classRoomMock.yearClassroom
+        );
+      } else {
+        this.props.pollMethods.set_poll_info(
+          ClassRoomEnum.ClassMT,
+          "CA",
+          classRoomMock.yearClassroom
+        );
+      }
 
-    if (classRoomMock.schoolYear >= 2022) return;
+      if (classRoomMock.schoolYear >= 2022) return;
 
-    if (this.props.poll.pollTypeSelected === "Numeric") {
-      this.props.pollMethods.get_poll_math_numbers_students(classRoomMock);
-    } else if (this.props.poll.pollTypeSelected === "CA") {
-      this.props.pollMethods.get_poll_math_ca_students(classRoomMock);
-    } else if (this.props.poll.pollTypeSelected === "CM") {
-      this.props.pollMethods.get_poll_math_cm_students(classRoomMock);
+      if (this.props.poll.pollTypeSelected === "Numeric") {
+        this.props.pollMethods.get_poll_math_numbers_students(classRoomMock);
+      } else if (this.props.poll.pollTypeSelected === "CA") {
+        this.props.pollMethods.get_poll_math_ca_students(classRoomMock);
+      } else if (this.props.poll.pollTypeSelected === "CM") {
+        this.props.pollMethods.get_poll_math_cm_students(classRoomMock);
+      }
     }
   }
 
@@ -491,6 +505,12 @@ class Poll extends Component {
             >
               Matem&aacute;tica
             </button>
+            <span
+              className="sc-text-orange sc-text-size-3"
+              id="span-matematica-tab"
+            >
+              {this.msnNaoExisteSondagem}
+            </span>
           </li>
         );
       }

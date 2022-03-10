@@ -1,69 +1,73 @@
 ﻿body {
-    font-family: 'Roboto', sans-serif
+  font-family: "Roboto", sans-serif;
 }
 
 .clickable {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .sc-darkblue-button {
-    background-color: #086397;
-    border-color: #086397;
+  background-color: #086397;
+  border-color: #086397;
 }
 
 .sc-darkblue-outline-button {
-    border-color: #086397;
-    color: #086397;
+  border-color: #086397;
+  color: #086397;
 }
 
 .sc-blue {
-    background-color: #1E90FF;
+  background-color: #1e90ff;
 }
 
 .sc-darkblue {
-    background-color: #0077BE;
+  background-color: #0077be;
 }
 
 .sc-gray {
-    background-color: #EEEEEE;
+  background-color: #eeeeee;
 }
 
 .sc-darkgray {
-    background-color: #ADADAE;
+  background-color: #adadae;
 }
 
 .sc-lightpurple {
-    background-color: #9C96F6;
+  background-color: #9c96f6;
 }
 
 .sc-text-blue {
-    color: #1E90FF;
+  color: #1e90ff;
+}
+
+.sc-text-orange {
+  color: #ff8c00;
 }
 
 .sc-text-purple {
-    color: #7C4DFF;
+  color: #7c4dff;
 }
 
 .sc-text-size-000 {
-    font-size: 9px;
+  font-size: 9px;
 }
 
 .sc-text-size-00 {
-    font-size: 10px;
+  font-size: 10px;
 }
 
 .sc-text-size-0 {
-    font-size: 12px;
+  font-size: 12px;
 }
 
 .sc-text-size-1 {
-    font-size: 14px;
+  font-size: 14px;
 }
 
 .sc-text-size-2 {
-    font-size: 16px;
+  font-size: 16px;
 }
 
 .sc-text-size-4 {
-    font-size: 24px;
+  font-size: 24px;
 }
