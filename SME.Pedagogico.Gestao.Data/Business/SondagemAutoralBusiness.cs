@@ -226,7 +226,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 if (aluno.Respostas != null)
                 {
                     AtualizaNovasRespostas(aluno, alunoSondagem, sondagem.PeriodoId, bimestre);
-                    //RemoveRespostasSemValor(contexto, aluno, alunoSondagem);
+                    RemoveRespostasSemValor(contexto, aluno, alunoSondagem);
                 }
             }
 
