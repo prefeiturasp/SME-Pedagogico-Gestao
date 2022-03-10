@@ -1,4 +1,4 @@
-﻿// Store filters
+// Store filters
 export const types = {
   GET_DRE: "GET_DRE",
   LIST_DRES: "LIST_DRES",

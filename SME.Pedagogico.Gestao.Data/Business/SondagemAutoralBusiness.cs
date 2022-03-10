@@ -657,8 +657,11 @@ namespace SME.Pedagogico.Gestao.Data.Business
 					join ""Pergunta"" p on p.""Id"" = pae.""PerguntaId""                                                        
 					join ""PerguntaResposta"" prs on prs.""PerguntaId"" = p.""Id""
 					join ""Resposta"" rs on rs.""Id"" = prs.""RespostaId""
-					where pae.""AnoEscolar"" in ({anoEscolar}) 
-					and (pae.""FimVigencia"" is null and extract(year from pae.""InicioVigencia"") <= {anoLetivo})";
+					where pae.""AnoEscolar"" in ({anoEscolar}) ";
+                if (anoLetivo >= 2022)
+                    sql += $@" and(pae.""FimVigencia"" is null and extract(year from pae.""InicioVigencia"") <= { anoLetivo})";
+                else
+                    sql += $@" and extract(year from pae.""InicioVigencia"") <= {anoLetivo}";
 
                 using (var command = contexto.Database.GetDbConnection().CreateCommand())
                 {

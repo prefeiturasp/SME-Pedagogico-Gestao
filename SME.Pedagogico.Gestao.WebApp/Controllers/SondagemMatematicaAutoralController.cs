@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DTO.Matematica;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
