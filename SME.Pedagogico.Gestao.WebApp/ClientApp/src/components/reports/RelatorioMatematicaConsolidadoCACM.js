@@ -72,7 +72,7 @@ const RelatorioMatematicaConsolidado = (props) => {
             </div>
             {dados.subPerguntas.map((subPergunta, indexSubPergunta) => {
               const quantidade = subPergunta.respostas[index].quantidade;
-              const porcentagem = subPergunta.respostas[index].quantidade;
+              const porcentagem = subPergunta.respostas[index].porcentagem;
               return ItemRelatorio(quantidade, porcentagem, indexSubPergunta);
             })}
           </div>
