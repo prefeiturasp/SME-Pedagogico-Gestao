@@ -27,7 +27,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
             int totalDeAlunos = await ConsultaTotalDeAlunos.BuscaTotalDeAlunosEOl(filtro);
             var query = ObtenhaQueryRelatorioMatematica(filtro);
-            var relatorio = new RelatorioConsolidadoDTO(); 
+            var relatorio = new RelatorioConsolidadoDTO();
 
             using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
             {
@@ -44,7 +44,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             var relatorio = new RelatorioConsolidadoProficienciaDTO();
 
             IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
-            
+
             relatorio.Perguntas = await ObtenhaListaDeDtoPerguntaProficiencia(filtro, proficienncia);
             relatorio.Graficos = ObtenhaListaDeGraficoProficiencia(relatorio.Perguntas);
 
@@ -75,18 +75,20 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 CalculaPercentualTotalPergunta(totalDeAlunos, x.Where(y => y.PerguntaId == x.Key).First().PerguntaDescricao, pergunta);
 
                 var listaPr = x.Where(y => y.PerguntaId == x.Key).ToList();
+
                 var totalRespostas = x.Where(y => y.PerguntaId == x.Key).Sum(q => q.QtdRespostas);
                 CalculaPercentualRespostas(totalDeAlunos, pergunta, listaPr, totalRespostas);
                 lista.Add(pergunta);
             });
 
+            lista = lista.DistinctBy(x => x.Nome).ToList();
 
             return lista;
         }
 
         private static void CalculaPercentualTotalPergunta(int totalDeAlunos, string descricaoPergunta, PerguntaDTO pergunta)
         {
-            pergunta.Nome = descricaoPergunta; 
+            pergunta.Nome = descricaoPergunta;
             pergunta.Total = new TotalDTO()
             {
                 Quantidade = totalDeAlunos
@@ -109,7 +111,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             var respostaSempreenchimento = CriaRespostaSemPreenchimento(totalDeAlunos, totalRespostas);
             pergunta.Respostas.Add(respostaSempreenchimento);
-
         }
 
         private RespostaDTO CriaRespostaSemPreenchimento(int totalDeAlunos, int quantidadeTotalRespostasPergunta)
@@ -126,7 +127,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             using (var contexto = new SMEManagementContextData())
             {
-
                 var componenteCurricular = contexto.ComponenteCurricular.Where(x => x.Descricao == filtro.DescricaoDisciplina).FirstOrDefault();
 
                 filtro.ComponenteCurricularId = componenteCurricular.Id;
@@ -136,7 +136,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 if (filtro.ConsiderarBimestre)
                 {
                     filtro.Bimestre = int.Parse(filtro.DescricaoPeriodo.Substring(0, 1));
-                } 
+                }
             }
         }
 
@@ -185,11 +185,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
             relatorio.Alunos = ListaAlunos.OrderBy(aluno => aluno.NomeAluno);
             relatorio.Graficos = new List<GraficosRelatorioDTO>();
 
-
             using (var contexto = new SMEManagementContextData())
             {
                 var perguntasBanco = await contexto.PerguntaResposta.Include(x => x.Pergunta).Include(y => y.Resposta).Where(pr => relatorio.Perguntas.Any(p => p.Id == pr.Pergunta.Id)).ToListAsync();
-
 
                 foreach (var pergunta in relatorio.Perguntas)
                 {
@@ -204,7 +202,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         barra.label = resposta.Resposta.Descricao;
                         barra.value = relatorio.Alunos.Count(x => x.Perguntas.Any(r => r.Id == pergunta.Id && r.Valor == resposta.Resposta.Descricao));
                         grafico.Barras.Add(barra);
-
                     });
 
                     var barraAlunosSemPreenchimento = new BarrasGraficoDTO();
@@ -227,7 +224,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 {
                     Id = x.Id,
                     Nome = x.Descricao
-
                 }).ToList();
             }
         }
@@ -255,11 +251,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     AnoLetivo = filtro.AnoLetivo,
                     PeriodoId = filtro.PeriodoId,
                     ComponenteCurricularId = filtro.ComponenteCurricularId
-
                 });
 
                 return listaAlunoRespostas;
-
             }
         }
 
