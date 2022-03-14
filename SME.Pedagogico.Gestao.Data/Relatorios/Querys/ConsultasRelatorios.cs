@@ -135,7 +135,7 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
 								pr.""PerguntaId"" = p.""Id""
 								inner join ""Resposta"" r on
 								r.""Id"" = pr.""RespostaId""
-								left join (
+								 join (
 									select
 									s.""AnoLetivo"",
 									s.""AnoTurma"",
@@ -184,7 +184,9 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
                                                           ) ) as tabela on
 	         						p.""Id"" = tabela.""PerguntaId"" and
 	         						r.""Id""= tabela.""RespostaId""
-	         					group by
+                                    AND EXTRACT (YEAR FROM pa.""InicioVigencia"") <= @AnoLetivo
+
+                                 group by
 	         						r.""Id"",
 	         						r.""Descricao"",
 	         						p.""Id"",
