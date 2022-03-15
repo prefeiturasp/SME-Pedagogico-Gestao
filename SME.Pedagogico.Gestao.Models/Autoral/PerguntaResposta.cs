@@ -9,7 +9,5 @@ namespace SME.Pedagogico.Gestao.Models.Autoral
         public virtual Resposta Resposta { get; set; }
         public int Ordenacao { get; set; }
         public bool Excluido { get; set; }
-        [NotMapped]
-        public virtual PerguntaAnoEscolar PerguntaAnoEscolar { get; set; }
     }
 }
