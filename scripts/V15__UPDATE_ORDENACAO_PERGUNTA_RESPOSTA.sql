@@ -1,3 +1,20 @@
-
-UPDATE "PerguntaResposta" SET "Ordenacao" =4
-WHERE "Id" ='7eee3ff9-ac26-453a-b1fd-77d7af7e00de';
+UPDATE
+	"PerguntaResposta"
+SET
+	"Ordenacao" = 4
+WHERE
+	"PerguntaId" IN (
+	SELECT
+		"Id"
+	FROM
+		"Pergunta" p
+	WHERE
+		lower(p."Descricao") = lower('Medidas de comprimento, capacidade e massa: uso de unidades padronizadas, comparações e estimativas - Perímetro'))
+	AND "RespostaId" IN (
+	SELECT
+		"Id"
+	FROM
+		"Resposta" r
+	WHERE
+		lower(r."Descricao") = lower('Não compreendeu a ideia'))
+	AND "Ordenacao" = 2
