@@ -2,7 +2,7 @@ import React from "react";
 import { CorpoRelatorio } from "./RelatorioMatematicaPorTurma.css";
 
 const RelatorioMatematicaPorTurma = (props) => {
-  const { alunos, perguntas } = props;
+  const { alunos, perguntas, corUnica } = props;
 
   const constuirHeader = () => {
     return (
@@ -19,8 +19,12 @@ const RelatorioMatematicaPorTurma = (props) => {
         </div>
         {perguntas.map((pergunta) => {
           return (
-            <div className="col sc-gray border-left border-white font-weight-bold">
-              <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-bold">
+            <div className="col sc-gray d-flex align-items-center border-left border-white font-weight-bold text-truncate">
+              <div
+                className="sc-text-size-0 font-weight-bold text-truncate"
+                data-bs-toggle="tooltip"
+                title={pergunta.nome}
+              >
                 {pergunta.nome}
               </div>
             </div>
@@ -43,22 +47,26 @@ const RelatorioMatematicaPorTurma = (props) => {
             {nomeEstudante}
           </div>
         </div>
-        {
-         perguntas.map((pergunta, index) => {
-          const resposta = perguntasAluno.find((p) => p.id === pergunta.id); 
+        {perguntas.map((pergunta, index) => {
+          const resposta = perguntasAluno.find((p) => p.id === pergunta.id);
           const par = index % 2 === 0;
-          const corCelula = par ? 'sc-lightpurple' : 'sc-darkblue';
+          const corCelula = par && !corUnica ? "sc-lightpurple" : "sc-darkblue";
+          const corBorda = corUnica ? "border-left border-white" : "";
           return (
-            <div className={`col overflow-hidden ${corCelula}`}>
+            <div className={`col overflow-hidden ${corCelula} ${corBorda}`}>
               <div className="sc-text-size-00 d-flex flex-fill h-100 align-items-center text-white font-weight-light">
-                <span className="item-celula" data-toggle="tooltip" data-placement="bottom" title={resposta.valor || ""}>
+                <span
+                  className="item-celula"
+                  data-toggle="tooltip"
+                  data-placement="bottom"
+                  title={resposta.valor || ""}
+                >
                   {resposta.valor || ""}
                 </span>
               </div>
             </div>
           );
-        })
-        }
+        })}
       </div>
     );
   };

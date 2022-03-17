@@ -5,6 +5,8 @@ import RelatorioMatematicaConsolidado from "../RelatorioMatematicaConsolidado";
 import RelatorioMatematicaConsolidadoCACM from "../RelatorioMatematicaConsolidadoCACM";
 import GraficoConsolidadoMatematica from "../GraficoConsolidadoMatematica/GraficoConsolidadoMatematica";
 import GraficoMatematicaCACM from "../GraficoMatematicaCACM/GraficoMatematicaCACM";
+import RelatorioMatematicaPorTurma from "../RelatorioMatematicaPorTurma/RelatorioMatematicaPorTurma";
+import RelatorioMatematicaPorTurmaCACM from "../RelatorioMatematicaPorTurma/RelatorioMatematicaPorTurmaCACM";
 
 export const novaRenderizacaoComponente = (props) => {
   const { data, selectedFilter } = props.pollReport;
@@ -12,8 +14,32 @@ export const novaRenderizacaoComponente = (props) => {
 
   const ehAlfabetizacaoCACM = CodigoCurso < 4 && proficiency !== "Números";
   const ehAlfabetizacaoNumero = CodigoCurso < 4 && proficiency === "Números";
+  const ehRelatorioPorTurma = props.pollReport.selectedFilter.classroomReport;
+
+  const montarPlanilhaPorTurma = () => {
+    const Componente = ehAlfabetizacaoCACM
+      ? RelatorioMatematicaPorTurmaCACM
+      : RelatorioMatematicaPorTurma;
+
+    return (
+      data && (
+        <>
+          <PollReportBreadcrumb className="mt-4" name="Planilha" />
+          <Componente
+            alunos={data.alunos}
+            perguntas={data.perguntas}
+            corUnica={ehAlfabetizacaoCACM}
+          />
+        </>
+      )
+    );
+  };
 
   const montarPlanilha = () => {
+    if (ehRelatorioPorTurma) {
+      return montarPlanilhaPorTurma();
+    }
+
     const Componente = ehAlfabetizacaoCACM
       ? RelatorioMatematicaConsolidadoCACM
       : RelatorioMatematicaConsolidado;
@@ -32,10 +58,10 @@ export const novaRenderizacaoComponente = (props) => {
   };
 
   const montarGraficos = () => {
+    const classes = ehAlfabetizacaoCACM ? "mt-4" : "row mt-4";
     const Componente = ehAlfabetizacaoCACM
       ? GraficoMatematicaCACM
       : GraficoConsolidadoMatematica;
-    const classes = ehAlfabetizacaoCACM ? "mt-4" : "row mt-4";
 
     return (
       data &&
