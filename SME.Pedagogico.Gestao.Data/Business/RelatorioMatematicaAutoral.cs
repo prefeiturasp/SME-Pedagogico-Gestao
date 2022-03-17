@@ -81,8 +81,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 lista.Add(pergunta);
             });
 
-            lista = lista.DistinctBy(x => x.Nome).ToList();
-
             return lista;
         }
 
