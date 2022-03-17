@@ -22,6 +22,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
 {
     public class RelatorioMatematicaAutoral
     {
+        private const int TERCEIRO_ANO = 3;
+
         public async Task<RelatorioConsolidadoDTO> ObterRelatorioMatematicaAutoral(filtrosRelatorioDTO filtro)
         {
             IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
@@ -49,6 +51,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
             relatorio.Graficos = ObtenhaListaDeGraficoProficiencia(relatorio.Perguntas);
 
             return relatorio;
+        }
+
+        public async Task<RelatorioMatematicaPorTurmaProficienciaDTO> ObterRelatorioPorTurmaProficiencia(filtrosRelatorioDTO filtro, string proficienncia)
+        {
+            IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
+
+            return await new RelatorioMatematicaPorTurmaProficiencia(filtro, ObtenhaProficiencia(proficienncia)).ObtenhaDTO();
         }
 
         private async Task<List<PerguntaDTO>> RetornaRelatorioMatematica(filtrosRelatorioDTO filtro, NpgsqlConnection conexao, string query, int totalDeAlunos)
@@ -150,8 +159,10 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             var endpoits = new EndpointsAPI();
             var alunoApi = new AlunosAPI(endpoits);
-            var alunosEol = await alunoApi.ObterAlunosAtivosPorTurmaEPeriodo(filtro.CodigoTurmaEol, periodos.First().DataFim);
-            var QueryAlunosRespostas = ConsultasRelatorios.QueryRelatorioPorTurmaMatematica();
+            var alunosEol = (await alunoApi.ObterAlunosAtivosPorTurmaEPeriodo(filtro.CodigoTurmaEol,periodos.First().DataFim))
+                                                            .OrderBy(aluno => aluno.NomeAluno)
+                                                            .ToList();
+            var QueryAlunosRespostas = ObtenhaQueryRelatorioPorTurmaMatematica(filtro);
             var listaAlunoRespostas = await RetornaListaRespostasAlunoPorTurma(filtro, QueryAlunosRespostas);
             var AlunosAgrupados = listaAlunoRespostas.GroupBy(x => x.CodigoAluno);
             var relatorio = new RelatorioMatematicaPorTurmaDTO();
@@ -217,9 +228,20 @@ namespace SME.Pedagogico.Gestao.Data.Business
         private async Task RetornaPerguntasDoRelatorio(filtrosRelatorioDTO filtro, RelatorioMatematicaPorTurmaDTO relatorio)
         {
             relatorio.Perguntas = new List<PerguntasRelatorioDTO>();
+
             using (var contexto = new SMEManagementContextData())
             {
-                var perguntasBanco = await contexto.PerguntaAnoEscolar.Include(x => x.Pergunta).Where(perguntaAnoEscolar => perguntaAnoEscolar.AnoEscolar == filtro.AnoEscolar).OrderBy(x => x.Ordenacao).Select(x => MapearPergunta(x)).ToListAsync();
+                IQueryable<PerguntaAnoEscolar> queryPerguntaAnoEscolar = contexto.PerguntaAnoEscolar.Include(x => x.Pergunta)
+                    .Where(perguntaAnoEscolar => perguntaAnoEscolar.AnoEscolar == filtro.AnoEscolar &&
+                          ((perguntaAnoEscolar.FimVigencia == null && perguntaAnoEscolar.InicioVigencia.GetValueOrDefault().Year <= filtro.AnoLetivo) ||
+                          (perguntaAnoEscolar.FimVigencia.GetValueOrDefault().Year >= filtro.AnoLetivo && perguntaAnoEscolar.InicioVigencia.GetValueOrDefault().Year <= filtro.AnoLetivo)));
+
+                if (filtro.ConsiderarBimestre && filtro.AnoEscolar <= TERCEIRO_ANO)
+                {
+                    queryPerguntaAnoEscolar = queryPerguntaAnoEscolar.Where(perguntaAnoEscolar => perguntaAnoEscolar.Grupo == (int)ProficienciaEnum.Numeros);
+                }
+
+                var perguntasBanco = await queryPerguntaAnoEscolar.OrderBy(x => x.Ordenacao).Select(x => MapearPergunta(x)).ToListAsync();
                 relatorio.Perguntas = perguntasBanco.Select(x => new PerguntasRelatorioDTO
                 {
                     Id = x.Id,
@@ -250,7 +272,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     CodigoTurmaEol = filtro.CodigoTurmaEol,
                     AnoLetivo = filtro.AnoLetivo,
                     PeriodoId = filtro.PeriodoId,
-                    ComponenteCurricularId = filtro.ComponenteCurricularId
+                    ComponenteCurricularId = filtro.ComponenteCurricularId,
+                    Bimestre = filtro.Bimestre
+
                 });
 
                 return listaAlunoRespostas;
@@ -391,6 +415,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
 
             return ConsultasRelatorios.QueryRelatorioMatematicaAutoral(filtro);
+        }
+
+        private string ObtenhaQueryRelatorioPorTurmaMatematica(filtrosRelatorioDTO filtro)
+        {
+            if (filtro.ConsiderarBimestre)
+            {
+                return ConsultasRelatorios.QueryRelatorioPorTurmaMatematicaBimestre(filtro.AnoEscolar);
+            }
+
+            return ConsultasRelatorios.QueryRelatorioPorTurmaMatematica();
         }
     }
 }
