@@ -112,11 +112,11 @@ function* SetProfileSaga({ perfilSelecionado, history }) {
       const text = yield data.text();
       const { menus, ehProfessor, token } = yield JSON.parse(text);
 
-      if (!ehProfessor) url = "/Relatorios/Sondagem";
-
       newUser.ehProfessor = ehProfessor;
       newUser.token = token;
       newUser.permissoes.podeConsultar = menus[0].podeConsultar;
+
+      if (!newUser.permissoes.podeConsultar) url = "/Relatorios/Sondagem";
     }
 
     yield put({ type: "SET_USER", user: newUser });
