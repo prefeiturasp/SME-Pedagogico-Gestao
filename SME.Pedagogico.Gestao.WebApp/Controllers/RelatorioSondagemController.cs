@@ -60,15 +60,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     DescricaoPeriodo = parameters.Term,
                     ConsiderarBimestre = int.Parse(parameters.SchoolYear) >= ANO_ESCOLAR_2022
                 };
-                var obj = new RelatorioMatematicaAutoral();
 
-                if (parameters.ClassroomReport)
-                {
-                    var relatorioPorTurma = await obj.ObterRelatorioPorTurma(filtro);
-                    return (Ok(relatorioPorTurma));
-                }
-
-                return await ObtenhaRelatorioMatematicaAutoral(filtro, parameters.Proficiency);
+                return await ObtenhaRelatorioMatematicaAutoral(filtro, parameters.Proficiency, parameters.ClassroomReport);
             }
 
             Periodo periodo = await businessPoll.ObterPeriodoRelatorioPorDescricao(parameters.Term);
@@ -400,13 +393,43 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return proficiencia.Equals(PROFICIENCIA_NUMERO, StringComparison.InvariantCultureIgnoreCase);
         }
 
-        private async Task<ActionResult<string>> ObtenhaRelatorioMatematicaAutoral(filtrosRelatorioDTO filtro, string proficiencia)
+        private async Task<ActionResult<string>> ObtenhaRelatorioMatematicaAutoral(
+                                                        filtrosRelatorioDTO filtro, 
+                                                        string proficiencia,
+                                                        bool ehPorTurma)
         {
             var relatorio = new RelatorioMatematicaAutoral();
 
             if (filtro.AnoEscolar <= TERCEIRO_ANO && !ProficienciaEhNumero(proficiencia))
             {
-                return Ok(await relatorio.ObtenhaRelatorioMatematicaProficiencia(filtro, proficiencia));
+                return await ObtenhaRelatorioMatematicaProficiencia(filtro, proficiencia, ehPorTurma);
+            }
+
+            return await ObtenhaRelatorioMatematica(filtro, ehPorTurma);
+        }
+
+        private async Task<ActionResult<string>> ObtenhaRelatorioMatematicaProficiencia(
+                                                        filtrosRelatorioDTO filtro, 
+                                                        string proficiencia,
+                                                        bool ehPorTurma)
+        {
+            var relatorio = new RelatorioMatematicaAutoral();
+
+            if (ehPorTurma)
+            {
+                return Ok(await relatorio.ObterRelatorioPorTurmaProficiencia(filtro, proficiencia));
+            }
+
+            return Ok(await relatorio.ObtenhaRelatorioMatematicaProficiencia(filtro, proficiencia));
+        }
+
+        private async Task<ActionResult<string>> ObtenhaRelatorioMatematica(filtrosRelatorioDTO filtro, bool ehPorTurma)
+        {
+            var relatorio = new RelatorioMatematicaAutoral();
+
+            if (ehPorTurma)
+            {
+                return Ok(await relatorio.ObterRelatorioPorTurma(filtro));
             }
 
             return Ok(await relatorio.ObterRelatorioMatematicaAutoral(filtro));
