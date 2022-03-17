@@ -49,6 +49,7 @@ const GraficoMatematicaCACM = (props) => {
           xAxis: {
             type: "category",
             data: dadosLabel,
+            show: false,
           },
           yAxis: {
             type: "value",
