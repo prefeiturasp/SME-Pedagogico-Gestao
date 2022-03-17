@@ -263,7 +263,7 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
 	         						r.""Id""= tabela.""RespostaId""");
 
             if (filtro.AnoEscolar <= TERCEIRO_ANO)
-                query.AppendLine(" AND pa.\"Grupo\" = " + (int)ProficienciaEnum.Numeros);
+                query.AppendLine(" WHERE pa.\"Grupo\" = " + (int)ProficienciaEnum.Numeros);
 
             query.AppendLine(@"group by
 	         						r.""Id"",
