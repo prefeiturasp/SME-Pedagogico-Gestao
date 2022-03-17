@@ -8,6 +8,6 @@ namespace SME.Pedagogico.Gestao.Data.DTO.RelatorioPorTurma
 
         public string NomeAluno { get; set; }
 
-        public List<PerguntasRelatorioProficienciaDTO> ListaDePerguntas { get; set; }
+        public List<PerguntasRelatorioProficienciaDTO> Perguntas { get; set; }
     }
 }
