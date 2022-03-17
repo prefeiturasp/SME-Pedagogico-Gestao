@@ -5,8 +5,8 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Matematica
 {
     public class RelatorioMatematicaPorTurmaProficienciaDTO
     {
-        public List<AlunoPorTurmaRelatorioProficienciaDTO> ListaDeAlunos { get; set; }
+        public List<AlunoPorTurmaRelatorioProficienciaDTO> Alunos { get; set; }
 
-        public List<GraficosRelatorioProficienciaDTO> ListaDeGraficos { get; set; }
+        public List<GraficosRelatorioProficienciaDTO> Graficos { get; set; }
     }
 }
