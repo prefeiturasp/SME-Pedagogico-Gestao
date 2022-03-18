@@ -22,6 +22,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
 {
     public class RelatorioMatematicaAutoral
     {
+        private const int TERCEIRO_ANO = 3;
+
         public async Task<RelatorioConsolidadoDTO> ObterRelatorioMatematicaAutoral(filtrosRelatorioDTO filtro)
         {
             IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
@@ -385,7 +387,10 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             if (filtro.ConsiderarBimestre)
             {
-                return ConsultasRelatorios.QueryRelatorioMatematicaAutoralBimestre(filtro);
+                return ConsultasRelatorios.QueryRelatorioMatematicaAutoralBimestre(
+                                                !string.IsNullOrEmpty(filtro.CodigoDre), 
+                                                !string.IsNullOrEmpty(filtro.CodigoUe),
+                                                filtro.AnoEscolar <= TERCEIRO_ANO);
             }
 
             return ConsultasRelatorios.QueryRelatorioMatematicaAutoral(filtro);
