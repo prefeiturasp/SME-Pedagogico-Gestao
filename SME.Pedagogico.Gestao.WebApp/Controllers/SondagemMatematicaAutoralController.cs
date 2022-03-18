@@ -32,20 +32,21 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
         [HttpGet("Matematica/Perguntas")]
-        public async Task<IActionResult> ObterPerguntas([FromQuery]int anoEscolar, [FromQuery]int anoLetivo)
+        public async Task<IActionResult> ObterPerguntas([FromQuery] int anoEscolar, [FromQuery] int anoLetivo)
         {
-            return Ok(await sondagemAutoralBusiness.ObterPerguntas(anoEscolar, anoLetivo));
+            var perguntas = await sondagemAutoralBusiness.ObterPerguntas(anoEscolar, anoLetivo);
+            return Ok(perguntas);
         }
 
         [HttpGet("Matematica")]
-        public async Task<IActionResult> ObterSondagemAutoral([FromQuery]FiltrarListagemMatematicaDTO filtrarListagemDto)
+        public async Task<IActionResult> ObterSondagemAutoral([FromQuery] FiltrarListagemMatematicaDTO filtrarListagemDto)
         {
             var retorno = await sondagemAutoralBusiness.ObterListagemAutoral(filtrarListagemDto);
             return Ok(retorno);
         }
 
         [HttpPost("Matematica")]
-        public async Task<IActionResult> SalvarSondagem([FromBody]IEnumerable<AlunoSondagemMatematicaDto> alunoSondagemMatematicaDtos)
+        public async Task<IActionResult> SalvarSondagem([FromBody] IEnumerable<AlunoSondagemMatematicaDto> alunoSondagemMatematicaDtos)
         {
             await sondagemAutoralBusiness.SalvarSondagemMatematica(alunoSondagemMatematicaDtos);
 

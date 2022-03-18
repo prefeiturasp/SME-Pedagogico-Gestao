@@ -1,4 +1,5 @@
 ﻿using SME.Pedagogico.Gestao.Models.Base.Abstracts;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SME.Pedagogico.Gestao.Models.Autoral
 {
@@ -8,6 +9,5 @@ namespace SME.Pedagogico.Gestao.Models.Autoral
         public virtual Resposta Resposta { get; set; }
         public int Ordenacao { get; set; }
         public bool Excluido { get; set; }
-        public virtual PerguntaAnoEscolar PerguntaAnoEscolar { get; set; }
     }
 }

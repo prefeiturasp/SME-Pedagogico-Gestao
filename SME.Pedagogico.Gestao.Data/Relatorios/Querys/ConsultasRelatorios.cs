@@ -135,7 +135,7 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
 								pr.""PerguntaId"" = p.""Id""
 								inner join ""Resposta"" r on
 								r.""Id"" = pr.""RespostaId""
-								 join (
+								left join (
 									select
 									s.""AnoLetivo"",
 									s.""AnoTurma"",
@@ -184,7 +184,7 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
                                                           ) ) as tabela on
 	         						p.""Id"" = tabela.""PerguntaId"" and
 	         						r.""Id""= tabela.""RespostaId""
-                                    AND EXTRACT (YEAR FROM pa.""InicioVigencia"") <= @AnoLetivo
+                                    where EXTRACT (YEAR FROM pa.""InicioVigencia"") <= @AnoLetivo
 
                                  group by
 	         						r.""Id"",
@@ -250,9 +250,9 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
 
             var query = new StringBuilder();
             query.Append(queryRelatorio);
-            if (!string.IsNullOrEmpty(filtro.CodigoDre))
+            if (!string.IsNullOrEmpty(filtro.CodigoDre) && string.IsNullOrEmpty(filtro.CodigoUe))
                 query.AppendLine(@" and ""CodigoDre"" =  @CodigoDRE");
-            if (!string.IsNullOrEmpty(filtro.CodigoUe))
+            if (!string.IsNullOrEmpty(filtro.CodigoUe) && string.IsNullOrEmpty(filtro.CodigoDre))
                 query.AppendLine(@"and ""CodigoUe"" =  @CodigoEscola");
 
             query.Append(@" and ""AnoLetivo"" = @AnoLetivo
@@ -260,7 +260,8 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
                                   and ""Bimestre"" = @Bimestre
                                                           ) ) as tabela on
 	         						p.""Id"" = tabela.""PerguntaId"" and
-	         						r.""Id""= tabela.""RespostaId""");
+	         						r.""Id""= tabela.""RespostaId""  
+                                    WHERE EXTRACT (YEAR FROM pa.""InicioVigencia"") = @AnoLetivo ");
 
             query.AppendLine(" WHERE ((pa.\"FimVigencia\" IS NULL AND EXTRACT (YEAR FROM pa.\"InicioVigencia\") <= @AnoLetivo)");
             query.AppendLine(" OR (EXTRACT(YEAR FROM pa.\"FimVigencia\") >= @AnoLetivo AND EXTRACT (YEAR FROM pa.\"InicioVigencia\") <= @AnoLetivo))");
