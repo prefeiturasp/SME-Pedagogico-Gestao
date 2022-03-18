@@ -106,6 +106,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var dtoAlunoPergunta = listaPorPergunta.FirstOrDefault();
                 var dtoPerguntaRelatorio = new PerguntasRelatorioProficienciaDTO()
                 {
+                    PerguntaId = dtoAlunoPergunta.PerguntaId,
                     NomePergunta = dtoAlunoPergunta.PerguntaDescricao,
                     Ordenacao = dtoAlunoPergunta.OrdemPergunta,
                     subPerguntas = ObtenhaListaDeSubPergunta(listaPorPergunta)
@@ -125,6 +126,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 var dtoSubPergunta = new SubPerguntaRelatorioDTO()
                 {
+                    SubPerguntaId = dto.SubPerguntaId,
                     NomeSubPergunta = dto.SubPerguntaDescricao,
                     Resposta = dto.RespostaDescricao
                 };
