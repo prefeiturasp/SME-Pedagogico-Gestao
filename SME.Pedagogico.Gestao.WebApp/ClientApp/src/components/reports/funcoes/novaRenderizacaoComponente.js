@@ -22,13 +22,15 @@ export const novaRenderizacaoComponente = (props) => {
       : RelatorioMatematicaPorTurma;
 
     return (
-      data && (
+      data &&
+      data.perguntas && (
         <>
           <PollReportBreadcrumb className="mt-4" name="Planilha" />
           <Componente
             alunos={data.alunos}
             perguntas={data.perguntas}
             corUnica={ehAlfabetizacaoCACM}
+            ehAlfabetizacaoCACM={ehAlfabetizacaoCACM}
           />
         </>
       )
