@@ -263,8 +263,11 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
 	         						r.""Id""= tabela.""RespostaId""  
                                     WHERE EXTRACT (YEAR FROM pa.""InicioVigencia"") = @AnoLetivo ");
 
+            query.AppendLine(" WHERE ((pa.\"FimVigencia\" IS NULL AND EXTRACT (YEAR FROM pa.\"InicioVigencia\") <= @AnoLetivo)");
+            query.AppendLine(" OR (EXTRACT(YEAR FROM pa.\"FimVigencia\") >= @AnoLetivo AND EXTRACT (YEAR FROM pa.\"InicioVigencia\") <= @AnoLetivo))");
+
             if (filtro.AnoEscolar <= TERCEIRO_ANO)
-                query.AppendLine(" WHERE pa.\"Grupo\" = " + (int)ProficienciaEnum.Numeros);
+                query.AppendLine(" AND pa.\"Grupo\" = " + (int)ProficienciaEnum.Numeros);
 
             query.AppendLine(@"group by
 	         						r.""Id"",
