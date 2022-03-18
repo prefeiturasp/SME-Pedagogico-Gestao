@@ -260,8 +260,7 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
                                   and ""Bimestre"" = @Bimestre
                                                           ) ) as tabela on
 	         						p.""Id"" = tabela.""PerguntaId"" and
-	         						r.""Id""= tabela.""RespostaId""  
-                                    WHERE EXTRACT (YEAR FROM pa.""InicioVigencia"") = @AnoLetivo ");
+	         						r.""Id""= tabela.""RespostaId"" ");
 
             query.AppendLine(" WHERE ((pa.\"FimVigencia\" IS NULL AND EXTRACT (YEAR FROM pa.\"InicioVigencia\") <= @AnoLetivo)");
             query.AppendLine(" OR (EXTRACT(YEAR FROM pa.\"FimVigencia\") >= @AnoLetivo AND EXTRACT (YEAR FROM pa.\"InicioVigencia\") <= @AnoLetivo))");
