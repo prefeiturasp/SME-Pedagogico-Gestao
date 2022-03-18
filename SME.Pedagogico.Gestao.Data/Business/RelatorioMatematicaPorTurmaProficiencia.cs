@@ -90,7 +90,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 CodigoAluno = aluno.CodigoAluno,
                 NomeAluno = aluno.NomeAlunoRelatorio,
-                ListaDePerguntas = ObtenhaListaDePerguntas(aluno)
+                Perguntas = ObtenhaListaDePerguntas(aluno)
             };
         }
 
@@ -108,7 +108,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 {
                     NomePergunta = dtoAlunoPergunta.PerguntaDescricao,
                     Ordenacao = dtoAlunoPergunta.OrdemPergunta,
-                    ListaDeSubPerguntas = ObtenhaListaDeSubPergunta(listaPorPergunta)
+                    subPerguntas = ObtenhaListaDeSubPergunta(listaPorPergunta)
                 };
 
                 listaRetorno.Add(dtoPerguntaRelatorio);
