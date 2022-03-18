@@ -10,6 +10,7 @@ using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using SME.Pedagogico.Gestao.Data.Relatorios;
 using SME.Pedagogico.Gestao.Data.Relatorios.Querys;
+using SME.Pedagogico.Gestao.Models.Autoral;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             return new RelatorioMatematicaPorTurmaProficienciaDTO()
             {
+                Perguntas = await ObtenhaCabecalho(),
                 Alunos = await ObtenhaListaDeAlunosResposta(),
                 Graficos = ObtenhaListaDeGrafico()
             };
@@ -237,6 +239,60 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 label = descricao,
                 value = valor
             };
+        }
+
+        private async Task<List<CabecalhoRelatorioProficienciaDTO>> ObtenhaCabecalho()
+        {
+            var lista = new List<CabecalhoRelatorioProficienciaDTO>();
+            var listaDePergunta = await ObtenhaListaDePerguntaPrincipal();
+            var listaPai = listaDePergunta.FindAll(pergunta => pergunta.SubPerguntaId == null);
+
+            foreach (var perguntaPai in listaPai)
+            {
+                lista.Add(new CabecalhoRelatorioProficienciaDTO()
+                {
+                    Id = perguntaPai.PerguntaId,
+                    Nome = perguntaPai.PerguntaDescricao,
+                    Ordenacao = perguntaPai.OrdemPergunta,
+                    PerguntasFilhas = ObtenhaListaCabecalhoFilho(perguntaPai.PerguntaId, listaDePergunta)
+                });
+            }
+
+            return lista;
+        }
+
+        private List<PerguntasRelatorioDTO> ObtenhaListaCabecalhoFilho(string idPai, List<PerguntaPrincipalTurmaProficienciaDTO> listaDePergunta)
+        {
+            var lista = new List<PerguntasRelatorioDTO>();
+            var listaPai = listaDePergunta.FindAll(pergunta => pergunta.SubPerguntaId == idPai);
+
+            foreach (var perguntaFilha in listaPai)
+            {
+                lista.Add(new PerguntasRelatorioDTO()
+                {
+                    Id = perguntaFilha.PerguntaId,
+                    Nome = perguntaFilha.PerguntaDescricao
+                });
+            }
+
+            return lista;
+        }
+
+        private async Task<List<PerguntaPrincipalTurmaProficienciaDTO>> ObtenhaListaDePerguntaPrincipal()
+        {
+            string sql = ConsultasRelatorios.QueryRelatorioPorTurmaProficienciaPergunta();
+
+            using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
+            {
+                return (await conexao.QueryAsync<PerguntaPrincipalTurmaProficienciaDTO>(
+                                                                sql,
+                                                                new
+                                                                {
+                                                                    AnoDaTurma = this._filtro.AnoEscolar,
+                                                                    AnoLetivo = this._filtro.AnoLetivo,
+                                                                    Grupo = this._grupo
+                                                                })).ToList();
+            }
         }
     }
 }
