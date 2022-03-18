@@ -17,8 +17,7 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Matematica.Relatorio
         public string ComponenteCurricularId { get; set; }
         public string PeriodoId { get; set; }
         public bool ConsiderarBimestre {  get; set; }
-
         public int Bimestre { get; set; }
-
+        public string Proficiencia { get; set; }
     }
 }

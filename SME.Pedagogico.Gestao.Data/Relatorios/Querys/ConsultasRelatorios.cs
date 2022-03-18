@@ -474,5 +474,24 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
 
             return query.ToString();
         }
+
+        public static string QueryRelatorioPorTurmaProficienciaPergunta()
+        {
+            var query = new StringBuilder();
+
+            query.AppendLine("SELECT p.\"Id\" AS \"PerguntaId\",");
+            query.AppendLine(" p.\"Descricao\" AS \"PerguntaDescricao\",");
+            query.AppendLine(" p.\"PerguntaId\" AS \"SubPerguntaId\",");
+            query.AppendLine(" pae.\"Ordenacao\" AS \"OrdemPergunta\"");
+            query.AppendLine(" FROM \"PerguntaAnoEscolar\" pae");
+            query.AppendLine(" INNER JOIN \"Pergunta\" p ON pae.\"PerguntaId\" = p.\"Id\"");
+
+            query.AppendLine(" WHERE \"AnoEscolar\" = @AnoDaTurma");
+            query.AppendLine(" AND \"Grupo\" = @Grupo");
+            query.AppendLine(" AND ((pae.\"FimVigencia\" IS NULL AND EXTRACT (YEAR FROM pae.\"InicioVigencia\") <= @AnoLetivo)");
+            query.AppendLine(" OR (EXTRACT(YEAR FROM pae.\"FimVigencia\") >= @AnoLetivo AND EXTRACT (YEAR FROM pae.\"InicioVigencia\") <= @AnoLetivo))");
+
+            return query.ToString();
+        }
     }
 }

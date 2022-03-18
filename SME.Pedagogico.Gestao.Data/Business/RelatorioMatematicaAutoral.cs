@@ -41,23 +41,23 @@ namespace SME.Pedagogico.Gestao.Data.Business
             return relatorio;
         }
 
-        public async Task<RelatorioConsolidadoProficienciaDTO> ObtenhaRelatorioMatematicaProficiencia(filtrosRelatorioDTO filtro, string proficienncia)
+        public async Task<RelatorioConsolidadoProficienciaDTO> ObtenhaRelatorioMatematicaProficiencia(filtrosRelatorioDTO filtro)
         {
             var relatorio = new RelatorioConsolidadoProficienciaDTO();
 
             IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
 
-            relatorio.Perguntas = await ObtenhaListaDeDtoPerguntaProficiencia(filtro, proficienncia);
+            relatorio.Perguntas = await ObtenhaListaDeDtoPerguntaProficiencia(filtro);
             relatorio.Graficos = ObtenhaListaDeGraficoProficiencia(relatorio.Perguntas);
 
             return relatorio;
         }
 
-        public async Task<RelatorioMatematicaPorTurmaProficienciaDTO> ObterRelatorioPorTurmaProficiencia(filtrosRelatorioDTO filtro, string proficienncia)
+        public async Task<RelatorioMatematicaPorTurmaProficienciaDTO> ObterRelatorioPorTurmaProficiencia(filtrosRelatorioDTO filtro)
         {
             IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
 
-            return await new RelatorioMatematicaPorTurmaProficiencia(filtro, ObtenhaProficiencia(proficienncia)).ObtenhaDTO();
+            return await new RelatorioMatematicaPorTurmaProficiencia(filtro, ObtenhaProficiencia(filtro.Proficiencia)).ObtenhaDTO();
         }
 
         private async Task<List<PerguntaDTO>> RetornaRelatorioMatematica(filtrosRelatorioDTO filtro, NpgsqlConnection conexao, string query, int totalDeAlunos)
@@ -335,10 +335,10 @@ namespace SME.Pedagogico.Gestao.Data.Business
             return (int)ProficienciaEnum.Numeros;
         }
 
-        private async Task<List<PerguntaProficienciaDTO>> ObtenhaListaDeDtoPerguntaProficiencia(filtrosRelatorioDTO filtro, string proficiencia)
+        private async Task<List<PerguntaProficienciaDTO>> ObtenhaListaDeDtoPerguntaProficiencia(filtrosRelatorioDTO filtro)
         {
             int totalDeAlunos = await ConsultaTotalDeAlunos.BuscaTotalDeAlunosEOl(filtro);
-            var listaPerguntaResposta = await ObtenhaListaDtoPerguntasRespostasProficiencia(filtro, proficiencia);
+            var listaPerguntaResposta = await ObtenhaListaDtoPerguntasRespostasProficiencia(filtro);
             var listaAgrupada = listaPerguntaResposta.GroupBy(p => p.PerguntaId).ToList();
             var listaRetorno = new List<PerguntaProficienciaDTO>();
 
@@ -385,7 +385,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             return listaPergunta;
         }
 
-        private async Task<List<PerguntasRespostasProficienciaDTO>> ObtenhaListaDtoPerguntasRespostasProficiencia(filtrosRelatorioDTO filtro, string proficiencia)
+        private async Task<List<PerguntasRespostasProficienciaDTO>> ObtenhaListaDtoPerguntasRespostasProficiencia(filtrosRelatorioDTO filtro)
         {
             string query = ConsultasRelatorios.QueryRelatorioMatematicaProficiencia(!string.IsNullOrEmpty(filtro.CodigoDre), !string.IsNullOrEmpty(filtro.CodigoUe));
 
@@ -400,7 +400,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                     AnoLetivo = filtro.AnoLetivo,
                                     PeriodoId = filtro.PeriodoId,
                                     ComponenteCurricularId = filtro.ComponenteCurricularId,
-                                    Grupo = ObtenhaProficiencia(proficiencia),
+                                    Grupo = ObtenhaProficiencia(filtro.Proficiencia),
                                     Bimestre = filtro.Bimestre
                                 })
                         ).ToList();
