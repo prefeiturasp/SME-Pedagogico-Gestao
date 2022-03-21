@@ -143,13 +143,26 @@ class PollReport extends Component {
     });
   }
 
+  montarMensagemSondagemNaoDisponivel = () => {
+    return (
+      <div className="d-flex mt-4 justify-content-center sc-text-blue sc-text-size-2">
+        Sondagem não disponível neste ano letivo
+      </div>
+    );
+  };
+
   componentRender() {
-    const { SchoolYear, discipline } = this.props.pollReport.selectedFilter;
-    if (
-      SchoolYear >= 2022 &&
-      discipline === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao
-    ) {
+    const { SchoolYear, discipline, CodigoCurso } =
+      this.props.pollReport.selectedFilter;
+    const ehMatematica =
+      discipline === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao;
+    const codigoCursoMaiorIgualSete = CodigoCurso >= "7";
+
+    if (SchoolYear >= "2022" && ehMatematica) {
       return novaRenderizacaoComponente(this.props);
+    }
+    if (SchoolYear === "2019" && ehMatematica && codigoCursoMaiorIgualSete) {
+      return this.montarMensagemSondagemNaoDisponivel();
     }
     return componentRenderReport(this.props);
   }
