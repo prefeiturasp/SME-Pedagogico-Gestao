@@ -156,7 +156,7 @@ class PollReport extends Component {
       this.props.pollReport.selectedFilter;
     const ehMatematica =
       discipline === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao;
-    const codigoCursoMaiorIgualSete = Number(CodigoCurso) >= 7;
+    const codigoCursoMaiorIgualSete = CodigoCurso >= "7";
 
     if (SchoolYear >= "2022" && ehMatematica) {
       return novaRenderizacaoComponente(this.props);
