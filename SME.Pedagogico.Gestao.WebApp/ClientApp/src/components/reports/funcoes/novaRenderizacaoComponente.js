@@ -29,7 +29,6 @@ export const novaRenderizacaoComponente = (props) => {
           <Componente
             alunos={data.alunos}
             perguntas={data.perguntas}
-            corUnica={ehAlfabetizacaoCACM}
             ehAlfabetizacaoCACM={ehAlfabetizacaoCACM}
           />
         </>

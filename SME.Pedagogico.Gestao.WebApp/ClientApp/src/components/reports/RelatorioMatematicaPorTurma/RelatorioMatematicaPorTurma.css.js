@@ -38,5 +38,7 @@ export const CorpoRelatorio = styled.div`
   .tamanho-celula {
     padding: 0 15px;
     width: 100%;
+    min-width: 135px;
+    justify-content: center;
   }
 `;

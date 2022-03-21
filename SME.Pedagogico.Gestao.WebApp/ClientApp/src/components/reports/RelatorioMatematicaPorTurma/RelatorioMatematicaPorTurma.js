@@ -2,7 +2,7 @@ import React from "react";
 import { CorpoRelatorio } from "./RelatorioMatematicaPorTurma.css";
 
 const RelatorioMatematicaPorTurma = (props) => {
-  const { alunos, perguntas, corUnica } = props;
+  const { alunos, perguntas, ehAlfabetizacaoCACM } = props;
 
   const construirPerguntas = () => {
     return (
@@ -61,8 +61,9 @@ const RelatorioMatematicaPorTurma = (props) => {
     return perguntas.map((pergunta, index) => {
       const resposta = perguntasAluno.find((p) => p.id === pergunta.id);
       const par = index % 2 === 0;
-      const corCelula = par && !corUnica ? "sc-lightpurple" : "sc-darkblue";
-      const corBorda = corUnica ? "border-left border-white" : "";
+      const corCelula =
+        par && ehAlfabetizacaoCACM ? "sc-lightpurple" : "sc-darkblue";
+      const corBorda = ehAlfabetizacaoCACM ? "" : "border-left border-white";
 
       return (
         <div
