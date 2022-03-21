@@ -201,86 +201,6 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
             return query.ToString();
         }
 
-        public static string QueryRelatorioMatematicaAutoralBimestre(filtrosRelatorioDTO filtro)
-        {
-            var queryRelatorio = @"SELECT
-								p.""Id"" as ""PerguntaId"",
-							    p.""Descricao"" as ""PerguntaDescricao"",
-								r.""Id"" as ""RespostaId"",
-								r.""Descricao"" as ""RespostaDescricao"",
-	                            pa.""Ordenacao"",
-                                pr.""Ordenacao"",
-								count(tabela.""RespostaId"") as ""QtdRespostas""
-							    from
-								""Pergunta"" p
-								inner join ""PerguntaAnoEscolar"" pa on
-							    pa.""PerguntaId"" = p.""Id""
-
-								and pa.""AnoEscolar"" = @AnoDaTurma
-								inner join ""PerguntaResposta"" pr on
-								pr.""PerguntaId"" = p.""Id""
-								inner join ""Resposta"" r on
-								r.""Id"" = pr.""RespostaId""
-								left join (
-									select
-									p.""Id"" as""PerguntaId"",
-									r.""Id"" as ""RespostaId""
-								from
-									""SondagemAlunoRespostas"" sar
-								inner join ""SondagemAluno"" sa on
-									sa.""Id"" = ""SondagemAlunoId""
-								inner join ""Sondagem"" s on
-									s.""Id"" = sa.""SondagemId""
-								inner join ""Pergunta"" p on
-									p.""Id"" = sar.""PerguntaId""
-								inner join ""Resposta"" r on
-									r.""Id"" = sar.""RespostaId""
-								inner join ""ComponenteCurricular"" c on
-									c.""Id"" = s.""ComponenteCurricularId""
-								where
-									s.""Id"" in (
-									select
-										""Id""
-									from
-										""Sondagem""
-									where
-									   ""ComponenteCurricularId"" = @ComponenteCurricularId
-										";
-
-
-            var query = new StringBuilder();
-            query.Append(queryRelatorio);
-            if (!string.IsNullOrEmpty(filtro.CodigoDre) && string.IsNullOrEmpty(filtro.CodigoUe))
-                query.AppendLine(@" and ""CodigoDre"" =  @CodigoDRE");
-            if (!string.IsNullOrEmpty(filtro.CodigoUe) && string.IsNullOrEmpty(filtro.CodigoDre))
-                query.AppendLine(@"and ""CodigoUe"" =  @CodigoEscola");
-
-            query.Append(@" and ""AnoLetivo"" = @AnoLetivo
-	         	                and ""AnoTurma"" =  @AnoDaTurma
-                                  and ""Bimestre"" = @Bimestre
-                                                          ) ) as tabela on
-	         						p.""Id"" = tabela.""PerguntaId"" and
-	         						r.""Id""= tabela.""RespostaId""  
-                                    WHERE EXTRACT (YEAR FROM pa.""InicioVigencia"") = @AnoLetivo ");
-
-            if (filtro.AnoEscolar <= TERCEIRO_ANO)
-                query.AppendLine(" WHERE pa.\"Grupo\" = " + (int)ProficienciaEnum.Numeros);
-
-            query.AppendLine(@"group by
-	         						r.""Id"",
-	         						r.""Descricao"",
-	         						p.""Id"",
-	         						p.""Descricao"",
-                                    pa.""Ordenacao"",
-                                    pr.""Ordenacao""
-	         					order by
-                                    pa.""Ordenacao"",
-                                    pr.""Ordenacao"",
-	         						p.""Descricao"",
-	         						r.""Descricao"" ");
-            return query.ToString();
-        }
-
         public static string QueryRelatorioPorTurmaMatematica()
         {
           return  @"select
@@ -491,6 +411,55 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
             query.AppendLine(" AND \"Grupo\" = @Grupo");
             query.AppendLine(" AND ((pae.\"FimVigencia\" IS NULL AND EXTRACT (YEAR FROM pae.\"InicioVigencia\") <= @AnoLetivo)");
             query.AppendLine(" OR (EXTRACT(YEAR FROM pae.\"FimVigencia\") >= @AnoLetivo AND EXTRACT (YEAR FROM pae.\"InicioVigencia\") <= @AnoLetivo))");
+
+            return query.ToString();
+        }
+
+        public static string QueryRelatorioMatematicaAutoralBimestre(
+                                bool filtroPorDre,
+                                bool filtroPorUe,
+                                bool filtroPorNumero)
+        {
+            var query = new StringBuilder();
+
+            query.AppendLine("SELECT p.\"Id\" AS \"PerguntaId\",");
+            query.AppendLine(" p.\"Descricao\" AS \"PerguntaDescricao\",");
+            query.AppendLine(" r.\"Id\" AS \"RespostaId\",");
+            query.AppendLine(" r.\"Descricao\" AS \"RespostaDescricao\",");
+            query.AppendLine(" pa.\"Ordenacao\", pr.\"Ordenacao\",");
+            query.AppendLine(" tabela.\"QtdRespostas\"");
+            query.AppendLine(" FROM \"Pergunta\" p");
+            query.AppendLine(" INNER JOIN \"PerguntaAnoEscolar\" pa ON pa.\"PerguntaId\" = p.\"Id\"");
+            query.AppendLine(" INNER JOIN \"PerguntaResposta\" pr ON pr.\"PerguntaId\" = p.\"Id\"");
+            query.AppendLine(" INNER JOIN \"Resposta\" r ON r.\"Id\" = pr.\"RespostaId\"");
+            query.AppendLine(" LEFT JOIN ( ");
+            query.AppendLine("    SELECT p.\"Id\" AS \"PerguntaId\",");
+            query.AppendLine("           r.\"Id\" AS \"RespostaId\", COUNT(1) AS \"QtdRespostas\"");
+            query.AppendLine("    FROM \"SondagemAlunoRespostas\" sar");
+            query.AppendLine("    INNER JOIN \"SondagemAluno\" sa ON sa.\"Id\" = sar.\"SondagemAlunoId\"");
+            query.AppendLine("    INNER JOIN \"Sondagem\" s ON s.\"Id\" = sa.\"SondagemId\"");
+            query.AppendLine("    INNER JOIN \"Pergunta\" p ON p.\"Id\" = sar.\"PerguntaId\"");
+            query.AppendLine("    INNER JOIN \"Resposta\" r ON r.\"Id\" = sar.\"RespostaId\"");
+            query.AppendLine("    WHERE s.\"ComponenteCurricularId\" = @ComponenteCurricularId");
+            query.AppendLine("      AND s.\"AnoLetivo\" = @AnoLetivo");
+            query.AppendLine("      AND s.\"AnoTurma\" = @AnoDaTurma");
+            query.AppendLine("      AND s.\"Bimestre\" = @Bimestre");
+
+            if (filtroPorDre)
+                query.AppendLine(" AND s.\"CodigoDre\" =  @CodigoDRE");
+            if (filtroPorUe)
+                query.AppendLine(" AND s.\"CodigoUe\" =  @CodigoEscola");
+
+            query.AppendLine("    GROUP BY p.\"Id\", r.\"Id\") AS tabela");
+            query.AppendLine(" ON p.\"Id\" = tabela.\"PerguntaId\" AND r.\"Id\"= tabela.\"RespostaId\"");
+            query.AppendLine(" WHERE ((pa.\"FimVigencia\" IS NULL AND EXTRACT (YEAR FROM pa.\"InicioVigencia\") <= @AnoLetivo)");
+            query.AppendLine("    OR (EXTRACT(YEAR FROM pa.\"FimVigencia\") >= @AnoLetivo AND EXTRACT (YEAR FROM pa.\"InicioVigencia\") <= @AnoLetivo))");
+            query.AppendLine("   AND pa.\"AnoEscolar\" = @AnoDaTurma");
+
+            if (filtroPorNumero)
+                query.AppendLine(" AND pa.\"Grupo\" = " + (int)ProficienciaEnum.Numeros);
+
+            query.AppendLine(" ORDER BY pa.\"Ordenacao\", pr.\"Ordenacao\", p.\"Descricao\", r.\"Descricao\"");
 
             return query.ToString();
         }
