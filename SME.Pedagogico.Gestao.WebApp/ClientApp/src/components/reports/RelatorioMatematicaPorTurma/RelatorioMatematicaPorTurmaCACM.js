@@ -2,16 +2,16 @@ import React from "react";
 import { CorpoRelatorio } from "./RelatorioMatematicaPorTurma.css";
 
 const RelatorioMatematicaPorTurmaCACM = (props) => {
-  const { alunos } = props;
+  const { alunos, perguntas } = props;
 
   const construirCabeçalho = () => {
     return (
       <div className="d-flex poll-report-grid-header border-bottom border-white mt-3">
         <div class="col-4 "></div>
-        {alunos[0].perguntas.map((pergunta) => (
+        {perguntas.map((pergunta) => (
           <div className="col sc-gray border-left border-white">
             <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center font-weight-bold">
-              ORDEM {pergunta.nomePergunta}
+              ORDEM {pergunta.ordenacao} - {pergunta.nome.toUpperCase()}
             </div>
           </div>
         ))}
@@ -32,12 +32,12 @@ const RelatorioMatematicaPorTurmaCACM = (props) => {
             Nome do estudante
           </div>
         </div>
-        {alunos[0].perguntas.map((pergunta) =>
-          pergunta.subPerguntas.map((subPergunta) => {
+        {perguntas.map((pergunta) =>
+          pergunta.perguntasFilhas.map((perguntasFilha) => {
             return (
               <div class="col sc-gray border-left border-white">
                 <div class="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center">
-                  {subPergunta.nomeSubPergunta}
+                  {perguntasFilha.nome}
                 </div>
               </div>
             );
@@ -60,22 +60,34 @@ const RelatorioMatematicaPorTurmaCACM = (props) => {
             {aluno.nomeAluno}
           </div>
         </div>
-        {aluno.perguntas.map((pergunta) =>
-          pergunta.subPerguntas.map((subPergunta, index) => {
+
+        {perguntas.map((pergunta) =>
+          pergunta.perguntasFilhas.map((perguntasFilha, index) => {
             const par = index % 2 === 0;
             const corCelula = par ? "sc-lightpurple" : "sc-darkblue";
+            let perguntaRepondida = undefined;
+            aluno.perguntas.forEach((pergunta) => {
+              const resp = pergunta.subPerguntas.find(
+                (subPergunta) => subPergunta.subPerguntaId === perguntasFilha.id
+              );
+              perguntaRepondida = resp;
+            });
+            const resposta = perguntaRepondida
+              ? perguntaRepondida.resposta
+              : "";
+
             return (
               <div
                 className={`col overflow-hidden border-left border-white ${corCelula}`}
               >
-                <div className="sc-text-size-00 d-flex flex-fill h-100 align-items-center text-white font-weight-light">
+                <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center text-white font-weight-light">
                   <span
                     className="item-celula"
                     data-toggle="tooltip"
                     data-placement="bottom"
-                    title={subPergunta.reposta || ""}
+                    title={resposta}
                   >
-                    {subPergunta.reposta || ""}
+                    {resposta}
                   </span>
                 </div>
               </div>
