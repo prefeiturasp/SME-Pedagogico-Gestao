@@ -66,12 +66,16 @@ const RelatorioMatematicaPorTurmaCACM = (props) => {
             const par = index % 2 === 0;
             const corCelula = par ? "sc-lightpurple" : "sc-darkblue";
             let perguntaRepondida = undefined;
+
             aluno.perguntas.forEach((pergunta) => {
               const resp = pergunta.subPerguntas.find(
                 (subPergunta) => subPergunta.subPerguntaId === perguntasFilha.id
               );
-              perguntaRepondida = resp;
+              if (resp) {
+                perguntaRepondida = resp;
+              }
             });
+
             const resposta = perguntaRepondida
               ? perguntaRepondida.resposta
               : "";
