@@ -100,7 +100,9 @@ const GraficoMatematicaCACM = (props) => {
 
   return (
     <div className="d-flex flex-column">
-      <ChartTitle title={`ORDEM ${dados.ordenacao}`} />
+      <ChartTitle
+        title={`ORDEM ${dados.ordenacao} - ${dados.nome.toUpperCase()}`}
+      />
       <div
         className="d-flex flex-fill justify-content-center"
         style={{ position: "relative", top: -35 }}
