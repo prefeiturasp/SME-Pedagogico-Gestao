@@ -42,10 +42,9 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 else if (filtros.TurmaCodigo <= 0)
                 {
                     if (filtros.ProficienciaId == ProficienciaEnum.CampoAditivo || filtros.ProficienciaId == ProficienciaEnum.CampoMultiplicativo)
-                    {
                         tipoRelatorio = TipoRelatorio.RelatorioMatematicaConsolidadoAdtMult;
-                    }
-                    else tipoRelatorio = TipoRelatorio.RelatorioMatematicaConsolidado;
+                    else 
+                        tipoRelatorio = TipoRelatorio.RelatorioMatematicaConsolidado;
                 }
             }
 
@@ -66,9 +65,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                         tipoRelatorio = TipoRelatorio.RelatorioPortuguesConsolidadoLeitEscProdTexto;
                     }
                     else
-                    {
                         tipoRelatorio = TipoRelatorio.RelatorioPortuguesConsolidado;
-                    }
                 }
             }
 
