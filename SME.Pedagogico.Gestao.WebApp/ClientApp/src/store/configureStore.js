@@ -21,8 +21,9 @@ import * as PollOptionSelectLock from "./PollOptionSelectLock";
 import * as Data from "./Data";
 import * as SondagemAutoral from "./SondagemAutoral";
 import * as SondagemPortugues from "./SondagemPortuguesStore";
+import * as DadosGerais from "./DadosGerais";
 import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage"; 
+import storage from "redux-persist/lib/storage";
 import logger from "redux-logger";
 import LoginSgpSaga from "../sagas/LoginSgpSaga";
 
@@ -41,6 +42,7 @@ export default function configureStore(history, initialState) {
     data: Data.reducer,
     autoral: SondagemAutoral.reducer,
     sondagemPortugues: SondagemPortugues.reducer,
+    dadosGerais: DadosGerais.reducer,
   };
 
   const reduxSaga = createSagaMiddleware();
@@ -51,9 +53,7 @@ export default function configureStore(history, initialState) {
     whitelist: ["user"],
   };
 
-  const middleware = [
-    reduxSaga,
-  ];
+  const middleware = [reduxSaga];
 
   const enhancers = [];
   const isDevelopment = process.env.NODE_ENV === "development";

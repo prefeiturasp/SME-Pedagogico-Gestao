@@ -1,10 +1,16 @@
 import React from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import MensagemInformacao from "../messaging/MensagemInformacao";
 
-function MensagemConfirmacao({ exibir, acaoFeedBack, confirmacao, botaoSim, botaoNao}) {
+function MensagemConfirmacao({
+  exibir,
+  acaoFeedBack,
+  confirmacao,
+  botaoSim,
+  botaoNao,
+}) {
   const titulo = "Atenção";
-  const mesagemPrincipal = 
+  const mensagemPrincipal =
     "Essa ação poderá cancelar a geração de relatório. Deseja continuar ?";
 
   return (
@@ -12,7 +18,7 @@ function MensagemConfirmacao({ exibir, acaoFeedBack, confirmacao, botaoSim, bota
       confirmacao={confirmacao}
       acaoFeedBack={acaoFeedBack}
       exibir={exibir}
-      mesagemPrincipal={mesagemPrincipal}
+      mensagemPrincipal={mensagemPrincipal}
       titulo={titulo}
       botaoSim={botaoSim}
       botaoNao={botaoNao}
@@ -26,7 +32,7 @@ MensagemConfirmacao.defaultProps = {
   botaoSim: () => {},
   botaoNao: () => {},
   confirmacao: false,
-}
+};
 
 MensagemConfirmacao.propTypes = {
   acaoFeedBack: PropTypes.func,
@@ -34,6 +40,6 @@ MensagemConfirmacao.propTypes = {
   botaoSim: PropTypes.func,
   botaoNao: PropTypes.func,
   confirmacao: PropTypes.bool,
-}
+};
 
 export default MensagemConfirmacao;
