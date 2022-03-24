@@ -137,7 +137,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             AdicionarAlunosEOL(filtrarListagemDto, alunos, listagem);
 
-            return listagem.OrderBy(x => x.NumeroChamada);
+            return listagem.OrderBy(x => x.NumeroChamada).ThenBy(x => x.NomeAluno); 
         }
 
         private static async Task<List<Sondagem>> ObterSondagemAutoralMatematicaBimestre(FiltrarListagemMatematicaDTO filtrarListagemDto)
