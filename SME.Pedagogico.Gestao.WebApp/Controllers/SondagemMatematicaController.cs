@@ -29,7 +29,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// </summary>
         /// <param name="dadosSondagem">Objeto que contém informações da sondagem de matemática</param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost("GravaSondagemCM")]
         public async Task<IActionResult> GravaSondagemCM([FromBody]List<SondagemMatematicaOrdemDTO> dadosSondagem)
         {
             await sondagemAlfabetizacaoBusiness.InsertPoolCMAsync(dadosSondagem);
@@ -75,7 +75,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// </summary>
         /// <param name="dadosSondagem">Objeto que contém informações da sondagem de matemática</param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost("GravaSondagemCA")]
         public async Task<IActionResult> GravaSondagemCA([FromBody]List<SondagemMatematicaOrdemDTO> dadosSondagem)
         {
             await sondagemAlfabetizacaoBusiness.InsertPoolCAAsync(dadosSondagem);
@@ -87,7 +87,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         /// </summary>
         /// <param name="dadosSondagem">Objeto que contém informações da sondagem de matemática</param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost("GravaSondagemNumeros")]
         public async Task<IActionResult> GravaSondagemNumeros([FromBody]List<SondagemMatematicaNumerosDTO> dadosSondagem)
         {
             

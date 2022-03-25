@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using MoreLinq;
 using SME.Pedagogico.Gestao.Data.Contexts;
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.DTO.Matematica;
@@ -77,7 +78,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             if (studentPoolCM.Semestre == 1)
             {
-
                 if (studentPoolCM.AnoTurma == 2)
                 {
                     studentPoolCM.Ordem3Ideia = studentDTO.Ideia3Semestre1;
@@ -96,11 +96,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     studentPoolCM.Ordem8Ideia = studentDTO.Ideia8Semestre1;
                     studentPoolCM.Ordem8Resultado = studentDTO.Resultado8Semestre1;
                 }
-
             }
             else if (studentPoolCM.Semestre == 2)
             {
-
                 if (studentPoolCM.AnoTurma == 2)
                 {
                     studentPoolCM.Ordem3Ideia = studentDTO.Ideia3Semestre2;
@@ -139,7 +137,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             AdicionarAlunosEOL(filtrarListagemDto, alunos, listagem);
 
-            return listagem.OrderBy(x => x.NumeroChamada);
+            return listagem.OrderBy(x => x.NumeroChamada).ThenBy(x => x.NomeAluno); 
         }
 
         private static async Task<List<Sondagem>> ObterSondagemAutoralMatematicaBimestre(FiltrarListagemMatematicaDTO filtrarListagemDto)
@@ -162,7 +160,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     return listaSondagem;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -170,12 +168,10 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private void MapearAlunosListagemMatematica(List<AlunoSondagemMatematicaDto> listagem, List<Sondagem> lsondagem, int? bimestre)
         {
-
             var listaAlunosDto = new List<AlunoSondagemMatematicaDto>();
             var listCodigoAlunoEol = new List<string>();
             lsondagem.ForEach(s =>
             {
-
                 s.AlunosSondagem.ForEach(a =>
                 {
                     var alunoDto = new AlunoSondagemMatematicaDto();
@@ -235,7 +231,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             alunos.ForEach(aluno =>
             {
-
                 var alunoBanco = listagem.FirstOrDefault(x => x.CodigoAluno.Equals(aluno.CodigoAluno.ToString()));
                 if (alunoBanco != null)
                 {
@@ -268,7 +263,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 using (SMEManagementContextData db = new SMEManagementContextData())
                 {
-                    var perguntas = (ProficienciaEnum)grupo == ProficienciaEnum.Numeros 
+                    var perguntas = (ProficienciaEnum)grupo == ProficienciaEnum.Numeros
                                     ? await ObterPerguntasGrupoNumeros(db, anoEscolar, anoLetivo, grupo)
                                     : await ObterPerguntasGrupoCACM(db, anoEscolar, anoLetivo, grupo);
 
@@ -291,13 +286,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var perguntasAlfabetizacao = new List<PerguntaAlfabetizacaoDto>();
 
                 var sql = $@"select p.""Id"" as ""PerguntaPrincipalId"",
-                                    p.""Descricao"" as ""PerguntaPrincipalDescricao"", 
+                                    p.""Descricao"" as ""PerguntaPrincipalDescricao"",
                                     pae.""Ordenacao"" as ""PerguntaPrincipalOrdenacao"",
-                                    ps.""Id"" as ""PerguntaSecundariaId"",                                    
-                                    ps.""Descricao"" as ""PerguntaSecundariaDescricao"",                                     
-                                    pae2.""Ordenacao"" as ""PerguntaSecundariaOrdenacao"",                                   
-                                    rs.""Id"" as ""RespostaId"", 
-                                    rs.""Descricao"" as ""RespostaDescricao"", 
+                                    ps.""Id"" as ""PerguntaSecundariaId"",
+                                    ps.""Descricao"" as ""PerguntaSecundariaDescricao"",
+                                    pae2.""Ordenacao"" as ""PerguntaSecundariaOrdenacao"",
+                                    rs.""Id"" as ""RespostaId"",
+                                    rs.""Descricao"" as ""RespostaDescricao"",
                                     prs.""Ordenacao"" as ""RespostaOrdenacao""
                             from ""PerguntaAnoEscolar"" pae
                             join ""Pergunta"" p on p.""Id"" = pae.""PerguntaId""
@@ -305,7 +300,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             join ""PerguntaAnoEscolar"" pae2 on pae2.""PerguntaId"" = ps.""Id""
                             join ""PerguntaResposta"" prs on prs.""PerguntaId"" = ps.""Id""
                             join ""Resposta"" rs on rs.""Id"" = prs.""RespostaId""
-                            where pae.""AnoEscolar"" in ({anoEscolar}) and pae.""Grupo"" = {grupo}";
+                            where pae.""AnoEscolar"" in ({anoEscolar}) and pae.""Grupo"" = {grupo}
+                                  and (pae.""FimVigencia"" is null and extract(year from pae.""InicioVigencia"") <= {anoLetivo})";
 
                 using (var command = db.Database.GetDbConnection().CreateCommand())
                 {
@@ -317,7 +313,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         {
                             while (reader.Read())
                             {
-                                var pergunta = new PerguntaAlfabetizacaoDto() 
+                                var pergunta = new PerguntaAlfabetizacaoDto()
                                 {
                                     PerguntaPrincipalId = reader["PerguntaPrincipalId"].ToString(),
                                     PerguntaPrincipalDescricao = reader["PerguntaPrincipalDescricao"].ToString(),
@@ -353,13 +349,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             Id = s.RespostaId,
                             Descricao = s.RespostaDescricao,
                             Ordenacao = s.RespostaOrdenacao
-                        }).OrderBy(o=> o.Ordenacao)
+                        }).OrderBy(o => o.Ordenacao)
                     }).OrderBy(o => o.Ordenacao)
                 }).ToList();
 
-                return perguntasRespostas;               
-            } 
-            catch(Exception ex)
+                return perguntasRespostas;
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -372,13 +368,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var perguntasAlfabetizacao = new List<PerguntaAlfabetizacaoDto>();
 
                 var sql = $@"select p.""Id"" as ""PerguntaId"",
-                                    p.""Descricao"" as ""PerguntaDescricao"", 
-                                    pae.""Ordenacao"" as ""PerguntaOrdenacao"",                                                                        
-                                    rs.""Id"" as ""RespostaId"", 
-                                    rs.""Descricao"" as ""RespostaDescricao"", 
+                                    p.""Descricao"" as ""PerguntaDescricao"",
+                                    pae.""Ordenacao"" as ""PerguntaOrdenacao"",
+                                    rs.""Id"" as ""RespostaId"",
+                                    rs.""Descricao"" as ""RespostaDescricao"",
                                     prs.""Ordenacao"" as ""RespostaOrdenacao""
                             from ""PerguntaAnoEscolar"" pae
-                            join ""Pergunta"" p on p.""Id"" = pae.""PerguntaId""                                                        
+                            join ""Pergunta"" p on p.""Id"" = pae.""PerguntaId""
                             join ""PerguntaResposta"" prs on prs.""PerguntaId"" = p.""Id""
                             join ""Resposta"" rs on rs.""Id"" = prs.""RespostaId""
                             where pae.""AnoEscolar"" in ({anoEscolar}) and pae.""Grupo"" = {grupo}
@@ -398,7 +394,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                 {
                                     PerguntaPrincipalId = reader["PerguntaId"].ToString(),
                                     PerguntaPrincipalDescricao = reader["PerguntaDescricao"].ToString(),
-                                    PerguntaPrincipalOrdenacao = int.Parse(reader["PerguntaOrdenacao"].ToString()),                                    
+                                    PerguntaPrincipalOrdenacao = int.Parse(reader["PerguntaOrdenacao"].ToString()),
                                     RespostaId = reader["RespostaId"].ToString(),
                                     RespostaDescricao = reader["RespostaDescricao"].ToString(),
                                     RespostaOrdenacao = int.Parse(reader["RespostaOrdenacao"].ToString()),
@@ -421,7 +417,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         Id = s.RespostaId,
                         Descricao = s.RespostaDescricao,
                         Ordenacao = s.RespostaOrdenacao
-                    }).OrderBy(o => o.Ordenacao)
+                    }).OrderBy(o => o.Ordenacao).DistinctBy(x => x.Id)
                 }).ToList();
 
                 return perguntasRespostas;
@@ -431,7 +427,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 throw ex;
             }
         }
-               
 
         public async Task<List<SondagemMatematicaOrdemDTO>> ListPoolCMAsync(FiltroSondagemMatematicaDTO filtroSondagem)
         {
@@ -444,7 +439,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     var sondagemDaTurma = db.MathPoolCMs
                                                         .Where(x => x.TurmaEolCode.Equals(filtroSondagem.TurmaEolCode))
                                                         .ToList();
-
 
                     var turmApi = new TurmasAPI(new EndpointsAPI());
 
@@ -522,7 +516,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                         }
                                     }
                                 }
-
                             }
                             else
                             {
@@ -691,14 +684,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         CreateResultItem(ordem4ResultadoAgrupados, order: "4", ref ideasAndResults, ref resultCharts, PollTypeEnum.CM, anoTurma, quantidadeAlunoTotal);
                     }
 
-
                     var ordem5IdeiaAgrupados = query.GroupBy(fu => fu.Ordem5Ideia)
                                             .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() }).ToList();
                     var ordem5ResultadoAgrupados = query.GroupBy(fu => fu.Ordem5Resultado)
                                                 .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() }).ToList();
                     CreateIdeaItem(ordem5IdeiaAgrupados, order: "5", ref ideasAndResults, ref ideaCharts, quantidadeAlunoTotal);
                     CreateResultItem(ordem5ResultadoAgrupados, order: "5", ref ideasAndResults, ref resultCharts, PollTypeEnum.CM, anoTurma, quantidadeAlunoTotal);
-
 
                     if (anoTurma != (int)AnoTurmaEnum.TerceiroAno)
                     {
@@ -717,7 +708,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         CreateResultItem(ordem7ResultadoAgrupados, order: "7", ref ideasAndResults, ref resultCharts, PollTypeEnum.CM, anoTurma, quantidadeAlunoTotal);
                     }
 
-
                     if (anoTurma != (int)AnoTurmaEnum.TerceiroAno && anoTurma != (int)AnoTurmaEnum.QuartoAno)
                     {
                         var ordem8IdeiaAgrupados = query.GroupBy(fu => fu.Ordem8Ideia)
@@ -727,7 +717,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         CreateIdeaItem(ordem8IdeiaAgrupados, order: "8", ref ideasAndResults, ref ideaCharts, quantidadeAlunoTotal);
                         CreateResultItem(ordem8ResultadoAgrupados, order: "8", ref ideasAndResults, ref resultCharts, PollTypeEnum.CM, anoTurma, quantidadeAlunoTotal);
                     }
-
                 }
 
                 ideasAndResults.IdeaResults = ideasAndResults.IdeaResults.OrderBy(i => Convert.ToInt32(i.OrderName)).ToList();
@@ -880,7 +869,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                     CreateResultItem(ordem1Resultado, order: "1", ref ideasAndResults, ref resultCharts, PollTypeEnum.CA, anoTurma, quantidadeAlunoTotal);
                     CreateResultItem(ordem2Resultado, order: "2", ref ideasAndResults, ref resultCharts, PollTypeEnum.CA, anoTurma, quantidadeAlunoTotal);
-
 
                     ideasAndResults.IdeaResults = ideasAndResults.IdeaResults.OrderBy(i => Convert.ToInt32(i.OrderName)).ToList();
                     ideasAndResults.ResultResults = ideasAndResults.ResultResults.OrderBy(i => Convert.ToInt32(i.OrderName)).ToList();
@@ -1073,8 +1061,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         numberRetorno.NaoEscreveConvencionalmenteResultado = item.Value;
                         numberRetorno.NaoEscreveConvencionalmenteText = "Não escreve convencionalmente";
                     }
-
-
                 }
             }
 
@@ -1127,11 +1113,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         case PollTypeEnum.CA:
                             orderTitle = "COMPOSIÇÃO";
                             break;
+
                         default:
                             orderTitle = string.Empty;
                             break;
                     }
                     break;
+
                 case 2:
                     switch (pollType)
                     {
@@ -1141,20 +1129,24 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                 case 1:
                                     orderTitle = "COMPOSIÇÃO";
                                     break;
+
                                 case 2:
                                     orderTitle = "TRANSFORMAÇÃO";
                                     break;
+
                                 default:
                                     orderTitle = string.Empty;
                                     break;
                             }
                             break;
+
                         case PollTypeEnum.CM:
                             switch (orderNumber)
                             {
                                 case 3:
                                     orderTitle = "PROPORCIONALIDADE";
                                     break;
+
                                 default:
                                     orderTitle = string.Empty;
                                     break;
@@ -1162,6 +1154,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             break;
                     }
                     break;
+
                 case 3:
                     switch (pollType)
                     {
@@ -1171,26 +1164,32 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                 case 1:
                                     orderTitle = "COMPOSIÇÃO";
                                     break;
+
                                 case 2:
                                     orderTitle = "TRANSFORMAÇÃO";
                                     break;
+
                                 case 3:
                                     orderTitle = "COMPARAÇÃO";
                                     break;
+
                                 default:
                                     orderTitle = string.Empty;
                                     break;
                             }
                             break;
+
                         case PollTypeEnum.CM:
                             switch (orderNumber)
                             {
                                 case 4:
                                     orderTitle = "CONFIGURAÇÃO RETANGULAR";
                                     break;
+
                                 case 5:
                                     orderTitle = "PROPORCIONALIDADE";
                                     break;
+
                                 default:
                                     orderTitle = string.Empty;
                                     break;
@@ -1198,6 +1197,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             break;
                     }
                     break;
+
                 case 4:
                     switch (pollType)
                     {
@@ -1207,32 +1207,40 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                 case 1:
                                     orderTitle = "COMPOSIÇÃO";
                                     break;
+
                                 case 2:
                                     orderTitle = "TRANSFORMAÇÃO";
                                     break;
+
                                 case 3:
                                     orderTitle = "COMPOSIÇÃO DE TRANSF.";
                                     break;
+
                                 case 4:
                                     orderTitle = "COMPARAÇÃO";
                                     break;
+
                                 default:
                                     orderTitle = string.Empty;
                                     break;
                             }
                             break;
+
                         case PollTypeEnum.CM:
                             switch (orderNumber)
                             {
                                 case 5:
                                     orderTitle = "CONFIGURAÇÃO RETANGULAR";
                                     break;
+
                                 case 6:
                                     orderTitle = "PROPORCIONALIDADE";
                                     break;
+
                                 case 7:
                                     orderTitle = "COMBINATÓRIA";
                                     break;
+
                                 default:
                                     orderTitle = string.Empty;
                                     break;
@@ -1240,6 +1248,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             break;
                     }
                     break;
+
                 case 5:
                     switch (pollType)
                     {
@@ -1249,35 +1258,44 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                 case 1:
                                     orderTitle = "COMPOSIÇÃO";
                                     break;
+
                                 case 2:
                                     orderTitle = "TRANSFORMAÇÃO";
                                     break;
+
                                 case 3:
                                     orderTitle = "COMPOSIÇÃO DE TRANSF.";
                                     break;
+
                                 case 4:
                                     orderTitle = "COMPARAÇÃO";
                                     break;
+
                                 default:
                                     orderTitle = string.Empty;
                                     break;
                             }
                             break;
+
                         case PollTypeEnum.CM:
                             switch (orderNumber)
                             {
                                 case 5:
                                     orderTitle = "COMBINATÓRIA";
                                     break;
+
                                 case 6:
                                     orderTitle = "CONFIGURAÇÃO RETANGULAR";
                                     break;
+
                                 case 7:
                                     orderTitle = "PROPORCIONALIDADE";
                                     break;
+
                                 case 8:
                                     orderTitle = "MULTIPLICAÇÃO COMPARATIVA";
                                     break;
+
                                 default:
                                     orderTitle = string.Empty;
                                     break;
@@ -1285,6 +1303,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             break;
                     }
                     break;
+
                 case 6:
                     switch (pollType)
                     {
@@ -1294,35 +1313,44 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                 case 1:
                                     orderTitle = "COMPOSIÇÃO";
                                     break;
+
                                 case 2:
                                     orderTitle = "TRANSFORMAÇÃO";
                                     break;
+
                                 case 3:
                                     orderTitle = "COMPOSIÇÃO DE TRANSF.";
                                     break;
+
                                 case 4:
                                     orderTitle = "COMPARAÇÃO";
                                     break;
+
                                 default:
                                     orderTitle = string.Empty;
                                     break;
                             }
                             break;
+
                         case PollTypeEnum.CM:
                             switch (orderNumber)
                             {
                                 case 5:
                                     orderTitle = "COMBINATÓRIA";
                                     break;
+
                                 case 6:
                                     orderTitle = "CONFIGURAÇÃO RETANGULAR";
                                     break;
+
                                 case 7:
                                     orderTitle = "PROPORCIONALIDADE";
                                     break;
+
                                 case 8:
                                     orderTitle = "MULTIPLICAÇÃO COMPARATIVA";
                                     break;
+
                                 default:
                                     orderTitle = string.Empty;
                                     break;
@@ -1330,14 +1358,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             break;
                     }
                     break;
+
                 default:
                     break;
-
             }
-
 
             return orderTitle;
         }
+
         public async Task<List<SondagemMatematicaOrdemDTO>> ListPoolCAAsync(FiltroSondagemMatematicaDTO filtroSondagem)
         {
             try
@@ -1349,7 +1377,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     var sondagemDaTurma = db.MathPoolCAs
                                             .Where(x => x.TurmaEolCode.Equals(filtroSondagem.TurmaEolCode))
                                             .ToList();
-
 
                     var turmApi = new TurmasAPI(new EndpointsAPI());
 
@@ -1415,7 +1442,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                         }
                                     }
                                 }
-
                             }
                             else
                             {
@@ -1633,7 +1659,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         }
                         else
                         {
-
                             MapValuesPoolNumbers(student, ref studentPoolNumeros);
                             db.MathPoolNumbers.Update(studentPoolNumeros);
                         }

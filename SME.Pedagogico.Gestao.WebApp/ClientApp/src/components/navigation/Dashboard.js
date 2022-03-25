@@ -14,6 +14,7 @@ import SelectProfile from "../profile/SelectProfile";
 import PollReport from "../reports/PollReport";
 import Poll from "../classRecord/Poll";
 import NotFound from "./NotFound";
+import MensagemInformacaoGeral from "../messaging/MensagemInformacaoGeral";
 
 class Dashboard extends Component {
   constructor(props) {
@@ -45,10 +46,8 @@ class Dashboard extends Component {
   }
 
   handleClose = () => {
-    const {
-      cancelPollReportRequest,
-      printingPollReport,
-    } = this.props.pollReportMethods;
+    const { cancelPollReportRequest, printingPollReport } =
+      this.props.pollReportMethods;
 
     cancelPollReportRequest(true);
     printingPollReport(false);
@@ -90,6 +89,8 @@ class Dashboard extends Component {
           botaoSim={() => this.botaoSim()}
           botaoNao={() => this.botaoNao()}
         />
+
+        <MensagemInformacaoGeral />
 
         <Loader
           isPrinting

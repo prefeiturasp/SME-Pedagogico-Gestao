@@ -1,4 +1,4 @@
-﻿import React, { useState, useMemo, useEffect, useCallback } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { actionCreators } from "../../../store/SondagemAutoral";
@@ -12,6 +12,7 @@ import {
 } from "../../utils/utils";
 import NovoAlunoSondagemMatematicaAutoral from "../../classRecord/NovaSondagemMatematicaAutoral/novoAluno";
 import { GRUPO_SONDAGEM } from "../../../Enums";
+import { exibirMensagemInformacoesSalvas } from "../../utils/exibirMensagemInformacoesSalvas";
 
 function NovaSondagemCACM() {
   const dispatch = useDispatch();
@@ -110,6 +111,7 @@ function NovaSondagemCACM() {
     salvar().then((x) => {
       setIndexSelecionado((oldState) => oldState + 1);
       sairModoEdicao();
+      exibirMensagemInformacoesSalvas();
     });
   };
 
@@ -124,6 +126,7 @@ function NovaSondagemCACM() {
     salvar().then((x) => {
       setIndexSelecionado((oldState) => oldState - 1);
       sairModoEdicao();
+      exibirMensagemInformacoesSalvas();
     });
   };
 

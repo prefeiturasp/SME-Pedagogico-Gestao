@@ -5,9 +5,11 @@ import NovoAlunoSondagemMatematicaAutoral from "./novoAluno";
 import { actionCreators } from "../../../store/SondagemAutoral";
 import { actionCreators as dataStore } from "../../../store/Data";
 import { actionCreators as pollStore } from "../../../store/Poll";
+
 import Loader from "../../loader/Loader";
 import CabecalhoPerguntaAutoral from "./cabecalhoPerguntaAutoral";
 import { setasDireitaAutoral, setasEsquerdaAutoral } from "../../utils/utils";
+import { exibirMensagemInformacoesSalvas } from "../../utils/exibirMensagemInformacoesSalvas";
 import { GRUPO_SONDAGEM, ENUM_TIPO_SONDAGEM } from "../../../Enums";
 
 function NovaSondagemMatematicaAutoral() {
@@ -101,6 +103,7 @@ function NovaSondagemMatematicaAutoral() {
     salvar().then((x) => {
       setIndexSelecionado((oldState) => oldState + 1);
       sairModoEdicao();
+      exibirMensagemInformacoesSalvas();
     });
   };
 
@@ -115,6 +118,7 @@ function NovaSondagemMatematicaAutoral() {
     salvar().then((x) => {
       setIndexSelecionado((oldState) => oldState - 1);
       sairModoEdicao();
+      exibirMensagemInformacoesSalvas();
     });
   };
 
@@ -201,13 +205,9 @@ function NovaSondagemMatematicaAutoral() {
     )
       return;
 
-    if (ehTipoNumerico) {
-      dispatch(pollStore.obterAlunosAlfabetizacao({ filtrosBusca, bimestre }));
-    } else {
-      dispatch(
-        actionCreators.listaAlunosAutoralMatematica(filtrosBusca, bimestre)
-      );
-    }
+    dispatch(
+      actionCreators.listaAlunosAutoralMatematica(filtrosBusca, bimestre)
+    );
   }, [bimestre, dispatch, ehTipoNumerico, filtrosBusca]);
 
   useEffect(() => {
@@ -276,8 +276,9 @@ function NovaSondagemMatematicaAutoral() {
       <>
         {alunos &&
           !!alunos.length &&
-          alunos.map((aluno) => (
+          alunos.map((aluno, index) => (
             <NovoAlunoSondagemMatematicaAutoral
+              key={index}
               aluno={aluno}
               salvar={salvar}
               perguntaSelecionada={itemSelecionado}

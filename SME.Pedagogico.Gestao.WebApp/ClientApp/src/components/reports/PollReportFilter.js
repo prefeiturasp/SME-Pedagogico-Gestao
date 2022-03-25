@@ -311,6 +311,12 @@ class PollReportFilter extends Component {
     );
 
     const parameters = this.state.selectedFilter;
+    const { schoolYear, yearClassroom } = this.props.poll.selectedFilter;
+    const ehMatematica =
+      parameters.discipline ===
+      DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao;
+    const codigoCursoMaiorIgualSete = yearClassroom >= "7";
+
     parameters.classroomReport =
       this.props.poll.selectedFilter.classroomCodeEol === "" ? false : true;
     parameters.codigoDRE =
@@ -331,6 +337,10 @@ class PollReportFilter extends Component {
       ? this.state.grupoSelecionado
       : null;
     this.props.pollReportsMethods.resetData();
+
+    if (schoolYear === "2019" && ehMatematica && codigoCursoMaiorIgualSete) {
+      return;
+    }
 
     this.props.pollReportsMethods.getPollReport(parameters);
   }
