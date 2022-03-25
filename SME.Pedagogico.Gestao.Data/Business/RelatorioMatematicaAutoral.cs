@@ -171,7 +171,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 var aluno = new AlunoPorTurmaRelatorioDTO();
                 aluno.CodigoAluno = alunoRetorno.CodigoAluno;
-                aluno.NomeAluno = alunoRetorno.NomeAlunoRelatorio;
+                aluno.NomeAluno = string.IsNullOrEmpty(alunoRetorno.NomeSocialAluno) ? alunoRetorno.NomeAlunoRelatorio : alunoRetorno.NomeSocialAluno;
                 aluno.Perguntas = new List<PerguntaRespostaPorAluno>();
 
                 var alunoRespostas = AlunosAgrupados.Where(x => x.Key == aluno.CodigoAluno.ToString()).ToList();
