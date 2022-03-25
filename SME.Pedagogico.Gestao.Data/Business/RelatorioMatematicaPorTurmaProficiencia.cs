@@ -89,7 +89,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             return new AlunoPorTurmaRelatorioProficienciaDTO()
             {
                 CodigoAluno = aluno.CodigoAluno,
-                NomeAluno = aluno.NomeAlunoRelatorio,
+                NomeAluno = string.IsNullOrEmpty(aluno.NomeSocialAluno) ? aluno.NomeAlunoRelatorio : aluno.NomeSocialAluno,
                 Perguntas = ObtenhaListaDePerguntas(aluno)
             };
         }
