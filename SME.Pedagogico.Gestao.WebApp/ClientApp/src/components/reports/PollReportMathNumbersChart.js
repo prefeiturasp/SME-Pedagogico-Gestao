@@ -14,7 +14,8 @@ class MathChart extends Component {
         myChart.setOption({
             tooltip: {},
             xAxis: {
-                data: ['Escreve conv.', 'Não escreve conv.', 'S. preenchimento']
+                data: ['Escreve conv.', 'Não escreve conv.', 'S. preenchimento'],
+                show: false,
             },
             yAxis: {},
             series: [{

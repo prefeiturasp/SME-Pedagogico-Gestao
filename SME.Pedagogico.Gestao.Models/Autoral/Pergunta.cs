@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SME.Pedagogico.Gestao.Models.Autoral
 {
@@ -10,6 +11,7 @@ namespace SME.Pedagogico.Gestao.Models.Autoral
         public string ComponenteCurricularId { get; set; }
         public virtual ComponenteCurricular ComponenteCurricular { get; set; }
         public bool Excluido { get; set; }
+        [NotMapped]
         public virtual Pergunta PerguntaPai { get; set; }
     }
 }

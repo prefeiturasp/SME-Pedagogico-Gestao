@@ -18,6 +18,7 @@ class MathChart extends Component {
             tooltip: {},
             xAxis: {
                 data: ['Escreve conv.', 'Não escreve conv.','S. preenchimento'],
+                show: false,
             },
             yAxis: {},
             series: [{
@@ -95,7 +96,8 @@ const ChartLabel = (props) => {
             myChart.setOption({
                 tooltip: {},
                 xAxis: {
-                    data: ['Acertou', 'Errou', 'Não Resolveu', 'S. preenchimento']
+                    data: ['Acertou', 'Errou', 'Não Resolveu', 'S. preenchimento'],
+                    show: false,
                 },
                 yAxis: {},
                 series: [{
@@ -113,7 +115,8 @@ const ChartLabel = (props) => {
             myChart2.setOption({
                 tooltip: {},
                 xAxis: {
-                    data: ['Acertou', 'Errou', 'Não Resolveu', 'S. preenchimento']
+                    data: ['Acertou', 'Errou', 'Não Resolveu', 'S. preenchimento'],
+                    show: false,
                 },
                 yAxis: {},
                 series: [{
