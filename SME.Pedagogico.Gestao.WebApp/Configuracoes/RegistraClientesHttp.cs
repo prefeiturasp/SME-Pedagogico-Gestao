@@ -21,6 +21,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Configuracoes
             {
                 c.BaseAddress = new Uri(configuration.GetSection("urlApiSgp").Value);
                 c.DefaultRequestHeaders.Add("Accept", "application/json");
+                c.DefaultRequestHeaders.Add("x-sgp-api-key", configuration.GetSection("ChaveIntegracaoSgpApi").Value);
             });
 
             services.AddHttpClient(name: "apiEOL", c =>
