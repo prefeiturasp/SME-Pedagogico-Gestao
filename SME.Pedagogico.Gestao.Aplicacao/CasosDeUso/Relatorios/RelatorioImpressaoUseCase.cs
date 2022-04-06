@@ -1,8 +1,6 @@
 ﻿using MediatR;
-using SME.Pedagogico.Gestao.Dominio;
 using SME.Pedagogico.Gestao.Infra;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.Aplicacao
@@ -15,17 +13,19 @@ namespace SME.Pedagogico.Gestao.Aplicacao
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
+
         public async Task Executar(RelatorioImpressaoFiltroDto filtros)
         {
             TipoRelatorio? tipoRelatorio = GetTipoRelatorio(filtros);
 
             await mediator.Send(new GerarRelatorioCommand(tipoRelatorio.Value, filtros, filtros.UsuarioRF));
         }
+
         public async Task<string> ExecutarSync(RelatorioImpressaoFiltroDto filtros)
         {
             TipoRelatorio? tipoRelatorio = GetTipoRelatorio(filtros);
 
-            return (await mediator.Send(new ObterRelatorioSincronoQuery(tipoRelatorio.Value, filtros, filtros.UsuarioRF)));
+            return await mediator.Send(new ObterRelatorioSincronoQuery(tipoRelatorio.Value, filtros, filtros.UsuarioRF));
         }
 
         private TipoRelatorio? GetTipoRelatorio(RelatorioImpressaoFiltroDto filtros)
@@ -34,7 +34,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
 
             if (filtros.ComponenteCurricularId == ComponenteCurricularEnum.Matematica)
             {
-                if (filtros.TurmaCodigo > 0 && (filtros.ProficienciaId == ProficienciaEnum.CampoAditivo || filtros.ProficienciaId == ProficienciaEnum.CampoMultiplicativo 
+                if (filtros.TurmaCodigo > 0 && (filtros.ProficienciaId == ProficienciaEnum.CampoAditivo || filtros.ProficienciaId == ProficienciaEnum.CampoMultiplicativo
                     || filtros.ProficienciaId == ProficienciaEnum.Numeros || filtros.ProficienciaId == ProficienciaEnum.Autoral))
                 {
                     tipoRelatorio = TipoRelatorio.RelatorioMatematicaPorTurma;
@@ -43,7 +43,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 {
                     if (filtros.ProficienciaId == ProficienciaEnum.CampoAditivo || filtros.ProficienciaId == ProficienciaEnum.CampoMultiplicativo)
                         tipoRelatorio = TipoRelatorio.RelatorioMatematicaConsolidadoAdtMult;
-                    else 
+                    else
                         tipoRelatorio = TipoRelatorio.RelatorioMatematicaConsolidado;
                 }
             }
