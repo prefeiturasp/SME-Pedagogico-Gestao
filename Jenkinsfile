@@ -3,6 +3,7 @@ pipeline {
       branchname =  env.BRANCH_NAME.toLowerCase()
       kubeconfig = getKubeconf(env.branchname)
       registryCredential = 'jenkins_registry'
+      namespace = "${env.branchname == 'release-r2' ? 'sme-pedagogico-gestao-r2' : 'sme-pedagogico-gestao'}"
     }
   
     agent {
@@ -65,7 +66,7 @@ pipeline {
                     }
                     withCredentials([file(credentialsId: "${kubeconfig}", variable: 'config')]){
                       sh('cp $config '+"$home"+'/.kube/config')
-                      sh "kubectl -n sme-pedagogico-gestao rollout restart deploy"
+                      sh "kubectl -n ${namespace} rollout restart deploy"
                       sh('rm -f '+"$home"+'/.kube/config')
                     }
                 }
