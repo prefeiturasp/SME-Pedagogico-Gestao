@@ -30,13 +30,22 @@ begin
                     and r."Descricao" = valorResposta 
                    
 		loop
-			raise notice 'SondagemAlunoRespostas inserida - perguntaId: %, respostaId: %', rec_perguntaResposta.perguntaId,  rec_perguntaResposta.respostaId;
-		
-			insert into public."SondagemAlunoRespostas"("Id", "SondagemAlunoId", "PerguntaId", "RespostaId")
-			values (public.uuid_generate_v4(), sondagemAlunoId, rec_perguntaResposta.perguntaId, rec_perguntaResposta.respostaId)
-			returning "Id" into sondagemAlunoRespostaId;
+			raise notice 'perguntaId: %, respostaId: %', rec_perguntaResposta.perguntaId,  rec_perguntaResposta.respostaId;
 			
-			raise notice 'SondagemAlunoRespostas inserida: %', sondagemAlunoRespostaId;
+			select "Id" into sondagemAlunoRespostaId 
+			from public."SondagemAlunoRespostas"
+			where "SondagemAlunoId" = sondagemAlunoId
+			  and "PerguntaId" = rec_perguntaResposta.perguntaId;
+			 
+			if sondagemAlunoRespostaId is null then   
+				insert into public."SondagemAlunoRespostas"("Id", "SondagemAlunoId", "PerguntaId", "RespostaId", "Bimestre")
+				values (public.uuid_generate_v4(), sondagemAlunoId, rec_perguntaResposta.perguntaId, rec_perguntaResposta.respostaId, 1)
+				returning "Id" into sondagemAlunoRespostaId;
+			
+				raise notice 'SondagemAlunoRespostas inserida: %', sondagemAlunoRespostaId;
+			else
+				raise notice 'SondagemAlunoRespostas já cadastrado: %', sondagemAlunoRespostaId;
+			end if;
 		end loop;
 end;
 $$  LANGUAGE plpgsql
@@ -63,23 +72,30 @@ begin
 		"AnoTurma" <= 3 and
 		("Ordem3Ideia" <> '' or "Ordem3Resultado" <> ''
 		or "Ordem4Ideia" <> '' or "Ordem4Resultado" <> ''
-		or "Ordem5Ideia" <> '' or "Ordem5Resultado" <> '') and
-		not exists (select "Id" from "Sondagem" 
-					where "AnoTurma" = mpc."AnoTurma" 
-						  and "CodigoTurma" = mpc."TurmaEolCode"
-						  and "CodigoUe" = mpc."EscolaEolCode" 
-						  and "CodigoDre" = mpc."DreEolCode" 
-						  and "AnoLetivo" = mpc."AnoLetivo")
+		or "Ordem5Ideia" <> '' or "Ordem5Resultado" <> '')
 		group by "DreEolCode" , "EscolaEolCode" , "TurmaEolCode", "AnoLetivo" , "AnoTurma"
 		
 		loop
 			raise notice 'Sondagem: %', REC_SONDAGEM;
-			
-			insert into public."Sondagem" ("Id", "ComponenteCurricularId" , "AnoTurma" , "CodigoTurma" , "CodigoUe" , "CodigoDre" , "AnoLetivo", "PeriodoId", "Bimestre")
-			values (uuid_generate_v4(), componenteCurricularId, REC_SONDAGEM."AnoTurma",  REC_SONDAGEM."TurmaEolCode", REC_SONDAGEM."EscolaEolCode", REC_SONDAGEM."DreEolCode", REC_SONDAGEM."AnoLetivo", '', '1')
-			returning "Id" into sondagemId;
 		
-			raise notice 'Sondagem inserida: %', sondagemId;
+			select "Id" into sondagemId 
+			from "Sondagem" 
+			where "AnoTurma" = REC_SONDAGEM."AnoTurma" 
+				  and "CodigoTurma" = REC_SONDAGEM."TurmaEolCode"
+				  and "CodigoUe" = REC_SONDAGEM."EscolaEolCode" 
+				  and "CodigoDre" = REC_SONDAGEM."DreEolCode" 
+				  and "AnoLetivo" = REC_SONDAGEM."AnoLetivo"
+				  and "Bimestre" = 1;
+			
+			if sondagemId is null then		 
+				insert into public."Sondagem" ("Id", "ComponenteCurricularId" , "AnoTurma" , "CodigoTurma" , "CodigoUe" , "CodigoDre" , "AnoLetivo", "PeriodoId", "Bimestre")
+				values (uuid_generate_v4(), componenteCurricularId, REC_SONDAGEM."AnoTurma",  REC_SONDAGEM."TurmaEolCode", REC_SONDAGEM."EscolaEolCode", REC_SONDAGEM."DreEolCode", REC_SONDAGEM."AnoLetivo", '', 1)
+				returning "Id" into sondagemId;
+		
+				raise notice 'Sondagem inserida: %', sondagemId;
+			else
+				raise notice 'Sondagem encontrada: %', sondagemId;
+			end if;
 		
 			for REC_SONDAGEM_ALUNO in select "AlunoEolCode", "AlunoNome", "Ordem3Ideia", "Ordem3Resultado" , "Ordem4Ideia" , "Ordem4Resultado" , "Ordem5Ideia" , "Ordem5Resultado"  
 										from "MathPoolCMs" mpc 
@@ -95,11 +111,20 @@ begin
 			loop
 				raise notice 'Sondagem Aluno: %', REC_SONDAGEM_ALUNO;
 				
-				insert into public."SondagemAluno"("Id" , "SondagemId" , "CodigoAluno" , "NomeAluno" , "Bimestre")
-				values (uuid_generate_v4(), sondagemId, REC_SONDAGEM_ALUNO."AlunoEolCode", REC_SONDAGEM_ALUNO."AlunoNome", '1')
-				returning "Id" into sondagemAlunoId;
-			
-				raise notice 'SondagemAluno inserida: %', sondagemAlunoId;
+				select "Id" into sondagemAlunoId 
+				from "SondagemAluno" 
+				where "SondagemId" = sondagemId 
+				  and "CodigoAluno" = REC_SONDAGEM_ALUNO."AlunoEolCode";
+				
+				if sondagemAlunoId is null then	 
+					insert into public."SondagemAluno"("Id" , "SondagemId" , "CodigoAluno" , "NomeAluno" , "Bimestre")
+					values (uuid_generate_v4(), sondagemId, REC_SONDAGEM_ALUNO."AlunoEolCode", REC_SONDAGEM_ALUNO."AlunoNome", 1)
+					returning "Id" into sondagemAlunoId;
+				
+					raise notice 'SondagemAluno inserida: %', sondagemAlunoId;
+				else
+					raise notice 'SondagemAluno encontrada: %', sondagemAlunoId;
+				end if;
 			
 				for REC_SONDAGEM_RESULTADO in SELECT * FROM (VALUES (3, 'Ideia', REC_SONDAGEM_ALUNO."Ordem3Ideia"), 
 																	(3, 'Resultado', REC_SONDAGEM_ALUNO."Ordem3Resultado"), 
@@ -116,5 +141,6 @@ begin
 	
 
 	drop function insereSondagemResposta(int4, RECORD, uuid);
-
+	
+	raise notice '*FINAL MIGRAÇÃO SONDAGEM CM 2022*';
 end $$;
