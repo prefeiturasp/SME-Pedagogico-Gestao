@@ -38,8 +38,8 @@ begin
 			  and "PerguntaId" = rec_perguntaResposta.perguntaId;
 			
 			if sondagemAlunoRespostaId is null then  
-				insert into public."SondagemAlunoRespostas"("Id", "SondagemAlunoId", "PerguntaId", "RespostaId")
-				values (public.uuid_generate_v4(), sondagemAlunoId, rec_perguntaResposta.perguntaId, rec_perguntaResposta.respostaId)
+				insert into public."SondagemAlunoRespostas"("Id", "SondagemAlunoId", "PerguntaId", "RespostaId", "Bimestre")
+				values (public.uuid_generate_v4(), sondagemAlunoId, rec_perguntaResposta.perguntaId, rec_perguntaResposta.respostaId, 1)
 				returning "Id" into sondagemAlunoRespostaId;
 			
 				raise notice 'SondagemAlunoRespostas inserida: %', sondagemAlunoRespostaId;
@@ -84,11 +84,12 @@ begin
 				  and "CodigoTurma" = REC_SONDAGEM."TurmaEolCode"
 				  and "CodigoUe" = REC_SONDAGEM."EscolaEolCode" 
 				  and "CodigoDre" = REC_SONDAGEM."DreEolCode" 
-				  and "AnoLetivo" = REC_SONDAGEM."AnoLetivo";
+				  and "AnoLetivo" = REC_SONDAGEM."AnoLetivo"
+				  and "Bimestre" = 1;
 			
 			if sondagemId is null then	 
 				insert into public."Sondagem" ("Id", "ComponenteCurricularId" , "AnoTurma" , "CodigoTurma" , "CodigoUe" , "CodigoDre" , "AnoLetivo", "PeriodoId", "Bimestre")
-				values (uuid_generate_v4(), componenteCurricularId, REC_SONDAGEM."AnoTurma",  REC_SONDAGEM."TurmaEolCode", REC_SONDAGEM."EscolaEolCode", REC_SONDAGEM."DreEolCode", REC_SONDAGEM."AnoLetivo", '', '1')
+				values (uuid_generate_v4(), componenteCurricularId, REC_SONDAGEM."AnoTurma",  REC_SONDAGEM."TurmaEolCode", REC_SONDAGEM."EscolaEolCode", REC_SONDAGEM."DreEolCode", REC_SONDAGEM."AnoLetivo", '', 1)
 				returning "Id" into sondagemId;
 				
 				raise notice 'Sondagem inserida: %', sondagemId;
@@ -117,7 +118,7 @@ begin
 				
 				if sondagemAlunoId is null then	 
 					insert into public."SondagemAluno"("Id" , "SondagemId" , "CodigoAluno" , "NomeAluno" , "Bimestre")
-					values (uuid_generate_v4(), sondagemId, REC_SONDAGEM_ALUNO."AlunoEolCode", REC_SONDAGEM_ALUNO."AlunoNome", '1')
+					values (uuid_generate_v4(), sondagemId, REC_SONDAGEM_ALUNO."AlunoEolCode", REC_SONDAGEM_ALUNO."AlunoNome", 1)
 					returning "Id" into sondagemAlunoId;
 			
 					raise notice 'SondagemAluno inserida: %', sondagemAlunoId;
