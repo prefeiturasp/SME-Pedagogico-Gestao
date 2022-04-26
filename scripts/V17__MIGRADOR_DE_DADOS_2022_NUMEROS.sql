@@ -14,16 +14,14 @@ begin
 		valorResposta = 'Não escreve convencionalmente';
 	end if;
 
-	for rec_perguntaResposta in select ps."Id" as perguntaId, r."Id" as respostaId   
+	for rec_perguntaResposta in select p."Id" as perguntaId, r."Id" as respostaId   
                 from public."PerguntaAnoEscolar" pae
                 join public."Pergunta" p on p."Id" = pae."PerguntaId"
-                join public."Pergunta" ps on ps."PerguntaId" = pae."PerguntaId"
-                join public."PerguntaAnoEscolar" pae2 on pae2."PerguntaId" = ps."Id"
-                join public."PerguntaResposta" prs on prs."PerguntaId" = ps."Id"
+                join public."PerguntaResposta" prs on prs."PerguntaId" = p."Id"
                 join public."Resposta" r on r."Id" = prs."RespostaId"
                 where pae."AnoEscolar" = anoEscolar 
                     and pae."Grupo" = 3 
-                    and ps."Descricao" = recordValores.descricaoPergunta
+                    and p."Descricao" = recordValores.descricaoPergunta
                     and r."Descricao" = valorResposta 
 		loop
 			raise notice 'perguntaId: %, respostaId: %', rec_perguntaResposta.perguntaId,  rec_perguntaResposta.respostaId;
@@ -34,8 +32,8 @@ begin
 			  and "PerguntaId" = rec_perguntaResposta.perguntaId;
 			
 			if sondagemAlunoRespostaId is null then    
-				insert into public."SondagemAlunoRespostas"("Id", "SondagemAlunoId", "PerguntaId", "RespostaId")
-				values (public.uuid_generate_v4(), sondagemAlunoId, rec_perguntaResposta.perguntaId, rec_perguntaResposta.respostaId)
+				insert into public."SondagemAlunoRespostas"("Id", "SondagemAlunoId", "PerguntaId", "RespostaId", "Bimestre")
+				values (public.uuid_generate_v4(), sondagemAlunoId, rec_perguntaResposta.perguntaId, rec_perguntaResposta.respostaId, 1)
 				returning "Id" into sondagemAlunoRespostaId;
 				
 				raise notice 'SondagemAlunoRespostas inserida: %', sondagemAlunoRespostaId;
@@ -61,6 +59,7 @@ begin
 	raise notice '*INICIANDO MIGRAÇÃO SONDAGEM NÚMEROS 2022*';
 	
 	select "Id" into componenteCurricularId from "ComponenteCurricular" where "Descricao" = 'Matemática'; 
+	create index "idx_MathPoolNumbers_migracao" on "MathPoolNumbers" ("AnoLetivo", "DreEolCode", "EscolaEolCode", "TurmaEolCode", "AnoTurma");
 	
 	for REC_SONDAGEM in select "DreEolCode" , "EscolaEolCode" , "TurmaEolCode", "AnoLetivo" , "AnoTurma" 
 						from "MathPoolNumbers"	
@@ -79,11 +78,12 @@ begin
 				  and "CodigoTurma" = REC_SONDAGEM."TurmaEolCode"
 				  and "CodigoUe" = REC_SONDAGEM."EscolaEolCode" 
 				  and "CodigoDre" = REC_SONDAGEM."DreEolCode" 
-				  and "AnoLetivo" = REC_SONDAGEM."AnoLetivo";
+				  and "AnoLetivo" = REC_SONDAGEM."AnoLetivo"
+				  and "Bimestre" = 1;
 		
 			if sondagemId is null then		 
 				insert into public."Sondagem" ("Id", "ComponenteCurricularId" , "AnoTurma" , "CodigoTurma" , "CodigoUe" , "CodigoDre" , "AnoLetivo", "PeriodoId", "Bimestre")
-				values (uuid_generate_v4(), componenteCurricularId, REC_SONDAGEM."AnoTurma",  REC_SONDAGEM."TurmaEolCode", REC_SONDAGEM."EscolaEolCode", REC_SONDAGEM."DreEolCode", REC_SONDAGEM."AnoLetivo", '', '1')
+				values (uuid_generate_v4(), componenteCurricularId, REC_SONDAGEM."AnoTurma",  REC_SONDAGEM."TurmaEolCode", REC_SONDAGEM."EscolaEolCode", REC_SONDAGEM."DreEolCode", REC_SONDAGEM."AnoLetivo", '', 1)
 				returning "Id" into sondagemId;
 			
 				raise notice 'Sondagem inserida: %', sondagemId;
@@ -94,10 +94,10 @@ begin
 			for REC_SONDAGEM_ALUNO in select "AlunoEolCode" , "AlunoNome", "Familiares", "Opacos", "Transparentes", "TerminamZero", "Algarismos", "Processo", "ZeroIntercalados"  
 										from "MathPoolNumbers"	
 										where "AnoLetivo" = 2022 and
-										"AnoTurma" <= 3 and
 										"DreEolCode" = REC_SONDAGEM."DreEolCode" and
 										"EscolaEolCode" = REC_SONDAGEM."EscolaEolCode" and
 										"TurmaEolCode" = REC_SONDAGEM."TurmaEolCode" and
+										"AnoTurma" = REC_SONDAGEM."AnoTurma" and
 										("Familiares" <> '' or "Opacos" <> '' or "Transparentes" <> '' or "TerminamZero" <> '' or
 										"Algarismos" <> '' or "Processo" <> '' or "ZeroIntercalados" <> '')
 			loop
@@ -110,7 +110,7 @@ begin
 				
 				if sondagemAlunoId is null then	 
 					insert into public."SondagemAluno"("Id" , "SondagemId" , "CodigoAluno" , "NomeAluno" , "Bimestre")
-					values (uuid_generate_v4(), sondagemId, REC_SONDAGEM_ALUNO."AlunoEolCode", REC_SONDAGEM_ALUNO."AlunoNome", '1')
+					values (uuid_generate_v4(), sondagemId, REC_SONDAGEM_ALUNO."AlunoEolCode", REC_SONDAGEM_ALUNO."AlunoNome", 1)
 					returning "Id" into sondagemAlunoId;
 				
 					raise notice 'SondagemAluno inserida: %', sondagemAlunoId;
@@ -132,7 +132,7 @@ begin
 			end loop;
 		end loop;
 	
-
+	drop index "idx_MathPoolNumbers_migracao";
 	drop function insereSondagemResposta(int4, RECORD, uuid);
 	
 	raise notice '*FINAL MIGRAÇÃO SONDAGEM NÚMEROS 2022*';

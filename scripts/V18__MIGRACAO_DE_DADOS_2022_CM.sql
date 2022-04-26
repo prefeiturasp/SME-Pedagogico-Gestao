@@ -65,6 +65,7 @@ begin
 	raise notice '*INICIANDO MIGRAÇÃO SONDAGEM CM 2022*';
 	
 	select "Id" into componenteCurricularId from "ComponenteCurricular" c where c."Descricao" = 'Matemática'; 
+	create index "idx_MathPoolCMs_migracao" on "MathPoolCMs" ("AnoLetivo", "DreEolCode", "EscolaEolCode", "TurmaEolCode", "AnoTurma");
 	
 	for REC_SONDAGEM in select "DreEolCode" , "EscolaEolCode" , "TurmaEolCode", "AnoLetivo" , "AnoTurma"  
 		from "MathPoolCMs" mpc 
@@ -139,7 +140,7 @@ begin
 			end loop;
 		end loop;
 	
-
+	drop index "idx_MathPoolCMs_migracao";
 	drop function insereSondagemResposta(int4, RECORD, uuid);
 	
 	raise notice '*FINAL MIGRAÇÃO SONDAGEM CM 2022*';
