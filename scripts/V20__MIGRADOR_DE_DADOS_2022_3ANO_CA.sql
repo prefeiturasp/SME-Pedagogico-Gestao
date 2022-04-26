@@ -62,16 +62,16 @@ declare
 	sondagemAlunoId uuid;
 begin
 	
-	raise notice '*INICIANDO MIGRAÇÃO SONDAGEM CA 2022*';
+	raise notice '*INICIANDO MIGRAÇÃO SONDAGEM CA 3 ANO 2022*';
 	
 	select "Id" into componenteCurricularId from "ComponenteCurricular" c where c."Descricao" = 'Matemática'; 
-	
+
 	create index "idx_MathPoolCAs_migracao" ON "MathPoolCAs" ("AnoLetivo", "DreEolCode", "EscolaEolCode", "TurmaEolCode", "AnoTurma");
 	
 	for REC_SONDAGEM in select "DreEolCode" , "EscolaEolCode" , "TurmaEolCode", "AnoLetivo" , "AnoTurma"  
 		from "MathPoolCAs" mpc 
 		where mpc."AnoLetivo" = 2022 and 
-		"AnoTurma" <= 2 and
+		"AnoTurma" = 3 and
 		("Ordem1Ideia" <> '' or "Ordem1Resultado" <> '' or 
 		"Ordem2Ideia" <> '' or  "Ordem2Resultado" <> '' or 
 		"Ordem3Ideia" <> '' or "Ordem3Resultado" <> '') 
@@ -143,5 +143,5 @@ begin
 	drop index "idx_MathPoolCAs_migracao";
 	drop function insereSondagemResposta(int4, RECORD, uuid);
 	
-	raise notice '*FINAL MIGRAÇÃO SONDAGEM CA 2022*';
+	raise notice '*FINAL MIGRAÇÃO SONDAGEM CA 3 ANO 2022*';
 end $$;
