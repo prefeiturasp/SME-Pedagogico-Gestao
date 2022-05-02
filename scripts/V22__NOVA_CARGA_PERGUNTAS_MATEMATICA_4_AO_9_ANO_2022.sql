@@ -1,4 +1,4 @@
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+﻿CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Inserindo respostas
@@ -193,6 +193,14 @@ where not exists (select 1 from public."Resposta" where "Descricao" = 'Não comp
 insert into public."Resposta" ("Id", "Descricao")  
 select uuid_generate_v4()::text,'Compreende a ideia e acerta o resultado.' 
 where not exists (select 1 from public."Resposta" where "Descricao" = 'Compreende a ideia e acerta o resultado.');
+
+insert into public."Resposta" ("Id", "Descricao")  
+select uuid_generate_v4()::text,'Compreende a ideia e erra o resultado.' 
+where not exists (select 1 from public."Resposta" where "Descricao" = 'Compreende a ideia e erra o resultado.');
+
+insert into public."Resposta" ("Id", "Descricao")  
+select uuid_generate_v4()::text,'Copia dado(s) existente(s) no enunciado da situação-problema.' 
+where not exists (select 1 from public."Resposta" where "Descricao" = 'Copia dado(s) existente(s) no enunciado da situação-problema.');
 
 insert into public."Resposta" ("Id", "Descricao")  
 select uuid_generate_v4()::text,'Compreende parcialmente a ideia: acerta parte do(s) resultado(s).' 
@@ -411,6 +419,10 @@ select uuid_generate_v4()::text,'Conhece algumas terminologias que apareceram na
 where not exists (select 1 from public."Resposta" where "Descricao" = 'Conhece algumas terminologias que apareceram na questão.');
 
 insert into public."Resposta" ("Id", "Descricao")  
+select uuid_generate_v4()::text,'Conhece a maioria das terminologias que apareceram na questão.' 
+where not exists (select 1 from public."Resposta" where "Descricao" = 'Conhece a maioria das terminologias que apareceram na questão.');
+
+insert into public."Resposta" ("Id", "Descricao")  
 select uuid_generate_v4()::text,'Conhece todas as terminologias que apareceram na questão.' 
 where not exists (select 1 from public."Resposta" where "Descricao" = 'Conhece todas as terminologias que apareceram na questão.');
 
@@ -435,12 +447,12 @@ select uuid_generate_v4()::text,'Não compreende o conceito das dimensões e err
 where not exists (select 1 from public."Resposta" where "Descricao" = 'Não compreende o conceito das dimensões e erra o volume e a capacidade.');
 
 insert into public."Resposta" ("Id", "Descricao")  
-select uuid_generate_v4()::text,'Identifica todas as dimensões, mas erra o volume (item I)' 
-where not exists (select 1 from public."Resposta" where "Descricao" = 'Identifica todas as dimensões, mas erra o volume (item I)');
+select uuid_generate_v4()::text,'Identifica todas as dimensões, mas erra o volume (item I).' 
+where not exists (select 1 from public."Resposta" where "Descricao" = 'Identifica todas as dimensões, mas erra o volume (item I).');
 
 insert into public."Resposta" ("Id", "Descricao")  
-select uuid_generate_v4()::text,'Identifica todas as dimensões, mas erra a capacidade (item II)' 
-where not exists (select 1 from public."Resposta" where "Descricao" = 'Identifica todas as dimensões, mas erra a capacidade (item II)');
+select uuid_generate_v4()::text,'Identifica todas as dimensões, mas erra a capacidade (item II).' 
+where not exists (select 1 from public."Resposta" where "Descricao" = 'Identifica todas as dimensões, mas erra a capacidade (item II).');
 
 insert into public."Resposta" ("Id", "Descricao")  
 select uuid_generate_v4()::text,'Identifica todas as dimensões e acerta o volume e a capacidade.' 
@@ -695,15 +707,15 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Ac
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende a ideia, mas erra o resultado';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende a ideia, mas erra o resultado.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreende a ideia da situação-problema';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreende a ideia da situação-problema.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
 
@@ -730,15 +742,15 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Ac
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende a ideia, mas erra o resultado';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende a ideia, mas erra o resultado.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreende a ideia da situação-problema';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreende a ideia da situação-problema.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
 
@@ -773,7 +785,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'N�
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
 
@@ -808,7 +820,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'N�
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
 
@@ -843,7 +855,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'N�
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
 
@@ -878,7 +890,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'N�
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
 
@@ -914,7 +926,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'N�
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
 
@@ -950,7 +962,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'N�
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
 
@@ -985,7 +997,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'N�
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
 
@@ -1020,7 +1032,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'N�
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
 
@@ -1055,7 +1067,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'N�
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
 
@@ -1090,7 +1102,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'N�
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
 
@@ -1125,7 +1137,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Re
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
 
@@ -1160,7 +1172,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Re
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
 
@@ -1195,7 +1207,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'N�
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
 
@@ -1230,7 +1242,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'N�
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
 
@@ -1265,7 +1277,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'N�
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
 
@@ -1300,7 +1312,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'N�
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
 
@@ -1335,7 +1347,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'N�
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
 
@@ -1370,7 +1382,147 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'N�
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 6º Ano - Ordem 1
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Números racionais: leitura, escrita, comparação, ordenação e representação na reta numerada; equivalência','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 6,1,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 6 and "Ordenacao" = 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compara e/ou ordena números racionais na representação decimal.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Faz a leitura de números racionais como se fossem números naturais, colocando em ordem decrescente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Faz a leitura de números racionais como se fossem números naturais, colocando em ordem crescente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compara e/ou ordena números racionais na representação decimal.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 6º Ano - Ordem 2
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Problemas envolvendo os significados dos campos aditivo e multiplicativo com números naturais e/ou racionais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 6,2,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 6 and "Ordenacao" = 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Acerta o resultado utilizando estratégias convencionais/ cálculo mental.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende a ideia e acerta o resultado utilizando estratégias não convencionais e/ou outras estratégias.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende que o número racional apresentado representa uma parte de um todo, mas não encontra o valor correto.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreende que o número racional apresentado representa uma parte de um todo.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 6º Ano - Ordem 3
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Relação de igualdade em diferentes sentenças matemáticas envolvendo adições ou subtrações','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 6,3,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 6 and "Ordenacao" = 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende a ideia e acerta o resultado.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende a ideia e erra o resultado.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Copia dado(s) existente(s) no enunciado da situação-problema.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreende a ideia.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 6º Ano - Ordem 4
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Álgebra - propriedades da igualdade','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 6,4,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 6 and "Ordenacao" = 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende a ideia e acerta o resultado.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende parcialmente a ideia: acerta parte do(s) resultado(s).';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreenda a ideia mas erra o resultado.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreende a ideia.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
 
@@ -1379,5 +1531,1277 @@ insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordena
 values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 6º Ano - Ordem 5
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Localização e movimentação: representação, descrição e interpretação da localização e/ou movimentação de pontos no 1º quadrante do plano cartesiano.','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 6,5,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 6 and "Ordenacao" = 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende a ideia de plano cartesiano e acerta as coordenadas.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende parcialmente a ideia: acerta parte da(s) coordenada(s).';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende parcialmente a ideia: inverte a localização nos eixos.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreende a ideia.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 6º Ano - Ordem 6
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Localização e movimentação: representação, descrição e interpretação da localização e/ou movimentação de pontos no 1º quadrante do plano cartesiano.','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 6,6,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 6 and "Ordenacao" = 6);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende a ideia de plano cartesiano e acerta as coordenadas.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende parcialmente a ideia: acerta parte da(s) coordenada(s).';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende parcialmente a ideia: inverte a localização nos eixos.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreende a ideia.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 6º Ano - Ordem 7
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Área de retângulo','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 6,7,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 6 and "Ordenacao" = 7);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende a ideia de área.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende a ideia, mas erra o cálculo.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Realiza uma operação inadequada com os valores apresentados na situação-problema.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreende a ideia.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 6º Ano - Ordem 8
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Área de retângulo','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 6,8,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 6 and "Ordenacao" = 8);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende a ideia de área.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende a ideia, mas erra o cálculo.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Realiza uma operação inadequada com os valores apresentados na situação-problema.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreende a ideia.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 6º Ano - Ordem 9
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Problemas com dados representados em gráficos e/ou tabelas.','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 6,9,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 6 and "Ordenacao" = 9);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Realiza a leitura de dados explícitos e implícitos.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Realiza a leitura de dados explícitos e compreende a ideia de dado implícito, mas não o identifica corretamente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Realiza somente a leitura de dados explícitos no gráfico.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não realiza a leitura de dados explícitos em gráficos.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 6º Ano - Ordem 10
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Problemas com dados representados em gráficos e/ou tabelas.','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 6,10,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 6 and "Ordenacao" = 10);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Representa corretamente no gráfico os dados representados na tabela.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Representa parcialmente no gráfico os dados representados na tabela.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não considera as características de um gráfico de colunas.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não representa os dados corretamente e desconsidera as características de um gráfico de colunas.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 7º Ano - Ordem 1
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Planejamento e realização de pesquisas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 7,1,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 7 and "Ordenacao" = 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Regista “Não conheço” em todas as opções.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Regista “Conheço um pouco” em todas as opções.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Registra em parte das opções: “Não conheço”, “Conheço um pouco” e “Conheço”.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Registra “Conheço” em todas as opções.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 7º Ano - Ordem 2
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Planejamento e realização de pesquisas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 7,2,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 7 and "Ordenacao" = 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não identifica o tema e a importância do título e da fonte, nem calcula corretamente o valor da renda familiar per capita (em reais) e o número de pessoas na família.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não identifica o tema e a importância do título e da fonte, mas calcula corretamente o valor da renda familiar per capita (em reais) ou o número de pessoas na família.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Identifica a tema e a importância do título e da fonte, mas calcula incorretamente o valor da renda familiar per capita (em reais) ou o número de pessoas na família.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Identifica o tema e a importância do título e da fonte e calcula corretamente o valor da renda familiar per capita (em reais) e o número de pessoas na família.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 7º Ano - Ordem 3
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Sólidos: diferenças e similaridades','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 7,3,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 7 and "Ordenacao" = 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Confunde sólidos com figuras planas.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Reconhece alguns sólidos geométricos, entre os apresentados.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Reconhece a maioria dos sólidos geométricos apresentados.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Reconhece todos os sólidos geométricos apresentados.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 7º Ano - Ordem 4
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Ângulos: representações, giros e medidas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 7,4,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 7 and "Ordenacao" = 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não consegue identificar os ângulos de 180° e 360° nas representações.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Reconhece somente o ângulo de 180° nas representações.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Reconhece somente o ângulo de 360° nas representações.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Reconhece os ângulos de 180° e 360° nas representações.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 7º Ano - Ordem 5
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Medidas de tempo','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 7,5,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 7 and "Ordenacao" = 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não identifica medidas de tempo e não realiza conversões.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Identifica medidas de tempo, diferencia hora de minuto, mão não se ateve a informação que o intervalo é de 15 minutos ao invés de 10 minutos.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Identifica medidas de tempo, diferencia hora de minuto, mas não se ateve a informação que a aula começa 5 minutos depois da entrada.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Identifica medidas de tempo e realiza conversões corretamente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 7º Ano - Ordem 6
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Perímetro e área de retângulos','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 7,6,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 7 and "Ordenacao" = 6);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não reconhece o significado de perímetro e nem de área.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Calcula somente o perímetro.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Calcula somente a área.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Calcula o perímetro e a área.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 7º Ano - Ordem 7
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Propriedade da igualdade','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 7,7,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 7 and "Ordenacao" = 7);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Indica o valor incorreto da massa de cada bola de tênis e o registro de como pensou também está equivocado.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Indica o valor incorreto da massa de cada bola de tênis, mas o registro de como pensou está correto.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Indica o valor correto da massa de cada bola de tênis, mas não demonstra como encontrou a resposta.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Indica o valor correto da massa de cada bola de tênis e demonstra corretamente como encontrou a resposta.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 7º Ano - Ordem 8
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Propriedade da igualdade','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 7,8,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 7 and "Ordenacao" = 8);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não interpreta as escritas algébricas correspondentes e erra a idade.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Interpreta as escritas algébricas correspondentes, mas erra a idade.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não consegue interpretar as escritas algébricas, mas acerta a idade.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Reconhece as escritas algébricas correspondentes e acerta a idade.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 7º Ano - Ordem 9
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Números naturais e inteiros: significados, reta numerada e significado das operações.','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 7,9,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 7 and "Ordenacao" = 9);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreende a ideia do problema, conceito de reta numerada e não consegue esboçar uma tentativa de resolução, ainda que incorreta.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Calcula incorretamente a diferença entre as temperaturas, mas representa corretamente no termômetro.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Calcula corretamente a diferença entre as temperaturas, mas representa incorretamente no termômetro.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende os conceitos envolvidos (localização de número na reta numerada e diferença entre inteiros).';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 7º Ano - Ordem 10
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Números naturais e inteiros: significados, reta numerada e significado das operações.','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 7,10,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 7 and "Ordenacao" = 10);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreende a ideia do problema e erra a resposta.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende a ideia do problema, mas erra a resposta.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreende a ideia do problema, mas acerta a resposta.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende os conceitos envolvidos e acerta a resposta.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 8º Ano - Ordem 1
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Planejamento, execução e relatório de pesquisa','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 8,1,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 8 and "Ordenacao" = 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não conhece as terminologias envolvendo uma pesquisa que apareceram na questão.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Conhece algumas terminologias que apareceram na questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Conhece a maioria das terminologias que apareceram na questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Conhece todas as terminologias que apareceram na questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 8º Ano - Ordem 2
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Planejamento, execução e relatório de pesquisa','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 8,2,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 8 and "Ordenacao" = 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não identifica os dados apresentados e nem calcula o valor da renda familiar per capita.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Determina o número de familiares a partir das demais informações (Família B).';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Determina a renda per capita a partir das demais informações (Família C).';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Determina o número de familiares e a renda per capita (Famílias B e C).';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 8º Ano - Ordem 3
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Poliedros e Medidas de comprimento, capacidade e volume','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 8,3,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 8 and "Ordenacao" = 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreende o conceito das dimensões e erra o volume e a capacidade.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Identifica todas as dimensões, mas erra o volume (item I).';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Identifica todas as dimensões, mas erra a capacidade (item II).';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Identifica todas as dimensões e acerta o volume e a capacidade.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 8º Ano - Ordem 4
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Ângulos em polígonos','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 8,4,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 8 and "Ordenacao" = 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não reconhece os tipos de ângulos no triângulo.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Reconhece somente um dos tipos de ângulo (reto, agudo ou obtuso).';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Reconhece dois ou três tipos de ângulo (reto, agudo ou obtuso).';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Reconhece os tipos de ângulo (reto, agudo ou obtuso) e identifica os triângulos segundo as medidas dos ângulos.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 8º Ano - Ordem 5
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Variação de grandezas: diretamente e inversamente proporcionais ou não proporcionais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 8,5,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 8 and "Ordenacao" = 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Interpreta a variação como diretamente proporcional e resolve por meio de desenhos, esquemas ou operações aritméticas.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Interpreta a variação como diretamente proporcional e resolve por meio de expressões algébricas.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Identifica a variação inversamente proporcional e resolve por meio de desenhos, esquemas ou operações aritméticas.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Identifica a variação inversamente proporcional e resolve por meio de expressões algébricas.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 8º Ano - Ordem 6
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Variação de grandezas: diretamente e inversamente proporcionais ou não proporcionais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 8,6,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 8 and "Ordenacao" = 6);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não organiza os dados do problema para calcular o valor do capital inicial.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Interpreta as informações, mas erra o valor do capital inicial.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Informa o valor do capital inicial corretamente, mas não registra como pensou.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Organiza os dados do problema e acerta o valor do capital inicial.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 8º Ano - Ordem 7
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Números racionais: comparação, ordenação e localização na reta numerada','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 8,7,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 8 and "Ordenacao" = 7);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não consegue interpretar os dados do problema para chegar à resposta.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Utiliza os dados do problema, mas erra a localização dos números racionais na reta numerada.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Determina somente a distância entre as casas de Maria e Rita.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Resolve o problema corretamente (itens a, b e c).';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 8º Ano - Ordem 8
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Procedimentos de cálculos, Problemas envolvendo o significado das operações','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 8,8,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 8 and "Ordenacao" = 8);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Utiliza os dados do problema para realizar operações que não conduzem às respostas.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Resolve corretamente um dos itens e erra os demais.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Resolve corretamente os itens I e II, mas não compara duas informações distintas (item III).';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Resolve corretamente todos os itens do problema.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 8º Ano - Ordem 9
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Cálculo de área','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 8,9,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 8 and "Ordenacao" = 9);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não reconhece as dimensões da base do tanque e erra a sua área.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não reconhece as dimensões da base do tanque, mas acerta a da superfície.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Reconhece as dimensões da base do tanque, mas erra a sua área.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Determina a base do tanque corretamente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 8º Ano - Ordem 10
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Cálculo de volume','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 8,10,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 8 and "Ordenacao" = 10);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não reconhece as dimensões do tanque necessárias para o cálculo do seu volume.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Reconhece as dimensões do tanque, mas realiza operações aleatórias que não determinam o seu volume.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Reconhece as dimensões do tanque, mas erra o produto entre os 3 valores.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Determina o volume do tanque corretamente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 9º Ano - Ordem 1
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Medidas de tendência central','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 9,1,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 9 and "Ordenacao" = 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Desconhece termos do problema e não organiza as informações para chegar à resposta.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Organiza as informações apresentadas no problema, mas erra a resposta.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Determina o salário médio, mas não registra se este valor representa, ou não, todos os salários da empresa.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Resolve o problema corretamente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 9º Ano - Ordem 2
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Planejamento, execução e relatório de pesquisa','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 9,2,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 9 and "Ordenacao" = 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não identifica os dados apresentados e nem calcula o valor da renda familiar per capita.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Calcula o valor da renda familiar per capita, mas não calcula o número de pessoas da família.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não calcula o valor da renda familiar per capita, mas calcula o número de pessoas da família.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Resolve o problema corretamente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 9º Ano - Ordem 3
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Medidas de comprimento e volume','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 9,3,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 9 and "Ordenacao" = 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreende o enunciado, realizando registros desconectados com o texto.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende o enunciado, mas erra o volume de um paralelepípedo.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Calcula corretamente o volume de uma peça, mas erra o volume da montagem.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Resolve o problema corretamente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 9º Ano - Ordem 4
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Ângulos em polígonos','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 9,4,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 9 and "Ordenacao" = 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não determina as medidas dos ângulos e não classifica a figura corretamente.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Classifica a figura corretamente, mas erra as medidas dos ângulos.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não classifica a figura corretamente, mas acerta as medidas dos ângulos.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Resolve o problema.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 9º Ano - Ordem 5
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Relações entre grandezas: diretamente, inversamente ou não proporcionais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 9,5,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 9 and "Ordenacao" = 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não estabelece relações entre as grandezas.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Responde corretamente somente uma questão, por meio de operações aritméticas (cálculo escrito ou mental).';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Responde corretamente as duas questões, por meio de operações aritméticas (cálculo escrito ou mental).';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Responde corretamente as duas questões, por meio de equacionamento (regra de três).';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 9º Ano - Ordem 6
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Relações entre grandezas: diretamente, inversamente ou não proporcionais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 9,6,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 9 and "Ordenacao" = 6);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não estabelece relações entre as grandezas.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Responde corretamente somente uma questão, por meio de operações aritméticas (cálculo escrito ou mental).';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Responde corretamente as duas questões, por meio de operações aritméticas (cálculo escrito ou mental).';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Responde corretamente as duas questões, por meio de equacionamento (regra de três).';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 9º Ano - Ordem 7
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Área de figuras planas e expressões algébricas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 9,7,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 9 and "Ordenacao" = 7);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não interpreta o problema e erra todas as respostas.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Determina corretamente somente a medida do lado da sala de leitura.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Determina corretamente somente a medida do lado da sala de leitura e do comprimento do ambiente da escola.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Resolve todas as questões corretamente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 9º Ano - Ordem 8
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Medidas de comprimento e Área','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 9,8,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 9 and "Ordenacao" = 8);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não interpreta o texto, pois faz registros desconectados do problema.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Erra a área do quadrado e determina área de um triângulo coerente a partir desse valor.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Calcula corretamente a área de um quadrado, mas não calcula a área de um triângulo.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Resolve o problema corretamente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 9º Ano - Ordem 9
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Problemas com números reais, porcentagens sucessivas, taxas percentuais e juros simples','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 9,9,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 9 and "Ordenacao" = 9);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreende a ideia da situação-problema envolvendo porcentagens.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende a ideia envolvendo porcentagem, mas erra os resultados.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Resolve corretamente o item a, mas erra o item b, ou vice-versa.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Resolve o problema corretamente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Inserindo Pergunta, PerguntaAnoEscolar e PerguntaResposta - 9º Ano - Ordem 10
+
+insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId") 
+values (uuid_generate_v4()::text,'Problemas com números reais, porcentagens sucessivas, taxas percentuais e juros simples','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+returning "Id" into perguntaId;
+
+insert into public."PerguntaAnoEscolar" ("Id","PerguntaId","AnoEscolar", "Ordenacao", "InicioVigencia")
+select uuid_generate_v4()::text, perguntaId, 9,10,'2022-01-01'
+where not exists (select "Id" from public."PerguntaAnoEscolar" where "PerguntaId" = perguntaId and "AnoEscolar" = 9 and "Ordenacao" = 10);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não compreende a ideia da situação-problema envolvendo porcentagens.';	
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Compreende a ideia envolvendo porcentagem, mas erra os resultados.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Resolve corretamente o item I, mas erra o item b, ou vice-versa.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Resolve o problema corretamente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Não resolve a questão.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
+
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'Estudante ausente.';
+insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
+values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 end $$;
