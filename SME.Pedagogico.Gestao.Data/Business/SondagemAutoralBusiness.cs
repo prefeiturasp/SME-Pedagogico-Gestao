@@ -135,6 +135,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 foreach (var aluno in alunoSondagemMatematicaDto)
                 {
+                    if (aluno.Id == null && aluno.Respostas.Any())
+                    {
+                        Guid id = VerificaSeOAlunoPossuiSondagemERetornaId(aluno.CodigoAluno, aluno.CodigoTurma, filtroSondagem.Bimestre);
+
+                        if (id != Guid.Empty)
+                            aluno.Id = id.ToString();
+                    }
+
                     if (aluno.Id == null)
                     {
                         if (aluno.Respostas != null)
@@ -165,6 +173,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 }
             }
         }
+
+
 
         private async Task SalvarSonsagemMatermaticaPorPeriodo(IEnumerable<AlunoSondagemMatematicaDto> alunoSondagemMatematicaDto, IEnumerable<string> listaIdPeriodos, FiltrarListagemMatematicaDTO filtroSondagem)
         {
@@ -611,6 +621,17 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                                           Include(x => x.AlunosSondagem).ThenInclude(x => x.ListaRespostas).ThenInclude(x => x.Resposta).ToListAsync();
 
                 return listaSondagem;
+            }
+        }
+
+        private static Guid VerificaSeOAlunoPossuiSondagemERetornaId(string codigoAluno, string codigoTurma, int? bimestre)
+        {
+            using (var contexto = new SMEManagementContextData())
+            {
+                var idSondagem = contexto.Sondagem.Where(s => s.AlunosSondagem.Any(a => a.CodigoAluno == codigoAluno && a.ListaRespostas.Any(lr => lr.Bimestre == bimestre)) &&
+                                                          s.CodigoTurma == codigoTurma).Select(a => a.AlunosSondagem.FirstOrDefault().Id);
+
+                return idSondagem.FirstOrDefault();
             }
         }
 
