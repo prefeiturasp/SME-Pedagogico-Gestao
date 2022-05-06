@@ -1,16 +1,15 @@
 ﻿//CargoController
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Threading.Tasks;
 using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.Functionalities;
-using System.Linq;
-using SME.Pedagogico.Gestao.WebApp.Models;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO;
 using SME.Pedagogico.Gestao.Infra;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
