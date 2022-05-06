@@ -9,6 +9,7 @@ using SME.Pedagogico.Gestao.Data.Functionalities;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
+using SME.Pedagogico.Gestao.Infra;
 using SME.Pedagogico.Gestao.Models.Autoral;
 using System;
 using System.Collections.Generic;
@@ -75,7 +76,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 listaSondagem = await ObterSondagemAutoralMatematica(filtrarListagemDto);
 
             var listaAlunos = await TurmaApi.GetAlunosNaTurma(Convert.ToInt32(filtrarListagemDto.CodigoTurma), _token);
-            var alunos = listaAlunos.Where(x => x.CodigoSituacaoMatricula == 10 || x.CodigoSituacaoMatricula == 1 || x.CodigoSituacaoMatricula == 6 || x.CodigoSituacaoMatricula == 13 || x.CodigoSituacaoMatricula == 5).ToList();
+            var alunos = VerificaSituacaoMatriculaERetornaAlunosTurma(listaAlunos, filtrarListagemDto.AnoLetivo, filtrarListagemDto.Bimestre);
 
             if (alunos == null || !alunos.Any())
                 throw new Exception($"Não encontrado alunos para a turma {filtrarListagemDto.CodigoTurma} do ano letivo {filtrarListagemDto.AnoLetivo}");
@@ -86,6 +87,31 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             AdicionarAlunosEOL(filtrarListagemDto, alunos, listagem);
             return listagem.OrderBy(x => x.NumeroChamada).ThenBy(x => x.NomeAluno);
+        }
+
+        private List<AlunosNaTurmaDTO> VerificaSituacaoMatriculaERetornaAlunosTurma(List<AlunosNaTurmaDTO> alunosTurma,int anoLetivo, int? bimestre)
+        {
+            DateTime periodoFimBimestre = DateTime.MinValue;
+            DateTime periodoInicioBimestre = DateTime.MinValue;
+
+            if (bimestre != null)
+            {
+                using (var contexto = new SMEManagementContextData())
+                {
+                   periodoFimBimestre = contexto.PeriodoFixoAnual.Where(p => p.TipoPeriodo == Models.Enums.TipoPeriodoEnum.Bimestre &&
+                   p.Ano == anoLetivo && p.Descricao.Contains(bimestre.ToString())).Select(pa=> pa.DataFim).FirstOrDefault();
+                   periodoInicioBimestre = contexto.PeriodoFixoAnual.Where(p => p.TipoPeriodo == Models.Enums.TipoPeriodoEnum.Bimestre &&
+                  p.Ano == anoLetivo && p.Descricao.Contains(bimestre.ToString())).Select(pa => pa.DataInicio).FirstOrDefault();
+                };
+            }
+
+            return alunosTurma.Where(x => x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.Rematriculado
+                                       || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.Ativo
+                                       || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.PendenteRematricula
+                                       || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.SemContinuidade
+                                       || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.Concluido
+                                       || (periodoFimBimestre > DateTime.MinValue && x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.Transferido 
+                                       && (x.DataSituacao >= periodoFimBimestre || x.DataSituacao <= periodoFimBimestre && x.DataSituacao >= periodoInicioBimestre))).ToList();
         }
 
         public async Task SalvarSondagem(IEnumerable<AlunoSondagemMatematicaDto> alunoSondagemMatematicaDto)
