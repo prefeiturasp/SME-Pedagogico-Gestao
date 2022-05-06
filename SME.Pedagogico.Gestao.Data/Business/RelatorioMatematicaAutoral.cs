@@ -150,6 +150,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         public async Task<RelatorioMatematicaPorTurmaDTO> ObterRelatorioPorTurma(filtrosRelatorioDTO filtro)
         {
             IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
+
             var periodos = await ConsultaTotalDeAlunos.BuscaDatasPeriodoFixoAnual(filtro);
 
             if (periodos.Count() == 0)
@@ -157,7 +158,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             var endpoits = new EndpointsAPI();
             var alunoApi = new AlunosAPI(endpoits);
-            var alunosEol = (await alunoApi.ObterAlunosAtivosPorTurmaEPeriodo(filtro.CodigoTurmaEol,periodos.First().DataFim))
+            var alunosEol = (await alunoApi.ObterAlunosAtivosPorTurmaEPeriodo(filtro.CodigoTurmaEol,periodos.First().DataInicio))
                                                             .OrderBy(aluno => aluno.NomeAluno)
                                                             .ToList();
             var QueryAlunosRespostas = ObtenhaQueryRelatorioPorTurmaMatematica(filtro);
