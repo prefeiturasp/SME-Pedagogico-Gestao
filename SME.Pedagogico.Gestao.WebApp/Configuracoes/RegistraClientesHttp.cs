@@ -30,7 +30,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Configuracoes
                 c.DefaultRequestHeaders.Add("x-api-eol-key", configuration.GetSection("API_EOL_KEY_ENV").Value);
                 c.DefaultRequestHeaders.Add("Accept", "application/json");
             });
-
         }
     }
 }
