@@ -2,37 +2,38 @@ import React from "react";
 import AutoralSelect from "./select";
 
 function NovoAlunoSondagemMatematicaAutoral({
-  perguntaSelecionada,
-  aluno,
-  onChangeAluno,
-  ehAutoral,
+    perguntaSelecionada,
+    aluno,
+    onChangeAluno,
+    ehAutoral,
 }) {
-  return (
-    <>
-      {ehAutoral ? (
+    return (
         <>
-          <tr>
-            <th className="align-middle">
-              <small className="ml-2 pr-4">
-                <b>{aluno.numeroChamada}</b>
-              </small>
-              <small>{aluno.nomeAluno}</small>
-            </th>
-            <th className="text-center align-center">
-              <AutoralSelect
-                lista={perguntaSelecionada.respostas}
-                valor={aluno.respostas && aluno.respostas[0].resposta}
-                perguntaId={perguntaSelecionada.id}
-                alunoId={aluno.codigoAluno}
-                sondagemId={aluno.id}
-                key={aluno.id}
-                id={aluno.id}
-                onChange={onChangeAluno}
-                disabled={false}
-                mostraToolTipItens
-              ></AutoralSelect>
-            </th>
-          </tr>
+            {ehAutoral ? (
+                
+                <>
+                <tr>
+                    <th className="align-middle">
+                        <small className="ml-2 pr-4">
+                            <b>{aluno.numeroChamada}</b>
+                        </small>
+                        <small>{aluno.nomeAluno}</small>
+                    </th>
+                    <th className="text-center align-center">
+                        <AutoralSelect
+                            lista={perguntaSelecionada.respostas}
+                            valor={obtenhaRespostaAutoral(perguntaSelecionada, aluno)}
+                            perguntaId={perguntaSelecionada.id}
+                            alunoId={aluno.codigoAluno}
+                            sondagemId={aluno.id}
+                            key={aluno.id}
+                            id={aluno.id}
+                            onChange={onChangeAluno}
+                            disabled={false}
+                            mostraToolTipItens
+                        ></AutoralSelect>
+                    </th>
+                </tr> 
         </>
       ) : (
         <>
@@ -69,6 +70,15 @@ function NovoAlunoSondagemMatematicaAutoral({
       )}
     </>
   );
+}
+
+function obtenhaRespostaAutoral(perguntaSelecionada, aluno) {
+    var acharReposta = perguntaSelecionada &&
+        aluno &&
+        aluno.respostas &&
+        aluno.respostas.find((resp) => resp.pergunta === perguntaSelecionada.id);
+
+    return acharReposta && acharReposta.resposta;
 }
 
 export default NovoAlunoSondagemMatematicaAutoral;
