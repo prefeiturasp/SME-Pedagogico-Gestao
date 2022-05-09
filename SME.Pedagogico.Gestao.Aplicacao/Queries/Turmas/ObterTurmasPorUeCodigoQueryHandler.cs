@@ -28,9 +28,12 @@ namespace SME.Pedagogico.Gestao.Aplicacao
             {
                 var listaRetornoTurmas = new List<TurmaSGPDto>();
 
-                for (int i = 0; i < 2; i++)
-                    listaRetornoTurmas.AddRange(await EnviarRequisicao(httpClient, i % 2 != 0, request.UeCodigo, request.AnoLetivo));
-                
+                if(request.AnoLetivo < DateTime.Now.Year)
+                    for (int i = 0; i < 2; i++)
+                        listaRetornoTurmas.AddRange(await EnviarRequisicao(httpClient, i % 2 != 0, request.UeCodigo, request.AnoLetivo));
+                else
+                    listaRetornoTurmas.AddRange(await EnviarRequisicao(httpClient,false, request.UeCodigo, request.AnoLetivo));
+
                 var listaRetornoFinal = new List<SalasPorUEDTO>();
 
                 foreach (var item in listaRetornoTurmas.Where(a => a.Ano != "0").OrderBy(a => a.Nome))
