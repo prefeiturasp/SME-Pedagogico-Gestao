@@ -160,7 +160,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     }
 
                 }
-
                 else    // cONSOLIDADO
                 {
                     var result = await BuscaDadosMathAsync(parameters, parameters.SchoolYear, parameters.CodigoDRE, parameters.CodigoEscola, parameters.CodigoCurso, periodo);
@@ -396,8 +395,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
         private async Task<ActionResult<string>> ObtenhaRelatorioMatematicaAutoral(filtrosRelatorioDTO filtro, bool ehPorTurma)
         {
-            var relatorio = new RelatorioMatematicaAutoral();
-
             if (filtro.AnoEscolar <= TERCEIRO_ANO && !ProficienciaEhNumero(filtro.Proficiencia))
             {
                 return await ObtenhaRelatorioMatematicaProficiencia(filtro, ehPorTurma);

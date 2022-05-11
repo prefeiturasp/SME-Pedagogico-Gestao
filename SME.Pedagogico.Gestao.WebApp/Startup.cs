@@ -1,4 +1,8 @@
 using AutoMapper;
+using Elastic.Apm.AspNetCore;
+using Elastic.Apm.DiagnosticSource;
+using Elastic.Apm.EntityFrameworkCore;
+using Elastic.Apm.SqlClient;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +12,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.IoC;
 using SME.Pedagogico.Gestao.WebApp.Configuracoes;
 using SME.Pedagogico.Gestao.WebApp.Contexts;
@@ -42,10 +45,9 @@ namespace SME.Pedagogico.Gestao.WebApp
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddHttpContextAccessor();
+
             RegistrarDependencias.Registrar(services);
             RegistraClientesHttp.Registrar(services, Configuration);
-
-            //services.AddRabbit();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -53,7 +55,7 @@ namespace SME.Pedagogico.Gestao.WebApp
                 configuration.RootPath = "ClientApp/build";
             });
 
-            // Configura��o de inje��o de depend�ncia do SMEContext (Postgres - Npgsql)
+            // Configuração de inje��o de depend�ncia do SMEContext (Postgres - Npgsql)
             services.AddDbContext<SMEManagementContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -96,7 +98,7 @@ namespace SME.Pedagogico.Gestao.WebApp
                 {
                     Title = "SME.Pedagogico.Gestao.WebApp",
                     Version = "v1.0.0",
-                    Description = "Documenta��o das APIs do SME.Pedagogico.Gestao.WebApp (.NET Core v2.2)",
+                    Description = "Documentação das APIs do SME.Pedagogico.Gestao.WebApp (.NET Core v2.2)",
                 });
 
                 string xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -104,11 +106,12 @@ namespace SME.Pedagogico.Gestao.WebApp
                 options.IncludeXmlComments(xmlPath);
             });
 
-            var config = new AutoMapper.MapperConfiguration(cfg =>
+            var config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Data.DTO.Portugues.GrupoDTO, Gestao.Models.Autoral.Grupo>();
                 cfg.CreateMap<Data.DTO.Portugues.OrdemDTO, Gestao.Models.Autoral.Ordem>();
             });
+
             IMapper mapper = config.CreateMapper();
             services.AddSingleton(mapper);
         }
@@ -131,13 +134,17 @@ namespace SME.Pedagogico.Gestao.WebApp
             app.UseSpaStaticFiles();
             app.UseAuthentication();
             app.UseCors("CorsPolicy");
-            app.UseSwagger();
 
+            app.UseElasticApm(Configuration,
+                new SqlClientDiagnosticSubscriber(),
+                new HttpDiagnosticsSubscriber(),
+                new EfCoreDiagnosticsSubscriber());
+
+            app.UseSwagger();
 
             app.UseSwaggerUI(options =>
             {
                 options.SwaggerEndpoint("/swagger/documentation/swagger.json", "SME.Pedagogico.Gestao.WebApp");
-                //options.RoutePrefix = "/documentation";
             });
 
             app.UseMvc(routes =>
