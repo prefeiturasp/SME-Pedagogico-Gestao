@@ -161,7 +161,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 foreach (var aluno in alunoSondagemMatematicaDto)
                 {
-                    if (aluno.Id == null && aluno.Respostas.Any())
+                    if (aluno.Id == null && aluno.Respostas != null)
                     {
                         Guid id = VerificaSeOAlunoPossuiSondagemERetornaId(aluno.CodigoAluno, aluno.CodigoTurma, filtroSondagem.Bimestre);
 
