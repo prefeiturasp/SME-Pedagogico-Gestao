@@ -75,7 +75,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             else
                 listaSondagem = await ObterSondagemAutoralMatematica(filtrarListagemDto);
 
-            var listaAlunos = await TurmaApi.GetAlunosNaTurma(Convert.ToInt32(filtrarListagemDto.CodigoTurma), _token);
+            var listaAlunos = await TurmaApi.GetAlunosConsideraInativosNaTurma(Convert.ToInt32(filtrarListagemDto.CodigoTurma), _token);
             var alunos = VerificaSituacaoMatriculaERetornaAlunosTurma(listaAlunos, filtrarListagemDto.AnoLetivo, filtrarListagemDto.Bimestre);
 
             if (alunos == null || !alunos.Any())
