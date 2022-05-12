@@ -75,7 +75,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             else
                 listaSondagem = await ObterSondagemAutoralMatematica(filtrarListagemDto);
 
-            var listaAlunos = await TurmaApi.GetAlunosNaTurma(Convert.ToInt32(filtrarListagemDto.CodigoTurma), _token);
+            var listaAlunos = await TurmaApi.GetAlunosConsideraInativosNaTurma(Convert.ToInt32(filtrarListagemDto.CodigoTurma), _token);
             var alunos = VerificaSituacaoMatriculaERetornaAlunosTurma(listaAlunos, filtrarListagemDto.AnoLetivo, filtrarListagemDto.Bimestre);
 
             if (alunos == null || !alunos.Any())
@@ -110,7 +110,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                        || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.PendenteRematricula
                                        || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.SemContinuidade
                                        || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.Concluido
-                                       || (periodoFimBimestre > DateTime.MinValue && x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.Transferido 
+                                       || (periodoFimBimestre > DateTime.MinValue && SituacoesAlunoInativo().Contains(x.CodigoSituacaoMatricula)
                                        && (x.DataSituacao >= periodoFimBimestre || x.DataSituacao <= periodoFimBimestre && x.DataSituacao >= periodoInicioBimestre))).ToList();
         }
 
@@ -133,6 +133,21 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
+        private List<int> SituacoesAlunoInativo()
+        {
+            return new List<int>
+            {
+                (int)SituacaoMatriculaAluno.Desistente,
+                (int)SituacaoMatriculaAluno.Transferido,
+                (int)SituacaoMatriculaAluno.VinculoIndevido,
+                (int)SituacaoMatriculaAluno.Falecido,
+                (int)SituacaoMatriculaAluno.NaoCompareceu,
+                (int)SituacaoMatriculaAluno.Deslocamento,
+                (int)SituacaoMatriculaAluno.Cessado,
+                (int)SituacaoMatriculaAluno.RemanejadoSaida,
+                (int)SituacaoMatriculaAluno.ReclassificadoSaida
+            };
+        }
         public async Task SalvarSondagemMatematica(IEnumerable<AlunoSondagemMatematicaDto> alunoSondagemMatematicaDto)
         {
             if (alunoSondagemMatematicaDto == null || !alunoSondagemMatematicaDto.Any())
