@@ -75,8 +75,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
             else
                 listaSondagem = await ObterSondagemAutoralMatematica(filtrarListagemDto);
 
-            var listaAlunos = await TurmaApi.GetAlunosConsideraInativosNaTurma(Convert.ToInt32(filtrarListagemDto.CodigoTurma), _token);
-            var alunos = VerificaSituacaoMatriculaERetornaAlunosTurma(listaAlunos, filtrarListagemDto.AnoLetivo, filtrarListagemDto.Bimestre);
+            var listaAlunos = await TurmaApi.GetAlunosNaTurma(Convert.ToInt32(filtrarListagemDto.CodigoTurma), _token);
+            var alunos = listaAlunos.Where(x => x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.Rematriculado
+            || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.Ativo 
+            || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.PendenteRematricula 
+            || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.SemContinuidade
+            || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.Concluido).ToList();
 
             if (alunos == null || !alunos.Any())
                 throw new Exception($"Não encontrado alunos para a turma {filtrarListagemDto.CodigoTurma} do ano letivo {filtrarListagemDto.AnoLetivo}");
