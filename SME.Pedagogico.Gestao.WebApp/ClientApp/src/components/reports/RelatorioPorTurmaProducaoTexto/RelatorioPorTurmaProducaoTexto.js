@@ -16,19 +16,18 @@ const RelatorioPorTurmaProducaoTexto = (props) => {
   };
 
   const getDadosAlunos = (aluno) => {
-    return perguntas.map((pergunta) => {
+    return perguntas.map((pergunta, index) => {
       const temPerguntaRespondida = aluno.perguntas
         ? aluno.perguntas.find((a) => a === pergunta.id)
         : false;
+      const par = index % 2 === 0;
+      const corCelula = par ? 'sc-lightpurple' : 'sc-darkblue';
       return (
-        <div className="col align-items-center justify-content-center d-flex flex-fill font-weight-light border-left">
+        <div
+          className={`col align-items-center justify-content-center d-flex flex-fill font-weight-light border-left text-white ${corCelula}`}
+        >
           {temPerguntaRespondida ? (
-            <i
-              className="fas fa-check-circle ml-2"
-              style={{
-                color: "#72BC17",
-              }}
-            />
+            <i className="fas fa-check-circle ml-2" />
           ) : null}
         </div>
       );

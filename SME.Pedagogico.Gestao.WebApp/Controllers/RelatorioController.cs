@@ -16,6 +16,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             await relatorioImpressaoUseCase.Executar(filtros);
             return Ok();
         }
+
         [HttpPost]
         [Route("sync")]
         public async Task<IActionResult> GerarSync([FromBody]RelatorioImpressaoFiltroDto filtros,

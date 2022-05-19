@@ -49,7 +49,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 return (NoContent());
             }
-
         }
 
         /// <summary>
@@ -60,7 +59,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> ListarEscolasPorDre(BuscarEscolasPorDreDTO schoolFilters, [FromServices]IMediator mediator)
         {
-
             if (string.IsNullOrEmpty(schoolFilters.dreCodeEol))
                 return (NoContent());
 
@@ -75,8 +73,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 return (NoContent());
             }
-
-
         }
 
         /// <summary>

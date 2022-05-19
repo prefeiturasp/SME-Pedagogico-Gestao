@@ -35,7 +35,8 @@ export default class PollReportMathChart extends Component {
         myChart.setOption({
             tooltip: {},
             xAxis: {
-                data: ['Acertou', 'Errou', 'Não Resolveu', 'S. preenchimento']
+                data: ['Acertou', 'Errou', 'Não Resolveu', 'S. preenchimento'],
+                show: false,
             },
             yAxis: {},
             series: [{
@@ -53,7 +54,8 @@ export default class PollReportMathChart extends Component {
         myChart2.setOption({
             tooltip: {},
             xAxis: {
-                data: ['Acertou', 'Errou', 'Não Resolveu', 'S. preenchimento']
+                data: ['Acertou', 'Errou', 'Não Resolveu', 'S. preenchimento'],
+                show: false,
             },
             yAxis: {},
             series: [{

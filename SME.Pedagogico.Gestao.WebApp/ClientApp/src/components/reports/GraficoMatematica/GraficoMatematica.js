@@ -1,11 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import echarts from "echarts";
 import { montarCampoToolTipGrafico } from "../../utils/utils";
+import { Grafico } from "./GraficoMatematica.css";
 
 const GraficoMatematica = (props) => {
-  const { dados, index } = props;
+  const { dados, index, esconderTresLinhas } = props;
 
-  useEffect(() => construirGrafico(), [dados]);
+  const classes = esconderTresLinhas ? "" : "col-xl-4";
 
   const format = (data) => {
     data = parseFloat(data);
@@ -16,7 +17,7 @@ const GraficoMatematica = (props) => {
     return texto.length > 50 ? posicaoX - 100 : posicaoX - 100;
   };
 
-  const construirGrafico = () => {
+  const construirGrafico = useCallback(() => {
     const myChart = echarts.init(document.getElementById(`grafico-${index}`));
 
     const dadosLabel = [];
@@ -40,6 +41,7 @@ const GraficoMatematica = (props) => {
       xAxis: {
         type: "category",
         data: dadosLabel,
+        show: false,
       },
       yAxis: {
         type: "value",
@@ -51,7 +53,7 @@ const GraficoMatematica = (props) => {
           showBackground: true,
           itemStyle: {
             normal: {
-              color: "#9C96F6",
+                color: "#0077be",
             },
           },
           backgroundStyle: {
@@ -60,15 +62,21 @@ const GraficoMatematica = (props) => {
         },
       ],
     });
-  };
+  }, [dados.barras, index]);
+
+  useEffect(() => construirGrafico(), [construirGrafico, dados]);
 
   return (
-    <div className="d-flex flex-column col-sm-6 col-xl-4">
+    <div className={`d-flex flex-column col-sm-6 ${classes}`}>
       <div
-        className="d-flex flex-fill justify-content-center align-items-center sc-gray"
-        style={{ height: 35 }}
+        className="d-flex flex-fill justify-content-center align-items-center sc-gray px-4 text-truncate"
+        style={{ height: 35, zIndex: 99 }}
       >
-        <div className="sc-text-size-1 font-weight-bold">
+        <div
+          className="sc-text-size-1 font-weight-bold text-truncate"
+          data-bs-toggle="tooltip"
+          title={dados.nomeGrafico}
+        >
           {dados.nomeGrafico}
         </div>
       </div>
@@ -77,10 +85,7 @@ const GraficoMatematica = (props) => {
         style={{ position: "relative", top: -35 }}
       >
         <div>
-          <div
-            id={`grafico-${index}`}
-            style={{ height: 400, width: 517 }}
-          ></div>
+          <Grafico id={`grafico-${index}`}></Grafico>
         </div>
       </div>
     </div>

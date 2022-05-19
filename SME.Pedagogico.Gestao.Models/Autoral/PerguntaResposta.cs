@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using SME.Pedagogico.Gestao.Models.Base.Abstracts;
+﻿using SME.Pedagogico.Gestao.Models.Base.Abstracts;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SME.Pedagogico.Gestao.Models.Autoral
 {

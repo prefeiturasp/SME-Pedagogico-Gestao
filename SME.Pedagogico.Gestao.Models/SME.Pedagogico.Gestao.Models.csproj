@@ -6,7 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Institutional\" />
+    <Compile Remove="Institutional\**" />
+    <EmbeddedResource Remove="Institutional\**" />
+    <None Remove="Institutional\**" />
   </ItemGroup>
 
 </Project>

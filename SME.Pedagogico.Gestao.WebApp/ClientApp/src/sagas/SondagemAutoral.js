@@ -2,6 +2,7 @@
 import * as Autoral from "../store/SondagemAutoral";
 import * as Filters from "../store/Filters";
 import * as Poll from "../store/Poll";
+import { parametrosParaUrl } from "../utils";
 
 export default function* () {
   yield all([
@@ -16,21 +17,33 @@ export default function* () {
       SalvaSondagemAutoralMat
     ),
     takeLatest(Filters.types.GET_PERIOD, GetPeriod),
+    takeLatest(Autoral.types.OBTER_PERIODO_ABERTO, obterPeriodoAberto),
   ]);
 }
 
-function* ListarPerguntas({ anoEscolar }) {
+const setCarregandoLista = (type, carregandoPerguntas) => ({
+  type,
+  carregandoPerguntas,
+});
+
+function* ListarPerguntas({ filtros }) {
   try {
-    const data = yield call(listaPerguntasAPI, anoEscolar);
-    var listaPerguntas = data;
+    yield put(setCarregandoLista(Poll.types.SET_LOADING_PERGUNTAS, true));
+    const listaPerguntas = yield call(listaPerguntasAPI, filtros);
     yield put({ type: Autoral.types.SETAR_PERGUNTAS, listaPerguntas });
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
+  } finally {
+    yield put(setCarregandoLista(Poll.types.SET_LOADING_PERGUNTAS, false));
   }
 }
 
-function listaPerguntasAPI(anoEscolar) {
-  var url = `/api/SondagemAutoral/Matematica/Perguntas?anoEscolar=${anoEscolar}`;
+function listaPerguntasAPI(filtros) {
+  const params = parametrosParaUrl({
+    anoEscolar: filtros.yearClassroom,
+    anoLetivo: filtros.schoolYear,
+  });
+  const url = `/api/SondagemAutoral/Matematica/Perguntas?${params}`;
   return fetch(url, {
     method: "get",
     headers: { "Content-Type": "application/json" },
@@ -55,9 +68,11 @@ function listarPeriodosAPI() {
   }).then((response) => response.json());
 }
 
-function* ListarAlunosAutoralMat({ filtro }) {
+function* ListarAlunosAutoralMat({ payload }) {
+  const tipoCarregandoAlunos = Poll.types.SET_CARREGANDO_ALUNOS;
   try {
-    const data = yield call(listarAlunosMatApi, filtro);
+    yield put({ type: tipoCarregandoAlunos, carregandoAlunos: true });
+    const data = yield call(listarAlunosMatApi, payload);
     var listaAlunosAutoralMatematica = data;
     yield put({
       type: Autoral.types.SETAR_ALUNOS_AUTORAL_MATEMATICA,
@@ -65,11 +80,18 @@ function* ListarAlunosAutoralMat({ filtro }) {
     });
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
+  } finally {
+    yield put({ type: tipoCarregandoAlunos, carregandoAlunos: false });
   }
 }
 
-function listarAlunosMatApi(filtro) {
-  var url = `/api/SondagemAutoral/Matematica?${new URLSearchParams(filtro)}`;
+function listarAlunosMatApi({ filtro, bimestre }) {
+  var params;
+  if (bimestre != null) params = parametrosParaUrl({ ...filtro, bimestre });
+  else params = parametrosParaUrl({ ...filtro });
+
+  var url = `/api/SondagemAutoral/Matematica?${params}`;
+
   return fetch(url, {
     method: "get",
     headers: { "Content-Type": "application/json" },
@@ -93,10 +115,12 @@ function* SalvaSondagemAutoralMat({ payload }) {
     filters: false,
   });
 
-  yield put({
-    type: Autoral.types.LISTAR_ALUNOS_AUTORAL_MATEMATICA,
-    filtro: payload.filtro,
-  });
+  if (payload.yearClassroom < 2022) {
+    yield put({
+      type: Autoral.types.LISTAR_ALUNOS_AUTORAL_MATEMATICA,
+      filtro: payload.filtro,
+    });
+  }
 }
 
 function* GetPeriod({ schoolYear }) {
@@ -113,6 +137,24 @@ function* GetPeriod({ schoolYear }) {
 
 function getPeriodApi(schoolYear) {
   var url = `/api/Filtros/ListarPeriodoDeAberturas/${schoolYear}`;
+  return fetch(url, {
+    method: "get",
+    headers: { "Content-Type": "application/json" },
+  }).then((response) => response.json());
+}
+
+function* obterPeriodoAberto({ payload }) {
+  try {
+    const periodoAberto = yield call(obterPeriodAbertoApi, payload);
+    yield put({ type: Autoral.types.SETAR_PERIODO_ABERTO, periodoAberto });
+  } catch (error) {
+    yield put({ type: "API_CALL_ERROR" });
+  }
+}
+
+function obterPeriodAbertoApi({ bimestre, anoLetivo }) {
+  const params = parametrosParaUrl({ bimestre, anoLetivo });
+  var url = `/api/SondagemAutoral/Matematica/Periodo/Aberto?${params}`;
   return fetch(url, {
     method: "get",
     headers: { "Content-Type": "application/json" },

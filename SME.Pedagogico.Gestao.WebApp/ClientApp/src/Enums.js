@@ -1,4 +1,4 @@
-﻿export const ROLES_ENUM = {
+export const ROLES_ENUM = {
   PROFESSOR: "Professor",
   COORDENADOR_PEDAGOGICO: "CP",
   ADM_DRE: "Adm DRE",
@@ -147,4 +147,22 @@ export const MATH_EXCLUDE_PROFICIENCIES_ID = {
   CAMPO_ADITIVO: 2,
   NUMEROS: 3,
   INEXISTENTE: 77,
+};
+
+export const TIPO_SONDAGEM = {
+  Numeric: "Números",
+  CA: "Campo Aditivo",
+  CM: "Campo Multiplicativo",
+};
+
+export const ENUM_TIPO_SONDAGEM = {
+  NUMEROS: "Numeric",
+  CAMPO_ADITIVO: "CA",
+  CAMPO_MULTIPLICATIVO: "CM",
+};
+
+export const GRUPO_SONDAGEM = {
+  CA: 1,
+  CM: 2,
+  Numeric: 3,
 };

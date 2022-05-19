@@ -39,8 +39,8 @@ const RelatorioPorTurmaLeituraVozAlta = (props) => {
                 {aluno.nomeAluno}
               </div>
             </div>
-            <div className="col-7">
-              <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center font-weight-light">
+            <div className="col-7 sc-lightpurple">
+              <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center font-weight-light text-white">
                 {getDadosAlunos(aluno)}
               </div>
             </div>
