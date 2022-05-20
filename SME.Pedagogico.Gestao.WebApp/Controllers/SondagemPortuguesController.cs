@@ -1,14 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using SME.Pedagogico.Gestao.WebApp.Models.ClassRoom;
-using SME.Pedagogico.Gestao.Data.DataTransfer;
 using SME.Pedagogico.Gestao.Data.Business;
+using SME.Pedagogico.Gestao.Data.DataTransfer;
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.DTO.Portugues;
-using SME.Pedagogico.Gestao.Data.DTO.Portugues.Relatorio;
-using System;
+using SME.Pedagogico.Gestao.WebApp.Models.ClassRoom;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
@@ -25,8 +23,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             _config = config;
         }
 
-
-
         [HttpPost]
         public async Task<ActionResult> IncluirSondagemPortugues(List<StudentPollPortuguese> ListStudentPollPortuguese)
         {
@@ -41,7 +37,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 return StatusCode(500, ex);
             }
-
         }
 
         [HttpPost]
@@ -98,6 +93,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             var sondagemAutoralBll = new PollPortuguese(_config);
             return Ok(sondagemAutoralBll.RetornaComponenteCurricularPortugues());
         }
+
         [HttpGet]
         public async Task<ActionResult> Bimestres()
         {
@@ -113,7 +109,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
             return Ok();
         }
-
 
         [HttpDelete]
         public async Task<IActionResult> ExcluirSondagemPortugues([FromQuery] FiltrarListagemDto filtrarListagemDto)

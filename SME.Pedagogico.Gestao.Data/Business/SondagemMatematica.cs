@@ -1,8 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using MoreLinq;
 using SME.Pedagogico.Gestao.Data.Contexts;
 using SME.Pedagogico.Gestao.Data.DTO;
+using SME.Pedagogico.Gestao.Data.DTO.Matematica;
 using SME.Pedagogico.Gestao.Data.Functionalities;
 using SME.Pedagogico.Gestao.Data.Integracao;
+using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using SME.Pedagogico.Gestao.Infra;
 using SME.Pedagogico.Gestao.Models.Academic;
@@ -19,12 +23,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
         private string _token;
         private AlunosAPI alunoAPI;
         public IConfiguration _config;
+        private TurmasAPI TurmaApi;
 
         public SondagemMatematica(IConfiguration config)
         {
             alunoAPI = new AlunosAPI(new EndpointsAPI());
             var createToken = new CreateToken(config);
             _token = createToken.CreateTokenProvisorio();
+            TurmaApi = new TurmasAPI(new EndpointsAPI());
         }
 
         public async Task InsertPoolCMAsync(List<SondagemMatematicaOrdemDTO> dadosSondagem)
@@ -72,7 +78,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             if (studentPoolCM.Semestre == 1)
             {
-
                 if (studentPoolCM.AnoTurma == 2)
                 {
                     studentPoolCM.Ordem3Ideia = studentDTO.Ideia3Semestre1;
@@ -91,11 +96,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     studentPoolCM.Ordem8Ideia = studentDTO.Ideia8Semestre1;
                     studentPoolCM.Ordem8Resultado = studentDTO.Resultado8Semestre1;
                 }
-
             }
             else if (studentPoolCM.Semestre == 2)
             {
-
                 if (studentPoolCM.AnoTurma == 2)
                 {
                     studentPoolCM.Ordem3Ideia = studentDTO.Ideia3Semestre2;
@@ -117,6 +120,314 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
+        public async Task<IEnumerable<AlunoSondagemMatematicaDto>> ObterAlunos(FiltrarListagemMatematicaDTO filtrarListagemDto)
+        {
+            var listaSondagem = await ObterSondagemAutoralMatematicaBimestre(filtrarListagemDto);
+
+            var alunos = (await TurmaApi.GetAlunosNaTurma(Convert.ToInt32(filtrarListagemDto.CodigoTurma), _token))
+                              .Where(x => x.CodigoSituacaoMatricula == 10 || x.CodigoSituacaoMatricula == 1 || x.CodigoSituacaoMatricula == 6 || x.CodigoSituacaoMatricula == 13 || x.CodigoSituacaoMatricula == 5)
+                              .ToList();
+
+            if (alunos == null || !alunos.Any())
+                throw new Exception($"Não encontrado alunos para a turma {filtrarListagemDto.CodigoTurma} do ano letivo {filtrarListagemDto.AnoLetivo}");
+
+            var listagem = new List<AlunoSondagemMatematicaDto>();
+            if (listaSondagem.Count > 0)
+                MapearAlunosListagemMatematica(listagem, listaSondagem, filtrarListagemDto.Bimestre);
+
+            AdicionarAlunosEOL(filtrarListagemDto, alunos, listagem);
+
+            return listagem.OrderBy(x => x.NumeroChamada).ThenBy(x => x.NomeAluno); 
+        }
+
+        private static async Task<List<Sondagem>> ObterSondagemAutoralMatematicaBimestre(FiltrarListagemMatematicaDTO filtrarListagemDto)
+        {
+            try
+            {
+                using (var contexto = new SMEManagementContextData())
+                {
+                    var subPerguntas = filtrarListagemDto.Perguntas != null ? filtrarListagemDto.Perguntas.Split(',').ToArray() : new string[] { filtrarListagemDto.PerguntaId };
+
+                    var listaSondagem = await contexto.Sondagem.Where(s => s.AnoLetivo == filtrarListagemDto.AnoLetivo &&
+                                                              s.AnoTurma == filtrarListagemDto.AnoEscolar &&
+                                                              s.CodigoDre == filtrarListagemDto.CodigoDre &&
+                                                              s.CodigoUe == filtrarListagemDto.CodigoUe &&
+                                                              s.ComponenteCurricularId.Equals(filtrarListagemDto.ComponenteCurricular.ToString()) &&
+                                                              s.AlunosSondagem.Any(a => a.ListaRespostas.Any(lr => subPerguntas.Contains(lr.PerguntaId))) &&
+                                                              s.CodigoTurma == filtrarListagemDto.CodigoTurma).Where(s => s.AlunosSondagem.Any(a => a.ListaRespostas.Any(lr => lr.Bimestre == filtrarListagemDto.Bimestre))).
+                                                              Include(x => x.AlunosSondagem).ThenInclude(x => x.ListaRespostas).ThenInclude(x => x.Resposta).ToListAsync();
+
+                    return listaSondagem;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private void MapearAlunosListagemMatematica(List<AlunoSondagemMatematicaDto> listagem, List<Sondagem> lsondagem, int? bimestre)
+        {
+            var listaAlunosDto = new List<AlunoSondagemMatematicaDto>();
+            var listCodigoAlunoEol = new List<string>();
+            lsondagem.ForEach(s =>
+            {
+                s.AlunosSondagem.ForEach(a =>
+                {
+                    var alunoDto = new AlunoSondagemMatematicaDto();
+
+                    alunoDto.Id = a.Id != null ? a.Id.ToString() : null;
+                    alunoDto.AnoLetivo = s.AnoLetivo;
+                    alunoDto.AnoTurma = s.AnoTurma;
+                    alunoDto.CodigoAluno = a.CodigoAluno;
+                    alunoDto.NomeAluno = a.NomeAluno;
+                    alunoDto.ComponenteCurricular = s.ComponenteCurricularId.ToString();
+                    alunoDto.CodigoUe = s.CodigoUe;
+                    alunoDto.CodigoDre = s.CodigoDre;
+                    alunoDto.Bimestre = bimestre;
+                    alunoDto.CodigoTurma = s.CodigoTurma;
+                    alunoDto.Respostas = new List<AlunoRespostaDto>();
+                    a.ListaRespostas.Where(x => x.Bimestre == bimestre).ToList().ForEach(r =>
+                    {
+                        var Resposta = new AlunoRespostaDto()
+                        {
+                            Resposta = r.RespostaId,
+                            Pergunta = r.PerguntaId,
+                            PeriodoId = s.PeriodoId,
+                            Bimestre = r.Bimestre
+                        };
+
+                        alunoDto.Respostas.Add(Resposta);
+                    });
+
+                    if (alunoDto.Respostas.Count() > 0)
+                    {
+                        listaAlunosDto.Add(alunoDto);
+                        listCodigoAlunoEol.Add(a.CodigoAluno);
+                    }
+                });
+            });
+
+            foreach (var codigoAluno in listCodigoAlunoEol.Distinct())
+            {
+                var listaResposta = new List<AlunoRespostaDto>();
+                var alunoDto = listaAlunosDto.Where(a => a.CodigoAluno == codigoAluno).FirstOrDefault();
+                var listaAlunoResposta = listaAlunosDto.Where(a => a.CodigoAluno == codigoAluno && (a.Bimestre.HasValue ? a.Bimestre.Value : 0) == bimestre).ToList();
+                listaAlunoResposta.ForEach(lr =>
+                {
+                    lr.Respostas.ForEach(r =>
+                    {
+                        listaResposta.Add(r);
+                    });
+                });
+                alunoDto.Respostas = listaResposta;
+
+                if (alunoDto != null)
+                    listagem.Add(alunoDto);
+            }
+        }
+
+        private void AdicionarAlunosEOL(FiltrarListagemMatematicaDTO filtrarListagemDto, List<AlunosNaTurmaDTO> alunos, List<AlunoSondagemMatematicaDto> listagem)
+        {
+            alunos.ForEach(aluno =>
+            {
+                var alunoBanco = listagem.FirstOrDefault(x => x.CodigoAluno.Equals(aluno.CodigoAluno.ToString()));
+                if (alunoBanco != null)
+                {
+                    alunoBanco.NumeroChamada = aluno.NumeroAlunoChamada;
+                    return;
+                }
+
+                listagem.Add(new AlunoSondagemMatematicaDto
+                {
+                    CodigoAluno = aluno.CodigoAluno.ToString(),
+                    AnoLetivo = filtrarListagemDto.AnoLetivo,
+                    AnoTurma = filtrarListagemDto.AnoEscolar,
+                    CodigoDre = filtrarListagemDto.CodigoDre,
+                    CodigoTurma = filtrarListagemDto.CodigoTurma,
+                    CodigoUe = filtrarListagemDto.CodigoUe,
+                    NumeroChamada = aluno.NumeroAlunoChamada,
+                    ComponenteCurricular = filtrarListagemDto.ComponenteCurricular.ToString(),
+                    NomeAluno = aluno.NomeAluno,
+                });
+
+                listagem.OrderBy(x => x.NumeroChamada);
+            });
+        }
+
+        public async Task<IEnumerable<PerguntaDto>> ObterPerguntas(int anoEscolar, int anoLetivo, int grupo)
+        {
+            try
+            {
+                var retornoSondagem = new List<SondagemMatematicaOrdemDTO>();
+
+                using (SMEManagementContextData db = new SMEManagementContextData())
+                {
+                    var perguntas = (ProficienciaEnum)grupo == ProficienciaEnum.Numeros
+                                    ? await ObterPerguntasGrupoNumeros(db, anoEscolar, anoLetivo, grupo)
+                                    : await ObterPerguntasGrupoCACM(db, anoEscolar, anoLetivo, grupo);
+
+                    if (perguntas == null || !perguntas.Any())
+                        throw new Exception("Não foi possivel obter as perguntas da sondagem");
+
+                    return perguntas;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private async Task<List<PerguntaDto>> ObterPerguntasGrupoCACM(SMEManagementContextData db, int anoEscolar, int anoLetivo, int grupo)
+        {
+            try
+            {
+                var perguntasAlfabetizacao = new List<PerguntaAlfabetizacaoDto>();
+
+                var sql = $@"select p.""Id"" as ""PerguntaPrincipalId"",
+                                    p.""Descricao"" as ""PerguntaPrincipalDescricao"",
+                                    pae.""Ordenacao"" as ""PerguntaPrincipalOrdenacao"",
+                                    ps.""Id"" as ""PerguntaSecundariaId"",
+                                    ps.""Descricao"" as ""PerguntaSecundariaDescricao"",
+                                    pae2.""Ordenacao"" as ""PerguntaSecundariaOrdenacao"",
+                                    rs.""Id"" as ""RespostaId"",
+                                    rs.""Descricao"" as ""RespostaDescricao"",
+                                    prs.""Ordenacao"" as ""RespostaOrdenacao""
+                            from ""PerguntaAnoEscolar"" pae
+                            join ""Pergunta"" p on p.""Id"" = pae.""PerguntaId""
+                            join ""Pergunta"" ps on ps.""PerguntaId"" = pae.""PerguntaId""
+                            join ""PerguntaAnoEscolar"" pae2 on pae2.""PerguntaId"" = ps.""Id""
+                            join ""PerguntaResposta"" prs on prs.""PerguntaId"" = ps.""Id""
+                            join ""Resposta"" rs on rs.""Id"" = prs.""RespostaId""
+                            where pae.""AnoEscolar"" in ({anoEscolar}) and pae.""Grupo"" = {grupo}
+                                  and (pae.""FimVigencia"" is null and extract(year from pae.""InicioVigencia"") <= {anoLetivo})";
+
+                using (var command = db.Database.GetDbConnection().CreateCommand())
+                {
+                    command.CommandText = sql;
+                    db.Database.OpenConnection();
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                var pergunta = new PerguntaAlfabetizacaoDto()
+                                {
+                                    PerguntaPrincipalId = reader["PerguntaPrincipalId"].ToString(),
+                                    PerguntaPrincipalDescricao = reader["PerguntaPrincipalDescricao"].ToString(),
+                                    PerguntaPrincipalOrdenacao = int.Parse(reader["PerguntaPrincipalOrdenacao"].ToString()),
+                                    PerguntaSecundariaId = reader["PerguntaSecundariaId"].ToString(),
+                                    PerguntaSecundariaDescricao = reader["PerguntaSecundariaDescricao"].ToString(),
+                                    PerguntaSecundariaOrdenacao = int.Parse(reader["PerguntaSecundariaOrdenacao"].ToString()),
+                                    RespostaId = reader["RespostaId"].ToString(),
+                                    RespostaDescricao = reader["RespostaDescricao"].ToString(),
+                                    RespostaOrdenacao = int.Parse(reader["RespostaOrdenacao"].ToString()),
+                                };
+                                perguntasAlfabetizacao.Add(pergunta);
+                            }
+                            reader.NextResult();
+                        }
+                    }
+                }
+
+                var perguntasRespostas = perguntasAlfabetizacao.GroupBy(g => new { g.PerguntaPrincipalId, g.PerguntaPrincipalDescricao, g.PerguntaPrincipalOrdenacao }, (key, group) =>
+                new PerguntaDto()
+                {
+                    Id = key.PerguntaPrincipalId,
+                    Descricao = key.PerguntaPrincipalDescricao,
+                    Ordenacao = key.PerguntaPrincipalOrdenacao,
+                    Perguntas = group.GroupBy(g => new { g.PerguntaSecundariaId, g.PerguntaSecundariaDescricao, g.PerguntaSecundariaOrdenacao }, (key2, group2) =>
+                    new PerguntaDto()
+                    {
+                        Id = key2.PerguntaSecundariaId,
+                        Descricao = key2.PerguntaSecundariaDescricao,
+                        Ordenacao = key2.PerguntaSecundariaOrdenacao,
+                        Respostas = group2.Select(s => new RespostaDto()
+                        {
+                            Id = s.RespostaId,
+                            Descricao = s.RespostaDescricao,
+                            Ordenacao = s.RespostaOrdenacao
+                        }).OrderBy(o => o.Ordenacao)
+                    }).OrderBy(o => o.Ordenacao)
+                }).ToList();
+
+                return perguntasRespostas;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private async Task<List<PerguntaDto>> ObterPerguntasGrupoNumeros(SMEManagementContextData db, int anoEscolar, int anoLetivo, int grupo)
+        {
+            try
+            {
+                var perguntasAlfabetizacao = new List<PerguntaAlfabetizacaoDto>();
+
+                var sql = $@"select p.""Id"" as ""PerguntaId"",
+                                    p.""Descricao"" as ""PerguntaDescricao"",
+                                    pae.""Ordenacao"" as ""PerguntaOrdenacao"",
+                                    rs.""Id"" as ""RespostaId"",
+                                    rs.""Descricao"" as ""RespostaDescricao"",
+                                    prs.""Ordenacao"" as ""RespostaOrdenacao""
+                            from ""PerguntaAnoEscolar"" pae
+                            join ""Pergunta"" p on p.""Id"" = pae.""PerguntaId""
+                            join ""PerguntaResposta"" prs on prs.""PerguntaId"" = p.""Id""
+                            join ""Resposta"" rs on rs.""Id"" = prs.""RespostaId""
+                            where pae.""AnoEscolar"" in ({anoEscolar}) and pae.""Grupo"" = {grupo}
+                            and (pae.""FimVigencia"" is null and extract(year from pae.""InicioVigencia"") <= {anoLetivo})";
+
+                using (var command = db.Database.GetDbConnection().CreateCommand())
+                {
+                    command.CommandText = sql;
+                    db.Database.OpenConnection();
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                var pergunta = new PerguntaAlfabetizacaoDto()
+                                {
+                                    PerguntaPrincipalId = reader["PerguntaId"].ToString(),
+                                    PerguntaPrincipalDescricao = reader["PerguntaDescricao"].ToString(),
+                                    PerguntaPrincipalOrdenacao = int.Parse(reader["PerguntaOrdenacao"].ToString()),
+                                    RespostaId = reader["RespostaId"].ToString(),
+                                    RespostaDescricao = reader["RespostaDescricao"].ToString(),
+                                    RespostaOrdenacao = int.Parse(reader["RespostaOrdenacao"].ToString()),
+                                };
+                                perguntasAlfabetizacao.Add(pergunta);
+                            }
+                            reader.NextResult();
+                        }
+                    }
+                }
+
+                var perguntasRespostas = perguntasAlfabetizacao.GroupBy(g => new { g.PerguntaPrincipalId, g.PerguntaPrincipalDescricao, g.PerguntaPrincipalOrdenacao }, (key, group) =>
+                new PerguntaDto()
+                {
+                    Id = key.PerguntaPrincipalId,
+                    Descricao = key.PerguntaPrincipalDescricao,
+                    Ordenacao = key.PerguntaPrincipalOrdenacao,
+                    Respostas = group.Select(s => new RespostaDto()
+                    {
+                        Id = s.RespostaId,
+                        Descricao = s.RespostaDescricao,
+                        Ordenacao = s.RespostaOrdenacao
+                    }).OrderBy(o => o.Ordenacao).DistinctBy(x => x.Id)
+                }).ToList();
+
+                return perguntasRespostas;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<List<SondagemMatematicaOrdemDTO>> ListPoolCMAsync(FiltroSondagemMatematicaDTO filtroSondagem)
         {
             try
@@ -128,7 +439,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     var sondagemDaTurma = db.MathPoolCMs
                                                         .Where(x => x.TurmaEolCode.Equals(filtroSondagem.TurmaEolCode))
                                                         .ToList();
-
 
                     var turmApi = new TurmasAPI(new EndpointsAPI());
 
@@ -206,7 +516,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                         }
                                     }
                                 }
-
                             }
                             else
                             {
@@ -375,14 +684,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         CreateResultItem(ordem4ResultadoAgrupados, order: "4", ref ideasAndResults, ref resultCharts, PollTypeEnum.CM, anoTurma, quantidadeAlunoTotal);
                     }
 
-
                     var ordem5IdeiaAgrupados = query.GroupBy(fu => fu.Ordem5Ideia)
                                             .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() }).ToList();
                     var ordem5ResultadoAgrupados = query.GroupBy(fu => fu.Ordem5Resultado)
                                                 .Select(g => new MathGroupByDTO() { Label = g.Key, Value = g.Count() }).ToList();
                     CreateIdeaItem(ordem5IdeiaAgrupados, order: "5", ref ideasAndResults, ref ideaCharts, quantidadeAlunoTotal);
                     CreateResultItem(ordem5ResultadoAgrupados, order: "5", ref ideasAndResults, ref resultCharts, PollTypeEnum.CM, anoTurma, quantidadeAlunoTotal);
-
 
                     if (anoTurma != (int)AnoTurmaEnum.TerceiroAno)
                     {
@@ -401,7 +708,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         CreateResultItem(ordem7ResultadoAgrupados, order: "7", ref ideasAndResults, ref resultCharts, PollTypeEnum.CM, anoTurma, quantidadeAlunoTotal);
                     }
 
-
                     if (anoTurma != (int)AnoTurmaEnum.TerceiroAno && anoTurma != (int)AnoTurmaEnum.QuartoAno)
                     {
                         var ordem8IdeiaAgrupados = query.GroupBy(fu => fu.Ordem8Ideia)
@@ -411,7 +717,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         CreateIdeaItem(ordem8IdeiaAgrupados, order: "8", ref ideasAndResults, ref ideaCharts, quantidadeAlunoTotal);
                         CreateResultItem(ordem8ResultadoAgrupados, order: "8", ref ideasAndResults, ref resultCharts, PollTypeEnum.CM, anoTurma, quantidadeAlunoTotal);
                     }
-
                 }
 
                 ideasAndResults.IdeaResults = ideasAndResults.IdeaResults.OrderBy(i => Convert.ToInt32(i.OrderName)).ToList();
@@ -564,7 +869,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                     CreateResultItem(ordem1Resultado, order: "1", ref ideasAndResults, ref resultCharts, PollTypeEnum.CA, anoTurma, quantidadeAlunoTotal);
                     CreateResultItem(ordem2Resultado, order: "2", ref ideasAndResults, ref resultCharts, PollTypeEnum.CA, anoTurma, quantidadeAlunoTotal);
-
 
                     ideasAndResults.IdeaResults = ideasAndResults.IdeaResults.OrderBy(i => Convert.ToInt32(i.OrderName)).ToList();
                     ideasAndResults.ResultResults = ideasAndResults.ResultResults.OrderBy(i => Convert.ToInt32(i.OrderName)).ToList();
@@ -757,8 +1061,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         numberRetorno.NaoEscreveConvencionalmenteResultado = item.Value;
                         numberRetorno.NaoEscreveConvencionalmenteText = "Não escreve convencionalmente";
                     }
-
-
                 }
             }
 
@@ -811,11 +1113,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         case PollTypeEnum.CA:
                             orderTitle = "COMPOSIÇÃO";
                             break;
+
                         default:
                             orderTitle = string.Empty;
                             break;
                     }
                     break;
+
                 case 2:
                     switch (pollType)
                     {
@@ -825,20 +1129,24 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                 case 1:
                                     orderTitle = "COMPOSIÇÃO";
                                     break;
+
                                 case 2:
                                     orderTitle = "TRANSFORMAÇÃO";
                                     break;
+
                                 default:
                                     orderTitle = string.Empty;
                                     break;
                             }
                             break;
+
                         case PollTypeEnum.CM:
                             switch (orderNumber)
                             {
                                 case 3:
                                     orderTitle = "PROPORCIONALIDADE";
                                     break;
+
                                 default:
                                     orderTitle = string.Empty;
                                     break;
@@ -846,6 +1154,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             break;
                     }
                     break;
+
                 case 3:
                     switch (pollType)
                     {
@@ -855,26 +1164,32 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                 case 1:
                                     orderTitle = "COMPOSIÇÃO";
                                     break;
+
                                 case 2:
                                     orderTitle = "TRANSFORMAÇÃO";
                                     break;
+
                                 case 3:
                                     orderTitle = "COMPARAÇÃO";
                                     break;
+
                                 default:
                                     orderTitle = string.Empty;
                                     break;
                             }
                             break;
+
                         case PollTypeEnum.CM:
                             switch (orderNumber)
                             {
                                 case 4:
                                     orderTitle = "CONFIGURAÇÃO RETANGULAR";
                                     break;
+
                                 case 5:
                                     orderTitle = "PROPORCIONALIDADE";
                                     break;
+
                                 default:
                                     orderTitle = string.Empty;
                                     break;
@@ -882,6 +1197,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             break;
                     }
                     break;
+
                 case 4:
                     switch (pollType)
                     {
@@ -891,32 +1207,40 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                 case 1:
                                     orderTitle = "COMPOSIÇÃO";
                                     break;
+
                                 case 2:
                                     orderTitle = "TRANSFORMAÇÃO";
                                     break;
+
                                 case 3:
                                     orderTitle = "COMPOSIÇÃO DE TRANSF.";
                                     break;
+
                                 case 4:
                                     orderTitle = "COMPARAÇÃO";
                                     break;
+
                                 default:
                                     orderTitle = string.Empty;
                                     break;
                             }
                             break;
+
                         case PollTypeEnum.CM:
                             switch (orderNumber)
                             {
                                 case 5:
                                     orderTitle = "CONFIGURAÇÃO RETANGULAR";
                                     break;
+
                                 case 6:
                                     orderTitle = "PROPORCIONALIDADE";
                                     break;
+
                                 case 7:
                                     orderTitle = "COMBINATÓRIA";
                                     break;
+
                                 default:
                                     orderTitle = string.Empty;
                                     break;
@@ -924,6 +1248,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             break;
                     }
                     break;
+
                 case 5:
                     switch (pollType)
                     {
@@ -933,35 +1258,44 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                 case 1:
                                     orderTitle = "COMPOSIÇÃO";
                                     break;
+
                                 case 2:
                                     orderTitle = "TRANSFORMAÇÃO";
                                     break;
+
                                 case 3:
                                     orderTitle = "COMPOSIÇÃO DE TRANSF.";
                                     break;
+
                                 case 4:
                                     orderTitle = "COMPARAÇÃO";
                                     break;
+
                                 default:
                                     orderTitle = string.Empty;
                                     break;
                             }
                             break;
+
                         case PollTypeEnum.CM:
                             switch (orderNumber)
                             {
                                 case 5:
                                     orderTitle = "COMBINATÓRIA";
                                     break;
+
                                 case 6:
                                     orderTitle = "CONFIGURAÇÃO RETANGULAR";
                                     break;
+
                                 case 7:
                                     orderTitle = "PROPORCIONALIDADE";
                                     break;
+
                                 case 8:
                                     orderTitle = "MULTIPLICAÇÃO COMPARATIVA";
                                     break;
+
                                 default:
                                     orderTitle = string.Empty;
                                     break;
@@ -969,6 +1303,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             break;
                     }
                     break;
+
                 case 6:
                     switch (pollType)
                     {
@@ -978,35 +1313,44 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                 case 1:
                                     orderTitle = "COMPOSIÇÃO";
                                     break;
+
                                 case 2:
                                     orderTitle = "TRANSFORMAÇÃO";
                                     break;
+
                                 case 3:
                                     orderTitle = "COMPOSIÇÃO DE TRANSF.";
                                     break;
+
                                 case 4:
                                     orderTitle = "COMPARAÇÃO";
                                     break;
+
                                 default:
                                     orderTitle = string.Empty;
                                     break;
                             }
                             break;
+
                         case PollTypeEnum.CM:
                             switch (orderNumber)
                             {
                                 case 5:
                                     orderTitle = "COMBINATÓRIA";
                                     break;
+
                                 case 6:
                                     orderTitle = "CONFIGURAÇÃO RETANGULAR";
                                     break;
+
                                 case 7:
                                     orderTitle = "PROPORCIONALIDADE";
                                     break;
+
                                 case 8:
                                     orderTitle = "MULTIPLICAÇÃO COMPARATIVA";
                                     break;
+
                                 default:
                                     orderTitle = string.Empty;
                                     break;
@@ -1014,14 +1358,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             break;
                     }
                     break;
+
                 default:
                     break;
-
             }
-
 
             return orderTitle;
         }
+
         public async Task<List<SondagemMatematicaOrdemDTO>> ListPoolCAAsync(FiltroSondagemMatematicaDTO filtroSondagem)
         {
             try
@@ -1033,7 +1377,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     var sondagemDaTurma = db.MathPoolCAs
                                             .Where(x => x.TurmaEolCode.Equals(filtroSondagem.TurmaEolCode))
                                             .ToList();
-
 
                     var turmApi = new TurmasAPI(new EndpointsAPI());
 
@@ -1099,7 +1442,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                         }
                                     }
                                 }
-
                             }
                             else
                             {
@@ -1317,7 +1659,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         }
                         else
                         {
-
                             MapValuesPoolNumbers(student, ref studentPoolNumeros);
                             db.MathPoolNumbers.Update(studentPoolNumeros);
                         }

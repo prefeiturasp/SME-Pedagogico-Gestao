@@ -17,6 +17,7 @@ function* GetPollReportSaga({ parameters }) {
       loadingSearchPollReport: true,
     });
     const data = yield call(getPollReportData, parameters);
+    const sondagemAnterior = parameters.SchoolYear < 2022;
 
     if (data.status === 401)
       yield put({ type: PollReport.types.POLL_REPORT_REQUEST_NOT_FOUND });
@@ -27,7 +28,8 @@ function* GetPollReportSaga({ parameters }) {
         (parameters.discipline === "Língua Portuguesa" &&
           Number(parameters.CodigoCurso) >= 4) ||
         (parameters.discipline === "Matemática" &&
-          Number(parameters.CodigoCurso) >= 7)
+          Number(parameters.CodigoCurso) >= 7 &&
+          sondagemAnterior)
       ) {
         pollReportResponse = {
           data: data,
@@ -35,7 +37,8 @@ function* GetPollReportSaga({ parameters }) {
         };
       } else if (
         !parameters.classroomReport &&
-        parameters.discipline === "Matemática"
+        parameters.discipline === "Matemática" &&
+        sondagemAnterior
       ) {
         pollReportResponse = {
           data: {
@@ -54,6 +57,10 @@ function* GetPollReportSaga({ parameters }) {
           data: data.results,
           chartData: data.chartData,
         };
+      }
+
+      if (!sondagemAnterior) {
+        pollReportResponse = { data };
       }
 
       yield put({

@@ -504,11 +504,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 {
                     item.StudentPercentage = ((double)item.studentQuantity / total) * 100;
                     if (string.IsNullOrWhiteSpace(item.OptionName))
-                        item.OptionName = "Sem preechimento";
+                        item.OptionName = "Sem preenchimento";
                 }
 
                 PollReportPortugueseResult retorno = new PollReportPortugueseResult();
-                retorno.Results = listReturn.OrderBy(lr => lr.OptionName).ToList();
+
+                retorno.Results = OrdenarSequenciaDeRespostasEscrita(listReturn);
 
                 var listaGrafico = graficos.GroupBy(fu => fu.Name).Select(g => new { Label = g.Key, Value = g.Sum(soma => soma.Value) }).ToList();
 
@@ -523,10 +524,70 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     });
                 }
 
-                retorno.ChartData = graficos.OrderBy(g => g.Name).ToList();
+                if (proficiencia == "Escrita")
+                {
+                    retorno.Results = OrdenarSequenciaDeRespostasEscrita(listReturn);
+                    retorno.ChartData = OrdenarSequenciaDeRespostasEscritaGrafico(graficos);
+                }
+                else
+                {
+                    retorno.Results = listReturn.OrderBy(lr => lr.OptionName).ToList();
+                    retorno.ChartData = graficos.OrderBy(g => g.Name).ToList();
+                }
+                    
 
                 return retorno;
             }
+        }
+
+        public List<PollReportPortugueseItem> OrdenarSequenciaDeRespostasEscrita(List<PollReportPortugueseItem> listaRespostas)
+        {
+            var listaRespostasEscritaOrdenada = new List<PollReportPortugueseItem>();
+
+            var opcao1 = listaRespostas.FirstOrDefault(lr => lr.OptionName == "Pré-Silábico");
+            listaRespostasEscritaOrdenada.Add(opcao1);
+
+            var opcao2 = listaRespostas.FirstOrDefault(lr => lr.OptionName == "Silábico sem valor");
+            listaRespostasEscritaOrdenada.Add(opcao2);
+
+            var opcao3 = listaRespostas.FirstOrDefault(lr => lr.OptionName == "Silábico com valor");
+            listaRespostasEscritaOrdenada.Add(opcao3);
+
+            var opcao4 = listaRespostas.FirstOrDefault(lr => lr.OptionName == "Silábico alfabético");
+            listaRespostasEscritaOrdenada.Add(opcao4);
+
+            var opcao5 = listaRespostas.FirstOrDefault(lr => lr.OptionName == "Alfabético");
+            listaRespostasEscritaOrdenada.Add(opcao5);
+
+            var opcao6 = listaRespostas.FirstOrDefault(lr => lr.OptionName == "Sem preenchimento");
+            listaRespostasEscritaOrdenada.Add(opcao6);
+
+            return listaRespostasEscritaOrdenada;
+        }
+
+        public List<PortChartDataModel> OrdenarSequenciaDeRespostasEscritaGrafico(List<PortChartDataModel> listaColunasGrafico)
+        {
+            var listaRespostasEscritaOrdenada = new List<PortChartDataModel>();
+
+            var opcao1 = listaColunasGrafico.FirstOrDefault(lr => lr.Name == "Pré-Silábico");
+            listaRespostasEscritaOrdenada.Add(opcao1);
+
+            var opcao2 = listaColunasGrafico.FirstOrDefault(lr => lr.Name == "Silábico sem valor");
+            listaRespostasEscritaOrdenada.Add(opcao2);
+
+            var opcao3 = listaColunasGrafico.FirstOrDefault(lr => lr.Name == "Silábico com valor");
+            listaRespostasEscritaOrdenada.Add(opcao3);
+
+            var opcao4 = listaColunasGrafico.FirstOrDefault(lr => lr.Name == "Silábico alfabético");
+            listaRespostasEscritaOrdenada.Add(opcao4);
+
+            var opcao5 = listaColunasGrafico.FirstOrDefault(lr => lr.Name == "Alfabético");
+            listaRespostasEscritaOrdenada.Add(opcao5);
+
+            var opcao6 = listaColunasGrafico.FirstOrDefault(lr => lr.Name == "Sem preenchimento");
+            listaRespostasEscritaOrdenada.Add(opcao6);
+
+            return listaRespostasEscritaOrdenada;
         }
 
         private string MontarTextoProficiencia(string proficiencia)

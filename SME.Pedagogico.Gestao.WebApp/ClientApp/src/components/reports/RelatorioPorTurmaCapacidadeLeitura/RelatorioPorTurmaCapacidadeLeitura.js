@@ -34,13 +34,25 @@ const RelatorioPorTurmaCapacidadeLeitura = (props) => {
   const getDadosAlunos = aluno => {
     return ordens.map((ordem) => {
       const ordemAluno = aluno.ordens.find((o) => o.id === ordem.id);
-      return perguntas.map((pergunta) => {
+      return perguntas.map((pergunta, index) => {
+        let corCelula = '';
+        switch (index) {
+          case 1:
+            corCelula = 'sc-darkblue';
+            break;        
+          case 2:
+            corCelula = 'sc-darkgray';
+            break;        
+          default:
+            corCelula = 'sc-lightpurple'
+            break;
+        }
         const perguntaAluno =
           ordemAluno && ordemAluno.perguntas.find((p) => p.id === pergunta.id);
         return (
-          <div className="col-1 border-right">
-            <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center font-weight-light">
-              {perguntaAluno ? perguntaAluno.valor : ""}
+          <div className={`col-1 border-right ${corCelula}`}>
+            <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center font-weight-light text-white">
+              {perguntaAluno && perguntaAluno.valor ? perguntaAluno.valor : ""}
             </div>
           </div>
         );

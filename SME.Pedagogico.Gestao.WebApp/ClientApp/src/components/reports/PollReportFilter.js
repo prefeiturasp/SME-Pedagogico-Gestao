@@ -75,11 +75,31 @@ class PollReportFilter extends Component {
       this.limparDadosFiltro();
     }
 
-    const { yearClassroom } = this.props.poll.selectedFilter;
-    const { yearClassroom: prevYearClassroom } = prevProps.poll.selectedFilter;
+    const { yearClassroom, schoolYear } = this.props.poll.selectedFilter;
+    const { yearClassroom: prevYearClassroom, schoolYear: prevSchoolYear } =
+      prevProps.poll.selectedFilter;
 
     if (prevYearClassroom !== yearClassroom) {
       this.carregarProficiencia(this.state.campoDisciplina);
+    }
+
+    if (schoolYear !== prevSchoolYear) {
+      const filters = this.props.pollReport.filters;
+      const campoDisciplina = this.state.campoDisciplina;
+      const disciplina = this.state.selectedFilter.discipline;
+
+      const parametroPeriodo =
+        this.props.poll.selectedFilter.schoolYear >= 2022 &&
+        disciplina === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao
+          ? "newTerms"
+          : "terms";
+
+      this.setState((state) => ({
+        ...state,
+        selectedProficiency: "",
+        selectedTerm: "",
+        terms: filters[campoDisciplina][parametroPeriodo],
+      }));
     }
   }
 
@@ -199,6 +219,11 @@ class PollReportFilter extends Component {
           };
         })
       : [];
+    const parametroPeriodo =
+      this.props.poll.selectedFilter.schoolYear >= 2022 &&
+      label === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao
+        ? "newTerms"
+        : "terms";
 
     this.setState({
       selectedFilter: {
@@ -210,7 +235,7 @@ class PollReportFilter extends Component {
       selectedTerm: "",
       grupos,
       grupoSelecionado: "",
-      terms: filters[event.target.value].terms,
+      terms: filters[event.target.value][parametroPeriodo],
       campoDisciplina: event.target.value,
     });
 
@@ -286,6 +311,12 @@ class PollReportFilter extends Component {
     );
 
     const parameters = this.state.selectedFilter;
+    const { schoolYear, yearClassroom } = this.props.poll.selectedFilter;
+    const ehMatematica =
+      parameters.discipline ===
+      DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao;
+    const codigoCursoMaiorIgualSete = yearClassroom >= "7";
+
     parameters.classroomReport =
       this.props.poll.selectedFilter.classroomCodeEol === "" ? false : true;
     parameters.codigoDRE =
@@ -306,6 +337,11 @@ class PollReportFilter extends Component {
       ? this.state.grupoSelecionado
       : null;
     this.props.pollReportsMethods.resetData();
+
+    if (schoolYear === "2019" && ehMatematica && codigoCursoMaiorIgualSete) {
+      return;
+    }
+
     this.props.pollReportsMethods.getPollReport(parameters);
   }
 
@@ -325,6 +361,13 @@ class PollReportFilter extends Component {
 
   checkButton() {
     const parameters = this.state.selectedFilter;
+    const ehNovaMatematica =
+      this.props.poll.selectedFilter.schoolYear >= 2022 &&
+      parameters.discipline ===
+        DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao;
+    const desabilitarProeficiencia = ehNovaMatematica
+      ? false
+      : !parameters.proficiency;
 
     if (this.ehMatematicaAcimaDoSetimoAnoConsolidado()) {
       return !parameters.discipline || !parameters.term;
@@ -332,7 +375,7 @@ class PollReportFilter extends Component {
       return !parameters.discipline || !parameters.term || !parameters.grupoId;
     } else {
       return (
-        !parameters.discipline || !parameters.term || !parameters.proficiency
+        !parameters.discipline || !parameters.term || desabilitarProeficiencia
       );
     }
   }
@@ -343,10 +386,12 @@ class PollReportFilter extends Component {
 
   mostrarProficiencia = () => {
     const anoEscolhido = Number(this.props.poll.selectedFilter.yearClassroom);
+    const anoMatematica =
+      this.props.poll.selectedFilter.schoolYear >= 2022 ? 4 : 7;
 
     switch (this.state.selectedFilter.discipline) {
       case DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao:
-        return !this.verificaAno(anoEscolhido, 7);
+        return !this.verificaAno(anoEscolhido, anoMatematica);
       case DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES.Descricao:
         return !this.verificaAno(anoEscolhido, 4);
       default:

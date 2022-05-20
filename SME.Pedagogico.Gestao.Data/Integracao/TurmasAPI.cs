@@ -26,5 +26,15 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
                 .GetAsync<List<AlunosNaTurmaDTO>>
                       (token, string.Format(url, codigoTurma, false));
         }
+
+        public async Task<List<AlunosNaTurmaDTO>> GetAlunosConsideraInativosNaTurma(int codigoTurma, string token)
+        {
+            var url = HttpHelper
+                .ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.BuscaAlunosNaTurma);
+
+            return await HttpHelper
+                .GetAsync<List<AlunosNaTurmaDTO>>
+                      (token, string.Format(url, codigoTurma, true));
+        }
     }
 }
