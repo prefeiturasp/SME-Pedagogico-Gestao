@@ -23,9 +23,10 @@ namespace SME.Pedagogico.Gestao.Aplicacao
             var perfisElegiveis = Perfil.ObterPerfis().Where(x => request.Perfis.Any(y => y.CodigoPerfil.Equals(x.PerfilGuid))).ToList();
             
             //Verificar se possui perfil professor
-            var perfilProfessor = perfisElegiveis.FirstOrDefault(a => a.PerfilGuid == Guid.Parse("40E1E074-37D6-E911-ABD6-F81654FE895D"));
+            var perfilProfessor = perfisElegiveis.FirstOrDefault(a => a.PerfilGuid == Perfis.PERFIL_PROFESSOR);
+            var perfilCP = perfisElegiveis.FirstOrDefault(a => a.PerfilGuid == Perfis.PERFIL_CP);                     
 
-            if (perfilProfessor != null)
+            if (perfilProfessor != null && perfilCP == null)
             {
                 var temAcesso = await mediator.Send(new ObterUsuarioProfessorTemAcessoQuery(request.UsuarioRF));
                 if (!temAcesso)
