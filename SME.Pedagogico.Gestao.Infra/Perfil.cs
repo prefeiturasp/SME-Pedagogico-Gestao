@@ -118,6 +118,16 @@ namespace SME.Pedagogico.Gestao.Infra
                     AccessLevel = "1",
                     IsDre = false,
                     IsSme = true
+                },
+                new Perfil
+                {
+                    PerfilGuid = Guid.Parse("42E1E074-37D6-E911-ABD6-F81654FE895D"),
+                    IsTeacher = false,
+                    RoleName = "ADM UE",
+                    haveOccupationAccess = false,
+                    AccessLevel = "1",
+                    IsDre = false,
+                    IsSme = true
                 }
             };
         }
