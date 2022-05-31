@@ -4,7 +4,7 @@ CREATE INDEX sondagem_codigoue_idx ON public."Sondagem" ("CodigoUe");
 CREATE INDEX sondagem_componentecurricularid_idx ON public."Sondagem" ("ComponenteCurricularId");
 CREATE INDEX sondagem_anoturma_idx ON public."Sondagem" ("AnoTurma");
 CREATE INDEX sondagem_anoletivo_idx ON public."Sondagem" ("AnoLetivo");
-CREATE INDEX sondagem_anoturma_idx ON public."Sondagem" ("AnoTurma");
+CREATE INDEX sondagem_codigoturma_idx ON public."Sondagem" ("CodigoTurma");
 
 -- Sondaem Aluno
 CREATE INDEX sondagemaluno_sondagemid_idx ON public."SondagemAluno" ("SondagemId");
