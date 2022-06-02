@@ -341,6 +341,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
             var listaAgrupada = listaPerguntaResposta.GroupBy(p => p.PerguntaId).ToList();
             var listaRetorno = new List<PerguntaProficienciaDTO>();
 
+            totalDeAlunos = listaPerguntaResposta.Count() > totalDeAlunos ? listaPerguntaResposta.Count() : totalDeAlunos;
+
             listaAgrupada.ForEach(agrupador =>
             {
                 listaRetorno.Add(ObtenhaDtoPerguntaProficiencia(agrupador, totalDeAlunos));
