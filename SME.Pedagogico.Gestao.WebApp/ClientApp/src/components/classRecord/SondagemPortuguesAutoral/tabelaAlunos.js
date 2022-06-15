@@ -72,7 +72,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
     const trocarExibirConfirmacaoExclusao = () => {        
         if(mostrarMensagemConfirmacao){
             setMostrarMensagemConfirmacao(false);
-            setExibirConfirmacaoExclusao(true);
+            setExibirConfirmacaoExclusao(false);
             return;
         }
         setExibirConfirmacaoExclusao(false);
