@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using SME.Pedagogico.Gestao.Aplicacao;
 using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DTO.Matematica;
 using System.Collections.Generic;
@@ -39,9 +41,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
         [HttpGet("Matematica")]
-        public async Task<IActionResult> ObterSondagemAutoral([FromQuery] FiltrarListagemMatematicaDTO filtrarListagemDto)
+        public async Task<IActionResult> ObterSondagemAutoral([FromQuery] FiltrarListagemMatematicaDTO filtrarListagemDto, [FromServices]IMediator mediator)
         {
-            var retorno = await sondagemAutoralBusiness.ObterListagemAutoral(filtrarListagemDto);
+            var retorno = await mediator.Send(new ObterListagemAutoralQuery(filtrarListagemDto));
             return Ok(retorno);
         }
 

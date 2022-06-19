@@ -9,10 +9,12 @@ using SME.Pedagogico.Gestao.Data.Functionalities;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
+using SME.Pedagogico.Gestao.Dominio;
 using SME.Pedagogico.Gestao.Infra;
 using SME.Pedagogico.Gestao.Models.Autoral;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -65,32 +67,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
 
             return periodoAberto;
-        }
-
-        public async Task<IEnumerable<AlunoSondagemMatematicaDto>> ObterListagemAutoral(FiltrarListagemMatematicaDTO filtrarListagemDto)
-        {
-            var listaSondagem = new List<Sondagem>();
-            if (filtrarListagemDto.AnoLetivo >= 2022)
-                listaSondagem = await ObterSondagemAutoralMatematicaBimestre(filtrarListagemDto);
-            else
-                listaSondagem = await ObterSondagemAutoralMatematica(filtrarListagemDto);
-
-            var listaAlunos = await TurmaApi.GetAlunosNaTurma(Convert.ToInt32(filtrarListagemDto.CodigoTurma), _token);
-            var alunos = listaAlunos.Where(x => x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.Rematriculado
-            || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.Ativo 
-            || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.PendenteRematricula 
-            || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.SemContinuidade
-            || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.Concluido).ToList();
-
-            if (alunos == null || !alunos.Any())
-                throw new Exception($"Não encontrado alunos para a turma {filtrarListagemDto.CodigoTurma} do ano letivo {filtrarListagemDto.AnoLetivo}");
-
-            var listagem = new List<AlunoSondagemMatematicaDto>();
-            if (listaSondagem.Count > 0)
-                MapearAlunosListagemMatematica(listagem, listaSondagem, filtrarListagemDto.Bimestre);
-
-            AdicionarAlunosEOL(filtrarListagemDto, alunos, listagem);
-            return listagem.OrderBy(x => x.NumeroChamada).ThenBy(x => x.NomeAluno);
         }
 
         private List<AlunosNaTurmaDTO> VerificaSituacaoMatriculaERetornaAlunosTurma(List<AlunosNaTurmaDTO> alunosTurma,int anoLetivo, int? bimestre)
@@ -152,6 +128,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 (int)SituacaoMatriculaAluno.ReclassificadoSaida
             };
         }
+
         public async Task SalvarSondagemMatematica(IEnumerable<AlunoSondagemMatematicaDto> alunoSondagemMatematicaDto)
         {
             if (alunoSondagemMatematicaDto == null || !alunoSondagemMatematicaDto.Any())
@@ -218,8 +195,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 }
             }
         }
-
-
 
         private async Task SalvarSonsagemMatermaticaPorPeriodo(IEnumerable<AlunoSondagemMatematicaDto> alunoSondagemMatematicaDto, IEnumerable<string> listaIdPeriodos, FiltrarListagemMatematicaDTO filtroSondagem)
         {
@@ -449,68 +424,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        private void MapearAlunosListagemMatematica(List<AlunoSondagemMatematicaDto> listagem, List<Sondagem> lsondagem, int? bimestre)
-        {
-            var listaAlunosDto = new List<AlunoSondagemMatematicaDto>();
-            var listCodigoAlunoEol = new List<string>();
-            lsondagem.ForEach(s =>
-            {
-                s.AlunosSondagem.ForEach(a =>
-                {
-                    var alunoDto = new AlunoSondagemMatematicaDto();
-
-                    alunoDto.Id = a.Id != null ? a.Id.ToString() : null;
-                    alunoDto.AnoLetivo = s.AnoLetivo;
-                    alunoDto.AnoTurma = s.AnoTurma;
-                    alunoDto.CodigoAluno = a.CodigoAluno;
-                    alunoDto.NomeAluno = a.NomeAluno;
-                    alunoDto.ComponenteCurricular = s.ComponenteCurricularId.ToString();
-                    alunoDto.CodigoUe = s.CodigoUe;
-                    alunoDto.CodigoDre = s.CodigoDre;
-                    alunoDto.Bimestre = bimestre;
-                    alunoDto.CodigoTurma = s.CodigoTurma;
-                    alunoDto.Respostas = new List<AlunoRespostaDto>();
-                    a.ListaRespostas.Where(x => x.Bimestre == bimestre).ToList().ForEach(r =>
-                    {
-                        var Resposta = new AlunoRespostaDto()
-                        {
-                            Resposta = r.RespostaId,
-                            Pergunta = r.PerguntaId,
-                            PeriodoId = s.PeriodoId,
-                            Bimestre = r.Bimestre
-                        };
-
-                        alunoDto.Respostas.Add(Resposta);
-                    });
-
-                    if (alunoDto.Respostas.Count() > 0)
-                    {
-                        listaAlunosDto.Add(alunoDto);
-                        listCodigoAlunoEol.Add(a.CodigoAluno);
-                    }
-                });
-            });
-
-            foreach (var codigoAluno in listCodigoAlunoEol.Distinct())
-            {
-                var listaResposta = new List<AlunoRespostaDto>();
-                var alunoDto = listaAlunosDto.Where(a => a.CodigoAluno == codigoAluno).FirstOrDefault();
-                //var listaAlunoResposta = listaAlunosDto.Where(a => a.CodigoAluno == codigoAluno && (a.Bimestre.HasValue ? a.Bimestre.Value : 0) == bimestre).ToList();
-                var listaAlunoResposta = listaAlunosDto.Where(a => a.CodigoAluno == codigoAluno && a.Bimestre == bimestre).ToList();
-                listaAlunoResposta.ForEach(lr =>
-                {
-                    lr.Respostas.ForEach(r =>
-                    {
-                        listaResposta.Add(r);
-                    });
-                });
-                alunoDto.Respostas = listaResposta;
-
-                if (alunoDto != null)
-                    listagem.Add(alunoDto);
-            }
-        }
-
         private async Task SalvarAlunoComResposta(SMEManagementContextData contexto, AlunoSondagemMatematicaDto aluno, SondagemAutoral alunoAutoral)
         {
             foreach (var resposta in aluno.Respostas)
@@ -547,34 +460,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 context.SondagemAutoral.Update(sondagemAutoral);
             }
-        }
-
-        private void AdicionarAlunosEOL(FiltrarListagemMatematicaDTO filtrarListagemDto, List<AlunosNaTurmaDTO> alunos, List<AlunoSondagemMatematicaDto> listagem)
-        {
-            alunos.ForEach(aluno =>
-            {
-                var alunoBanco = listagem.FirstOrDefault(x => x.CodigoAluno.Equals(aluno.CodigoAluno.ToString()));
-                if (alunoBanco != null)
-                {
-                    alunoBanco.NumeroChamada = aluno.NumeroAlunoChamada;
-                    return;
-                }
-
-                listagem.Add(new AlunoSondagemMatematicaDto
-                {
-                    CodigoAluno = aluno.CodigoAluno.ToString(),
-                    AnoLetivo = filtrarListagemDto.AnoLetivo,
-                    AnoTurma = filtrarListagemDto.AnoEscolar,
-                    CodigoDre = filtrarListagemDto.CodigoDre,
-                    CodigoTurma = filtrarListagemDto.CodigoTurma,
-                    CodigoUe = filtrarListagemDto.CodigoUe,
-                    NumeroChamada = aluno.NumeroAlunoChamada,
-                    ComponenteCurricular = filtrarListagemDto.ComponenteCurricular.ToString(),
-                    NomeAluno = string.IsNullOrEmpty(aluno.NomeSocialAluno) ? aluno.NomeAluno : aluno.NomeSocialAluno
-                });
-
-                listagem.OrderBy(x => x.NumeroChamada);
-            });
         }
 
         private static void MapearRespostas(PerguntaDto pergunta, IEnumerable<PerguntaResposta> respostasDaPergunta)
@@ -634,7 +519,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                                    Include(x => x.AlunosSondagem).ThenInclude(x => x.ListaRespostas).ThenInclude(x => x.Resposta).FirstOrDefaultAsync();
         }
 
-        private static async Task<List<Sondagem>> ObterSondagemAutoralMatematica(FiltrarListagemMatematicaDTO filtrarListagemDto)
+        public static async Task<List<Sondagem>> ObterSondagemAutoralMatematica(FiltrarListagemMatematicaDTO filtrarListagemDto)
         {
             using (var contexto = new SMEManagementContextData())
             {
@@ -652,7 +537,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        private static async Task<List<Sondagem>> ObterSondagemAutoralMatematicaBimestre(FiltrarListagemMatematicaDTO filtrarListagemDto)
+        public static async Task<List<Sondagem>> ObterSondagemAutoralMatematicaBimestre(FiltrarListagemMatematicaDTO filtrarListagemDto)
         {
             using (var contexto = new SMEManagementContextData())
             {
