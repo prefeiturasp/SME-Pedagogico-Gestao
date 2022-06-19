@@ -3,6 +3,7 @@ using Elastic.Apm.AspNetCore;
 using Elastic.Apm.DiagnosticSource;
 using Elastic.Apm.EntityFrameworkCore;
 using Elastic.Apm.SqlClient;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using SME.Pedagogico.Gestao.Infra.Utilitarios;
 using SME.Pedagogico.Gestao.IoC;
 using SME.Pedagogico.Gestao.WebApp.Configuracoes;
 using SME.Pedagogico.Gestao.WebApp.Contexts;
@@ -35,19 +37,22 @@ namespace SME.Pedagogico.Gestao.WebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddResponseCaching();            
-
-            services.AddMvc(options =>
-            {
-                options.AllowValidatingTopLevelNodes = false;
-                options.EnableEndpointRouting = true;                
-                options.Filters.Add(new FiltroExcecoesAttribute());
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
+            services.AddResponseCaching();
             services.AddHttpContextAccessor();
 
             RegistrarDependencias.Registrar(services);
             RegistraClientesHttp.Registrar(services, Configuration);
+
+            ConfiguraRabbitParaLogs(services);
+
+            var serviceProvider = services.BuildServiceProvider();
+            var mediator = serviceProvider.GetService<IMediator>();
+            services.AddMvc(options =>
+            {
+                options.AllowValidatingTopLevelNodes = false;
+                options.EnableEndpointRouting = true;
+                options.Filters.Add(new FiltroExcecoesAttribute(mediator));
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -114,6 +119,14 @@ namespace SME.Pedagogico.Gestao.WebApp
 
             IMapper mapper = config.CreateMapper();
             services.AddSingleton(mapper);
+        }
+
+        private void ConfiguraRabbitParaLogs(IServiceCollection services)
+        {
+            var configuracaoRabbitLogOptions = new ConfiguracaoRabbitLogOptions();
+            Configuration.GetSection("ConfiguracaoRabbitLog").Bind(configuracaoRabbitLogOptions, c => c.BindNonPublicProperties = true);
+
+            services.AddSingleton(configuracaoRabbitLogOptions);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
