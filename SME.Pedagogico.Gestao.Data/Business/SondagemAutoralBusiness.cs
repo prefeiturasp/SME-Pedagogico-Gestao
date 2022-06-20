@@ -172,8 +172,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         {
                             var novaSondagem = CriaNovaSondagem(new List<AlunoSondagemMatematicaDto>() { aluno }, null, filtroSondagem);
                             novaSondagem.PeriodoId = novaSondagem.PeriodoId == null ? string.Empty : novaSondagem.PeriodoId;
-                            contexto.Sondagem.Add(novaSondagem);
-                            await contexto.SaveChangesAsync();
+                            contexto.Sondagem.Add(novaSondagem);                           
                         }
                     }
                     else
@@ -183,17 +182,17 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         {
                             AdicionaOUAlteraAlunosERespostas(contexto, sondagem, aluno, filtroSondagem.Bimestre);
                             contexto.Sondagem.Update(sondagem);
-                            await contexto.SaveChangesAsync();
                         }
                         else
                         {
                             var novaSondagem = CriaNovaSondagem(alunoSondagemMatematicaDto, null, filtroSondagem);
                             novaSondagem.PeriodoId = novaSondagem.PeriodoId == null ? string.Empty : novaSondagem.PeriodoId;
                             contexto.Sondagem.Add(novaSondagem);
-                            await contexto.SaveChangesAsync();
                         }
                     }
                 }
+
+                await contexto.SaveChangesAsync();
             }
         }
 
