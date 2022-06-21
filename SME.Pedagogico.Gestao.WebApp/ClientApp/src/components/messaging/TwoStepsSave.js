@@ -76,11 +76,11 @@ export default class TwoStepsSave extends Component {
                                     :
                                     <Card className="col-5 p-4">
                                         <div className="border-bottom sc-text-size-4">
-                                            Informações salvas
+                                            Erro
                                         </div>
 
                                         <div className="pt-4 sc-text-size-1">
-                                            Seus dados de sondagem foram salvos com sucesso.
+                                            Seus dados de sondagem não foram salvos.
                                         </div>
 
                                         <div className="pt-5 d-flex justify-content-end">
