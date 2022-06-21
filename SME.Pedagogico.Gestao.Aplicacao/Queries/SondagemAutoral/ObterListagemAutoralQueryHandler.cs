@@ -37,7 +37,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
             var filtrarListagemDto = request.FiltrarListagemDto;
             Stopwatch temporizador = Stopwatch.StartNew();
 
-            var listaSondagem = new List<Sondagem>();
+            var listaSondagem = Enumerable.Empty<Sondagem>();
             listaSondagem = filtrarListagemDto.AnoLetivo >= 2022 ?
                 await ObterSondagemAutoralMatematicaBimestre(filtrarListagemDto) :
                 await ObterSondagemAutoralMatematica(filtrarListagemDto);
@@ -58,7 +58,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
 
             var listagem = new List<AlunoSondagemMatematicaDto>();
 
-            if (listaSondagem.Count > 0)
+            if (listaSondagem.Count() > 0)
                 MapearAlunosListagemMatematica(listagem, listaSondagem, filtrarListagemDto.Bimestre);
             var tempoMapeamento = temporizador.Elapsed;
 
@@ -81,32 +81,32 @@ namespace SME.Pedagogico.Gestao.Aplicacao
         private string FormataTempo(TimeSpan tempo)
             => tempo.ToString(@"ss\:fff");
 
-        private Task<List<Sondagem>> ObterSondagemAutoralMatematica(FiltrarListagemMatematicaDTO filtrarListagemDto)
+        private Task<IEnumerable<Sondagem>> ObterSondagemAutoralMatematica(FiltrarListagemMatematicaDTO filtrarListagemDto)
             => SondagemAutoralBusiness.ObterSondagemAutoralMatematica(filtrarListagemDto);
 
-        private Task<List<Sondagem>> ObterSondagemAutoralMatematicaBimestre(FiltrarListagemMatematicaDTO filtrarListagemDto)
+        private Task<IEnumerable<Sondagem>> ObterSondagemAutoralMatematicaBimestre(FiltrarListagemMatematicaDTO filtrarListagemDto)
             => SondagemAutoralBusiness.ObterSondagemAutoralMatematicaBimestre(filtrarListagemDto);
 
-        private void MapearAlunosListagemMatematica(List<AlunoSondagemMatematicaDto> listagem, List<Sondagem> lsondagem, int? bimestre)
+        private void MapearAlunosListagemMatematica(List<AlunoSondagemMatematicaDto> listagem, IEnumerable<Sondagem> listaSondagem, int? bimestre)
         {
             var listaAlunosDto = new List<AlunoSondagemMatematicaDto>();
             var listCodigoAlunoEol = new List<string>();
-            lsondagem.ForEach(s =>
+            foreach(var sondagem in listaSondagem)
             {
-                s.AlunosSondagem.ForEach(a =>
+                sondagem.AlunosSondagem.ForEach(a =>
                 {
                     var alunoDto = new AlunoSondagemMatematicaDto();
 
                     alunoDto.Id = a.Id != null ? a.Id.ToString() : null;
-                    alunoDto.AnoLetivo = s.AnoLetivo;
-                    alunoDto.AnoTurma = s.AnoTurma;
+                    alunoDto.AnoLetivo = sondagem.AnoLetivo;
+                    alunoDto.AnoTurma = sondagem.AnoTurma;
                     alunoDto.CodigoAluno = a.CodigoAluno;
                     alunoDto.NomeAluno = a.NomeAluno;
-                    alunoDto.ComponenteCurricular = s.ComponenteCurricularId.ToString();
-                    alunoDto.CodigoUe = s.CodigoUe;
-                    alunoDto.CodigoDre = s.CodigoDre;
+                    alunoDto.ComponenteCurricular = sondagem.ComponenteCurricularId.ToString();
+                    alunoDto.CodigoUe = sondagem.CodigoUe;
+                    alunoDto.CodigoDre = sondagem.CodigoDre;
                     alunoDto.Bimestre = bimestre;
-                    alunoDto.CodigoTurma = s.CodigoTurma;
+                    alunoDto.CodigoTurma = sondagem.CodigoTurma;
                     alunoDto.Respostas = new List<AlunoRespostaDto>();
                     a.ListaRespostas.Where(x => x.Bimestre == bimestre).ToList().ForEach(r =>
                     {
@@ -114,7 +114,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                         {
                             Resposta = r.RespostaId,
                             Pergunta = r.PerguntaId,
-                            PeriodoId = s.PeriodoId,
+                            PeriodoId = sondagem.PeriodoId,
                             Bimestre = r.Bimestre
                         };
 
@@ -127,7 +127,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                         listCodigoAlunoEol.Add(a.CodigoAluno);
                     }
                 });
-            });
+            };
 
             foreach (var codigoAluno in listCodigoAlunoEol.Distinct())
             {
