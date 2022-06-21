@@ -20,7 +20,6 @@ namespace SME.Pedagogico.Gestao.Aplicacao
     public class ObterListagemAutoralQueryHandler : IRequestHandler<ObterListagemAutoralQuery, IEnumerable<AlunoSondagemMatematicaDto>>
     {
         private string _token;
-        private SondagemAutoralBusiness sondagemAutoralBusiness;
         private TurmasAPI TurmaApi;
         private readonly IMediator mediator;
 
@@ -29,7 +28,6 @@ namespace SME.Pedagogico.Gestao.Aplicacao
             var createToken = new CreateToken(configuration);
             _token = createToken.CreateTokenProvisorio();
 
-            sondagemAutoralBusiness = new SondagemAutoralBusiness(configuration);
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             TurmaApi = new TurmasAPI(new EndpointsAPI());
         }

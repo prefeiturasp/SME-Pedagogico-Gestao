@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Aplicacao;
 using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DTO.Matematica;
+using SME.Pedagogico.Gestao.Infra;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -16,9 +17,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
     {
         private SondagemAutoralBusiness sondagemAutoralBusiness;
 
-        public SondagemMatematicaAutoralController(IConfiguration configuration)
+        public SondagemMatematicaAutoralController(IConfiguration configuration, IServicoTelemetria servicoTelemetria)
         {
-            sondagemAutoralBusiness = new SondagemAutoralBusiness(configuration);
+            sondagemAutoralBusiness = new SondagemAutoralBusiness(configuration, servicoTelemetria);
         }
 
         [HttpGet("Matematica/Periodos")]
