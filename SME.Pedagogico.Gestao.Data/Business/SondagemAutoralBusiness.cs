@@ -9,12 +9,10 @@ using SME.Pedagogico.Gestao.Data.Functionalities;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
-using SME.Pedagogico.Gestao.Dominio;
 using SME.Pedagogico.Gestao.Infra;
 using SME.Pedagogico.Gestao.Models.Autoral;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,12 +23,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
     {
         private string _token;
         private TurmasAPI TurmaApi;
+        private readonly IServicoTelemetria servicoTelemetria;
 
-        public SondagemAutoralBusiness(IConfiguration config)
+        public SondagemAutoralBusiness(IConfiguration config, IServicoTelemetria servicoTelemetria)
         {
             var createToken = new CreateToken(config);
             _token = createToken.CreateTokenProvisorio();
             TurmaApi = new TurmasAPI(new EndpointsAPI());
+            this.servicoTelemetria = servicoTelemetria ?? throw new ArgumentNullException(nameof(servicoTelemetria));
         }
 
         public async Task<IEnumerable<PerguntaDto>> ObterPerguntas(int anoEscolar, int anoLetivo)
@@ -565,7 +565,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 {
                     command.CommandText = sql.ToString();
                     contexto.Database.OpenConnection();
-                    using (var reader = command.ExecuteReader())
+                    using (var reader = command.ExecuteReader("AutoralMatematica"))
                     {
                         while (reader.HasRows)
                         {
