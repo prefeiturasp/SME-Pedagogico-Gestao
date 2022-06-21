@@ -1,4 +1,5 @@
-﻿using SME.Pedagogico.Gestao.Infra;
+﻿using Dapper;
+using SME.Pedagogico.Gestao.Infra;
 using System.Data.Common;
 
 namespace SME.Pedagogico.Gestao.Data
@@ -12,7 +13,9 @@ namespace SME.Pedagogico.Gestao.Data
 
         public static DbDataReader ExecuteReader(this DbCommand commando, string queryName = "")
         {
-            var restult = servicoTelemetria.RegistrarComRetorno<DbDataReader>(() => commando.ExecuteReader(), "query", $"Query {queryName}", commando.CommandText);
+            var restult = servicoTelemetria.RegistrarComRetorno<DbDataReader>(() => SqlMapper.ExecuteReader(commando.Connection,
+                commando.CommandText), "query", $"Query {queryName}", commando.CommandText);
+
             return restult;
         }
     }
