@@ -519,7 +519,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                                    Include(x => x.AlunosSondagem).ThenInclude(x => x.ListaRespostas).ThenInclude(x => x.Resposta).FirstOrDefaultAsync();
         }
 
-        public static async Task<List<Sondagem>> ObterSondagemAutoralMatematica(FiltrarListagemMatematicaDTO filtrarListagemDto)
+        public static async Task<IEnumerable<Sondagem>> ObterSondagemAutoralMatematica(FiltrarListagemMatematicaDTO filtrarListagemDto)
         {
             using (var contexto = new SMEManagementContextData())
             {
@@ -537,7 +537,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public static async Task<List<Sondagem>> ObterSondagemAutoralMatematicaBimestre(FiltrarListagemMatematicaDTO filtrarListagemDto)
+        public static async Task<IEnumerable<Sondagem>> ObterSondagemAutoralMatematicaBimestre(FiltrarListagemMatematicaDTO filtrarListagemDto)
         {
             var contexto = new SMEManagementContextData();
             try
@@ -596,8 +596,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     }
                 }
 
-                var sondagem = listaSondagemDto.GroupBy(s => new { s.SondagemId, s.AnoLetivo, s.AnoTurma, s.CodigoDre, s.CodigoUe, s.CodigoTurma, s.Bimestre, s.PeriodoId, s.ComponenteCurricular }, (key, group) =>
-                  new Sondagem()
+                var listaSondagem = listaSondagemDto.GroupBy(s => new { s.SondagemId, s.AnoLetivo, s.AnoTurma, s.CodigoDre, s.CodigoUe, s.CodigoTurma, s.Bimestre, s.PeriodoId, s.ComponenteCurricular }
+                , (key, sondagem) => new Sondagem()
                   {
                       Id = Guid.Parse(key.SondagemId),
                       AnoLetivo = key.AnoLetivo,
@@ -608,23 +608,24 @@ namespace SME.Pedagogico.Gestao.Data.Business
                       Bimestre = key.Bimestre,
                       PeriodoId = key.PeriodoId,
                       ComponenteCurricularId = key.ComponenteCurricular,
-                      AlunosSondagem = group.Select(a => new SondagemAluno()
-                      {
-                          Id = Guid.Parse(a.SondagemAlunoId),
-                          CodigoAluno = a.CodigoAluno,
-                          NomeAluno = a.NomeAluno,
-                          ListaRespostas = group.Select(lr => new SondagemAlunoRespostas()
-                          {
-                              Id = Guid.Parse(lr.SondagemAlunoRespostaId),
-                              PerguntaId = lr.PerguntaId,
-                              RespostaId = lr.RespostaId,
-                              Bimestre = key.Bimestre
+                      AlunosSondagem = sondagem.GroupBy(x => new { x.SondagemAlunoId, x.CodigoAluno, x.NomeAluno }
+                      , (alunoKey, aluno) => new SondagemAluno()
+                        {
+                            Id = Guid.Parse(alunoKey.SondagemAlunoId),
+                            CodigoAluno = alunoKey.CodigoAluno,
+                            NomeAluno = alunoKey.NomeAluno,
+                            ListaRespostas = aluno.Select(lr => new SondagemAlunoRespostas()
+                            {
+                                Id = Guid.Parse(lr.SondagemAlunoRespostaId),
+                                PerguntaId = lr.PerguntaId,
+                                RespostaId = lr.RespostaId,
+                                Bimestre = key.Bimestre
 
-                          }).ToList()
-                      }).ToList()
-                  }).ToList();
+                            }).ToList()
+                        }).ToList()
+                  });
 
-                return sondagem;
+                return listaSondagem;
             }
             catch (Exception ex)
             {
