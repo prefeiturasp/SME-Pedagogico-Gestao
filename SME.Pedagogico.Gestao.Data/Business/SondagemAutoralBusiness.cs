@@ -9,12 +9,10 @@ using SME.Pedagogico.Gestao.Data.Functionalities;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
-using SME.Pedagogico.Gestao.Dominio;
 using SME.Pedagogico.Gestao.Infra;
 using SME.Pedagogico.Gestao.Models.Autoral;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,12 +23,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
     {
         private string _token;
         private TurmasAPI TurmaApi;
+        private readonly IServicoTelemetria servicoTelemetria;
 
-        public SondagemAutoralBusiness(IConfiguration config)
+        public SondagemAutoralBusiness(IConfiguration config, IServicoTelemetria servicoTelemetria)
         {
             var createToken = new CreateToken(config);
             _token = createToken.CreateTokenProvisorio();
             TurmaApi = new TurmasAPI(new EndpointsAPI());
+            this.servicoTelemetria = servicoTelemetria ?? throw new ArgumentNullException(nameof(servicoTelemetria));
         }
 
         public async Task<IEnumerable<PerguntaDto>> ObterPerguntas(int anoEscolar, int anoLetivo)
@@ -519,7 +519,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                                    Include(x => x.AlunosSondagem).ThenInclude(x => x.ListaRespostas).ThenInclude(x => x.Resposta).FirstOrDefaultAsync();
         }
 
-        public static async Task<List<Sondagem>> ObterSondagemAutoralMatematica(FiltrarListagemMatematicaDTO filtrarListagemDto)
+        public static async Task<IEnumerable<Sondagem>> ObterSondagemAutoralMatematica(FiltrarListagemMatematicaDTO filtrarListagemDto)
         {
             using (var contexto = new SMEManagementContextData())
             {
@@ -537,13 +537,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public static async Task<List<Sondagem>> ObterSondagemAutoralMatematicaBimestre(FiltrarListagemMatematicaDTO filtrarListagemDto)
+        public async Task<IEnumerable<Sondagem>> ObterSondagemAutoralMatematicaBimestre(FiltrarListagemMatematicaDTO filtrarListagemDto)
         {
             var contexto = new SMEManagementContextData();
             try
             {
                 var listaSondagemDto = new List<SondagemAutoralDTO>();
-
                 var sql = new StringBuilder();
                 sql.AppendLine($@"select s.""Id"" as SondagemId, sa.""Id"" as SondagemAlunoId, sar.""Id"" SondagemAlunoRespostaId,
                                     s.""AnoLetivo"" as AnoLetivo, s.""AnoTurma"" as AnoTurma,
@@ -565,66 +564,91 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 {
                     command.CommandText = sql.ToString();
                     contexto.Database.OpenConnection();
-                    using (var reader = command.ExecuteReader())
+                    using (var reader = await command.ExecuteReaderAsync("AutoralMatematica"))
                     {
-                        while (reader.HasRows)
+                        var sondagemIdOrdinal = reader.GetOrdinal("SondagemId");
+                        var sondagemAlunoIdOrdinal = reader.GetOrdinal("SondagemAlunoId");
+                        var sondagemAlunoRespostaIdOrdinal = reader.GetOrdinal("SondagemAlunoRespostaId");
+                        var anoLetivoOrdinal = reader.GetOrdinal("AnoLetivo");
+                        var anoTurmaOrdinal = reader.GetOrdinal("AnoTurma");
+                        var codigoDreOrdinal = reader.GetOrdinal("CodigoDre");
+                        var codigoUeOrdinal = reader.GetOrdinal("CodigoUe");
+                        var codigoTurmaOrdinal = reader.GetOrdinal("CodigoTurma");
+                        var respostaIdOrdinal = reader.GetOrdinal("RespostaId");
+                        var perguntaIdOrdinal = reader.GetOrdinal("PerguntaId");
+                        var periodoIdOrdinal = reader.GetOrdinal("PeriodoId");
+                        var bimestreOrdinal = reader.GetOrdinal("Bimestre");
+                        var componenteCurricularOrdinal = reader.GetOrdinal("ComponenteCurricular");
+                        var nomeAlunoOrdinal = reader.GetOrdinal("NomeAluno");
+                        var codigoAlunoOrdinal = reader.GetOrdinal("CodigoAluno");
+
+                        listaSondagemDto = servicoTelemetria.RegistrarComRetorno<List<SondagemAutoralDTO>>(() =>
                         {
-                            while (reader.Read())
+                            var listaSondagem = new List<SondagemAutoralDTO>();
+                            while (reader.HasRows)
                             {
-                                var sondagemDto = new SondagemAutoralDTO()
+                                while (reader.Read())
                                 {
-                                    SondagemId = reader["SondagemId"].ToString(),
-                                    SondagemAlunoId = reader["SondagemAlunoId"].ToString(),
-                                    SondagemAlunoRespostaId = reader["SondagemAlunoRespostaId"].ToString(), 
-                                    AnoLetivo = int.Parse(reader["AnoLetivo"].ToString()),
-                                    AnoTurma = int.Parse(reader["AnoTurma"].ToString()),
-                                    CodigoDre = reader["CodigoDre"].ToString(),
-                                    CodigoUe = reader["CodigoUe"].ToString(),
-                                    CodigoTurma = reader["CodigoTurma"].ToString(),
-                                    RespostaId = reader["RespostaId"].ToString(),
-                                    PerguntaId = reader["PerguntaId"].ToString(),
-                                    PeriodoId = reader["PeriodoId"].ToString(),
-                                    Bimestre = int.Parse(reader["Bimestre"].ToString()),
-                                    ComponenteCurricular = reader["ComponenteCurricular"].ToString(),
-                                    NomeAluno = reader["NomeAluno"].ToString(),
-                                    CodigoAluno = reader["CodigoAluno"].ToString(),
-                                };
-                                listaSondagemDto.Add(sondagemDto);
+                                    var sondagemDto = new SondagemAutoralDTO()
+                                    {
+                                        SondagemId = reader.GetGuid(sondagemIdOrdinal),
+                                        SondagemAlunoId = reader.GetGuid(sondagemAlunoIdOrdinal),
+                                        SondagemAlunoRespostaId = reader.GetGuid(sondagemAlunoRespostaIdOrdinal),
+                                        AnoLetivo = reader.GetInt32(anoLetivoOrdinal),
+                                        AnoTurma = reader.GetInt32(anoTurmaOrdinal),
+                                        CodigoDre = reader.GetString(codigoDreOrdinal),
+                                        CodigoUe = reader.GetString(codigoUeOrdinal),
+                                        CodigoTurma = reader.GetString(codigoTurmaOrdinal),
+                                        RespostaId = reader.GetString(respostaIdOrdinal),
+                                        PerguntaId = reader.GetString(perguntaIdOrdinal),
+                                        PeriodoId = reader.GetString(periodoIdOrdinal),
+                                        Bimestre = reader.GetInt32(bimestreOrdinal),
+                                        ComponenteCurricular = reader.GetString(componenteCurricularOrdinal),
+                                        NomeAluno = reader.GetString(nomeAlunoOrdinal),
+                                        CodigoAluno = reader.GetString(codigoAlunoOrdinal),
+                                    };
+                                    listaSondagem.Add(sondagemDto);
+                                }
+                                reader.NextResult();
                             }
-                            reader.NextResult();
-                        }
+                            return listaSondagem;
+                        }, "mapeamento", "Mapeamento DTO", "");
                     }
                 }
 
-                var sondagem = listaSondagemDto.GroupBy(s => new { s.SondagemId, s.AnoLetivo, s.AnoTurma, s.CodigoDre, s.CodigoUe, s.CodigoTurma, s.Bimestre, s.PeriodoId, s.ComponenteCurricular }, (key, group) =>
-                  new Sondagem()
-                  {
-                      Id = Guid.Parse(key.SondagemId),
-                      AnoLetivo = key.AnoLetivo,
-                      AnoTurma = key.AnoTurma,
-                      CodigoDre = key.CodigoDre,
-                      CodigoUe = key.CodigoUe,
-                      CodigoTurma = key.CodigoTurma,
-                      Bimestre = key.Bimestre,
-                      PeriodoId = key.PeriodoId,
-                      ComponenteCurricularId = key.ComponenteCurricular,
-                      AlunosSondagem = group.Select(a => new SondagemAluno()
+                var agrupamentoSondagem = servicoTelemetria.RegistrarComRetorno<IEnumerable<Sondagem>>(() =>
+                    listaSondagemDto.GroupBy(s => new { s.SondagemId, s.AnoLetivo, s.AnoTurma, s.CodigoDre, s.CodigoUe, s.CodigoTurma, s.Bimestre, s.PeriodoId, s.ComponenteCurricular }
+                    , (key, sondagem) =>
+                      new Sondagem()
                       {
-                          Id = Guid.Parse(a.SondagemAlunoId),
-                          CodigoAluno = a.CodigoAluno,
-                          NomeAluno = a.NomeAluno,
-                          ListaRespostas = group.Select(lr => new SondagemAlunoRespostas()
+                          Id = key.SondagemId,
+                          AnoLetivo = key.AnoLetivo,
+                          AnoTurma = key.AnoTurma,
+                          CodigoDre = key.CodigoDre,
+                          CodigoUe = key.CodigoUe,
+                          CodigoTurma = key.CodigoTurma,
+                          Bimestre = key.Bimestre,
+                          PeriodoId = key.PeriodoId,
+                          ComponenteCurricularId = key.ComponenteCurricular,
+                          AlunosSondagem = sondagem.GroupBy(x => new { x.SondagemAlunoId, x.CodigoAluno, x.NomeAluno }
+                          , (alunoKey, aluno) => new SondagemAluno()
                           {
-                              Id = Guid.Parse(lr.SondagemAlunoRespostaId),
-                              PerguntaId = lr.PerguntaId,
-                              RespostaId = lr.RespostaId,
-                              Bimestre = key.Bimestre
+                              Id = alunoKey.SondagemAlunoId,
+                              CodigoAluno = alunoKey.CodigoAluno,
+                              NomeAluno = alunoKey.NomeAluno,
+                              ListaRespostas = aluno.Select(lr => new SondagemAlunoRespostas()
+                              {
+                                  Id = lr.SondagemAlunoRespostaId,
+                                  PerguntaId = lr.PerguntaId,
+                                  RespostaId = lr.RespostaId,
+                                  Bimestre = key.Bimestre
 
+                              }).ToList()
                           }).ToList()
                       }).ToList()
-                  }).ToList();
+                , "agrupamento", "Agrupamento DTO", "");
 
-                return sondagem;
+                return agrupamentoSondagem;
             }
             catch (Exception ex)
             {

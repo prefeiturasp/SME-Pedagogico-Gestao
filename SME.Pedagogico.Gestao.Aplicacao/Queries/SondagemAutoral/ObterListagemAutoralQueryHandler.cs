@@ -20,55 +20,48 @@ namespace SME.Pedagogico.Gestao.Aplicacao
     public class ObterListagemAutoralQueryHandler : IRequestHandler<ObterListagemAutoralQuery, IEnumerable<AlunoSondagemMatematicaDto>>
     {
         private string _token;
-        private SondagemAutoralBusiness sondagemAutoralBusiness;
         private TurmasAPI TurmaApi;
         private readonly IMediator mediator;
+        private readonly IServicoTelemetria servicoTelemetria;
+        private SondagemAutoralBusiness sondagemAutoralBusiness;
 
-        public ObterListagemAutoralQueryHandler(IConfiguration configuration, IMediator mediator)
+        public ObterListagemAutoralQueryHandler(IConfiguration configuration, IMediator mediator, IServicoTelemetria servicoTelemetria)
         {
             var createToken = new CreateToken(configuration);
             _token = createToken.CreateTokenProvisorio();
 
-            sondagemAutoralBusiness = new SondagemAutoralBusiness(configuration);
+            sondagemAutoralBusiness = new SondagemAutoralBusiness(configuration, servicoTelemetria);
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.servicoTelemetria = servicoTelemetria ?? throw new ArgumentNullException(nameof(servicoTelemetria));
             TurmaApi = new TurmasAPI(new EndpointsAPI());
         }
 
         public async Task<IEnumerable<AlunoSondagemMatematicaDto>> Handle(ObterListagemAutoralQuery request, CancellationToken cancellationToken)
         {
             var filtrarListagemDto = request.FiltrarListagemDto;
-            Stopwatch temporizador = Stopwatch.StartNew();
 
-            var listaSondagem = new List<Sondagem>();
+            var listaSondagem = Enumerable.Empty<Sondagem>();
             listaSondagem = filtrarListagemDto.AnoLetivo >= 2022 ?
                 await ObterSondagemAutoralMatematicaBimestre(filtrarListagemDto) :
                 await ObterSondagemAutoralMatematica(filtrarListagemDto);
-            var tempoQuery = temporizador.Elapsed;
 
             var listaAlunos = await TurmaApi.GetAlunosNaTurma(Convert.ToInt32(filtrarListagemDto.CodigoTurma), _token);
-            var tempoEOL = temporizador.Elapsed;
 
             var alunos = listaAlunos.Where(x => x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.Rematriculado
             || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.Ativo
             || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.PendenteRematricula
             || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.SemContinuidade
             || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.Concluido).ToList();
-            var tempoFiltro = temporizador.Elapsed;
 
             if (alunos == null || !alunos.Any())
                 throw new Exception($"Não encontrado alunos para a turma {filtrarListagemDto.CodigoTurma} do ano letivo {filtrarListagemDto.AnoLetivo}");
 
             var listagem = new List<AlunoSondagemMatematicaDto>();
 
-            if (listaSondagem.Count > 0)
+            if (listaSondagem.Count() > 0)
                 MapearAlunosListagemMatematica(listagem, listaSondagem, filtrarListagemDto.Bimestre);
-            var tempoMapeamento = temporizador.Elapsed;
 
             AdicionarAlunosEOL(filtrarListagemDto, alunos, listagem);
-            var tempoTotal = temporizador.Elapsed;
-
-            temporizador.Stop();
-            await RegistrarTempos(tempoQuery, tempoEOL, tempoFiltro, tempoMapeamento, tempoTotal);
 
             return listagem.OrderBy(x => x.NumeroChamada).ThenBy(x => x.NomeAluno);
         }
@@ -83,32 +76,34 @@ namespace SME.Pedagogico.Gestao.Aplicacao
         private string FormataTempo(TimeSpan tempo)
             => tempo.ToString(@"ss\:fff");
 
-        private Task<List<Sondagem>> ObterSondagemAutoralMatematica(FiltrarListagemMatematicaDTO filtrarListagemDto)
-            => SondagemAutoralBusiness.ObterSondagemAutoralMatematica(filtrarListagemDto);
+        private async Task<IEnumerable<Sondagem>> ObterSondagemAutoralMatematica(FiltrarListagemMatematicaDTO filtrarListagemDto)
+            => await servicoTelemetria.RegistrarComRetornoAsync<List<Sondagem>>(async () =>
+            await SondagemAutoralBusiness.ObterSondagemAutoralMatematica(filtrarListagemDto), "consulta", "Consulta Sondagem Semestral", "");
 
-        private Task<List<Sondagem>> ObterSondagemAutoralMatematicaBimestre(FiltrarListagemMatematicaDTO filtrarListagemDto)
-            => SondagemAutoralBusiness.ObterSondagemAutoralMatematicaBimestre(filtrarListagemDto);
+        private async Task<IEnumerable<Sondagem>> ObterSondagemAutoralMatematicaBimestre(FiltrarListagemMatematicaDTO filtrarListagemDto)
+            => await servicoTelemetria.RegistrarComRetornoAsync<List<Sondagem>>(async () =>
+            await sondagemAutoralBusiness.ObterSondagemAutoralMatematicaBimestre(filtrarListagemDto), "consulta", "Consulta Sondagem Bimestral", "");
 
-        private void MapearAlunosListagemMatematica(List<AlunoSondagemMatematicaDto> listagem, List<Sondagem> lsondagem, int? bimestre)
+        private void MapearAlunosListagemMatematica(List<AlunoSondagemMatematicaDto> listagem, IEnumerable<Sondagem> listaSondagem, int? bimestre)
         {
             var listaAlunosDto = new List<AlunoSondagemMatematicaDto>();
             var listCodigoAlunoEol = new List<string>();
-            lsondagem.ForEach(s =>
+            foreach(var sondagem in listaSondagem)
             {
-                s.AlunosSondagem.ForEach(a =>
+                sondagem.AlunosSondagem.ForEach(a =>
                 {
                     var alunoDto = new AlunoSondagemMatematicaDto();
 
                     alunoDto.Id = a.Id != null ? a.Id.ToString() : null;
-                    alunoDto.AnoLetivo = s.AnoLetivo;
-                    alunoDto.AnoTurma = s.AnoTurma;
+                    alunoDto.AnoLetivo = sondagem.AnoLetivo;
+                    alunoDto.AnoTurma = sondagem.AnoTurma;
                     alunoDto.CodigoAluno = a.CodigoAluno;
                     alunoDto.NomeAluno = a.NomeAluno;
-                    alunoDto.ComponenteCurricular = s.ComponenteCurricularId.ToString();
-                    alunoDto.CodigoUe = s.CodigoUe;
-                    alunoDto.CodigoDre = s.CodigoDre;
+                    alunoDto.ComponenteCurricular = sondagem.ComponenteCurricularId.ToString();
+                    alunoDto.CodigoUe = sondagem.CodigoUe;
+                    alunoDto.CodigoDre = sondagem.CodigoDre;
                     alunoDto.Bimestre = bimestre;
-                    alunoDto.CodigoTurma = s.CodigoTurma;
+                    alunoDto.CodigoTurma = sondagem.CodigoTurma;
                     alunoDto.Respostas = new List<AlunoRespostaDto>();
                     a.ListaRespostas.Where(x => x.Bimestre == bimestre).ToList().ForEach(r =>
                     {
@@ -116,7 +111,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                         {
                             Resposta = r.RespostaId,
                             Pergunta = r.PerguntaId,
-                            PeriodoId = s.PeriodoId,
+                            PeriodoId = sondagem.PeriodoId,
                             Bimestre = r.Bimestre
                         };
 
@@ -129,7 +124,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                         listCodigoAlunoEol.Add(a.CodigoAluno);
                     }
                 });
-            });
+            };
 
             foreach (var codigoAluno in listCodigoAlunoEol.Distinct())
             {
