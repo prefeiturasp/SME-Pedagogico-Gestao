@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SME.Pedagogico.Gestao
 {
     public class SondagemAutoralDTO
     {
-        public string SondagemId { get; set; }
-        public string SondagemAlunoId { get; set; }
-        public string SondagemAlunoRespostaId { get; set; }
+        public Guid SondagemId { get; set; }
+        public Guid SondagemAlunoId { get; set; }
+        public Guid SondagemAlunoRespostaId { get; set; }
         public int AnoLetivo { get; set; }
         public int AnoTurma { get; set; }
         public string CodigoAluno { get; set; }
