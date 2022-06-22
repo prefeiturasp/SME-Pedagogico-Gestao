@@ -66,19 +66,6 @@ namespace SME.Pedagogico.Gestao.Aplicacao
             return listagem.OrderBy(x => x.NumeroChamada).ThenBy(x => x.NomeAluno);
         }
 
-        public static long GetTicks(Guid target)
-        {
-            var parts = target.ToByteArray();
-            var result = new byte[8];
-            Array.Copy(parts, 0, result, 4, 2);
-            Array.Copy(parts, 2, result, 6, 2);
-            Array.Copy(parts, 4, result, 2, 2);
-            Array.Copy(parts, 6, result, 0, 2);
-
-            var ticks = BitConverter.ToInt64(result, 0);
-            return ticks;
-        }
-
         private Task RegistrarTempos(TimeSpan tempoQuery, TimeSpan tempoEOL, TimeSpan tempoFiltro, TimeSpan tempoMapeamento, TimeSpan tempoTotal)
         {
             var mensagem = $"Tempos Carga Sondagem Matematica : Query [{FormataTempo(tempoQuery)}] EOL [{FormataTempo(tempoEOL.Subtract(tempoQuery))}] Filtro [{FormataTempo(tempoFiltro.Subtract(tempoEOL))}] Mapeamento [{FormataTempo(tempoMapeamento.Subtract(tempoFiltro))}] - Total [{FormataTempo(tempoTotal)}]";
