@@ -538,6 +538,7 @@ class Poll extends Component {
               id="btnSave"
               className="btn btn-save text-white deactive"
               onClick={this.toggleMessageBox}
+              disabled={!this.props.poll.newDataToSave}
             >
               Salvar
             </button>
