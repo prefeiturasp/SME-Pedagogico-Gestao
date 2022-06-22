@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using SME.Pedagogico.Gestao.Infra;
 using System.Data.Common;
+using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.Data
 {
@@ -18,5 +19,9 @@ namespace SME.Pedagogico.Gestao.Data
 
             return restult;
         }
+
+        public static async Task<DbDataReader> ExecuteReaderAsync(this DbCommand commando, string queryName = "")
+            => await servicoTelemetria.RegistrarComRetornoAsync<DbDataReader>(async () => await SqlMapper.ExecuteReaderAsync(commando.Connection,
+                commando.CommandText), "query", $"Query {queryName}", commando.CommandText);
     }
 }

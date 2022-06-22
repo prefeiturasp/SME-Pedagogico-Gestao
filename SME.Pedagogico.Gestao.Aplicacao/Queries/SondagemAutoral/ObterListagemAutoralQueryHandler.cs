@@ -22,36 +22,36 @@ namespace SME.Pedagogico.Gestao.Aplicacao
         private string _token;
         private TurmasAPI TurmaApi;
         private readonly IMediator mediator;
+        private readonly IServicoTelemetria servicoTelemetria;
+        private SondagemAutoralBusiness sondagemAutoralBusiness;
 
-        public ObterListagemAutoralQueryHandler(IConfiguration configuration, IMediator mediator)
+        public ObterListagemAutoralQueryHandler(IConfiguration configuration, IMediator mediator, IServicoTelemetria servicoTelemetria)
         {
             var createToken = new CreateToken(configuration);
             _token = createToken.CreateTokenProvisorio();
 
+            sondagemAutoralBusiness = new SondagemAutoralBusiness(configuration, servicoTelemetria);
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.servicoTelemetria = servicoTelemetria ?? throw new ArgumentNullException(nameof(servicoTelemetria));
             TurmaApi = new TurmasAPI(new EndpointsAPI());
         }
 
         public async Task<IEnumerable<AlunoSondagemMatematicaDto>> Handle(ObterListagemAutoralQuery request, CancellationToken cancellationToken)
         {
             var filtrarListagemDto = request.FiltrarListagemDto;
-            Stopwatch temporizador = Stopwatch.StartNew();
 
             var listaSondagem = Enumerable.Empty<Sondagem>();
             listaSondagem = filtrarListagemDto.AnoLetivo >= 2022 ?
                 await ObterSondagemAutoralMatematicaBimestre(filtrarListagemDto) :
                 await ObterSondagemAutoralMatematica(filtrarListagemDto);
-            var tempoQuery = temporizador.Elapsed;
 
             var listaAlunos = await TurmaApi.GetAlunosNaTurma(Convert.ToInt32(filtrarListagemDto.CodigoTurma), _token);
-            var tempoEOL = temporizador.Elapsed;
 
             var alunos = listaAlunos.Where(x => x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.Rematriculado
             || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.Ativo
             || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.PendenteRematricula
             || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.SemContinuidade
             || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.Concluido).ToList();
-            var tempoFiltro = temporizador.Elapsed;
 
             if (alunos == null || !alunos.Any())
                 throw new Exception($"Não encontrado alunos para a turma {filtrarListagemDto.CodigoTurma} do ano letivo {filtrarListagemDto.AnoLetivo}");
@@ -60,15 +60,23 @@ namespace SME.Pedagogico.Gestao.Aplicacao
 
             if (listaSondagem.Count() > 0)
                 MapearAlunosListagemMatematica(listagem, listaSondagem, filtrarListagemDto.Bimestre);
-            var tempoMapeamento = temporizador.Elapsed;
 
             AdicionarAlunosEOL(filtrarListagemDto, alunos, listagem);
-            var tempoTotal = temporizador.Elapsed;
-
-            temporizador.Stop();
-            await RegistrarTempos(tempoQuery, tempoEOL, tempoFiltro, tempoMapeamento, tempoTotal);
 
             return listagem.OrderBy(x => x.NumeroChamada).ThenBy(x => x.NomeAluno);
+        }
+
+        public static long GetTicks(Guid target)
+        {
+            var parts = target.ToByteArray();
+            var result = new byte[8];
+            Array.Copy(parts, 0, result, 4, 2);
+            Array.Copy(parts, 2, result, 6, 2);
+            Array.Copy(parts, 4, result, 2, 2);
+            Array.Copy(parts, 6, result, 0, 2);
+
+            var ticks = BitConverter.ToInt64(result, 0);
+            return ticks;
         }
 
         private Task RegistrarTempos(TimeSpan tempoQuery, TimeSpan tempoEOL, TimeSpan tempoFiltro, TimeSpan tempoMapeamento, TimeSpan tempoTotal)
@@ -81,11 +89,13 @@ namespace SME.Pedagogico.Gestao.Aplicacao
         private string FormataTempo(TimeSpan tempo)
             => tempo.ToString(@"ss\:fff");
 
-        private Task<IEnumerable<Sondagem>> ObterSondagemAutoralMatematica(FiltrarListagemMatematicaDTO filtrarListagemDto)
-            => SondagemAutoralBusiness.ObterSondagemAutoralMatematica(filtrarListagemDto);
+        private async Task<IEnumerable<Sondagem>> ObterSondagemAutoralMatematica(FiltrarListagemMatematicaDTO filtrarListagemDto)
+            => await servicoTelemetria.RegistrarComRetornoAsync<List<Sondagem>>(async () =>
+            await SondagemAutoralBusiness.ObterSondagemAutoralMatematica(filtrarListagemDto), "consulta", "Consulta Sondagem Semestral", "");
 
-        private Task<IEnumerable<Sondagem>> ObterSondagemAutoralMatematicaBimestre(FiltrarListagemMatematicaDTO filtrarListagemDto)
-            => SondagemAutoralBusiness.ObterSondagemAutoralMatematicaBimestre(filtrarListagemDto);
+        private async Task<IEnumerable<Sondagem>> ObterSondagemAutoralMatematicaBimestre(FiltrarListagemMatematicaDTO filtrarListagemDto)
+            => await servicoTelemetria.RegistrarComRetornoAsync<List<Sondagem>>(async () =>
+            await sondagemAutoralBusiness.ObterSondagemAutoralMatematicaBimestre(filtrarListagemDto), "consulta", "Consulta Sondagem Bimestral", "");
 
         private void MapearAlunosListagemMatematica(List<AlunoSondagemMatematicaDto> listagem, IEnumerable<Sondagem> listaSondagem, int? bimestre)
         {
