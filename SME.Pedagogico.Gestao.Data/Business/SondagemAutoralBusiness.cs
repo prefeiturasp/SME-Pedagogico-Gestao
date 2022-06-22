@@ -158,6 +158,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 foreach (var aluno in alunoSondagemMatematicaDto)
                 {
+                    if (!filtroSondagem.Bimestre.HasValue)
+                        throw new ArgumentNullException("bimestre", "Necessário informa o bimestre para gravar Sondagem a partir de 2022");
+
                     if (aluno.Id == null && aluno.Respostas != null)
                     {
                         Guid id = VerificaSeOAlunoPossuiSondagemERetornaId(aluno.CodigoAluno, aluno.CodigoTurma, filtroSondagem.Bimestre);
@@ -612,7 +615,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                 reader.NextResult();
                             }
                             return listaSondagem;
-                        }, "mapeamento", "Mapeamento DTO", "");
+                        }, "mapeamento", "Mapeamento DTO", $"{reader.RecordsAffected}");
                     }
                 }
 
