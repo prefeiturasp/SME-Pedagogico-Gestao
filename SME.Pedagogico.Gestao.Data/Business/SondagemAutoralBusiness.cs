@@ -566,6 +566,22 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     contexto.Database.OpenConnection();
                     using (var reader = await command.ExecuteReaderAsync("AutoralMatematica"))
                     {
+                        var sondagemIdOrdinal = reader.GetOrdinal("SondagemId");
+                        var sondagemAlunoIdOrdinal = reader.GetOrdinal("SondagemAlunoId");
+                        var sondagemAlunoRespostaIdOrdinal = reader.GetOrdinal("SondagemAlunoRespostaId");
+                        var anoLetivoOrdinal = reader.GetOrdinal("AnoLetivo");
+                        var anoTurmaOrdinal = reader.GetOrdinal("AnoTurma");
+                        var codigoDreOrdinal = reader.GetOrdinal("CodigoDre");
+                        var codigoUeOrdinal = reader.GetOrdinal("CodigoUe");
+                        var codigoTurmaOrdinal = reader.GetOrdinal("CodigoTurma");
+                        var respostaIdOrdinal = reader.GetOrdinal("RespostaId");
+                        var perguntaIdOrdinal = reader.GetOrdinal("PerguntaId");
+                        var periodoIdOrdinal = reader.GetOrdinal("PeriodoId");
+                        var bimestreOrdinal = reader.GetOrdinal("Bimestre");
+                        var componenteCurricularOrdinal = reader.GetOrdinal("ComponenteCurricular");
+                        var nomeAlunoOrdinal = reader.GetOrdinal("NomeAluno");
+                        var codigoAlunoOrdinal = reader.GetOrdinal("CodigoAluno");
+
                         listaSondagemDto = servicoTelemetria.RegistrarComRetorno<List<SondagemAutoralDTO>>(() =>
                         {
                             var listaSondagem = new List<SondagemAutoralDTO>();
@@ -575,21 +591,21 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                 {
                                     var sondagemDto = new SondagemAutoralDTO()
                                     {
-                                        SondagemId = reader["SondagemId"].ToString(),
-                                        SondagemAlunoId = reader["SondagemAlunoId"].ToString(),
-                                        SondagemAlunoRespostaId = reader["SondagemAlunoRespostaId"].ToString(),
-                                        AnoLetivo = int.Parse(reader["AnoLetivo"].ToString()),
-                                        AnoTurma = int.Parse(reader["AnoTurma"].ToString()),
-                                        CodigoDre = reader["CodigoDre"].ToString(),
-                                        CodigoUe = reader["CodigoUe"].ToString(),
-                                        CodigoTurma = reader["CodigoTurma"].ToString(),
-                                        RespostaId = reader["RespostaId"].ToString(),
-                                        PerguntaId = reader["PerguntaId"].ToString(),
-                                        PeriodoId = reader["PeriodoId"].ToString(),
-                                        Bimestre = int.Parse(reader["Bimestre"].ToString()),
-                                        ComponenteCurricular = reader["ComponenteCurricular"].ToString(),
-                                        NomeAluno = reader["NomeAluno"].ToString(),
-                                        CodigoAluno = reader["CodigoAluno"].ToString(),
+                                        SondagemId = reader.GetGuid(sondagemIdOrdinal),
+                                        SondagemAlunoId = reader.GetGuid(sondagemAlunoIdOrdinal),
+                                        SondagemAlunoRespostaId = reader.GetGuid(sondagemAlunoRespostaIdOrdinal),
+                                        AnoLetivo = reader.GetInt32(anoLetivoOrdinal),
+                                        AnoTurma = reader.GetInt32(anoTurmaOrdinal),
+                                        CodigoDre = reader.GetString(codigoDreOrdinal),
+                                        CodigoUe = reader.GetString(codigoUeOrdinal),
+                                        CodigoTurma = reader.GetString(codigoTurmaOrdinal),
+                                        RespostaId = reader.GetString(respostaIdOrdinal),
+                                        PerguntaId = reader.GetString(perguntaIdOrdinal),
+                                        PeriodoId = reader.GetString(periodoIdOrdinal),
+                                        Bimestre = reader.GetInt32(bimestreOrdinal),
+                                        ComponenteCurricular = reader.GetString(componenteCurricularOrdinal),
+                                        NomeAluno = reader.GetString(nomeAlunoOrdinal),
+                                        CodigoAluno = reader.GetString(codigoAlunoOrdinal),
                                     };
                                     listaSondagem.Add(sondagemDto);
                                 }
@@ -605,7 +621,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     , (key, sondagem) =>
                       new Sondagem()
                       {
-                          Id = Guid.Parse(key.SondagemId),
+                          Id = key.SondagemId,
                           AnoLetivo = key.AnoLetivo,
                           AnoTurma = key.AnoTurma,
                           CodigoDre = key.CodigoDre,
@@ -617,12 +633,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
                           AlunosSondagem = sondagem.GroupBy(x => new { x.SondagemAlunoId, x.CodigoAluno, x.NomeAluno }
                           , (alunoKey, aluno) => new SondagemAluno()
                           {
-                              Id = Guid.Parse(alunoKey.SondagemAlunoId),
+                              Id = alunoKey.SondagemAlunoId,
                               CodigoAluno = alunoKey.CodigoAluno,
                               NomeAluno = alunoKey.NomeAluno,
                               ListaRespostas = aluno.Select(lr => new SondagemAlunoRespostas()
                               {
-                                  Id = Guid.Parse(lr.SondagemAlunoRespostaId),
+                                  Id = lr.SondagemAlunoRespostaId,
                                   PerguntaId = lr.PerguntaId,
                                   RespostaId = lr.RespostaId,
                                   Bimestre = key.Bimestre
