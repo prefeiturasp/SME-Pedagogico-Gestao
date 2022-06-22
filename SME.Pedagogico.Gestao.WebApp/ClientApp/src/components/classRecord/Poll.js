@@ -34,6 +34,7 @@ class Poll extends Component {
       showMessageMathBox: false, //para botao para abrir matematica
       controleEdicaoBimestre: false,
       bimestreAtualControleEdicao: null,
+      isMatematica: false,
       bimestres: [
         {
           value: "1",
@@ -224,6 +225,9 @@ class Poll extends Component {
 
   async savePollStudent() {
     if (this.props.poll.onClickButtonSave) {
+      this.setState({
+        isMatematica: true,
+      });
       const filtros = this.props.poll.selectedFilter;
       const itemSelecionado = this.props.autoral.perguntaSelecionada;
 
@@ -245,8 +249,11 @@ class Poll extends Component {
       );
       return;
     }
-
+   
     if (this.props.sondagemPortugues.salvar) {
+      this.setState({
+        isMatematica: false,
+      });
       const sequenciasOrdens = this.props.sondagemPortugues.sequenciaOrdens;
       const idOrdemSelecionada = this.props.sondagemPortugues.ordemSelecionada;
       const periodoSelecionadoSalvar =
@@ -531,11 +538,12 @@ class Poll extends Component {
               id="btnSave"
               className="btn btn-save text-white deactive"
               onClick={this.toggleMessageBox}
-              disabled={!this.props.poll.newDataToSave}
             >
               Salvar
             </button>
             <TwoStepsSave
+              isMatematica={this.state.isMatematica}
+              status={this.props.autoral.statusDadosMatematica}
               show={this.state.showMessageBox}
               showControl={this.toggleMessageBox}
               runMethod={this.savePollStudent}
