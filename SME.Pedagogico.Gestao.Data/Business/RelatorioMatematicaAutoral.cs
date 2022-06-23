@@ -123,8 +123,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
         private RespostaDTO CriaRespostaSemPreenchimento(int totalDeAlunos, int quantidadeTotalRespostasPergunta)
         {
             var respostaSemPreenchimento = new RespostaDTO();
+            var quantidade = totalDeAlunos - quantidadeTotalRespostasPergunta;
             respostaSemPreenchimento.Nome = "Sem preenchimento";
-            respostaSemPreenchimento.quantidade = totalDeAlunos - quantidadeTotalRespostasPergunta;
+            respostaSemPreenchimento.quantidade = quantidade >= 0 ? quantidade : 0;
             respostaSemPreenchimento.porcentagem = (respostaSemPreenchimento.quantidade > 0 ? (respostaSemPreenchimento.quantidade * 100) / (Double)totalDeAlunos : 0).ToString("0.00");
             respostaSemPreenchimento.porcentagem = respostaSemPreenchimento.porcentagem;
             return respostaSemPreenchimento;
