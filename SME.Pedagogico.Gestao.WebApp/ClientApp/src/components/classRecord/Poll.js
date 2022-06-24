@@ -638,6 +638,7 @@ class Poll extends Component {
             this.props.poll.selectedFilter.schoolYear >= 2022 && (
               <div className="col-md-2 pb-2">
                 <SelectChangeColor
+                  id ="comboSemestre"
                   className="custom-select-sm"
                   defaultText="Bimestre"
                   options={this.state.bimestres}
