@@ -139,6 +139,7 @@ namespace SME.Pedagogico.Gestao.WebApp
             var servicoTelemetria = new ServicoTelemetria(clientTelemetry, telemetriaOptions);
 
             QueryInterceptors.Init(servicoTelemetria);
+            DapperInterceptor.Init(servicoTelemetria);
 
             services.AddSingleton<IServicoTelemetria>(servicoTelemetria);
         }
