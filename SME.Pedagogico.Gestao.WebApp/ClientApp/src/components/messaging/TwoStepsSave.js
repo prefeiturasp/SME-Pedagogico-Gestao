@@ -1,4 +1,4 @@
-﻿import React, { Component } from "react";
+import React, { Component } from "react";
 import "./TwoStepsSave.css";
 import Card from "../containers/Card";
 import { Spring } from "react-spring/renderprops";
@@ -86,7 +86,7 @@ export default class TwoStepsSave extends Component {
                       </button>
                     </div>
                   </Card>
-                ) : this.props.isMatematica && this.props.status !== 200 ? (
+                ) : this.props.status !== 200 ? (
                   <Card className="col-5 p-4">
                     <div className="border-bottom sc-text-size-4">Erro</div>
 
