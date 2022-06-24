@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Dapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MoreLinq;
 using MoreLinq.Extensions;
+using Npgsql;
 using SME.Pedagogico.Gestao.Data.Contexts;
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.DTO.Matematica;
@@ -13,6 +15,7 @@ using SME.Pedagogico.Gestao.Infra;
 using SME.Pedagogico.Gestao.Models.Autoral;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,12 +27,15 @@ namespace SME.Pedagogico.Gestao.Data.Business
         private string _token;
         private TurmasAPI TurmaApi;
         private readonly IServicoTelemetria servicoTelemetria;
+        private string connectionString;
 
         public SondagemAutoralBusiness(IConfiguration config, IServicoTelemetria servicoTelemetria)
         {
             var createToken = new CreateToken(config);
             _token = createToken.CreateTokenProvisorio();
             TurmaApi = new TurmasAPI(new EndpointsAPI());
+            connectionString = Environment.GetEnvironmentVariable("sondagemConnection");
+
             this.servicoTelemetria = servicoTelemetria ?? throw new ArgumentNullException(nameof(servicoTelemetria));
         }
 
@@ -158,6 +164,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 foreach (var aluno in alunoSondagemMatematicaDto)
                 {
+                    if (!filtroSondagem.Bimestre.HasValue)
+                        throw new ArgumentNullException("bimestre", "Necessário informa o bimestre para gravar Sondagem a partir de 2022");
+
                     if (aluno.Id == null && aluno.Respostas != null)
                     {
                         Guid id = VerificaSeOAlunoPossuiSondagemERetornaId(aluno.CodigoAluno, aluno.CodigoTurma, filtroSondagem.Bimestre);
@@ -537,6 +546,47 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
+        public async Task ExcluirRespostas(Guid[] ids)
+        {
+            await servicoTelemetria.RegistrarAsync(async () =>
+            {
+                using (var conexao = new NpgsqlConnection(connectionString))
+                {
+                    await conexao.ExecuteScalarAsync(@"delete from ""SondagemAlunoRespostas"" where ""Id"" = any(@ids)", new { ids });
+                }
+            }, "delete", "Excluir Respostas Divergentes", "");
+        }
+
+        public async Task<IEnumerable<SondagemAlunoRespostaDTO>> ObterRespostasDivergentesPorPergunta(string turmaCodigo, string alunoCodigo, string perguntaId)
+        {
+            var sql = $@"select sar.""Id""
+                            , sar.""PerguntaId""
+                            , sar.""RespostaId""
+                    from ""Sondagem"" s
+                    inner join ""SondagemAluno"" sa on
+                        sa.""SondagemId"" = s.""Id""
+                    inner join ""SondagemAlunoRespostas"" sar on
+                        sar.""SondagemAlunoId"" = sa.""Id""
+                    where s.""CodigoTurma"" = @turmaCodigo
+                      and sa.""CodigoAluno"" = @alunoCodigo
+                      and sar.""PerguntaId"" = @perguntaId ";
+
+            using (var conexao = new NpgsqlConnection(connectionString))
+                return await conexao.QueryAsync<SondagemAlunoRespostaDTO>(sql, new { turmaCodigo, alunoCodigo, perguntaId }, queryName: "Obter Respostas");
+        }
+
+        public async Task<IEnumerable<SondagemRespostasDivergentesDTO>> ObterRespostasDivergentesPorUe(string dreCodigo)
+        {
+            var sql = $@"select CodigoTurma as TurmaCodigo
+	                        , CodigoAluno as AlunoCodigo
+	                        , PerguntaId
+                          from sondagem_2022_divergencias 
+                         where CodigoDre = @dreCodigo";
+
+            using (var conexao = new NpgsqlConnection(connectionString))
+                return await conexao.QueryAsync<SondagemRespostasDivergentesDTO>(sql, new { dreCodigo }, queryName: "Obter Respostas Divergentes");
+        }
+
         public async Task<IEnumerable<Sondagem>> ObterSondagemAutoralMatematicaBimestre(FiltrarListagemMatematicaDTO filtrarListagemDto)
         {
             var contexto = new SMEManagementContextData();
@@ -612,7 +662,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                 reader.NextResult();
                             }
                             return listaSondagem;
-                        }, "mapeamento", "Mapeamento DTO", "");
+                        }, "mapeamento", "Mapeamento DTO", $"{reader.RecordsAffected}");
                     }
                 }
 
