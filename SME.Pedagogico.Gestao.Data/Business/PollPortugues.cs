@@ -755,7 +755,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     return listaVazia;
                 }
 
-                var listaSequenciaOrdemSalva = lista.GroupBy(x => x.SequenciaDeOrdemSalva).Select(item => new SequenciaOrdemSalvaDTO
+                var listaSequenciaOrdemSalva = lista.GroupBy(x => x.Id).Select(item => new SequenciaOrdemSalvaDTO
                 {
                     OrdemId = item.First().OrdemId,
                     SequenciaOrdemSalva = item.First().SequenciaDeOrdemSalva
