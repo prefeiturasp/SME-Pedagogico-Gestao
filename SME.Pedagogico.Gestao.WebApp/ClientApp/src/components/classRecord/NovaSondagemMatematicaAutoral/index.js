@@ -128,25 +128,19 @@ function NovaSondagemMatematicaAutoral() {
 
   const persistencia = useCallback(
     async (listaAlunosRedux, filtrosBuscaPersistencia) => {
-      var numeroBimestre = document.getElementById("comboSemestre").value;
-      var alunosMutaveis = Object.assign([], listaAlunosRedux);
-
-      alunosMutaveis.forEach(element => {
-        if(element.bimestre == null){
-           element.bimestre = numeroBimestre;
-        }
-      });
+      let alunosMutaveis = Object.assign([], listaAlunosRedux);
 
       try {
-      await dispatch(
-         actionCreators.salvaSondagemAutoralMatematica(
-          alunosMutaveis,
-          filtrosBuscaPersistencia
+        await dispatch(
+          actionCreators.salvaSondagemAutoralMatematica(
+            alunosMutaveis,
+            filtrosBuscaPersistencia
           )
-        )
+        );
       } catch (e) {
         dispatch(pollStore.setLoadingSalvar(false));
       }
+
       sairModoEdicao();
     },
     [dispatch, sairModoEdicao]

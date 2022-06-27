@@ -305,7 +305,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 retorno.ChartData.Add(new PortChartDataModel()
                 {
                     Name = "Sem Preenchimento",
-                    Value = semPreenchimento.Value >= 0 ? semPreenchimento.Value :0
+                    Value = semPreenchimento.Value
                 });
             }
 

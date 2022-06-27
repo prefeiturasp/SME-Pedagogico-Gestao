@@ -54,16 +54,13 @@ function* GetPollReportSaga({ parameters }) {
         };
       } else {
         pollReportResponse = {
-          data: data,
-          discipline: parameters.discipline,
+          data: data.results,
+          chartData: data.chartData,
         };
       }
 
       if (!sondagemAnterior) {
-        pollReportResponse = {
-          data: data,
-          discipline: parameters.discipline,
-        };
+        pollReportResponse = { data };
       }
 
       yield put({
