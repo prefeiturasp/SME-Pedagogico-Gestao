@@ -553,6 +553,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 using (var conexao = new NpgsqlConnection(connectionString))
                 {
                     await conexao.ExecuteScalarAsync(@"delete from ""SondagemAlunoRespostas"" where ""Id"" = any(@ids)", new { ids });
+                    conexao.Close();
                 }
             }, "delete", "Excluir Respostas Divergentes", "");
         }
@@ -572,7 +573,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
                       and sar.""PerguntaId"" = @perguntaId ";
 
             using (var conexao = new NpgsqlConnection(connectionString))
-                return await conexao.QueryAsync<SondagemAlunoRespostaDTO>(sql, new { turmaCodigo, alunoCodigo, perguntaId }, queryName: "Obter Respostas");
+            {
+                var result = await conexao.QueryAsync<SondagemAlunoRespostaDTO>(sql, new { turmaCodigo, alunoCodigo, perguntaId }, queryName: "Obter Respostas");
+                conexao.Close();
+
+                return result;
+            }
         }
 
         public async Task<IEnumerable<SondagemRespostasDivergentesDTO>> ObterRespostasDivergentesPorUe(string dreCodigo)
@@ -584,7 +590,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
                          where CodigoDre = @dreCodigo";
 
             using (var conexao = new NpgsqlConnection(connectionString))
-                return await conexao.QueryAsync<SondagemRespostasDivergentesDTO>(sql, new { dreCodigo }, queryName: "Obter Respostas Divergentes");
+            {
+                var resust = await conexao.QueryAsync<SondagemRespostasDivergentesDTO>(sql, new { dreCodigo }, queryName: "Obter Respostas Divergentes");
+                conexao.Close();
+
+                return resust;
+            }
         }
 
         public async Task<IEnumerable<Sondagem>> ObterSondagemAutoralMatematicaBimestre(FiltrarListagemMatematicaDTO filtrarListagemDto)
