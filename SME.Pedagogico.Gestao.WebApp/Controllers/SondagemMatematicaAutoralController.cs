@@ -55,5 +55,15 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
             return Ok();
         }
+
+
+        [HttpPost("Matematica/ExcluirDivergencias")]
+        public async Task<IActionResult> ExcluirDivergencias([FromQuery] string dreCodigo, [FromServices] IMediator mediator)
+        {
+            await mediator.Send(new ExcluirSondagemMatematica2022ComDivergenciasCommand(dreCodigo));
+
+            return Ok();
+        }
+
     }
 }
