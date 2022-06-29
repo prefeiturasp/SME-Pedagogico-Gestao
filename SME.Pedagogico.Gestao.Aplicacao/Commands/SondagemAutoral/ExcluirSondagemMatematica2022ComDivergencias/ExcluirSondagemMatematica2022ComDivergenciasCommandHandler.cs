@@ -19,20 +19,17 @@ namespace SME.Pedagogico.Gestao.Aplicacao
 
         protected override async Task Handle(ExcluirSondagemMatematica2022ComDivergenciasCommand request, CancellationToken cancellationToken)
         {
-            var divergencias = await sondagemAutoralBusiness.ObterRespostasDivergentesPorUe(request.DreCodigo);
+            var divergencias = await sondagemAutoralBusiness.ObterRespostasDivergentesPorDre(request.DreCodigo);
 
             foreach(var divergencia in divergencias)
             {
-                var respostas = await sondagemAutoralBusiness.ObterRespostasDivergentesPorPergunta(divergencia.TurmaCodigo, divergencia.AlunoCodigo, divergencia.PerguntaId);
+                var respostas = await sondagemAutoralBusiness.ObterRespostasDivergentesPorPergunta(divergencia.CodigoTurma, divergencia.CodigoAluno, divergencia.PerguntaId);
 
                 var ultimaResposta = respostas
                     .OrderByDescending(x => x.HoraGuid)
-                    .FirstOrDefault().Id;
+                    .FirstOrDefault();
 
-                await sondagemAutoralBusiness.ExcluirRespostas(respostas
-                    .Where(a => !a.Id.Equals(ultimaResposta))
-                    .Select(a => a.Id)
-                    .ToArray());
+                await sondagemAutoralBusiness.ExcluirRespostasDivergentes(divergencia.SondagemAlunoId, ultimaResposta.RespostaId);
             };
         }
     }
