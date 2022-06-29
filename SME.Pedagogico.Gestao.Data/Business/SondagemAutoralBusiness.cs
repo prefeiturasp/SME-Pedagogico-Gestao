@@ -635,56 +635,64 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 using (var command = contexto.Database.GetDbConnection().CreateCommand())
                 {
                     command.CommandText = sql.ToString();
-                    contexto.Database.OpenConnection();
-                    using (var reader = await command.ExecuteReaderAsync("AutoralMatematica"))
-                    {
-                        var sondagemIdOrdinal = reader.GetOrdinal("SondagemId");
-                        var sondagemAlunoIdOrdinal = reader.GetOrdinal("SondagemAlunoId");
-                        var sondagemAlunoRespostaIdOrdinal = reader.GetOrdinal("SondagemAlunoRespostaId");
-                        var anoLetivoOrdinal = reader.GetOrdinal("AnoLetivo");
-                        var anoTurmaOrdinal = reader.GetOrdinal("AnoTurma");
-                        var codigoDreOrdinal = reader.GetOrdinal("CodigoDre");
-                        var codigoUeOrdinal = reader.GetOrdinal("CodigoUe");
-                        var codigoTurmaOrdinal = reader.GetOrdinal("CodigoTurma");
-                        var respostaIdOrdinal = reader.GetOrdinal("RespostaId");
-                        var perguntaIdOrdinal = reader.GetOrdinal("PerguntaId");
-                        var periodoIdOrdinal = reader.GetOrdinal("PeriodoId");
-                        var bimestreOrdinal = reader.GetOrdinal("Bimestre");
-                        var componenteCurricularOrdinal = reader.GetOrdinal("ComponenteCurricular");
-                        var nomeAlunoOrdinal = reader.GetOrdinal("NomeAluno");
-                        var codigoAlunoOrdinal = reader.GetOrdinal("CodigoAluno");
 
-                        listaSondagemDto = servicoTelemetria.RegistrarComRetorno<List<SondagemAutoralDTO>>(() =>
+                    contexto.Database.OpenConnection();
+                    try
+                    {
+                        using (var reader = await command.ExecuteReaderAsync("AutoralMatematica"))
                         {
-                            var listaSondagem = new List<SondagemAutoralDTO>();
-                            while (reader.HasRows)
+                            var sondagemIdOrdinal = reader.GetOrdinal("SondagemId");
+                            var sondagemAlunoIdOrdinal = reader.GetOrdinal("SondagemAlunoId");
+                            var sondagemAlunoRespostaIdOrdinal = reader.GetOrdinal("SondagemAlunoRespostaId");
+                            var anoLetivoOrdinal = reader.GetOrdinal("AnoLetivo");
+                            var anoTurmaOrdinal = reader.GetOrdinal("AnoTurma");
+                            var codigoDreOrdinal = reader.GetOrdinal("CodigoDre");
+                            var codigoUeOrdinal = reader.GetOrdinal("CodigoUe");
+                            var codigoTurmaOrdinal = reader.GetOrdinal("CodigoTurma");
+                            var respostaIdOrdinal = reader.GetOrdinal("RespostaId");
+                            var perguntaIdOrdinal = reader.GetOrdinal("PerguntaId");
+                            var periodoIdOrdinal = reader.GetOrdinal("PeriodoId");
+                            var bimestreOrdinal = reader.GetOrdinal("Bimestre");
+                            var componenteCurricularOrdinal = reader.GetOrdinal("ComponenteCurricular");
+                            var nomeAlunoOrdinal = reader.GetOrdinal("NomeAluno");
+                            var codigoAlunoOrdinal = reader.GetOrdinal("CodigoAluno");
+
+                            listaSondagemDto = servicoTelemetria.RegistrarComRetorno<List<SondagemAutoralDTO>>(() =>
                             {
-                                while (reader.Read())
+                                var listaSondagem = new List<SondagemAutoralDTO>();
+                                while (reader.HasRows)
                                 {
-                                    var sondagemDto = new SondagemAutoralDTO()
+                                    while (reader.Read())
                                     {
-                                        SondagemId = reader.GetGuid(sondagemIdOrdinal),
-                                        SondagemAlunoId = reader.GetGuid(sondagemAlunoIdOrdinal),
-                                        SondagemAlunoRespostaId = reader.GetGuid(sondagemAlunoRespostaIdOrdinal),
-                                        AnoLetivo = reader.GetInt32(anoLetivoOrdinal),
-                                        AnoTurma = reader.GetInt32(anoTurmaOrdinal),
-                                        CodigoDre = reader.GetString(codigoDreOrdinal),
-                                        CodigoUe = reader.GetString(codigoUeOrdinal),
-                                        CodigoTurma = reader.GetString(codigoTurmaOrdinal),
-                                        RespostaId = reader.GetString(respostaIdOrdinal),
-                                        PerguntaId = reader.GetString(perguntaIdOrdinal),
-                                        PeriodoId = reader.GetString(periodoIdOrdinal),
-                                        Bimestre = reader.GetInt32(bimestreOrdinal),
-                                        ComponenteCurricular = reader.GetString(componenteCurricularOrdinal),
-                                        NomeAluno = reader.GetString(nomeAlunoOrdinal),
-                                        CodigoAluno = reader.GetString(codigoAlunoOrdinal),
-                                    };
-                                    listaSondagem.Add(sondagemDto);
+                                        var sondagemDto = new SondagemAutoralDTO()
+                                        {
+                                            SondagemId = reader.GetGuid(sondagemIdOrdinal),
+                                            SondagemAlunoId = reader.GetGuid(sondagemAlunoIdOrdinal),
+                                            SondagemAlunoRespostaId = reader.GetGuid(sondagemAlunoRespostaIdOrdinal),
+                                            AnoLetivo = reader.GetInt32(anoLetivoOrdinal),
+                                            AnoTurma = reader.GetInt32(anoTurmaOrdinal),
+                                            CodigoDre = reader.GetString(codigoDreOrdinal),
+                                            CodigoUe = reader.GetString(codigoUeOrdinal),
+                                            CodigoTurma = reader.GetString(codigoTurmaOrdinal),
+                                            RespostaId = reader.GetString(respostaIdOrdinal),
+                                            PerguntaId = reader.GetString(perguntaIdOrdinal),
+                                            PeriodoId = reader.GetString(periodoIdOrdinal),
+                                            Bimestre = reader.GetInt32(bimestreOrdinal),
+                                            ComponenteCurricular = reader.GetString(componenteCurricularOrdinal),
+                                            NomeAluno = reader.GetString(nomeAlunoOrdinal),
+                                            CodigoAluno = reader.GetString(codigoAlunoOrdinal),
+                                        };
+                                        listaSondagem.Add(sondagemDto);
+                                    }
+                                    reader.NextResult();
                                 }
-                                reader.NextResult();
-                            }
-                            return listaSondagem;
-                        }, "mapeamento", "Mapeamento DTO", $"{reader.RecordsAffected}");
+                                return listaSondagem;
+                            }, "mapeamento", "Mapeamento DTO", $"{reader.RecordsAffected}");
+                        }
+                    }
+                    finally
+                    {
+                        contexto.Database.CloseConnection();
                     }
                 }
 
@@ -785,25 +793,33 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 {
                     command.CommandText = sql;
                     contexto.Database.OpenConnection();
-                    using (var reader = command.ExecuteReader())
+                    try
                     {
-                        while (reader.HasRows)
+                        using (var reader = command.ExecuteReader())
                         {
-                            while (reader.Read())
+                            while (reader.HasRows)
                             {
-                                var pergunta = new PerguntaAlfabetizacaoDto()
+                                while (reader.Read())
                                 {
-                                    PerguntaPrincipalId = reader["PerguntaId"].ToString(),
-                                    PerguntaPrincipalDescricao = reader["PerguntaDescricao"].ToString(),
-                                    PerguntaPrincipalOrdenacao = int.Parse(reader["PerguntaOrdenacao"].ToString()),
-                                    RespostaId = reader["RespostaId"].ToString(),
-                                    RespostaDescricao = reader["RespostaDescricao"].ToString(),
-                                    RespostaOrdenacao = int.Parse(reader["RespostaOrdenacao"].ToString()),
-                                };
-                                perguntasAlfabetizacao.Add(pergunta);
+                                    var pergunta = new PerguntaAlfabetizacaoDto()
+                                    {
+                                        PerguntaPrincipalId = reader["PerguntaId"].ToString(),
+                                        PerguntaPrincipalDescricao = reader["PerguntaDescricao"].ToString(),
+                                        PerguntaPrincipalOrdenacao = int.Parse(reader["PerguntaOrdenacao"].ToString()),
+                                        RespostaId = reader["RespostaId"].ToString(),
+                                        RespostaDescricao = reader["RespostaDescricao"].ToString(),
+                                        RespostaOrdenacao = int.Parse(reader["RespostaOrdenacao"].ToString()),
+                                    };
+                                    perguntasAlfabetizacao.Add(pergunta);
+                                }
+                                reader.NextResult();
                             }
-                            reader.NextResult();
                         }
+
+                    }
+                    finally
+                    {
+                        contexto.Database.CloseConnection();
                     }
                 }
 
