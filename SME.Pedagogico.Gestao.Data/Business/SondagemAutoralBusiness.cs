@@ -546,13 +546,17 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public async Task ExcluirRespostas(Guid[] ids)
+        public async Task ExcluirRespostasDivergentes(Guid sondagemAlunoId, string respostaId)
         {
             await servicoTelemetria.RegistrarAsync(async () =>
             {
                 using (var conexao = new NpgsqlConnection(connectionString))
                 {
-                    await conexao.ExecuteScalarAsync(@"delete from ""SondagemAlunoRespostas"" where ""Id"" = any(@ids)", new { ids });
+                    await conexao.ExecuteScalarAsync(@"delete from ""SondagemAlunoRespostaV2"" 
+                                where ""SondagemAlunoId"" = @sondagemAlunoId 
+                                  and ""RespostaId"" != @respostaId"
+                        , new { sondagemAlunoId, respostaId });
+
                     conexao.Close();
                 }
             }, "delete", "Excluir Respostas Divergentes", "");
@@ -561,16 +565,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
         public async Task<IEnumerable<SondagemAlunoRespostaDTO>> ObterRespostasDivergentesPorPergunta(string turmaCodigo, string alunoCodigo, string perguntaId)
         {
             var sql = $@"select sar.""Id""
-                            , sar.""PerguntaId""
-                            , sar.""RespostaId""
-                    from ""Sondagem"" s
-                    inner join ""SondagemAluno"" sa on
-                        sa.""SondagemId"" = s.""Id""
-                    inner join ""SondagemAlunoRespostas"" sar on
-                        sar.""SondagemAlunoId"" = sa.""Id""
-                    where s.""CodigoTurma"" = @turmaCodigo
-                      and sa.""CodigoAluno"" = @alunoCodigo
-                      and sar.""PerguntaId"" = @perguntaId ";
+	                    , sar.""PerguntaId""
+	                    , sar.""RespostaId""
+                      from ""Sondagem"" s
+                     inner join ""SondagemAluno"" sa
+                         on sa.""SondagemId"" = s.""Id""
+                     inner join ""SondagemAlunoRespostas"" sar
+                         on sar.""SondagemAlunoId"" = sa.""Id""
+                     where s.""CodigoTurma"" = @turmaCodigo
+                       and sa.""CodigoAluno"" = @alunoCodigo
+                       and sar.""PerguntaId"" = @perguntaId";
 
             using (var conexao = new NpgsqlConnection(connectionString))
             {
@@ -581,13 +585,20 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public async Task<IEnumerable<SondagemRespostasDivergentesDTO>> ObterRespostasDivergentesPorUe(string dreCodigo)
+        public async Task<IEnumerable<SondagemRespostasDivergentesDTO>> ObterRespostasDivergentesPorDre(string dreCodigo)
         {
-            var sql = $@"select CodigoTurma as TurmaCodigo
-	                        , CodigoAluno as AlunoCodigo
-	                        , PerguntaId
-                          from sondagem_2022_divergencias 
-                         where CodigoDre = @dreCodigo";
+            var sql = $@"select sar.""CodigoTurma""
+	                        , sar.""CodigoAluno""
+	                        , sar.""PerguntaId""
+	                        , sar.""SondagemAlunoId""
+	                        , count(distinct sar.""RespostaId"") Qtd
+                          from ""SondagemAlunoRespostaV2"" sar
+                         where sar.""CodigoDre"" = @dreCodigo
+                        group by sar.""CodigoTurma""
+	                        , sar.""CodigoAluno""
+	                        , sar.""PerguntaId""
+	                        , sar.""SondagemAlunoId""
+                        having count(distinct sar.""RespostaId"") > 1 ";
 
             using (var conexao = new NpgsqlConnection(connectionString))
             {
