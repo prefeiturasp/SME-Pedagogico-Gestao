@@ -155,13 +155,15 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             using (var contexto = new SMEManagementContextData())
             {
+                var lista = ObterListaDeIdsDeAlunoPorTurma(filtroSondagem.CodigoTurma, filtroSondagem.Bimestre);
                 foreach (var aluno in alunoSondagemMatematicaDto)
                 {
                     if (aluno.Id == null && aluno.Respostas != null)
                     {
-                        Guid id = VerificaSeOAlunoPossuiSondagemERetornaId(aluno.CodigoAluno, aluno.CodigoTurma, filtroSondagem.Bimestre);
+                        //Guid id = VerificaSeOAlunoPossuiSondagemERetornaId(aluno.CodigoAluno, aluno.CodigoTurma, filtroSondagem.Bimestre);
+                        var id = ObterIdDoAlunoSePossuirSondagem(aluno.CodigoAluno, lista);
 
-                        if (id != Guid.Empty)
+                        if (id.HasValue)
                             aluno.Id = id.ToString();
                     }
 
@@ -554,6 +556,17 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
+        private  List<Tuple<string, Guid>> ObterListaDeIdsDeAlunoPorTurma(string codigoTurma, int? bimestre)
+        {
+            using (var contexto = new SMEManagementContextData())
+            {
+                var lista = contexto.SondagemAluno.Where(x => x.ListaRespostas.Any(lr => lr.Bimestre == bimestre) 
+                                                  && x.Sondagem.CodigoTurma == codigoTurma).Select(a => new Tuple<string, Guid>(a.CodigoAluno, a.Id)).ToList();
+
+                return lista;
+            }
+        }
+
         private static Guid VerificaSeOAlunoPossuiSondagemERetornaId(string codigoAluno, string codigoTurma, int? bimestre)
         {
             using (var contexto = new SMEManagementContextData())
@@ -563,6 +576,11 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 return idSondagem.FirstOrDefault();
             }
+        }
+        
+        private static Guid? ObterIdDoAlunoSePossuirSondagem(string codigoAluno, List<Tuple<string, Guid>> listaAlunos)
+        {
+            return listaAlunos.FirstOrDefault(x => x.Item1 == codigoAluno)?.Item2;
         }
 
         private static IEnumerable<PerguntaResposta> ObterRespostaDaPergunta(PerguntaDto pergunta, List<PerguntaResposta> perguntasResposta)
