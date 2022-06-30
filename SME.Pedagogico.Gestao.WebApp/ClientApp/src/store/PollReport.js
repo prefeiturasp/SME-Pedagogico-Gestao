@@ -143,19 +143,11 @@ export const reducer = (state, action) => {
         chartData: null,
       };
     case types.SET_POLL_REPORT_DATA:
-      if (action.pollReportResponse.discipline === "Matemática") {
         return {
           ...state,
           data: action.pollReportResponse.data,
           chartData: action.pollReportResponse.data.graficos,
         };
-      } else {
-        return {
-          ...state,
-          data: action.pollReportResponse.data.results,
-          chartData: action.pollReportResponse.data.chartData,
-        };
-      }
     case types.PRINTING_POLL_REPORT:
       return {
         ...state,
