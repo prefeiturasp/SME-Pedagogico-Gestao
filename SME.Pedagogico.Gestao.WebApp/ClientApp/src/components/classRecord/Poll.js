@@ -249,7 +249,7 @@ class Poll extends Component {
       );
       return;
     }
-   
+
     if (this.props.sondagemPortugues.salvar) {
       this.setState({
         isMatematica: false,
@@ -544,8 +544,14 @@ class Poll extends Component {
             </button>
             <TwoStepsSave
               isMatematica={this.state.isMatematica}
-              status={this.props.autoral.statusDadosMatematica}
+              status={
+                this.props.autoral.statusDadosMatematica !== undefined &&
+                this.props.autoral.statusDadosMatematica > 0
+                  ? this.props.autoral.statusDadosMatematica
+                  : this.props.sondagemPortugues.statusDadosPortugues
+              }
               show={this.state.showMessageBox}
+              loading={this.props.poll.loadingSalvar}
               showControl={this.toggleMessageBox}
               runMethod={this.savePollStudent}
             />
@@ -638,7 +644,7 @@ class Poll extends Component {
             this.props.poll.selectedFilter.schoolYear >= 2022 && (
               <div className="col-md-2 pb-2">
                 <SelectChangeColor
-                  id ="comboSemestre"
+                  id="comboSemestre"
                   className="custom-select-sm"
                   defaultText="Bimestre"
                   options={this.state.bimestres}

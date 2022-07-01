@@ -35,14 +35,17 @@ export default class TwoStepsSave extends Component {
   render() {
     var { runMethod } = this.props;
 
-    if (runMethod === undefined) runMethod = this.nextStep;
-    else
+    if (runMethod === undefined) {
+      runMethod = this.nextStep;
+    } else {
       runMethod = (event) => {
         this.props.runMethod().finally(() => this.nextStep());
       };
+    }
 
     return (
       <div>
+        {}
         <Spring
           from={{
             display: "none",
@@ -60,7 +63,6 @@ export default class TwoStepsSave extends Component {
                 className="block-screen d-flex justify-content-center align-items-center"
                 onClick={this.hideMessage}
               >
-                {console.log(this.props.isMatematica, this.props.status)}
                 {this.state.step === 1 ? (
                   <Card className="col-5 p-4">
                     <div className="border-bottom sc-text-size-4">Atenção</div>
@@ -86,7 +88,9 @@ export default class TwoStepsSave extends Component {
                       </button>
                     </div>
                   </Card>
-                ) : this.props.status !== 200 ? (
+                ) : !this.props.loading &&
+                  this.props.status !== 200 &&
+                  this.props.status !== null ? (
                   <Card className="col-5 p-4">
                     <div className="border-bottom sc-text-size-4">Erro</div>
 
@@ -104,7 +108,9 @@ export default class TwoStepsSave extends Component {
                       </button>
                     </div>
                   </Card>
-                ) : (
+                ) : !this.props.loading &&
+                  this.props.status === 200 &&
+                  this.props.status !== null ? (
                   <Card className="col-5 p-4">
                     <div className="border-bottom sc-text-size-4">Sucesso</div>
 
@@ -122,6 +128,8 @@ export default class TwoStepsSave extends Component {
                       </button>
                     </div>
                   </Card>
+                ) : (
+                  this.resetState
                 )}
               </div>
             </animated.div>
