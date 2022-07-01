@@ -14,7 +14,7 @@ export default class TwoStepsSave extends Component {
 
     this.hideMessage = this.hideMessage.bind(this);
     this.nextStep = this.nextStep.bind(this);
-    this.resetState = this.resetState.bind(this);
+      this.resetState = this.resetState.bind(this);
   }
 
   hideMessage(event) {
@@ -29,20 +29,23 @@ export default class TwoStepsSave extends Component {
 
   resetState() {
     this.nextStep();
-    this.props.showControl();
-  }
+      this.props.showControl();
+
+   }
 
   render() {
-    var { runMethod } = this.props;
-
+      var { runMethod } = this.props;
+      console.log('props', this.props);
     if (runMethod === undefined) runMethod = this.nextStep;
     else
-      runMethod = (event) => {
-        this.props.runMethod().finally(() => this.nextStep());
+        runMethod = (event) => {
+            this.props.runMethod()
+                .finally(() => this.nextStep());
       };
 
     return (
-      <div>
+        <div>
+            {console.log('status', this.props.status)}
         <Spring
           from={{
             display: "none",
@@ -52,7 +55,7 @@ export default class TwoStepsSave extends Component {
             display: this.props.show ? "block" : "none",
             opacity: this.props.show ? 1 : 0,
           }}
-        >
+          >
           {(props) => (
             <animated.div style={props}>
               <div
@@ -60,8 +63,8 @@ export default class TwoStepsSave extends Component {
                 className="block-screen d-flex justify-content-center align-items-center"
                 onClick={this.hideMessage}
               >
-                {console.log(this.props.isMatematica, this.props.status)}
-                {this.state.step === 1 ? (
+                           
+                  {this.state.step === 1 ? (
                   <Card className="col-5 p-4">
                     <div className="border-bottom sc-text-size-4">Atenção</div>
 
@@ -86,7 +89,7 @@ export default class TwoStepsSave extends Component {
                       </button>
                     </div>
                   </Card>
-                ) : this.props.status !== 200 ? (
+                ) : (this.props.status !== 200  && this.props.status !== null )? (
                   <Card className="col-5 p-4">
                     <div className="border-bottom sc-text-size-4">Erro</div>
 
@@ -104,7 +107,7 @@ export default class TwoStepsSave extends Component {
                       </button>
                     </div>
                   </Card>
-                ) : (
+                ) : (this.props.status !== null) ? (
                   <Card className="col-5 p-4">
                     <div className="border-bottom sc-text-size-4">Sucesso</div>
 
@@ -121,8 +124,8 @@ export default class TwoStepsSave extends Component {
                         Ok
                       </button>
                     </div>
-                  </Card>
-                )}
+                                </Card>
+                            ) : this.resetState}
               </div>
             </animated.div>
           )}
