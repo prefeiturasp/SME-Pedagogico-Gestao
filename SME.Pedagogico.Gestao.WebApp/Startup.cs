@@ -4,6 +4,7 @@ using Elastic.Apm.DiagnosticSource;
 using Elastic.Apm.EntityFrameworkCore;
 using Elastic.Apm.SqlClient;
 using MediatR;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,6 +14,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using SME.Pedagogico.Gestao.Data;
+using SME.Pedagogico.Gestao.Infra;
 using SME.Pedagogico.Gestao.Infra.Utilitarios;
 using SME.Pedagogico.Gestao.IoC;
 using SME.Pedagogico.Gestao.WebApp.Configuracoes;
@@ -44,6 +47,7 @@ namespace SME.Pedagogico.Gestao.WebApp
             RegistraClientesHttp.Registrar(services, Configuration);
 
             ConfiguraRabbitParaLogs(services);
+            ConfiguraTelemetria(services);
 
             var serviceProvider = services.BuildServiceProvider();
             var mediator = serviceProvider.GetService<IMediator>();
@@ -119,6 +123,25 @@ namespace SME.Pedagogico.Gestao.WebApp
 
             IMapper mapper = config.CreateMapper();
             services.AddSingleton(mapper);
+        }
+
+        private void ConfiguraTelemetria(IServiceCollection services)
+        {
+            var telemetriaOptions = new TelemetriaOptions();
+            Configuration.GetSection(TelemetriaOptions.Secao).Bind(telemetriaOptions, c => c.BindNonPublicProperties = true);
+
+            services.AddSingleton(telemetriaOptions);
+
+            var serviceProvider = services.BuildServiceProvider();
+
+            var clientTelemetry = serviceProvider.GetService<TelemetryClient>();
+
+            var servicoTelemetria = new ServicoTelemetria(clientTelemetry, telemetriaOptions);
+
+            QueryInterceptors.Init(servicoTelemetria);
+            DapperInterceptor.Init(servicoTelemetria);
+
+            services.AddSingleton<IServicoTelemetria>(servicoTelemetria);
         }
 
         private void ConfiguraRabbitParaLogs(IServiceCollection services)

@@ -29,7 +29,8 @@ export const types = {
   ATUALIZAR_RESPOSTA_CHECKBOX: "ATUALIZAR_RESPOSTA_CHECKBOX",
   LIMPAR_RESPOSTA_ALUNO_ESPECIFICO: "LIMPAR_RESPOSTA_ALUNO_ESPECIFICO",
   EXCLUIR_SONDAGEM_PORTUGUES: "EXCLUIR_SONDAGEM_PORTUGUES",
-}
+  SETAR_STATUS_AUTORAL_PORTUGUES: "SETAR_STATUS_AUTORAL_PORTUGUES",
+};
 
 const initialState = {
   grupoSelecionado: null,
@@ -45,11 +46,14 @@ const initialState = {
   periodoSelecionado: null,
   salvar: null,
   filtros: {},
+  statusDadosPortugues: null,
 };
 
 export const actionCreators = {
   listarGrupos: () => ({ type: types.LISTAR_GRUPOS }),
-  listarComponenteCurricular: () => ({ type: types.LISTAR_COMPONENTE_CURRICULAR }),
+  listarComponenteCurricular: () => ({
+    type: types.LISTAR_COMPONENTE_CURRICULAR,
+  }),
   listarBimestres: () => ({ type: types.LISTAR_BIMESTRES }),
   listarPerguntasPortugues: (sequenciaOrdem, grupoId) => ({
     type: types.LISTAR_PERGUNTAS_PORTUGUES,
@@ -62,6 +66,10 @@ export const actionCreators = {
   listarAlunosPortugues: (filtros) => ({
     type: types.LISTAR_ALUNOS_PORTUGUES,
     payload: filtros,
+  }),
+  statusSalvarDados: (status) => ({
+    type: types.SETAR_STATUS_AUTORAL_PORTUGUES,
+    payload: status,
   }),
   salvarSondagemPortugues: ({ alunos, filtro, novaOrdem, novoPeriodoId }) => ({
     type: types.SALVAR_SONDAGEM_PORTUGUES,
@@ -97,7 +105,7 @@ export const actionCreators = {
   }),
   atualizar_resposta_radio_button: (atualizarDto) => ({
     type: types.ATUALIZAR_RESPOSTA_RADIO,
-    payload: atualizarDto
+    payload: atualizarDto,
   }),
   atualizar_resposta_checkbox: (atualizarDto) => ({
     type: types.ATUALIZAR_RESPOSTA_CHECKBOX,
@@ -116,7 +124,7 @@ export const actionCreators = {
     payload: perguntas,
   }),
   limpar_todas_ordens_selecionadas: () => ({
-    type: types.LIMPAR_TODAS_ORDENS_SELECIONADAS
+    type: types.LIMPAR_TODAS_ORDENS_SELECIONADAS,
   }),
   setar_periodo_selecionado: (periodoSelecionado) => ({
     type: types.SETAR_PERIODO_SELECIONADO,
@@ -124,22 +132,22 @@ export const actionCreators = {
   }),
   salvar_funcao_salvamento: (salvar) => ({
     type: types.SALVAR_FUNCAO_SALVAMENTO,
-    payload: salvar
+    payload: salvar,
   }),
   salvar_filtros_consulta_salvamento: (filtros) => ({
     type: types.SALVAR_FILTROS_CONSULTA_SALVAMENTO,
     payload: filtros,
   }),
-  limpar_respostas_aluno_especifico: codigoAluno => ({
+  limpar_respostas_aluno_especifico: (codigoAluno) => ({
     type: types.LIMPAR_RESPOSTA_ALUNO_ESPECIFICO,
-    payload: codigoAluno
+    payload: codigoAluno,
   }),
   limpar_respostas_alunos: () => ({
-    type: types.LIMPAR_RESPOSTAS_ALUNOS
+    type: types.LIMPAR_RESPOSTAS_ALUNOS,
   }),
   remover_sequencia_ordens: (ordemId) => ({
     type: types.REMOVER_SEQUENCIA_ORDENS,
-    payload: ordemId
+    payload: ordemId,
   }),
   excluir_sondagem_portugues: (filtro) => ({
     type: types.EXCLUIR_SONDAGEM_PORTUGUES,
@@ -179,60 +187,98 @@ export const reducer = (state, action) => {
       return { ...state, salvar: action.payload };
     case types.SALVAR_FILTROS_CONSULTA_SALVAMENTO:
       return { ...state, filtros: action.payload };
+    case types.SETAR_STATUS_AUTORAL_PORTUGUES: {
+      return {
+        ...state,
+        statusDadosPortugues: action.status,
+      };
+    }
     case types.LIMPAR_RESPOSTAS_ALUNOS:
-      const alunosSemResposta = state.alunos.map(aluno => { return { ...aluno, respostas: [] } });
+      const alunosSemResposta = state.alunos.map((aluno) => {
+        return { ...aluno, respostas: [] };
+      });
 
       return { ...state, alunos: alunosSemResposta };
 
     case types.REMOVER_SEQUENCIA_ORDENS:
-      const sequenciaOrdemNova = state.sequenciaOrdens.filter(sequencia => sequencia.ordemId !== action.payload);
+      const sequenciaOrdemNova = state.sequenciaOrdens.filter(
+        (sequencia) => sequencia.ordemId !== action.payload
+      );
 
       return { ...state, sequenciaOrdens: sequenciaOrdemNova, emEdicao: false };
     case types.INSERIR_SEQUENCIA_ORDENS:
-      let sequenciaOrdem = Object.assign([], state.sequenciaOrdens)
+      let sequenciaOrdem = Object.assign([], state.sequenciaOrdens);
 
-      const naLista = sequenciaOrdem.findIndex(ordem => ordem.ordemId === action.payload);
+      const naLista = sequenciaOrdem.findIndex(
+        (ordem) => ordem.ordemId === action.payload
+      );
 
       if (naLista !== -1)
         return { ...state, ordemSelecionada: action.payload, emEdicao: true };
 
       if (sequenciaOrdem === null || sequenciaOrdem.length === 0) {
         sequenciaOrdem = [];
-        sequenciaOrdem.push({ ordemId: action.payload, sequenciaOrdemSalva: 1 });
-        return { ...state, sequenciaOrdens: sequenciaOrdem, ordemSelecionada: action.payload, emEdicao: true };
+        sequenciaOrdem.push({
+          ordemId: action.payload,
+          sequenciaOrdemSalva: 1,
+        });
+        return {
+          ...state,
+          sequenciaOrdens: sequenciaOrdem,
+          ordemSelecionada: action.payload,
+          emEdicao: true,
+        };
       }
 
-      for (let i = 0; i < 3; i++) { 
-        const ordemIndex = sequenciaOrdem.findIndex(x => x.sequenciaOrdemSalva === i + 1)
-        if (ordemIndex > -1)
-          continue;
+      for (let i = 0; i < 3; i++) {
+        const ordemIndex = sequenciaOrdem.findIndex(
+          (x) => x.sequenciaOrdemSalva === i + 1
+        );
+        if (ordemIndex > -1) continue;
 
-        sequenciaOrdem.push({ ordemId: action.payload, sequenciaOrdemSalva: i + 1 });
+        sequenciaOrdem.push({
+          ordemId: action.payload,
+          sequenciaOrdemSalva: i + 1,
+        });
         break;
       }
 
-      return { ...state, sequenciaOrdens: sequenciaOrdem, ordemSelecionada: action.payload, emEdicao: true }
+      return {
+        ...state,
+        sequenciaOrdens: sequenciaOrdem,
+        ordemSelecionada: action.payload,
+        emEdicao: true,
+      };
     case types.ATUALIZAR_RESPOSTA_RADIO:
       let alunos = Object.assign([], state.alunos);
 
-      const Indexaluno = alunos.findIndex(aluno => aluno.codigoAluno === action.payload.alunoId);
+      const Indexaluno = alunos.findIndex(
+        (aluno) => aluno.codigoAluno === action.payload.alunoId
+      );
 
-      if (Indexaluno < 0)
-        return state;
+      if (Indexaluno < 0) return state;
 
-      alunos[Indexaluno].respostas = [{
-        periodoId: action.payload.periodoId,
-        pergunta: action.payload.perguntaId,
-        resposta: action.payload.respostaId,
-      }];
+      alunos[Indexaluno].respostas = [
+        {
+          periodoId: action.payload.periodoId,
+          pergunta: action.payload.perguntaId,
+          resposta: action.payload.respostaId,
+        },
+      ];
 
       return { ...state, alunos, emEdicao: true };
     case types.LIMPAR_RESPOSTA_ALUNO_ESPECIFICO:
       const alunosReset = Object.assign([], state.alunos);
 
-      const indexAlunoReset = alunosReset.findIndex(aluno => aluno.codigoAluno === action.payload)
+      const indexAlunoReset = alunosReset.findIndex(
+        (aluno) => aluno.codigoAluno === action.payload
+      );
 
-      if (indexAlunoReset === null || indexAlunoReset === undefined || indexAlunoReset < 0)
+      if (
+        indexAlunoReset === null ||
+        indexAlunoReset === undefined ||
+        indexAlunoReset < 0
+      )
         return { ...state };
 
       alunosReset[indexAlunoReset].respostas = [];
@@ -241,17 +287,17 @@ export const reducer = (state, action) => {
     case types.ATUALIZAR_RESPOSTA_CHECKBOX:
       let alunosM = Object.assign([], state.alunos);
 
-      if (!action.payload || action.payload.length === 0)
-        return state;
+      if (!action.payload || action.payload.length === 0) return state;
 
-      const index = alunosM.findIndex(a => a.codigoAluno === action.payload[0].alunoId);
+      const index = alunosM.findIndex(
+        (a) => a.codigoAluno === action.payload[0].alunoId
+      );
 
-      if (index < 0)
-        return state;
+      if (index < 0) return state;
 
       let respostas = [];
 
-      action.payload.forEach(aluno => {
+      action.payload.forEach((aluno) => {
         respostas.push({
           periodoId: aluno.periodoId,
           pergunta: aluno.perguntaId,
@@ -266,32 +312,38 @@ export const reducer = (state, action) => {
     case types.ATUALIZAR_RESPOSTA:
       let alunosMutaveis = Object.assign([], state.alunos);
 
-      const alunoIndex = alunosMutaveis.findIndex(aluno => aluno.codigoAluno === action.payload.alunoId);
+      const alunoIndex = alunosMutaveis.findIndex(
+        (aluno) => aluno.codigoAluno === action.payload.alunoId
+      );
 
-      if (alunoIndex < 0)
-        return state;
+      if (alunoIndex < 0) return state;
 
       const aluno = alunosMutaveis[alunoIndex];
 
-      const respostaIndex = aluno.respostas ? aluno.respostas
-        .findIndex(resposta => resposta.pergunta === action.payload.perguntaId
-          && action.payload.periodoId) : -1;
+      const respostaIndex = aluno.respostas
+        ? aluno.respostas.findIndex(
+            (resposta) =>
+              resposta.pergunta === action.payload.perguntaId &&
+              action.payload.periodoId
+          )
+        : -1;
 
-      const resposta = respostaIndex < 0 ? {
-        periodoId: action.payload.periodoId,
-        pergunta: action.payload.perguntaId,
-        resposta: action.payload.respostaId,
-      } : aluno.respostas[respostaIndex];
+      const resposta =
+        respostaIndex < 0
+          ? {
+              periodoId: action.payload.periodoId,
+              pergunta: action.payload.perguntaId,
+              resposta: action.payload.respostaId,
+            }
+          : aluno.respostas[respostaIndex];
 
       resposta.resposta = action.payload.respostaId;
 
-      if (!aluno.respostas)
-        alunosMutaveis[alunoIndex].respostas = [];
+      if (!aluno.respostas) alunosMutaveis[alunoIndex].respostas = [];
 
       if (respostaIndex < 0)
         alunosMutaveis[alunoIndex].respostas.push(resposta);
-      else
-        alunosMutaveis[alunoIndex].respostas[respostaIndex] = resposta;
+      else alunosMutaveis[alunoIndex].respostas[respostaIndex] = resposta;
 
       return { ...state, alunos: alunosMutaveis };
     default:
