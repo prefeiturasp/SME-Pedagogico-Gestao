@@ -17,9 +17,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
     {
         private SondagemAutoralBusiness sondagemAutoralBusiness;
 
-        public SondagemMatematicaAutoralController(IConfiguration configuration, IServicoTelemetria servicoTelemetria)
+        public SondagemMatematicaAutoralController(IServicoTelemetria servicoTelemetria)
         {
-            sondagemAutoralBusiness = new SondagemAutoralBusiness(configuration, servicoTelemetria);
+            sondagemAutoralBusiness = new SondagemAutoralBusiness(servicoTelemetria);
         }
 
         [HttpGet("Matematica/Periodos")]

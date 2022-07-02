@@ -30,7 +30,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
             var createToken = new CreateToken(configuration);
             _token = createToken.CreateTokenProvisorio();
 
-            sondagemAutoralBusiness = new SondagemAutoralBusiness(configuration, servicoTelemetria);
+            sondagemAutoralBusiness = new SondagemAutoralBusiness(servicoTelemetria);
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.servicoTelemetria = servicoTelemetria ?? throw new ArgumentNullException(nameof(servicoTelemetria));
             TurmaApi = new TurmasAPI(new EndpointsAPI());
