@@ -12,9 +12,9 @@ namespace SME.Pedagogico.Gestao.Aplicacao
     {
         private SondagemAutoralBusiness sondagemAutoralBusiness;
 
-        public ExcluirSondagemMatematica2022ComDivergenciasCommandHandler(IConfiguration configuration, IServicoTelemetria servicoTelemetria)
+        public ExcluirSondagemMatematica2022ComDivergenciasCommandHandler(IServicoTelemetria servicoTelemetria)
         {
-            sondagemAutoralBusiness = new SondagemAutoralBusiness(configuration, servicoTelemetria);
+            sondagemAutoralBusiness = new SondagemAutoralBusiness(servicoTelemetria);
         }
 
         protected override async Task Handle(ExcluirSondagemMatematica2022ComDivergenciasCommand request, CancellationToken cancellationToken)
