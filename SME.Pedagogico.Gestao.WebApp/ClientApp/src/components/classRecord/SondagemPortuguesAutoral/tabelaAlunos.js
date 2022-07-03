@@ -19,7 +19,10 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
 
     const perguntas = useSelector(store => store.sondagemPortugues.perguntas);
 
-    const periodoSelecionado = useSelector(store => store.sondagemPortugues.periodoSelecionado);
+    let periodoSelecionado = useSelector(store => store.sondagemPortugues.periodoSelecionado);
+
+    if (!periodoSelecionado)
+        periodoSelecionado = periodos[0];
 
     const exibirLimparCampos = useMemo(() => {
         if (!periodoSelecionado)
@@ -72,7 +75,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
     const trocarExibirConfirmacaoExclusao = () => {        
         if(mostrarMensagemConfirmacao){
             setMostrarMensagemConfirmacao(false);
-            setExibirConfirmacaoExclusao(true);
+            setExibirConfirmacaoExclusao(false);
             return;
         }
         setExibirConfirmacaoExclusao(false);
