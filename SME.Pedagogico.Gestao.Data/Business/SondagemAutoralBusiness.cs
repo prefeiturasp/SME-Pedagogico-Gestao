@@ -276,21 +276,15 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private static void RemoveRespostasSemValor(SMEManagementContextData contexto, AlunoSondagemMatematicaDto aluno, SondagemAluno alunoSondagem)
         {
-            var ListaRespostasRemovidas = new List<SondagemAlunoRespostas>();
-
-            if (alunoSondagem.ListaRespostas.Any(x => x.RespostaId != ""))
+            if (alunoSondagem.ListaRespostas.Any(x => !string.IsNullOrEmpty(x.RespostaId)))
             {
-                foreach (var alunoResposta in alunoSondagem.ListaRespostas)
-                {
-                    var respostaSondagem = aluno.Respostas
-                        .Where(x => x.Pergunta == alunoResposta.PerguntaId && x.Resposta != "").FirstOrDefault();
+                var respostasGravadas = aluno.Respostas;
 
-                    if (respostaSondagem == null)
-                        ListaRespostasRemovidas.Add(alunoResposta);
-                }
+                var respostasASeremRemovidas = alunoSondagem.ListaRespostas.Where(c => string.IsNullOrEmpty(c.RespostaId) &&
+                    respostasGravadas.Select(a => a.Pergunta).Contains(c.PerguntaId));
 
-                if (ListaRespostasRemovidas.Count > 0)
-                    contexto.SondagemAlunoRespostas.RemoveRange(ListaRespostasRemovidas);
+                if (respostasASeremRemovidas.Any())
+                    contexto.SondagemAlunoRespostas.RemoveRange(respostasASeremRemovidas);
             }
             else
                 contexto.SondagemAluno.Remove(alunoSondagem);
@@ -478,7 +472,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 s.CodigoUe == filtrarListagemDto.CodigoUe &&
                 s.ComponenteCurricularId.Equals(filtrarListagemDto.ComponenteCurricular.ToString()) &&
                 s.CodigoTurma == filtrarListagemDto.CodigoTurma &&
-                // TODO s.AlunosSondagem.Any(a => a.ListaRespostas.Any(lr => lr.PerguntaId.Equals(filtrarListagemDto.PerguntaId)) && a.Id.ToString().Equals(alunoId)))
                 s.AlunosSondagem.Any(a => a.Id.ToString() == alunoId))
                 .Include(x => x.AlunosSondagem)
                 .ThenInclude(x => x.ListaRespostas)
