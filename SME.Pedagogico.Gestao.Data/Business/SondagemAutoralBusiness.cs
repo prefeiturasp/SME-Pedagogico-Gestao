@@ -521,15 +521,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
                       from ""Sondagem"" s
                      inner join ""SondagemAluno"" sa
                          on sa.""SondagemId"" = s.""Id""
-                     inner join ""SondagemAlunoRespostas"" sar
+                     inner join ""SondagemAlunoRespostasOld"" sar
                          on sar.""SondagemAlunoId"" = sa.""Id""
                      where s.""CodigoTurma"" = @turmaCodigo
                        and sa.""CodigoAluno"" = @alunoCodigo
-                       and sar.""PerguntaId"" = @perguntaId";
+                       and sar.""PerguntaId"" = @perguntaId
+                       and s.""ComponenteCurricularId"" = @componenteCurricularId";
 
             using (var conexao = new NpgsqlConnection(connectionString))
             {
-                var result = await conexao.QueryAsync<SondagemAlunoRespostaDTO>(sql, new { turmaCodigo, alunoCodigo, perguntaId }, queryName: "Obter Respostas");
+                var result = await conexao.QueryAsync<SondagemAlunoRespostaDTO>(sql, new { turmaCodigo, alunoCodigo, perguntaId, componenteCurricularId = "c65b2c0a-7a58-4d40-b474-23f0982f14b1" }, queryName: "Obter Respostas");
                 conexao.Close();
 
                 return result;
