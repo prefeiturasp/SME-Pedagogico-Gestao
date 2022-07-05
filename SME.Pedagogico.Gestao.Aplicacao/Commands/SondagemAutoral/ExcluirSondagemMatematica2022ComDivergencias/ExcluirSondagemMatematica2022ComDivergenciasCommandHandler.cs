@@ -29,7 +29,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                     .OrderByDescending(x => x.HoraGuid)
                     .FirstOrDefault();
 
-                await sondagemAutoralBusiness.ExcluirRespostasDivergentes(divergencia.SondagemAlunoId, ultimaResposta.RespostaId);
+                await sondagemAutoralBusiness.ExcluirRespostasDivergentes(divergencia.SondagemAlunoId, divergencia.PerguntaId, ultimaResposta.RespostaId);
             };
         }
     }

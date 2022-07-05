@@ -547,7 +547,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public async Task ExcluirRespostasDivergentes(Guid sondagemAlunoId, string respostaId)
+        public async Task ExcluirRespostasDivergentes(Guid sondagemAlunoId, string perguntaId, string respostaId)
         {
             await servicoTelemetria.RegistrarAsync(async () =>
             {
@@ -555,8 +555,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 {
                     await conexao.ExecuteScalarAsync(@"delete from ""SondagemAlunoRespostaV2"" 
                                 where ""SondagemAlunoId"" = @sondagemAlunoId 
+                                  and ""PerguntaId"" = @perguntaId
                                   and ""RespostaId"" != @respostaId"
-                        , new { sondagemAlunoId, respostaId });
+                        , new { sondagemAlunoId, perguntaId, respostaId });
 
                     conexao.Close();
                 }
