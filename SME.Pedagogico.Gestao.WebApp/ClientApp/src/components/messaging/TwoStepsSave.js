@@ -34,7 +34,6 @@ export default class TwoStepsSave extends Component {
 
   render() {
     var { runMethod } = this.props;
-
     if (runMethod === undefined) {
       runMethod = this.nextStep;
     } else {
@@ -63,54 +62,54 @@ export default class TwoStepsSave extends Component {
                 className="block-screen d-flex justify-content-center align-items-center"
                 onClick={this.hideMessage}
               >
-                {this.state.step === 1 ? (
-                  <Card className="col-5 p-4">
-                    <div className="border-bottom sc-text-size-4">Atenção</div>
+                            {this.state.step === 1 ? (
+                                <Card className="col-5 p-4">
+                                    <div className="border-bottom sc-text-size-4">Atenção</div>
 
-                    <div className="pt-4 sc-text-size-1">
-                      Deseja salvar as informações?
-                    </div>
+                                    <div className="pt-4 sc-text-size-1">
+                                        Deseja salvar as informações?
+                                    </div>
 
-                    <div className="pt-5 d-flex justify-content-end">
-                      <button
-                        type="button"
-                        className="btn btn-outline-primary btn-sm mr-3 sc-darkblue-outline-button"
-                        onClick={this.props.showControl}
-                      >
-                        Cancelar
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-primary btn-sm sc-darkblue-button"
-                        onClick={runMethod}
-                      >
-                        Salvar Alterações
-                      </button>
-                    </div>
-                  </Card>
-                ) : !this.props.loading &&
-                  this.props.status !== 200 &&
-                  this.props.status !== null ? (
-                  <Card className="col-5 p-4">
-                    <div className="border-bottom sc-text-size-4">Erro</div>
+                                    <div className="pt-5 d-flex justify-content-end">
+                                        <button
+                                            type="button"
+                                            className="btn btn-outline-primary btn-sm mr-3 sc-darkblue-outline-button"
+                                            onClick={this.props.showControl}
+                                        >
+                                            Cancelar
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="btn btn-primary btn-sm sc-darkblue-button"
+                                            onClick={runMethod}
+                                        >
+                                            Salvar Alterações
+                                        </button>
+                                    </div>
+                                </Card>
+                            ) : !this.props.loading &&
+                                this.props.status !== 200 &&
+                                this.props.status !== null ? (
+                                <Card className="col-5 p-4">
+                                    <div className="border-bottom sc-text-size-4">Erro</div>
 
-                    <div className="pt-4 sc-text-size-1">
-                      Seus dados de sondagem não foram salvos.
-                    </div>
+                                    <div className="pt-4 sc-text-size-1">
+                                        Seus dados de sondagem não foram salvos.
+                                    </div>
 
-                    <div className="pt-5 d-flex justify-content-end">
-                      <button
-                        type="button"
-                        className="col-3 btn btn-primary btn-sm sc-darkblue-button"
-                        onClick={this.resetState}
-                      >
-                        Ok
-                      </button>
-                    </div>
-                  </Card>
-                ) : !this.props.loading &&
-                  this.props.status === 200 &&
-                  this.props.status !== null ? (
+                                    <div className="pt-5 d-flex justify-content-end">
+                                        <button
+                                            type="button"
+                                            className="col-3 btn btn-primary btn-sm sc-darkblue-button"
+                                            onClick={this.resetState}
+                                        >
+                                            Ok
+                                        </button>
+                                    </div>
+                                </Card>
+                                ) : !this.props.loading ||
+                                    this.props.status !== 200 ||
+                                    this.props.status !== null ? (
                   <Card className="col-5 p-4">
                     <div className="border-bottom sc-text-size-4">Sucesso</div>
 
