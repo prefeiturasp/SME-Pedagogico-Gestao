@@ -108,7 +108,7 @@ export default class TwoStepsSave extends Component {
                                     </div>
                                 </Card>
                                 ) : !this.props.loading ||
-                                    this.props.status !== 200 ||
+                                    this.props.status === 200 ||
                                     this.props.status !== null ? (
                   <Card className="col-5 p-4">
                     <div className="border-bottom sc-text-size-4">Sucesso</div>
