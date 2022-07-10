@@ -564,7 +564,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }, "delete", "Excluir Respostas Divergentes", "");
         }
 
-        public async Task<IEnumerable<SondagemAlunoRespostaDTO>> ObterRespostasDivergentesPorPergunta(string turmaCodigo, string alunoCodigo, string perguntaId)
+        public async Task<IEnumerable<SondagemAlunoRespostaDTO>> ObterRespostasDivergentesPorPergunta(string turmaCodigo, string alunoCodigo, string perguntaId, string componenteCurricularId)
         {
             var sql = $@"select sar.""Id""
 	                    , sar.""PerguntaId""
@@ -581,7 +581,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             using (var conexao = new NpgsqlConnection(connectionString))
             {
-                var result = await conexao.QueryAsync<SondagemAlunoRespostaDTO>(sql, new { turmaCodigo, alunoCodigo, perguntaId, componenteCurricularId = "c65b2c0a-7a58-4d40-b474-23f0982f14b1" }, queryName: "Obter Respostas");
+                var result = await conexao.QueryAsync<SondagemAlunoRespostaDTO>(sql, new { turmaCodigo, alunoCodigo, perguntaId, componenteCurricularId }, queryName: "Obter Respostas");
                 conexao.Close();
 
                 return result;
@@ -594,6 +594,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 	                        , sar.""CodigoAluno""
 	                        , sar.""PerguntaId""
 	                        , sar.""SondagemAlunoId""
+	                        , sar.""ComponenteCurricularId""
 	                        , count(distinct sar.""RespostaId"") Qtd
                           from ""SondagemAlunoRespostaV2"" sar
                          where sar.""CodigoDre"" = @dreCodigo
@@ -601,6 +602,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 	                        , sar.""CodigoAluno""
 	                        , sar.""PerguntaId""
 	                        , sar.""SondagemAlunoId""
+	                        , sar.""ComponenteCurricularId""
                         having count(distinct sar.""RespostaId"") > 1 ";
 
             using (var conexao = new NpgsqlConnection(connectionString))
