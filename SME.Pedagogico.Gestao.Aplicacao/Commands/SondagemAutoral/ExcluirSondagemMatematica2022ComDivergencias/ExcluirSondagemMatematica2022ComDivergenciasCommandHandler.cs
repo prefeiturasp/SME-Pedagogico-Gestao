@@ -23,13 +23,13 @@ namespace SME.Pedagogico.Gestao.Aplicacao
 
             foreach(var divergencia in divergencias)
             {
-                var respostas = await sondagemAutoralBusiness.ObterRespostasDivergentesPorPergunta(divergencia.CodigoTurma, divergencia.CodigoAluno, divergencia.PerguntaId);
+                var respostas = await sondagemAutoralBusiness.ObterRespostasDivergentesPorPergunta(divergencia.CodigoTurma, divergencia.CodigoAluno, divergencia.PerguntaId, divergencia.ComponenteCurricularId);
 
                 var ultimaResposta = respostas
                     .OrderByDescending(x => x.HoraGuid)
                     .FirstOrDefault();
 
-                await sondagemAutoralBusiness.ExcluirRespostasDivergentes(divergencia.SondagemAlunoId, ultimaResposta.RespostaId);
+                await sondagemAutoralBusiness.ExcluirRespostasDivergentes(divergencia.SondagemAlunoId, divergencia.PerguntaId, ultimaResposta.RespostaId);
             };
         }
     }

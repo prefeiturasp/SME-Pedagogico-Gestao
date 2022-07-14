@@ -60,8 +60,10 @@ pipeline {
                 script{
                     if ( env.branchname == 'main' ||  env.branchname == 'master' || env.branchname == 'homolog' || env.branchname == 'release' ) {
                         sendTelegram("🤩 [Deploy ${env.branchname}] Job Name: ${JOB_NAME} \nBuild: ${BUILD_DISPLAY_NAME} \nMe aprove! \nLog: \n${env.BUILD_URL}")
-                        timeout(time: 24, unit: "HOURS") {
-                            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'marlon_goncalves, robson_silva, rafael_losi, ricardo_coda'
+                         withCredentials([string(credentialsId: 'aprovadores-sgp', variable: 'aprovadores')]) {
+                            timeout(time: 24, unit: "HOURS") {
+                                input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: "${aprovadores}"
+                            }
                         }
                     }
                     withCredentials([file(credentialsId: "${kubeconfig}", variable: 'config')]){
