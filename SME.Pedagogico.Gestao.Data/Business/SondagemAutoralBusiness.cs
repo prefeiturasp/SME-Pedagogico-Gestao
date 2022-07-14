@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MoreLinq;
 using MoreLinq.Extensions;
@@ -497,7 +497,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public async Task ExcluirRespostasDivergentes(Guid sondagemAlunoId, string respostaId)
+        public async Task ExcluirRespostasDivergentes(Guid sondagemAlunoId, string perguntaId, string respostaId)
         {
             await servicoTelemetria.RegistrarAsync(async () =>
             {
@@ -505,15 +505,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 {
                     await conexao.ExecuteScalarAsync(@"delete from ""SondagemAlunoRespostaV2"" 
                                 where ""SondagemAlunoId"" = @sondagemAlunoId 
+                                  and ""PerguntaId"" = @perguntaId
                                   and ""RespostaId"" != @respostaId"
-                        , new { sondagemAlunoId, respostaId });
+                        , new { sondagemAlunoId, perguntaId, respostaId });
 
                     conexao.Close();
                 }
             }, "delete", "Excluir Respostas Divergentes", "");
         }
 
-        public async Task<IEnumerable<SondagemAlunoRespostaDTO>> ObterRespostasDivergentesPorPergunta(string turmaCodigo, string alunoCodigo, string perguntaId)
+        public async Task<IEnumerable<SondagemAlunoRespostaDTO>> ObterRespostasDivergentesPorPergunta(string turmaCodigo, string alunoCodigo, string perguntaId, string componenteCurricularId)
         {
             var sql = $@"select sar.""Id""
 	                    , sar.""PerguntaId""
@@ -521,15 +522,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
                       from ""Sondagem"" s
                      inner join ""SondagemAluno"" sa
                          on sa.""SondagemId"" = s.""Id""
-                     inner join ""SondagemAlunoRespostas"" sar
+                     inner join ""SondagemAlunoRespostasOld"" sar
                          on sar.""SondagemAlunoId"" = sa.""Id""
                      where s.""CodigoTurma"" = @turmaCodigo
                        and sa.""CodigoAluno"" = @alunoCodigo
-                       and sar.""PerguntaId"" = @perguntaId";
+                       and sar.""PerguntaId"" = @perguntaId
+                       and s.""ComponenteCurricularId"" = @componenteCurricularId";
 
             using (var conexao = new NpgsqlConnection(connectionString))
             {
-                var result = await conexao.QueryAsync<SondagemAlunoRespostaDTO>(sql, new { turmaCodigo, alunoCodigo, perguntaId }, queryName: "Obter Respostas");
+                var result = await conexao.QueryAsync<SondagemAlunoRespostaDTO>(sql, new { turmaCodigo, alunoCodigo, perguntaId, componenteCurricularId }, queryName: "Obter Respostas");
                 conexao.Close();
 
                 return result;
@@ -542,6 +544,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 	                        , sar.""CodigoAluno""
 	                        , sar.""PerguntaId""
 	                        , sar.""SondagemAlunoId""
+	                        , sar.""ComponenteCurricularId""
 	                        , count(distinct sar.""RespostaId"") Qtd
                           from ""SondagemAlunoRespostaV2"" sar
                          where sar.""CodigoDre"" = @dreCodigo
@@ -549,6 +552,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 	                        , sar.""CodigoAluno""
 	                        , sar.""PerguntaId""
 	                        , sar.""SondagemAlunoId""
+	                        , sar.""ComponenteCurricularId""
                         having count(distinct sar.""RespostaId"") > 1 ";
 
             using (var conexao = new NpgsqlConnection(connectionString))
