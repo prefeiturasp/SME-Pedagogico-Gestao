@@ -8,10 +8,16 @@ export const componentRenderReport = (props) => {
   let indexes = [];
   let numbers = false;
   const classroomReport = props.pollReport.selectedFilter.classroomReport;
-
-  if (props.pollReport.showReport === true) {
-    reportData = props.pollReport.data;
-    chartData = props.pollReport.chartData;
+  
+  if (props.pollReport.showReport === true) {    
+    const codigoCurso = props.pollReport.selectedFilter.CodigoCurso;
+    if (codigoCurso >= 1 && codigoCurso <= 3) {
+      reportData = props.pollReport.data && props.pollReport.data.results ? props.pollReport.data.results : [];
+      chartData = props.pollReport.data && props.pollReport.data.chartData ?  props.pollReport.data.chartData: [];      
+    } else {
+      reportData = props.pollReport.data;
+      chartData = props.pollReport.chartData;
+    }
   }
 
   if (props.pollReport.showReport === true) {
