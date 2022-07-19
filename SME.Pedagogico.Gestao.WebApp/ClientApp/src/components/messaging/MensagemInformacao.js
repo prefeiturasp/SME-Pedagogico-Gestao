@@ -39,7 +39,7 @@ export default function MensagemInformacao({
               id="block-screen"
               className="block-screen d-flex justify-content-center align-items-center"
             >
-              <Card className="col-5 p-4">
+              <Card className="col-4 p-4">
                 {linkPdf && (
                   <ButtonClose className="btn btn-lg" onClick={acaoFeedBack}>
                     <i className="fas fa-times"></i>
