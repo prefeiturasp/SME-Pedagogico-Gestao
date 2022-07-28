@@ -132,7 +132,7 @@ function NovaSondagemMatematicaAutoral() {
       var alunosMutaveis = Object.assign([], listaAlunosRedux);
 
       alunosMutaveis.forEach(element => {
-        if(element.bimestre == null){
+        if(!element.bimestre){
            element.bimestre = numeroBimestre;
         }
       });

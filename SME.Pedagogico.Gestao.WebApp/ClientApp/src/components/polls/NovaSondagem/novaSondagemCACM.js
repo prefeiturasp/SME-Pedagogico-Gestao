@@ -139,7 +139,7 @@ function NovaSondagemCACM() {
           var numeroBimestre = document.getElementById("comboSemestre").value;
           var alunosMutaveis = Object.assign([], listaAlunosRedux);
           alunosMutaveis.forEach(element => {
-              if (element.bimestre == null) {
+              if (!element.bimestre) {
                   element.bimestre = numeroBimestre;
               }
           });
