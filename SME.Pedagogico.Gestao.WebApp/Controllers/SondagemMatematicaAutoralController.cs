@@ -50,7 +50,18 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
         [HttpPost("Matematica")]
         public async Task<IActionResult> SalvarSondagem([FromBody] IEnumerable<AlunoSondagemMatematicaDto> alunoSondagemMatematicaDtos)
-        {
+        {   
+            foreach(var item in alunoSondagemMatematicaDtos)
+            {
+                item.Bimestre = 2;
+                if(item.Respostas != null)
+                    foreach(var resposta in item.Respostas)
+                    {
+                        resposta.Bimestre = 2;
+                    }
+            }
+
+
             await sondagemAutoralBusiness.SalvarSondagemMatematica(alunoSondagemMatematicaDtos);
 
             return Ok();
