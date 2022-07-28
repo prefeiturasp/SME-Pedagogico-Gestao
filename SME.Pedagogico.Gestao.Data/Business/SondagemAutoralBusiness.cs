@@ -96,6 +96,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         private async Task SalvarSonsagemMatermaticaPorBimestre(IEnumerable<AlunoSondagemMatematicaDto> alunoSondagemMatematicaDto,
             FiltrarListagemMatematicaDTO filtroSondagem)
         {
+            filtroSondagem.Bimestre = 2;
             using (var contexto = new SMEManagementContextData())
             {
                 var lista = ObterListaDeIdsDeAlunoPorTurma(filtroSondagem.CodigoTurma, filtroSondagem.Bimestre);
