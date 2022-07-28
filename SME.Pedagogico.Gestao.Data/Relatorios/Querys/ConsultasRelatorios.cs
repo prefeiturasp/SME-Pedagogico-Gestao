@@ -434,7 +434,7 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
             query.AppendLine(" INNER JOIN \"Resposta\" r ON r.\"Id\" = pr.\"RespostaId\"");
             query.AppendLine(" LEFT JOIN ( ");
             query.AppendLine("    SELECT p.\"Id\" AS \"PerguntaId\",");
-            query.AppendLine("           r.\"Id\" AS \"RespostaId\", COUNT(1) AS \"QtdRespostas\"");
+            query.AppendLine("           r.\"Id\" AS \"RespostaId\", COUNT(distinct sa.\"CodigoAluno\") AS \"QtdRespostas\"");
             query.AppendLine("    FROM \"SondagemAlunoRespostas\" sar");
             query.AppendLine("    INNER JOIN \"SondagemAluno\" sa ON sa.\"Id\" = sar.\"SondagemAlunoId\"");
             query.AppendLine("    INNER JOIN \"Sondagem\" s ON s.\"Id\" = sa.\"SondagemId\"");
