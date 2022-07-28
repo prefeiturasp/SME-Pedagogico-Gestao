@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MoreLinq;
 using MoreLinq.Extensions;
+using Newtonsoft.Json;
 using Npgsql;
 using SME.Pedagogico.Gestao.Data.Contexts;
 using SME.Pedagogico.Gestao.Data.DTO;
@@ -75,22 +76,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             if (alunoSondagemMatematicaDto == null || !alunoSondagemMatematicaDto.Any())
                 throw new Exception("É necessário realizar a sondagem de pelo menos 1 aluno");
-            try
-            {
-                var periodosRespostas = new List<string>();
-                var perguntaId = await ObterPeriodosDasRespostasEhPerguntaDaSondagem(alunoSondagemMatematicaDto, periodosRespostas);
-                var listaIdPeriodos = periodosRespostas.Distinct();
-                var filtroSondagem = CriaFiltroListagemMatematica(alunoSondagemMatematicaDto, perguntaId);
 
-                if (alunoSondagemMatematicaDto.FirstOrDefault().AnoLetivo < 2022)
-                    await SalvarSonsagemMatermaticaPorPeriodo(alunoSondagemMatematicaDto, listaIdPeriodos, filtroSondagem);
-                else
-                    await SalvarSonsagemMatermaticaPorBimestre(alunoSondagemMatematicaDto, filtroSondagem);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            var periodosRespostas = new List<string>();
+            var perguntaId = await ObterPeriodosDasRespostasEhPerguntaDaSondagem(alunoSondagemMatematicaDto, periodosRespostas);
+            var listaIdPeriodos = periodosRespostas.Distinct();
+            var filtroSondagem = CriaFiltroListagemMatematica(alunoSondagemMatematicaDto, perguntaId);
+
+            if (alunoSondagemMatematicaDto.FirstOrDefault().AnoLetivo < 2022)
+                await SalvarSonsagemMatermaticaPorPeriodo(alunoSondagemMatematicaDto, listaIdPeriodos, filtroSondagem);
+            else
+                await SalvarSonsagemMatermaticaPorBimestre(alunoSondagemMatematicaDto, filtroSondagem);
         }
 
         private async Task SalvarSonsagemMatermaticaPorBimestre(IEnumerable<AlunoSondagemMatematicaDto> alunoSondagemMatematicaDto,
@@ -98,12 +93,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             using (var contexto = new SMEManagementContextData())
             {
-                var lista = ObterListaDeIdsDeAlunoPorTurma(filtroSondagem.CodigoTurma, filtroSondagem.Bimestre);
+                //var sondagemId = ObterSondagemTurma(filtroSondagem.CodigoTurma, filtroSondagem.Bimestre, contexto);
+                var lista = ObterListaDeIdsDeAlunoPorTurma(filtroSondagem.CodigoTurma, filtroSondagem.Bimestre, contexto);
 
                 foreach (var aluno in alunoSondagemMatematicaDto)
                 {
                     if (!filtroSondagem.Bimestre.HasValue)
-                        throw new ArgumentNullException("bimestre", "Necessário informa o bimestre para gravar Sondagem a partir de 2022");
+                        throw new ArgumentNullException("bimestre", $"Necessário informar o bimestre para gravar Sondagem a partir de 2022 {ObterFiltro(filtroSondagem)}");
 
                     if (aluno.Respostas != null)
                     {
@@ -139,6 +135,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     }
                 }
             }
+        }
+
+        private string ObterFiltro(FiltrarListagemMatematicaDTO filtroSondagem)
+            => JsonConvert.SerializeObject(filtroSondagem);
+
+        private Guid? ObterSondagemTurma(string codigoTurma, int? bimestre, SMEManagementContextData contexto)
+        {
+            return contexto.Sondagem
+                .FirstOrDefault(s => s.CodigoTurma == codigoTurma && s.Bimestre == bimestre)
+                ?.Id;
         }
 
         private async Task SalvarSonsagemMatermaticaPorPeriodo(IEnumerable<AlunoSondagemMatematicaDto> alunoSondagemMatematicaDto,
@@ -694,17 +700,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        private List<Tuple<string, Guid>> ObterListaDeIdsDeAlunoPorTurma(string codigoTurma, int? bimestre)
+        private List<Tuple<string, Guid>> ObterListaDeIdsDeAlunoPorTurma(string codigoTurma, int? bimestre, SMEManagementContextData contexto)
         {
-            using (var contexto = new SMEManagementContextData())
-            {
-                var lista = contexto.SondagemAluno.Where(x => x.ListaRespostas.Any(lr => lr.Bimestre == bimestre) 
-                    && x.Sondagem.CodigoTurma == codigoTurma)
-                    .Select(a => new Tuple<string, Guid>(a.CodigoAluno, a.Id))
-                    .ToList();
+            var lista = contexto.SondagemAluno.Where(x => x.Sondagem.Bimestre == bimestre 
+                && x.Sondagem.CodigoTurma == codigoTurma)
+                .Select(a => new Tuple<string, Guid>(a.CodigoAluno, a.Id))
+                .ToList();
 
-                return lista;
-            }
+            return lista;
         }
 
         private static Guid? ObterIdDoAlunoSePossuirSondagem(string codigoAluno, List<Tuple<string, Guid>> listaAlunos)
