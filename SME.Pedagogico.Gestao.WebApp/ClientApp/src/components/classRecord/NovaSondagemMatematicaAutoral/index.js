@@ -127,21 +127,19 @@ function NovaSondagemMatematicaAutoral() {
   };
 
   const persistencia = useCallback(
-    async (listaAlunosRedux, filtrosBuscaPersistencia) => {
-      var numeroBimestre = document.getElementById("comboSemestre").value;
-      var alunosMutaveis = Object.assign([], listaAlunosRedux);
-
-      alunosMutaveis.forEach(element => {
-        if(!element.bimestre){
-           element.bimestre = numeroBimestre;
+    async (listaAlunosRedux, filtrosBuscaPersistencia) => {      
+      const alunosMutaveis = Object.assign([], listaAlunosRedux);
+      alunosMutaveis.forEach((element) => {
+        if (!element.bimestre) {
+          element.bimestre = bimestre;
         }
       });
 
       try {
-      await dispatch(
-         actionCreators.salvaSondagemAutoralMatematica(
-          alunosMutaveis,
-          filtrosBuscaPersistencia
+        await dispatch(
+          actionCreators.salvaSondagemAutoralMatematica(
+            alunosMutaveis,
+            filtrosBuscaPersistencia
           )
         )
       } catch (e) {
@@ -149,7 +147,7 @@ function NovaSondagemMatematicaAutoral() {
       }
       sairModoEdicao();
     },
-    [dispatch, sairModoEdicao]
+    [dispatch, sairModoEdicao, bimestre]
   );
 
   const obterIndexAlunoAlteracao = (alunoIdState) => {
