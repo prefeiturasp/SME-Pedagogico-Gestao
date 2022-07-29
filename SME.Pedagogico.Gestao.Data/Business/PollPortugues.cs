@@ -524,32 +524,41 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 if (proficiencia == "Escrita")
                 {
-                    string[] descSequenciaOrdenadaDeRespostasEscritas = { "Pré-Silábico", "Silábico sem valor", "Silábico com valor", "Silábico alfabético", "Alfabético", "Sem preenchimento" };
-
-                    foreach (var desc in descSequenciaOrdenadaDeRespostasEscritas)
+                    //particularidade do 3 ano
+                    if(listReturn.Any(l=> l.OptionName.Contains("Nivel")))
                     {
-                        foreach (var item in listReturn)
-                        {
-                            if (item.OptionName == desc)
-                            {
-                                retorno.Results.Add(item);
-                                break;
-                            }
-                        }
-
+                        retorno.Results = listReturn.OrderBy(lr => lr.OptionName).ToList();
+                        retorno.ChartData = graficos.OrderBy(g => g.Name).ToList();
                     }
-
-                    foreach (var desc in descSequenciaOrdenadaDeRespostasEscritas)
+                    else
                     {
-                        foreach (var item in graficos)
+                        string[] descSequenciaOrdenadaDeRespostasEscritas = { "Pré-Silábico", "Silábico sem valor", "Silábico com valor", "Silábico alfabético", "Alfabético", "Sem preenchimento" };
+
+                        foreach (var desc in descSequenciaOrdenadaDeRespostasEscritas)
                         {
-                            if (item.Name == desc)
+                            foreach (var item in listReturn)
                             {
-                                retorno.ChartData.Add(item);
-                                break;
+                                if (item.OptionName == desc)
+                                {
+                                    retorno.Results.Add(item);
+                                    break;
+                                }
                             }
+
                         }
 
+                        foreach (var desc in descSequenciaOrdenadaDeRespostasEscritas)
+                        {
+                            foreach (var item in graficos)
+                            {
+                                if (item.Name == desc)
+                                {
+                                    retorno.ChartData.Add(item);
+                                    break;
+                                }
+                            }
+
+                        }
                     }
                 }
                 else
