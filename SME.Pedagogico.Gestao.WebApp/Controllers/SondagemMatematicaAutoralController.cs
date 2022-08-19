@@ -53,11 +53,11 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         {   
             foreach(var item in alunoSondagemMatematicaDtos)
             {
-                item.Bimestre = 2;
+                item.Bimestre = 3;
                 if(item.Respostas != null)
                     foreach(var resposta in item.Respostas)
                     {
-                        resposta.Bimestre = 2;
+                        resposta.Bimestre = 3;
                     }
             }
 
