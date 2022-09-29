@@ -331,6 +331,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     UeId = codigoEscola
                 });
 
+                // obter todas as turmas lançadas sondagem...
+                var turmasComSondagem = query.GroupBy(q => q.classroomCodeEol).Select(q => q.Key).ToArray();
+
+                if(turmasComSondagem.Any())
+                    quantidadeTotalAlunos = await RetornaTotalAlunosSondagem(turmasComSondagem, periodoAnual.DataFim);
+
                 switch (bimestre)
                 {
                     case "1° Bimestre":
@@ -498,18 +504,24 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         }
                         break;
                 }
+                var listaGrafico = graficos.GroupBy(fu => fu.Name).Select(g => new { Label = g.Key, Value = g.Sum(soma => soma.Value) }).ToList();
 
-                int total = listReturn.Sum(lr => lr.studentQuantity);
+                int totalSemPreenchimento = (quantidadeTotalAlunos - listaGrafico.Where(l => !string.IsNullOrWhiteSpace(l.Label)).Sum(l => l.Value)) > 0
+                   ? quantidadeTotalAlunos - listaGrafico.Where(l => !string.IsNullOrWhiteSpace(l.Label)).Sum(l => l.Value)
+                   : listaGrafico.Where(l => string.IsNullOrWhiteSpace(l.Label)).Count();
+
                 foreach (var item in listReturn)
                 {
-                    item.StudentPercentage = ((double)item.studentQuantity / total) * 100;
+                    item.StudentPercentage = ((double)item.studentQuantity / quantidadeTotalAlunos) * 100;
                     if (string.IsNullOrWhiteSpace(item.OptionName))
+                    {
                         item.OptionName = "Sem preenchimento";
+                        item.StudentPercentage = ((double)totalSemPreenchimento / quantidadeTotalAlunos) * 100;
+                        item.studentQuantity = totalSemPreenchimento;
+                    }     
                 }
 
                 PollReportPortugueseResult retorno = new PollReportPortugueseResult();             
-
-                var listaGrafico = graficos.GroupBy(fu => fu.Name).Select(g => new { Label = g.Key, Value = g.Sum(soma => soma.Value) }).ToList();
 
                 graficos = new List<PortChartDataModel>();
 
@@ -517,8 +529,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 {
                     graficos.Add(new PortChartDataModel()
                     {
-                        Name = string.IsNullOrWhiteSpace(item.Label) ? "Sem preenchimento" : item.Label,
-                        Value = item.Value
+                        Name = string.IsNullOrWhiteSpace(item.Label) 
+                                                ? "Sem preenchimento" 
+                                                : item.Label,
+                        Value = string.IsNullOrWhiteSpace(item.Label) 
+                                                ? totalSemPreenchimento 
+                                                : item.Value
                     });
                 }
 
@@ -570,6 +586,18 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 return retorno;
             }
+        }
+
+        public async Task<int> RetornaTotalAlunosSondagem(string [] turmasSondagem, DateTime dataReferencia)
+        {
+            int totalAlunos = 0;
+            foreach (var turma in turmasSondagem)
+            {
+                var alunos = await alunoAPI.ObterAlunosAtivosPorTurmaEPeriodo(turma, dataReferencia);
+                totalAlunos += alunos.Count();
+            }
+
+            return totalAlunos;
         }
 
         private string MontarTextoProficiencia(string proficiencia)
