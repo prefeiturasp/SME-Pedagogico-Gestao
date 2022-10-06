@@ -387,7 +387,7 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
             query.AppendLine(" INNER JOIN \"Sondagem\" s ON s.\"Id\" = sa.\"SondagemId\"");
             query.AppendLine(" INNER JOIN \"Pergunta\" p ON p.\"Id\" = sar.\"PerguntaId\"");
             query.AppendLine(" INNER JOIN \"PerguntaAnoEscolar\" pae ON p.\"Id\" = pae.\"PerguntaId\"");
-            query.AppendLine(" left JOIN \"\"PerguntaAnoEscolarBimestre\"\" paeb ON pae.\"\"Id\"\" = paeb.\"\"PerguntaAnoEscolarId\"\"  ");
+            query.AppendLine(" left JOIN \"PerguntaAnoEscolarBimestre\" paeb ON pae.\"Id\" = paeb.\"PerguntaAnoEscolarId\"  ");
             query.AppendLine(" INNER JOIN \"Resposta\" r ON r.\"Id\" = sar.\"RespostaId\"");
 
             query.AppendLine(" WHERE s.\"CodigoTurma\" = @CodigoTurmaEol");
@@ -401,7 +401,7 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
                 query.AppendLine(" AND pae.\"Grupo\" = " + (int)ProficienciaEnum.Numeros);
 
             if (bimestre > 0)
-                query.AppendLine(" AND paeb.\"\"Bimestre\"\" = @Bimestre ");
+                query.AppendLine(" AND paeb.\"Bimestre\" = @Bimestre ");
 
             query.AppendLine(" ORDER BY sa.\"NomeAluno\", pae.\"Ordenacao\", sa.\"CodigoAluno\"");
 

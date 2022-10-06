@@ -228,48 +228,50 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private async Task RetornaPerguntasDoRelatorio(filtrosRelatorioDTO filtro, RelatorioMatematicaPorTurmaDTO relatorio)
         {
-            relatorio.Perguntas = new List<PerguntasRelatorioDTO>();
 
-            var sql = new StringBuilder();
-             sql.AppendLine("SELECT * ");
-             sql.AppendLine("FROM \"PerguntaAnoEscolar\" pae");
-             sql.AppendLine("LEFT join \"PerguntaAnoEscolarBimestre\" paeb on pae.\"Id\" = paeb.\"PerguntaAnoEscolarId\"  ");
-             sql.AppendLine("INNER JOIN \"Pergunta\" p ON pae.\"PerguntaId\" = p.\"Id\"");
-             sql.AppendLine("WHERE ((pa.\"FimVigencia\" IS NULL");
-             sql.AppendLine("        AND EXTRACT (YEAR FROM pa.\"InicioVigencia\") <= @AnoLetivo)");
-             sql.AppendLine("        OR (EXTRACT(YEAR FROM pa.\"FimVigencia\") >= @AnoLetivo");
-             sql.AppendLine("        AND EXTRACT (YEAR FROM pa.\"InicioVigencia\") <= @AnoLetivo))");
-             sql.AppendLine("  AND pa.\"AnoEscolar\" = @AnoDaTurma");
+                relatorio.Perguntas = new List<PerguntasRelatorioDTO>();
+
+                var sql = new StringBuilder();
+                sql.AppendLine("SELECT * ");
+                sql.AppendLine("FROM \"PerguntaAnoEscolar\" pae");
+                sql.AppendLine("LEFT join \"PerguntaAnoEscolarBimestre\" paeb on pae.\"Id\" = paeb.\"PerguntaAnoEscolarId\"  ");
+                sql.AppendLine("INNER JOIN \"Pergunta\" p ON pae.\"PerguntaId\" = p.\"Id\"");
+                sql.AppendLine("WHERE ((pae.\"FimVigencia\" IS NULL");
+                sql.AppendLine("        AND EXTRACT (YEAR FROM pae.\"InicioVigencia\") <= @AnoLetivo)");
+                sql.AppendLine("        OR (EXTRACT(YEAR FROM pae.\"FimVigencia\") >= @AnoLetivo");
+                sql.AppendLine("        AND EXTRACT (YEAR FROM pae.\"InicioVigencia\") <= @AnoLetivo))");
+                sql.AppendLine("  AND pae.\"AnoEscolar\" = @AnoDaTurma");
                 
-             if (filtro.ConsiderarBimestre && filtro.AnoEscolar <= TERCEIRO_ANO)
-                 sql.AppendLine("  AND pae.\"Grupo\"  = @Grupo");
+                if (filtro.ConsiderarBimestre && filtro.AnoEscolar <= TERCEIRO_ANO)
+                    sql.AppendLine("  AND pae.\"Grupo\"  = @Grupo");
                 
-             if(filtro.Bimestre > 0)
-                 sql.AppendLine("  AND paeb.\"Bimestre\" = @bimestre");
+                if(filtro.Bimestre > 0)
+                    sql.AppendLine("  AND paeb.\"Bimestre\" = @Bimestre");
                 
-             sql.AppendLine("  ORDER BY pae.\"Ordenacao\" ");
+                sql.AppendLine("  ORDER BY pae.\"Ordenacao\" ");
 
-             IEnumerable<PerguntaAnoEscolar> listaPerguntas = null;
-             using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
-             {
-                 listaPerguntas = await conexao.QueryAsync<PerguntaAnoEscolar>(sql.ToString(),
-                     new
-                     {
-                         filtro.AnoLetivo,
-                         filtro.Bimestre,
-                         AnoDaTurma = filtro.AnoEscolar,
-                         Grupo = (int)ProficienciaEnum.Numeros
+                var listaPerguntas = new List<PerguntaAnoEscolar>();
+                using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
+                {
+                    listaPerguntas = (await conexao.QueryAsync<PerguntaAnoEscolar>(sql.ToString(),
+                        new
+                        {
+                            filtro.AnoLetivo,
+                            filtro.Bimestre,
+                            AnoDaTurma = filtro.AnoEscolar,
+                            Grupo = (int)ProficienciaEnum.Numeros
 
-                     });
-             }
+                        })).ToList();
 
-             var perguntasNoBanco = listaPerguntas.Select(MapearPergunta).ToList();
-             relatorio.Perguntas = perguntasNoBanco.Select(x => new PerguntasRelatorioDTO
-             {
-                 Id = x.Id,
-                 Nome = x.Descricao
-             }).ToList();
+                }
 
+                var perguntasNoBanco = listaPerguntas?.Select(MapearPergunta).ToList();
+                relatorio.Perguntas = perguntasNoBanco?.Select(x => new PerguntasRelatorioDTO
+                {
+                    Id = x.Id,
+                    Nome = x.Descricao
+                }).ToList();
+                
         }
 
         private PerguntaDto MapearPergunta(PerguntaAnoEscolar perguntaAnoEscolar)
