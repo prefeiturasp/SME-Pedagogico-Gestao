@@ -127,12 +127,9 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
 								count(tabela.""RespostaId"") as ""QtdRespostas""
 							    from
 								""Pergunta"" p
-								inner join ""PerguntaAnoEscolar"" pa on
-							    pa.""PerguntaId"" = p.""Id""
-
-								and pa.""AnoEscolar"" = @AnoDaTurma
-								inner join ""PerguntaResposta"" pr on
-								pr.""PerguntaId"" = p.""Id""
+								inner join ""PerguntaAnoEscolar"" pa on pa.""PerguntaId"" = p.""Id"" and pa.""AnoEscolar"" = @AnoDaTurma
+								left JOIN ""PerguntaAnoEscolarBimestre"" paeb ON pa.""Id"" = paeb.""PerguntaAnoEscolarId""
+								inner join ""PerguntaResposta"" pr on pr.""PerguntaId"" = p.""Id""
 								inner join ""Resposta"" r on
 								r.""Id"" = pr.""RespostaId""
 								left join (
@@ -173,6 +170,9 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
 
             var query = new StringBuilder();
             query.Append(queryRelatorio);
+            if (filtro.Bimestre > 0)
+	            query.AppendLine(@" AND paeb.""Bimestre"" = @bimestre ");
+            
             if (!string.IsNullOrEmpty(filtro.CodigoDre))
                 query.AppendLine(@" and ""CodigoDre"" =  @CodigoDRE");
             if (!string.IsNullOrEmpty(filtro.CodigoUe))
@@ -418,7 +418,7 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
         public static string QueryRelatorioMatematicaAutoralBimestre(
                                 bool filtroPorDre,
                                 bool filtroPorUe,
-                                bool filtroPorNumero)
+                                bool filtroPorNumero,int bimestre)
         {
             var query = new StringBuilder();
 
@@ -430,6 +430,7 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
             query.AppendLine(" tabela.\"QtdRespostas\"");
             query.AppendLine(" FROM \"Pergunta\" p");
             query.AppendLine(" INNER JOIN \"PerguntaAnoEscolar\" pa ON pa.\"PerguntaId\" = p.\"Id\"");
+            query.AppendLine(" left join \"PerguntaAnoEscolarBimestre\" paeb on pa.\"Id\" = paeb.\"PerguntaAnoEscolarId\"  ");
             query.AppendLine(" INNER JOIN \"PerguntaResposta\" pr ON pr.\"PerguntaId\" = p.\"Id\"");
             query.AppendLine(" INNER JOIN \"Resposta\" r ON r.\"Id\" = pr.\"RespostaId\"");
             query.AppendLine(" LEFT JOIN ( ");
@@ -456,6 +457,9 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
             query.AppendLine("    OR (EXTRACT(YEAR FROM pa.\"FimVigencia\") >= @AnoLetivo AND EXTRACT (YEAR FROM pa.\"InicioVigencia\") <= @AnoLetivo))");
             query.AppendLine("   AND pa.\"AnoEscolar\" = @AnoDaTurma");
 
+            if (bimestre > 0)
+	            query.AppendLine(" AND paeb.\"Bimestre\" =  @bimestre");
+            
             if (filtroPorNumero)
                 query.AppendLine(" AND pa.\"Grupo\" = " + (int)ProficienciaEnum.Numeros);
 
