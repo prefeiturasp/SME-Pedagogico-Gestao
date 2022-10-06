@@ -16,6 +16,7 @@ using SME.Pedagogico.Gestao.Models.Autoral;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.Data.Business
@@ -229,27 +230,68 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             relatorio.Perguntas = new List<PerguntasRelatorioDTO>();
 
-            using (var contexto = new SMEManagementContextData())
-            {
-                IQueryable<PerguntaAnoEscolar> queryPerguntaAnoEscolar = contexto.PerguntaAnoEscolar
-                    .Include(x => x.Pergunta)
-                    
-                    .Where(perguntaAnoEscolar => perguntaAnoEscolar.AnoEscolar == filtro.AnoEscolar &&
-                          ((perguntaAnoEscolar.FimVigencia == null && perguntaAnoEscolar.InicioVigencia.GetValueOrDefault().Year <= filtro.AnoLetivo) ||
-                          (perguntaAnoEscolar.FimVigencia.GetValueOrDefault().Year >= filtro.AnoLetivo && perguntaAnoEscolar.InicioVigencia.GetValueOrDefault().Year <= filtro.AnoLetivo)));
+            //  using (var contexto = new SMEManagementContextData())
+            //  {
+            //      IQueryable<PerguntaAnoEscolar> queryPerguntaAnoEscolar = contexto.PerguntaAnoEscolar
+            //          .Include(x => x.Pergunta)
+            //          
+            //          .Where(perguntaAnoEscolar => perguntaAnoEscolar.AnoEscolar == filtro.AnoEscolar &&
+            //                ((perguntaAnoEscolar.FimVigencia == null && perguntaAnoEscolar.InicioVigencia.GetValueOrDefault().Year <= filtro.AnoLetivo) ||
+            //                (perguntaAnoEscolar.FimVigencia.GetValueOrDefault().Year >= filtro.AnoLetivo && perguntaAnoEscolar.InicioVigencia.GetValueOrDefault().Year <= filtro.AnoLetivo)));
+            //
+            //      if (filtro.ConsiderarBimestre && filtro.AnoEscolar <= TERCEIRO_ANO)
+            //      {
+            //          queryPerguntaAnoEscolar = queryPerguntaAnoEscolar.Where(perguntaAnoEscolar => perguntaAnoEscolar.Grupo == (int)ProficienciaEnum.Numeros);
+            //      }
+            //
+            //      var perguntasBanco = await queryPerguntaAnoEscolar.OrderBy(x => x.Ordenacao).Select(x => MapearPergunta(x)).ToListAsync();
+            //      relatorio.Perguntas = perguntasBanco.Select(x => new PerguntasRelatorioDTO
+            //      {
+            //          Id = x.Id,
+            //          Nome = x.Descricao
+            //      }).ToList();
+            // };
+            
+            var sql = new StringBuilder();
+             sql.AppendLine("SELECT * ");
+             sql.AppendLine("FROM \"PerguntaAnoEscolar\" pae");
+             sql.AppendLine("LEFT join \"PerguntaAnoEscolarBimestre\" paeb on pae.\"Id\" = paeb.\"PerguntaAnoEscolarId\"  ");
+             sql.AppendLine("INNER JOIN \"Pergunta\" p ON pae.\"PerguntaId\" = p.\"Id\"");
+             sql.AppendLine("WHERE ((pa.\"FimVigencia\" IS NULL");
+             sql.AppendLine("        AND EXTRACT (YEAR FROM pa.\"InicioVigencia\") <= @AnoLetivo)");
+             sql.AppendLine("        OR (EXTRACT(YEAR FROM pa.\"FimVigencia\") >= @AnoLetivo");
+             sql.AppendLine("        AND EXTRACT (YEAR FROM pa.\"InicioVigencia\") <= @AnoLetivo))");
+             sql.AppendLine("  AND pa.\"AnoEscolar\" = @AnoDaTurma");
+                
+             if (filtro.ConsiderarBimestre && filtro.AnoEscolar <= TERCEIRO_ANO)
+                 sql.AppendLine("  AND pae.\"Grupo\"  = @Grupo");
+                
+             if(filtro.Bimestre > 0)
+                 sql.AppendLine("  AND paeb.\"Bimestre\" = @bimestre");
+                
+             sql.AppendLine("  ORDER BY pae.\"Ordenacao\" ");
 
-                if (filtro.ConsiderarBimestre && filtro.AnoEscolar <= TERCEIRO_ANO)
-                {
-                    queryPerguntaAnoEscolar = queryPerguntaAnoEscolar.Where(perguntaAnoEscolar => perguntaAnoEscolar.Grupo == (int)ProficienciaEnum.Numeros);
-                }
+             IEnumerable<PerguntaAnoEscolar> listaPerguntas = null;
+             using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
+             {
+                 listaPerguntas = await conexao.QueryAsync<PerguntaAnoEscolar>(sql.ToString(),
+                     new
+                     {
+                         filtro.AnoLetivo,
+                         filtro.Bimestre,
+                         AnoDaTurma = filtro.AnoEscolar,
+                         Grupo = (int)ProficienciaEnum.Numeros
 
-                var perguntasBanco = await queryPerguntaAnoEscolar.OrderBy(x => x.Ordenacao).Select(x => MapearPergunta(x)).ToListAsync();
-                relatorio.Perguntas = perguntasBanco.Select(x => new PerguntasRelatorioDTO
-                {
-                    Id = x.Id,
-                    Nome = x.Descricao
-                }).ToList();
-            }
+                     });
+             }
+
+             var perguntasNoBanco = listaPerguntas.Select(MapearPergunta).ToList();
+             relatorio.Perguntas = perguntasNoBanco.Select(x => new PerguntasRelatorioDTO
+             {
+                 Id = x.Id,
+                 Nome = x.Descricao
+             }).ToList();
+
         }
 
         private PerguntaDto MapearPergunta(PerguntaAnoEscolar perguntaAnoEscolar)
