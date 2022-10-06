@@ -416,7 +416,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 return ConsultasRelatorios.QueryRelatorioMatematicaAutoralBimestre(
                                                 !string.IsNullOrEmpty(filtro.CodigoDre), 
                                                 !string.IsNullOrEmpty(filtro.CodigoUe),
-                                                filtro.AnoEscolar <= TERCEIRO_ANO);
+                                                filtro.AnoEscolar <= TERCEIRO_ANO,filtro.Bimestre);
             }
 
             return ConsultasRelatorios.QueryRelatorioMatematicaAutoral(filtro);
