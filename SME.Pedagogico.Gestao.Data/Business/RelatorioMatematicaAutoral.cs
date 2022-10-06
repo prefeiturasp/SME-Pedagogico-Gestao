@@ -230,28 +230,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             relatorio.Perguntas = new List<PerguntasRelatorioDTO>();
 
-            //  using (var contexto = new SMEManagementContextData())
-            //  {
-            //      IQueryable<PerguntaAnoEscolar> queryPerguntaAnoEscolar = contexto.PerguntaAnoEscolar
-            //          .Include(x => x.Pergunta)
-            //          
-            //          .Where(perguntaAnoEscolar => perguntaAnoEscolar.AnoEscolar == filtro.AnoEscolar &&
-            //                ((perguntaAnoEscolar.FimVigencia == null && perguntaAnoEscolar.InicioVigencia.GetValueOrDefault().Year <= filtro.AnoLetivo) ||
-            //                (perguntaAnoEscolar.FimVigencia.GetValueOrDefault().Year >= filtro.AnoLetivo && perguntaAnoEscolar.InicioVigencia.GetValueOrDefault().Year <= filtro.AnoLetivo)));
-            //
-            //      if (filtro.ConsiderarBimestre && filtro.AnoEscolar <= TERCEIRO_ANO)
-            //      {
-            //          queryPerguntaAnoEscolar = queryPerguntaAnoEscolar.Where(perguntaAnoEscolar => perguntaAnoEscolar.Grupo == (int)ProficienciaEnum.Numeros);
-            //      }
-            //
-            //      var perguntasBanco = await queryPerguntaAnoEscolar.OrderBy(x => x.Ordenacao).Select(x => MapearPergunta(x)).ToListAsync();
-            //      relatorio.Perguntas = perguntasBanco.Select(x => new PerguntasRelatorioDTO
-            //      {
-            //          Id = x.Id,
-            //          Nome = x.Descricao
-            //      }).ToList();
-            // };
-            
             var sql = new StringBuilder();
              sql.AppendLine("SELECT * ");
              sql.AppendLine("FROM \"PerguntaAnoEscolar\" pae");
