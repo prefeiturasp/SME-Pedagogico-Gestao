@@ -16,6 +16,7 @@ using SME.Pedagogico.Gestao.Models.Autoral;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.Data.Business
@@ -57,7 +58,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
 
-            return await new RelatorioMatematicaPorTurmaProficiencia(filtro, ObtenhaProficiencia(filtro.Proficiencia)).ObtenhaDTO();
+            return await new RelatorioMatematicaPorTurmaProficiencia(filtro, ObtenhaProficiencia(filtro.Proficiencia)).ObtenhaDTO(filtro.Bimestre);
         }
 
         private async Task<List<PerguntaDTO>> RetornaRelatorioMatematica(filtrosRelatorioDTO filtro, NpgsqlConnection conexao, string query, int totalDeAlunos)
@@ -227,27 +228,50 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private async Task RetornaPerguntasDoRelatorio(filtrosRelatorioDTO filtro, RelatorioMatematicaPorTurmaDTO relatorio)
         {
-            relatorio.Perguntas = new List<PerguntasRelatorioDTO>();
 
-            using (var contexto = new SMEManagementContextData())
-            {
-                IQueryable<PerguntaAnoEscolar> queryPerguntaAnoEscolar = contexto.PerguntaAnoEscolar.Include(x => x.Pergunta)
-                    .Where(perguntaAnoEscolar => perguntaAnoEscolar.AnoEscolar == filtro.AnoEscolar &&
-                          ((perguntaAnoEscolar.FimVigencia == null && perguntaAnoEscolar.InicioVigencia.GetValueOrDefault().Year <= filtro.AnoLetivo) ||
-                          (perguntaAnoEscolar.FimVigencia.GetValueOrDefault().Year >= filtro.AnoLetivo && perguntaAnoEscolar.InicioVigencia.GetValueOrDefault().Year <= filtro.AnoLetivo)));
+                relatorio.Perguntas = new List<PerguntasRelatorioDTO>();
 
+                var sql = new StringBuilder();
+                sql.AppendLine("SELECT * ");
+                sql.AppendLine("FROM \"PerguntaAnoEscolar\" pae");
+                sql.AppendLine("LEFT join \"PerguntaAnoEscolarBimestre\" paeb on pae.\"Id\" = paeb.\"PerguntaAnoEscolarId\"  ");
+                sql.AppendLine("INNER JOIN \"Pergunta\" p ON pae.\"PerguntaId\" = p.\"Id\"");
+                sql.AppendLine("WHERE ((pae.\"FimVigencia\" IS NULL");
+                sql.AppendLine("        AND EXTRACT (YEAR FROM pae.\"InicioVigencia\") <= @AnoLetivo)");
+                sql.AppendLine("        OR (EXTRACT(YEAR FROM pae.\"FimVigencia\") >= @AnoLetivo");
+                sql.AppendLine("        AND EXTRACT (YEAR FROM pae.\"InicioVigencia\") <= @AnoLetivo))");
+                sql.AppendLine("  AND pae.\"AnoEscolar\" = @AnoDaTurma");
+                
                 if (filtro.ConsiderarBimestre && filtro.AnoEscolar <= TERCEIRO_ANO)
+                    sql.AppendLine("  AND pae.\"Grupo\"  = @Grupo");
+                
+                if(filtro.Bimestre > 0)
+                    sql.AppendLine("  AND paeb.\"Bimestre\" = @Bimestre");
+                
+                sql.AppendLine("  ORDER BY pae.\"Ordenacao\" ");
+
+                var listaPerguntas = new List<PerguntaAnoEscolar>();
+                using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
                 {
-                    queryPerguntaAnoEscolar = queryPerguntaAnoEscolar.Where(perguntaAnoEscolar => perguntaAnoEscolar.Grupo == (int)ProficienciaEnum.Numeros);
+                    listaPerguntas = (await conexao.QueryAsync<PerguntaAnoEscolar>(sql.ToString(),
+                        new
+                        {
+                            filtro.AnoLetivo,
+                            filtro.Bimestre,
+                            AnoDaTurma = filtro.AnoEscolar,
+                            Grupo = (int)ProficienciaEnum.Numeros
+
+                        })).ToList();
+
                 }
 
-                var perguntasBanco = await queryPerguntaAnoEscolar.OrderBy(x => x.Ordenacao).Select(x => MapearPergunta(x)).ToListAsync();
-                relatorio.Perguntas = perguntasBanco.Select(x => new PerguntasRelatorioDTO
+                var perguntasNoBanco = listaPerguntas?.Select(MapearPergunta).ToList();
+                relatorio.Perguntas = perguntasNoBanco?.Select(x => new PerguntasRelatorioDTO
                 {
                     Id = x.Id,
                     Nome = x.Descricao
                 }).ToList();
-            }
+                
         }
 
         private PerguntaDto MapearPergunta(PerguntaAnoEscolar perguntaAnoEscolar)
@@ -389,7 +413,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private async Task<List<PerguntasRespostasProficienciaDTO>> ObtenhaListaDtoPerguntasRespostasProficiencia(filtrosRelatorioDTO filtro)
         {
-            string query = ConsultasRelatorios.QueryRelatorioMatematicaProficiencia(!string.IsNullOrEmpty(filtro.CodigoDre), !string.IsNullOrEmpty(filtro.CodigoUe));
+            string query = ConsultasRelatorios.QueryRelatorioMatematicaProficiencia(!string.IsNullOrEmpty(filtro.CodigoDre), !string.IsNullOrEmpty(filtro.CodigoUe), filtro.Bimestre);
 
             using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
             {
@@ -416,7 +440,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 return ConsultasRelatorios.QueryRelatorioMatematicaAutoralBimestre(
                                                 !string.IsNullOrEmpty(filtro.CodigoDre), 
                                                 !string.IsNullOrEmpty(filtro.CodigoUe),
-                                                filtro.AnoEscolar <= TERCEIRO_ANO);
+                                                filtro.AnoEscolar <= TERCEIRO_ANO,filtro.Bimestre);
             }
 
             return ConsultasRelatorios.QueryRelatorioMatematicaAutoral(filtro);
@@ -426,7 +450,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             if (filtro.ConsiderarBimestre)
             {
-                return ConsultasRelatorios.QueryRelatorioPorTurmaMatematicaBimestre(filtro.AnoEscolar);
+                return ConsultasRelatorios.QueryRelatorioPorTurmaMatematicaBimestre(filtro.AnoEscolar,filtro.Bimestre);
             }
 
             return ConsultasRelatorios.QueryRelatorioPorTurmaMatematica();

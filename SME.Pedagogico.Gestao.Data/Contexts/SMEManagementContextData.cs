@@ -25,6 +25,7 @@ namespace SME.Pedagogico.Gestao.Data.Contexts
         public DbSet<Resposta> Resposta { get; set; }
         public DbSet<PerguntaResposta> PerguntaResposta { get; set; }
         public DbSet<PerguntaAnoEscolar> PerguntaAnoEscolar { get; set; }
+        public DbSet<PerguntaAnoEscolarBimestre> PerguntaAnoEscolarBimestre { get; set; }
         public DbSet<Grupo> Grupo { get; set; }
         public DbSet<Ordem> Ordem { get; set; }
         public DbSet<OrdemPergunta> OrdemPergunta { get; set; }
