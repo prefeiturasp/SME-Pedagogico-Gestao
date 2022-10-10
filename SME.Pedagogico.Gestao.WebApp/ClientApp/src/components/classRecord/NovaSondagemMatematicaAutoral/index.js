@@ -127,7 +127,7 @@ function NovaSondagemMatematicaAutoral() {
   };
 
   const persistencia = useCallback(
-    async (listaAlunosRedux, filtrosBuscaPersistencia) => {      
+    async (listaAlunosRedux, filtrosBuscaPersistencia) => {
       const alunosMutaveis = Object.assign([], listaAlunosRedux);
       alunosMutaveis.forEach((element) => {
         if (!element.bimestre) {
@@ -217,16 +217,17 @@ function NovaSondagemMatematicaAutoral() {
   useEffect(() => {
     if (filtros.yearClassroom && bimestre) {
       dispatch(actionCreators.obterPeriodoAberto(filtros.schoolYear, bimestre));
-
+      
       if (ehTipoNumerico) {
         dispatch(
           pollStore.obterPerguntasAlfabetizacao({
             ...filtros,
             grupo: GRUPO_SONDAGEM[tipoSondagem],
+            bimestre,
           })
         );
       } else {
-        dispatch(actionCreators.listarPerguntas(filtros));
+        dispatch(actionCreators.listarPerguntas({ ...filtros, bimestre }));
       }
 
       dispatch(
