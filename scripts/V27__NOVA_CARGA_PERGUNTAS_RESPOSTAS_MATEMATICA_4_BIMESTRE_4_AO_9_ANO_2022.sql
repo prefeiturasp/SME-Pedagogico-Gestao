@@ -2249,7 +2249,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 1
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Conjuntos numéricos: operações e resolução de problemas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 1: Conjuntos numéricos: operações e resolução de problemas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -2632,7 +2632,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 1: 
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Conjuntos numéricos: operações e resolução de problemas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 1: Conjuntos numéricos: operações e resolução de problemas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -2670,7 +2670,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 2: 
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Conjuntos numéricos: operações e resolução de problemas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 2: Conjuntos numéricos: operações e resolução de problemas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
