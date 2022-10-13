@@ -143,8 +143,8 @@ select uuid_generate_v4()::text,'O estudante identificou corretamente todas as f
 where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante identificou corretamente todas as figuras geométricas que correspondem à superfície do cilindro');
 
 insert into public."Resposta" ("Id", "Descricao")  
-select uuid_generate_v4()::text,'O estudante identificou apenas o cálculo como parte da planificação da superfície do cilindro' 
-where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante identificou apenas o cálculo como parte da planificação da superfície do cilindro');
+select uuid_generate_v4()::text,'O estudante identificou apenas o círculo como parte da planificação da superfície do cilindro' 
+where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante identificou apenas o círculo como parte da planificação da superfície do cilindro');
 
 insert into public."Resposta" ("Id", "Descricao")  
 select uuid_generate_v4()::text,'O estudante identificou apenas o retângulo como parte da planificação da superfície do cilindro' 
@@ -1042,7 +1042,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O estudante identificou apenas o cálculo como parte da planificação da superfície do cilindro';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O estudante identificou apenas o círculo como parte da planificação da superfície do cilindro';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
 
