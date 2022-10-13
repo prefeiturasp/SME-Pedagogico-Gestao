@@ -47,8 +47,8 @@ select uuid_generate_v4()::text,'O estudante respondeu corretamente todas as que
 where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante respondeu corretamente todas as questões');
 
 insert into public."Resposta" ("Id", "Descricao")  
-select uuid_generate_v4()::text,'O estudante ordenou corretamente, mas não identidicou quem pesa mais de 2kg' 
-where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante ordenou corretamente, mas não identidicou quem pesa mais de 2kg');
+select uuid_generate_v4()::text,'O estudante ordenou corretamente, mas não identificou quem pesa mais de 2kg' 
+where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante ordenou corretamente, mas não identificou quem pesa mais de 2kg');
 
 insert into public."Resposta" ("Id", "Descricao")  
 select uuid_generate_v4()::text,'O estudante não ordenou corretamente, mas identificou quem pesa mais de 2kg' 
@@ -814,7 +814,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O estudante ordenou corretamente, mas não identidicou quem pesa mais de 2kg';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O estudante ordenou corretamente, mas não identificou quem pesa mais de 2kg';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
 
