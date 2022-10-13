@@ -722,7 +722,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var perguntasAlfabetizacao = new List<PerguntaAlfabetizacaoDto>();
 
                 var sql = $@"select p.""Id"" as ""PerguntaId"",
-							p.""Descricao"" as ""PerguntaDescricao"",
+							'Questão '|| pae.""Ordenacao""|| ': ' || p.""Descricao"" as ""PerguntaDescricao"",
 							pae.""Ordenacao"" as ""PerguntaOrdenacao"",
 							rs.""Id"" as ""RespostaId"",
 							rs.""Descricao"" as ""RespostaDescricao"",
