@@ -351,12 +351,12 @@ select uuid_generate_v4()::text,'O estudante demonstrou que não sabe o que é p
 where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante demonstrou que não sabe o que é probabilidade');
 
 insert into public."Resposta" ("Id", "Descricao")  
-select uuid_generate_v4()::text,'O estudante não compreendeu o conceito de probabilidade e respondeu o número 5, pois considerou apenas o trecho um número maior do que quatro' 
-where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante não compreendeu o conceito de probabilidade e respondeu o número 5, pois considerou apenas o trecho um número maior do que quatro');
+select uuid_generate_v4()::text,'O estudante não compreendeu o conceito de probabilidade e respondeu o número 5, pois considerou apenas o trecho "um número maior do que quatro"' 
+where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante não compreendeu o conceito de probabilidade e respondeu o número 5, pois considerou apenas o trecho "um número maior do que quatro"');
 
 insert into public."Resposta" ("Id", "Descricao")  
-select uuid_generate_v4()::text,'O estudante não compreendeu o conceito de probabilidade e respondeu os números 5 e 6 porque considerou apenas o trecho um número maior do que quatro' 
-where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante não compreendeu o conceito de probabilidade e respondeu os números 5 e 6 porque considerou apenas o trecho um número maior do que quatro');
+select uuid_generate_v4()::text,'O estudante não compreendeu o conceito de probabilidade e respondeu os números 5 e 6 porque considerou apenas o trecho "um número maior do que quatro"' 
+where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante não compreendeu o conceito de probabilidade e respondeu os números 5 e 6 porque considerou apenas o trecho "um número maior do que quatro"');
 
 insert into public."Resposta" ("Id", "Descricao")  
 select uuid_generate_v4()::text,'O estudante resolveu a questão corretamente e se baseou nas propriedades da igualdade' 
@@ -519,12 +519,12 @@ select uuid_generate_v4()::text,'O estudante não estruturou os dados do problem
 where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante não estruturou os dados do problema de forma lógica e/ou realizou cálculos aleatórios com números presentes no texto');
 
 insert into public."Resposta" ("Id", "Descricao")  
-select uuid_generate_v4()::text,'O estudante resolveu o problema corretamente, por meio de uma sentença matemática ou dados esteuturados' 
-where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante resolveu o problema corretamente, por meio de uma sentença matemática ou dados esteuturados');
+select uuid_generate_v4()::text,'O estudante resolveu o problema corretamente, por meio de uma sentença matemática ou dados estruturados' 
+where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante resolveu o problema corretamente, por meio de uma sentença matemática ou dados estruturados.');
 
 insert into public."Resposta" ("Id", "Descricao")  
-select uuid_generate_v4()::text,'O estudante estruturou algumas informações do problema, mas apresentou resposta inadequada' 
-where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante estruturou algumas informações do problema, mas apresentou resposta inadequada');
+select uuid_generate_v4()::text,'O estudante estruturou algumas informações do problema de forma lógica, mas apresentou a resposta inadequada' 
+where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante estruturou algumas informações do problema de forma lógica, mas apresentou a resposta inadequada');
 
 insert into public."Resposta" ("Id", "Descricao")  
 select uuid_generate_v4()::text,'O estudante determinou corretamente o percentual de 10%, mas desconsiderou o desconto, gerando resposta inadequada' 
@@ -695,8 +695,8 @@ select uuid_generate_v4()::text,'O estudante não compreendeu o problema porque 
 where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante não compreendeu o problema porque faz operações aleatórias com os números 3 e 7');
 
 insert into public."Resposta" ("Id", "Descricao")  
-select uuid_generate_v4()::text,'O estudante compreendeu parcialmente o problem porque identificou todas as chances de sair soma 3 e todas as chances de sair soma 7, mas não calculou as probabilidades' 
-where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante compreendeu parcialmente o problem porque identificou todas as chances de sair soma 3 e todas as chances de sair soma 7, mas não calculou as probabilidades');
+select uuid_generate_v4()::text,'O estudante compreendeu parcialmente o problema porque identificou todas as chances de sair soma 3 e todas as chances de sair soma 7, mas não calculou as probabilidades' 
+where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante compreendeu parcialmente o problema porque identificou todas as chances de sair soma 3 e todas as chances de sair soma 7, mas não calculou as probabilidades');
 
 insert into public."Resposta" ("Id", "Descricao")  
 select uuid_generate_v4()::text,'O estudante compreendeu o problema, mas não determinou todas as sequências possíveis e não justificou porque acontecer três caras é menos provável' 
@@ -1563,7 +1563,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 3: 
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 3: Números racionais:leitura, escrita,comparação, ordenação e localização na reta numerada','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 3: Números racionais:leitura, escrita, comparação, ordenação e localização na reta numerada','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1601,7 +1601,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 4: 
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 4: Números racionais:leitura, escrita,comparação, ordenação e localização na reta numerada','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 4: Números racionais:leitura, escrita, comparação, ordenação e localização na reta numerada','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1765,11 +1765,11 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O estudante não compreendeu o conceito de probabilidade e respondeu o número 5, pois considerou apenas o trecho um número maior do que quatro';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O estudante não compreendeu o conceito de probabilidade e respondeu o número 5, pois considerou apenas o trecho "um número maior do que quatro"';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O estudante não compreendeu o conceito de probabilidade e respondeu os números 5 e 6 porque considerou apenas o trecho um número maior do que quatro';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O estudante não compreendeu o conceito de probabilidade e respondeu os números 5 e 6 porque considerou apenas o trecho "um número maior do que quatro"';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
@@ -2299,11 +2299,11 @@ insert into public."PerguntaAnoEscolarBimestre" ("PerguntaAnoEscolarId", "Bimest
 select perguntaAnoEscolarId, 4
 where not exists (select "Id" from public."PerguntaAnoEscolarBimestre" where "PerguntaAnoEscolarId" = perguntaAnoEscolarId and "Bimestre" = 4);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O estudante resolveu o problema corretamente, por meio de uma sentença matemática ou dados esteuturados';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O estudante resolveu o problema corretamente, por meio de uma sentença matemática ou dados estruturados.';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O estudante estruturou algumas informações do problema, mas apresentou resposta inadequada';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O estudante estruturou algumas informações do problema de forma lógica, mas apresentou a resposta inadequada';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
 
@@ -2341,7 +2341,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O estudante estruturou algumas informações do problema, mas apresentou resposta inadequada';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O estudante estruturou algumas informações do problema de forma lógica, mas apresentou a resposta inadequada';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
 
@@ -2379,7 +2379,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O estudante estruturou algumas informações do problema, mas apresentou resposta inadequada';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O estudante estruturou algumas informações do problema de forma lógica, mas apresentou a resposta inadequada';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
 
@@ -2956,7 +2956,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O estudante compreendeu parcialmente o problem porque identificou todas as chances de sair soma 3 e todas as chances de sair soma 7, mas não calculou as probabilidades';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O estudante compreendeu parcialmente o problema porque identificou todas as chances de sair soma 3 e todas as chances de sair soma 7, mas não calculou as probabilidades';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
