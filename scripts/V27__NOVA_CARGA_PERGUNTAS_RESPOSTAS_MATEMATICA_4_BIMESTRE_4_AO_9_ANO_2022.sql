@@ -127,16 +127,16 @@ select uuid_generate_v4()::text,'O estudante compôs corretamente todos os núme
 where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante compôs corretamente todos os números');
 
 insert into public."Resposta" ("Id", "Descricao")  
-select uuid_generate_v4()::text,'O estudante compôs corretamente os números 725 e 859 e errou a Composição do número 590' 
-where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante compôs corretamente os números 725 e 859 e errou a Composição do número 590');
+select uuid_generate_v4()::text,'O estudante compôs corretamente os números 725 e 859 e errou a composição do número 590' 
+where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante compôs corretamente os números 725 e 859 e errou a composição do número 590');
 
 insert into public."Resposta" ("Id", "Descricao")  
 select uuid_generate_v4()::text,'O estudante compôs corretamente apenas o número 590' 
 where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante compôs corretamente apenas o número 590');
 
 insert into public."Resposta" ("Id", "Descricao")  
-select uuid_generate_v4()::text,'O estudante errou a Composição de todos os números' 
-where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante errou a Composição de todos os números');
+select uuid_generate_v4()::text,'O estudante errou a composição de todos os números' 
+where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante errou a composição de todos os números');
 
 insert into public."Resposta" ("Id", "Descricao")  
 select uuid_generate_v4()::text,'O estudante identificou corretamente todas as figuras geométricas que correspondem à superfície do cilindro' 
@@ -874,7 +874,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 5
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Sistema de numeração decimal: leitura, escrita, comparação e ordenação de números naturais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Sistema de Numeração Decimal: leitura, escrita, comparação e ordenação de números naturais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -912,7 +912,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 6
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Sistema de numeração decimal: leitura, escrita, comparação e ordenação de números naturais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Sistema de Numeração Decimal: leitura, escrita, comparação e ordenação de números naturais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -950,7 +950,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 7
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Composição e deComposição de números naturais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Composição e decomposição de números naturais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -988,7 +988,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 8
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Composição e deComposição de números naturais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Composição e decomposição de números naturais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1004,7 +1004,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 1);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O estudante compôs corretamente os números 725 e 859 e errou a Composição do número 590';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O estudante compôs corretamente os números 725 e 859 e errou a composição do número 590';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 2);
 
@@ -1012,7 +1012,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O estudante errou a Composição de todos os números';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O estudante errou a composição de todos os números';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
 
@@ -1104,7 +1104,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 1
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Sistema de numeração decimal: leitura, escrita, ordenação e localização na reta numerada de números naturais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Sistema de Numeração Decimal: leitura, escrita, ordenação e localização na reta numerada de números naturais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
