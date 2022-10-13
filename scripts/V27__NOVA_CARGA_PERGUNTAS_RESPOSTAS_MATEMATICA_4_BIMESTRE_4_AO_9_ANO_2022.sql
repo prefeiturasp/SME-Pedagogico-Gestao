@@ -722,7 +722,7 @@ begin
 	
 --> Questão 1
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Problemas envolvendo o sistema monetário brasileiro','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 1: Problemas envolvendo o sistema monetário brasileiro','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;	
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -760,7 +760,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 2
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Problemas envolvendo o sistema monetário brasileiro','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 2: Problemas envolvendo o sistema monetário brasileiro','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -798,7 +798,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 3
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Capacidade e massa: uso de unidades padronizadas, comparações e estimativas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 3: Capacidade e massa: uso de unidades padronizadas, comparações e estimativas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -836,7 +836,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 4
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Capacidade e massa: uso de unidades padronizadas, comparações e estimativas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 4: Capacidade e massa: uso de unidades padronizadas, comparações e estimativas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -874,7 +874,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 5
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Sistema de Numeração Decimal: leitura, escrita, comparação e ordenação de números naturais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 5: Sistema de Numeração Decimal: leitura, escrita, comparação e ordenação de números naturais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -912,7 +912,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 6
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Sistema de Numeração Decimal: leitura, escrita, comparação e ordenação de números naturais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 6: Sistema de Numeração Decimal: leitura, escrita, comparação e ordenação de números naturais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -950,7 +950,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 7
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Composição e decomposição de números naturais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 7: Composição e decomposição de números naturais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -988,7 +988,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 8
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Composição e decomposição de números naturais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 8: Composição e decomposição de números naturais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1026,7 +1026,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 9
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Planificação de figuras geométricas espaciais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 9: Planificação de figuras geométricas espaciais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1064,7 +1064,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 10
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Planificação de figuras geométricas espaciais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 10: Planificação de figuras geométricas espaciais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1104,7 +1104,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 1
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Sistema de Numeração Decimal: leitura, escrita, ordenação e localização na reta numerada de números naturais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 1: Sistema de Numeração Decimal: leitura, escrita, ordenação e localização na reta numerada de números naturais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1142,7 +1142,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 2
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Sistema de numeração decimal: leitura, escrita, ordenação e localização na reta numerada de números naturais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 2: Sistema de numeração decimal: leitura, escrita, ordenação e localização na reta numerada de números naturais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1180,7 +1180,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 3
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Propriedades da igualdade','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 3: Propriedades da igualdade','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1218,7 +1218,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 4
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Propriedades da igualdade','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 4: Propriedades da igualdade','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1256,7 +1256,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 5
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Medidas de temperatura','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 5: Medidas de temperatura','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1294,7 +1294,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 6
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Medidas de tempo','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 6: Medidas de tempo','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1332,7 +1332,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 7
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Figuras espaciais: diferenças e similaridades','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 7: Figuras espaciais: Diferenças e similaridades','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1370,7 +1370,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 8
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Figuras espaciais: diferenças e similaridades','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 8: Figuras espaciais: Diferenças e similaridades','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1408,7 +1408,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 9
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Tabela Simples e de dupla entrada, tráficos de colunas, gráficos de linhas, barras e pictóricos','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 9: Tabela Simples e de dupla entrada, tráficos de colunas, gráficos de linhas, barras e pictóricos','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1446,7 +1446,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 10
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Tabela Simples e de dupla entrada, tráficos de colunas, gráficos de linhas, barras e pictóricos','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 10: Tabela Simples e de dupla entrada, tráficos de colunas, gráficos de linhas, barras e pictóricos','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1487,7 +1487,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 1: 
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Problemas envolvendo medidas de tempo','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 1: Problemas envolvendo medidas de tempo','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1525,7 +1525,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 2: 
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Problemas envolvendo medidas de tempo','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 2: Problemas envolvendo medidas de tempo','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1563,7 +1563,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 3: 
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId")
-values (uuid_generate_v4()::text,'números racionais:leitura, escrita,comparação, ordenação e localização na reta numerada','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 3: Números racionais:leitura, escrita,comparação, ordenação e localização na reta numerada','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1601,7 +1601,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 4: 
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId")
-values (uuid_generate_v4()::text,'números racionais:leitura, escrita,comparação, ordenação e localização na reta numerada','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 4: Números racionais:leitura, escrita,comparação, ordenação e localização na reta numerada','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1635,7 +1635,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 5);
 
 --> Questão 5: 
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId")
-values (uuid_generate_v4()::text, 'Planificação de superfícies de poliedros','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text, 'Questão 5: Planificação de superfícies de poliedros','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1673,7 +1673,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 6: 
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId")
-values (uuid_generate_v4()::text, 'Planificação de superfícies de poliedros','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text, 'Questão 6: Planificação de superfícies de poliedros','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1711,7 +1711,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 7: 
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId")
-values (uuid_generate_v4()::text, 'Cálculo de probabilidade','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text, 'Questão 7: Cálculo de probabilidade','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1749,7 +1749,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 8: 
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId")
-values (uuid_generate_v4()::text, 'Cálculo de probabilidade','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text, 'Questão 8: Cálculo de probabilidade','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1787,7 +1787,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 9:
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId")
-values (uuid_generate_v4()::text, 'Propriedades da igualdade','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text, 'Questão 9: Propriedades da igualdade','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
  
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1825,7 +1825,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 10: 
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId")
-values (uuid_generate_v4()::text, 'Propriedades da igualdade','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text, 'Questão 10: Propriedades da igualdade','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1866,7 +1866,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 1
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Problemas envolvendo os significados dos campos aditivo e multiplicativo com números naturais e/ou racionais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 1: Problemas envolvendo os significados dos campos aditivo e multiplicativo com números naturais e/ou racionais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1904,7 +1904,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 2
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Problemas envolvendo os significados dos campos aditivo e multiplicativo com números naturais e/ou racionais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 2: Problemas envolvendo os significados dos campos aditivo e multiplicativo com números naturais e/ou racionais','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1942,7 +1942,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 3
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Sinais de associação','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 3: Sinais de associação','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -1980,7 +1980,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 4
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'O estudante não considerou corretamente a ordem das operações e errou os resultados das operações','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 4: Objeto de Conhecimento: Sinais de associação','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -2018,7 +2018,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 5
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Objeto de conhecimento: Problemas envolvendo as medidas de comprimento, massa, tempo, temperatura e capacidade, utilizando, quando necessário, as transformações de unidade','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 5: Objeto de conhecimento: Problemas envolvendo as medidas de comprimento, massa, tempo, temperatura e capacidade, utilizando, quando necessário, as transformações de unidade','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -2094,7 +2094,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 7
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Objeto de conhecimento: Poliedros: diferenças e similaridades; planificação; exploração e classificação; relações entre os elementos de um poliedro','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 7: Objeto de conhecimento: Poliedros: diferenças e similaridades; planificação; exploração e classificação; relações entre os elementos de um poliedro','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -2132,7 +2132,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 8
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Objeto de conhecimento: Poliedros: diferenças e similaridades; planificação; exploração e classificação; relações entre os elementos de um poliedro','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 8: Objeto de conhecimento: Poliedros: diferenças e similaridades; planificação; exploração e classificação; relações entre os elementos de um poliedro','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -2170,7 +2170,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 9
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Objeto de Conhecimento: Problemas envolvendo espaço amostral e probabilidade de ocorrência de eventos','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 9: Objeto de Conhecimento: Problemas envolvendo espaço amostral e probabilidade de ocorrência de eventos','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -2208,7 +2208,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 10
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Objeto de Conhecimento: Problemas envolvendo espaço amostral e probabilidade de ocorrência de eventos','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 10: Objeto de Conhecimento: Problemas envolvendo espaço amostral e probabilidade de ocorrência de eventos','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -2325,7 +2325,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 3
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Porcentagem / Educação financeira','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 3: Porcentagem / Educação financeira','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -2363,7 +2363,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 4
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Porcentagem / Educação financeira','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 4: Porcentagem / Educação financeira','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -2401,7 +2401,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 5
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId") 
-values (uuid_generate_v4()::text,'Volumes de cubos, paralelepípedos, prismas e cilindros','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 5: Volumes de cubos, paralelepípedos, prismas e cilindros','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -2439,7 +2439,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 6
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Volumes de cubos, paralelepípedos, prismas e cilindros','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 6: Volumes de cubos, paralelepípedos, prismas e cilindros','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -2477,7 +2477,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 7
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'transformações geométricas: translação, reflexão e rotação no plano','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 7: Transformações geométricas: translação, reflexão e rotação no plano','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -2515,7 +2515,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 8
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'transformações geométricas: translação, reflexão e rotação no plano','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 8: Transformações geométricas: translação, reflexão e rotação no plano','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -2553,7 +2553,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 9
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Problemas envolvendo espaço amostral e probabilidade de ocorrência de eventos','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 9: Problemas envolvendo espaço amostral e probabilidade de ocorrência de eventos','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -2591,7 +2591,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 10
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Problemas envolvendo espaço amostral e probabilidade de ocorrência de eventos','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 10: Problemas envolvendo espaço amostral e probabilidade de ocorrência de eventos','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -2708,7 +2708,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 3: 
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Porcentagem','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 3: Porcentagem','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -2746,7 +2746,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 4: 
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Porcentagem','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 4: Porcentagem','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -2784,7 +2784,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 5: 
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId")
-values (uuid_generate_v4()::text,'transformações geométricas: translação, reflexão e rotação no plano','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 5: Transformações geométricas: translação, reflexão e rotação no plano','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -2822,7 +2822,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 6: 
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId")
-values (uuid_generate_v4()::text,'transformações geométricas: translação, reflexão e rotação no plano','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 6: Transformações geométricas: translação, reflexão e rotação no plano','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -2860,7 +2860,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 7: 
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Gráficos e tabelas: usos e elementos constitutivos','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 7: Gráficos e tabelas: usos e elementos constitutivos','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -2898,7 +2898,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 8:
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Gráficos e tabelas: usos e elementos constitutivos','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 8: Gráficos e tabelas: usos e elementos constitutivos','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -2936,7 +2936,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 9: 
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Problemas envolvendo espaço amostral e probabilidade de ocorrência de eventos','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 10: Problemas envolvendo espaço amostral e probabilidade de ocorrência de eventos','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -2974,7 +2974,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 6);
 
 --> Questão 10: 
 insert into public."Pergunta" ("Id", "Descricao","ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Problemas envolvendo espaço amostral e probabilidade de ocorrência de eventos','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 10: Problemas envolvendo espaço amostral e probabilidade de ocorrência de eventos','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
 returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
