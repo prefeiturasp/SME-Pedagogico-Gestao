@@ -167,8 +167,8 @@ select uuid_generate_v4()::text,'O estudante identifica apenas as planificaçõe
 where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante identifica apenas as planificações dos poliedros');
 
 insert into public."Resposta" ("Id", "Descricao")  
-select uuid_generate_v4()::text,'O estudante associou apenas apenas a planificação da superfície do cubo' 
-where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante associou apenas apenas a planificação da superfície do cubo');
+select uuid_generate_v4()::text,'O estudante associou apenas a planificação da superfície do cubo' 
+where not exists (select 1 from public."Resposta" where "Descricao" = 'O estudante associou apenas a planificação da superfície do cubo');
 
 insert into public."Resposta" ("Id", "Descricao")  
 select uuid_generate_v4()::text,'O estudante ordenou em ordem descrescente e localizou corretamente o número na reta numérica' 
@@ -1088,7 +1088,7 @@ select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O 
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
-select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O estudante associou apenas apenas a planificação da superfície do cubo';
+select p."Id" into respostaId from public."Resposta" p where p."Descricao" = 'O estudante associou apenas a planificação da superfície do cubo';
 insert into public."PerguntaResposta" ("Id", "PerguntaId", "RespostaId", "Ordenacao")
 values (uuid_generate_v4()::text, perguntaId, respostaId, 4);
 
