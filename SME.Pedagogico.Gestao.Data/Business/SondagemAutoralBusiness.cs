@@ -21,9 +21,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
     {
         private readonly IServicoTelemetria servicoTelemetria;
         private readonly string connectionString;
-        private const int QUARTO_ANO = 4;
-        private const int NONO_ANO = 9;
-        private const int QUARTO_BIMESTRE = 4;
 
         public SondagemAutoralBusiness(IServicoTelemetria servicoTelemetria)
         {
@@ -720,7 +717,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private bool UtilizarPerguntaAnoEscolarBimestre(int anoEscolar,int bimestre)
         {
-            return (anoEscolar >= QUARTO_ANO && anoEscolar <= NONO_ANO) && bimestre == QUARTO_BIMESTRE;
+            return (anoEscolar >= Constantes.QUARTO_ANO && anoEscolar <= Constantes.NONO_ANO) && bimestre == Constantes.QUARTO_BIMESTRE;
         }
         private async Task<List<PerguntaDto>> ObterPerguntas(int anoEscolar, List<PerguntaDto> perguntas, int anoLetivo, SMEManagementContextData contexto,int bimestre)
         {

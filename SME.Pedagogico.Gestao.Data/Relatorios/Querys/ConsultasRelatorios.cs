@@ -7,12 +7,6 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
 {
     public static class ConsultasRelatorios
     {
-
-	    private const int TERCEIRO_ANO = 3;
-	    private const int QUARTO_ANO = 4;
-	    private const int NONO_ANO = 9;
-	    private const int QUARTO_BIMESTRE = 4;
-
         public static string QueryPeriodoFixoAnual = @"select
 										     ""DataInicio"",
 											 ""DataFim""
@@ -118,7 +112,7 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
 
         private static bool UtilizarPerguntaAnoEscolarBimestre(int anoEscolar,int bimestre)
         {
-	        return (anoEscolar >= QUARTO_ANO && anoEscolar <= NONO_ANO) && bimestre == QUARTO_BIMESTRE;
+	        return (anoEscolar >= Constantes.QUARTO_ANO && anoEscolar <= Constantes.NONO_ANO) && bimestre == Constantes.QUARTO_BIMESTRE;
         }
         public static string QueryRelatorioMatematicaAutoral(filtrosRelatorioDTO filtro)
         {
@@ -410,7 +404,7 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
             query.AppendLine(" AND ((pae.\"FimVigencia\" IS NULL AND EXTRACT (YEAR FROM pae.\"InicioVigencia\") <= @AnoLetivo)");
             query.AppendLine(" OR (EXTRACT(YEAR FROM pae.\"FimVigencia\") >= @AnoLetivo AND EXTRACT (YEAR FROM pae.\"InicioVigencia\") <= @AnoLetivo))");
 
-            if (anoEscolar <= TERCEIRO_ANO)
+            if (anoEscolar <= Constantes.TERCEIRO_ANO)
                 query.AppendLine(" AND pae.\"Grupo\" = " + (int)ProficienciaEnum.Numeros);
 
             if (utilizarPerguntaAnoEscolarBimestre)
