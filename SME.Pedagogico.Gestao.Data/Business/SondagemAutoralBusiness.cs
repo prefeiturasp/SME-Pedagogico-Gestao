@@ -719,6 +719,11 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             return (anoEscolar >= Constantes.QUARTO_ANO && anoEscolar <= Constantes.NONO_ANO) && bimestre == Constantes.QUARTO_BIMESTRE;
         }
+
+        private bool ExibirNumeroDaQuestao(int anoEscolar,int bimestre)
+        {
+            return (anoEscolar >= Constantes.QUARTO_ANO && anoEscolar <= Constantes.NONO_ANO) && bimestre == Constantes.QUARTO_BIMESTRE || bimestre == Constantes.SEGUNDO_BIMESTRE;
+        }
         private async Task<List<PerguntaDto>> ObterPerguntas(int anoEscolar, List<PerguntaDto> perguntas, int anoLetivo, SMEManagementContextData contexto,int bimestre)
         {
             try
@@ -726,7 +731,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 var perguntasAlfabetizacao = new List<PerguntaAlfabetizacaoDto>();
                 var utilizarPerguntaAnoEscolarBimestre = UtilizarPerguntaAnoEscolarBimestre(anoEscolar, bimestre);
                 var leftPerguntaAnoEscolar = utilizarPerguntaAnoEscolarBimestre ? $@"LEFT JOIN ""PerguntaAnoEscolarBimestre"" paeb ON paeb.""PerguntaAnoEscolarId"" = pae.""Id"" " : null;
-                var numeracaoNaDescricaoDaQuestao = utilizarPerguntaAnoEscolarBimestre ? $@" 'Questão '|| pae.""Ordenacao""|| ': ' || p.""Descricao"" as ""PerguntaDescricao"",  " : $@" p.""Descricao"" as ""PerguntaDescricao"",  ";
+                var numeracaoNaDescricaoDaQuestao = ExibirNumeroDaQuestao(anoEscolar, bimestre) ? $@" 'Questão '|| pae.""Ordenacao""|| ': ' || p.""Descricao"" as ""PerguntaDescricao"",  " : $@" p.""Descricao"" as ""PerguntaDescricao"",  ";
                 var sql = $@"select p.""Id"" as ""PerguntaId"",
 							{numeracaoNaDescricaoDaQuestao}
 							pae.""Ordenacao"" as ""PerguntaOrdenacao"",
