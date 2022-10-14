@@ -28,14 +28,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
             this.servicoTelemetria = servicoTelemetria ?? throw new ArgumentNullException(nameof(servicoTelemetria));
         }
 
-        public async Task<IEnumerable<PerguntaDto>> ObterPerguntas(int anoEscolar, int anoLetivo)
+        public async Task<IEnumerable<PerguntaDto>> ObterPerguntas(int anoEscolar, int anoLetivo,int bimestre)
         {
             List<PerguntaDto> perguntas = new List<PerguntaDto>();
             IEnumerable<PerguntaDto> retorno = null;
 
             using (var contexto = new SMEManagementContextData())
             {
-                perguntas = await ObterPerguntas(anoEscolar, perguntas, anoLetivo, contexto);
+                perguntas = await ObterPerguntas(anoEscolar, perguntas, anoLetivo, contexto,bimestre);
             }
 
             retorno = perguntas.OrderBy(x => x.Ordenacao);
@@ -715,19 +715,31 @@ namespace SME.Pedagogico.Gestao.Data.Business
             return listaAlunos.FirstOrDefault(x => x.Item1 == codigoAluno)?.Item2;
         }
 
-        private async Task<List<PerguntaDto>> ObterPerguntas(int anoEscolar, List<PerguntaDto> perguntas, int anoLetivo, SMEManagementContextData contexto)
+        private bool UtilizarPerguntaAnoEscolarBimestre(int anoEscolar,int bimestre)
+        {
+            return (anoEscolar >= Constantes.QUARTO_ANO && anoEscolar <= Constantes.NONO_ANO) && bimestre == Constantes.QUARTO_BIMESTRE;
+        }
+
+        private bool ExibirNumeroDaQuestao(int anoEscolar,int bimestre)
+        {
+            return (anoEscolar >= Constantes.QUARTO_ANO && anoEscolar <= Constantes.NONO_ANO) && bimestre == Constantes.QUARTO_BIMESTRE || bimestre == Constantes.SEGUNDO_BIMESTRE;
+        }
+        private async Task<List<PerguntaDto>> ObterPerguntas(int anoEscolar, List<PerguntaDto> perguntas, int anoLetivo, SMEManagementContextData contexto,int bimestre)
         {
             try
             {
                 var perguntasAlfabetizacao = new List<PerguntaAlfabetizacaoDto>();
-
+                var utilizarPerguntaAnoEscolarBimestre = UtilizarPerguntaAnoEscolarBimestre(anoEscolar, bimestre);
+                var leftPerguntaAnoEscolar = utilizarPerguntaAnoEscolarBimestre ? $@"LEFT JOIN ""PerguntaAnoEscolarBimestre"" paeb ON paeb.""PerguntaAnoEscolarId"" = pae.""Id"" " : null;
+                var numeracaoNaDescricaoDaQuestao = ExibirNumeroDaQuestao(anoEscolar, bimestre) ? $@" 'Questão '|| pae.""Ordenacao""|| ': ' || p.""Descricao"" as ""PerguntaDescricao"",  " : $@" p.""Descricao"" as ""PerguntaDescricao"",  ";
                 var sql = $@"select p.""Id"" as ""PerguntaId"",
-							p.""Descricao"" as ""PerguntaDescricao"",
+							{numeracaoNaDescricaoDaQuestao}
 							pae.""Ordenacao"" as ""PerguntaOrdenacao"",
 							rs.""Id"" as ""RespostaId"",
 							rs.""Descricao"" as ""RespostaDescricao"",
 							prs.""Ordenacao"" as ""RespostaOrdenacao""
 					from ""PerguntaAnoEscolar"" pae
+					{leftPerguntaAnoEscolar}
 					join ""Pergunta"" p on p.""Id"" = pae.""PerguntaId""
 					join ""PerguntaResposta"" prs on prs.""PerguntaId"" = p.""Id""
 					join ""Resposta"" rs on rs.""Id"" = prs.""RespostaId""
@@ -737,6 +749,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     sql += $@" and(pae.""FimVigencia"" is null and extract(year from pae.""InicioVigencia"") <= {anoLetivo})";
                 else
                     sql += $@" and extract(year from pae.""InicioVigencia"") <= {anoLetivo}";
+
+                if (utilizarPerguntaAnoEscolarBimestre)
+                    sql += $@" AND paeb.""Bimestre"" = {bimestre}";
 
                 using (var command = contexto.Database.GetDbConnection().CreateCommand())
                 {

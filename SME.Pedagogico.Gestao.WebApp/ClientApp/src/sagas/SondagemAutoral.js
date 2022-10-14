@@ -42,6 +42,7 @@ function listaPerguntasAPI(filtros) {
   const params = parametrosParaUrl({
     anoEscolar: filtros.yearClassroom,
     anoLetivo: filtros.schoolYear,
+    bimestre: filtros.bimestre || 0
   });
   const url = `/api/SondagemAutoral/Matematica/Perguntas?${params}`;
   return fetch(url, {

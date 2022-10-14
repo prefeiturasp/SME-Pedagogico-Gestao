@@ -59,7 +59,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     DescricaoDisciplina = parameters.Discipline,
                     DescricaoPeriodo = parameters.Term,
                     ConsiderarBimestre = int.Parse(parameters.SchoolYear) >= ANO_ESCOLAR_2022,
-                    Proficiencia = parameters.Proficiency
+                    Proficiencia = parameters.Proficiency,
+                    Bimestre = parameters.Bimestre
                 };
 
                 return await ObtenhaRelatorioMatematicaAutoral(filtro, parameters.ClassroomReport);
