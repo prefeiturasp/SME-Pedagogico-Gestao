@@ -11,6 +11,7 @@
         public const int QUARTO_ANO = 4;
         public const int NONO_ANO = 9;
         public const int QUARTO_BIMESTRE = 4;
+        public const int SEGUNDO_BIMESTRE = 2;
         public const int TERCEIRO_ANO = 3;
     }
 }
