@@ -144,7 +144,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private async Task CarregueListaPerguntaRespostas()
         {
-            string sql = ConsultasRelatorios.QueryRelatorioPorTurmaMatematicaProficiencia(this._filtro.Bimestre);
+            string sql = ConsultasRelatorios.QueryRelatorioPorTurmaMatematicaProficiencia(this._filtro.Bimestre,this._filtro.AnoEscolar);
 
             using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
             {
@@ -282,7 +282,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private async Task<List<PerguntaPrincipalTurmaProficienciaDTO>> ObtenhaListaDePerguntaPrincipal(int bimestre)
         {
-            string sql = ConsultasRelatorios.QueryRelatorioPorTurmaProficienciaPergunta(bimestre);
+            string sql = ConsultasRelatorios.QueryRelatorioPorTurmaProficienciaPergunta(bimestre,this._filtro.AnoEscolar);
 
             using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
             {
