@@ -24,9 +24,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
         private AlunosAPI alunoAPI;
         public IConfiguration _config;
         private TurmasAPI TurmaApi;
-        private const int QUARTO_ANO = 4;
-        private const int NONO_ANO = 9;
-        private const int QUARTO_BIMESTRE = 4;
 
         public SondagemMatematica(IConfiguration config)
         {
@@ -371,7 +368,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private bool UtilizarPerguntaAnoEscolarBimestre(int anoEscolar,int bimestre)
         {
-            return (anoEscolar >= QUARTO_ANO && anoEscolar <= NONO_ANO) && bimestre == QUARTO_BIMESTRE;
+            return (anoEscolar >= Constantes.QUARTO_ANO && anoEscolar <= Constantes.NONO_ANO) && bimestre == Constantes.QUARTO_BIMESTRE;
         }
         private async Task<List<PerguntaDto>> ObterPerguntasGrupoNumeros(SMEManagementContextData db, int anoEscolar, int anoLetivo, int grupo,int bimestre)
         {
