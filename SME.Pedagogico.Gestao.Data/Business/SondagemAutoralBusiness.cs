@@ -715,20 +715,26 @@ namespace SME.Pedagogico.Gestao.Data.Business
             return listaAlunos.FirstOrDefault(x => x.Item1 == codigoAluno)?.Item2;
         }
 
-        private async Task<List<PerguntaDto>> ObterPerguntas(int anoEscolar, List<PerguntaDto> perguntas, int anoLetivo, SMEManagementContextData contexto,int bimestres)
+        private bool UtilizarPerguntaAnoEscolarBimestre(int anoEscolar,int bimestre)
+        {
+            return (anoEscolar >= Constantes.QUARTO_ANO && anoEscolar <= Constantes.NONO_ANO) && bimestre == Constantes.QUARTO_BIMESTRE;
+        }
+        private async Task<List<PerguntaDto>> ObterPerguntas(int anoEscolar, List<PerguntaDto> perguntas, int anoLetivo, SMEManagementContextData contexto,int bimestre)
         {
             try
             {
                 var perguntasAlfabetizacao = new List<PerguntaAlfabetizacaoDto>();
-
+                var utilizarPerguntaAnoEscolarBimestre = UtilizarPerguntaAnoEscolarBimestre(anoEscolar, bimestre);
+                var leftPerguntaAnoEscolar = utilizarPerguntaAnoEscolarBimestre ? $@"LEFT JOIN ""PerguntaAnoEscolarBimestre"" paeb ON paeb.""PerguntaAnoEscolarId"" = pae.""Id"" " : null;
+                var numeracaoNaDescricaoDaQuestao = utilizarPerguntaAnoEscolarBimestre ? $@" 'Questão '|| pae.""Ordenacao""|| ': ' || p.""Descricao"" as ""PerguntaDescricao"",  " : $@" p.""Descricao"" as ""PerguntaDescricao"",  ";
                 var sql = $@"select p.""Id"" as ""PerguntaId"",
-							p.""Descricao"" as ""PerguntaDescricao"",
+							{numeracaoNaDescricaoDaQuestao}
 							pae.""Ordenacao"" as ""PerguntaOrdenacao"",
 							rs.""Id"" as ""RespostaId"",
 							rs.""Descricao"" as ""RespostaDescricao"",
 							prs.""Ordenacao"" as ""RespostaOrdenacao""
 					from ""PerguntaAnoEscolar"" pae
-					LEFT JOIN ""PerguntaAnoEscolarBimestre"" paeb ON paeb.""PerguntaAnoEscolarId"" = pae.""Id"" 
+					{leftPerguntaAnoEscolar}
 					join ""Pergunta"" p on p.""Id"" = pae.""PerguntaId""
 					join ""PerguntaResposta"" prs on prs.""PerguntaId"" = p.""Id""
 					join ""Resposta"" rs on rs.""Id"" = prs.""RespostaId""
@@ -739,8 +745,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 else
                     sql += $@" and extract(year from pae.""InicioVigencia"") <= {anoLetivo}";
 
-                if (bimestres > 0)
-                    sql += $@" AND paeb.""Bimestre"" = {bimestres}";
+                if (utilizarPerguntaAnoEscolarBimestre)
+                    sql += $@" AND paeb.""Bimestre"" = {bimestre}";
 
                 using (var command = contexto.Database.GetDbConnection().CreateCommand())
                 {
