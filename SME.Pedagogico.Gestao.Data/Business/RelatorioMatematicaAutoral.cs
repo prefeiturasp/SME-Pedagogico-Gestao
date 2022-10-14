@@ -151,8 +151,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task<RelatorioMatematicaPorTurmaDTO> ObterRelatorioPorTurma(filtrosRelatorioDTO filtro)
         {
-            try
-            {
                 IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
 
                 var periodos = await ConsultaTotalDeAlunos.BuscaDatasPeriodoFixoAnual(filtro);
@@ -226,12 +224,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     }
                 }
                 return relatorio;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
         }
         private bool UtilizarPerguntaAnoEscolarBimestre(int anoEscolar,int bimestre)
         {
