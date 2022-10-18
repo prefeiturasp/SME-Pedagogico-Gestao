@@ -34,6 +34,7 @@ class Poll extends Component {
       showMessageMathBox: false, //para botao para abrir matematica
       controleEdicaoBimestre: false,
       bimestreAtualControleEdicao: null,
+      isMatematica: false,
       bimestres: [
         {
           value: "1",
@@ -224,6 +225,9 @@ class Poll extends Component {
 
   async savePollStudent() {
     if (this.props.poll.onClickButtonSave) {
+      this.setState({
+        isMatematica: true,
+      });
       const filtros = this.props.poll.selectedFilter;
       const itemSelecionado = this.props.autoral.perguntaSelecionada;
 
@@ -247,6 +251,9 @@ class Poll extends Component {
     }
 
     if (this.props.sondagemPortugues.salvar) {
+      this.setState({
+        isMatematica: false,
+      });
       const sequenciasOrdens = this.props.sondagemPortugues.sequenciaOrdens;
       const idOrdemSelecionada = this.props.sondagemPortugues.ordemSelecionada;
       const periodoSelecionadoSalvar =
@@ -536,7 +543,15 @@ class Poll extends Component {
               Salvar
             </button>
             <TwoStepsSave
+              isMatematica={this.state.isMatematica}
+              status={
+                this.props.autoral.statusDadosMatematica !== undefined &&
+                this.props.autoral.statusDadosMatematica > 0
+                  ? this.props.autoral.statusDadosMatematica
+                  : this.props.sondagemPortugues.statusDadosPortugues
+              }
               show={this.state.showMessageBox}
+              loading={this.props.poll.loadingSalvar}
               showControl={this.toggleMessageBox}
               runMethod={this.savePollStudent}
             />
@@ -629,6 +644,7 @@ class Poll extends Component {
             this.props.poll.selectedFilter.schoolYear >= 2022 && (
               <div className="col-md-2 pb-2">
                 <SelectChangeColor
+                  id="comboSemestre"
                   className="custom-select-sm"
                   defaultText="Bimestre"
                   options={this.state.bimestres}

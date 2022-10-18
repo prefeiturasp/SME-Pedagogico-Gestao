@@ -42,6 +42,7 @@ function listaPerguntasAPI(filtros) {
   const params = parametrosParaUrl({
     anoEscolar: filtros.yearClassroom,
     anoLetivo: filtros.schoolYear,
+    bimestre: filtros.bimestre || 0
   });
   const url = `/api/SondagemAutoral/Matematica/Perguntas?${params}`;
   return fetch(url, {
@@ -104,11 +105,19 @@ function* SalvaSondagemAutoralMat({ payload }) {
     filters: true,
   });
 
-  yield fetch("/api/SondagemAutoral/Matematica", {
-    method: "post",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload.alunos),
-  });
+  try {
+    const data = yield fetch("/api/SondagemAutoral/Matematica", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload.alunos),
+    });
+    yield put({
+      type: Autoral.types.SETAR_STATUS_AUTORAL_MATEMATICA,
+      status: data.status,
+    });
+  } catch (e) {
+    console.log(e);
+  }
 
   yield put({
     type: Poll.types.SET_LOADING_SALVAR,

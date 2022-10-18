@@ -5,6 +5,7 @@
         Matematica = 1,
         Portugues = 2
     }
+
     public enum ComponentesCurricularesRegenciaEnum
     {
         DISCIPLINA_REGENCIA_CLAS_F_I = 508,

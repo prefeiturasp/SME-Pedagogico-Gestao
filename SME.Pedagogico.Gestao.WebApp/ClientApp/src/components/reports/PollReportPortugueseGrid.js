@@ -99,8 +99,8 @@ export default class PollReportPortugueseGrid extends Component {
             <div className={className}>
                 <PollReportGridHeader classroomReport={this.props.classroomReport} />
 
-                {Array.isArray(this.props.data) && this.props.data.map(item =>
-                    <PollReportGridItem {...item} classroomReport={this.props.classroomReport} />
+                {Array.isArray(this.props.data) && this.props.data.map((item, i) =>
+                    <PollReportGridItem key={i} {...item} classroomReport={this.props.classroomReport} />
                 )}
 
                 {this.props.classroomReport === false &&
