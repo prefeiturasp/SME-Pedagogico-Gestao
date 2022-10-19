@@ -227,7 +227,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         }
         private bool UtilizarPerguntaAnoEscolarBimestre(int anoEscolar,int bimestre)
         {
-            return (anoEscolar >= Constantes.QUARTO_ANO && anoEscolar <= Constantes.NONO_ANO) && bimestre == 4;
+            return (anoEscolar >= Constantes.QUARTO_ANO && anoEscolar <= Constantes.NONO_ANO) && bimestre == Constantes.QUARTO_BIMESTRE;
         }
 
         private bool ExibirNumeroDaQuestao(int anoEscolar, int bimestre)
