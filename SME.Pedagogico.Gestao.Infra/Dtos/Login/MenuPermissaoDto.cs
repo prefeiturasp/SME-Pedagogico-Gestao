@@ -18,5 +18,6 @@ namespace SME.Pedagogico.Gestao.Infra
         public IList<MenuPermissaoDto> SubMenus { get; set; }
         public string Url { get; set; }
         public int Ordem { get; set; }
+        public bool Relatorios { get; set; }
     }
 }
