@@ -243,26 +243,23 @@ namespace SME.Pedagogico.Gestao.Data.Business
 					from ""PerguntaAnoEscolar"" pae
                     inner join ""Pergunta"" p on p.""Id"" = pae.""PerguntaId""
                     left join  ""PerguntaAnoEscolarBimestre"" paeb ON paeb.""PerguntaAnoEscolarId"" = pae.""Id"" 
-					where pae.""AnoEscolar"" = @AnoEscolar ";
+					where pae.""AnoEscolar"" = @anoEscolar ";
 
             if (filtro.AnoLetivo >= 2022)
-                sql += $@" and(pae.""FimVigencia"" is null and extract(year from pae.""InicioVigencia"") <= @AnoLetivo)";
+                sql += $@" and(pae.""FimVigencia"" is null and extract(year from pae.""InicioVigencia"") <= @anoLetivo)";
             else
-                sql += $@" and extract(year from pae.""InicioVigencia"") <= @AnoLetivo";
+                sql += $@" and extract(year from pae.""InicioVigencia"") <= @anoLetivo";
 
-            if (UtilizarPerguntaAnoEscolarBimestre(filtro.AnoEscolar, filtro.Bimestre))
-                sql += $@" AND paeb.""Bimestre"" = @Bimestre";
-            else
-                sql += $@" AND paeb.""Id"" is null";
+            sql += $@" and (paeb.""Id"" is null or paeb.""Bimestre"" = @bimestre)";
 
             using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
                 {
                     relatorio.Perguntas = (await conexao.QueryAsync<PerguntasRelatorioDTO>(sql.ToString(),
                     new
                     {
-                        AnoLetivo = filtro.AnoLetivo,
-                        Bimestre = filtro.Bimestre,
-                        AnoEscolar = filtro.AnoEscolar
+                        anoLetivo = filtro.AnoLetivo,
+                        bimestre = filtro.Bimestre,
+                        anoEscolar = filtro.AnoEscolar
 
                     })).ToList();
                 }  
