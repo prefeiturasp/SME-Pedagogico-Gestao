@@ -69,8 +69,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             if (retornoAutenticacao == null)
                 return Unauthorized(MensagensNegocio.USUARIO_SENHA_INVALIDA);
 
-            retornoAutenticacao.Autenticado = true;
-            //retornoAutenticacao.ModificarSenha = false;//não está sendo retornado
+            retornoAutenticacao.Autenticado = EstaAutenticado(retornoAutenticacao);
+            retornoAutenticacao.ModificarSenha = retornoAutenticacao.Status == AutenticacaoStatusEol.SenhaPadrao;
             
             if (retornoAutenticacao.ModificarSenha)
                 return Unauthorized(MensagensNegocio.VOCE_DEVE_ALTERAR_SENHA_DIRETAMENTE_NO_SGP);
@@ -87,10 +87,32 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             
             retornoAutenticacao.Token = permissoesAcessoSondagem.Token;
             retornoAutenticacao.DataHoraExpiracao = permissoesAcessoSondagem.DataExpiracaoToken;
+            retornoAutenticacao.PerfisUsuario = ObterPerfisUsuario(obterPerfisAcessoSondagem);
+            retornoAutenticacao.Permissoes = ObterPermissoesUsuario(permissoesAcessoSondagem);
+            
+            return Ok(retornoAutenticacao);
+        }
 
-            retornoAutenticacao.PerfisUsuario = new PerfisPorPrioridadeDto
+        private List<MenuPermissaoDto> ObterPermissoesUsuario(PerfilAcessoSondagemDto permissoesAcessoSondagem)
+        {
+            return new List<MenuPermissaoDto>()
             {
-                Perfis = obterPerfisAcessoSondagem.PerfisCompleto.Select(s=> new PerfilDto()
+                new MenuPermissaoDto()
+                {
+                    PodeConsultar = permissoesAcessoSondagem.Permissoes.Contains((int)PermissoesSondagemEnum.Consulta),
+                    PodeIncluir = permissoesAcessoSondagem.Permissoes.Contains((int)PermissoesSondagemEnum.Inclusão),
+                    PodeExcluir = permissoesAcessoSondagem.Permissoes.Contains((int)PermissoesSondagemEnum.Exclusão),
+                    PodeAlterar = permissoesAcessoSondagem.Permissoes.Contains((int)PermissoesSondagemEnum.Alteração),
+                    Relatorios = permissoesAcessoSondagem.Permissoes.Contains((int)PermissoesSondagemEnum.Relatório),
+                }
+            }.ToList();
+        }
+
+        private PerfisPorPrioridadeDto ObterPerfisUsuario(PerfisUsuarioSondagemDto obterPerfisAcessoSondagem)
+        {
+            var perfisUsuario = new PerfisPorPrioridadeDto
+            {
+                Perfis = obterPerfisAcessoSondagem.PerfisCompleto.Select(s => new PerfilDto()
                 {
                     CodigoPerfil = s.GrupoId,
                     NomePerfil = s.GrupoNome
@@ -103,21 +125,14 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 PossuiPerfilSmeOuDre = obterPerfisAcessoSondagem.PossuiPerfilSmeOuDre
             };
             if (obterPerfisAcessoSondagem.PerfisCompleto.Count > 1)
-                retornoAutenticacao.PerfisUsuario.PerfilSelecionado = obterPerfisAcessoSondagem.PerfisCompleto.FirstOrDefault().GrupoId;
-                    
-            retornoAutenticacao.Permissoes = new List<MenuPermissaoDto>()
-            {
-                new MenuPermissaoDto()
-                {
-                    PodeConsultar = permissoesAcessoSondagem.Permissoes.Contains((int)PermissoesSondagemEnum.Consulta),
-                    PodeIncluir = permissoesAcessoSondagem.Permissoes.Contains((int)PermissoesSondagemEnum.Inclusão),
-                    PodeExcluir = permissoesAcessoSondagem.Permissoes.Contains((int)PermissoesSondagemEnum.Exclusão),
-                    PodeAlterar = permissoesAcessoSondagem.Permissoes.Contains((int)PermissoesSondagemEnum.Alteração),
-                    Relatorios = permissoesAcessoSondagem.Permissoes.Contains((int)PermissoesSondagemEnum.Relatório),
-                }
-            }.ToList();
-            
-            return Ok(retornoAutenticacao);
+                perfisUsuario.PerfilSelecionado = obterPerfisAcessoSondagem.PerfisCompleto.FirstOrDefault().GrupoId;
+
+            return perfisUsuario;
+        }
+
+        private static bool EstaAutenticado(UsuarioAutenticacaoRetornoDto retornoAutenticacao)
+        {
+            return retornoAutenticacao.Status == AutenticacaoStatusEol.Ok || retornoAutenticacao.Status == AutenticacaoStatusEol.SenhaPadrao;
         }
 
 
