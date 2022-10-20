@@ -30,8 +30,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 var retorno = JsonConvert.DeserializeObject<PerfisUsuarioSondagemDto>(json);
                 return retorno;
             }
-            else
-                return null;
+            return null;
         }
     }
 }

@@ -32,8 +32,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 var retorno = JsonConvert.DeserializeObject<UsuarioAutenticacaoRetornoDto>(json);
                 return retorno;
             }
-            else
-                return null;
+            return null;
         }
     }
 }
