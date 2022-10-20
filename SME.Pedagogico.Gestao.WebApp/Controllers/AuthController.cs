@@ -75,60 +75,16 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             if (retornoAutenticacao.ModificarSenha)
                 return Unauthorized(MensagensNegocio.VOCE_DEVE_ALTERAR_SENHA_DIRETAMENTE_NO_SGP);
              
-            var obterPerfisAcessoSondagem = await mediator.Send(new ObterPerfisUsuariosSondagemPorLoginQuery(credential.Username));
-
-            if (obterPerfisAcessoSondagem == null || obterPerfisAcessoSondagem.PerfisCompleto == null)
-                throw new NegocioException(MensagensNegocio.USUARIO_SEM_PERMISSAO_ACESSO_SONDAGEM, 401);
-            
-            var permissoesAcessoSondagem = await mediator.Send(new ObterDadosAcessoSondagemPorLoginPerfilQuery(obterPerfisAcessoSondagem.CodigoRf, obterPerfisAcessoSondagem.PerfisCompleto.FirstOrDefault().GrupoId));
-
-            if (permissoesAcessoSondagem == null)
-                throw new NegocioException(MensagensNegocio.USUARIO_SEM_PERMISSAO_ACESSO_SONDAGEM, 401);
-            
-            retornoAutenticacao.Token = permissoesAcessoSondagem.Token;
-            retornoAutenticacao.DataHoraExpiracao = permissoesAcessoSondagem.DataExpiracaoToken;
-            retornoAutenticacao.PerfisUsuario = ObterPerfisUsuario(obterPerfisAcessoSondagem);
-            retornoAutenticacao.Permissoes = ObterPermissoesUsuario(permissoesAcessoSondagem);
+            var perfisPermissoesTokenDataExpiracao = await mediator.Send(new ObterPerfisPermissoesTokenDataExpiracaoUsuariosSondagemPorLoginQuery(credential.Username));
+            retornoAutenticacao.Token = perfisPermissoesTokenDataExpiracao.Token;
+            retornoAutenticacao.DataHoraExpiracao = perfisPermissoesTokenDataExpiracao.DataExpiracaoToken;
+            retornoAutenticacao.PerfisUsuario = perfisPermissoesTokenDataExpiracao.PerfisUsuario;
+            retornoAutenticacao.Permissoes = perfisPermissoesTokenDataExpiracao.Permissoes;
             
             return Ok(retornoAutenticacao);
         }
 
-        private List<MenuPermissaoDto> ObterPermissoesUsuario(PerfilAcessoSondagemDto permissoesAcessoSondagem)
-        {
-            return new List<MenuPermissaoDto>()
-            {
-                new MenuPermissaoDto()
-                {
-                    PodeConsultar = permissoesAcessoSondagem.Permissoes.Contains((int)PermissoesSondagemEnum.Consulta),
-                    PodeIncluir = permissoesAcessoSondagem.Permissoes.Contains((int)PermissoesSondagemEnum.Inclusao),
-                    PodeExcluir = permissoesAcessoSondagem.Permissoes.Contains((int)PermissoesSondagemEnum.Exclusao),
-                    PodeAlterar = permissoesAcessoSondagem.Permissoes.Contains((int)PermissoesSondagemEnum.Alteracao),
-                    Relatorios = permissoesAcessoSondagem.Permissoes.Contains((int)PermissoesSondagemEnum.Relatorio),
-                }
-            }.ToList();
-        }
-
-        private PerfisPorPrioridadeDto ObterPerfisUsuario(PerfisUsuarioSondagemDto obterPerfisAcessoSondagem)
-        {
-            var perfisUsuario = new PerfisPorPrioridadeDto
-            {
-                Perfis = obterPerfisAcessoSondagem.PerfisCompleto.Select(s => new PerfilDto()
-                {
-                    CodigoPerfil = s.GrupoId,
-                    NomePerfil = s.GrupoNome
-                }).ToList(),
-                EhProfessor = obterPerfisAcessoSondagem.PossuiPerfilProfessor,
-                EhProfessorCj = obterPerfisAcessoSondagem.PossuiPerfilCJ,
-                EhProfessorPoa = obterPerfisAcessoSondagem.PossuiPerfilProfessorPoa,
-                PossuiPerfilDre = obterPerfisAcessoSondagem.PossuiPerfilDre,
-                PossuiPerfilSme = obterPerfisAcessoSondagem.PossuiPerfilSme,
-                PossuiPerfilSmeOuDre = obterPerfisAcessoSondagem.PossuiPerfilSmeOuDre
-            };
-            if (obterPerfisAcessoSondagem.PerfisCompleto.Count > 1)
-                perfisUsuario.PerfilSelecionado = obterPerfisAcessoSondagem.PerfisCompleto.FirstOrDefault().GrupoId;
-
-            return perfisUsuario;
-        }
+        
 
         private static bool EstaAutenticado(UsuarioAutenticacaoRetornoDto retornoAutenticacao)
         {
