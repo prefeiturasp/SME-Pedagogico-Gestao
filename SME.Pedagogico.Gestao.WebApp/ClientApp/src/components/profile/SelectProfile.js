@@ -18,10 +18,12 @@ const SelectProfile = ({ history }) => {
 
   const handleClick = (event) => {
     const nomePerfil = event.target.innerText;
+    console.log(nomePerfil);
+    console.log(perfis);    
     const perfilSelecionado = perfis.find(
       (item) => nomePerfil === item.nomePerfil
     );
-
+    console.log(perfilSelecionado);
     setProfile(perfilSelecionado);
   };
 

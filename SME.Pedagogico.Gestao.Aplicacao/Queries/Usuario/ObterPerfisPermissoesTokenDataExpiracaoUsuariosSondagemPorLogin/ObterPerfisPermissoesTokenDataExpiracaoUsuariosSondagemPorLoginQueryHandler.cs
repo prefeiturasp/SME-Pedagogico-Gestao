@@ -63,7 +63,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 Perfis = obterPerfisAcessoSondagem.PerfisCompleto.Select(s => new PerfilDto()
                 {
                     CodigoPerfil = s.GrupoId,
-                    NomePerfil = s.GrupoNome
+                    NomePerfil = s.GrupoNome.Trim()
                 }).ToList(),
                 EhProfessor = obterPerfisAcessoSondagem.PossuiPerfilProfessor,
                 EhProfessorCj = obterPerfisAcessoSondagem.PossuiPerfilCJ,
