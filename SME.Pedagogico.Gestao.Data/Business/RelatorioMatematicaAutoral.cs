@@ -241,8 +241,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             var numeracaoNaDescricaoDaQuestao = ExibirNumeroDaQuestao(filtro.AnoEscolar, filtro.Bimestre) ? $@" 'Questão '|| pae.""Ordenacao""|| ': ' || p.""Descricao"" as ""Nome""  " : $@" p.""Descricao"" as ""Nome"" ";
             var sql = $@"select p.""Id"" as ""Id"",
-							    {numeracaoNaDescricaoDaQuestao}
-					from ""PerguntaAnoEscolar"" pae
+							    {numeracaoNaDescricaoDaQuestao},
+                                pae.""Ordenacao"" as ""Ordenacao""    
+                    from ""PerguntaAnoEscolar"" pae
                     inner join ""Pergunta"" p on p.""Id"" = pae.""PerguntaId""
                     left join  ""PerguntaAnoEscolarBimestre"" paeb ON paeb.""PerguntaAnoEscolarId"" = pae.""Id"" 
 					where pae.""AnoEscolar"" = @anoEscolar ";
@@ -252,7 +253,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
             else
                 sql += $@" and extract(year from pae.""InicioVigencia"") <= @anoLetivo";
 
-            sql += $@" and (paeb.""Id"" is null or paeb.""Bimestre"" = @bimestre)";
+            sql += $@" and (paeb.""Id"" is null
+                       and not exists(select 1 from ""PerguntaAnoEscolar"" pae 
+                                      inner join  ""PerguntaAnoEscolarBimestre"" paeb ON paeb.""PerguntaAnoEscolarId"" = pae.""Id""
+                                      where pae.""AnoEscolar"" = @anoEscolar 
+                                      and (pae.""FimVigencia"" is null and extract(year from pae.""InicioVigencia"") <= @anoLetivo) 
+                                      and paeb.""Bimestre"" = @bimestre)
+                       or paeb.""Bimestre"" = @bimestre)";
+            sql += $@"order by ""Ordenacao""";
 
             using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
                 {
