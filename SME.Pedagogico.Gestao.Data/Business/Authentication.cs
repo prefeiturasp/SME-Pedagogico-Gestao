@@ -257,17 +257,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public static async Task<LoggedUser> GetLoggedUser(string username, string session, string refreshToken)
-        {
-            using (SMEManagementContextData db = new SMEManagementContextData())
-                return (await
-                    (from current in db.LoggedUsers.Include(".User")
-                     where current.User.Name == username
-                     && current.Session == session
-                     && current.RefreshToken == refreshToken
-                     select current).FirstOrDefaultAsync());
-        }
-
         public static async Task<LoggedUser> GetLoggedUser(string userName)
         {
             using (SMEManagementContextData db = new SMEManagementContextData())
