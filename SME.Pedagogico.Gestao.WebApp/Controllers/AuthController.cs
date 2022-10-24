@@ -74,8 +74,12 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             
             if (retornoAutenticacao.ModificarSenha)
                 return Unauthorized(MensagensNegocio.VOCE_DEVE_ALTERAR_SENHA_DIRETAMENTE_NO_SGP);
-             
+            
             var perfisPermissoesTokenDataExpiracao = await mediator.Send(new ObterPerfisPermissoesTokenDataExpiracaoUsuariosSondagemPorLoginQuery(credential.Username));
+
+            if (!perfisPermissoesTokenDataExpiracao.PerfisUsuario.Perfis.Any())
+                return Unauthorized(MensagensNegocio.USUARIO_SEM_PERMISSAO_ACESSO_SONDAGEM);
+            
             retornoAutenticacao.Token = perfisPermissoesTokenDataExpiracao.Token;
             retornoAutenticacao.DataHoraExpiracao = perfisPermissoesTokenDataExpiracao.DataExpiracaoToken;
             retornoAutenticacao.PerfisUsuario = perfisPermissoesTokenDataExpiracao.PerfisUsuario;
@@ -84,13 +88,10 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return Ok(retornoAutenticacao);
         }
 
-        
-
         private static bool EstaAutenticado(UsuarioAutenticacaoRetornoDto retornoAutenticacao)
         {
             return retornoAutenticacao.Status == AutenticacaoStatusEol.Ok || retornoAutenticacao.Status == AutenticacaoStatusEol.SenhaPadrao;
         }
-
 
         [AllowAnonymous]
         [HttpPut]
