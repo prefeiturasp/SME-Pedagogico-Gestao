@@ -9,14 +9,14 @@ using MediatR;
 
 namespace SME.Pedagogico.Gestao.Aplicacao
 {
-    public class ObterLoginUsuarioLogadoQueryHandler : IRequestHandler<ObterLoginUsuarioLogado, string>
+    public class ObterLoginUsuarioLogadoQueryHandler : IRequestHandler<ObterLoginUsuarioLogadoQuery, string>
     {
         private readonly IMediator mediator;
         public ObterLoginUsuarioLogadoQueryHandler(IMediator mediator)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
-        public async Task<string> Handle(ObterLoginUsuarioLogado request, CancellationToken cancellationToken)
+        public async Task<string> Handle(ObterLoginUsuarioLogadoQuery request, CancellationToken cancellationToken)
         {
            
            var token = await mediator.Send(new ObterTokenUsuarioLogadoQuery());

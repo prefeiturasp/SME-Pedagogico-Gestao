@@ -16,7 +16,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
         }
         public async Task<PerfisMenusAutenticacaoDto> Handle(ObterVerificarPerfisTokenQuery request, CancellationToken cancellationToken)
         {
-            var loginRF = await mediator.Send(new ObterLoginUsuarioLogado());
+            var loginRF = await mediator.Send(new ObterLoginUsuarioLogadoQuery());
 
             var listaPerfis = await mediator.Send(new ObterVerificarPerfisDoUsuarioLoginQuery(loginRF, request.Perfis));
 
