@@ -28,10 +28,22 @@ namespace SME.Pedagogico.Gestao.Aplicacao
             if (obterPerfisAcessoSondagem?.PerfisCompleto == null)
                 throw new NegocioException(MensagensNegocio.USUARIO_SEM_PERMISSAO_ACESSO_SONDAGEM, 401);
 
+            var perfisElegiveis = obterPerfisAcessoSondagem.PerfisCompleto;
+            
+            var perfilProfessor = perfisElegiveis.FirstOrDefault(a => a.GrupoId == Perfis.PERFIL_PROFESSOR);
+            
+            if (perfilProfessor != null)
+            {
+                var temAcesso = await mediator.Send(new ObterUsuarioProfessorTemAcessoQuery(obterPerfisAcessoSondagem.CodigoRf), cancellationToken);
+                
+                if (!temAcesso)
+                    perfisElegiveis.Remove(perfilProfessor);
+            }            
+
             var permissoesAcessoSondagem =
                 await mediator.Send(
                     new ObterDadosAcessoSondagemPorLoginPerfilQuery(obterPerfisAcessoSondagem.CodigoRf,
-                        obterPerfisAcessoSondagem.PerfisCompleto.FirstOrDefault().GrupoId), cancellationToken);
+                        perfisElegiveis.FirstOrDefault().GrupoId), cancellationToken);
 
             if (permissoesAcessoSondagem == null)
                 throw new NegocioException(MensagensNegocio.USUARIO_SEM_PERMISSAO_ACESSO_SONDAGEM, 401);
@@ -90,7 +102,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
             };
             
             if (obterPerfisAcessoSondagem.PerfisCompleto.Count > 1)
-                perfisUsuario.PerfilSelecionado = obterPerfisAcessoSondagem.PerfisCompleto.FirstOrDefault().GrupoId;
+                perfisUsuario.PerfilSelecionado = perfisElegiveis.FirstOrDefault().CodigoPerfil;
 
             return perfisUsuario;
         }
