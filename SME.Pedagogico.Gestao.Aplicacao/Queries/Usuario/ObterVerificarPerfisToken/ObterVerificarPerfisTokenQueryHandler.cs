@@ -27,9 +27,8 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 var retornoTokenPerfilUnico = await mediator.Send(new AtualizarPerfilCommand(perfisPermissoesTokenDataExpiracao.PerfisUsuario.Perfis.FirstOrDefault().CodigoPerfil.ToString()));
                 listaPerfis.Token = retornoTokenPerfilUnico.Token;
             }
-
+            
             return listaPerfis;
-
         }
     }
 }

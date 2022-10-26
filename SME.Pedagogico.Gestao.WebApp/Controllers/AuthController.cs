@@ -104,6 +104,11 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPut]
         public async Task<IActionResult> ValidarPerfisToken([FromBody] List<PerfilDto> perfis, [FromServices]IMediator mediator)
         {
+            var retornoPerfisToken = await mediator.Send(new ObterVerificarPerfisTokenQuery(perfis));
+            
+            if (!retornoPerfisToken.Perfis.Any())
+                return Unauthorized(MensagensNegocio.USUARIO_SEM_PERMISSAO_ACESSO_SONDAGEM);
+            
             return Ok(await mediator.Send(new ObterVerificarPerfisTokenQuery(perfis)));
         }
     }
