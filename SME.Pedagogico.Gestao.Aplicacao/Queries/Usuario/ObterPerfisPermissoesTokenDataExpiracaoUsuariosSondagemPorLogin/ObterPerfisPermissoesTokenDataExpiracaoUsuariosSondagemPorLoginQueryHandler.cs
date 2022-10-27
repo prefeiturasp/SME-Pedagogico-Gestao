@@ -38,12 +38,17 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 
                 if (!temAcesso)
                     perfisElegiveis.Remove(perfilProfessor);
-            }            
+            }
+            
+            var perfilElegivel = perfisElegiveis.FirstOrDefault();
+            
+            if (perfilElegivel == null)
+                throw new NegocioException(MensagensNegocio.USUARIO_SEM_PERMISSAO_ACESSO_SONDAGEM, 401);            
 
             var permissoesAcessoSondagem =
                 await mediator.Send(
                     new ObterDadosAcessoSondagemPorLoginPerfilQuery(obterPerfisAcessoSondagem.CodigoRf,
-                        perfisElegiveis.FirstOrDefault().GrupoId), cancellationToken);
+                        perfilElegivel.GrupoId), cancellationToken);
 
             if (permissoesAcessoSondagem == null)
                 throw new NegocioException(MensagensNegocio.USUARIO_SEM_PERMISSAO_ACESSO_SONDAGEM, 401);
@@ -100,9 +105,11 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 PossuiPerfilSme = obterPerfisAcessoSondagem.PossuiPerfilSme,
                 PossuiPerfilSmeOuDre = obterPerfisAcessoSondagem.PossuiPerfilSmeOuDre
             };
+
+            var perfilElegivel = perfisElegiveis.FirstOrDefault(); 
             
-            if (obterPerfisAcessoSondagem.PerfisCompleto.Count > 1)
-                perfisUsuario.PerfilSelecionado = perfisElegiveis.FirstOrDefault().CodigoPerfil;
+            if (obterPerfisAcessoSondagem.PerfisCompleto.Count > 1 && perfilElegivel != null)
+                perfisUsuario.PerfilSelecionado = perfilElegivel.CodigoPerfil;
 
             return perfisUsuario;
         }
