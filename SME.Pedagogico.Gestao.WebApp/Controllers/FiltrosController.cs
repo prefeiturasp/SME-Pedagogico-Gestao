@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Aplicacao;
 using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DTO;
-using SME.Pedagogico.Gestao.Data.Integracao;
 using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
@@ -38,17 +37,12 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> ListarTurmasPorEscola(BuscarTurmasPorEscola classrooms, [FromServices]IMediator mediator)
         {
-
-            var listClassRoom = await mediator.Send(new ObterTurmasPorUeCodigoQuery(classrooms.schoolYear, classrooms.schoolCodeEol));
+            var listClassRoom = await mediator.Send(new ObterTurmasPorUeCodigoQuery(classrooms.schoolYear, classrooms.schoolCodeEol, true));
 
             if (listClassRoom != null)
-            {
-                return (Ok(listClassRoom));
-            }
-            else
-            {
-                return (NoContent());
-            }
+                return Ok(listClassRoom);
+
+            return (NoContent());
         }
 
         /// <summary>
