@@ -445,7 +445,6 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
                                 bool filtroPorUe,
                                 bool filtroPorNumero,int bimestre,int anoEscolar)
         {
-	        var utilizarPerguntaAnoEscolarBimestre = UtilizarPerguntaAnoEscolarBimestre(anoEscolar, bimestre);
             var query = new StringBuilder();
 
             query.AppendLine("SELECT p.\"Id\" AS \"PerguntaId\",");
@@ -456,8 +455,7 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
             query.AppendLine(" tabela.\"QtdRespostas\"");
             query.AppendLine(" FROM \"Pergunta\" p");
             query.AppendLine(" INNER JOIN \"PerguntaAnoEscolar\" pa ON pa.\"PerguntaId\" = p.\"Id\"");
-            if(utilizarPerguntaAnoEscolarBimestre)
-               query.AppendLine(" left join \"PerguntaAnoEscolarBimestre\" paeb on pa.\"Id\" = paeb.\"PerguntaAnoEscolarId\"  ");
+            query.AppendLine(" LEFT JOIN \"PerguntaAnoEscolarBimestre\" paeb on pa.\"Id\" = paeb.\"PerguntaAnoEscolarId\"  ");
             query.AppendLine(" INNER JOIN \"PerguntaResposta\" pr ON pr.\"PerguntaId\" = p.\"Id\"");
             query.AppendLine(" INNER JOIN \"Resposta\" r ON r.\"Id\" = pr.\"RespostaId\"");
             query.AppendLine(" LEFT JOIN ( ");
@@ -484,9 +482,14 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
             query.AppendLine("    OR (EXTRACT(YEAR FROM pa.\"FimVigencia\") >= @AnoLetivo AND EXTRACT (YEAR FROM pa.\"InicioVigencia\") <= @AnoLetivo))");
             query.AppendLine("   AND pa.\"AnoEscolar\" = @AnoDaTurma");
 
-            if (utilizarPerguntaAnoEscolarBimestre)
-	            query.AppendLine(" AND paeb.\"Bimestre\" =  @bimestre");
-            
+            query.AppendLine("   AND (paeb.\"Id\" is null");
+            query.AppendLine("   AND NOT EXISTS (SELECT 1 FROM \"PerguntaAnoEscolar\" pae");
+            query.AppendLine("                   INNER JOIN  \"PerguntaAnoEscolarBimestre\" paeb ON paeb.\"PerguntaAnoEscolarId\" = pae.\"Id\"");
+            query.AppendLine("                   WHERE pae.\"AnoEscolar\" = @AnoDaTurma");
+            query.AppendLine("                     AND (pae.\"FimVigencia\" IS NULL AND EXTRACT(YEAR FROM pae.\"InicioVigencia\") <= @AnoLetivo)");
+            query.AppendLine("                     AND paeb.\"Bimestre\" = @Bimestre)");
+            query.AppendLine("    OR paeb.\"Bimestre\" = @Bimestre)");
+
             if (filtroPorNumero)
                 query.AppendLine(" AND pa.\"Grupo\" = " + (int)ProficienciaEnum.Numeros);
 
