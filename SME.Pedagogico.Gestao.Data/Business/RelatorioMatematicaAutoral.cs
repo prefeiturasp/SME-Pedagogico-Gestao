@@ -225,14 +225,10 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 }
                 return relatorio;
         }
-        private bool UtilizarPerguntaAnoEscolarBimestre(int anoEscolar,int bimestre)
-        {
-            return (anoEscolar >= Constantes.QUARTO_ANO && anoEscolar <= Constantes.NONO_ANO) && bimestre == Constantes.QUARTO_BIMESTRE;
-        }
-
+        
         private bool ExibirNumeroDaQuestao(int anoEscolar, int bimestre)
         {
-            return UtilizarPerguntaAnoEscolarBimestre(anoEscolar, bimestre) || bimestre == Constantes.SEGUNDO_BIMESTRE;
+            return (anoEscolar >= Constantes.QUARTO_ANO && anoEscolar <= Constantes.NONO_ANO) && bimestre == Constantes.QUARTO_BIMESTRE;
         }
 
         private async Task RetornaPerguntasDoRelatorio(filtrosRelatorioDTO filtro, RelatorioMatematicaPorTurmaDTO relatorio)
@@ -250,7 +246,15 @@ namespace SME.Pedagogico.Gestao.Data.Business
             else
                 sql += $@" and extract(year from pae.""InicioVigencia"") <= @anoLetivo";
 
-            sql += $@" and (paeb.""Id"" is null or paeb.""Bimestre"" = @bimestre)";
+            sql += $@" and (paeb.""Id"" is null
+                       and not exists(select 1 from ""PerguntaAnoEscolar"" pae 
+                                      inner join  ""PerguntaAnoEscolarBimestre"" paeb ON paeb.""PerguntaAnoEscolarId"" = pae.""Id""
+                                      where pae.""AnoEscolar"" = @anoEscolar 
+                                      and (pae.""FimVigencia"" is null and extract(year from pae.""InicioVigencia"") <= @anoLetivo) 
+                                      and paeb.""Bimestre"" = @bimestre)
+                        or paeb.""Bimestre"" = @bimestre)";
+
+            sql += " order by pae.\"Ordenacao\"";
 
             using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
                 {
