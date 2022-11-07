@@ -18,5 +18,6 @@ namespace SME.Pedagogico.Gestao.Infra
         public string Token { get; set; }
         public Guid UsuarioId { get; set; }
         public IEnumerable<MenuPermissaoDto> Permissoes { get; set; }
+        public AutenticacaoStatusEol Status { get; set; }
     }
 }

@@ -35,50 +35,6 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
             return await TrataRetorno<MeusDadosDto>(resposta);
         }
 
-        public async Task<IEnumerable<PrioridadePerfilDto>> ListarPefis(string authenticationToken, string login)
-        {
-            ResetarCabecalhoAutenticado(authenticationToken);
-
-            var resposta = await httpClient.GetAsync(EndpointsNovoSGP.ListarPerfisEndpoint(login));
-
-            return await TrataRetorno<IEnumerable<PrioridadePerfilDto>>(resposta);
-        }
-
-        public async Task<TrocaPerfilDto> TrocaPerfil(string authenticationToken, Guid perfil)
-        {
-            ResetarCabecalhoAutenticado(authenticationToken);
-
-            var resposta = await httpClient.GetAsync(EndpointsNovoSGP.TrocarPerfilEndpoint(perfil.ToString()));
-
-            return await TrataRetorno<TrocaPerfilDto>(resposta);
-        }
-
-        public async Task<UsuarioAutenticacaoRetornoDto> Autenticar(string login, string senha)
-        {
-            try
-            {
-                ResetarCabecalho();
-
-                var valoresParaEnvio = new Dictionary<string, string>
-            {
-                {"Login", login },
-                {"Senha", senha }
-            };
-
-                var resposta = await httpClient.PostAsync(EndpointsNovoSGP.AutenticacaoEndpoint(), new StringContent(JsonConvert.SerializeObject(valoresParaEnvio), Encoding.UTF8, "application/json-patch+json"));
-
-                return await TrataRetorno<UsuarioAutenticacaoRetornoDto>(resposta);
-            }
-            catch (Exception ex)
-            {
-
-                Console.WriteLine(ex.Message);
-                throw;
-            }
-
-            
-        }
-
         public async Task<AutenticacaoRevalidarRetornoDto> RevalidarAutenticacao(string token)
         {
             ResetarCabecalhoAutenticado(token);
@@ -113,17 +69,6 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
 
             return await TrataRetorno<IList<AbrangenciaUeRetornoDto>>(resposta);
         }
-
-        //public async Task<IList<DisciplinaRetornoDto>> DisciplinasPorTurma(BuscarDisciplinasPorRfTurmaDto buscarDisciplinasPorRfTurmaDto)
-        //{
-        //    var loggedUser = await Authentication.GetLoggedUser(buscarDisciplinasPorRfTurmaDto.CodigoRf);
-
-        //    ResetarCabecalhoAutenticado(loggedUser.RefreshToken);
-
-        //    var resposta = await httpClient.GetAsync(EndpointsNovoSGP.Disciplinas(buscarDisciplinasPorRfTurmaDto.CodigoTurmaEol));
-
-        //    return await TrataRetorno<IList<DisciplinaRetornoDto>>(resposta);
-        //}
 
         private async Task<T> TrataRetorno<T>(HttpResponseMessage response)
         {
