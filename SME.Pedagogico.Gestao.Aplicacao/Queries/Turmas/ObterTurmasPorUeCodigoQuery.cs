@@ -6,13 +6,15 @@ namespace SME.Pedagogico.Gestao.Aplicacao
 {
     public class ObterTurmasPorUeCodigoQuery : IRequest<List<SalasPorUEDTO>>
     {
-        public ObterTurmasPorUeCodigoQuery(int anoLetivo, string ueCodigo)
+        public ObterTurmasPorUeCodigoQuery(int anoLetivo, string ueCodigo, bool consideraNovosAnosInfantil)
         {
             AnoLetivo = anoLetivo;
             UeCodigo = ueCodigo;
+            ConsideraNovosAnosInfantil = consideraNovosAnosInfantil;
         }
 
-        public int AnoLetivo { get; set; }
-        public string UeCodigo { get; set; }
+        public int AnoLetivo { get; }
+        public string UeCodigo { get; }
+        public bool ConsideraNovosAnosInfantil { get; }
     }
 }

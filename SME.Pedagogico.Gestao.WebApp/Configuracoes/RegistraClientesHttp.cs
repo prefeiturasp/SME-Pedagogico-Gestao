@@ -26,9 +26,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Configuracoes
 
             services.AddHttpClient(name: "apiEOL", c =>
             {
-                c.BaseAddress = new Uri(configuration.GetSection("urlApiEol").Value);
-                c.DefaultRequestHeaders.Add("x-api-eol-key", configuration.GetSection("API_EOL_KEY_ENV").Value);
+                c.BaseAddress = new Uri(configuration.GetSection("UrlApiEOL").Value);
                 c.DefaultRequestHeaders.Add("Accept", "application/json");
+                c.DefaultRequestHeaders.Add("x-api-eol-key", configuration.GetSection("ApiKeyEolApi").Value);
             });
         }
     }

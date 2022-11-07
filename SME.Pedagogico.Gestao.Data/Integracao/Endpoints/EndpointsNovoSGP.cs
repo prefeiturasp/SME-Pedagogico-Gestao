@@ -8,14 +8,8 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.Endpoints
     {
         public static Func<string, string> BaseSGPEndpoint = (versao) => Environment.GetEnvironmentVariable("urlApiSgp") + versao + "/";
 
-        public static Func<string> AutenticacaoEndpoint = () => "autenticacao";
-
         public static Func<string> MeusDadosEndpoint = () => "usuarios/meus-dados";
-
-        public static Func<string, string> ListarPerfisEndpoint = login => $"autenticacao/{login}/perfis/listar";
-
-        public static Func<string, string> TrocarPerfilEndpoint = perfil => $"autenticacao/perfis/{perfil}";
-
+        
         public static Func<string> RevalidarAutenticacao = () => $"autenticacao/revalidar";
 
         public static Func<bool, int?, string> AbrangenciaDres = (consideraHistorico, anoLetivo) => $"abrangencias/{consideraHistorico}/dres{ (anoLetivo.HasValue ? $"?anoLetivo={anoLetivo}" : string.Empty) }";
