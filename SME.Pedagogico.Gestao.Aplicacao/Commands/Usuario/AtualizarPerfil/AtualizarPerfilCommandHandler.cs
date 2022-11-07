@@ -23,11 +23,6 @@ namespace SME.Pedagogico.Gestao.Aplicacao
         }
         public async Task<ModificarPerfilRetornoSGPDto> Handle(AtualizarPerfilCommand request, CancellationToken cancellationToken)
         {
-
-            //var perfilAtual = await mediator.Send(new ObterPerfilUsuarioLogadoQuery());
-            //if (perfilAtual == request.Perfil)
-            //    return default;
-
             var token = await mediator.Send(new ObterTokenUsuarioLogadoQuery());            
 
             using (var httpClient = httpClientFactory.CreateClient("apiSGP"))
@@ -48,6 +43,9 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 var retornoSGP = JsonConvert.DeserializeObject<ModificarPerfilRetornoSGPDto>(json); 
                 
                 retornoSGP.Menus = await mediator.Send(new ObterPermissaoMenuPorPerfilQuery(Guid.Parse(request.Perfil)));
+
+                var loginUsuario = await mediator.Send(new ObterLoginUsuarioLogadoQuery());
+                await httpClient.GetAsync($"v1/abrangencias/usuarios/{loginUsuario}/perfis/{request.Perfil}/carregar");
 
                 return retornoSGP;
 

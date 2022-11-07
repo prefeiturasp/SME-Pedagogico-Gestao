@@ -16,18 +16,19 @@ namespace SME.Pedagogico.Gestao.Aplicacao
         }
         public async Task<PerfisMenusAutenticacaoDto> Handle(ObterVerificarPerfisTokenQuery request, CancellationToken cancellationToken)
         {
-            var loginRF = await mediator.Send(new ObterLoginUsuarioLogado());
+            var loginRF = await mediator.Send(new ObterLoginUsuarioLogadoQuery());
 
-            var listaPerfis = await mediator.Send(new ObterVerificarPerfisDoUsuarioLoginQuery(loginRF, request.Perfis));
+            var perfisPermissoesTokenDataExpiracao = await mediator.Send(new ObterPerfisPermissoesTokenDataExpiracaoUsuariosSondagemPorLoginQuery(loginRF));
 
-            if (listaPerfis.Perfis.Any())
+            var listaPerfis = new PerfisMenusAutenticacaoDto(perfisPermissoesTokenDataExpiracao.PerfisUsuario.Perfis.ToList(),perfisPermissoesTokenDataExpiracao.Permissoes.ToList());
+
+            if (perfisPermissoesTokenDataExpiracao.PerfisUsuario.Perfis.Any())
             {
-                var retornoTokenPerfilUnico = await mediator.Send(new AtualizarPerfilCommand(listaPerfis.Perfis.FirstOrDefault().CodigoPerfil.ToString()));
+                var retornoTokenPerfilUnico = await mediator.Send(new AtualizarPerfilCommand(perfisPermissoesTokenDataExpiracao.PerfisUsuario.Perfis.FirstOrDefault().CodigoPerfil.ToString()));
                 listaPerfis.Token = retornoTokenPerfilUnico.Token;
             }
-
+            
             return listaPerfis;
-
         }
     }
 }
