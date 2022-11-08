@@ -156,7 +156,7 @@ public class RelatorioPortuguesCapacidadeLeitura
 
         if (periodos.Count() == 0)
             throw new Exception("Periodo fixo anual nao encontrado");
-        var alunosEol = await alunoAPI.ObterAlunosAtivosPorTurmaEPeriodo(filtro.CodigoTurma, periodos.First().DataFim);
+        var alunosEol = await alunoAPI.ObterAlunosAtivosPorTurmaEPeriodo(filtro.CodigoTurma, periodos.First().DataInicio);
         var queryPorTurma = ConsultasRelatorios.QueryRelatorioPorTurmaPortuguesCapacidadeDeLeitura();
         var listaAlunoRespostas = await RetornaListaRespostasAlunoPorTurma(filtrosRelatorio, queryPorTurma);
         var relatorio = await CriaRelatorioAlunos(filtrosRelatorio, alunosEol, listaAlunoRespostas);
