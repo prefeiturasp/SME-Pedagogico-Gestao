@@ -42,6 +42,7 @@ class PollReportFilter extends Component {
   }
 
   componentDidMount() {
+    this.props.pollReportsMethods.resetData();
     this.props.pollReportsMethods.hidePollReport();
     this.props.sondagemPortuguesMethods.listarGrupos();
     this.mostrarDisciplina(
