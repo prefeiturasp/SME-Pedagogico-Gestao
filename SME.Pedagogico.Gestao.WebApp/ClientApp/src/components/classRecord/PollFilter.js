@@ -331,13 +331,13 @@ class PollFilter extends Component {
   checkDisabledButton() {
     const {
       pollRouter: { activeRoute },
-      user: { ehProfessor },
     } = this.props;
     const { classroom, selectedClassRoom } = this.state;
 
     if (activeRoute === ROUTES_ENUM.RELATORIOS) {
-      return ehProfessor ? selectedClassRoom : classroom;
+      return classroom;
     }
+
     return selectedClassRoom;
   }
 
