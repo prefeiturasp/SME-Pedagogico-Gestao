@@ -13,6 +13,7 @@ using SME.Pedagogico.Gestao.Data.Functionalities;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
+using SME.Pedagogico.Gestao.Infra;
 using SME.Pedagogico.Gestao.Models.Academic;
 using SME.Pedagogico.Gestao.Models.Autoral;
 using System;
@@ -765,6 +766,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     return listaVazia;
                 }
 
+                lista = VerificaSondagemOrdenacaoCapacidadeDeLeitura(lista);
+
                 var listaSequenciaOrdemSalva = lista.GroupBy(x => x.Id).Select(item => new SequenciaOrdemSalvaDTO
                 {
                     OrdemId = item.First().OrdemId,
@@ -775,6 +778,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 return listaSequenciaOrdemSalva;
             }
+        }
+
+        public List<Sondagem> VerificaSondagemOrdenacaoCapacidadeDeLeitura(List<Sondagem> sondagens)
+        {
+            if (sondagens.FirstOrDefault().GrupoId == GrupoEnum.CapacidadeLeitura.Name())
+                return sondagens.Where(s => s.SequenciaDeOrdemSalva >= 1 && s.SequenciaDeOrdemSalva <= 3).ToList();
+            else
+                return sondagens;
         }
 
 
