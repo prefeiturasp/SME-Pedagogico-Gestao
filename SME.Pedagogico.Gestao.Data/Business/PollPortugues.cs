@@ -783,7 +783,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         public List<Sondagem> VerificaSondagemOrdenacaoCapacidadeDeLeitura(List<Sondagem> sondagens)
         {
             if (sondagens.FirstOrDefault().GrupoId == GrupoEnum.CapacidadeLeitura.Name())
-                return sondagens.Where(s => s.SequenciaDeOrdemSalva >= 1 && s.SequenciaDeOrdemSalva <= 3).ToList();
+                return sondagens.Where(s => s.SequenciaDeOrdemSalva <= 3).ToList();
             else
                 return sondagens;
         }
