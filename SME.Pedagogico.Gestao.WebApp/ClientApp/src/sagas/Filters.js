@@ -114,12 +114,15 @@ function* GetSchools({ schoolCode }) {
   try {
     const {
       user,
+      filters,
       pollRouter: { activeRoute },
     } = yield select();
-    const { token, possuiPerfilSme, possuiPerfilDre, perfil } = user;
+      const { token, possuiPerfilSme, possuiPerfilDre, perfil } = user;
+      schoolCode.schoolYear = filters.setSchoolYear;
     const ehProfessor =
       perfil.perfilSelecionado.nomePerfil.indexOf("Professor") >= 0;
-    const ehTodas = schoolCode.dreCodeEol === "todas";
+      const ehTodas = schoolCode.dreCodeEol === "todas";
+
     const data = !ehTodas
       ? yield call(fetch, "/api/Filtros/ListarEscolasPorDre", {
           method: "post",
