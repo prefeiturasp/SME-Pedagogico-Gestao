@@ -83,11 +83,11 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 var pergunta = new PerguntaDTO();
                 var totalRespostas = x.Where(y => y.PerguntaId == x.Key).Sum(q => q.QtdRespostas);
-                var listaPr = x.Where(y => y.PerguntaId == x.Key).ToList();
-
                 totalDeAlunos = totalRespostas > totalDeAlunos ? totalRespostas : totalDeAlunos;
 
                 CalculaPercentualTotalPergunta(totalDeAlunos, x.Where(y => y.PerguntaId == x.Key).First().PerguntaDescricao, pergunta);
+
+                var listaPr = x.Where(y => y.PerguntaId == x.Key).ToList();
                 CalculaPercentualRespostas(totalDeAlunos, pergunta, listaPr, totalRespostas);
 
                 lista.Add(pergunta);
