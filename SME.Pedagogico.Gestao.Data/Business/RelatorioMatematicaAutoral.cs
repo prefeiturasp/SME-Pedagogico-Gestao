@@ -82,12 +82,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
             relatorioAgrupado.ForEach(x =>
             {
                 var pergunta = new PerguntaDTO();
-                CalculaPercentualTotalPergunta(totalDeAlunos, x.Where(y => y.PerguntaId == x.Key).First().PerguntaDescricao, pergunta);
-
+                var totalRespostas = x.Where(y => y.PerguntaId == x.Key).Sum(q => q.QtdRespostas);
                 var listaPr = x.Where(y => y.PerguntaId == x.Key).ToList();
 
-                var totalRespostas = x.Where(y => y.PerguntaId == x.Key).Sum(q => q.QtdRespostas);
+                totalDeAlunos = totalRespostas > totalDeAlunos ? totalRespostas : totalDeAlunos;
+
+                CalculaPercentualTotalPergunta(totalDeAlunos, x.Where(y => y.PerguntaId == x.Key).First().PerguntaDescricao, pergunta);
                 CalculaPercentualRespostas(totalDeAlunos, pergunta, listaPr, totalRespostas);
+
                 lista.Add(pergunta);
             });
 
