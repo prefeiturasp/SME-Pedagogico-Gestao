@@ -76,7 +76,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 });
 
             var relatorioAgrupado = ListaPerguntaEhRespostasRelatorio.GroupBy(p => p.PerguntaId).ToList();
-
+            
             var lista = new List<PerguntaDTO>();
 
             relatorioAgrupado.ForEach(x =>
@@ -237,8 +237,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             var numeracaoNaDescricaoDaQuestao = ExibirNumeroDaQuestao(filtro.AnoEscolar, filtro.Bimestre) ? $@" 'Questão '|| pae.""Ordenacao""|| ': ' || p.""Descricao"" as ""Nome""  " : $@" p.""Descricao"" as ""Nome"" ";
             var sql = $@"select p.""Id"" as ""Id"",
-							    {numeracaoNaDescricaoDaQuestao}
-					from ""PerguntaAnoEscolar"" pae
+							    {numeracaoNaDescricaoDaQuestao},
+                                pae.""Ordenacao"" as ""Ordenacao""    
+                    from ""PerguntaAnoEscolar"" pae
                     inner join ""Pergunta"" p on p.""Id"" = pae.""PerguntaId""
                     left join  ""PerguntaAnoEscolarBimestre"" paeb ON paeb.""PerguntaAnoEscolarId"" = pae.""Id"" 
 					where pae.""AnoEscolar"" = @anoEscolar ";

@@ -467,6 +467,7 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
             query.AppendLine("    INNER JOIN \"Pergunta\" p ON p.\"Id\" = sar.\"PerguntaId\"");
             query.AppendLine("    INNER JOIN \"Resposta\" r ON r.\"Id\" = sar.\"RespostaId\"");
             query.AppendLine("    WHERE s.\"ComponenteCurricularId\" = @ComponenteCurricularId");
+            query.AppendLine("    AND sa.\"CodigoAluno\" in(SELECT DISTINCT \"CodigoAluno\"  FROM \"SondagemAluno\" WHERE \"Id\" IN(sar.\"SondagemAlunoId\"))");
             query.AppendLine("      AND s.\"AnoLetivo\" = @AnoLetivo");
             query.AppendLine("      AND s.\"AnoTurma\" = @AnoDaTurma");
             query.AppendLine("      AND s.\"Bimestre\" = @Bimestre");
