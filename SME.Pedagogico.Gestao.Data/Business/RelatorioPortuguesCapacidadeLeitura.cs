@@ -125,7 +125,9 @@ public class RelatorioPortuguesCapacidadeLeitura
                 };
 
                 pergunta.Respostas = new List<RespostaDTO>();
- 
+
+                pergunta.Total.Porcentagem = (pergunta.Total.Quantidade > 0 ? (pergunta.Total.Quantidade * 100) / (Double)totalDeAlunos : 0).ToString("0.00");
+
                 var listaPr = x.Where(y => y.PerguntaId == x.Key).ToList();
 
                 foreach (var item in listaPr)
