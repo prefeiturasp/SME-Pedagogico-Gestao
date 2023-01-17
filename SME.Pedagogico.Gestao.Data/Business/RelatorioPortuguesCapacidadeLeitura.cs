@@ -114,17 +114,18 @@ public class RelatorioPortuguesCapacidadeLeitura
             relatorioAgrupadoPergunta.ForEach(x =>
             {
                 var pergunta = new PerguntaDTO();
+                var totalRespostas = x.Where(y => y.PerguntaId == x.Key).Sum(q => q.QtdRespostas);
+
+                totalDeAlunos = totalDeAlunos >= totalRespostas ? totalDeAlunos : totalRespostas;
+
                 pergunta.Nome = x.Where(y => y.PerguntaId == x.Key).First().PerguntaDescricao;
                 pergunta.Total = new TotalDTO()
                 {
                     Quantidade = totalDeAlunos,
-
                 };
 
                 pergunta.Respostas = new List<RespostaDTO>();
-                var totalRespostas = x.Where(y => y.PerguntaId == x.Key).Sum(q => q.QtdRespostas);
 
-                totalDeAlunos = totalRespostas > totalDeAlunos ? totalRespostas : totalDeAlunos;
                 pergunta.Total.Porcentagem = (pergunta.Total.Quantidade > 0 ? (pergunta.Total.Quantidade * 100) / (Double)totalDeAlunos : 0).ToString("0.00");
 
                 var listaPr = x.Where(y => y.PerguntaId == x.Key).ToList();
