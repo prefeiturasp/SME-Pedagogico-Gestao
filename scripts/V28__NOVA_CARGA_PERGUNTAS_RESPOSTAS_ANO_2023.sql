@@ -1,5 +1,4 @@
-﻿
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+﻿CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Inserindo respostas
@@ -36,7 +35,7 @@ begin
 	
 --> Questão 1
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 1:Resolver problemas do Eixo Números','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 1: Resolver problemas do Eixo Números','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -59,7 +58,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 2
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 2:Resolver problemas do  Eixo Álgebra','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 2: Resolver problemas do  Eixo Álgebra','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -82,7 +81,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 3
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 3:Resolver problemas do Eixo Probabilidade e Estatística','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 3: Resolver problemas do Eixo Probabilidade e Estatística','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -105,7 +104,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 4
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 4:Resolver problemas do Eixo Geometria','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 4: Resolver problemas do Eixo Geometria','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -128,7 +127,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 5
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 5:Resolver problemas do Eixo Grandezas e Medidas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 5: Resolver problemas do Eixo Grandezas e Medidas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -151,7 +150,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 6
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 6:O estudante participa dos projetos de recuperação paralela?','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 6: O estudante participa dos projetos de recuperação paralela?','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -181,7 +180,7 @@ begin
 	
 --> Questão 1
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 1:Resolver problemas do Eixo Números','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 1: Resolver problemas do Eixo Números','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -204,7 +203,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 2
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 2:Resolver problemas do  Eixo Álgebra','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 2: Resolver problemas do  Eixo Álgebra','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -227,7 +226,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 3
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 3:Resolver problemas do Eixo Probabilidade e Estatística','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 3: Resolver problemas do Eixo Probabilidade e Estatística','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -250,7 +249,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 4
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 4:Resolver problemas do Eixo Geometria','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 4: Resolver problemas do Eixo Geometria','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -273,7 +272,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 5
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 5:Resolver problemas do Eixo Grandezas e Medidas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 5: Resolver problemas do Eixo Grandezas e Medidas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -296,7 +295,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 6
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 6:O estudante participa dos projetos de recuperação paralela?','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 6: O estudante participa dos projetos de recuperação paralela?','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -326,7 +325,7 @@ begin
 	
 --> Questão 1
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 1:Resolver problemas do Eixo Números','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 1: Resolver problemas do Eixo Números','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -349,7 +348,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 2
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 2:Resolver problemas do  Eixo Álgebra','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 2: Resolver problemas do  Eixo Álgebra','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -372,7 +371,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 3
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 3:Resolver problemas do Eixo Probabilidade e Estatística','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 3: Resolver problemas do Eixo Probabilidade e Estatística','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -395,7 +394,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 4
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 4:Resolver problemas do Eixo Geometria','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 4: Resolver problemas do Eixo Geometria','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -418,7 +417,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 5
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 5:Resolver problemas do Eixo Grandezas e Medidas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 5: Resolver problemas do Eixo Grandezas e Medidas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -441,7 +440,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 6
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 6:O estudante participa dos projetos de recuperação paralela?','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 6: O estudante participa dos projetos de recuperação paralela?','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -471,7 +470,7 @@ begin
 	
 --> Questão 1
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 1:Resolver problemas do Eixo Números','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 1: Resolver problemas do Eixo Números','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -494,7 +493,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 2
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 2:Resolver problemas do  Eixo Álgebra','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 2: Resolver problemas do  Eixo Álgebra','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -517,7 +516,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 3
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 3:Resolver problemas do Eixo Probabilidade e Estatística','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 3: Resolver problemas do Eixo Probabilidade e Estatística','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -540,7 +539,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 4
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 4:Resolver problemas do Eixo Geometria','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 4: Resolver problemas do Eixo Geometria','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -563,7 +562,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 5
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 5:Resolver problemas do Eixo Grandezas e Medidas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 5: Resolver problemas do Eixo Grandezas e Medidas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -586,7 +585,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 6
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 6:O estudante participa dos projetos de recuperação paralela?','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 6: O estudante participa dos projetos de recuperação paralela?','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -616,7 +615,7 @@ begin
 	
 --> Questão 1
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 1:Resolver problemas do Eixo Números','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 1: Resolver problemas do Eixo Números','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -639,7 +638,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 2
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 2:Resolver problemas do  Eixo Álgebra','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 2: Resolver problemas do  Eixo Álgebra','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -662,7 +661,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 3
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 3:Resolver problemas do Eixo Probabilidade e Estatística','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 3: Resolver problemas do Eixo Probabilidade e Estatística','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -685,7 +684,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 4
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 4:Resolver problemas do Eixo Geometria','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 4: Resolver problemas do Eixo Geometria','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -708,7 +707,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 5
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 5:Resolver problemas do Eixo Grandezas e Medidas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 5: Resolver problemas do Eixo Grandezas e Medidas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -731,7 +730,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 6
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 6:O estudante participa dos projetos de recuperação paralela?','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 6: O estudante participa dos projetos de recuperação paralela?','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -761,7 +760,7 @@ begin
 	
 --> Questão 1
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 1:Resolver problemas do Eixo Números','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 1: Resolver problemas do Eixo Números','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -784,7 +783,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 2
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 2:Resolver problemas do  Eixo Álgebra','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 2: Resolver problemas do  Eixo Álgebra','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -807,7 +806,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 3
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 3:Resolver problemas do Eixo Probabilidade e Estatística','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 3: Resolver problemas do Eixo Probabilidade e Estatística','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -830,7 +829,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 4
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 4:Resolver problemas do Eixo Geometria','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 4: Resolver problemas do Eixo Geometria','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -853,7 +852,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 5
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 5:Resolver problemas do Eixo Grandezas e Medidas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 5: Resolver problemas do Eixo Grandezas e Medidas','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
@@ -876,7 +875,7 @@ values (uuid_generate_v4()::text, perguntaId, respostaId, 3);
 
 --> Questão 6
 insert into public."Pergunta" ("Id", "Descricao", "ComponenteCurricularId")
-values (uuid_generate_v4()::text,'Questão 6:O estudante participa dos projetos de recuperação paralela?','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
+values (uuid_generate_v4()::text,'Questão 6: O estudante participa dos projetos de recuperação paralela?','9f3d8467-2f6e-4bcb-a8e9-12e840426aba')
     returning "Id" into perguntaId;
 
 insert into public."PerguntaAnoEscolar" ("Id", "PerguntaId", "AnoEscolar", "Ordenacao", "InicioVigencia")
