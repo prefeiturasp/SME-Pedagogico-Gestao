@@ -16,6 +16,7 @@ using SME.Pedagogico.Gestao.Models.Autoral;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.Data.Business
@@ -57,7 +58,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
 
-            return await new RelatorioMatematicaPorTurmaProficiencia(filtro, ObtenhaProficiencia(filtro.Proficiencia)).ObtenhaDTO();
+            return await new RelatorioMatematicaPorTurmaProficiencia(filtro, ObtenhaProficiencia(filtro.Proficiencia)).ObtenhaDTO(filtro.Bimestre);
         }
 
         private async Task<List<PerguntaDTO>> RetornaRelatorioMatematica(filtrosRelatorioDTO filtro, NpgsqlConnection conexao, string query, int totalDeAlunos)
@@ -123,8 +124,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
         private RespostaDTO CriaRespostaSemPreenchimento(int totalDeAlunos, int quantidadeTotalRespostasPergunta)
         {
             var respostaSemPreenchimento = new RespostaDTO();
+            var quantidade = totalDeAlunos - quantidadeTotalRespostasPergunta;
             respostaSemPreenchimento.Nome = "Sem preenchimento";
-            respostaSemPreenchimento.quantidade = totalDeAlunos - quantidadeTotalRespostasPergunta;
+            respostaSemPreenchimento.quantidade = quantidade >= 0 ? quantidade : 0;
             respostaSemPreenchimento.porcentagem = (respostaSemPreenchimento.quantidade > 0 ? (respostaSemPreenchimento.quantidade * 100) / (Double)totalDeAlunos : 0).ToString("0.00");
             respostaSemPreenchimento.porcentagem = respostaSemPreenchimento.porcentagem;
             return respostaSemPreenchimento;
@@ -149,115 +151,122 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task<RelatorioMatematicaPorTurmaDTO> ObterRelatorioPorTurma(filtrosRelatorioDTO filtro)
         {
-            IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
-            var periodos = await ConsultaTotalDeAlunos.BuscaDatasPeriodoFixoAnual(filtro);
+                IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
 
-            if (periodos.Count() == 0)
-                throw new Exception("Periodo fixo anual nao encontrado");
+                var periodos = await ConsultaTotalDeAlunos.BuscaDatasPeriodoFixoAnual(filtro);
 
-            var endpoits = new EndpointsAPI();
-            var alunoApi = new AlunosAPI(endpoits);
-            var alunosEol = (await alunoApi.ObterAlunosAtivosPorTurmaEPeriodo(filtro.CodigoTurmaEol,periodos.First().DataFim))
-                                                            .OrderBy(aluno => aluno.NomeAluno)
-                                                            .ToList();
-            var QueryAlunosRespostas = ObtenhaQueryRelatorioPorTurmaMatematica(filtro);
-            var listaAlunoRespostas = await RetornaListaRespostasAlunoPorTurma(filtro, QueryAlunosRespostas);
-            var AlunosAgrupados = listaAlunoRespostas.GroupBy(x => x.CodigoAluno);
-            var relatorio = new RelatorioMatematicaPorTurmaDTO();
-            await RetornaPerguntasDoRelatorio(filtro, relatorio);
+                if (periodos.Count() == 0)
+                    throw new Exception("Periodo fixo anual nao encontrado");
 
-            var ListaAlunos = new List<AlunoPorTurmaRelatorioDTO>();
-            alunosEol.ForEach(alunoRetorno =>
-            {
-                var aluno = new AlunoPorTurmaRelatorioDTO();
-                aluno.CodigoAluno = alunoRetorno.CodigoAluno;
-                aluno.NomeAluno = alunoRetorno.NomeAlunoRelatorio;
-                aluno.Perguntas = new List<PerguntaRespostaPorAluno>();
+                var endpoits = new EndpointsAPI();
+                var alunoApi = new AlunosAPI(endpoits);
+                var alunosEol = (await alunoApi.ObterAlunosAtivosPorTurmaEPeriodo(filtro.CodigoTurmaEol,periodos.First().DataInicio))
+                    .OrderBy(aluno => aluno.NomeAluno)
+                    .ToList();
+                var QueryAlunosRespostas = ObtenhaQueryRelatorioPorTurmaMatematica(filtro);
+                var listaAlunoRespostas = await RetornaListaRespostasAlunoPorTurma(filtro, QueryAlunosRespostas);
+                var AlunosAgrupados = listaAlunoRespostas.GroupBy(x => x.CodigoAluno);
+                var relatorio = new RelatorioMatematicaPorTurmaDTO();
+                await RetornaPerguntasDoRelatorio(filtro, relatorio);
 
-                var alunoRespostas = AlunosAgrupados.Where(x => x.Key == aluno.CodigoAluno.ToString()).ToList();
-
-                foreach (var perguntaBanco in relatorio.Perguntas)
+                var ListaAlunos = new List<AlunoPorTurmaRelatorioDTO>();
+                alunosEol.ForEach(alunoRetorno =>
                 {
-                    var pergunta = new PerguntaRespostaPorAluno()
+                    var aluno = new AlunoPorTurmaRelatorioDTO();
+                    aluno.CodigoAluno = alunoRetorno.CodigoAluno;
+                    aluno.NomeAluno = string.IsNullOrEmpty(alunoRetorno.NomeSocialAluno) ? alunoRetorno.NomeAlunoRelatorio : alunoRetorno.NomeSocialAluno;
+                    aluno.Perguntas = new List<PerguntaRespostaPorAluno>();
+
+                    var alunoRespostas = AlunosAgrupados.Where(x => x.Key == aluno.CodigoAluno.ToString()).ToList();
+
+                    foreach (var perguntaBanco in relatorio.Perguntas)
                     {
-                        Id = perguntaBanco.Id,
-                        Valor = string.Empty
-                    };
+                        var pergunta = new PerguntaRespostaPorAluno()
+                        {
+                            Id = perguntaBanco.Id,
+                            Valor = string.Empty
+                        };
 
-                    var respostaAluno = listaAlunoRespostas.Where(x => x.PerguntaId == perguntaBanco.Id && x.CodigoAluno == aluno.CodigoAluno.ToString()).FirstOrDefault();
-                    if (respostaAluno != null)
-                        pergunta.Valor = respostaAluno.RespostaDescricao;
-                    aluno.Perguntas.Add(pergunta);
-                }
-                ListaAlunos.Add(aluno);
-            });
-            relatorio.Alunos = ListaAlunos.OrderBy(aluno => aluno.NomeAluno);
-            relatorio.Graficos = new List<GraficosRelatorioDTO>();
+                        var respostaAluno = listaAlunoRespostas.Where(x => x.PerguntaId == perguntaBanco.Id && x.CodigoAluno == aluno.CodigoAluno.ToString()).FirstOrDefault();
+                        if (respostaAluno != null)
+                            pergunta.Valor = respostaAluno.RespostaDescricao;
+                        aluno.Perguntas.Add(pergunta);
+                    }
+                    ListaAlunos.Add(aluno);
+                });
+                relatorio.Alunos = ListaAlunos.OrderBy(aluno => aluno.NomeAluno);
+                relatorio.Graficos = new List<GraficosRelatorioDTO>();
 
-            using (var contexto = new SMEManagementContextData())
-            {
-                var perguntasBanco = await contexto.PerguntaResposta.Include(x => x.Pergunta).Include(y => y.Resposta).Where(pr => relatorio.Perguntas.Any(p => p.Id == pr.Pergunta.Id)).ToListAsync();
-
-                foreach (var pergunta in relatorio.Perguntas)
+                using (var contexto = new SMEManagementContextData())
                 {
-                    var grafico = new GraficosRelatorioDTO();
-                    grafico.nomeGrafico = pergunta.Nome;
-                    grafico.Barras = new List<BarrasGraficoDTO>();
-                    var listaRespostas = perguntasBanco.Where(x => x.Pergunta.Id == pergunta.Id).ToList();
+                    var perguntasBanco = await contexto.PerguntaResposta.Include(x => x.Pergunta).Include(y => y.Resposta).Where(pr => relatorio.Perguntas.Any(p => p.Id == pr.Pergunta.Id)).ToListAsync();
 
-                    listaRespostas.ForEach(resposta =>
+                    foreach (var pergunta in relatorio.Perguntas)
                     {
-                        var barra = new BarrasGraficoDTO();
-                        barra.label = resposta.Resposta.Descricao;
-                        barra.value = relatorio.Alunos.Count(x => x.Perguntas.Any(r => r.Id == pergunta.Id && r.Valor == resposta.Resposta.Descricao));
-                        grafico.Barras.Add(barra);
-                    });
+                        var grafico = new GraficosRelatorioDTO();
+                        grafico.nomeGrafico = pergunta.Nome;
+                        grafico.Barras = new List<BarrasGraficoDTO>();
+                        var listaRespostas = perguntasBanco.Where(x => x.Pergunta.Id == pergunta.Id).ToList();
 
-                    var barraAlunosSemPreenchimento = new BarrasGraficoDTO();
-                    barraAlunosSemPreenchimento.label = "Sem Preenchimento";
-                    barraAlunosSemPreenchimento.value = relatorio.Alunos.Count() - grafico.Barras.Sum(x => x.value);
-                    grafico.Barras.Add(barraAlunosSemPreenchimento);
-                    relatorio.Graficos.Add(grafico);
+                        listaRespostas.ForEach(resposta =>
+                        {
+                            var barra = new BarrasGraficoDTO();
+                            barra.label = resposta.Resposta.Descricao;
+                            barra.value = relatorio.Alunos.Count(x => x.Perguntas.Any(r => r.Id == pergunta.Id && r.Valor == resposta.Resposta.Descricao));
+                            grafico.Barras.Add(barra);
+                        });
+
+                        var barraAlunosSemPreenchimento = new BarrasGraficoDTO();
+                        barraAlunosSemPreenchimento.label = "Sem Preenchimento";
+                        barraAlunosSemPreenchimento.value = relatorio.Alunos.Count() - grafico.Barras.Sum(x => x.value);
+                        grafico.Barras.Add(barraAlunosSemPreenchimento);
+                        relatorio.Graficos.Add(grafico);
+                    }
                 }
-            }
-            return relatorio;
+                return relatorio;
+        }
+        
+        private bool ExibirNumeroDaQuestao(int anoEscolar, int bimestre)
+        {
+            return (anoEscolar >= Constantes.QUARTO_ANO && anoEscolar <= Constantes.NONO_ANO) && bimestre == Constantes.QUARTO_BIMESTRE;
         }
 
         private async Task RetornaPerguntasDoRelatorio(filtrosRelatorioDTO filtro, RelatorioMatematicaPorTurmaDTO relatorio)
         {
-            relatorio.Perguntas = new List<PerguntasRelatorioDTO>();
+            var numeracaoNaDescricaoDaQuestao = ExibirNumeroDaQuestao(filtro.AnoEscolar, filtro.Bimestre) ? $@" 'Questão '|| pae.""Ordenacao""|| ': ' || p.""Descricao"" as ""Nome""  " : $@" p.""Descricao"" as ""Nome"" ";
+            var sql = $@"select p.""Id"" as ""Id"",
+							    {numeracaoNaDescricaoDaQuestao}
+					from ""PerguntaAnoEscolar"" pae
+                    inner join ""Pergunta"" p on p.""Id"" = pae.""PerguntaId""
+                    left join  ""PerguntaAnoEscolarBimestre"" paeb ON paeb.""PerguntaAnoEscolarId"" = pae.""Id"" 
+					where pae.""AnoEscolar"" = @anoEscolar ";
 
-            using (var contexto = new SMEManagementContextData())
-            {
-                IQueryable<PerguntaAnoEscolar> queryPerguntaAnoEscolar = contexto.PerguntaAnoEscolar.Include(x => x.Pergunta)
-                    .Where(perguntaAnoEscolar => perguntaAnoEscolar.AnoEscolar == filtro.AnoEscolar &&
-                          ((perguntaAnoEscolar.FimVigencia == null && perguntaAnoEscolar.InicioVigencia.GetValueOrDefault().Year <= filtro.AnoLetivo) ||
-                          (perguntaAnoEscolar.FimVigencia.GetValueOrDefault().Year >= filtro.AnoLetivo && perguntaAnoEscolar.InicioVigencia.GetValueOrDefault().Year <= filtro.AnoLetivo)));
+            if (filtro.AnoLetivo >= 2022)
+                sql += $@" and(pae.""FimVigencia"" is null and extract(year from pae.""InicioVigencia"") <= @anoLetivo)";
+            else
+                sql += $@" and extract(year from pae.""InicioVigencia"") <= @anoLetivo";
 
-                if (filtro.ConsiderarBimestre && filtro.AnoEscolar <= TERCEIRO_ANO)
+            sql += $@" and (paeb.""Id"" is null
+                       and not exists(select 1 from ""PerguntaAnoEscolar"" pae 
+                                      inner join  ""PerguntaAnoEscolarBimestre"" paeb ON paeb.""PerguntaAnoEscolarId"" = pae.""Id""
+                                      where pae.""AnoEscolar"" = @anoEscolar 
+                                      and (pae.""FimVigencia"" is null and extract(year from pae.""InicioVigencia"") <= @anoLetivo) 
+                                      and paeb.""Bimestre"" = @bimestre)
+                        or paeb.""Bimestre"" = @bimestre)";
+
+            sql += " order by pae.\"Ordenacao\"";
+
+            using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
                 {
-                    queryPerguntaAnoEscolar = queryPerguntaAnoEscolar.Where(perguntaAnoEscolar => perguntaAnoEscolar.Grupo == (int)ProficienciaEnum.Numeros);
-                }
+                    relatorio.Perguntas = (await conexao.QueryAsync<PerguntasRelatorioDTO>(sql.ToString(),
+                    new
+                    {
+                        anoLetivo = filtro.AnoLetivo,
+                        bimestre = filtro.Bimestre,
+                        anoEscolar = filtro.AnoEscolar
 
-                var perguntasBanco = await queryPerguntaAnoEscolar.OrderBy(x => x.Ordenacao).Select(x => MapearPergunta(x)).ToListAsync();
-                relatorio.Perguntas = perguntasBanco.Select(x => new PerguntasRelatorioDTO
-                {
-                    Id = x.Id,
-                    Nome = x.Descricao
-                }).ToList();
-            }
-        }
-
-        private PerguntaDto MapearPergunta(PerguntaAnoEscolar perguntaAnoEscolar)
-        {
-            var retorno = (PerguntaDto)perguntaAnoEscolar.Pergunta;
-
-            if (retorno == null)
-                return default;
-
-            retorno.Ordenacao = perguntaAnoEscolar.Ordenacao;
-
-            return retorno;
+                    })).ToList();
+                }  
         }
 
         private static async Task<IEnumerable<AlunoPerguntaRespostaDTO>> RetornaListaRespostasAlunoPorTurma(filtrosRelatorioDTO filtro, string QueryAlunosRespostas)
@@ -340,6 +349,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
             var listaAgrupada = listaPerguntaResposta.GroupBy(p => p.PerguntaId).ToList();
             var listaRetorno = new List<PerguntaProficienciaDTO>();
 
+            totalDeAlunos = listaPerguntaResposta.Count() > totalDeAlunos ? listaPerguntaResposta.Count() : totalDeAlunos;
+
             listaAgrupada.ForEach(agrupador =>
             {
                 listaRetorno.Add(ObtenhaDtoPerguntaProficiencia(agrupador, totalDeAlunos));
@@ -385,7 +396,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private async Task<List<PerguntasRespostasProficienciaDTO>> ObtenhaListaDtoPerguntasRespostasProficiencia(filtrosRelatorioDTO filtro)
         {
-            string query = ConsultasRelatorios.QueryRelatorioMatematicaProficiencia(!string.IsNullOrEmpty(filtro.CodigoDre), !string.IsNullOrEmpty(filtro.CodigoUe));
+            string query = ConsultasRelatorios.QueryRelatorioMatematicaProficiencia(!string.IsNullOrEmpty(filtro.CodigoDre), !string.IsNullOrEmpty(filtro.CodigoUe), filtro.Bimestre,filtro.AnoEscolar);
 
             using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
             {
@@ -412,7 +423,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 return ConsultasRelatorios.QueryRelatorioMatematicaAutoralBimestre(
                                                 !string.IsNullOrEmpty(filtro.CodigoDre), 
                                                 !string.IsNullOrEmpty(filtro.CodigoUe),
-                                                filtro.AnoEscolar <= TERCEIRO_ANO);
+                                                filtro.AnoEscolar <= TERCEIRO_ANO,filtro.Bimestre,filtro.AnoEscolar);
             }
 
             return ConsultasRelatorios.QueryRelatorioMatematicaAutoral(filtro);
@@ -422,7 +433,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             if (filtro.ConsiderarBimestre)
             {
-                return ConsultasRelatorios.QueryRelatorioPorTurmaMatematicaBimestre(filtro.AnoEscolar);
+                return ConsultasRelatorios.QueryRelatorioPorTurmaMatematicaBimestre(filtro.AnoEscolar,filtro.Bimestre);
             }
 
             return ConsultasRelatorios.QueryRelatorioPorTurmaMatematica();

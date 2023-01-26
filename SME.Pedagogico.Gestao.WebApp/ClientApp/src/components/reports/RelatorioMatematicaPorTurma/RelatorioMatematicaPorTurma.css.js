@@ -24,7 +24,6 @@ export const CorpoRelatorio = styled.div`
 
   .celulas-fixas {
     position: absolute;
-    z-index: 99;
     background: white;
     width: 30%;
     }

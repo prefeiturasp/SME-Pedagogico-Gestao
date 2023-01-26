@@ -17,20 +17,32 @@ namespace SME.Pedagogico.Gestao.Aplicacao
     {
         private readonly IHttpClientFactory httpClientFactory;
         private readonly IMediator mediator;
+
         public ObterTurmasPorUeCodigoQueryHandler(IHttpClientFactory httpClientFactory, IMediator mediator)
         {
             this.httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
+
         public async Task<List<SalasPorUEDTO>> Handle(ObterTurmasPorUeCodigoQuery request, CancellationToken cancellationToken)
         {
             using (var httpClient = httpClientFactory.CreateClient("apiSGP"))
             {
                 var listaRetornoTurmas = new List<TurmaSGPDto>();
 
-                for (int i = 0; i < 2; i++)
-                    listaRetornoTurmas.AddRange(await EnviarRequisicao(httpClient, i % 2 != 0, request.UeCodigo, request.AnoLetivo));
-                
+                if (request.AnoLetivo < DateTime.Now.Year)
+                {
+                    for (var i = 0; i < 2; i++)
+                        listaRetornoTurmas.AddRange(await EnviarRequisicao(httpClient, i % 2 != 0, request.UeCodigo,
+                            request.AnoLetivo, request.ConsideraNovosAnosInfantil));
+                }
+                else
+                {
+                    listaRetornoTurmas.AddRange(await EnviarRequisicao(httpClient, false, request.UeCodigo,
+                        request.AnoLetivo,
+                        request.ConsideraNovosAnosInfantil));
+                }
+
                 var listaRetornoFinal = new List<SalasPorUEDTO>();
 
                 foreach (var item in listaRetornoTurmas.Where(a => a.Ano != "0").OrderBy(a => a.Nome))
@@ -49,9 +61,10 @@ namespace SME.Pedagogico.Gestao.Aplicacao
             }
         }
 
-        private async Task<IEnumerable<TurmaSGPDto>> EnviarRequisicao(HttpClient httpClient, bool consideraHistorico, string ueCodigo, int anoLetivo)
+        private async Task<IEnumerable<TurmaSGPDto>> EnviarRequisicao(HttpClient httpClient, bool consideraHistorico, string ueCodigo, int anoLetivo,
+            bool consideraNovosAnosInfantil)
         {
-            var modalidade = 5;
+            const int modalidade = 5;
 
             if (!httpClient.DefaultRequestHeaders.Contains("Authorization"))
             {
@@ -60,14 +73,14 @@ namespace SME.Pedagogico.Gestao.Aplicacao
             }
 
             var resposta = await httpClient
-                .GetAsync($"v1/abrangencias/{consideraHistorico}/dres/ues/{ueCodigo}/turmas?modalidade={modalidade}&anoLetivo={anoLetivo}");
+                .GetAsync($"v1/abrangencias/{consideraHistorico}/dres/ues/{ueCodigo}/turmas?modalidade={modalidade}&anoLetivo={anoLetivo}&consideraNovosAnosInfantil={consideraNovosAnosInfantil}");
 
             if (!resposta.IsSuccessStatusCode || resposta.StatusCode == HttpStatusCode.NoContent)
             {
                 if (resposta.StatusCode == HttpStatusCode.Unauthorized)
                     throw new NegocioException("Não autorizado", 401);
 
-                else return await Task.FromResult(Enumerable.Empty<TurmaSGPDto>());
+                return await Task.FromResult(Enumerable.Empty<TurmaSGPDto>());
             }
 
             var json = await resposta.Content.ReadAsStringAsync();

@@ -21,15 +21,15 @@ namespace SME.Pedagogico.Gestao.WebApp.Configuracoes
             {
                 c.BaseAddress = new Uri(configuration.GetSection("urlApiSgp").Value);
                 c.DefaultRequestHeaders.Add("Accept", "application/json");
+                c.DefaultRequestHeaders.Add("x-sgp-api-key", configuration.GetSection("ChaveIntegracaoSgpApi").Value);
             });
 
             services.AddHttpClient(name: "apiEOL", c =>
             {
-                c.BaseAddress = new Uri(configuration.GetSection("urlApiEol").Value);
-                c.DefaultRequestHeaders.Add("x-api-eol-key", configuration.GetSection("API_EOL_KEY_ENV").Value);
+                c.BaseAddress = new Uri(configuration.GetSection("UrlApiEOL").Value);
                 c.DefaultRequestHeaders.Add("Accept", "application/json");
+                c.DefaultRequestHeaders.Add("x-api-eol-key", configuration.GetSection("ApiKeyEolApi").Value);
             });
-
         }
     }
 }

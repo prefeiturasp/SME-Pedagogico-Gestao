@@ -136,7 +136,12 @@ function NovaSondagemCACM() {
 
   const persistencia = useCallback(
     async (listaAlunosRedux, filtrosBuscaPersistencia) => {
-      let alunosMutaveis = Object.assign([], listaAlunosRedux);
+      const alunosMutaveis = Object.assign([], listaAlunosRedux);
+      alunosMutaveis.forEach((element) => {
+        if (!element.bimestre) {
+          element.bimestre = bimestre;
+        }
+      });
 
       try {
         await dispatch(
@@ -151,7 +156,7 @@ function NovaSondagemCACM() {
 
       sairModoEdicao();
     },
-    [dispatch, sairModoEdicao]
+    [dispatch, sairModoEdicao, bimestre]
   );
 
   const obterIndexAlunoAlteracao = (alunoIdState) => {
@@ -242,6 +247,7 @@ function NovaSondagemCACM() {
         pollStore.obterPerguntasAlfabetizacao({
           ...filtros,
           grupo: GRUPO_SONDAGEM[tipoSondagem],
+          bimestre,
         })
       );
       dispatch(

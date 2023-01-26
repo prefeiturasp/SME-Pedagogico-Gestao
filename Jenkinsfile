@@ -3,6 +3,7 @@ pipeline {
       branchname =  env.BRANCH_NAME.toLowerCase()
       kubeconfig = getKubeconf(env.branchname)
       registryCredential = 'jenkins_registry'
+      namespace = "${env.branchname == 'release-r2' ? 'sme-pedagogico-gestao-r2' : 'sme-pedagogico-gestao'}"
     }
   
     agent {
@@ -59,13 +60,15 @@ pipeline {
                 script{
                     if ( env.branchname == 'main' ||  env.branchname == 'master' || env.branchname == 'homolog' || env.branchname == 'release' ) {
                         sendTelegram("🤩 [Deploy ${env.branchname}] Job Name: ${JOB_NAME} \nBuild: ${BUILD_DISPLAY_NAME} \nMe aprove! \nLog: \n${env.BUILD_URL}")
-                        timeout(time: 24, unit: "HOURS") {
-                            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'marlon_goncalves, robson_silva, rafael_losi, ricardo_coda'
+                         withCredentials([string(credentialsId: 'aprovadores-sgp', variable: 'aprovadores')]) {
+                            timeout(time: 24, unit: "HOURS") {
+                                input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: "${aprovadores}"
+                            }
                         }
                     }
                     withCredentials([file(credentialsId: "${kubeconfig}", variable: 'config')]){
                       sh('cp $config '+"$home"+'/.kube/config')
-                      sh "kubectl -n sme-pedagogico-gestao rollout restart deploy"
+                      sh "kubectl -n ${namespace} rollout restart deploy"
                       sh('rm -f '+"$home"+'/.kube/config')
                     }
                 }
@@ -106,5 +109,6 @@ def sendTelegram(message) {
 def getKubeconf(branchName) {
     if("master".equals(branchName)) { return "config_prd"; }
     else if ("release".equals(branchName)) { return "config_hom"; }
+    else if ("release-r2".equals(branchName)) { return "config_hom"; }	
     else if ("dev".equals(branchName)) { return "config_dev"; }
 }

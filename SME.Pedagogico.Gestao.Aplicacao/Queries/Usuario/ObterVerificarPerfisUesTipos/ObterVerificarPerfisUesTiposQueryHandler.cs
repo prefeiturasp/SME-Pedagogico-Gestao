@@ -24,7 +24,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
             {
                 using (var httpClient = httpClientFactory.CreateClient("apiSGP"))
                 {
-                    var resposta = await httpClient.GetAsync($"v1/abrangencias/{request.UsuarioRF}/perfis/{request.UsuarioPerfil}/acesso-sondagem");
+                    var resposta = await httpClient.GetAsync($"v1/abrangencias/integracoes/{request.UsuarioRF}/perfis/{request.UsuarioPerfil}/acesso-sondagem");
 
                     if (!resposta.IsSuccessStatusCode || resposta.StatusCode == HttpStatusCode.NoContent)
                         return false;

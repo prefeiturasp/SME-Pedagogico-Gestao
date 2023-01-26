@@ -1,4 +1,4 @@
-﻿﻿import { takeLatest, call, put, all, select } from "redux-saga/effects";
+﻿import { takeLatest, call, put, all, select } from "redux-saga/effects";
 
 import * as Filters from "../store/Filters";
 import { types } from "../store/User";

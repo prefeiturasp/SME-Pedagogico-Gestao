@@ -255,7 +255,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             });
         }
 
-        public async Task<IEnumerable<PerguntaDto>> ObterPerguntas(int anoEscolar, int anoLetivo, int grupo)
+        public async Task<IEnumerable<PerguntaDto>> ObterPerguntas(int anoEscolar, int anoLetivo, int grupo, int bimestre)
         {
             try
             {
@@ -264,8 +264,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 using (SMEManagementContextData db = new SMEManagementContextData())
                 {
                     var perguntas = (ProficienciaEnum)grupo == ProficienciaEnum.Numeros
-                                    ? await ObterPerguntasGrupoNumeros(db, anoEscolar, anoLetivo, grupo)
-                                    : await ObterPerguntasGrupoCACM(db, anoEscolar, anoLetivo, grupo);
+                                    ? await ObterPerguntasGrupoNumeros(db, anoEscolar, anoLetivo, grupo,bimestre)
+                                    : await ObterPerguntasGrupoCACM(db, anoEscolar, anoLetivo, grupo, bimestre);
 
                     if (perguntas == null || !perguntas.Any())
                         throw new Exception("Não foi possivel obter as perguntas da sondagem");
@@ -279,12 +279,11 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        private async Task<List<PerguntaDto>> ObterPerguntasGrupoCACM(SMEManagementContextData db, int anoEscolar, int anoLetivo, int grupo)
+        private async Task<List<PerguntaDto>> ObterPerguntasGrupoCACM(SMEManagementContextData db, int anoEscolar, int anoLetivo, int grupo, int bimestre)
         {
             try
             {
-                var perguntasAlfabetizacao = new List<PerguntaAlfabetizacaoDto>();
-
+                var perguntasAlfabetizacao = new List<PerguntaAlfabetizacaoDto>();              
                 var sql = $@"select p.""Id"" as ""PerguntaPrincipalId"",
                                     p.""Descricao"" as ""PerguntaPrincipalDescricao"",
                                     pae.""Ordenacao"" as ""PerguntaPrincipalOrdenacao"",
@@ -295,6 +294,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                     rs.""Descricao"" as ""RespostaDescricao"",
                                     prs.""Ordenacao"" as ""RespostaOrdenacao""
                             from ""PerguntaAnoEscolar"" pae
+                            left JOIN ""PerguntaAnoEscolarBimestre"" paeb ON pae.""Id"" = paeb.""PerguntaAnoEscolarId""
                             join ""Pergunta"" p on p.""Id"" = pae.""PerguntaId""
                             join ""Pergunta"" ps on ps.""PerguntaId"" = pae.""PerguntaId""
                             join ""PerguntaAnoEscolar"" pae2 on pae2.""PerguntaId"" = ps.""Id""
@@ -302,6 +302,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
                             join ""Resposta"" rs on rs.""Id"" = prs.""RespostaId""
                             where pae.""AnoEscolar"" in ({anoEscolar}) and pae.""Grupo"" = {grupo}
                                   and (pae.""FimVigencia"" is null and extract(year from pae.""InicioVigencia"") <= {anoLetivo})";
+
+                sql += $@" and (paeb.""Id"" is null
+                       and not exists(select 1 from ""PerguntaAnoEscolar"" pae 
+                                      inner join  ""PerguntaAnoEscolarBimestre"" paeb ON paeb.""PerguntaAnoEscolarId"" = pae.""Id""
+                                      where pae.""AnoEscolar"" = {anoEscolar}
+                                      and (pae.""FimVigencia"" is null and extract(year from pae.""InicioVigencia"") <=  {anoLetivo}) 
+                                      and paeb.""Bimestre"" = {bimestre})
+                        or paeb.""Bimestre"" = {bimestre})";
+
+                sql += " order by pae.\"Ordenacao\"";
 
                 using (var command = db.Database.GetDbConnection().CreateCommand())
                 {
@@ -361,12 +371,11 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        private async Task<List<PerguntaDto>> ObterPerguntasGrupoNumeros(SMEManagementContextData db, int anoEscolar, int anoLetivo, int grupo)
+        private async Task<List<PerguntaDto>> ObterPerguntasGrupoNumeros(SMEManagementContextData db, int anoEscolar, int anoLetivo, int grupo,int bimestre)
         {
             try
             {
                 var perguntasAlfabetizacao = new List<PerguntaAlfabetizacaoDto>();
-
                 var sql = $@"select p.""Id"" as ""PerguntaId"",
                                     p.""Descricao"" as ""PerguntaDescricao"",
                                     pae.""Ordenacao"" as ""PerguntaOrdenacao"",
@@ -374,11 +383,22 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                     rs.""Descricao"" as ""RespostaDescricao"",
                                     prs.""Ordenacao"" as ""RespostaOrdenacao""
                             from ""PerguntaAnoEscolar"" pae
+                            left JOIN ""PerguntaAnoEscolarBimestre"" paeb ON pae.""Id"" = paeb.""PerguntaAnoEscolarId""
                             join ""Pergunta"" p on p.""Id"" = pae.""PerguntaId""
                             join ""PerguntaResposta"" prs on prs.""PerguntaId"" = p.""Id""
                             join ""Resposta"" rs on rs.""Id"" = prs.""RespostaId""
                             where pae.""AnoEscolar"" in ({anoEscolar}) and pae.""Grupo"" = {grupo}
                             and (pae.""FimVigencia"" is null and extract(year from pae.""InicioVigencia"") <= {anoLetivo})";
+
+                sql += $@" and (paeb.""Id"" is null
+                       and not exists(select 1 from ""PerguntaAnoEscolar"" pae 
+                                      inner join  ""PerguntaAnoEscolarBimestre"" paeb ON paeb.""PerguntaAnoEscolarId"" = pae.""Id""
+                                      where pae.""AnoEscolar"" = {anoEscolar}
+                                      and (pae.""FimVigencia"" is null and extract(year from pae.""InicioVigencia"") <=  {anoLetivo}) 
+                                      and paeb.""Bimestre"" = {bimestre})
+                        or paeb.""Bimestre"" = {bimestre})";
+
+                sql += " order by pae.\"Ordenacao\"";
 
                 using (var command = db.Database.GetDbConnection().CreateCommand())
                 {

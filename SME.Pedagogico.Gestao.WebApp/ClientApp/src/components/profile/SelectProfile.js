@@ -17,11 +17,10 @@ const SelectProfile = ({ history }) => {
     dispatch(actionCreators.setProfile(payload, history));
 
   const handleClick = (event) => {
-    const nomePerfil = event.target.innerText;
+    const nomePerfil = event.target.innerText;    
     const perfilSelecionado = perfis.find(
       (item) => nomePerfil === item.nomePerfil
-    );
-
+    );    
     setProfile(perfilSelecionado);
   };
 

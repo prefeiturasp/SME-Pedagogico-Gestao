@@ -6,6 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Enums\**" />
+    <EmbeddedResource Remove="Enums\**" />
+    <None Remove="Enums\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SME.Pedagogico.Gestao.Dominio\SME.Pedagogico.Gestao.Dominio.csproj" />
     <ProjectReference Include="..\SME.Pedagogico.Gestao.Infra\SME.Pedagogico.Gestao.Infra.csproj" />
     <ProjectReference Include="..\SME.Pedagogico.Gestao.Models\SME.Pedagogico.Gestao.Models.csproj" />
@@ -38,7 +44,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Enums\" />
     <Folder Include="Integracao\DTO\RetornoNovoSGP\" />
   </ItemGroup>
 

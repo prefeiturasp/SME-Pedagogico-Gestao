@@ -53,7 +53,7 @@ const GraficoMatematica = (props) => {
           showBackground: true,
           itemStyle: {
             normal: {
-              color: "#9C96F6",
+                color: "#0077be",
             },
           },
           backgroundStyle: {

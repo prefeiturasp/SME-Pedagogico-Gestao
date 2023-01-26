@@ -209,6 +209,7 @@ async function obterPerguntasAlfabetizacaoApi(payload) {
     anoEscolar: payload.yearClassroom,
     anoLetivo: payload.schoolYear,
     grupo: payload.grupo,
+    bimestre: payload.bimestre || 0,
   });
   const url = `/api/SondagemAlfabetizacao/Matematica/Perguntas?${params}`;
   return fetch(url, {

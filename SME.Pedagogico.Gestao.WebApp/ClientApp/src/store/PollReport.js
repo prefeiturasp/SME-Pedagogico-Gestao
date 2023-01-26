@@ -143,11 +143,11 @@ export const reducer = (state, action) => {
         chartData: null,
       };
     case types.SET_POLL_REPORT_DATA:
-      return {
-        ...state,
-        data: action.pollReportResponse.data,
-        chartData: action.pollReportResponse.chartData,
-      };
+        return {
+          ...state,
+          data: action.pollReportResponse.data,
+          chartData: action.pollReportResponse.data.graficos,
+        };
     case types.PRINTING_POLL_REPORT:
       return {
         ...state,

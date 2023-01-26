@@ -122,16 +122,21 @@ function SondagemPortuguesAutoral() {
     dispatch(PortuguesStore.setar_ordem_selecionada(null));
     dispatch(PortuguesStore.setar_perguntas(null));
     dispatch(PortuguesStore.limpar_todas_ordens_selecionadas());
-    dispatch(PortuguesStore.listarSequenciaOrdens({ ...filtrosBusca, grupoId: grupoSelecionado }));
+    dispatch(PortuguesStore.listarBimestres());
+    if (grupoSelecionado){
+      dispatch(PortuguesStore.listarSequenciaOrdens({ ...filtrosBusca, grupoId: grupoSelecionado }));      
+    }
   }, [grupoSelecionado])
 
   useEffect(() => {
     const grupo = grupos && grupoSelecionado && grupos.find(g => g.id === grupoSelecionado);
 
-    if (grupo && !grupo.ordemVisivel) {
+    if (grupo && !grupo.ordemVisivel) 
       dispatch(PortuguesStore.setar_ordem_selecionada(ordens[0].id));
+
+    if (grupo)
       dispatch(PortuguesStore.listarPerguntasPortugues(1, grupoSelecionado));
-    }
+
   }, [ordens])
 
   useEffect(() => {

@@ -34,13 +34,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
             this._grupo = grupo;
         }
 
-        public async Task<RelatorioMatematicaPorTurmaProficienciaDTO> ObtenhaDTO()
+        public async Task<RelatorioMatematicaPorTurmaProficienciaDTO> ObtenhaDTO(int bimestre)
         {
             await this.CarregueAlunosAtivos();
 
             return new RelatorioMatematicaPorTurmaProficienciaDTO()
             {
-                Perguntas = await ObtenhaCabecalho(),
+                Perguntas = await ObtenhaCabecalho(bimestre),
                 Alunos = await ObtenhaListaDeAlunosResposta(),
                 Graficos = ObtenhaListaDeGrafico()
             };
@@ -89,7 +89,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             return new AlunoPorTurmaRelatorioProficienciaDTO()
             {
                 CodigoAluno = aluno.CodigoAluno,
-                NomeAluno = aluno.NomeAlunoRelatorio,
+                NomeAluno = string.IsNullOrEmpty(aluno.NomeSocialAluno) ? aluno.NomeAlunoRelatorio : aluno.NomeSocialAluno,
                 Perguntas = ObtenhaListaDePerguntas(aluno)
             };
         }
@@ -144,7 +144,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private async Task CarregueListaPerguntaRespostas()
         {
-            string sql = ConsultasRelatorios.QueryRelatorioPorTurmaMatematicaProficiencia();
+            string sql = ConsultasRelatorios.QueryRelatorioPorTurmaMatematicaProficiencia(this._filtro.Bimestre,this._filtro.AnoEscolar);
 
             using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
             {
@@ -243,10 +243,10 @@ namespace SME.Pedagogico.Gestao.Data.Business
             };
         }
 
-        private async Task<List<CabecalhoRelatorioProficienciaDTO>> ObtenhaCabecalho()
+        private async Task<List<CabecalhoRelatorioProficienciaDTO>> ObtenhaCabecalho(int bimestre)
         {
             var lista = new List<CabecalhoRelatorioProficienciaDTO>();
-            var listaDePergunta = await ObtenhaListaDePerguntaPrincipal();
+            var listaDePergunta = await ObtenhaListaDePerguntaPrincipal(bimestre);
             var listaPai = listaDePergunta.FindAll(pergunta => pergunta.SubPerguntaId == null);
 
             foreach (var perguntaPai in listaPai)
@@ -280,9 +280,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
             return lista;
         }
 
-        private async Task<List<PerguntaPrincipalTurmaProficienciaDTO>> ObtenhaListaDePerguntaPrincipal()
+        private async Task<List<PerguntaPrincipalTurmaProficienciaDTO>> ObtenhaListaDePerguntaPrincipal(int bimestre)
         {
-            string sql = ConsultasRelatorios.QueryRelatorioPorTurmaProficienciaPergunta();
+            string sql = ConsultasRelatorios.QueryRelatorioPorTurmaProficienciaPergunta(bimestre,this._filtro.AnoEscolar);
 
             using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
             {
@@ -292,7 +292,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                                                 {
                                                                     AnoDaTurma = this._filtro.AnoEscolar,
                                                                     AnoLetivo = this._filtro.AnoLetivo,
-                                                                    Grupo = this._grupo
+                                                                    Grupo = this._grupo,
+                                                                    Bimestre = bimestre
                                                                 })).ToList();
             }
         }

@@ -128,7 +128,12 @@ function NovaSondagemMatematicaAutoral() {
 
   const persistencia = useCallback(
     async (listaAlunosRedux, filtrosBuscaPersistencia) => {
-      let alunosMutaveis = Object.assign([], listaAlunosRedux);
+      const alunosMutaveis = Object.assign([], listaAlunosRedux);
+      alunosMutaveis.forEach((element) => {
+        if (!element.bimestre) {
+          element.bimestre = bimestre;
+        }
+      });
 
       try {
         await dispatch(
@@ -136,14 +141,13 @@ function NovaSondagemMatematicaAutoral() {
             alunosMutaveis,
             filtrosBuscaPersistencia
           )
-        );
+        )
       } catch (e) {
         dispatch(pollStore.setLoadingSalvar(false));
       }
-
       sairModoEdicao();
     },
-    [dispatch, sairModoEdicao]
+    [dispatch, sairModoEdicao, bimestre]
   );
 
   const obterIndexAlunoAlteracao = (alunoIdState) => {
@@ -213,16 +217,17 @@ function NovaSondagemMatematicaAutoral() {
   useEffect(() => {
     if (filtros.yearClassroom && bimestre) {
       dispatch(actionCreators.obterPeriodoAberto(filtros.schoolYear, bimestre));
-
+      
       if (ehTipoNumerico) {
         dispatch(
           pollStore.obterPerguntasAlfabetizacao({
             ...filtros,
             grupo: GRUPO_SONDAGEM[tipoSondagem],
+            bimestre,
           })
         );
       } else {
-        dispatch(actionCreators.listarPerguntas(filtros));
+        dispatch(actionCreators.listarPerguntas({ ...filtros, bimestre }));
       }
 
       dispatch(

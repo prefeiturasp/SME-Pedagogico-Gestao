@@ -59,7 +59,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     DescricaoDisciplina = parameters.Discipline,
                     DescricaoPeriodo = parameters.Term,
                     ConsiderarBimestre = int.Parse(parameters.SchoolYear) >= ANO_ESCOLAR_2022,
-                    Proficiencia = parameters.Proficiency
+                    Proficiencia = parameters.Proficiency,
+                    Bimestre = parameters.Bimestre
                 };
 
                 return await ObtenhaRelatorioMatematicaAutoral(filtro, parameters.ClassroomReport);
@@ -160,7 +161,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     }
 
                 }
-
                 else    // cONSOLIDADO
                 {
                     var result = await BuscaDadosMathAsync(parameters, parameters.SchoolYear, parameters.CodigoDRE, parameters.CodigoEscola, parameters.CodigoCurso, periodo);
@@ -306,7 +306,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 retorno.ChartData.Add(new PortChartDataModel()
                 {
                     Name = "Sem Preenchimento",
-                    Value = semPreenchimento.Value
+                    Value = semPreenchimento.Value >= 0 ? semPreenchimento.Value :0
                 });
             }
 
@@ -396,8 +396,6 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
         private async Task<ActionResult<string>> ObtenhaRelatorioMatematicaAutoral(filtrosRelatorioDTO filtro, bool ehPorTurma)
         {
-            var relatorio = new RelatorioMatematicaAutoral();
-
             if (filtro.AnoEscolar <= TERCEIRO_ANO && !ProficienciaEhNumero(filtro.Proficiencia))
             {
                 return await ObtenhaRelatorioMatematicaProficiencia(filtro, ehPorTurma);

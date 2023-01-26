@@ -2,7 +2,7 @@
 
 namespace SME.Pedagogico.Gestao.Aplicacao
 {
-    public class ObterLoginUsuarioLogado : IRequest<string>
+    public class ObterLoginUsuarioLogadoQuery : IRequest<string>
     {
     }
 }
