@@ -739,7 +739,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 					where pae.""AnoEscolar"" in ({anoEscolar}) ";
 
                 if (anoLetivo >= 2022)
-                    sql += $@" and(pae.""FimVigencia"" is null and extract(year from pae.""InicioVigencia"") <= {anoLetivo})";
+                    sql += $@" and((pae.""FimVigencia"" is null or extract(year from pae.""FimVigencia"") >= {anoLetivo}) and extract(year from pae.""InicioVigencia"") <= {anoLetivo})  ";
                 else
                     sql += $@" and extract(year from pae.""InicioVigencia"") <= {anoLetivo}";
 
@@ -747,7 +747,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                        and not exists(select 1 from ""PerguntaAnoEscolar"" pae 
                                       inner join  ""PerguntaAnoEscolarBimestre"" paeb ON paeb.""PerguntaAnoEscolarId"" = pae.""Id""
                                       where pae.""AnoEscolar"" = {anoEscolar}
-                                      and (pae.""FimVigencia"" is null and extract(year from pae.""InicioVigencia"") <=  {anoLetivo}) 
+                                      and (((pae.""FimVigencia"" is null or extract(year from pae.""FimVigencia"") >= {anoLetivo}) and extract(year from pae.""InicioVigencia"") <=  {anoLetivo})) 
                                       and paeb.""Bimestre"" = {bimestre})
                         or paeb.""Bimestre"" = {bimestre})";
 
