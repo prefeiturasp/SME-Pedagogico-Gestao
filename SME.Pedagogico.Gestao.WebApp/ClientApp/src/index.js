@@ -3,7 +3,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "@fortawesome/fontawesome-free/js/all.min.js";
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { createBrowserHistory } from "history";
 import { BrowserRouter } from "react-router-dom";
@@ -21,16 +21,16 @@ const initialState = window.initialReduxState;
 export const { store, persistor } = configureStore(history, initialState);
 
 const rootElement = document.getElementById("root");
+const root = createRoot(rootElement);
 
-ReactDOM.render(
+root.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <BrowserRouter basename={baseUrl}>
         <App />
       </BrowserRouter>
     </PersistGate>
-  </Provider>,
-  rootElement
+  </Provider>
 );
 
 registerServiceWorker();
