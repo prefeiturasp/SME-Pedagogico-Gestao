@@ -459,25 +459,23 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
             query.AppendLine(" INNER JOIN \"PerguntaResposta\" pr ON pr.\"PerguntaId\" = p.\"Id\"");
             query.AppendLine(" INNER JOIN \"Resposta\" r ON r.\"Id\" = pr.\"RespostaId\"");
             query.AppendLine(" LEFT JOIN ( ");
-            query.AppendLine("    SELECT p.\"Id\" AS \"PerguntaId\",");
-            query.AppendLine("           r.\"Id\" AS \"RespostaId\", COUNT(distinct sa.\"CodigoAluno\") AS \"QtdRespostas\"");
+            query.AppendLine("    SELECT sar.\"PerguntaId\" AS \"PerguntaId\",");
+            query.AppendLine("           r.\"Id\" AS \"RespostaId\", COUNT(sa.\"CodigoAluno\") AS \"QtdRespostas\"");
             query.AppendLine("    FROM \"SondagemAlunoRespostas\" sar");
-            query.AppendLine("    INNER JOIN \"SondagemAluno\" sa ON sa.\"Id\" = sar.\"SondagemAlunoId\"");
+            query.AppendLine("    INNER JOIN \"SondagemAluno\" sa ON sa.\"Id\" = sar.\"SondagemAlunoId\" and sar.\"CodigoAluno\" = sa.\"CodigoAluno\"");
             query.AppendLine("    INNER JOIN \"Sondagem\" s ON s.\"Id\" = sa.\"SondagemId\"");
-            query.AppendLine("    INNER JOIN \"Pergunta\" p ON p.\"Id\" = sar.\"PerguntaId\"");
             query.AppendLine("    INNER JOIN \"Resposta\" r ON r.\"Id\" = sar.\"RespostaId\"");
-            query.AppendLine("    WHERE s.\"ComponenteCurricularId\" = @ComponenteCurricularId");
-            query.AppendLine("    AND sa.\"CodigoAluno\" in(SELECT DISTINCT \"CodigoAluno\"  FROM \"SondagemAluno\" WHERE \"Id\" IN(sar.\"SondagemAlunoId\"))");
+            query.AppendLine("    WHERE sar.\"ComponenteCurricularId\" = @ComponenteCurricularId");
             query.AppendLine("      AND s.\"AnoLetivo\" = @AnoLetivo");
             query.AppendLine("      AND s.\"AnoTurma\" = @AnoDaTurma");
-            query.AppendLine("      AND s.\"Bimestre\" = @Bimestre");
+            query.AppendLine("      AND sa.\"Bimestre\" = @Bimestre");
 
             if (filtroPorDre)
                 query.AppendLine(" AND s.\"CodigoDre\" =  @CodigoDRE");
             if (filtroPorUe)
                 query.AppendLine(" AND s.\"CodigoUe\" =  @CodigoEscola");
 
-            query.AppendLine("    GROUP BY p.\"Id\", r.\"Id\") AS tabela");
+            query.AppendLine("    GROUP BY sar.\"PerguntaId\", r.\"Id\") AS tabela");
             query.AppendLine(" ON p.\"Id\" = tabela.\"PerguntaId\" AND r.\"Id\"= tabela.\"RespostaId\"");
             query.AppendLine(" WHERE ((pa.\"FimVigencia\" IS NULL AND EXTRACT (YEAR FROM pa.\"InicioVigencia\") <= @AnoLetivo)");
             query.AppendLine("    OR (EXTRACT(YEAR FROM pa.\"FimVigencia\") >= @AnoLetivo AND EXTRACT (YEAR FROM pa.\"InicioVigencia\") <= @AnoLetivo))");
