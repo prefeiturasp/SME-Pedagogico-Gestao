@@ -3,20 +3,14 @@ import styled from "styled-components";
 import { COLORS } from "../colors";
 
 export const TableContainer = styled(Table)`
-  border-radius: 0;
-
-  .ant-table-content table > thead.ant-table-thead {
-    th {
-      background-color: ${COLORS.HEADER.PURPLE_BACKGROUND};
-      color: white;
-    }
+  .ant-table-container table > thead.ant-table-thead th {
+    color: white;
+    background-color: ${COLORS.HEADER.PURPLE_BACKGROUND};
   }
 
-  .ant-table-wrapper .ant-table-container {
-    table thead tr th {
-      border-start-start-radius: 0px !important;
-      border-start-end-radius: 0px !important;
-    }
+  .ant-table-wrapper table thead.ant-table-thead tr th.ant-table-cell {
+    border-start-start-radius: 0px !important;
+    border-start-end-radius: 0px !important;
   }
 
   tr.ant-table-row td {
@@ -27,6 +21,10 @@ export const TableContainer = styled(Table)`
     margin-block: 0 !important;
     margin-inline: 0 !important;
   }
+
+  .ant-tooltip-inner {
+    color: black;
+  }
 `;
 
 export const RowTableContainer = styled(Table)`
@@ -34,15 +32,37 @@ export const RowTableContainer = styled(Table)`
     background-color: ${COLORS.HEADER.GRAY_BACKGROUND};
     color: ${COLORS.LABEL};
   }
+
+  .ant-table-tbody tr > td {
+    padding: 16px;
+  }
+
+  .ant-table-content table > thead.ant-table-thead th {
+    padding: 0;
+    background-color: ${COLORS.HEADER.LIGHT_GRAY_BACKGROUND};
+
+    &:hover {
+      background-color: ${COLORS.HEADER.BACKGROUND_HOVER};
+    }
+  }
 `;
 
 export const Title = styled.div`
-  display: flex;
-  justify-content: space-between;
+  font-weight: 700;
+
+  &.flex {
+    display: flex;
+    justify-content: space-between;
+  }
 
   span {
     gap: 8px;
     display: flex;
+    font-weight: 500;
     align-items: center;
   }
+`;
+
+export const NumeroChamadaTexto = styled.div`
+  padding: 16px;
 `;

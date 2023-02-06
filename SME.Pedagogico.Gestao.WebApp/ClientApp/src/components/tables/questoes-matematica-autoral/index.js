@@ -1,111 +1,144 @@
 import { Checkbox, Tooltip } from "antd";
-import React from "react";
-import { RowTableContainer, TableContainer, Title } from "./styles";
+import React, { useEffect } from "react";
+import { useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { actionCreators } from "../../../store/SondagemAutoral";
+import {
+  NumeroChamadaTexto,
+  RowTableContainer,
+  TableContainer,
+  Title,
+} from "./styles";
 
 const QuestoesMatematicaAutoral = () => {
-  const alunos = [
-    {
-      id: 1,
-      nomeAluno: "ANA CAROLINA",
-      numeroChamada: "1",
-    },
-    {
-      id: 2,
-      nomeAluno: "CAIQUE DOS SANTOS",
-      numeroChamada: "2",
-    },
-  ];
+  const dispatch = useDispatch();
 
-  const questoes = [
-    {
-      id: 123,
-      descricao: "Questão 1: Resolver problemas do Eixo Números",
-      respostas: [
-        { id: 1, descricao: "Acertou a questão" },
-        { id: 2, descricao: "Acertou parcialmente a questão" },
-        { id: 3, descricao: "Errou a questão" },
-      ],
-    },
-  ];
+  const bimestre = useSelector((store) => store.poll.bimestre);
+  const filtros = useSelector((store) => store.poll.selectedFilter);
+  const perguntas = useSelector((store) => store.autoral.listaPerguntas);
+  const tipoSondagem = useSelector((store) => store.poll.pollTypeSelected);
 
-  const montarLinhasRespostas = (_, questao) => {
+  const alunos = useSelector(
+    (store) => store.autoral.listaAlunosAutoralMatematica
+  );
+
+  const filtrosBusca = useMemo(() => {
+    if (!filtros) return;
+
+    return {
+      anoLetivo: filtros.schoolYear,
+      anoEscolar: filtros.yearClassroom,
+      codigoDre: filtros.dreCodeEol,
+      codigoUe: filtros.schoolCodeEol,
+      codigoTurma: filtros.classroomCodeEol,
+      componenteCurricular: "9f3d8467-2f6e-4bcb-a8e9-12e840426aba",
+    };
+  }, [filtros]);
+
+  useEffect(() => {
+    if (filtros.yearClassroom && bimestre) {
+      dispatch(actionCreators.obterPeriodoAberto(filtros.schoolYear, bimestre));
+      dispatch(actionCreators.listarPerguntas({ ...filtros, bimestre }));
+    }
+  }, [bimestre, dispatch, filtros, filtros.yearClassroom, tipoSondagem]);
+
+  useEffect(() => {
+    if (
+      !filtrosBusca ||
+      !filtrosBusca.anoLetivo ||
+      !filtrosBusca.anoEscolar ||
+      !bimestre
+    )
+      return;
+
+    dispatch(
+      actionCreators.listaAlunosAutoralMatematica(filtrosBusca, bimestre)
+    );
+  }, [bimestre, dispatch, filtrosBusca]);
+
+  const montarLinhas = (_, resposta) => {
     const columnsQuestoes = [
       {
-        title: questao?.descricao,
+        width: 500,
+        fixed: "left",
+        title: resposta?.descricao,
         dataIndex: "descricao",
       },
     ];
-    const respostas = questao?.respostas?.length ? questao.respostas : [];
-
-    return (
-      <RowTableContainer
-        pagination={false}
-        columns={columnsQuestoes}
-        dataSource={respostas}
-      />
-    );
-  };
-
-  const montarLinhasEstudantes = (_, questao) => {
-    const columnsAlunos = [];
 
     alunos.forEach((aluno) => {
       const colunaAluno = {
+        width: 54,
+        align: "center",
         title: (
-          <Tooltip title={aluno?.nomeAluno}>{aluno?.numeroChamada}</Tooltip>
+          <Tooltip title={aluno?.nomeAluno} placement="bottomRight">
+            <NumeroChamadaTexto>{aluno?.numeroChamada}</NumeroChamadaTexto>
+          </Tooltip>
         ),
-        render: (resposta) => (
-          <Checkbox
-            onChange={() => {
-              console.log(aluno);
-              console.log(resposta);
-            }}
-          />
-        ),
+        render: (resposta) =>
+          // <Checkbox
+          //   onChange={() => {
+          //     console.log(aluno);
+          //     console.log(resposta);
+          //   }}
+          // />
+          "-",
       };
 
-      columnsAlunos.push(colunaAluno);
+      columnsQuestoes.push(colunaAluno);
     });
 
-    const respostas = questao?.respostas?.length ? questao.respostas : [];
+    const respostas = resposta?.respostas?.length ? resposta.respostas : [];
 
     return (
       <RowTableContainer
+        bordered
         pagination={false}
-        columns={columnsAlunos}
+        scroll={{ x: "100%" }}
         dataSource={respostas}
+        columns={columnsQuestoes}
       />
     );
   };
 
-  const columns = [
-    {
-      width: 500,
-      fixed: "left",
-      align: "center",
-      key: "questoes",
-      title: "Questões",
-      render: montarLinhasRespostas,
-    },
-    {
-      title: (
-        <Title>
-          <div>Estudantes</div>
-          <span>Veja o nome do aluno passando o mouse sobre o número.</span>
-        </Title>
-      ),
-      render: montarLinhasEstudantes,
-      key: "estudantes",
-    },
-  ];
+  const columns = useMemo(
+    () => [
+      {
+        width: 500,
+        key: "questoes",
+        align: "center",
+        title: <Title>Questões</Title>,
+        render: montarLinhas,
+        onCell: (_) => ({
+          colSpan: 2,
+        }),
+      },
+      {
+        title: (
+          <Title className="flex">
+            <div>Estudantes</div>
+            <span>
+              <i className="fas fa-info-circle"></i>
+              Veja o nome do aluno passando o mouse sobre o número.
+            </span>
+          </Title>
+        ),
+        onCell: () => ({
+          colSpan: 0,
+        }),
+      },
+    ],
+    [alunos]
+  );
 
   return (
     <TableContainer
       bordered
       columns={columns}
       pagination={false}
-      dataSource={questoes}
-      scroll={{ x: "100%" }}
+      dataSource={perguntas}
+      scroll={{ y: "450px" }}
+      locale={{ emptyText: "Sem dados" }}
     />
   );
 };
