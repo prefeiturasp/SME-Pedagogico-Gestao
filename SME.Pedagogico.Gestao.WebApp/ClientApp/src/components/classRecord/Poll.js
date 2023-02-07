@@ -53,6 +53,16 @@ class Poll extends Component {
           label: "4º Bimestre",
         },
       ],
+      semestres: [
+        {
+          value: "1",
+          label: "1º Semestre",
+        },
+        {
+          value: "2",
+          label: "2º Semestre",
+        },
+      ],
     };
     this.componentRender = this.componentRender.bind(this);
 
@@ -634,25 +644,39 @@ class Poll extends Component {
         </Card>
         <Card id="classRecord-poll" hide={this.checkPollCard()}>
           <nav className="container-tabpanel navbar">
-            <ul className="nav" role="tablist">
+            <ul className="nav align-items-center" role="tablist">
               {this.checkButtonPortuguese()}
               {this.checkButtonMath()}
+              {this.props.poll.navSelected === "matematica-tab" &&
+              this.props.poll.selectedFilter.schoolYear >= 2023 ? (
+                <li className="nav-item">
+                  <SelectChangeColor
+                    id="comboSemestre"
+                    className="custom-select-sm"
+                    defaultText="Semestre"
+                    options={this.state.semestres}
+                    onChange={this.onChangeBimestre}
+                    value={this.props.poll.bimestre}
+                  />
+                </li>
+              ) : (
+                this.props.poll.navSelected === "matematica-tab" &&
+                this.props.poll.selectedFilter.schoolYear >= 2022 && (
+                  <li className="nav-item">
+                    <SelectChangeColor
+                      id="comboSemestre"
+                      className="custom-select-sm"
+                      defaultText="Bimestre"
+                      options={this.state.bimestres}
+                      onChange={this.onChangeBimestre}
+                      value={this.props.poll.bimestre}
+                    />
+                  </li>
+                )
+              )}
             </ul>
             <ul className="nav navbar-nav ml-auto">{this.checkButtonSave()}</ul>
           </nav>
-          {this.props.poll.navSelected === "matematica-tab" &&
-            this.props.poll.selectedFilter.schoolYear >= 2022 && (
-              <div className="col-md-2 pb-2">
-                <SelectChangeColor
-                  id="comboSemestre"
-                  className="custom-select-sm"
-                  defaultText="Bimestre"
-                  options={this.state.bimestres}
-                  onChange={this.onChangeBimestre}
-                  value={this.props.poll.bimestre}
-                />
-              </div>
-            )}
           <Loader loading={this.props.poll.loadingSalvar}>
             {this.componentRender()}
           </Loader>
