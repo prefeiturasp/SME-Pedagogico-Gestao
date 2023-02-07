@@ -3,66 +3,80 @@ import styled from "styled-components";
 import { COLORS } from "../colors";
 
 export const TableContainer = styled(Table)`
-  .ant-table-container table > thead.ant-table-thead th {
-    color: white;
-    background-color: ${COLORS.HEADER.PURPLE_BACKGROUND};
+  color: ${COLORS.LABEL};
+
+  .ant-table-header {
+    display: none;
   }
 
-  .ant-table-wrapper table thead.ant-table-thead tr th.ant-table-cell {
-    border-start-start-radius: 0px !important;
-    border-start-end-radius: 0px !important;
+  tr.ant-table-row {
+    height: 50px;
+
+    td {
+      padding: 0px;
+      height: inherit;
+    }
   }
 
-  tr.ant-table-row td {
-    padding: 0px;
-  }
-
-  .ant-table {
+  tr.ant-table-row .ant-table {
     margin-block: 0 !important;
     margin-inline: 0 !important;
   }
+`;
 
-  .ant-tooltip-inner {
-    color: black;
+export const PerguntaContainer = styled.div`
+  padding: 16px;
+  font-weight: 500;
+  background-color: ${COLORS.HEADER.GRAY_BACKGROUND};
+`;
+
+export const RespostaContainer = styled.div`
+  padding: 16px;
+`;
+
+export const NumeroChamadaTexto = styled.div`
+  height: 100%;
+  display: flex;
+  padding: 16px;
+  font-weight: 700;
+  align-items: center;
+  justify-content: center;
+  background-color: ${COLORS.HEADER.LIGHT_GRAY_BACKGROUND};
+
+  &:hover {
+    background-color: ${COLORS.HEADER.BACKGROUND_HOVER};
   }
 `;
 
-export const RowTableContainer = styled(Table)`
-  .ant-table-content table > thead.ant-table-thead th {
-    background-color: ${COLORS.HEADER.GRAY_BACKGROUND};
-    color: ${COLORS.LABEL};
+export const TableHeader = styled.div`
+  display: flex;
+  font-size: 14px;
+  font-weight: 700;
+  background-color: ${COLORS.HEADER.PURPLE_BACKGROUND};
+
+  > div:first-child {
+    width: 500px;
+    border-right: 1px solid white;
+    justify-content: center;
   }
 
-  .ant-table-tbody tr > td {
-    padding: 16px;
-  }
+  > div:last-child {
+    flex-grow: 1;
+    justify-content: space-between;
 
-  .ant-table-content table > thead.ant-table-thead th {
-    padding: 0;
-    background-color: ${COLORS.HEADER.LIGHT_GRAY_BACKGROUND};
-
-    &:hover {
-      background-color: ${COLORS.HEADER.BACKGROUND_HOVER};
+    span {
+      grid-gap: 8px;
+      display: flex;
+      font-size: 12px;
+      font-weight: 500;
+      align-items: center;
     }
   }
 `;
 
-export const Title = styled.div`
-  font-weight: 700;
-
-  &.flex {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  span {
-    gap: 8px;
-    display: flex;
-    font-weight: 500;
-    align-items: center;
-  }
-`;
-
-export const NumeroChamadaTexto = styled.div`
+export const TableColumn = styled.div`
+  color: white;
+  display: flex;
   padding: 16px;
+  align-items: center;
 `;
