@@ -1,4 +1,3 @@
-import { Checkbox, Tooltip } from "antd";
 import React, { useEffect } from "react";
 import { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,13 +5,13 @@ import { actionCreators } from "../../../store/SondagemAutoral";
 import Loader from "../../loader/Loader";
 import shortid from "shortid";
 import {
-  NumeroChamadaTexto,
   PerguntaContainer,
   RespostaContainer,
   TableColumn,
   TableContainer,
   TableHeader,
 } from "./styles";
+import LinhaAluno from "./linha-aluno";
 
 const QuestoesMatematicaAutoral = () => {
   const dispatch = useDispatch();
@@ -98,14 +97,9 @@ const QuestoesMatematicaAutoral = () => {
     width: 54,
     align: "center",
     key: shortid.generate(),
-    render: ({ ehPergunta }) =>
-      ehPergunta ? (
-        <Tooltip title={aluno?.nomeAluno} placement="bottomRight">
-          <NumeroChamadaTexto>{aluno?.numeroChamada}</NumeroChamadaTexto>
-        </Tooltip>
-      ) : (
-        "x"
-      ),
+    render: (dadosLinha) => (
+      <LinhaAluno aluno={aluno} dadosLinha={dadosLinha} />
+    ),
   }));
 
   const colunas = [...columns, ...dynamicColumns];

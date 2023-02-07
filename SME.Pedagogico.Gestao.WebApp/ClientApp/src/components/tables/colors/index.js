@@ -6,4 +6,8 @@ export const COLORS = {
     BACKGROUND_HOVER: "#A4A4A4",
     PURPLE_BACKGROUND: "#8469CF",
   },
+  RADIO: {
+    BORDER: "#D9D9D9",
+    COLOR: "#1677FF",
+  },
 };
