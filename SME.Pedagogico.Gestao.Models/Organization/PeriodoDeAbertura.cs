@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using SME.Pedagogico.Gestao.Models.Enums;
+using System;
+
 
 namespace SME.Pedagogico.Gestao.Models.Organization
 {
@@ -11,5 +11,6 @@ namespace SME.Pedagogico.Gestao.Models.Organization
         public int Bimestre { get; set; }
         public DateTime DataInicio { get; set; }
         public DateTime DataFim { get; set; }
+        public TipoPeriodoEnum TipoPeriodicidade { get; set; }
     }
 }
