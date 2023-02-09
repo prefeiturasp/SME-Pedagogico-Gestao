@@ -582,6 +582,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 var listaSondagemDto = new List<SondagemAutoralDTO>();
                 var sql = new StringBuilder();
+                var AndPerguntaId = $@"and sar.""PerguntaId""  = '{filtrarListagemDto.PerguntaId}'";
 
                 sql.AppendLine($@"select s.""Id"" as SondagemId, sa.""Id"" as SondagemAlunoId, sar.""Id"" SondagemAlunoRespostaId,
                                     s.""AnoLetivo"" as AnoLetivo, s.""AnoTurma"" as AnoTurma,
@@ -595,7 +596,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                     where s.""AnoLetivo"" = {filtrarListagemDto.AnoLetivo} and s.""AnoTurma"" = {filtrarListagemDto.AnoEscolar}
                                     and s.""CodigoDre"" = '{filtrarListagemDto.CodigoDre}' and s.""CodigoUe"" = '{filtrarListagemDto.CodigoUe}' 
                                     and s.""ComponenteCurricularId"" = '{filtrarListagemDto.ComponenteCurricular}' 
-                                    and sar.""PerguntaId""  = '{filtrarListagemDto.PerguntaId}'
+                                    { (!string.IsNullOrEmpty(filtrarListagemDto.PerguntaId) ? AndPerguntaId : "")}
                                     and s.""CodigoTurma"" = '{filtrarListagemDto.CodigoTurma}'
                                     and sar.""Bimestre""  = {filtrarListagemDto.Bimestre}");
 
