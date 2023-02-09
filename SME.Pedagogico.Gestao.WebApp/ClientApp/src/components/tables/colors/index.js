@@ -7,7 +7,8 @@ export const COLORS = {
     PURPLE_BACKGROUND: "#8469CF",
   },
   RADIO: {
-    BORDER: "#D9D9D9",
-    COLOR: "#1677FF",
+    COLOR: "#8E8E93",
+    LIGHT_COLOR: "#DADADA",
+    CHECKED_COLOR: "#1677FF",
   },
 };

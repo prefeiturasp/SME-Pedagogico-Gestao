@@ -12,6 +12,7 @@ import {
   TableHeader,
 } from "./styles";
 import LinhaAluno from "./linha-aluno";
+import { Button, Form } from "antd";
 
 const QuestoesMatematicaAutoral = () => {
   const dispatch = useDispatch();
@@ -30,10 +31,10 @@ const QuestoesMatematicaAutoral = () => {
     if (!filtros) return;
 
     return {
-      anoLetivo: filtros.schoolYear,
-      anoEscolar: filtros.yearClassroom,
       codigoDre: filtros.dreCodeEol,
+      anoLetivo: filtros.schoolYear,
       codigoUe: filtros.schoolCodeEol,
+      anoEscolar: filtros.yearClassroom,
       codigoTurma: filtros.classroomCodeEol,
       componenteCurricular: "9f3d8467-2f6e-4bcb-a8e9-12e840426aba",
     };
@@ -48,10 +49,10 @@ const QuestoesMatematicaAutoral = () => {
 
   useEffect(() => {
     if (
+      !bimestre ||
       !filtrosBusca ||
       !filtrosBusca.anoLetivo ||
-      !filtrosBusca.anoEscolar ||
-      !bimestre
+      !filtrosBusca.anoEscolar
     )
       return;
 
@@ -71,7 +72,7 @@ const QuestoesMatematicaAutoral = () => {
       ehPergunta: true,
     },
     ...respostas.map((resposta) => ({
-      pergundaId: id,
+      perguntaId: id,
       ehResposta: true,
       id: shortid.generate(),
       repostaId: resposta?.id,
@@ -98,38 +99,57 @@ const QuestoesMatematicaAutoral = () => {
     align: "center",
     key: shortid.generate(),
     render: (dadosLinha) => (
-      <LinhaAluno aluno={aluno} dadosLinha={dadosLinha} />
+      <LinhaAluno
+        aluno={aluno}
+        dadosLinha={dadosLinha}
+      />
     ),
   }));
 
   const colunas = [...columns, ...dynamicColumns];
 
+  const onFinish = (values) => {
+    console.log("Success:", values);
+  };
+
   return (
     <>
       {alunos && !!alunos.length ? (
-        <>
-          <TableHeader>
-            <TableColumn>Questões</TableColumn>
+        <Form
+        autoComplete="off"
+        onFinish={onFinish}
+        initialValues={{ remember: true }}
+        >
+          <>
+            <TableHeader>
+              <TableColumn>Questões</TableColumn>
 
-            <TableColumn>
-              <div>Estudantes</div>
-              <span>
-                <i className="fas fa-info-circle"></i>
-                Veja o nome do aluno passando o mouse sobre o número.
-              </span>
-            </TableColumn>
-          </TableHeader>
+              <TableColumn>
+                <div>Estudantes</div>
+                <span>
+                  <i className="fas fa-info-circle"></i>
+                  Veja o nome do aluno passando o mouse sobre o número.
+                </span>
+              </TableColumn>
+            </TableHeader>
 
-          <TableContainer
-            bordered
-            rowKey="id"
-            columns={colunas}
-            pagination={false}
-            scroll={{ y: "calc(100vh - 200px)" }}
-            dataSource={novasPerguntas}
-            locale={{ emptyText: "Sem dados" }}
-          />
-        </>
+            <TableContainer
+              bordered
+              rowKey="id"
+              columns={colunas}
+              pagination={false}
+              dataSource={novasPerguntas}
+              locale={{ emptyText: "Sem dados" }}
+              scroll={{ y: "calc(100vh - 200px)" }}
+            />
+          </>
+
+          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
       ) : (
         <div style={{ height: "calc(100vh - 290px)" }}>
           <Loader loading={carregandoAlunos}></Loader>
