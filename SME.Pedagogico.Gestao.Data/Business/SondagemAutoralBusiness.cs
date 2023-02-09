@@ -9,6 +9,7 @@ using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.DTO.Matematica;
 using SME.Pedagogico.Gestao.Infra;
 using SME.Pedagogico.Gestao.Models.Autoral;
+using EnumModel = SME.Pedagogico.Gestao.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,14 +56,18 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public async Task<bool> ConsultarSePeriodoEstaAberto(int bimestre, string anoLetivo)
+        public async Task<bool> ConsultarSePeriodoEstaAberto(int bimestre, string anoLetivo, EnumModel.TipoPeriodoEnum tipoPeriodicidade =
+                                                                                             EnumModel.TipoPeriodoEnum.Bimestre)
         {
             bool periodoAberto = false;
 
             using (var contexto = new SMEManagementContextData())
             {
                 var periodos = await contexto.PeriodoDeAberturas
-                    .Where(x => x.Bimestre.Equals(bimestre) && x.Ano.Equals(anoLetivo) && DateTime.Now >= x.DataInicio && DateTime.Now <= x.DataFim)
+                    .Where(x => x.Bimestre.Equals(bimestre) && 
+                                x.Ano.Equals(anoLetivo) && 
+                                DateTime.Now >= x.DataInicio && DateTime.Now <= x.DataFim &&
+                                x.TipoPeriodicidade == tipoPeriodicidade)
                     .ToListAsync();
 
                 if (periodos?.Count() > 0)
