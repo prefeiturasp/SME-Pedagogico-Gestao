@@ -15,6 +15,13 @@ export const TableContainer = styled(Table)`
     td {
       padding: 0px;
       height: inherit;
+
+      label > div.ant-form-item {
+        display: flex;
+        margin-bottom: 0;
+        align-items: center;
+        justify-content: center;
+      }
     }
   }
 

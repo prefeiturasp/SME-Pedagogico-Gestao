@@ -2,6 +2,15 @@ import { Input } from "antd";
 import styled from "styled-components";
 import { COLORS } from "../../colors";
 
+export const Label = styled.label`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  margin-bottom: 0;
+  align-items: center;
+  justify-content: center;
+`;
+
 export const RadioButton = styled(Input)`
   width: 16px;
   height: 16px;
@@ -11,13 +20,17 @@ export const RadioButton = styled(Input)`
   -webkit-appearance: none;
   box-shadow: 0 0 0 1px ${COLORS.RADIO.COLOR};
 
+  &.light-border {
+    box-shadow: 0 0 0 1px ${COLORS.RADIO.LIGHT_COLOR} !important;
+  }
+
   &:focus {
     border-color: white;
-    box-shadow: 0 0 0 1px ${COLORS.RADIO.COLOR};
     border-inline-end-width: initial;
+    box-shadow: 0 0 0 1px ${COLORS.RADIO.COLOR} !important;
 
     &:checked {
-      box-shadow: 0 0 0 1px ${COLORS.RADIO.CHECKED_COLOR};
+      box-shadow: 0 0 0 1px ${COLORS.RADIO.CHECKED_COLOR} !important;
     }
   }
 
