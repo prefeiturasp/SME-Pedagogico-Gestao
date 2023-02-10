@@ -53,6 +53,46 @@ export const NumeroChamadaTexto = styled.div`
   &:hover {
     background-color: ${COLORS.HEADER.BACKGROUND_HOVER};
   }
+
+  &[data-title]:hover:after,
+  &[data-title]:hover:before {
+    opacity: 1;
+    transition: all 0.1s ease 0.2s;
+    visibility: visible;
+  }
+
+  &[data-title]:after {
+    content: attr(data-title);
+    opacity: 0;
+    color: black;
+    padding: 12px;
+    bottom: -40px;
+    z-index: 99999;
+    font-size: 10px;
+    font-weight: 500;
+    position: absolute;
+    visibility: hidden;
+    border-radius: 8px;
+    white-space: nowrap;
+    background-color: white;
+    box-shadow: 0px 8px 16px -2px rgba(27, 33, 44, 0.12);
+  }
+
+  &[data-title]:before {
+    content: "";
+    bottom: 0;
+    opacity: 1;
+    z-index: 99999;
+    position: absolute;
+    visibility: hidden;
+    border-bottom: 8px solid white;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+  }
+
+  &[data-title] {
+    position: relative;
+  }
 `;
 
 export const TableHeader = styled.div`

@@ -1,4 +1,4 @@
-import { Form, Tooltip } from "antd";
+import { Form } from "antd";
 import React from "react";
 import { NumeroChamadaTexto } from "../styles";
 import { Label, RadioButton } from "./styles";
@@ -52,9 +52,9 @@ const LinhaAluno = (props) => {
   }
 
   return ehPergunta ? (
-    <Tooltip title={aluno?.nomeAluno} placement="bottomRight">
-      <NumeroChamadaTexto>{aluno?.numeroChamada}</NumeroChamadaTexto>
-    </Tooltip>
+    <NumeroChamadaTexto data-title={aluno?.nomeAluno}>
+      {aluno?.numeroChamada}
+    </NumeroChamadaTexto>
   ) : (
     <Label htmlFor={`${repostaId}-${aluno.codigoAluno}`}>
       <Form.Item name={nomeCampo} getValueProps={() => null}>
