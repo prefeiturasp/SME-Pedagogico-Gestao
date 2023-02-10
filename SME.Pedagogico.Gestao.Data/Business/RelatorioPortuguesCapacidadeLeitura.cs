@@ -114,16 +114,19 @@ public class RelatorioPortuguesCapacidadeLeitura
             relatorioAgrupadoPergunta.ForEach(x =>
             {
                 var pergunta = new PerguntaDTO();
+                var totalRespostas = x.Where(y => y.PerguntaId == x.Key).Sum(q => q.QtdRespostas);
+
+                totalDeAlunos = totalDeAlunos >= totalRespostas ? totalDeAlunos : totalRespostas;
+
                 pergunta.Nome = x.Where(y => y.PerguntaId == x.Key).First().PerguntaDescricao;
                 pergunta.Total = new TotalDTO()
                 {
                     Quantidade = totalDeAlunos,
-
                 };
 
                 pergunta.Total.Porcentagem = (pergunta.Total.Quantidade > 0 ? (pergunta.Total.Quantidade * 100) / (Double)totalDeAlunos : 0).ToString("0.00");
                 pergunta.Respostas = new List<RespostaDTO>();
-                var totalRespostas = x.Where(y => y.PerguntaId == x.Key).Sum(q => q.QtdRespostas);
+                
                 var listaPr = x.Where(y => y.PerguntaId == x.Key).ToList();
 
                 foreach (var item in listaPr)
@@ -156,7 +159,7 @@ public class RelatorioPortuguesCapacidadeLeitura
 
         if (periodos.Count() == 0)
             throw new Exception("Periodo fixo anual nao encontrado");
-        var alunosEol = await alunoAPI.ObterAlunosAtivosPorTurmaEPeriodo(filtro.CodigoTurma, periodos.First().DataFim);
+        var alunosEol = await alunoAPI.ObterAlunosAtivosPorTurmaEPeriodo(filtro.CodigoTurma, periodos.First().DataInicio);
         var queryPorTurma = ConsultasRelatorios.QueryRelatorioPorTurmaPortuguesCapacidadeDeLeitura();
         var listaAlunoRespostas = await RetornaListaRespostasAlunoPorTurma(filtrosRelatorio, queryPorTurma);
         var relatorio = await CriaRelatorioAlunos(filtrosRelatorio, alunosEol, listaAlunoRespostas);
