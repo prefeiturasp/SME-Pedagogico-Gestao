@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Data.Functionalities;
+using SME.Pedagogico.Gestao.Models.Enums;
 using SME.Pedagogico.Gestao.Models.Organization;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,14 +18,15 @@ namespace SME.Pedagogico.Gestao.Data.Business
             _token = createToken.CreateTokenProvisorio();
         }
 
-        public async Task<List<PeriodoDeAbertura>> GetPeriodoDeAberturas(string  schoolYear)
+        public async Task<List<PeriodoDeAbertura>> GetPeriodoDeAberturas(string  schoolYear, TipoPeriodoEnum? tipoPeriodicidade)
         {
             try
             {
                 using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
                 {
                     var teste = db.AccessLevels;
-                    var listaPeriodoAbertura = db.PeriodoDeAberturas.Where(x => x.Ano == schoolYear).ToList();
+                    var listaPeriodoAbertura = db.PeriodoDeAberturas.Where(x => x.Ano == schoolYear &&
+                                                                           (!tipoPeriodicidade.HasValue || x.TipoPeriodicidade == tipoPeriodicidade)).ToList();
                     return listaPeriodoAbertura;
                 }
             }

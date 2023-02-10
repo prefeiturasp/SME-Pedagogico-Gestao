@@ -13,18 +13,25 @@ import {
   escolherPropriedade,
 } from "./componentesMatematica";
 import NovaSondagemAlfabetizacao from "../../polls/NovaSondagem/novaSondagemAlfabetizacao";
+import QuestoesMatematicaAutoral from "../../tables/questoes-matematica-autoral";
 
 const escolherComponentesMatematica = (props, updatePollStudent) => {
   const ehNovaSondagem = props.poll.selectedFilter.schoolYear >= 2022;
+  const ehNovoComponenteAutoral = props.poll.selectedFilter.schoolYear >= 2023;
   const ehAlfabetizacao = Number(props.poll.pollYear) < 4;
   const ehInterAutoral = Number(props.poll.pollYear) > 3;
   const ehAutoral = props.poll.pollSelected === ClassRoomEnum.ClassMTAutoral;
   const ehTipoNumerico =
     props.poll.pollTypeSelected === escolherPropriedade.Numeric;
 
+  if (ehNovoComponenteAutoral && ehInterAutoral) {
+    return <QuestoesMatematicaAutoral />;
+  }
+
   if (ehNovaSondagem && ehAlfabetizacao) {
     return <NovaSondagemAlfabetizacao />;
   }
+
   if (ehNovaSondagem && ehInterAutoral) {
     return <NovaSondagemMatematicaAutoral />;
   }

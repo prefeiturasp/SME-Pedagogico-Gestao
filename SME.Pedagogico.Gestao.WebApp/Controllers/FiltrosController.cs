@@ -5,6 +5,7 @@ using SME.Pedagogico.Gestao.Aplicacao;
 using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DTO;
 using System.Threading.Tasks;
+using EnumModel = SME.Pedagogico.Gestao.Models.Enums;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
@@ -22,10 +23,10 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
         [HttpGet("{schoolYear}")]
         //[Route("api/[controller]/[action]/[id]")]
-        public async Task<ActionResult<string>> ListarPeriodoDeAberturas(string schoolYear)
+        public async Task<ActionResult<string>> ListarPeriodoDeAberturas(string schoolYear, [FromQuery] EnumModel.TipoPeriodoEnum? tipoPeriodicidade)
         {
             var periodoAbertura = new PeriodoAbertura(_config);
-            var lista = await periodoAbertura.GetPeriodoDeAberturas(schoolYear);
+            var lista = await periodoAbertura.GetPeriodoDeAberturas(schoolYear, tipoPeriodicidade);
             return (Ok(lista));
         }
 

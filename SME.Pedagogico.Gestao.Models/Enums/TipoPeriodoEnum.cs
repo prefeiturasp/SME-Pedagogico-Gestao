@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SME.Pedagogico.Gestao.Models.Enums
+﻿namespace SME.Pedagogico.Gestao.Models.Enums
 {
     public enum TipoPeriodoEnum
     {

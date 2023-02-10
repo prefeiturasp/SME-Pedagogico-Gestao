@@ -5,6 +5,7 @@ using SME.Pedagogico.Gestao.Aplicacao;
 using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DTO.Matematica;
 using SME.Pedagogico.Gestao.Infra;
+using EnumModel = SME.Pedagogico.Gestao.Models.Enums;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -29,9 +30,10 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
         [HttpGet("Matematica/Periodo/Aberto")]
-        public async Task<IActionResult> ConsultarSePeriodoEstaAberto([FromQuery] int bimestre, [FromQuery] string anoLetivo)
+        public async Task<IActionResult> ConsultarSePeriodoEstaAberto([FromQuery] int bimestre, [FromQuery] string anoLetivo, [FromQuery] EnumModel.TipoPeriodoEnum tipoPeriodicidade =
+                                                                                                                                          EnumModel.TipoPeriodoEnum.Bimestre)
         {
-            return Ok(await sondagemAutoralBusiness.ConsultarSePeriodoEstaAberto(bimestre, anoLetivo));
+            return Ok(await sondagemAutoralBusiness.ConsultarSePeriodoEstaAberto(bimestre, anoLetivo, tipoPeriodicidade));
         }
 
         [HttpGet("Matematica/Perguntas")]

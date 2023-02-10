@@ -9,6 +9,7 @@ using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.DTO.Matematica;
 using SME.Pedagogico.Gestao.Infra;
 using SME.Pedagogico.Gestao.Models.Autoral;
+using EnumModel = SME.Pedagogico.Gestao.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,14 +56,18 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public async Task<bool> ConsultarSePeriodoEstaAberto(int bimestre, string anoLetivo)
+        public async Task<bool> ConsultarSePeriodoEstaAberto(int bimestre, string anoLetivo, EnumModel.TipoPeriodoEnum tipoPeriodicidade =
+                                                                                             EnumModel.TipoPeriodoEnum.Bimestre)
         {
             bool periodoAberto = false;
 
             using (var contexto = new SMEManagementContextData())
             {
                 var periodos = await contexto.PeriodoDeAberturas
-                    .Where(x => x.Bimestre.Equals(bimestre) && x.Ano.Equals(anoLetivo) && DateTime.Now >= x.DataInicio && DateTime.Now <= x.DataFim)
+                    .Where(x => x.Bimestre.Equals(bimestre) && 
+                                x.Ano.Equals(anoLetivo) && 
+                                DateTime.Now >= x.DataInicio && DateTime.Now <= x.DataFim &&
+                                x.TipoPeriodicidade == tipoPeriodicidade)
                     .ToListAsync();
 
                 if (periodos?.Count() > 0)
@@ -577,6 +582,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 var listaSondagemDto = new List<SondagemAutoralDTO>();
                 var sql = new StringBuilder();
+                var AndPerguntaId = $@"and sar.""PerguntaId""  = '{filtrarListagemDto.PerguntaId}'";
 
                 sql.AppendLine($@"select s.""Id"" as SondagemId, sa.""Id"" as SondagemAlunoId, sar.""Id"" SondagemAlunoRespostaId,
                                     s.""AnoLetivo"" as AnoLetivo, s.""AnoTurma"" as AnoTurma,
@@ -590,7 +596,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                     where s.""AnoLetivo"" = {filtrarListagemDto.AnoLetivo} and s.""AnoTurma"" = {filtrarListagemDto.AnoEscolar}
                                     and s.""CodigoDre"" = '{filtrarListagemDto.CodigoDre}' and s.""CodigoUe"" = '{filtrarListagemDto.CodigoUe}' 
                                     and s.""ComponenteCurricularId"" = '{filtrarListagemDto.ComponenteCurricular}' 
-                                    and sar.""PerguntaId""  = '{filtrarListagemDto.PerguntaId}'
+                                    { (!string.IsNullOrEmpty(filtrarListagemDto.PerguntaId) ? AndPerguntaId : "")}
                                     and s.""CodigoTurma"" = '{filtrarListagemDto.CodigoTurma}'
                                     and sar.""Bimestre""  = {filtrarListagemDto.Bimestre}");
 
