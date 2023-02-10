@@ -587,7 +587,8 @@ class Poll extends Component {
   limparDadosAposSalvarMatematicaAutoral() {
     if (
       this.props.poll.navSelected === "matematica-tab" &&
-      this.props.poll.selectedFilter.schoolYear >= 2023
+      this.props.poll.selectedFilter.schoolYear >= 2023 &&
+      Number(this.props.poll.pollYear) > 3
     ) {
       this.props.autoralMethods.limparAlunosAutoralMatematica();
       this.props.dataMethods.reset_new_data_state();
@@ -664,7 +665,8 @@ class Poll extends Component {
               {this.checkButtonPortuguese()}
               {this.checkButtonMath()}
               {this.props.poll.navSelected === "matematica-tab" &&
-              this.props.poll.selectedFilter.schoolYear >= 2023 ? (
+              this.props.poll.selectedFilter.schoolYear >= 2023 &&
+              Number(this.props.poll.pollYear) > 3 ? (
                 <li className="nav-item">
                   <SelectChangeColor
                     id="comboSemestre"
