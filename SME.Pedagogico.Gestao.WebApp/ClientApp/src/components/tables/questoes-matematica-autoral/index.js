@@ -71,57 +71,37 @@ const QuestoesMatematicaAutoral = () => {
   }, [dispatch]);
 
   const atualizarRespostasAlunosParaSalvar = (alunosMutaveis, novosValores) => {
-    console.log("ALUNOS", alunosMutaveis);
-    console.log("VALORES DO FORM", novosValores);
-    debugger;
+    if (!alunosMutaveis || !novosValores) return;
 
-    Object.entries(novosValores).forEach(entry => {
-      const [key, value] = entry;
+    Object.entries(novosValores).forEach(([key, value]) => {
+      if (value === undefined) return;
 
-      if (value) {
-        const [perguntaId, codigoAluno] = key.split("|");
-        const dadosAluno = alunosMutaveis?.filter(
-          (i) => i.codigoAluno === codigoAluno
-        );
+      const [perguntaId, codigoAluno] = key.split("|");
 
-        if (dadosAluno.length && dadosAluno.respostas.length) {
-          const alunoJaTemRespostaParaPergunta = dadosAluno.respostas.findIndex(
-            (i) => i.pergunta === perguntaId
-          );
+      const aluno = alunosMutaveis.find((a) => a.codigoAluno === codigoAluno);
 
-          if (alunoJaTemRespostaParaPergunta > -1) {
-            dadosAluno.respostas[alunoJaTemRespostaParaPergunta].resposta =
-              value;
-          } else {
-            const novaResposta = {
-              bimestre: 1,
-              pergunta: perguntaId,
-              periodoId: "",
-              resposta: value,
-            };
+      if (!aluno) return;
+      if (!aluno.respostas) aluno.respostas = [];
 
-            dadosAluno.respostas.push(novaResposta);
-          }
-        } else if (dadosAluno.length) {
-          const novaResposta = {
-            bimestre: 1,
-            pergunta: perguntaId,
-            periodoId: "",
-            resposta: value,
-          };
+      const resposta = aluno.respostas.find((r) => r.pergunta === perguntaId);
 
-          dadosAluno.respostas.push(novaResposta);
-        }
+      if (resposta) {
+        resposta.resposta = value;
+      } else {
+        aluno.respostas.push({
+          bimestre: Number(aluno.bimestre),
+          pergunta: perguntaId,
+          periodoId: "",
+          resposta: value,
+        });
       }
     });
 
-    // TODO Atualizar alunosMutaveis com os valores que estão no form para salvar os alunos
     return alunosMutaveis;
   };
 
   const persistencia = useCallback(
     async (listaAlunosRedux) => {
-      debugger;
       const alunosMutaveis = _.cloneDeep(listaAlunosRedux);
       alunosMutaveis.forEach((element) => {
         if (!element.bimestre) {

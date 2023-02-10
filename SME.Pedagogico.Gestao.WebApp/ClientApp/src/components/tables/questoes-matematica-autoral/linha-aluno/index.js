@@ -37,7 +37,7 @@ const LinhaAluno = (props) => {
     const valorSelecionado = form.getFieldValue(nomeCampo);
 
     if (valorSelecionado === repostaId) {
-      form.setFieldValue(nomeCampo, undefined);
+      form.setFieldValue(nomeCampo, "");
       form.getFieldInstance(nomeCampo).input.checked = false;
     }
 
