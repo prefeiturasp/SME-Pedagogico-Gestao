@@ -10,6 +10,7 @@
     "draft-js": "^0.10.5",
     "echarts": "^4.2.1",
     "jquery": "^3.4.0",
+    "lodash": "^4.17.21",
     "popper.js": "^1.14.7",
     "prop-types": "^15.7.2",
     "react": "^18.2.0",

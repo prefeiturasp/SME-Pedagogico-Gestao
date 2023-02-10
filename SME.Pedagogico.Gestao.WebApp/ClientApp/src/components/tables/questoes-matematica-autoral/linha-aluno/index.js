@@ -4,11 +4,11 @@ import { NumeroChamadaTexto } from "../styles";
 import { Label, RadioButton } from "./styles";
 
 const LinhaAluno = (props) => {
-  const { aluno, dadosLinha } = props;
+  const { aluno, dadosLinha, onChange } = props;
   const { ehPergunta, ehResposta, perguntaId, repostaId } = dadosLinha;
 
   const form = Form.useFormInstance();
-  const nomeCampo = `${perguntaId}-${aluno.codigoAluno}`;
+  const nomeCampo = `${perguntaId}|${aluno.codigoAluno}`;
 
   const repostaSelecionada = ehResposta
     ? aluno?.respostas?.find((r) => r?.pergunta === perguntaId)
@@ -42,6 +42,7 @@ const LinhaAluno = (props) => {
     }
 
     temOutraOpcaoSelecionada();
+    onChange();
   };
 
   if (repostaSelecionada && repostaSelecionada?.resposta === repostaId) {

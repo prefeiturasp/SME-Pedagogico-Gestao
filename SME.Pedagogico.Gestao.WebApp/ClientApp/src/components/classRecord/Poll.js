@@ -584,6 +584,18 @@ class Poll extends Component {
     }
   }
 
+  limparDadosAposSalvarMatematicaAutoral() {
+    if (
+      this.props.poll.navSelected === "matematica-tab" &&
+      this.props.poll.selectedFilter.schoolYear >= 2023
+    ) {
+      this.props.autoralMethods.limparAlunosAutoralMatematica();
+      this.props.dataMethods.reset_new_data_state();
+      this.props.pollMethods.set_poll_data_saved_state();
+      this.props.autoralMethods.setarEmEdicao(false);
+    }
+  }
+
   onChangeBimestre(e) {
     const bimestre = e.target.value;
     if (this.props.data.newDataToSave) {
@@ -595,10 +607,12 @@ class Poll extends Component {
 
       return;
     }
+    this.limparDadosAposSalvarMatematicaAutoral();
     this.props.pollMethods.setBimestre(bimestre);
   }
 
   atualizarBimestre() {
+    this.limparDadosAposSalvarMatematicaAutoral();
     this.setState({
       controleEdicaoBimestre: false,
       bimestreAtualControleEdicao: null,
@@ -613,10 +627,12 @@ class Poll extends Component {
           controleExibicao={this.toggleMessagePortugueseBox}
           acaoPrincipal={this.savePollStudent}
           acaoSecundaria={async () => {
+            this.limparDadosAposSalvarMatematicaAutoral();
             this.openPortuguesePoll();
           }}
           exibir={this.state.showMessagePortugueseBox}
           acaoFeedBack={async () => {
+            this.limparDadosAposSalvarMatematicaAutoral();
             this.openPortuguesePoll();
           }}
         />
