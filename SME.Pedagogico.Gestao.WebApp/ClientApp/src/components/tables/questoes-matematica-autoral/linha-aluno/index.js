@@ -4,7 +4,7 @@ import { NumeroChamadaTexto } from "../styles";
 import { Label, RadioButton } from "./styles";
 
 const LinhaAluno = (props) => {
-  const { aluno, dadosLinha, onChange } = props;
+  const { aluno, dadosLinha, onChange, periodoAberto } = props;
   const { ehPergunta, ehResposta, perguntaId, repostaId } = dadosLinha;
 
   const form = Form.useFormInstance();
@@ -34,15 +34,17 @@ const LinhaAluno = (props) => {
   };
 
   const handleOnClick = () => {
-    const valorSelecionado = form.getFieldValue(nomeCampo);
+    if (periodoAberto) {
+      const valorSelecionado = form.getFieldValue(nomeCampo);
 
-    if (valorSelecionado === repostaId) {
-      form.setFieldValue(nomeCampo, "");
-      form.getFieldInstance(nomeCampo).input.checked = false;
+      if (valorSelecionado === repostaId) {
+        form.setFieldValue(nomeCampo, "");
+        form.getFieldInstance(nomeCampo).input.checked = false;
+      }
+
+      temOutraOpcaoSelecionada();
+      onChange();
     }
-
-    temOutraOpcaoSelecionada();
-    onChange();
   };
 
   if (repostaSelecionada && repostaSelecionada?.resposta === repostaId) {
@@ -64,6 +66,7 @@ const LinhaAluno = (props) => {
           id={`${repostaId}-${aluno.codigoAluno}`}
           className={temRespostaMarcada ? "light-border" : ""}
           defaultChecked={repostaSelecionada?.resposta === repostaId}
+          disabled={!periodoAberto}
         />
       </Form.Item>
     </Label>

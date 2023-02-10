@@ -67,9 +67,9 @@ export const actionCreators = {
     type: types.SETAR_PERGUNTA_SELECIONADA,
     payload: pergunta,
   }),
-  obterPeriodoAberto: (anoLetivo, bimestre) => ({
+  obterPeriodoAberto: (anoLetivo, bimestre, tipoPeriodicidade) => ({
     type: types.OBTER_PERIODO_ABERTO,
-    payload: { anoLetivo, bimestre },
+    payload: { anoLetivo, bimestre, tipoPeriodicidade },
   }),
 };
 

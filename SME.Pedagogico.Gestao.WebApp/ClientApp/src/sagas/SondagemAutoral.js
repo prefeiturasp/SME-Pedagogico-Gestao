@@ -3,6 +3,7 @@ import * as Autoral from "../store/SondagemAutoral";
 import * as Filters from "../store/Filters";
 import * as Poll from "../store/Poll";
 import { parametrosParaUrl } from "../utils";
+import { TIPO_PERIODO } from '../Enums'; 
 
 export default function* () {
   yield all([
@@ -161,8 +162,12 @@ function* obterPeriodoAberto({ payload }) {
   }
 }
 
-function obterPeriodAbertoApi({ bimestre, anoLetivo }) {
-  const params = parametrosParaUrl({ bimestre, anoLetivo });
+function obterPeriodAbertoApi({
+  bimestre,
+  anoLetivo,
+  tipoPeriodicidade = TIPO_PERIODO.BIMESTRE,
+}) {
+  const params = parametrosParaUrl({ bimestre, anoLetivo, tipoPeriodicidade });
   var url = `/api/SondagemAutoral/Matematica/Periodo/Aberto?${params}`;
   return fetch(url, {
     method: "get",

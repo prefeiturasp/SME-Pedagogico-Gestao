@@ -25,6 +25,7 @@ const QuestoesMatematicaAutoral = () => {
   const perguntas = useSelector((store) => store.autoral.listaPerguntas);
   const tipoSondagem = useSelector((store) => store.poll.pollTypeSelected);
   const carregandoAlunos = useSelector((store) => store.poll.carregandoAlunos);
+  const periodoAberto = useSelector((store) => store.autoral.periodoAberto);
 
   const [form] = Form.useForm();
 
@@ -159,10 +160,6 @@ const QuestoesMatematicaAutoral = () => {
     })),
   ]);
 
-  const onChangeAluno = () => {
-    setarModoEdicao();
-  };
-
   const columns = [
     {
       width: 500,
@@ -177,34 +174,27 @@ const QuestoesMatematicaAutoral = () => {
     },
   ];
 
-  const dynamicColumns = alunos.map((aluno) => ({
+  const dynamicColumns = alunos?.map((aluno) => ({
     width: 54,
     align: "center",
     key: shortid.generate(),
     render: (dadosLinha) => (
       <LinhaAluno
+        key={shortid.generate()}
         aluno={aluno}
         dadosLinha={dadosLinha}
-        onChange={onChangeAluno}
+        onChange={() => setarModoEdicao()}
+        periodoAberto={periodoAberto}
       />
     ),
-  }));
+  })) || [];
 
   const colunas = [...columns, ...dynamicColumns];
 
-  const onFinish = (values) => {
-    console.log("Success:", values);
-  };
-
   return (
     <>
-      {alunos && !!alunos.length ? (
-        <Form
-          form={form}
-          autoComplete="off"
-          onFinish={onFinish}
-          initialValues={{ remember: true }}
-        >
+      {alunos && alunos?.length ? (
+        <Form form={form} autoComplete="off" initialValues={{ remember: true }}>
           <TableHeader>
             <TableColumn>Questões</TableColumn>
 
@@ -229,7 +219,7 @@ const QuestoesMatematicaAutoral = () => {
         </Form>
       ) : (
         <div style={{ height: "calc(100vh - 290px)" }}>
-          <Loader loading={carregandoAlunos}></Loader>
+          <Loader loading={carregandoAlunos} />
         </div>
       )}
     </>
