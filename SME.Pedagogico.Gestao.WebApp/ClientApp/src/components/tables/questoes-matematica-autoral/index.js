@@ -16,6 +16,7 @@ import {
 import LinhaAluno from "./linha-aluno";
 import { Form } from "antd";
 import _ from "lodash";
+import { TIPO_PERIODO } from '../../../Enums';
 
 const QuestoesMatematicaAutoral = () => {
   const dispatch = useDispatch();
@@ -48,7 +49,8 @@ const QuestoesMatematicaAutoral = () => {
 
   useEffect(() => {
     if (filtros.yearClassroom && bimestre) {
-      dispatch(actionCreators.obterPeriodoAberto(filtros.schoolYear, bimestre));
+      const tipoPeriodicidade = TIPO_PERIODO.SEMESTRE;
+      dispatch(actionCreators.obterPeriodoAberto(filtros.schoolYear, bimestre, tipoPeriodicidade));
       dispatch(actionCreators.listarPerguntas({ ...filtros, bimestre }));
 
       dispatch(
@@ -145,20 +147,22 @@ const QuestoesMatematicaAutoral = () => {
     };
   }, [bimestre, dispatch, filtrosBusca]);
 
-  const novasPerguntas = perguntas?.flatMap(({ id, descricao, respostas }) => [
-    {
-      id,
-      descricao,
-      ehPergunta: true,
-    },
-    ...respostas.map((resposta) => ({
-      perguntaId: id,
-      ehResposta: true,
-      id: shortid.generate(),
-      repostaId: resposta?.id,
-      descricao: resposta?.descricao,
-    })),
-  ]);
+  const novasPerguntas = perguntas?.length
+    ? perguntas?.flatMap(({ id, descricao, respostas }) => [
+        {
+          id,
+          descricao,
+          ehPergunta: true,
+        },
+        ...respostas.map((resposta) => ({
+          perguntaId: id,
+          ehResposta: true,
+          id: shortid.generate(),
+          repostaId: resposta?.id,
+          descricao: resposta?.descricao,
+        })),
+      ])
+    : [];
 
   const columns = [
     {
@@ -174,20 +178,21 @@ const QuestoesMatematicaAutoral = () => {
     },
   ];
 
-  const dynamicColumns = alunos?.map((aluno) => ({
-    width: 54,
-    align: "center",
-    key: shortid.generate(),
-    render: (dadosLinha) => (
-      <LinhaAluno
-        key={shortid.generate()}
-        aluno={aluno}
-        dadosLinha={dadosLinha}
-        onChange={() => setarModoEdicao()}
-        periodoAberto={periodoAberto}
-      />
-    ),
-  })) || [];
+  const dynamicColumns =
+    alunos?.map((aluno) => ({
+      width: 54,
+      align: "center",
+      key: shortid.generate(),
+      render: (dadosLinha) => (
+        <LinhaAluno
+          key={shortid.generate()}
+          aluno={aluno}
+          dadosLinha={dadosLinha}
+          onChange={() => setarModoEdicao()}
+          periodoAberto={periodoAberto}
+        />
+      ),
+    })) || [];
 
   const colunas = [...columns, ...dynamicColumns];
 
