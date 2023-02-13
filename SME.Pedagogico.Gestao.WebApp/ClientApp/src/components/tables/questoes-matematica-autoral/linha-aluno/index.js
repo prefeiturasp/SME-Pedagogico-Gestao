@@ -56,14 +56,14 @@ const LinhaAluno = (props) => {
       {aluno?.numeroChamada}
     </NumeroChamadaTexto>
   ) : (
-    <Label htmlFor={`${repostaId}-${aluno.codigoAluno}`}>
+    <Label htmlFor={`${perguntaId}-${repostaId}-${aluno.codigoAluno}`}>
       <Form.Item name={nomeCampo} getValueProps={() => null}>
         <RadioButton
           type="radio"
           name={nomeCampo}
           value={repostaId}
           onClick={() => handleOnClick()}
-          id={`${repostaId}-${aluno.codigoAluno}`}
+          id={`${perguntaId}-${repostaId}-${aluno.codigoAluno}`}
           className={temRespostaMarcada ? "light-border" : ""}
           defaultChecked={repostaSelecionada?.resposta === repostaId}
           disabled={!periodoAberto}
