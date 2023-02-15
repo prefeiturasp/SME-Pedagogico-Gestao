@@ -327,9 +327,9 @@ class PollFilter extends Component {
   limparDadosMatematicaAutoral() {
     if (
       this.props.poll.navSelected === "matematica-tab" &&
-      this.props.filters.setSchoolYear >= 2023 &&
-      Number(this.props.poll.pollYear) > 3
+      this.props.filters.setSchoolYear >= 2023
     ) {
+      this.props.autoralMethods.setarPerguntas(null);
       this.props.autoralMethods.limparAlunosAutoralMatematica();
       this.props.dataMethods.reset_new_data_state();
       this.props.poll2.set_poll_data_saved_state();
