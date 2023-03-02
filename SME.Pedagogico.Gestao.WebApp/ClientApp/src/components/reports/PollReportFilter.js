@@ -84,13 +84,17 @@ class PollReportFilter extends Component {
       this.carregarProficiencia(this.state.campoDisciplina);
     }
 
-    if (schoolYear !== prevSchoolYear) {
+    if (
+      (prevYearClassroom !== yearClassroom || schoolYear !== prevSchoolYear) &&
+      this.state.campoDisciplina
+    ) {
       const filters = this.props.pollReport.filters;
       const campoDisciplina = this.state.campoDisciplina;
       const disciplina = this.state.selectedFilter.discipline;
 
       const parametroPeriodo =
-        this.props.poll.selectedFilter.schoolYear >= 2022 &&
+        schoolYear >= 2022 &&
+        yearClassroom <= 3 &&
         disciplina === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao
           ? "newTerms"
           : "terms";
@@ -220,8 +224,11 @@ class PollReportFilter extends Component {
           };
         })
       : [];
+
+    const { yearClassroom, schoolYear } = this.props.poll.selectedFilter;
     const parametroPeriodo =
-      this.props.poll.selectedFilter.schoolYear >= 2022 &&
+      schoolYear >= 2022 &&
+      yearClassroom <= 3 &&
       label === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao
         ? "newTerms"
         : "terms";
