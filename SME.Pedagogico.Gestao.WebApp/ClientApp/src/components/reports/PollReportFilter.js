@@ -91,13 +91,17 @@ class PollReportFilter extends Component {
       const filters = this.props.pollReport.filters;
       const campoDisciplina = this.state.campoDisciplina;
       const disciplina = this.state.selectedFilter.discipline;
+      
+      const ehMatematica =
+        disciplina === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao;
 
-      const parametroPeriodo =
-        schoolYear >= 2022 &&
-        yearClassroom <= 3 &&
-        disciplina === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao
-          ? "newTerms"
-          : "terms";
+      const ehTurmaMatematicaSemestral =
+        ehMatematica && yearClassroom >= 4 && schoolYear >= 2023;
+
+      const ehSondagemSemestral =
+        schoolYear < 2022 || ehTurmaMatematicaSemestral;
+
+      const parametroPeriodo = ehSondagemSemestral ? "terms" : "newTerms";
 
       this.setState((state) => ({
         ...state,
@@ -226,12 +230,16 @@ class PollReportFilter extends Component {
       : [];
 
     const { yearClassroom, schoolYear } = this.props.poll.selectedFilter;
-    const parametroPeriodo =
-      schoolYear >= 2022 &&
-      yearClassroom <= 3 &&
-      label === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao
-        ? "newTerms"
-        : "terms";
+    
+    const ehMatematica =
+      label === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao;
+
+    const ehTurmaMatematicaSemestral =
+      ehMatematica && yearClassroom >= 4 && schoolYear >= 2023;
+
+    const ehSondagemSemestral = schoolYear < 2022 || ehTurmaMatematicaSemestral;
+
+    const parametroPeriodo = ehSondagemSemestral ? "terms" : "newTerms";
 
     this.setState({
       selectedFilter: {
