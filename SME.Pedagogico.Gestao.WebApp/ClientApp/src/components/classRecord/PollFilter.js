@@ -5,6 +5,8 @@ import { bindActionCreators } from "redux";
 
 import { actionCreators as actionCreatorsPoll } from "../../store/Filters";
 import { actionCreators as actionCreatorsPoll2 } from "../../store/Poll";
+import { actionCreators as actionCreatorsData } from "../../store/Data";
+import { actionCreators as actionCreatorAutoral } from "../../store/SondagemAutoral";
 
 import SelectChangeColor from "../inputs/SelectChangeColor";
 import CircleButton from "../inputs/CircleButton";
@@ -322,7 +324,21 @@ class PollFilter extends Component {
     }
   }
 
+  limparDadosMatematicaAutoral() {
+    if (
+      this.props.poll.navSelected === "matematica-tab" &&
+      this.props.filters.setSchoolYear >= 2023
+    ) {
+      this.props.autoralMethods.setarPerguntas(null);
+      this.props.autoralMethods.limparAlunosAutoralMatematica();
+      this.props.dataMethods.reset_new_data_state();
+      this.props.poll2.set_poll_data_saved_state();
+      this.props.autoralMethods.setarEmEdicao(false);
+    }
+  }
+
   limparSpanInfro() {
+    this.limparDadosMatematicaAutoral();
     var info = document.getElementById("span-matematica-tab");
     if (info != null) {
       info.innerHTML = "";
@@ -556,5 +572,7 @@ export default connect(
     filterMethods: bindActionCreators(actionCreatorsPoll, dispatch),
     poll2: bindActionCreators(actionCreatorsPoll2, dispatch),
     pollRouterMethods: bindActionCreators(actionCreatorsPollRouter, dispatch),
+    dataMethods: bindActionCreators(actionCreatorsData, dispatch),
+    autoralMethods: bindActionCreators(actionCreatorAutoral, dispatch),
   })
 )(withRouter(PollFilter));

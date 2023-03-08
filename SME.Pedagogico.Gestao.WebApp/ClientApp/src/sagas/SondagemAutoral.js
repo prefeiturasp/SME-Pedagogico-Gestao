@@ -3,6 +3,7 @@ import * as Autoral from "../store/SondagemAutoral";
 import * as Filters from "../store/Filters";
 import * as Poll from "../store/Poll";
 import { parametrosParaUrl } from "../utils";
+import { TIPO_PERIODO } from '../Enums'; 
 
 export default function* () {
   yield all([
@@ -42,7 +43,7 @@ function listaPerguntasAPI(filtros) {
   const params = parametrosParaUrl({
     anoEscolar: filtros.yearClassroom,
     anoLetivo: filtros.schoolYear,
-    bimestre: filtros.bimestre || 0
+    bimestre: filtros.bimestre || 0,
   });
   const url = `/api/SondagemAutoral/Matematica/Perguntas?${params}`;
   return fetch(url, {
@@ -145,7 +146,7 @@ function* GetPeriod({ schoolYear }) {
 // Filter Sagas
 
 function getPeriodApi(schoolYear) {
-  var url = `/api/Filtros/ListarPeriodoDeAberturas/${schoolYear}`;
+  var url = `/api/Filtros/ListarPeriodoDeAberturas/${schoolYear}?tipoPeriodicidade=${TIPO_PERIODO.BIMESTRE}`;
   return fetch(url, {
     method: "get",
     headers: { "Content-Type": "application/json" },
@@ -161,8 +162,12 @@ function* obterPeriodoAberto({ payload }) {
   }
 }
 
-function obterPeriodAbertoApi({ bimestre, anoLetivo }) {
-  const params = parametrosParaUrl({ bimestre, anoLetivo });
+function obterPeriodAbertoApi({
+  bimestre,
+  anoLetivo,
+  tipoPeriodicidade = TIPO_PERIODO.BIMESTRE,
+}) {
+  const params = parametrosParaUrl({ bimestre, anoLetivo, tipoPeriodicidade });
   var url = `/api/SondagemAutoral/Matematica/Periodo/Aberto?${params}`;
   return fetch(url, {
     method: "get",

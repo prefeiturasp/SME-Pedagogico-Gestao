@@ -166,3 +166,8 @@ export const GRUPO_SONDAGEM = {
   CM: 2,
   Numeric: 3,
 };
+
+export const TIPO_PERIODO = {
+  SEMESTRE: 1,
+  BIMESTRE: 2,
+};
