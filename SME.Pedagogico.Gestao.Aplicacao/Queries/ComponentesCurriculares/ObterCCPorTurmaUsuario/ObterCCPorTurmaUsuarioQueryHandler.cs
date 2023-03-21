@@ -16,6 +16,8 @@ namespace SME.Pedagogico.Gestao.Aplicacao
     {
         private readonly IHttpClientFactory httpClientFactory;
         private readonly IMediator mediator;
+        private const string CODIGO_COMPONENTE_CURRICULAR_MATEMATICA = "2";
+        private const string CODIGO_COMPONENTE_CURRICULAR_PORTUGUES = "138";
 
         public ObterCCPorTurmaUsuarioQueryHandler(IHttpClientFactory httpClientFactory, IMediator mediator)
         {
@@ -52,17 +54,16 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                     var listaComponentesSGP = JsonConvert.DeserializeObject<List<DisciplinaRetornoDto>>(json);
 
                     //Verificar se tem regencia, se tiver, deve visualizar PT e MT, caso não, verifico se tem MT e PT para deixar na lista
-                    var listaIdsEnum = EnumExtensao.Listar<ComponentesCurricularesRegenciaEnum>().Select(a => (int)a);
+                    var listaIdsEnum = EnumExtensao.Listar<ComponentesCurricularesRegenciaEnum>().Select(a => ((int)a).ToString());
 
-
-                    if (!listaComponentesSGP.Any(a => listaIdsEnum.Contains(int.Parse(a.CodigoComponenteCurricular))))
+                    if (!listaComponentesSGP.Any(a => listaIdsEnum.Contains(a.CodigoComponenteCurricular)))
                     {
                         //Verifico se tem Mat
-                        if (!listaComponentesSGP.Any(a => a.CodigoComponenteCurricular == "2"))
+                        if (!listaComponentesSGP.Any(a => a.CodigoComponenteCurricular.Equals(CODIGO_COMPONENTE_CURRICULAR_MATEMATICA)))
                             listFixaComponentes.Remove(componenteMat);
 
                         //Verifico se tem Pt
-                        if (!listaComponentesSGP.Any(a => a.CodigoComponenteCurricular == "138"))
+                        if (!listaComponentesSGP.Any(a => a.CodigoComponenteCurricular.Equals(CODIGO_COMPONENTE_CURRICULAR_PORTUGUES)))
                             listFixaComponentes.Remove(componentePor);
 
                     }
