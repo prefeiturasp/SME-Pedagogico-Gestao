@@ -95,14 +95,17 @@ class PollReportFilter extends Component {
       const ehMatematica =
         disciplina === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao;
 
+      const ehPortugues =
+          disciplina === DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES.Descricao;
+
       const ehTurmaMatematicaSemestral =
         ehMatematica && yearClassroom >= 4 && schoolYear >= 2023;
 
       const ehSondagemSemestral =
         schoolYear < 2022 || ehTurmaMatematicaSemestral;
 
-      const parametroPeriodo = ehSondagemSemestral ? "terms" : "newTerms";
-
+      const parametroPeriodo = ehSondagemSemestral || ehPortugues ? "terms" : "newTerms";
+        
       this.setState((state) => ({
         ...state,
         selectedProficiency: "",
@@ -232,14 +235,17 @@ class PollReportFilter extends Component {
     const { yearClassroom, schoolYear } = this.props.poll.selectedFilter;
     
     const ehMatematica =
-      label === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao;
+          label === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao;
+
+    const ehPortugues =
+          label === DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES.Descricao;
 
     const ehTurmaMatematicaSemestral =
       ehMatematica && yearClassroom >= 4 && schoolYear >= 2023;
 
     const ehSondagemSemestral = schoolYear < 2022 || ehTurmaMatematicaSemestral;
 
-    const parametroPeriodo = ehSondagemSemestral ? "terms" : "newTerms";
+    const parametroPeriodo = ehSondagemSemestral || ehPortugues ? "terms" : "newTerms";
 
     this.setState({
       selectedFilter: {
