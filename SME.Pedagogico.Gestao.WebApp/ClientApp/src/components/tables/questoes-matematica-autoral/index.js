@@ -150,6 +150,9 @@ const QuestoesMatematicaAutoral = () => {
 
     return () => {
       dispatch(actionCreators.limparAlunosAutoralMatematica());
+      dispatch(actionCreators.setarAlunosAutoralmatematicaPreSalvar([]));
+      sairModoEdicao();
+      dispatch(pollStore.setFunctionButtonSave(null));
     };
   }, [bimestre, dispatch, filtrosBusca]);
 
