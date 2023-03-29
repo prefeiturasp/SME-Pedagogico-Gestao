@@ -18,6 +18,9 @@ namespace SME.Pedagogico.Gestao.Aplicacao
         private readonly IHttpClientFactory httpClientFactory;
         private readonly IMediator mediator;
 
+        private const string PERFIL_CJ = "41e1e074-37d6-e911-abd6-f81654fe895d";
+        private const string PERFIL_PROFESSOR = "40E1E074-37D6-E911-ABD6-F81654FE895D";
+
         public ObterTurmasPorUeCodigoQueryHandler(IHttpClientFactory httpClientFactory, IMediator mediator)
         {
             this.httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
@@ -26,6 +29,8 @@ namespace SME.Pedagogico.Gestao.Aplicacao
 
         public async Task<List<SalasPorUEDTO>> Handle(ObterTurmasPorUeCodigoQuery request, CancellationToken cancellationToken)
         {
+            var perfilAtual = await mediator.Send(new ObterPerfilUsuarioLogadoQuery());
+
             using (var httpClient = httpClientFactory.CreateClient("apiSGP"))
             {
                 var listaRetornoTurmas = new List<TurmaSGPDto>();
@@ -57,9 +62,16 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                     }
                 }
 
+                if (EhProfessor(perfilAtual))
+                    listaRetornoFinal = await RetornaTurmasAbrangenciaProfessor(listaRetornoFinal);
+
+
                 return listaRetornoFinal;
             }
         }
+
+        private bool EhProfessor(string perfilAtual)
+            => perfilAtual.ToUpper() == PERFIL_CJ.ToUpper() || perfilAtual.ToUpper() == PERFIL_PROFESSOR.ToUpper();
 
         private async Task<IEnumerable<TurmaSGPDto>> EnviarRequisicao(HttpClient httpClient, bool consideraHistorico, string ueCodigo, int anoLetivo,
             bool consideraNovosAnosInfantil)
@@ -86,6 +98,21 @@ namespace SME.Pedagogico.Gestao.Aplicacao
             var json = await resposta.Content.ReadAsStringAsync();
 
             return await Task.FromResult(JsonConvert.DeserializeObject<List<TurmaSGPDto>>(json));
+        }
+
+        private async Task<List<SalasPorUEDTO>> RetornaTurmasAbrangenciaProfessor(List<SalasPorUEDTO> turmasDoProfessor)
+        {
+            var turmasQuePossuemSondagem = new List<SalasPorUEDTO>();
+
+            foreach(var turma in turmasDoProfessor)
+            {
+                var componentesDaTurma = await mediator.Send(new ObterCCPorTurmaUsuarioQuery(turma.CodigoTurma));
+
+                if (componentesDaTurma.Any())
+                    turmasQuePossuemSondagem.Add(turma);
+            }
+
+            return turmasQuePossuemSondagem;
         }
     }
 }
