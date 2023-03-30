@@ -332,12 +332,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     UeId = codigoEscola
                 });
 
-                // obter todas as turmas lançadas sondagem...
-                var turmasComSondagem = query.GroupBy(q => q.classroomCodeEol).Select(q => q.Key).ToArray();
-
-                if(turmasComSondagem.Any())
-                    quantidadeTotalAlunos = await RetornaTotalAlunosSondagem(turmasComSondagem, periodoAnual.DataFim);
-
                 switch (bimestre)
                 {
                     case "1° Bimestre":
