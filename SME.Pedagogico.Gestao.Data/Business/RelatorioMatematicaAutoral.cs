@@ -257,7 +257,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                       and (pae.""FimVigencia"" is null 
                                       and extract(year from pae.""InicioVigencia"") <= @anoLetivo) 
                                       and paeb.""Bimestre"" = @bimestre)
-                        or paeb.""Bimestre"" = @bimestre)";
+                        or paeb.""Bimestre"" = @bimestre) and pae.""Grupo"" = @grupo";
 
             sql += " order by pae.\"Ordenacao\"";
 
@@ -268,7 +268,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     {
                         anoLetivo = filtro.AnoLetivo,
                         bimestre = filtro.Bimestre,
-                        anoEscolar = filtro.AnoEscolar
+                        anoEscolar = filtro.AnoEscolar,
+                        grupo = ObtenhaProficiencia(filtro.Proficiencia)
 
                     })).ToList();
                 }  
