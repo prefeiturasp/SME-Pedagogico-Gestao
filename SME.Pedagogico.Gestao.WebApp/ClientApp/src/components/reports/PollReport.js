@@ -107,11 +107,13 @@ class PollReport extends Component {
     );
 
     const anoLetivo = parseInt(SchoolYear);
-    const ehSondagemAntiga = anoLetivo < 2022;
     const ehMatematica =
       discipline === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao;
-    const semestre = ehMatematica && ehSondagemAntiga ? SEMESTRES[term] : 0;
-    const bimestre = ehMatematica && ehSondagemAntiga ? 0 : BIMESTRES[term];
+    const ehTurmaMatematicaSemestral =
+      ehMatematica && ano >= 4 && anoLetivo >= 2023;
+    const ehSondagemSemestral = anoLetivo < 2022 || ehTurmaMatematicaSemestral;
+    const semestre = ehMatematica && ehSondagemSemestral ? SEMESTRES[term] : 0;
+    const bimestre = ehMatematica && ehSondagemSemestral ? 0 : BIMESTRES[term];
     const proficienciaId = proficiencia.length ? proficiencia[0].id : 0;
     const dreCodigo = parseInt(codigoDRE) || 0;
     const turmaCodigo = parseInt(CodigoTurmaEol) || 0;
