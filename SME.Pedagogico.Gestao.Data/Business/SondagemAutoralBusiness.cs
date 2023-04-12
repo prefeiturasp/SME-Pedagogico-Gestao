@@ -64,9 +64,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
             using (var contexto = new SMEManagementContextData())
             {
                 var periodos = await contexto.PeriodoDeAberturas
-                    .Where(x => x.Bimestre.Equals(bimestre) && 
-                                x.Ano.Equals(anoLetivo) && 
-                                DateTime.Now >= x.DataInicio && DateTime.Now <= x.DataFim &&
+                    .Where(x => x.Bimestre.Equals(bimestre) &&
+                                x.Ano.Equals(anoLetivo) &&
+                                DateTime.Now.Date >= x.DataInicio.Date && DateTime.Now.Date <= x.DataFim.Date &&
                                 x.TipoPeriodicidade == tipoPeriodicidade)
                     .ToListAsync();
 
