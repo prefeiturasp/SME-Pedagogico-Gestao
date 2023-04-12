@@ -11,7 +11,7 @@ export const componentRenderReport = (props) => {
   
   if (props.pollReport.showReport === true) {    
     const codigoCurso = props.pollReport.selectedFilter.CodigoCurso;
-    if (codigoCurso >= 1 && codigoCurso <= 3) {
+    if (codigoCurso >= 1 && codigoCurso <= 3 || (props.pollReport.data && props.pollReport.data.results)) {
       reportData = props.pollReport.data && props.pollReport.data.results ? props.pollReport.data.results : [];
       chartData = props.pollReport.data && props.pollReport.data.chartData ?  props.pollReport.data.chartData: [];      
     } else {
