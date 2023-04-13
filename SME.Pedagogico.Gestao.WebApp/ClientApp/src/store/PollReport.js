@@ -146,7 +146,7 @@ export const reducer = (state, action) => {
         return {
           ...state,
           data: action.pollReportResponse.data,
-          chartData: action.pollReportResponse.data.graficos,
+          chartData: action?.pollReportResponse?.chartData || action?.pollReportResponse?.data?.graficos,
         };
     case types.PRINTING_POLL_REPORT:
       return {
