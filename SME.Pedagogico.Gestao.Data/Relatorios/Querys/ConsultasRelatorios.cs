@@ -486,7 +486,10 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
             query.AppendLine("   AND NOT EXISTS (SELECT 1 FROM \"PerguntaAnoEscolar\" pae");
             query.AppendLine("                   INNER JOIN  \"PerguntaAnoEscolarBimestre\" paeb ON paeb.\"PerguntaAnoEscolarId\" = pae.\"Id\"");
             query.AppendLine("                   WHERE pae.\"AnoEscolar\" = @AnoDaTurma");
-            query.AppendLine("                     AND (pae.\"FimVigencia\" IS NULL AND EXTRACT(YEAR FROM pae.\"InicioVigencia\") <= @AnoLetivo)");
+            query.AppendLine(@"      AND ((pae.""FimVigencia"" IS NULL
+                                    AND EXTRACT (YEAR FROM pae.""InicioVigencia"") <= @anoLetivo)
+                                    OR (EXTRACT(YEAR FROM pae.""FimVigencia"") >= @anoLetivo
+                                    AND EXTRACT (YEAR FROM pae.""InicioVigencia"") <= @anoLetivo))");
             query.AppendLine("                     AND paeb.\"Bimestre\" = @Bimestre)");
             query.AppendLine("    OR paeb.\"Bimestre\" = @Bimestre)");
 
