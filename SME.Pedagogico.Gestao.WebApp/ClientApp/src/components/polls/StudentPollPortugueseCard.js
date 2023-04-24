@@ -15,6 +15,7 @@ class StudentPollPortugueseCard extends Component {
         this.state = {
             selectedClass: "custom-select custom-select-sm poll-select",
             selectedOrdem: "1bim_col",
+            bimestreSelecionado: "1bim_col",
         };
         this.hideShowOrdem = this.hideShowOrdem.bind(this);
         this.showOneHideAll = this.showOneHideAll.bind(this);
@@ -50,17 +51,19 @@ class StudentPollPortugueseCard extends Component {
     }
     hideShowOrdem(event) {
         this.setState({ 
-            selectedOrdem: event.currentTarget.attributes[0].value
+            selectedOrdem: event.currentTarget.attributes[0].value,
+            bimestreSelecionado: event.currentTarget.attributes[0].value
         });
         this.showOneHideAll(event.currentTarget.attributes[0].value);
     }
     render() {
         var componentLegendRender, rendererStudentPollPortuguese;
+        var anoLetivo = 2023;
         const pStyle = {
             color: '#DADADA'
         };
 
-        if (this.props.poll.pollYear === "3") {
+        if (this.props.poll.pollYear === "3" && this.props.poll.selectedFilter.schoolYear <= anoLetivo && this.state.bimestreSelecionado === "1bim_col") {
             componentLegendRender = <LegendsReadWrite3A />
             rendererStudentPollPortuguese = this.props.students.map(student => (
                 <StudentPollPortuguese3A key={student.sequenceNumber} student={student} updatePollStudent={this.props.updatePollStudent} editLock1b={this.props.editLock1b} editLock2b={this.props.editLock2b} editLock3b={this.props.editLock3b} editLock4b={this.props.editLock4b}/>
