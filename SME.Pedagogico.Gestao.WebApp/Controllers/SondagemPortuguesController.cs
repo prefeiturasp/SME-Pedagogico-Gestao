@@ -57,15 +57,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 var ListStudentPollPortuguese = await BusinessPoll.ListStudentPollPortuguese(classRoomDataTransfer);
 
                 if (ListStudentPollPortuguese != null)
-                {
                     return (Ok(ListStudentPollPortuguese));
-                }
-
                 else
-                {
                     return NoContent();
-                }
-
             }
             catch (System.Exception ex)
             {
