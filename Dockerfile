@@ -45,7 +45,11 @@ RUN cd ClientApp \
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-RUN echo -e "deb http://archive.debian.org/debian/ stretch main\ndeb-src http://archive.debian.org/debian/ stretch main\ndeb http://archive.debian.org/debian-security stretch/updates main\ndeb-src http://archive.debian.org/debian-security stretch/updates main" | tee /etc/apt/sources.list >/dev/null
+RUN rm /etc/apt/sources.list && touch /etc/apt/sources.list && echo "deb http://archive.debian.org/debian/ stretch main" | tee -a /etc/apt/sources.list \
+&& echo "deb-src http://archive.debian.org/debian/ stretch main" | tee -a /etc/apt/sources.list \
+&& echo "deb http://archive.debian.org/debian-security stretch/updates main" | tee -a /etc/apt/sources.list \
+&& echo "deb-src http://archive.debian.org/debian-security stretch/updates main" | tee -a /etc/apt/sources.list
+
 RUN apt-get update && apt-get upgrade -y && update-ca-certificates --fresh
 ENTRYPOINT ["dotnet", "SME.Pedagogico.Gestao.WebApp.dll"]
 
