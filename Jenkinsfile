@@ -23,14 +23,16 @@ pipeline {
         }
 
         stage('BuildProjeto') {
+	  agent { label 'dockerdotnet' }
           steps {
+	    checkout scm
             sh "echo executando build"
             sh 'dotnet build'
           }
         }
       
-        stage('AnaliseCodigo') {
-	        when { branch 'release' }
+        stage('AnaliseCodigo') { when { branch 'release' }
+	  agent { label 'dockerdotnet' }
           steps {
               withSonarQubeEnv('sonarqube-local'){
                 sh 'dotnet-sonarscanner begin /k:"SME-Pedagogico-Gestao"'
