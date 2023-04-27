@@ -76,7 +76,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 });
 
             var relatorioAgrupado = ListaPerguntaEhRespostasRelatorio.GroupBy(p => p.PerguntaId).ToList();
-
+            
             var lista = new List<PerguntaDTO>();
 
             relatorioAgrupado.ForEach(x =>
@@ -237,8 +237,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             var numeracaoNaDescricaoDaQuestao = ExibirNumeroDaQuestao(filtro.AnoEscolar, filtro.Bimestre) ? $@" 'Questão '|| pae.""Ordenacao""|| ': ' || p.""Descricao"" as ""Nome""  " : $@" p.""Descricao"" as ""Nome"" ";
             var sql = $@"select p.""Id"" as ""Id"",
-							    {numeracaoNaDescricaoDaQuestao}
-					from ""PerguntaAnoEscolar"" pae
+							    {numeracaoNaDescricaoDaQuestao},
+                                pae.""Ordenacao"" as ""Ordenacao""    
+                    from ""PerguntaAnoEscolar"" pae
                     inner join ""Pergunta"" p on p.""Id"" = pae.""PerguntaId""
                     left join  ""PerguntaAnoEscolarBimestre"" paeb ON paeb.""PerguntaAnoEscolarId"" = pae.""Id"" 
 					where pae.""AnoEscolar"" = @anoEscolar ";
@@ -256,22 +257,25 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                       and (pae.""FimVigencia"" is null 
                                       and extract(year from pae.""InicioVigencia"") <= @anoLetivo) 
                                       and paeb.""Bimestre"" = @bimestre)
-                        or paeb.""Bimestre"" = @bimestre) and pae.""Grupo"" = @grupo";
+                        or paeb.""Bimestre"" = @bimestre) ";
+           
+            if(!string.IsNullOrEmpty(filtro.Proficiencia))
+                sql += $@" and pae.""Grupo"" = @grupo ";
 
             sql += " order by pae.\"Ordenacao\"";
 
-            using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
+                using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
                 {
                     relatorio.Perguntas = (await conexao.QueryAsync<PerguntasRelatorioDTO>(sql.ToString(),
-                    new
-                    {
-                        anoLetivo = filtro.AnoLetivo,
-                        bimestre = filtro.Bimestre,
-                        anoEscolar = filtro.AnoEscolar,
-                        grupo = ObtenhaProficiencia(filtro.Proficiencia)
+                        new
+                        {
+                            anoLetivo = filtro.AnoLetivo,
+                            bimestre = filtro.Bimestre,
+                            anoEscolar = filtro.AnoEscolar,
+                            grupo = ObtenhaProficiencia(filtro.Proficiencia)
 
-                    })).ToList();
-                }  
+                        })).ToList();
+                }
         }
 
         private static async Task<IEnumerable<AlunoPerguntaRespostaDTO>> RetornaListaRespostasAlunoPorTurma(filtrosRelatorioDTO filtro, string QueryAlunosRespostas)
@@ -337,14 +341,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private int ObtenhaProficiencia(string proficiencia)
         {
-            ProficienciaEnum valorEnum;
-
-            if (Enum.TryParse(proficiencia.Replace(" ", String.Empty), out valorEnum))
+            if (!string.IsNullOrEmpty(proficiencia))
             {
-                return (int)valorEnum;
+                ProficienciaEnum valorEnum;
+                if (Enum.TryParse(proficiencia.Replace(" ", string.Empty), out valorEnum))
+                      return (int)valorEnum;
+                return (int)ProficienciaEnum.Numeros;
             }
-
-            return (int)ProficienciaEnum.Numeros;
+            return default;
         }
 
         private async Task<List<PerguntaProficienciaDTO>> ObtenhaListaDeDtoPerguntaProficiencia(filtrosRelatorioDTO filtro)
