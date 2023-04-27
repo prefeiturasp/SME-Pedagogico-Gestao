@@ -358,8 +358,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
             var listaAgrupada = listaPerguntaResposta.GroupBy(p => p.PerguntaId).ToList();
             var listaRetorno = new List<PerguntaProficienciaDTO>();
 
-            totalDeAlunos = listaPerguntaResposta.Count() > totalDeAlunos ? listaPerguntaResposta.Count() : totalDeAlunos;
-
             listaAgrupada.ForEach(agrupador =>
             {
                 listaRetorno.Add(ObtenhaDtoPerguntaProficiencia(agrupador, totalDeAlunos));
@@ -386,6 +384,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
             var listaSubPerguntaAgrupador = grupoPerguntaResposta.Where(pergunta => pergunta.PerguntaId == grupoPerguntaResposta.Key)
                                                                 .GroupBy(pergunta => pergunta.SubPerguntaId)
                                                                 .ToList();
+
+            var totalRespostasGeralPorSubPergunta = listaSubPerguntaAgrupador.Select(subPergunta => subPergunta.Sum(s => s.QtdRespostas)).Max();
+            if (totalRespostasGeralPorSubPergunta > totalDeAlunos) totalDeAlunos = totalRespostasGeralPorSubPergunta;
 
             listaSubPerguntaAgrupador.ForEach(subAgrupador =>
             {
