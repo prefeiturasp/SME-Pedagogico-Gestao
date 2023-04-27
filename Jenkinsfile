@@ -23,14 +23,16 @@ pipeline {
         }
 
         stage('BuildProjeto') {
+	  agent { label 'dockerdotnet' }
           steps {
+	    checkout scm
             sh "echo executando build"
             sh 'dotnet build'
           }
         }
       
-        stage('AnaliseCodigo') {
-	        when { branch 'release' }
+        stage('AnaliseCodigo') { when { branch 'release' }
+	  agent { label 'dockerdotnet' }
           steps {
               withSonarQubeEnv('sonarqube-local'){
                 sh 'dotnet-sonarscanner begin /k:"SME-Pedagogico-Gestao"'
@@ -58,8 +60,7 @@ pipeline {
             when { anyOf {  branch 'master'; branch 'main'; branch 'dev'; branch 'release'; branch 'release-r2'; } }        
             steps {
                 script{
-                    if ( env.branchname == 'main' ||  env.branchname == 'master' || env.branchname == 'homolog' || env.branchname == 'release' ) {
-                        sendTelegram("🤩 [Deploy ${env.branchname}] Job Name: ${JOB_NAME} \nBuild: ${BUILD_DISPLAY_NAME} \nMe aprove! \nLog: \n${env.BUILD_URL}")
+                    if ( env.branchname == 'main' ||  env.branchname == 'master' ) {
                          withCredentials([string(credentialsId: 'aprovadores-sgp', variable: 'aprovadores')]) {
                             timeout(time: 24, unit: "HOURS") {
                                 input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: "${aprovadores}"
