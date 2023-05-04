@@ -486,14 +486,20 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 foreach (var item in listReturn)
                 {
                     item.StudentPercentage = ((double) item.studentQuantity / quantidadeTotalAlunos) * 100;
-                    if (string.IsNullOrWhiteSpace(item.OptionName))
-                    {
-                        item.OptionName = "Sem preenchimento";
-                        item.StudentPercentage = ((double) totalSemPreenchimento / quantidadeTotalAlunos) * 100;
-                        item.studentQuantity = totalSemPreenchimento;
-                    }
                 }
 
+                var itemSemPreenchimento = listReturn.Find(item => string.IsNullOrWhiteSpace(item.OptionName));
+
+                if (itemSemPreenchimento == null)
+                {
+                    itemSemPreenchimento = new PollReportPortugueseItem();
+                    listReturn.Add(itemSemPreenchimento);
+                }
+                    
+                itemSemPreenchimento.OptionName = "Sem preenchimento";
+                itemSemPreenchimento.StudentPercentage = ((double)totalSemPreenchimento / quantidadeTotalAlunos) * 100;
+                itemSemPreenchimento.studentQuantity = totalSemPreenchimento;
+  
                 PollReportPortugueseResult retorno = new PollReportPortugueseResult();
 
                 graficos = new List<PortChartDataModel>();
