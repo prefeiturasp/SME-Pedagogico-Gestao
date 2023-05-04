@@ -483,7 +483,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     ? quantidadeTotalAlunos - listaGrafico.Where(l => !string.IsNullOrWhiteSpace(l.Label)).Sum(l => l.Value)
                     : 0;
 
-
                 foreach (var item in listReturn)
                 {
                     item.StudentPercentage = ((double) item.studentQuantity / quantidadeTotalAlunos) * 100;
