@@ -422,13 +422,15 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
 
             query.AppendLine("SELECT p.\"Id\" AS \"PerguntaId\",");
             query.AppendLine(" p.\"Descricao\" AS \"PerguntaDescricao\",");
-            query.AppendLine(" p.\"PerguntaId\" AS \"SubPerguntaId\",");
+            query.AppendLine(" ps.\"Id\" AS \"SubPerguntaId\",");
+            query.AppendLine(" ps.\"Descricao\" AS \"SubPerguntaDescricao\",");
             query.AppendLine(" pae.\"Ordenacao\" AS \"OrdemPergunta\"");
             query.AppendLine(" FROM \"PerguntaAnoEscolar\" pae");
             if(utilizarPerguntaAnoEscolarBimestre)
                query.AppendLine(" left join \"PerguntaAnoEscolarBimestre\" paeb on pae.\"Id\" = paeb.\"PerguntaAnoEscolarId\"  ");
+            
             query.AppendLine(" INNER JOIN \"Pergunta\" p ON pae.\"PerguntaId\" = p.\"Id\"");
-
+            query.AppendLine(" INNER JOIN \"Pergunta\" ps ON ps.\"PerguntaId\" = pae.\"PerguntaId\"");
             query.AppendLine(" WHERE \"AnoEscolar\" = @AnoDaTurma");
             query.AppendLine(" AND \"Grupo\" = @Grupo");
             query.AppendLine(" AND ((pae.\"FimVigencia\" IS NULL AND EXTRACT (YEAR FROM pae.\"InicioVigencia\") <= @AnoLetivo)");
