@@ -479,9 +479,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 var listaGrafico = graficos.GroupBy(fu => fu.Name).Select(g => new {Label = g.Key, Value = g.Sum(soma => soma.Value)}).ToList();
 
-                int totalSemPreenchimento = (quantidadeTotalAlunos - listaGrafico.Where(l => !string.IsNullOrWhiteSpace(l.Label)).Sum(l => l.Value)) >= 0
-                    ? quantidadeTotalAlunos - listaGrafico.Where(l => !string.IsNullOrWhiteSpace(l.Label)).Sum(l => l.Value)
-                    : 0;
+                quantidadeTotalAlunos = listaGrafico.Select(l => l.Value).Sum() > 0 ? listaGrafico.Select(l => l.Value).Sum() : quantidadeTotalAlunos;
+
+                int totalSemPreenchimento = listaGrafico.Where(l => string.IsNullOrWhiteSpace(l.Label)).Sum(l => l.Value) >= 0
+                    ? listaGrafico.Where(l => string.IsNullOrWhiteSpace(l.Label)).Sum(l => l.Value)
+                    : quantidadeTotalAlunos - listaGrafico.Where(l => !string.IsNullOrWhiteSpace(l.Label)).Sum(l => l.Value) >=0 
+                        ? quantidadeTotalAlunos - listaGrafico.Where(l => !string.IsNullOrWhiteSpace(l.Label)).Sum(l => l.Value)
+                        : 0;
+
 
                 foreach (var item in listReturn)
                 {
