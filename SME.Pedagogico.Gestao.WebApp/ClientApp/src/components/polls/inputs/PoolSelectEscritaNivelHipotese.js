@@ -42,7 +42,6 @@ export default class PoolSelectEscritaNivelHipotese extends Component {
                     <option className={"custom-select custom-select-sm text-white" + this.props.columnColor} value="SSV">SSV</option>
                     <option className={"custom-select custom-select-sm text-white" + this.props.columnColor} value="SCV">SCV</option>
                     <option className={"custom-select custom-select-sm text-white" + this.props.columnColor} value="SA">SA</option>
-                    <option className={"custom-select custom-select-sm text-white" + this.props.columnColor} value="A">A</option>
                 </select>
             </div>
 
