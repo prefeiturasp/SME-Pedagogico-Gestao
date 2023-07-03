@@ -28,6 +28,8 @@ export default class PoolSelectEscritaNivelHipotese extends Component {
     }
 
     render() {
+        var anoLetivoRemoverAlfabetico = 2022;
+        var exibirAlfabetico = this.props.anoSelecionado <= anoLetivoRemoverAlfabetico;
         return (
 
             <div>
@@ -42,6 +44,9 @@ export default class PoolSelectEscritaNivelHipotese extends Component {
                     <option className={"custom-select custom-select-sm text-white" + this.props.columnColor} value="SSV">SSV</option>
                     <option className={"custom-select custom-select-sm text-white" + this.props.columnColor} value="SCV">SCV</option>
                     <option className={"custom-select custom-select-sm text-white" + this.props.columnColor} value="SA">SA</option>
+                    {(exibirAlfabetico)
+                       ? <option className={"custom-select custom-select-sm text-white" + this.props.columnColor} value="A">A</option>
+                       : null}
                 </select>
             </div>
 
