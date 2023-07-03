@@ -73,7 +73,7 @@ class StudentPollPortugueseCard extends Component {
         } else if (this.props.poll.pollYear === "3" && this.props.poll.selectedFilter.schoolYear <= anoLetivo && parseInt(this.state.bimestreSelecionado.slice(0, 1)) >= this.state.segundoBimestre){
             componentLegendRender = <LegendsReadWrite />;
             rendererStudentPollPortuguese = this.props.students.map(student => (
-                <StudentPollPortuguese3ANivelHipotese key={student.sequenceNumber} student={student} updatePollStudent={this.props.updatePollStudent} editLock1b={this.props.editLock1b} editLock2b={this.props.editLock2b} editLock3b={this.props.editLock3b} editLock4b={this.props.editLock4b}/>
+                <StudentPollPortuguese3ANivelHipotese anoSelecionado={this.props.poll.selectedFilter.schoolYear} key={student.sequenceNumber} student={student} updatePollStudent={this.props.updatePollStudent} editLock1b={this.props.editLock1b} editLock2b={this.props.editLock2b} editLock3b={this.props.editLock3b} editLock4b={this.props.editLock4b}/>
             ));
         }else {
             componentLegendRender = <LegendsReadWrite />;
