@@ -742,7 +742,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     SequenciaOrdemSalva = item.First().SequenciaDeOrdemSalva
                 }).ToList();
 
-                listaSequenciaOrdemSalva.Distinct();
+                listaSequenciaOrdemSalva = listaSequenciaOrdemSalva?.DistinctBy(l=> l.OrdemId).ToList();
 
                 return listaSequenciaOrdemSalva;
             }
