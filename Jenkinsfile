@@ -34,6 +34,7 @@ pipeline {
         stage('AnaliseCodigo') { when { branch 'release' }
 	  agent { label 'dockerdotnet' }
           steps {
+	      checkout scm
               withSonarQubeEnv('sonarqube-local'){
                 sh 'dotnet-sonarscanner begin /k:"SME-Pedagogico-Gestao"'
                 sh 'dotnet build'
