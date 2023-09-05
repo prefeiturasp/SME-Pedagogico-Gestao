@@ -398,10 +398,10 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     case "3° Bimestre":
                     {
                         if (proficiencia == "Escrita")
-                        {
-                            var writing3B = query.GroupBy(fu => fu.writing3B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
+                            {
+                                var writing3B = query.DistinctBy(c=>c.studentCodeEol).GroupBy(fu => fu.writing3B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
 
-                            foreach (var item in writing3B)
+                                foreach (var item in writing3B)
                             {
                                 PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
                                 itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
@@ -479,11 +479,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 var listaGrafico = graficos.GroupBy(fu => fu.Name).Select(g => new {Label = g.Key, Value = g.Sum(soma => soma.Value)}).ToList();
 
-                quantidadeTotalAlunos = listaGrafico.Select(l => l.Value).Sum() > 0 ? listaGrafico.Select(l => l.Value).Sum() : quantidadeTotalAlunos;
-
-                int totalSemPreenchimento = listaGrafico.Where(l => string.IsNullOrWhiteSpace(l.Label)).Sum(l => l.Value) >= 0
-                    ? listaGrafico.Where(l => string.IsNullOrWhiteSpace(l.Label)).Sum(l => l.Value)
-                    : quantidadeTotalAlunos - listaGrafico.Where(l => !string.IsNullOrWhiteSpace(l.Label)).Sum(l => l.Value) >=0 
+                int totalSemPreenchimento = quantidadeTotalAlunos - listaGrafico.Where(l => !string.IsNullOrWhiteSpace(l.Label)).Sum(l => l.Value) >=0 
                         ? quantidadeTotalAlunos - listaGrafico.Where(l => !string.IsNullOrWhiteSpace(l.Label)).Sum(l => l.Value)
                         : 0;
 
