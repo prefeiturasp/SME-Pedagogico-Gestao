@@ -258,7 +258,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                       and paeb.""Bimestre"" = @bimestre)
                         or paeb.""Bimestre"" = @bimestre) ";
 
-            if(filtro.AnoEscolar <= TERCEIRO_ANO)
+            if(!string.IsNullOrEmpty(filtro.Proficiencia))
                 sql += $@"  and pae.""Grupo"" = @grupo";
 
             sql += " order by pae.\"Ordenacao\"";
@@ -271,7 +271,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         anoLetivo = filtro.AnoLetivo,
                         bimestre = filtro.Bimestre,
                         anoEscolar = filtro.AnoEscolar,
-                        grupo = filtro.AnoEscolar <= TERCEIRO_ANO ? ObtenhaProficiencia(filtro.Proficiencia) : 0
+                        grupo = ObtenhaProficiencia(filtro.Proficiencia)
                     })).ToList();
                 }  
         }
@@ -339,14 +339,19 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private int ObtenhaProficiencia(string proficiencia)
         {
-            ProficienciaEnum valorEnum;
-
-            if (Enum.TryParse(proficiencia.Replace(" ", String.Empty), out valorEnum))
+            if(!string.IsNullOrEmpty(proficiencia))
             {
-                return (int)valorEnum;
+                ProficienciaEnum valorEnum;
+
+                if (Enum.TryParse(proficiencia.Replace(" ", String.Empty), out valorEnum))
+                {
+                    return (int)valorEnum;
+                }
+
+                return (int)ProficienciaEnum.Numeros;
             }
 
-            return (int)ProficienciaEnum.Numeros;
+            return default;
         }
 
         private async Task<List<PerguntaProficienciaDTO>> ObtenhaListaDeDtoPerguntaProficiencia(filtrosRelatorioDTO filtro)
