@@ -46,7 +46,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             var endpoits = new EndpointsAPI();
             var alunoApi = new AlunosAPI(endpoits);
-            return (await alunoApi.ObterAlunosAtivosPorTurmaEPeriodo(codigoTurmaEol, periodos.First().DataFim)).OrderBy(a => a.NomeAluno);
+            return (await alunoApi.ObterAlunosAtivosPorTurmaEPeriodo(codigoTurmaEol, periodos.First().DataFim, periodos.First().DataInicio)).OrderBy(a => a.NomeAluno);
         }
     }
 }
