@@ -3,7 +3,7 @@ pipeline {
       branchname =  env.BRANCH_NAME.toLowerCase()
       kubeconfig = getKubeconf(env.branchname)
       registryCredential = 'jenkins_registry'
-      namespace = "${env.branchname == 'release-r2' ? 'sme-pedagogico-gestao-r2' : 'sme-pedagogico-gestao'}"
+      namespace = "${env.branchname == 'release-r2' ? 'sondagem-hom2' : env.branchname == 'release' ? 'sondagem-hom' : env.branchname == 'dev' ? 'sondagem-dev' : 'sme-pedagogico-gestao'}"
     }
   
     agent {
@@ -23,18 +23,15 @@ pipeline {
         }
 
         stage('BuildProjeto') {
-	  agent { label 'dockerdotnet' }
           steps {
-	    checkout scm
             sh "echo executando build"
             sh 'dotnet build'
           }
         }
       
-        stage('AnaliseCodigo') { when { branch 'release' }
-	  agent { label 'dockerdotnet' }
+        stage('AnaliseCodigo') {
+	        when { branch 'release' }
           steps {
-	      checkout scm
               withSonarQubeEnv('sonarqube-local'){
                 sh 'dotnet-sonarscanner begin /k:"SME-Pedagogico-Gestao"'
                 sh 'dotnet build'
@@ -61,7 +58,8 @@ pipeline {
             when { anyOf {  branch 'master'; branch 'main'; branch 'dev'; branch 'release'; branch 'release-r2'; } }        
             steps {
                 script{
-                    if ( env.branchname == 'main' ||  env.branchname == 'master' ) {
+                    if ( env.branchname == 'main' ||  env.branchname == 'master' || env.branchname == 'homolog' || env.branchname == 'release' ) {
+                        sendTelegram("🤩 [Deploy ${env.branchname}] Job Name: ${JOB_NAME} \nBuild: ${BUILD_DISPLAY_NAME} \nMe aprove! \nLog: \n${env.BUILD_URL}")
                          withCredentials([string(credentialsId: 'aprovadores-sgp', variable: 'aprovadores')]) {
                             timeout(time: 24, unit: "HOURS") {
                                 input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: "${aprovadores}"
@@ -110,7 +108,7 @@ def sendTelegram(message) {
 }
 def getKubeconf(branchName) {
     if("master".equals(branchName)) { return "config_prd"; }
-    else if ("release".equals(branchName)) { return "config_hom"; }
-    else if ("release-r2".equals(branchName)) { return "config_hom"; }	
-    else if ("dev".equals(branchName)) { return "config_dev"; }
+    else if ("release".equals(branchName)) { return "config_release"; }
+    else if ("release-r2".equals(branchName)) { return "config_release"; }	
+    else if ("dev".equals(branchName)) { return "config_release"; }
 }
