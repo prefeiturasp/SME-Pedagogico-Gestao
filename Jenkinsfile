@@ -23,7 +23,9 @@ pipeline {
         }
 
         stage('BuildProjeto') {
+          agent { label 'dockerdotnet' }
           steps {
+            checkout scm
             sh "echo executando build"
             sh 'dotnet build'
           }
@@ -31,6 +33,7 @@ pipeline {
       
         stage('AnaliseCodigo') {
 	        when { branch 'release' }
+          agent { label 'dockerdotnet' }
           steps {
               withSonarQubeEnv('sonarqube-local'){
                 sh 'dotnet-sonarscanner begin /k:"SME-Pedagogico-Gestao"'
@@ -80,7 +83,7 @@ pipeline {
         steps{
           withCredentials([string(credentialsId: "flyway_pedagogicogestao_${branchname}", variable: 'url')]) {
             checkout scm
-            sh 'docker run --rm -v $(pwd)/scripts:/opt/scripts boxfuse/flyway:5.2.4 -url=$url -locations="filesystem:/opt/scripts" -outOfOrder=true migrate'
+            sh 'docker run --rm -v $(pwd)/scripts:/opt/scripts registry.sme.prefeitura.sp.gov.br/devops/flyway:5.2.4 -url=$url -locations="filesystem:/opt/scripts" -outOfOrder=true migrate'
           }
         }		
       }    
