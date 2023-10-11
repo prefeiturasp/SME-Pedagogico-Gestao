@@ -27,7 +27,7 @@ pipeline {
         stage('BuildProjeto') {
           agent { kubernetes { 
               label 'dotnet-3-rc'
-              defaultContainer 'dotnet-3-rc'
+              defaultContainer 'builder'
             }
 	}
           steps {
