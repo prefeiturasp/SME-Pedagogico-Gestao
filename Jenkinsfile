@@ -102,14 +102,14 @@ pipeline {
 
       stage('Flyway') {
         agent { kubernetes { 
-              label 'builder'
-              defaultContainer 'builder'
+              label 'flyway'
+              defaultContainer 'flyway'
             }
           }
         steps{
           withCredentials([string(credentialsId: "flyway_pedagogicogestao_${branchname}", variable: 'url')]) {
             checkout scm
-            sh 'docker run --rm -v $(pwd)/scripts:/opt/scripts registry.sme.prefeitura.sp.gov.br/devops/flyway:5.2.4 -url=$url -locations="filesystem:/opt/scripts" -outOfOrder=true migrate'
+            sh 'flyway -url=$url -locations="filesystem:scripts" -outOfOrder=true migrate'
           }
         }		
       }    
