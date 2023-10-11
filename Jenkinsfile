@@ -6,9 +6,11 @@ pipeline {
       namespace = "${env.branchname == 'release-r2' ? 'sondagem-hom2' : env.branchname == 'release' ? 'sondagem-hom' : env.branchname == 'dev' ? 'sondagem-dev' : 'sme-pedagogico-gestao'}"
     }
   
-    agent {
-      node { label 'dotnet-3-rc' }
-    }
+    agent { kubernetes { 
+              label 'dotnet-3-sondagem'
+              defaultContainer 'dotnet-3-sondagem'
+            }
+          }
 
     options {
       buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
@@ -23,7 +25,11 @@ pipeline {
         }
 
         stage('BuildProjeto') {
-          agent { label 'dockerdotnet' }
+          agent { kubernetes { 
+              label 'dotnet-3-sondagem'
+              defaultContainer 'dotnet-3-sondagem'
+            }
+	}
           steps {
             checkout scm
             sh "echo executando build"
@@ -33,8 +39,13 @@ pipeline {
       
         stage('AnaliseCodigo') {
 	        when { branch 'release' }
-          agent { label 'dockerdotnet' }
+          agent { kubernetes { 
+              label 'dotnet-3-sondagem'
+              defaultContainer 'dotnet-3-sondagem'
+            }
+	}
           steps {
+              checkout scm
               withSonarQubeEnv('sonarqube-local'){
                 sh 'dotnet-sonarscanner begin /k:"SME-Pedagogico-Gestao"'
                 sh 'dotnet build'
@@ -44,8 +55,14 @@ pipeline {
         }
 
         stage('Build') {
-          when { anyOf { branch 'master'; branch 'main'; branch "story/*"; branch 'dev'; branch 'release'; branch 'release-r2'; } } 
+          when { anyOf { branch 'master'; branch 'main'; branch "story/*"; branch 'dev'; branch 'release'; branch 'release-r2'; } }
+          agent { kubernetes { 
+              label 'builder'
+              defaultContainer 'builder'
+            }
+          } 
           steps {
+            checkout scm
             script {
               imagename = "registry.sme.prefeitura.sp.gov.br/${env.branchname}/sme-sondagem-backend"        
               dockerImage = docker.build(imagename, "-f Dockerfile .")
@@ -58,7 +75,12 @@ pipeline {
         }
 	    
         stage('Deploy'){
-            when { anyOf {  branch 'master'; branch 'main'; branch 'dev'; branch 'release'; branch 'release-r2'; } }        
+            when { anyOf {  branch 'master'; branch 'main'; branch 'dev'; branch 'release'; branch 'release-r2'; } }
+            agent { kubernetes { 
+              label 'builder'
+              defaultContainer 'builder'
+            }
+          }        
             steps {
                 script{
                     if ( env.branchname == 'main' ||  env.branchname == 'master' || env.branchname == 'homolog' || env.branchname == 'release' ) {
@@ -79,7 +101,11 @@ pipeline {
         }
 
       stage('Flyway') {
-        agent { label 'master' }
+        agent { kubernetes { 
+              label 'builder'
+              defaultContainer 'builder'
+            }
+          }
         steps{
           withCredentials([string(credentialsId: "flyway_pedagogicogestao_${branchname}", variable: 'url')]) {
             checkout scm
