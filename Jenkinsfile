@@ -27,7 +27,7 @@ pipeline {
         stage('BuildProjeto') {
           agent { kubernetes { 
               label 'dotnet-3-rc'
-              defaultContainer 'builder'
+              defaultContainer 'dotnet-3-rc'
             }
 	}
           steps {
@@ -39,7 +39,11 @@ pipeline {
       
         stage('AnaliseCodigo') {
 	        when { branch 'release' }
-          agent { label 'dockerdotnet' }
+          agent { kubernetes { 
+              label 'builder'
+              defaultContainer 'builder'
+            }
+	}
           steps {
               checkout scm
               withSonarQubeEnv('sonarqube-local'){
