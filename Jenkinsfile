@@ -29,6 +29,7 @@ pipeline {
               label 'dotnet-3-rc'
               defaultContainer 'dotnet-3-rc'
             }
+	}
           steps {
             checkout scm
             sh "echo executando build"
