@@ -7,8 +7,8 @@ pipeline {
     }
   
     agent { kubernetes { 
-              label 'dotnet-3-rc'
-              defaultContainer 'dotnet-3-rc'
+              label 'dotnet-3-sondagem'
+              defaultContainer 'dotnet-3-sondagem'
             }
           }
 
@@ -26,8 +26,8 @@ pipeline {
 
         stage('BuildProjeto') {
           agent { kubernetes { 
-              label 'dotnet-3-rc'
-              defaultContainer 'dotnet-3-rc'
+              label 'dotnet-3-sondagem'
+              defaultContainer 'dotnet-3-sondagem'
             }
 	}
           steps {
@@ -39,7 +39,11 @@ pipeline {
       
         stage('AnaliseCodigo') {
 	        when { branch 'release' }
-          agent { label 'dockerdotnet' }
+          agent { kubernetes { 
+              label 'dotnet-3-sondagem'
+              defaultContainer 'dotnet-3-sondagem'
+            }
+	}
           steps {
               checkout scm
               withSonarQubeEnv('sonarqube-local'){
@@ -58,6 +62,7 @@ pipeline {
             }
           } 
           steps {
+            checkout scm
             script {
               imagename = "registry.sme.prefeitura.sp.gov.br/${env.branchname}/sme-sondagem-backend"        
               dockerImage = docker.build(imagename, "-f Dockerfile .")
@@ -97,14 +102,14 @@ pipeline {
 
       stage('Flyway') {
         agent { kubernetes { 
-              label 'builder'
-              defaultContainer 'builder'
+              label 'flyway'
+              defaultContainer 'flyway'
             }
           }
         steps{
           withCredentials([string(credentialsId: "flyway_pedagogicogestao_${branchname}", variable: 'url')]) {
             checkout scm
-            sh 'docker run --rm -v $(pwd)/scripts:/opt/scripts registry.sme.prefeitura.sp.gov.br/devops/flyway:5.2.4 -url=$url -locations="filesystem:/opt/scripts" -outOfOrder=true migrate'
+            sh 'flyway -url=$url -locations="filesystem:scripts" -outOfOrder=true migrate'
           }
         }		
       }    
