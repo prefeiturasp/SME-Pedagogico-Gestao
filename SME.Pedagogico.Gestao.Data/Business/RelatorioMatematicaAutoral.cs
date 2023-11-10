@@ -258,9 +258,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                       and extract(year from pae.""InicioVigencia"") <= @anoLetivo) 
                                       and paeb.""Bimestre"" = @bimestre)
                         or paeb.""Bimestre"" = @bimestre) ";
-           
+
             if(!string.IsNullOrEmpty(filtro.Proficiencia))
-                sql += $@" and pae.""Grupo"" = @grupo ";
+                sql += $@"  and pae.""Grupo"" = @grupo";
 
             sql += " order by pae.\"Ordenacao\"";
 
@@ -341,13 +341,18 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private int ObtenhaProficiencia(string proficiencia)
         {
-            if (!string.IsNullOrEmpty(proficiencia))
+            if(!string.IsNullOrEmpty(proficiencia))
             {
                 ProficienciaEnum valorEnum;
-                if (Enum.TryParse(proficiencia.Replace(" ", string.Empty), out valorEnum))
-                      return (int)valorEnum;
+
+                if (Enum.TryParse(proficiencia.Replace(" ", String.Empty), out valorEnum))
+                {
+                    return (int)valorEnum;
+                }
+
                 return (int)ProficienciaEnum.Numeros;
             }
+
             return default;
         }
 

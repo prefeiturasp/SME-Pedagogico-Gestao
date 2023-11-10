@@ -4,5 +4,6 @@
     {
         public string Codigo { get; set; }
         public string NomeSimples { get; set; }
+        public int TipoEscola { get; set; }
     }
 }
