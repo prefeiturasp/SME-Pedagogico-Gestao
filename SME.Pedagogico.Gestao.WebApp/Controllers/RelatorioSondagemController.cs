@@ -263,7 +263,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             foreach (var aluno in alunosEol)
             {
                 var sondagem = listaAlunosTurma.FirstOrDefault(s => s.studentCodeEol == aluno.CodigoAluno.ToString());
-                string tipo = sondagem != null ? ConverterProficienciaAluno(parameters.Proficiency, parameters.Term, sondagem) : string.Empty;
+                string tipo = sondagem != null 
+                    ? ConverterProficienciaAluno(parameters.Proficiency, parameters.Term, sondagem) ?? string.Empty 
+                    : string.Empty;
 
                 switch (tipo)
                 {
@@ -289,7 +291,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                         }
                 }
 
-                            result.Add(
+                result.Add(
                     new PollReportPortugueseStudentItem()
                     {
                         Code = aluno.CodigoAluno.ToString(),
