@@ -59,5 +59,10 @@ namespace SME.Pedagogico.Gestao.Infra
 
             return ((TEnum[])Enum.GetValues(typeof(TEnum))).Cast<Enum>().ToDictionary(key => key, value => value.Name());
         }
+
+        public static bool EhUmDosValores(this Enum valorEnum, params Enum[] valores)
+        {
+            return valores.Contains(valorEnum);
+        }
     }
 }
