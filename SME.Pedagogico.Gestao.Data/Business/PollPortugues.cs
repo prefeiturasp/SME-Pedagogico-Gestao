@@ -690,7 +690,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             using (var contexto = new SMEManagementContextData())
             {
-                var peridos = contexto.Periodo.Where(x => x.TipoPeriodo == Models.Enums.TipoPeriodoEnum.Bimestre).ToList();
+                var peridos = contexto.Periodo.Where(x => x.TipoPeriodo == Models.Enums.TipoPeriodoEnum.Semestre).ToList();
                 var ListaPeriodos = new List<PeriodoDto>();
                 foreach (var periodo in peridos)
                 {

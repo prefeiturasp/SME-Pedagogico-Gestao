@@ -88,11 +88,7 @@ class PollReportFilter extends Component {
       const campoDisciplina = this.state.campoDisciplina;
       const disciplina = this.state.selectedFilter.discipline;
 
-      const parametroPeriodo =
-        this.props.poll.selectedFilter.schoolYear >= 2022 &&
-        disciplina === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao
-          ? "newTerms"
-          : "terms";
+        const parametroPeriodo = "newTerms";
 
       this.setState((state) => ({
         ...state,
@@ -219,11 +215,7 @@ class PollReportFilter extends Component {
           };
         })
       : [];
-    const parametroPeriodo =
-      this.props.poll.selectedFilter.schoolYear >= 2022 &&
-      label === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao
-        ? "newTerms"
-        : "terms";
+      const parametroPeriodo = "newTerms";
 
     this.setState({
       selectedFilter: {

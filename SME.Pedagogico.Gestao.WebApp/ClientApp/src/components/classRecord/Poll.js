@@ -170,8 +170,8 @@ class Poll extends Component {
               todayDate <= new Date(item.dataFim)
             ) {
               if (this.props.pollOptionSelectLock.poll_2b_lock !== false) {
-                this.props.pollOptionSelectLockMethods.set_poll_2b_lock(false);
-                this.props.pollOptionSelectLockMethods.set_poll_1s_lock(false);
+                //this.props.pollOptionSelectLockMethods.set_poll_2b_lock(false);
+                //this.props.pollOptionSelectLockMethods.set_poll_1s_lock(false);
               }
             } else {
               if (this.props.pollOptionSelectLock.poll_2b_lock !== true) {

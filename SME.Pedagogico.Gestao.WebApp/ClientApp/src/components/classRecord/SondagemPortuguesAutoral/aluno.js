@@ -9,7 +9,7 @@ function Aluno({ aluno, perguntas, periodo, idOrdemSelecionada, grupoSelecionado
     const dispatch = useDispatch();
     const periodosAbertura = useSelector(store => store.filters.period);
     
-    const verificarPeriodoAberto = (bimestre) => {
+    const verificarPeriodoAberto = (bimestre, tipoPeriodo = 2) => {
         var todayDate = new Date();
 
         const aberto = periodosAbertura.find(p => p.bimestre === bimestre);
@@ -30,6 +30,10 @@ function Aluno({ aluno, perguntas, periodo, idOrdemSelecionada, grupoSelecionado
                 return !verificarPeriodoAberto(3);
             case "aa7f39fc-3b50-4aea-bd05-4bbe7cba687c":
                 return !verificarPeriodoAberto(4);
+            case "c93c1c4a-abb9-43a4-a8cd-283e4df365d8": //1º e 2º semestre
+                return false;//!verificarPeriodoAberto(1, 1);
+            case "8de86d08-b7a1-45df-b775-07550714756b":
+                return false;//!verificarPeriodoAberto(2, 1);
             default:
                 return true;
         }
