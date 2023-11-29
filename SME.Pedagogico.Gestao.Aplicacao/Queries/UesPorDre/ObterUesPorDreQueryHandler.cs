@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
 using SME.Pedagogico.Gestao.Dominio;
+using SME.Pedagogico.Gestao.Dominio.Enumerados;
 
 namespace SME.Pedagogico.Gestao.Aplicacao
 {
@@ -46,13 +47,14 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 var listaRetorno = new List<EscolasPorDREDTO>();
                 var listaUesSGP =  JsonConvert.DeserializeObject<List<UesPorDreSGPDto>>(json);
 
-                foreach (var item in listaUesSGP)
+                foreach (var item in listaUesSGP.Where(ue => EnumExtensao.EhUmDosValores(ue.TipoEscola, new Enum[] { TipoEscola.EMEF, TipoEscola.EMEFM, TipoEscola.EMEBS, TipoEscola.CEUEMEF })))
                 {
+                    var tipoEscola = (int)item.TipoEscola;
                     listaRetorno.Add(new EscolasPorDREDTO()
                     {
                          NomeEscola = item.NomeSimples,
                           CodigoEscola = item.Codigo,
-                          TipoEscola = item.TipoEscola > 0 ? item.TipoEscola.ToString() : string.Empty
+                          TipoEscola = tipoEscola > 0 ? tipoEscola.ToString() : string.Empty
                     });
                 }
 
