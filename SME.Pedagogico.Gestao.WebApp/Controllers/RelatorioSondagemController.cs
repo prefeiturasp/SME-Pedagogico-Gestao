@@ -263,7 +263,10 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             foreach (var aluno in alunosEol)
             {
                 var sondagem = listaAlunosTurma.FirstOrDefault(s => s.studentCodeEol == aluno.CodigoAluno.ToString());
-                string tipo = ConverterProficienciaAluno(parameters.Proficiency, parameters.Term, sondagem);
+
+                string tipo = sondagem != null
+                    ? ConverterProficienciaAluno(parameters.Proficiency, parameters.Term, sondagem) ?? string.Empty
+                    : string.Empty;
 
                 switch (tipo)
                 {
@@ -289,14 +292,12 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                         }
                 }
 
-                            result.Add(
-                    new PollReportPortugueseStudentItem()
-                    {
-                        Code = aluno.CodigoAluno.ToString(),
-                        StudentName = aluno.NomeAlunoRelatorio,
-                        StudentValue = tipo
-                    }
-                );
+                result.Add(new PollReportPortugueseStudentItem()
+                {
+                   Code = aluno.CodigoAluno.ToString(),
+                   StudentName = aluno.NomeAlunoRelatorio,
+                   StudentValue = tipo
+                });
 
                 graficos.Add(new PortChartDataModel()
                 {
