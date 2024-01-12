@@ -399,7 +399,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     {
                         if (proficiencia == "Escrita")
                         {
-                            var writing3B = query.DistinctBy(c=>c.studentCodeEol).GroupBy(fu => fu.writing3B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
+                            var writing3B = query.GroupBy(fu => fu.writing3B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
 
                             foreach (var item in writing3B)
                             {
