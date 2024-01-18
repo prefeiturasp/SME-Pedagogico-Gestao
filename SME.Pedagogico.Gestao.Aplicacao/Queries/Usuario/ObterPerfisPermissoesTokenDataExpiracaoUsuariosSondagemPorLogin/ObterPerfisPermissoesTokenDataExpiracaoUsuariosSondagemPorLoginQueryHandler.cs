@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using MoreLinq.Extensions;
 using SME.Pedagogico.Gestao.Dominio;
 using SME.Pedagogico.Gestao.Dominio.Enumerados;
 using SME.Pedagogico.Gestao.Infra;
@@ -12,7 +13,7 @@ using SME.Pedagogico.Gestao.Infra.Enumerados;
 
 namespace SME.Pedagogico.Gestao.Aplicacao
 {
-    public class ObterPerfisPermissoesTokenDataExpiracaoUsuariosSondagemPorLoginQueryHandler: IRequestHandler<ObterPerfisPermissoesTokenDataExpiracaoUsuariosSondagemPorLoginQuery, PerfisPermissaoTokenDataExpiracaoDto>
+    public class ObterPerfisPermissoesTokenDataExpiracaoUsuariosSondagemPorLoginQueryHandler : IRequestHandler<ObterPerfisPermissoesTokenDataExpiracaoUsuariosSondagemPorLoginQuery, PerfisPermissaoTokenDataExpiracaoDto>
     {
         private readonly IMediator mediator;
 
@@ -29,21 +30,24 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 throw new NegocioException(MensagensNegocio.USUARIO_SEM_PERMISSAO_ACESSO_SONDAGEM, 401);
 
             var perfisElegiveis = obterPerfisAcessoSondagem.PerfisCompleto;
-            
             var perfilProfessor = perfisElegiveis.FirstOrDefault(a => a.GrupoId == Perfis.PERFIL_PROFESSOR);
+            var perfilProfessorCJ = perfisElegiveis.FirstOrDefault(p => p.GrupoId == Perfis.PERFIL_CJ);
             
             if (perfilProfessor != null)
             {
                 var temAcesso = await mediator.Send(new ObterUsuarioProfessorTemAcessoQuery(obterPerfisAcessoSondagem.CodigoRf), cancellationToken);
-                
+
                 if (!temAcesso)
-                    perfisElegiveis.Remove(perfilProfessor);
+                    perfisElegiveis.Remove(perfilProfessor);                      
             }
             
+            if(perfilProfessorCJ != null)
+                perfisElegiveis.Remove(perfilProfessorCJ);
+
             var perfilElegivel = perfisElegiveis.FirstOrDefault();
-            
+
             if (perfilElegivel == null)
-                throw new NegocioException(MensagensNegocio.USUARIO_SEM_PERMISSAO_ACESSO_SONDAGEM, 401);            
+                throw new NegocioException(MensagensNegocio.USUARIO_SEM_PERMISSAO_ACESSO_SONDAGEM, 401);
 
             var permissoesAcessoSondagem =
                 await mediator.Send(
@@ -84,17 +88,17 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 CodigoPerfil = s.GrupoId,
                 NomePerfil = s.GrupoNome.Trim()
             }).ToList();
-            
+
             var perfilProfessor = perfisElegiveis.FirstOrDefault(a => a.CodigoPerfil == Perfis.PERFIL_PROFESSOR);
-            
+
             if (perfilProfessor != null)
             {
                 var temAcesso = await mediator.Send(new ObterUsuarioProfessorTemAcessoQuery(obterPerfisAcessoSondagem.CodigoRf));
-                
+
                 if (!temAcesso)
                     perfisElegiveis.Remove(perfilProfessor);
-            }            
-            
+            }
+
             var perfisUsuario = new PerfisPorPrioridadeDto
             {
                 Perfis = perfisElegiveis,
@@ -106,8 +110,8 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 PossuiPerfilSmeOuDre = obterPerfisAcessoSondagem.PossuiPerfilSmeOuDre
             };
 
-            var perfilElegivel = perfisElegiveis.FirstOrDefault(); 
-            
+            var perfilElegivel = perfisElegiveis.FirstOrDefault();
+
             if (obterPerfisAcessoSondagem.PerfisCompleto.Count > 1 && perfilElegivel != null)
                 perfisUsuario.PerfilSelecionado = perfilElegivel.CodigoPerfil;
 

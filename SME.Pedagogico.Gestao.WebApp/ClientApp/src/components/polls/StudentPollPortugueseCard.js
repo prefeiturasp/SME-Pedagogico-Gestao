@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 
 import StudentPollPortuguese from '../polls/StudentPollPortuguese'
 import StudentPollPortuguese3A from '../polls/StudentPollPortuguese3A'
+import StudentPollPortuguese3ANivelHipotese from '../polls/StudentPollPortuguese3ANivelHipotese'
 import LegendsReadWrite from '../polls/component/LegendsReadWrite'
 import LegendsReadWrite3A from '../polls/component/LegendsReadWrite3A'
 
@@ -15,6 +16,8 @@ class StudentPollPortugueseCard extends Component {
         this.state = {
             selectedClass: "custom-select custom-select-sm poll-select",
             selectedOrdem: "1bim_col",
+            bimestreSelecionado: "1bim_col",
+            segundoBimestre: 2,
         };
         this.hideShowOrdem = this.hideShowOrdem.bind(this);
         this.showOneHideAll = this.showOneHideAll.bind(this);
@@ -50,22 +53,29 @@ class StudentPollPortugueseCard extends Component {
     }
     hideShowOrdem(event) {
         this.setState({ 
-            selectedOrdem: event.currentTarget.attributes[0].value
+            selectedOrdem: event.currentTarget.attributes[0].value,
+            bimestreSelecionado: event.currentTarget.attributes[0].value
         });
         this.showOneHideAll(event.currentTarget.attributes[0].value);
     }
     render() {
         var componentLegendRender, rendererStudentPollPortuguese;
+        var anoLetivo = 2023;
         const pStyle = {
             color: '#DADADA'
         };
 
-        if (this.props.poll.pollYear === "3") {
+        if (this.props.poll.pollYear === "3" && this.props.poll.selectedFilter.schoolYear <= anoLetivo && this.state.bimestreSelecionado === "1bim_col") {
             componentLegendRender = <LegendsReadWrite3A />
             rendererStudentPollPortuguese = this.props.students.map(student => (
                 <StudentPollPortuguese3A key={student.sequenceNumber} student={student} updatePollStudent={this.props.updatePollStudent} editLock1b={this.props.editLock1b} editLock2b={this.props.editLock2b} editLock3b={this.props.editLock3b} editLock4b={this.props.editLock4b}/>
             ));
-        } else {
+        } else if (this.props.poll.pollYear === "3" && this.props.poll.selectedFilter.schoolYear <= anoLetivo && parseInt(this.state.bimestreSelecionado.slice(0, 1)) >= this.state.segundoBimestre){
+            componentLegendRender = <LegendsReadWrite />;
+            rendererStudentPollPortuguese = this.props.students.map(student => (
+                <StudentPollPortuguese3ANivelHipotese anoSelecionado={this.props.poll.selectedFilter.schoolYear} key={student.sequenceNumber} student={student} updatePollStudent={this.props.updatePollStudent} editLock1b={this.props.editLock1b} editLock2b={this.props.editLock2b} editLock3b={this.props.editLock3b} editLock4b={this.props.editLock4b}/>
+            ));
+        }else {
             componentLegendRender = <LegendsReadWrite />;
             rendererStudentPollPortuguese = this.props.students.map(student => (
                 <StudentPollPortuguese key={student.sequenceNumber} student={student} updatePollStudent={this.props.updatePollStudent} editLock1b={this.props.editLock1b} editLock2b={this.props.editLock2b} editLock3b={this.props.editLock3b} editLock4b={this.props.editLock4b}/>

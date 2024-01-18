@@ -256,7 +256,10 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                       and (pae.""FimVigencia"" is null 
                                       and extract(year from pae.""InicioVigencia"") <= @anoLetivo) 
                                       and paeb.""Bimestre"" = @bimestre)
-                        or paeb.""Bimestre"" = @bimestre) and pae.""Grupo"" = @grupo";
+                        or paeb.""Bimestre"" = @bimestre) ";
+
+            if(!string.IsNullOrEmpty(filtro.Proficiencia))
+                sql += $@"  and pae.""Grupo"" = @grupo";
 
             sql += " order by pae.\"Ordenacao\"";
 
@@ -269,7 +272,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         bimestre = filtro.Bimestre,
                         anoEscolar = filtro.AnoEscolar,
                         grupo = ObtenhaProficiencia(filtro.Proficiencia)
-
                     })).ToList();
                 }  
         }
@@ -337,14 +339,19 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private int ObtenhaProficiencia(string proficiencia)
         {
-            ProficienciaEnum valorEnum;
-
-            if (Enum.TryParse(proficiencia.Replace(" ", String.Empty), out valorEnum))
+            if(!string.IsNullOrEmpty(proficiencia))
             {
-                return (int)valorEnum;
+                ProficienciaEnum valorEnum;
+
+                if (Enum.TryParse(proficiencia.Replace(" ", String.Empty), out valorEnum))
+                {
+                    return (int)valorEnum;
+                }
+
+                return (int)ProficienciaEnum.Numeros;
             }
 
-            return (int)ProficienciaEnum.Numeros;
+            return default;
         }
 
         private async Task<List<PerguntaProficienciaDTO>> ObtenhaListaDeDtoPerguntaProficiencia(filtrosRelatorioDTO filtro)
@@ -353,8 +360,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
             var listaPerguntaResposta = await ObtenhaListaDtoPerguntasRespostasProficiencia(filtro);
             var listaAgrupada = listaPerguntaResposta.GroupBy(p => p.PerguntaId).ToList();
             var listaRetorno = new List<PerguntaProficienciaDTO>();
-
-            totalDeAlunos = listaPerguntaResposta.Count() > totalDeAlunos ? listaPerguntaResposta.Count() : totalDeAlunos;
 
             listaAgrupada.ForEach(agrupador =>
             {
@@ -382,6 +387,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
             var listaSubPerguntaAgrupador = grupoPerguntaResposta.Where(pergunta => pergunta.PerguntaId == grupoPerguntaResposta.Key)
                                                                 .GroupBy(pergunta => pergunta.SubPerguntaId)
                                                                 .ToList();
+
+            var totalRespostasGeralPorSubPergunta = listaSubPerguntaAgrupador.Select(subPergunta => subPergunta.Sum(s => s.QtdRespostas)).Max();
+            if (totalRespostasGeralPorSubPergunta > totalDeAlunos) totalDeAlunos = totalRespostasGeralPorSubPergunta;
 
             listaSubPerguntaAgrupador.ForEach(subAgrupador =>
             {

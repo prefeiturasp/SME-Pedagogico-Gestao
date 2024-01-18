@@ -44,11 +44,14 @@ namespace SME.Pedagogico.Gestao.Data.Integracao
             return await HttpHelper.GetAsync<int>(urlCompleta);
         }
 
-        public async Task<IEnumerable<AlunosNaTurmaDTO>> ObterAlunosAtivosPorTurmaEPeriodo(string codigoTurma, DateTime dataReferencia)
+        public async Task<IEnumerable<AlunosNaTurmaDTO>> ObterAlunosAtivosPorTurmaEPeriodo(string codigoTurma, DateTime dataReferenciaFim, DateTime? dataReferenciaInicio = null)
         {
             var url = HttpHelper.ConstroiURL(endpointsAPI.BaseEndpoint, endpointsAPI.ObterAlunosAtivosPorTurmaEPeriodo);
 
-            var urlCompleta = string.Format(url, codigoTurma, dataReferencia.ToString("yyyy-MM-dd"));
+            var urlCompleta = string.Format(url, codigoTurma, dataReferenciaFim.ToString("yyyy-MM-dd"));
+
+            if (dataReferenciaInicio != null)
+                urlCompleta += $"?dataReferenciaInicio={dataReferenciaInicio.Value.ToString("yyyy-MM-dd")}";
 
             return await HttpHelper.GetAsync<IEnumerable<AlunosNaTurmaDTO>>(urlCompleta);
         }

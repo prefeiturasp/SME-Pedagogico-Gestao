@@ -10,6 +10,7 @@ using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using SME.Pedagogico.Gestao.Data.Relatorios;
 using SME.Pedagogico.Gestao.Data.Relatorios.Querys;
+using SME.Pedagogico.Gestao.Infra;
 using SME.Pedagogico.Gestao.Models.Autoral;
 using System;
 using System.Collections.Generic;
@@ -247,16 +248,20 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             var lista = new List<CabecalhoRelatorioProficienciaDTO>();
             var listaDePergunta = await ObtenhaListaDePerguntaPrincipal(bimestre);
-            var listaPai = listaDePergunta.FindAll(pergunta => pergunta.SubPerguntaId == null);
+            var listaPai = listaDePergunta.GroupBy(pergunta => pergunta.PerguntaId);
 
             foreach (var perguntaPai in listaPai)
             {
                 lista.Add(new CabecalhoRelatorioProficienciaDTO()
                 {
-                    Id = perguntaPai.PerguntaId,
-                    Nome = perguntaPai.PerguntaDescricao,
-                    Ordenacao = perguntaPai.OrdemPergunta,
-                    PerguntasFilhas = ObtenhaListaCabecalhoFilho(perguntaPai.PerguntaId, listaDePergunta)
+                    Id = perguntaPai.FirstOrDefault().PerguntaId,
+                    Nome = perguntaPai.FirstOrDefault().PerguntaDescricao,
+                    Ordenacao = perguntaPai.FirstOrDefault().OrdemPergunta,
+                    PerguntasFilhas = perguntaPai.Select(pp => new PerguntasRelatorioDTO()
+                    {
+                        Id = pp.SubPerguntaId,
+                        Nome = pp.SubPerguntaDescricao
+                    }).ToList()
                 });
             }
 

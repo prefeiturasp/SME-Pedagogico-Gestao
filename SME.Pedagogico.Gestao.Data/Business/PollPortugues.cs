@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using MoreLinq;
 using SME.Pedagogico.Gestao.Data.Contexts;
@@ -25,32 +24,29 @@ namespace SME.Pedagogico.Gestao.Data.Business
 {
     public class PollPortuguese
     {
-
         private AlunosAPI alunoAPI;
         IMapper _mapper;
 
 
         private string _token;
+
         public PollPortuguese(IConfiguration config)
         {
             var createToken = new CreateToken(config);
             _token = createToken.CreateTokenProvisorio();
             alunoAPI = new AlunosAPI(new EndpointsAPI());
-
         }
 
         public async void InsertPollPortuguese(List<StudentPollPortuguese> ListStudentsModel)
         {
             using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
             {
-
                 var listStudentsPoll = new List<PortuguesePoll>();
 
                 foreach (var student in ListStudentsModel)
                 {
-                    var studentPollPortuguese = db.PortuguesePolls.Where(x =>
-                    x.classroomCodeEol == student.classroomCodeEol &&
-                     x.studentCodeEol == student.studentCodeEol).FirstOrDefault();
+                    var studentPollPortuguese = db.PortuguesePolls.FirstOrDefault(x => x.classroomCodeEol == student.classroomCodeEol &&
+                                                                                       x.studentCodeEol == student.studentCodeEol);
 
                     if (studentPollPortuguese == null)
                     {
@@ -92,85 +88,65 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task<List<StudentPollPortuguese>> ListStudentPollPortuguese(ClassRoomFilter classRoom)
         {
-            try
+            var liststudentPollPortuguese = new List<StudentPollPortuguese>();
+            using (var db = new Contexts.SMEManagementContextData())
             {
-                var liststudentPollPortuguese = new List<StudentPollPortuguese>();
-                using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
+                //Pega alunos daquela turma que possuem sondagem 
+                // ADD ano letivo no where
+                var listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == classRoom.classroomCodeEol).ToList();
+
+                // Pega alunos da API 
+                // tratar se ppor um acaso retornar uma lista vazia 
+                var studentsClassRoom = new ClassRoom();
+                // var listStudentsClassRoom = studentsClassRoom.MockListaChamada();
+                var endpointsAPI = new EndpointsAPI();
+
+                var turmApi = new TurmasAPI(endpointsAPI);
+
+                var listStudentsClassRoom = await turmApi.GetAlunosNaTurma(Convert.ToInt32(classRoom.classroomCodeEol), _token);
+
+                listStudentsClassRoom = listStudentsClassRoom.Where(x => x.CodigoSituacaoMatricula == 10 || x.CodigoSituacaoMatricula == 1 || x.CodigoSituacaoMatricula == 6 || x.CodigoSituacaoMatricula == 13 || x.CodigoSituacaoMatricula == 5).ToList(); // 1 ativo,10 rematriculado,6-pendente de rematricula
+
+                foreach (var studentClassRoom in listStudentsClassRoom)
                 {
-                    //Pega alunos daquela turma que possuem sondagem 
-                    // ADD ano letivo no where
-                    var listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == classRoom.classroomCodeEol).ToList();
-
-                    // Pega alunos da API 
-                    // tratar se ppor um acaso retornar uma lista vazia 
-                    var studentsClassRoom = new ClassRoom();
-                    // var listStudentsClassRoom = studentsClassRoom.MockListaChamada();
-                    var endpointsAPI = new EndpointsAPI();
-
-                    var turmApi = new TurmasAPI(endpointsAPI);
-
-                    var listStudentsClassRoom = await turmApi.GetAlunosNaTurma(Convert.ToInt32(classRoom.classroomCodeEol), _token);
-
-                    listStudentsClassRoom = listStudentsClassRoom.Where(x => x.CodigoSituacaoMatricula == 10 || x.CodigoSituacaoMatricula == 1 || x.CodigoSituacaoMatricula == 6 || x.CodigoSituacaoMatricula == 13 || x.CodigoSituacaoMatricula == 5).ToList(); // 1 ativo,10 rematriculado,6-pendente de rematricula
-                    if (listStudentsClassRoom == null)
+                    var studentDTO = new StudentPollPortuguese();
+                    if (listStudentsPollPortuguese != null)
                     {
-                        return null;
-                    }
+                        var studentPollPortuguese = listStudentsPollPortuguese.Where(x => x.studentCodeEol == studentClassRoom.CodigoAluno.ToString()).FirstOrDefault();
+                        studentDTO.name = studentClassRoom.NomeAluno;
+                        studentDTO.studentCodeEol = studentClassRoom.CodigoAluno.ToString();
+                        studentDTO.sequenceNumber = studentClassRoom.NumeroAlunoChamada.ToString();
+                        studentDTO.classroomCodeEol = classRoom.classroomCodeEol;
+                        studentDTO.schoolYear = classRoom.schoolYear;
+                        studentDTO.dreCodeEol = classRoom.dreCodeEol;
+                        studentDTO.schoolCodeEol = classRoom.schoolCodeEol;
+                        studentDTO.yearClassroom = classRoom.yearClassroom;
 
-                    foreach (var studentClassRoom in listStudentsClassRoom)
-                    {
-                        var studentDTO = new StudentPollPortuguese();
-                        if (listStudentsPollPortuguese != null)
+                        if (studentPollPortuguese != null)
                         {
-                            var studentPollPortuguese = listStudentsPollPortuguese.Where(x => x.studentCodeEol == studentClassRoom.CodigoAluno.ToString()).FirstOrDefault();
-                            studentDTO.name = studentClassRoom.NomeAluno;
-                            studentDTO.studentCodeEol = studentClassRoom.CodigoAluno.ToString();
-                            studentDTO.sequenceNumber = studentClassRoom.NumeroAlunoChamada.ToString();
-                            studentDTO.classroomCodeEol = classRoom.classroomCodeEol;
-                            studentDTO.schoolYear = classRoom.schoolYear;
-                            studentDTO.dreCodeEol = classRoom.dreCodeEol;
-                            studentDTO.schoolCodeEol = classRoom.schoolCodeEol;
-                            studentDTO.yearClassroom = classRoom.yearClassroom;
-
-                            if (studentPollPortuguese != null)
-                            {
-                                studentDTO.t1e = studentPollPortuguese.writing1B;
-                                studentDTO.t1l = studentPollPortuguese.reading1B;
-                                studentDTO.t2e = studentPollPortuguese.writing2B;
-                                studentDTO.t2l = studentPollPortuguese.reading2B;
-                                studentDTO.t3e = studentPollPortuguese.writing3B;
-                                studentDTO.t3l = studentPollPortuguese.reading3B;
-                                studentDTO.t4e = studentPollPortuguese.writing4B;
-                                studentDTO.t4l = studentPollPortuguese.reading4B;
-                            }
-
-                            else
-                            {
-                                AddStudentPollPortuguese(studentDTO);
-                            }
-
-                            liststudentPollPortuguese.Add(studentDTO);
+                            studentDTO.t1e = studentPollPortuguese.writing1B;
+                            studentDTO.t1l = studentPollPortuguese.reading1B;
+                            studentDTO.t2e = studentPollPortuguese.writing2B;
+                            studentDTO.t2l = studentPollPortuguese.reading2B;
+                            studentDTO.t3e = studentPollPortuguese.writing3B;
+                            studentDTO.t3l = studentPollPortuguese.reading3B;
+                            studentDTO.t4e = studentPollPortuguese.writing4B;
+                            studentDTO.t4l = studentPollPortuguese.reading4B;
                         }
+
+                        else
+                        {
+                            AddStudentPollPortuguese(studentDTO);
+                        }
+
+                        liststudentPollPortuguese.Add(studentDTO);
                     }
                 }
+            }
 
-                return liststudentPollPortuguese.OrderBy(x => Convert.ToInt32(x.sequenceNumber)).ToList();
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return liststudentPollPortuguese.OrderBy(x => Convert.ToInt32(x.sequenceNumber)).ToList();
         }
 
-        //public async Task<> ListStudentPollPortugueseAutoral(FiltrosPortuguesAutoralDTO classRoom)
-        //{
-        //    using(var context = new Contexts.SMEManagementContextData())
-        //    {
-        //        context.Pe
-        //    }
-
-
-        //}
         private static void AddStudentPollPortuguese(StudentPollPortuguese studentDTO)
         {
             studentDTO.t1e = string.Empty;
@@ -196,43 +172,46 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 switch (bimestre)
                 {
                     case "1° Bimestre":
+                    {
+                        if (proficiencia == "Escrita")
                         {
-                            if (proficiencia == "Escrita")
-                            {
-                                listStudentsPollPortuguese = db.PortuguesePolls
-                                    .Where(x => x.classroomCodeEol == turmaEol && !
+                            listStudentsPollPortuguese = db.PortuguesePolls
+                                .Where(x => x.classroomCodeEol == turmaEol && !
                                     string.IsNullOrEmpty(x.writing1B)).ToList();
-                            }
-                            else
-                            {
-                                listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.reading1B)).ToList();
-                            }
-                            break;
                         }
+                        else
+                        {
+                            listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.reading1B)).ToList();
+                        }
+
+                        break;
+                    }
                     case "2° Bimestre":
+                    {
+                        if (proficiencia == "Escrita")
                         {
-                            if (proficiencia == "Escrita")
-                            {
-                                listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.writing2B)).ToList();
-                            }
-                            else
-                            {
-                                listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.reading2B)).ToList();
-                            }
-                            break;
+                            listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.writing2B)).ToList();
                         }
+                        else
+                        {
+                            listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.reading2B)).ToList();
+                        }
+
+                        break;
+                    }
                     case "3° Bimestre":
+                    {
+                        if (proficiencia == "Escrita")
                         {
-                            if (proficiencia == "Escrita")
-                            {
-                                listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.writing3B)).ToList();
-                            }
-                            else
-                            {
-                                listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.reading3B)).ToList();
-                            }
-                            break;
+                            listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.writing3B)).ToList();
                         }
+                        else
+                        {
+                            listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.reading3B)).ToList();
+                        }
+
+                        break;
+                    }
                     default:
                         if (proficiencia == "Escrita")
                         {
@@ -242,6 +221,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         {
                             listStudentsPollPortuguese = db.PortuguesePolls.Where(x => x.classroomCodeEol == turmaEol && !string.IsNullOrEmpty(x.reading4B)).ToList();
                         }
+
                         break;
                 }
 
@@ -335,188 +315,187 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 switch (bimestre)
                 {
                     case "1° Bimestre":
+                    {
+                        if (proficiencia == "Escrita")
                         {
-                            if (proficiencia == "Escrita")
+                            var writing1B = query.GroupBy(fu => fu.writing1B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
+
+                            foreach (var item in writing1B)
                             {
-                                var writing1B = query.GroupBy(fu => fu.writing1B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
+                                PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                itemRetorno.studentQuantity = item.Value;
+                                listReturn.Add(itemRetorno);
 
-                                foreach (var item in writing1B)
+                                graficos.Add(new PortChartDataModel()
                                 {
-                                    PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
-                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                    itemRetorno.studentQuantity = item.Value;
-                                    listReturn.Add(itemRetorno);
-
-                                    graficos.Add(new PortChartDataModel()
-                                    {
-                                        Name = MontarTextoProficiencia(item.Label),
-                                        Value = item.Value
-                                    });
-                                }
-                            }
-
-                            else //leitura
-                            {
-                                var reading1B = query.GroupBy(fu => fu.reading1B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
-
-                                foreach (var item in reading1B)
-                                {
-                                    PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
-                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                    itemRetorno.studentQuantity = item.Value;
-                                    listReturn.Add(itemRetorno);
-
-                                    graficos.Add(new PortChartDataModel()
-                                    {
-                                        Name = MontarTextoProficiencia(item.Label),
-                                        Value = item.Value
-                                    });
-                                }
+                                    Name = MontarTextoProficiencia(item.Label),
+                                    Value = item.Value
+                                });
                             }
                         }
+
+                        else //leitura
+                        {
+                            var reading1B = query.GroupBy(fu => fu.reading1B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
+
+                            foreach (var item in reading1B)
+                            {
+                                PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                itemRetorno.studentQuantity = item.Value;
+                                listReturn.Add(itemRetorno);
+
+                                graficos.Add(new PortChartDataModel()
+                                {
+                                    Name = MontarTextoProficiencia(item.Label),
+                                    Value = item.Value
+                                });
+                            }
+                        }
+                    }
                         break;
                     case "2° Bimestre":
+                    {
+                        if (proficiencia == "Escrita")
                         {
-                            if (proficiencia == "Escrita")
+                            var writing2B = query.GroupBy(fu => fu.writing2B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
+
+                            foreach (var item in writing2B)
                             {
-                                var writing2B = query.GroupBy(fu => fu.writing2B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
+                                PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                itemRetorno.studentQuantity = item.Value;
+                                listReturn.Add(itemRetorno);
 
-                                foreach (var item in writing2B)
+                                graficos.Add(new PortChartDataModel()
                                 {
-                                    PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
-                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                    itemRetorno.studentQuantity = item.Value;
-                                    listReturn.Add(itemRetorno);
-
-                                    graficos.Add(new PortChartDataModel()
-                                    {
-                                        Name = MontarTextoProficiencia(item.Label),
-                                        Value = item.Value
-                                    });
-                                }
-
-                            }
-                            else //leitura
-                            {
-                                var reading2B = query.GroupBy(fu => fu.reading2B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
-
-                                foreach (var item in reading2B)
-                                {
-                                    PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
-                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                    itemRetorno.studentQuantity = item.Value;
-                                    listReturn.Add(itemRetorno);
-
-                                    graficos.Add(new PortChartDataModel()
-                                    {
-                                        Name = MontarTextoProficiencia(item.Label),
-                                        Value = item.Value
-                                    });
-                                }
+                                    Name = MontarTextoProficiencia(item.Label),
+                                    Value = item.Value
+                                });
                             }
                         }
+                        else //leitura
+                        {
+                            var reading2B = query.GroupBy(fu => fu.reading2B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
+
+                            foreach (var item in reading2B)
+                            {
+                                PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                itemRetorno.studentQuantity = item.Value;
+                                listReturn.Add(itemRetorno);
+
+                                graficos.Add(new PortChartDataModel()
+                                {
+                                    Name = MontarTextoProficiencia(item.Label),
+                                    Value = item.Value
+                                });
+                            }
+                        }
+                    }
                         break;
                     case "3° Bimestre":
+                    {
+                        if (proficiencia == "Escrita")
                         {
-                            if (proficiencia == "Escrita")
+                            var writing3B = query.GroupBy(fu => fu.writing3B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
+
+                            foreach (var item in writing3B)
                             {
-                                var writing3B = query.GroupBy(fu => fu.writing3B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
+                                PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                itemRetorno.studentQuantity = item.Value;
+                                listReturn.Add(itemRetorno);
 
-                                foreach (var item in writing3B)
+                                graficos.Add(new PortChartDataModel()
                                 {
-                                    PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
-                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                    itemRetorno.studentQuantity = item.Value;
-                                    listReturn.Add(itemRetorno);
-
-                                    graficos.Add(new PortChartDataModel()
-                                    {
-                                        Name = MontarTextoProficiencia(item.Label),
-                                        Value = item.Value
-                                    });
-                                }
-
-                            }
-                            else //leitura
-                            {
-                                var reading3B = query.GroupBy(fu => fu.reading3B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
-
-                                foreach (var item in reading3B)
-                                {
-                                    PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
-                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                    itemRetorno.studentQuantity = item.Value;
-                                    listReturn.Add(itemRetorno);
-
-                                    graficos.Add(new PortChartDataModel()
-                                    {
-                                        Name = MontarTextoProficiencia(item.Label),
-                                        Value = item.Value
-                                    });
-                                }
+                                    Name = MontarTextoProficiencia(item.Label),
+                                    Value = item.Value
+                                });
                             }
                         }
+                        else //leitura
+                        {
+                            var reading3B = query.GroupBy(fu => fu.reading3B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
+
+                            foreach (var item in reading3B)
+                            {
+                                PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                itemRetorno.studentQuantity = item.Value;
+                                listReturn.Add(itemRetorno);
+
+                                graficos.Add(new PortChartDataModel()
+                                {
+                                    Name = MontarTextoProficiencia(item.Label),
+                                    Value = item.Value
+                                });
+                            }
+                        }
+                    }
                         break;
                     case "4° Bimestre":
+                    {
+                        if (proficiencia == "Escrita")
                         {
-                            if (proficiencia == "Escrita")
+                            var writing4B = query.GroupBy(fu => fu.writing4B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
+
+                            foreach (var item in writing4B)
                             {
-                                var writing4B = query.GroupBy(fu => fu.writing4B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
+                                PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                itemRetorno.studentQuantity = item.Value;
+                                listReturn.Add(itemRetorno);
 
-                                foreach (var item in writing4B)
+                                graficos.Add(new PortChartDataModel()
                                 {
-                                    PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
-                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                    itemRetorno.studentQuantity = item.Value;
-                                    listReturn.Add(itemRetorno);
-
-                                    graficos.Add(new PortChartDataModel()
-                                    {
-                                        Name = MontarTextoProficiencia(item.Label),
-                                        Value = item.Value
-                                    });
-                                }
-
-                            }
-                            else //leitura
-                            {
-                                var reading4B = query.GroupBy(fu => fu.reading4B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
-
-                                foreach (var item in reading4B)
-                                {
-                                    PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
-                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                    itemRetorno.studentQuantity = item.Value;
-                                    listReturn.Add(itemRetorno);
-
-                                    graficos.Add(new PortChartDataModel()
-                                    {
-                                        Name = MontarTextoProficiencia(item.Label),
-                                        Value = item.Value
-                                    });
-                                }
+                                    Name = MontarTextoProficiencia(item.Label),
+                                    Value = item.Value
+                                });
                             }
                         }
+                        else //leitura
+                        {
+                            var reading4B = query.GroupBy(fu => fu.reading4B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
+
+                            foreach (var item in reading4B)
+                            {
+                                PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                itemRetorno.studentQuantity = item.Value;
+                                listReturn.Add(itemRetorno);
+
+                                graficos.Add(new PortChartDataModel()
+                                {
+                                    Name = MontarTextoProficiencia(item.Label),
+                                    Value = item.Value
+                                });
+                            }
+                        }
+                    }
                         break;
                 }
-                var listaGrafico = graficos.GroupBy(fu => fu.Name).Select(g => new { Label = g.Key, Value = g.Sum(soma => soma.Value) }).ToList();
 
-                int totalSemPreenchimento = (quantidadeTotalAlunos - listaGrafico.Where(l => !string.IsNullOrWhiteSpace(l.Label)).Sum(l => l.Value)) >= 0
-                   ? quantidadeTotalAlunos - listaGrafico.Where(l => !string.IsNullOrWhiteSpace(l.Label)).Sum(l => l.Value)
-                   : listaGrafico.Where(l => string.IsNullOrWhiteSpace(l.Label)).Count();
+                var listaGrafico = graficos.GroupBy(fu => fu.Name).Select(g => new {Label = g.Key, Value = g.Sum(soma => soma.Value)}).ToList();
+
+                int totalSemPreenchimento = quantidadeTotalAlunos - listaGrafico.Where(l => !string.IsNullOrWhiteSpace(l.Label)).Sum(l => l.Value) >=0 
+                        ? quantidadeTotalAlunos - listaGrafico.Where(l => !string.IsNullOrWhiteSpace(l.Label)).Sum(l => l.Value)
+                        : 0;
+
 
                 foreach (var item in listReturn)
                 {
-                    item.StudentPercentage = ((double)item.studentQuantity / quantidadeTotalAlunos) * 100;
+                    item.StudentPercentage = ((double) item.studentQuantity / quantidadeTotalAlunos) * 100;
                     if (string.IsNullOrWhiteSpace(item.OptionName))
                     {
                         item.OptionName = "Sem preenchimento";
-                        item.StudentPercentage = ((double)totalSemPreenchimento / quantidadeTotalAlunos) * 100;
+                        item.StudentPercentage = ((double) totalSemPreenchimento / quantidadeTotalAlunos) * 100;
                         item.studentQuantity = totalSemPreenchimento;
-                    }     
+                    }
                 }
 
-                PollReportPortugueseResult retorno = new PollReportPortugueseResult();             
+                PollReportPortugueseResult retorno = new PollReportPortugueseResult();
 
                 graficos = new List<PortChartDataModel>();
 
@@ -524,26 +503,26 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 {
                     graficos.Add(new PortChartDataModel()
                     {
-                        Name = string.IsNullOrWhiteSpace(item.Label) 
-                                                ? "Sem preenchimento" 
-                                                : item.Label,
-                        Value = string.IsNullOrWhiteSpace(item.Label) 
-                                                ? totalSemPreenchimento 
-                                                : item.Value
+                        Name = string.IsNullOrWhiteSpace(item.Label)
+                            ? "Sem preenchimento"
+                            : item.Label,
+                        Value = string.IsNullOrWhiteSpace(item.Label)
+                            ? totalSemPreenchimento
+                            : item.Value
                     });
                 }
 
                 if (proficiencia == "Escrita")
                 {
                     //particularidade do 3 ano
-                    if(listReturn.Any(l=> l.OptionName.Contains("Nivel")))
+                    if (listReturn.Any(l => l.OptionName.Contains("Nivel")))
                     {
                         retorno.Results = listReturn.OrderBy(lr => lr.OptionName).ToList();
                         retorno.ChartData = graficos.OrderBy(g => g.Name).ToList();
                     }
                     else
                     {
-                        string[] descSequenciaOrdenadaDeRespostasEscritas = { "Pré-Silábico", "Silábico sem valor", "Silábico com valor", "Silábico alfabético", "Alfabético", "Sem preenchimento" };
+                        string[] descSequenciaOrdenadaDeRespostasEscritas = {"Pré-Silábico", "Silábico sem valor", "Silábico com valor", "Silábico alfabético", "Alfabético", "Sem preenchimento"};
 
                         foreach (var desc in descSequenciaOrdenadaDeRespostasEscritas)
                         {
@@ -555,7 +534,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                     break;
                                 }
                             }
-
                         }
 
                         foreach (var desc in descSequenciaOrdenadaDeRespostasEscritas)
@@ -568,7 +546,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                                     break;
                                 }
                             }
-
                         }
                     }
                 }
@@ -577,13 +554,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     retorno.Results = listReturn.OrderBy(lr => lr.OptionName).ToList();
                     retorno.ChartData = graficos.OrderBy(g => g.Name).ToList();
                 }
-                    
+
 
                 return retorno;
             }
         }
 
-        public async Task<int> RetornaTotalAlunosSondagem(string [] turmasSondagem, DateTime dataReferencia)
+        public async Task<int> RetornaTotalAlunosSondagem(string[] turmasSondagem, DateTime dataReferencia)
         {
             int totalAlunos = 0;
             foreach (var turma in turmasSondagem)
@@ -613,7 +590,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     return proficiencia;
             }
         }
-
 
 
         public IEnumerable<DTO.Portugues.GrupoDTO> ListarGrupos()
@@ -646,7 +622,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     grupoDto.Ordem = grupoDto.Ordem?.OrderBy(x => x.Ordenacao).ToList();
 
                     ListaGrupos.Add(grupoDto);
-
                 }
 
                 return ListaGrupos.OrderBy(x => x.Descricao);
@@ -657,7 +632,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             using (var contexto = new SMEManagementContextData())
             {
-
                 try
                 {
                     var ss = contexto.Sondagem.ToList();
@@ -666,10 +640,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 }
                 catch (Exception ex)
                 {
-
                     throw ex;
                 }
-
             }
         }
 
@@ -699,10 +671,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 }
 
                 return ListaPeriodos;
-
-
             }
-
         }
 
         public async Task<IEnumerable<AlunoSondagemPortuguesDTO2>> ListarAlunosPortugues(FiltrarListagemDto filtrarListagemDto)
@@ -730,14 +699,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
-
         }
-
-
-
 
 
         public async Task<IEnumerable<SequenciaOrdemSalvaDTO>> ListaSequenciaOrdensSalva(FiltrarListagemDto filtrarListagemDto)
@@ -745,14 +709,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
             using (var contexto = new SMEManagementContextData())
             {
                 var lista = await contexto.Sondagem.Where(x => x.ComponenteCurricular.Id
-               .Equals(filtrarListagemDto.ComponenteCurricular.ToString())
-               && x.AnoTurma == filtrarListagemDto.AnoEscolar
-               && x.CodigoDre == filtrarListagemDto.CodigoDre
-               && x.CodigoUe == filtrarListagemDto.CodigoUe
-               && x.AnoLetivo == filtrarListagemDto.AnoLetivo
-               && x.GrupoId == filtrarListagemDto.GrupoId
-               && (filtrarListagemDto.CodigoTurma == null ? true : x.CodigoTurma.Equals(filtrarListagemDto.CodigoTurma)))
-           .ToListAsync();
+                                                                   .Equals(filtrarListagemDto.ComponenteCurricular.ToString())
+                                                               && x.AnoTurma == filtrarListagemDto.AnoEscolar
+                                                               && x.CodigoDre == filtrarListagemDto.CodigoDre
+                                                               && x.CodigoUe == filtrarListagemDto.CodigoUe
+                                                               && x.AnoLetivo == filtrarListagemDto.AnoLetivo
+                                                               && x.GrupoId == filtrarListagemDto.GrupoId
+                                                               && (filtrarListagemDto.CodigoTurma == null ? true : x.CodigoTurma.Equals(filtrarListagemDto.CodigoTurma)))
+                    .ToListAsync();
 
                 if (lista.Count == 0)
                 {
@@ -768,7 +732,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     SequenciaOrdemSalva = item.First().SequenciaDeOrdemSalva
                 }).ToList();
 
-                listaSequenciaOrdemSalva.Distinct();
+                listaSequenciaOrdemSalva = listaSequenciaOrdemSalva?.DistinctBy(l=> l.OrdemId).ToList();
 
                 return listaSequenciaOrdemSalva;
             }
@@ -789,7 +753,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 using (var contexto = new SMEManagementContextData())
                 {
-
                     var listaOrdemPergunta = contexto.OrdemPergunta.Include(x => x.Grupo).Include(x => x.Pergunta).Where(y => y.GrupoId == grupoId).ToList();
                     var perguntaResposta = contexto.PerguntaResposta.Include(x => x.Pergunta).Include(y => y.Resposta).ToList();
                     var listaPerguntaDto = new List<PerguntaDto>();
@@ -816,15 +779,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                     return listaPerguntaDto.OrderBy(x => x.Ordenacao);
                 }
-
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }
-
 
 
         private void AdicionarAlunosEOL(FiltrarListagemDto filtrarListagemDto, List<AlunosNaTurmaDTO> alunos, List<AlunoSondagemPortuguesDTO2> listagem, Sondagem sondagem)
@@ -853,8 +813,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     NumeroChamada = aluno.NumeroAlunoChamada,
                     ComponenteCurricular = filtrarListagemDto.ComponenteCurricular.ToString(),
                     NomeAluno = aluno.NomeAluno,
-
-                }); ;
+                });
+                ;
 
                 listagem.OrderBy(x => x.NumeroChamada);
             });
@@ -880,7 +840,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     throw new Exception("É necessário realizar a sondagem de pelo menos 1 aluno");
                 using (var contexto = new SMEManagementContextData())
                 {
-
                     Sondagem sondagem = null;
                     var item = ListaAlunosSondagemDto.FirstOrDefault();
 
@@ -889,7 +848,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                     if (sondagem == null)
                     {
-
                         var novaSondagem = CriaNovaSondagem(ListaAlunosSondagemDto, item);
                         if (novaSondagem != null)
                         {
@@ -909,7 +867,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }
@@ -917,8 +874,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
         private static Sondagem BuscaSondagem(SMEManagementContextData contexto, AlunoSondagemPortuguesDTO2 item)
         {
             return contexto.Sondagem.Where(s => s.Id == Guid.Parse(item.SondagemId))
-                  .Include(ss => ss.AlunosSondagem)
-                  .ThenInclude(x => x.ListaRespostas).FirstOrDefault();
+                .Include(ss => ss.AlunosSondagem)
+                .ThenInclude(x => x.ListaRespostas).FirstOrDefault();
         }
 
         private static void EditaSondagem(IEnumerable<AlunoSondagemPortuguesDTO2> ListaAlunosSondagemDto, SMEManagementContextData contexto, Sondagem sondagem)
@@ -941,7 +898,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     {
                         AtualizaNovasRespostas(aluno, alunoSondagem);
                         RemoveRespostasSemValor(contexto, aluno, alunoSondagem);
-
                     }
                 }
             }
@@ -961,17 +917,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         ListaRespostasRemovidas.Add(alunoResposta);
                     }
                 }
+
                 contexto.SondagemAlunoRespostas.RemoveRange(ListaRespostasRemovidas);
             }
             else
             {
                 contexto.SondagemAluno.Remove(alunoSondagem);
             }
-
-
-
-
-
         }
 
 
@@ -979,8 +931,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             foreach (var resposta in aluno.Respostas)
             {
-
-
                 var respostaSondagem = alunoSondagem.ListaRespostas.Where(x => x.PerguntaId == resposta.Pergunta).FirstOrDefault();
                 if (respostaSondagem != null)
                 {
@@ -993,14 +943,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                     alunoSondagem.ListaRespostas.Add(respostaNova);
                 }
-
             }
         }
 
 
         private static Sondagem CriaNovaSondagem(IEnumerable<AlunoSondagemPortuguesDTO2> ListaAlunosSondagemDto, AlunoSondagemPortuguesDTO2 item)
         {
-            var sondagem = (Sondagem)item;
+            var sondagem = (Sondagem) item;
             sondagem.AlunosSondagem = new List<SondagemAluno>();
 
             var listaAlunosComRespostaDto = ListaAlunosSondagemDto.Where(x => x.Respostas != null && x.Respostas.Count > 0).ToList();
@@ -1025,7 +974,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 periodoId = alunoDto.Respostas.First().PeriodoId;
                 sondagem.PeriodoId = periodoId;
-            };
+            }
+
+            ;
             return sondagem;
         }
 
@@ -1063,7 +1014,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             foreach (var entry in entries)
             {
-                Console.WriteLine($"Entity: {entry.Entity.GetType().Name}, State: { entry.State.ToString()} ");
+                Console.WriteLine($"Entity: {entry.Entity.GetType().Name}, State: {entry.State.ToString()} ");
             }
         }
 
@@ -1075,7 +1026,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             foreach (var respostaDto in alunoDto.Respostas)
             {
-
                 resposta.Id = Guid.NewGuid();
                 resposta.PerguntaId = respostaDto.Pergunta;
                 resposta.RespostaId = respostaDto.Resposta;
@@ -1092,7 +1042,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             foreach (var aluno in ListaAlunoSondagemPortuguesDTO)
             {
-                var alunoAutoral = (SondagemAutoral)aluno;
+                var alunoAutoral = (SondagemAutoral) aluno;
 
                 if (aluno.Respostas != null && aluno.Respostas.Any())
                     SalvarAlunoComResposta(contexto, aluno, alunoAutoral);
@@ -1113,13 +1063,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             var alunoBanco = contexto.SondagemAutoral
                 .FirstOrDefault(sondagem => sondagem.PerguntaId == resposta.Pergunta
-                                                && sondagem.PeriodoId == resposta.PeriodoId
-                                                && sondagem.CodigoAluno == alunoAutoral.CodigoAluno
-                                                && sondagem.CodigoTurma == alunoAutoral.CodigoTurma
-                                                && sondagem.ComponenteCurricularId == alunoAutoral.ComponenteCurricularId
-                                                && sondagem.GrupoId == alunoAutoral.GrupoId
-                                                && sondagem.OrdemId == alunoAutoral.OrdemId
-                                                );
+                                            && sondagem.PeriodoId == resposta.PeriodoId
+                                            && sondagem.CodigoAluno == alunoAutoral.CodigoAluno
+                                            && sondagem.CodigoTurma == alunoAutoral.CodigoTurma
+                                            && sondagem.ComponenteCurricularId == alunoAutoral.ComponenteCurricularId
+                                            && sondagem.GrupoId == alunoAutoral.GrupoId
+                                            && sondagem.OrdemId == alunoAutoral.OrdemId
+                );
 
             if (alunoBanco == null)
                 alunoBanco = new SondagemAutoral(alunoAutoral);
@@ -1140,7 +1090,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 context.SondagemAutoral.Update(sondagemAutoral);
             }
-
         }
 
         private void AdicionarRespostaAluno(SondagemAlunoRespostas alunoResposta, List<AlunoSondagemPortuguesDTO2> listagem, int index, string periodoId)
@@ -1165,7 +1114,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
         }
 
 
-
         private void AdicionarNovoAlunoListagem(List<AlunoSondagemPortuguesDTO2> listagem, SondagemAluno aluno, Sondagem sondagem)
         {
             var alunoDto = new AlunoSondagemPortuguesDTO2
@@ -1184,7 +1132,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 OrdemId = sondagem.OrdemId,
                 SequenciaOrdemSalva = sondagem.SequenciaDeOrdemSalva,
                 Respostas = new List<AlunoRespostaDto>()
-
             };
 
             foreach (var resp in aluno.ListaRespostas)
@@ -1218,23 +1165,20 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 try
                 {
                     return await contexto.Sondagem.Where(x => x.ComponenteCurricular.Id
-                   .Equals(filtrarListagemDto.ComponenteCurricular.ToString())
-                   && x.AnoTurma == filtrarListagemDto.AnoEscolar
-                   && x.OrdemId == filtrarListagemDto.OrdemId
-                   && x.PeriodoId == filtrarListagemDto.PeriodoId
-                   && x.CodigoDre == filtrarListagemDto.CodigoDre
-                   && x.CodigoUe == filtrarListagemDto.CodigoUe
-                   && x.AnoLetivo == filtrarListagemDto.AnoLetivo
-                   && (filtrarListagemDto.CodigoTurma == null ? true : x.CodigoTurma.Equals(filtrarListagemDto.CodigoTurma))).Include(ss => ss.AlunosSondagem)
-                            .ThenInclude(x => x.ListaRespostas).FirstOrDefaultAsync();
-
+                                                                  .Equals(filtrarListagemDto.ComponenteCurricular.ToString())
+                                                              && x.AnoTurma == filtrarListagemDto.AnoEscolar
+                                                              && x.OrdemId == filtrarListagemDto.OrdemId
+                                                              && x.PeriodoId == filtrarListagemDto.PeriodoId
+                                                              && x.CodigoDre == filtrarListagemDto.CodigoDre
+                                                              && x.CodigoUe == filtrarListagemDto.CodigoUe
+                                                              && x.AnoLetivo == filtrarListagemDto.AnoLetivo
+                                                              && (filtrarListagemDto.CodigoTurma == null ? true : x.CodigoTurma.Equals(filtrarListagemDto.CodigoTurma))).Include(ss => ss.AlunosSondagem)
+                        .ThenInclude(x => x.ListaRespostas).FirstOrDefaultAsync();
                 }
                 catch (Exception ex)
                 {
-
                     throw ex;
                 }
-
             }
         }
 
@@ -1245,28 +1189,21 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 try
                 {
                     return await contexto.SondagemAutoral.Where(x => x.ComponenteCurricular.Id
-                   .Equals(filtrarListagemDto.ComponenteCurricular.ToString())
-                   && x.AnoTurma == filtrarListagemDto.AnoEscolar
-                   && x.OrdemId == filtrarListagemDto.OrdemId
-                   && x.PeriodoId == filtrarListagemDto.PeriodoId
-                   && x.CodigoDre == filtrarListagemDto.CodigoDre
-                   && x.CodigoUe == filtrarListagemDto.CodigoUe
-                   && x.AnoLetivo == filtrarListagemDto.AnoLetivo
-                   && (filtrarListagemDto.CodigoTurma == null ? true : x.CodigoTurma.Equals(filtrarListagemDto.CodigoTurma)))
-               .ToListAsync();
+                                                                         .Equals(filtrarListagemDto.ComponenteCurricular.ToString())
+                                                                     && x.AnoTurma == filtrarListagemDto.AnoEscolar
+                                                                     && x.OrdemId == filtrarListagemDto.OrdemId
+                                                                     && x.PeriodoId == filtrarListagemDto.PeriodoId
+                                                                     && x.CodigoDre == filtrarListagemDto.CodigoDre
+                                                                     && x.CodigoUe == filtrarListagemDto.CodigoUe
+                                                                     && x.AnoLetivo == filtrarListagemDto.AnoLetivo
+                                                                     && (filtrarListagemDto.CodigoTurma == null ? true : x.CodigoTurma.Equals(filtrarListagemDto.CodigoTurma)))
+                        .ToListAsync();
                 }
                 catch (Exception ex)
                 {
-
                     throw ex;
                 }
-
             }
         }
-
-
     }
-
-
 }
-
