@@ -11,6 +11,7 @@ function Aluno({ aluno, perguntas, periodo, idOrdemSelecionada, grupoSelecionado
     
     const verificarPeriodoAberto = (bimestre) => {
         var todayDate = new Date();
+        todayDate.setHours(0, 0, 0, 0);
 
         const aberto = periodosAbertura.find(p => p.bimestre === bimestre);
 

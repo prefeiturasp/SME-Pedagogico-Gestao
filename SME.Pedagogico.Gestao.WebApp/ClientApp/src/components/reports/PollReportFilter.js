@@ -42,6 +42,7 @@ class PollReportFilter extends Component {
   }
 
   componentDidMount() {
+    this.props.pollReportsMethods.resetData();
     this.props.pollReportsMethods.hidePollReport();
     this.props.sondagemPortuguesMethods.listarGrupos();
     this.mostrarDisciplina(
@@ -83,17 +84,28 @@ class PollReportFilter extends Component {
       this.carregarProficiencia(this.state.campoDisciplina);
     }
 
-    if (schoolYear !== prevSchoolYear) {
+    if (
+      (prevYearClassroom !== yearClassroom || schoolYear !== prevSchoolYear) &&
+      this.state.campoDisciplina
+    ) {
       const filters = this.props.pollReport.filters;
       const campoDisciplina = this.state.campoDisciplina;
       const disciplina = this.state.selectedFilter.discipline;
+      
+      const ehMatematica =
+        disciplina === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao;
 
-      const parametroPeriodo =
-        this.props.poll.selectedFilter.schoolYear >= 2022 &&
-        disciplina === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao
-          ? "newTerms"
-          : "terms";
+      const ehPortugues =
+          disciplina === DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES.Descricao;
 
+      const ehTurmaMatematicaSemestral =
+        ehMatematica && yearClassroom >= 4 && schoolYear >= 2023;
+
+      const ehSondagemSemestral =
+        schoolYear < 2022 || ehTurmaMatematicaSemestral;
+
+      const parametroPeriodo = ehSondagemSemestral || ehPortugues ? "terms" : "newTerms";
+        
       this.setState((state) => ({
         ...state,
         selectedProficiency: "",
@@ -219,11 +231,21 @@ class PollReportFilter extends Component {
           };
         })
       : [];
-    const parametroPeriodo =
-      this.props.poll.selectedFilter.schoolYear >= 2022 &&
-      label === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao
-        ? "newTerms"
-        : "terms";
+
+    const { yearClassroom, schoolYear } = this.props.poll.selectedFilter;
+    
+    const ehMatematica =
+          label === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao;
+
+    const ehPortugues =
+          label === DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES.Descricao;
+
+    const ehTurmaMatematicaSemestral =
+      ehMatematica && yearClassroom >= 4 && schoolYear >= 2023;
+
+    const ehSondagemSemestral = schoolYear < 2022 || ehTurmaMatematicaSemestral;
+
+    const parametroPeriodo = ehSondagemSemestral || ehPortugues ? "terms" : "newTerms";
 
     this.setState({
       selectedFilter: {

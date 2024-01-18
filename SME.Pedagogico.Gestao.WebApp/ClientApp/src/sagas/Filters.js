@@ -2,7 +2,7 @@
 
 import * as Filters from "../store/Filters";
 import { types } from "../store/User";
-import { ROUTES_ENUM, STATUS_CODE_ENUM } from "../Enums";
+import { ROUTES_ENUM, STATUS_CODE_ENUM, TIPO_PERIODO } from "../Enums";
 
 export default function* () {
   yield all([
@@ -114,12 +114,15 @@ function* GetSchools({ schoolCode }) {
   try {
     const {
       user,
+      filters,
       pollRouter: { activeRoute },
     } = yield select();
     const { token, possuiPerfilSme, possuiPerfilDre, perfil } = user;
+    schoolCode.schoolYear = filters.setSchoolYear;
     const ehProfessor =
       perfil.perfilSelecionado.nomePerfil.indexOf("Professor") >= 0;
     const ehTodas = schoolCode.dreCodeEol === "todas";
+
     const data = !ehTodas
       ? yield call(fetch, "/api/Filtros/ListarEscolasPorDre", {
           method: "post",
@@ -203,7 +206,7 @@ function* GetFiltersTeacher({ profileOccupatios }) {
 // Filter Sagas
 
 function getPeriodApi(schoolYear) {
-  var url = `/api/Filtros/ListarPeriodoDeAberturas/${schoolYear}`;
+  var url = `/api/Filtros/ListarPeriodoDeAberturas/${schoolYear}?tipoPeriodicidade=${TIPO_PERIODO.BIMESTRE}`;
   return fetch(url, {
     method: "get",
     headers: { "Content-Type": "application/json" },

@@ -1,6 +1,7 @@
 import React from "react";
 import {
   CabecalhoOrdens,
+  EOLColumn,
   ItensCapacidadeLeituraPorTurma,
 } from "./RelatorioPorTurmaCapacidadeLeitura.css";
 
@@ -10,7 +11,7 @@ const RelatorioPorTurmaCapacidadeLeitura = (props) => {
   const getCabecalhoOrdens = () => {
     return ordens.map((ordem) => {
       return (
-        <div className="col-3 sc-gray border-left border-white">
+        <div key={ordem.id} className="col-3 sc-gray border-right border-white">
           <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center font-weight-bold">
             {ordem.nome}
           </div>
@@ -20,9 +21,9 @@ const RelatorioPorTurmaCapacidadeLeitura = (props) => {
   };
 
   const getCabecalhoPerguntas = () => {
-    return perguntas.map((ordem) => {
+    return perguntas.map((ordem, index) => {
       return (
-        <div className="col-1 sc-gray border-left border-white">
+        <div key={ordem.id} className="col-1 sc-gray border-right border-white">
           <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center font-weight-bold">
             {ordem.nome}
           </div>
@@ -31,26 +32,29 @@ const RelatorioPorTurmaCapacidadeLeitura = (props) => {
     });
   };
 
-  const getDadosAlunos = aluno => {
+  const getDadosAlunos = (aluno) => {
     return ordens.map((ordem) => {
       const ordemAluno = aluno.ordens.find((o) => o.id === ordem.id);
       return perguntas.map((pergunta, index) => {
-        let corCelula = '';
+        let corCelula = "";
         switch (index) {
           case 1:
-            corCelula = 'sc-darkblue';
-            break;        
+            corCelula = "sc-darkblue";
+            break;
           case 2:
-            corCelula = 'sc-darkgray';
-            break;        
+            corCelula = "sc-darkgray";
+            break;
           default:
-            corCelula = 'sc-lightpurple'
+            corCelula = "sc-lightpurple";
             break;
         }
         const perguntaAluno =
           ordemAluno && ordemAluno.perguntas.find((p) => p.id === pergunta.id);
         return (
-          <div className={`col-1 border-right ${corCelula}`}>
+          <div
+            key={`${ordem.id}-${pergunta.id}`}
+            className={`col-1 border-right ${corCelula}`}
+          >
             <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center font-weight-light text-white">
               {perguntaAluno && perguntaAluno.valor ? perguntaAluno.valor : ""}
             </div>
@@ -66,34 +70,43 @@ const RelatorioPorTurmaCapacidadeLeitura = (props) => {
         <div className="col-3" />
         {getCabecalhoOrdens()}
       </CabecalhoOrdens>
+
       <CabecalhoOrdens className="d-flex poll-report-grid-header border-bottom border-white">
-        <div className="col-1 sc-gray border-left border-white">
-          <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-bold">
+        <EOLColumn className="col-auto sc-gray border-right border-white">
+          <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center font-weight-bold">
             Código EOL
           </div>
-        </div>
-        <div className="col-2 sc-gray border-left border-white">
+        </EOLColumn>
+
+        <div className="col sc-gray border-right border-white">
           <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-bold">
             Nome do estudante
           </div>
         </div>
+
         {ordens.map(() => {
           return getCabecalhoPerguntas();
         })}
       </CabecalhoOrdens>
+
       {alunos.map((aluno) => {
         return (
-          <ItensCapacidadeLeituraPorTurma className="d-flex poll-report-grid-item border-bottom">
-            <div className="col-1">
-              <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-light">
+          <ItensCapacidadeLeituraPorTurma
+            key={aluno.codigoAluno}
+            className="d-flex border-bottom"
+          >
+            <EOLColumn className="col-auto">
+              <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center justify-content-center font-weight-light">
                 {aluno.codigoAluno}
               </div>
-            </div>
-            <div className="col-2 border-right">
+            </EOLColumn>
+
+            <div className="col border-right">
               <div className="sc-text-size-0 d-flex flex-fill h-100 align-items-center font-weight-light">
                 <span>{aluno.nomeAluno}</span>
               </div>
             </div>
+
             {getDadosAlunos(aluno)}
           </ItensCapacidadeLeituraPorTurma>
         );

@@ -263,15 +263,41 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             foreach (var aluno in alunosEol)
             {
                 var sondagem = listaAlunosTurma.FirstOrDefault(s => s.studentCodeEol == aluno.CodigoAluno.ToString());
-                string tipo = ConverterProficienciaAluno(parameters.Proficiency, parameters.Term, sondagem);
-                result.Add(
-                    new PollReportPortugueseStudentItem()
-                    {
-                        Code = aluno.CodigoAluno.ToString(),
-                        StudentName = aluno.NomeAlunoRelatorio,
-                        StudentValue = tipo
-                    }
-                );
+
+                string tipo = sondagem != null
+                    ? ConverterProficienciaAluno(parameters.Proficiency, parameters.Term, sondagem) ?? string.Empty
+                    : string.Empty;
+
+                switch (tipo)
+                {
+                    case "Nivel1":
+                        {
+                            tipo = "Nível 1";
+                            break;
+                        }
+                    case "Nivel2":
+                        {
+                            tipo = "Nível 2";
+                            break;
+                        }
+                    case "Nivel3":
+                        {
+                            tipo = "Nível 3";
+                            break;
+                        }
+                    case "Nivel4":
+                        {
+                            tipo = "Nível 4";
+                            break;
+                        }
+                }
+
+                result.Add(new PollReportPortugueseStudentItem()
+                {
+                   Code = aluno.CodigoAluno.ToString(),
+                   StudentName = aluno.NomeAlunoRelatorio,
+                   StudentValue = tipo
+                });
 
                 graficos.Add(new PortChartDataModel()
                 {

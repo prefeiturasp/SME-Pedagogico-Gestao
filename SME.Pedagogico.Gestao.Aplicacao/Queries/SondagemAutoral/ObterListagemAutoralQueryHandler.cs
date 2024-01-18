@@ -167,7 +167,8 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                     CodigoUe = filtrarListagemDto.CodigoUe,
                     NumeroChamada = aluno.NumeroAlunoChamada,
                     ComponenteCurricular = filtrarListagemDto.ComponenteCurricular.ToString(),
-                    NomeAluno = string.IsNullOrEmpty(aluno.NomeSocialAluno) ? aluno.NomeAluno : aluno.NomeSocialAluno
+                    NomeAluno = string.IsNullOrEmpty(aluno.NomeSocialAluno) ? aluno.NomeAluno : aluno.NomeSocialAluno,
+                    Bimestre = filtrarListagemDto.Bimestre
                 });
 
                 listagem.OrderBy(x => x.NumeroChamada);
