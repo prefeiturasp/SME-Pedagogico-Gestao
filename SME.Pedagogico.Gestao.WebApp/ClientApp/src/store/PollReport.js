@@ -52,6 +52,10 @@ const initialState = {
         { label: "3° Bimestre", value: "bimestre3" },
         { label: "4° Bimestre", value: "bimestre4" },
       ],
+      newTerms: [
+        { label: "1° Semestre", value: "semestre1" },
+        { label: "2° Semestre", value: "semestre2" },
+      ],
     },
   },
   selectedFilter: {
