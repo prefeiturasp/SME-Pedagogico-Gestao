@@ -4,14 +4,13 @@ import { actionCreators as PortuguesStore } from "../../../store/SondagemPortugu
 import { useDispatch, useSelector } from 'react-redux';
 import RadioButtonGroup from './radioButton';
 import CheckBox from './checkbox';
+import { TIPO_PERIODO } from "../../../Enums";
 
 function Aluno({ aluno, perguntas, periodo, idOrdemSelecionada, grupoSelecionado }) {
     const dispatch = useDispatch();
     const periodosAbertura = useSelector(store => store.filters.period);
-    const PERIODICIDADE_SEMESTRAL = 1;
-    const PERIODICIDADE_BIMESTRAL = 2;
 
-    const verificarPeriodoAberto = (bimestre, tipoPeriodicidade = PERIODICIDADE_BIMESTRAL) => {
+    const verificarPeriodoAberto = (bimestre, tipoPeriodicidade = TIPO_PERIODO.BIMESTRE) => {
         var todayDate = new Date();
         todayDate.setHours(0, 0, 0, 0);
 
@@ -34,9 +33,9 @@ function Aluno({ aluno, perguntas, periodo, idOrdemSelecionada, grupoSelecionado
             case "aa7f39fc-3b50-4aea-bd05-4bbe7cba687c":
                 return !verificarPeriodoAberto(4);
             case "c93c1c4a-abb9-43a4-a8cd-283e4df365d8":
-                return !verificarPeriodoAberto(1, PERIODICIDADE_SEMESTRAL);
+                return !verificarPeriodoAberto(2);
             case "8de86d08-b7a1-45df-b775-07550714756b":
-                return !verificarPeriodoAberto(2, PERIODICIDADE_SEMESTRAL);
+                return !verificarPeriodoAberto(4);
             default:
                 return true;
         }
