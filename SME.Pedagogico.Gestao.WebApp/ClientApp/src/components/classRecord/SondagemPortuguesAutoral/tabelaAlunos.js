@@ -146,7 +146,7 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
     }, [idOrdemSelecionada, periodos])
 
     useEffect(() => {
-        dispatch(PortuguesStore.listarBimestres());
+        dispatch(PortuguesStore.listarPeriodos(2));//TODO ESTA FIXO BIMESTRE
     }, [])
 
     const ehPrimeiraOrdenacao = ordenacaoAtual === 0;

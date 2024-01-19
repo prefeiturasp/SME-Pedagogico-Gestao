@@ -8,8 +8,8 @@ export default function* () {
     takeLatest(
       Autoral.types.LISTAR_COMPONENTE_CURRICULAR,
       ListarComponenteCurricular
-    ),
-    takeLatest(Autoral.types.LISTAR_BIMESTRES, ListarBimestres),
+      ),
+    takeLatest(Autoral.types.LISTAR_PERIODOS, ListarPeriodos),
     takeLatest(Autoral.types.LISTAR_PERGUNTAS_PORTUGUES, ListarPerguntas),
     takeLatest(
       Autoral.types.EXCLUIR_SONDAGEM_PORTUGUES,
@@ -85,18 +85,18 @@ function listarComponenteCurricularAPI() {
   }).then((response) => response.json());
 }
 
-function* ListarBimestres() {
+function* ListarPeriodos({ payload }) {
   try {
-    const data = yield call(listarBimestresAPI);
+    const data = yield call(listarPeriodosAPI, payload);
     var payload = data;
-    yield put({ type: Autoral.types.SETAR_BIMESTRES, payload });
+    yield put({ type: Autoral.types.SETAR_PERIODOS, payload });
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
   }
 }
 
-function listarBimestresAPI() {
-  var url = `/api/SondagemPortugues/Bimestres`;
+function listarPeriodosAPI({ tipoPeriodo }) {
+    var url = `/api/SondagemPortugues/Periodos?tipoPeriodo=${tipoPeriodo}`;
   return fetch(url, {
     method: "get",
     headers: { "Content-Type": "application/json" },

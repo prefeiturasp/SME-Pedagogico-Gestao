@@ -653,11 +653,11 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public IEnumerable<PeriodoDto> RetornaPeriodosBimestres()
+        public IEnumerable<PeriodoDto> RetornaPeriodos(Models.Enums.TipoPeriodoEnum tipoPeriodo)
         {
             using (var contexto = new SMEManagementContextData())
             {
-                var peridos = contexto.Periodo.Where(x => x.TipoPeriodo == Models.Enums.TipoPeriodoEnum.Bimestre).ToList();
+                var peridos = contexto.Periodo.Where(x => x.TipoPeriodo == tipoPeriodo).ToList();
                 var ListaPeriodos = new List<PeriodoDto>();
                 foreach (var periodo in peridos)
                 {

@@ -122,7 +122,7 @@ function SondagemPortuguesAutoral() {
     dispatch(PortuguesStore.setar_ordem_selecionada(null));
     dispatch(PortuguesStore.setar_perguntas(null));
     dispatch(PortuguesStore.limpar_todas_ordens_selecionadas());
-    dispatch(PortuguesStore.listarBimestres());
+    dispatch(PortuguesStore.listarPeriodos(2));//TODO ESTA FIXO BIMESTRE
     if (grupoSelecionado){
       dispatch(PortuguesStore.listarSequenciaOrdens({ ...filtrosBusca, grupoId: grupoSelecionado }));      
     }
