@@ -9,7 +9,7 @@ export default function* () {
       Autoral.types.LISTAR_COMPONENTE_CURRICULAR,
       ListarComponenteCurricular
       ),
-    takeLatest(Autoral.types.LISTAR_PERIODOS, ListarPeriodos),
+    takeLatest(Autoral.types.LISTAR_PERIODOS_PORTUGUES, ListarPeriodos),
     takeLatest(Autoral.types.LISTAR_PERGUNTAS_PORTUGUES, ListarPerguntas),
     takeLatest(
       Autoral.types.EXCLUIR_SONDAGEM_PORTUGUES,
@@ -88,8 +88,7 @@ function listarComponenteCurricularAPI() {
 function* ListarPeriodos({ payload }) {
   try {
     const data = yield call(listarPeriodosAPI, payload);
-    var payload = data;
-    yield put({ type: Autoral.types.SETAR_PERIODOS, payload });
+    yield put({ type: Autoral.types.SETAR_PERIODOS_PORTUGUES, payload: data });
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
   }

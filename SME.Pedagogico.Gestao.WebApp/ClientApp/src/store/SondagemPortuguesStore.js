@@ -6,11 +6,11 @@ export const types = {
   SETAR_PERIODOS: "SETAR_PERIODOS",
   SETAR_PERGUNTAS: "SETAR_PERGUNTAS",
   ATUALIZAR_RESPOSTA: "ATUALIZAR_RESPOSTA",
-  SETAR_PERIODOS: "SETAR_PERIODOS",
+  SETAR_PERIODOS_PORTUGUES: "SETAR_PERIODOS_PORTUGUES",
   SETAR_ALUNOS_PORTUGUES: "SETAR_ALUNOS_PORTUGUES",
   LISTAR_GRUPOS: "LISTAR_GRUPOS",
   LISTAR_COMPONENTE_CURRICULAR: "LISTAR_COMPONENTE_CURRICULAR",
-  LISTAR_PERIODOS: "LISTAR_PERIODOS",
+  LISTAR_PERIODOS_PORTUGUES: "LISTAR_PERIODOS_PORTUGUES",
   LISTAR_PERGUNTAS_PORTUGUES: "LISTAR_PERGUNTAS_PORTUGUES",
   LISTAR_SEQUENCIA_ORDENS: "LISTAR_SEQUENCIA_ORDENS",
   LISTAR_ALUNOS_PORTUGUES: "LISTAR_ALUNOS_PORTUGUES",
@@ -54,7 +54,7 @@ export const actionCreators = {
   listarComponenteCurricular: () => ({
     type: types.LISTAR_COMPONENTE_CURRICULAR,
   }),
-  listarPeriodos: (tipoPeriodo) => ({ type: types.LISTAR_PERIODOS, payload: { tipoPeriodo }, }),
+  listarPeriodos: (tipoPeriodo) => ({ type: types.LISTAR_PERIODOS_PORTUGUES, payload: { tipoPeriodo }, }),
   listarPerguntasPortugues: (sequenciaOrdem, grupoId) => ({
     type: types.LISTAR_PERGUNTAS_PORTUGUES,
     payload: { sequenciaOrdem, grupoId },
@@ -96,7 +96,7 @@ export const actionCreators = {
     payload: emEdicao,
   }),
   setar_periodos: (periodos) => ({
-    type: types.SETAR_PERIODOS,
+    type: types.SETAR_PERIODOS_PORTUGUES,
     payload: periodos,
   }),
   setar_sequencia_ordens: (sequencias) => ({
@@ -165,7 +165,7 @@ export const reducer = (state, action) => {
       return { ...state, grupos: action.payload };
     case types.SETAR_COMPONENTE_CURRICULAR:
       return { ...state, componenteCurricular: action.payload };
-    case types.SETAR_PERIODOS:
+    case types.SETAR_PERIODOS_PORTUGUES:
       return { ...state, periodos: action.payload };
     case types.SETAR_PERGUNTAS:
       return { ...state, perguntas: action.payload };
