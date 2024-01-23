@@ -1,4 +1,4 @@
-import { TIPO_PERIODO } from "../Enums";
+import { TIPO_PERIODO } from "../../Enums";
 
 // Store filters
 export const types = {
