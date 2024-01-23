@@ -1,3 +1,5 @@
+import { TIPO_PERIODO } from "../../Enums";
+
 // Store filters
 export const types = {
   GET_DRE: "GET_DRE",
@@ -177,7 +179,8 @@ export const reducer = (state, action) => {
         state.period &&
         state.period.length &&
         state.period.forEach((item) => {
-          if (item.bimestre === 2) {
+            if ((item.bimestre === 2 && item.tipoPeriodicidade === TIPO_PERIODO.BIMESTRE) ||
+                (item.bimestre === 1 && item.tipoPeriodicidade === TIPO_PERIODO.SEMESTRE)) {
             if (
               todayDate >= new Date(item.dataInicio) &&
               todayDate <= new Date(item.dataFim)
@@ -188,7 +191,8 @@ export const reducer = (state, action) => {
               };
             }
           }
-          if (item.bimestre === 4) {
+            if ((item.bimestre === 4 && item.tipoPeriodicidade === TIPO_PERIODO.BIMESTRE) ||
+                (item.bimestre === 2 && item.tipoPeriodicidade === TIPO_PERIODO.SEMESTRE)) {
             if (
               todayDate >= new Date(item.dataInicio) &&
               todayDate <= new Date(item.dataFim)

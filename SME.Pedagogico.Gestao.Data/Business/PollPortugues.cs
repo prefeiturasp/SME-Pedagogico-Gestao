@@ -676,7 +676,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task<IEnumerable<AlunoSondagemPortuguesDTO2>> ListarAlunosPortugues(FiltrarListagemDto filtrarListagemDto)
         {
-            try
+            try 
             {
                 var sondagem = await ObterSondagemPortugues(filtrarListagemDto);
                 var endpointsAPI = new EndpointsAPI();

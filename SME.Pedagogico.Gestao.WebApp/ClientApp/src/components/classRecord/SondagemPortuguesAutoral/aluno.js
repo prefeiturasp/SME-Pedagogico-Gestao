@@ -33,9 +33,9 @@ function Aluno({ aluno, perguntas, periodo, idOrdemSelecionada, grupoSelecionado
             case "aa7f39fc-3b50-4aea-bd05-4bbe7cba687c":
                 return !verificarPeriodoAberto(4);
             case "c93c1c4a-abb9-43a4-a8cd-283e4df365d8":
-                return !verificarPeriodoAberto(2);
+                return !verificarPeriodoAberto(1, TIPO_PERIODO.SEMESTRE);
             case "8de86d08-b7a1-45df-b775-07550714756b":
-                return !verificarPeriodoAberto(4);
+                return !verificarPeriodoAberto(2, TIPO_PERIODO.SEMESTRE);
             default:
                 return true;
         }
