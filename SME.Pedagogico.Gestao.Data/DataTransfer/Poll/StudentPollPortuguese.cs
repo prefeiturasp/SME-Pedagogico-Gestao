@@ -22,5 +22,9 @@ namespace SME.Pedagogico.Gestao.Data.DataTransfer
         public string t3l { get; set; }
         public string t4e { get; set; }
         public string t4l { get; set; }
+        public bool ativoB1 { get; set; }
+        public bool ativoB2 { get; set; }
+        public bool ativoB3 { get; set; }
+        public bool ativoB4 { get; set; }
     }
 }
