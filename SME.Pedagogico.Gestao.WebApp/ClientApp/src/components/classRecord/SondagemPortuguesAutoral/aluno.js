@@ -13,11 +13,10 @@ function Aluno({ aluno, perguntas, periodo, idOrdemSelecionada, grupoSelecionado
     const verificarPeriodoAberto = (bimestre, tipoPeriodicidade = TIPO_PERIODO.BIMESTRE) => {
         var todayDate = new Date();
         todayDate.setHours(0, 0, 0, 0);
-
+        if (!periodosAbertura) return false;
         const aberto = periodosAbertura.find(p => p.bimestre === bimestre && p.tipoPeriodicidade === tipoPeriodicidade);
 
-        if (!aberto)
-            return false;
+        if (!aberto) return false;
 
         return new Date(aberto.dataInicio) <= todayDate && new Date(aberto.dataFim) >= todayDate;
     }

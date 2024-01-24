@@ -73,22 +73,22 @@ class StudentPollPortugueseCard extends Component {
             componentLegendRender = <LegendsReadWrite3A />
             rendererStudentPollPortuguese = this.props.students.map(student => (
                 ativoBimestre(student, bimestre) ?
-                <StudentPollPortuguese3A key={student.sequenceNumber} student={student} updatePollStudent={this.props.updatePollStudent} editLock1b={this.props.editLock1b} editLock2b={this.props.editLock2b} editLock3b={this.props.editLock3b} editLock4b={this.props.editLock4b} />:
-                <></>
+                    <StudentPollPortuguese3A key={student.sequenceNumber + student.studentCodeEol} student={student} updatePollStudent={this.props.updatePollStudent} editLock1b={this.props.editLock1b} editLock2b={this.props.editLock2b} editLock3b={this.props.editLock3b} editLock4b={this.props.editLock4b} />:
+                    null
             ));
         } else if (this.props.poll.pollYear === "3" && this.props.poll.selectedFilter.schoolYear <= anoLetivo && bimestre >= this.state.segundoBimestre){
             componentLegendRender = <LegendsReadWrite />;
             rendererStudentPollPortuguese = this.props.students.map(student => (
                 ativoBimestre(student, bimestre) ?
-                    <StudentPollPortuguese3ANivelHipotese anoSelecionado={this.props.poll.selectedFilter.schoolYear} key={student.sequenceNumber} student={student} updatePollStudent={this.props.updatePollStudent} editLock1b={this.props.editLock1b} editLock2b={this.props.editLock2b} editLock3b={this.props.editLock3b} editLock4b={this.props.editLock4b} /> :
-                <></>
+                    <StudentPollPortuguese3ANivelHipotese anoSelecionado={this.props.poll.selectedFilter.schoolYear} key={student.sequenceNumber + student.studentCodeEol} student={student} updatePollStudent={this.props.updatePollStudent} editLock1b={this.props.editLock1b} editLock2b={this.props.editLock2b} editLock3b={this.props.editLock3b} editLock4b={this.props.editLock4b} /> :
+                    null
             ));
         }else {
             componentLegendRender = <LegendsReadWrite />;
             rendererStudentPollPortuguese = this.props.students.map(student => (
                 ativoBimestre(student, bimestre) ?
-                    <StudentPollPortuguese key={student.sequenceNumber} student={student} updatePollStudent={this.props.updatePollStudent} editLock1b={this.props.editLock1b} editLock2b={this.props.editLock2b} editLock3b={this.props.editLock3b} editLock4b={this.props.editLock4b} /> :
-                <></>
+                    <StudentPollPortuguese key={student.sequenceNumber + student.studentCodeEol} student={student} updatePollStudent={this.props.updatePollStudent} editLock1b={this.props.editLock1b} editLock2b={this.props.editLock2b} editLock3b={this.props.editLock3b} editLock4b={this.props.editLock4b} /> :
+                    null
             ));    
         }
 
