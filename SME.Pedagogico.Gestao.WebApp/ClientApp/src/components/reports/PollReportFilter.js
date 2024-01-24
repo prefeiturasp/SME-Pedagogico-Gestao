@@ -100,11 +100,18 @@ class PollReportFilter extends Component {
 
       const ehTurmaMatematicaSemestral =
         ehMatematica && yearClassroom >= 4 && schoolYear >= 2023;
+      
+      const ehTurmaPortuguesSemestral =
+        ehPortugues && yearClassroom >= 4 && schoolYear >= 2024;
 
-      const ehSondagemSemestral =
+      const ehSondagemSemestralMatematica =
         schoolYear < 2022 || ehTurmaMatematicaSemestral;
 
-      const parametroPeriodo = ehSondagemSemestral || ehPortugues ? "terms" : "newTerms";
+     const ehSondagemSemestralPortugues = ehTurmaPortuguesSemestral;    
+
+     let parametroPeriodo = ehSondagemSemestralMatematica ? "terms" : "newTerms";
+     if (ehPortugues)
+        parametroPeriodo = ehSondagemSemestralPortugues ? "newTerms" : "terms";
         
       this.setState((state) => ({
         ...state,
@@ -242,10 +249,18 @@ class PollReportFilter extends Component {
 
     const ehTurmaMatematicaSemestral =
       ehMatematica && yearClassroom >= 4 && schoolYear >= 2023;
+    
+    const ehTurmaPortuguesSemestral =
+        ehPortugues && yearClassroom >= 4 && schoolYear >= 2024;
 
-    const ehSondagemSemestral = schoolYear < 2022 || ehTurmaMatematicaSemestral;
+      const ehSondagemSemestralMatematica =
+        schoolYear < 2022 || ehTurmaMatematicaSemestral;
 
-    const parametroPeriodo = ehSondagemSemestral || ehPortugues ? "terms" : "newTerms";
+     const ehSondagemSemestralPortugues = ehTurmaPortuguesSemestral;    
+
+     let parametroPeriodo = ehSondagemSemestralMatematica ? "terms" : "newTerms";;
+     if (ehPortugues)
+        parametroPeriodo = ehSondagemSemestralPortugues ? "newTerms" : "terms";
 
     this.setState({
       selectedFilter: {

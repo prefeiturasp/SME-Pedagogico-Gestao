@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Aluno from './aluno';
 import { actionCreators as PortuguesStore } from "../../../store/SondagemPortuguesStore";
 import MensagemLimparSelecao from './mensagemLimparSelecao';
+import { TIPO_PERIODO } from "../../../Enums";
 
 function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado, salvar }) {
     const dispatch = useDispatch();
@@ -146,7 +147,8 @@ function TabelaAlunos({ filtros, periodos, idOrdemSelecionada, grupoSelecionado,
     }, [idOrdemSelecionada, periodos])
 
     useEffect(() => {
-        dispatch(PortuguesStore.listarBimestres());
+        const ehSondagemSemestral = filtros && filtros.anoLetivo >= 2024 && filtros.anoEscolar >= 4;
+        dispatch(PortuguesStore.listarPeriodos(ehSondagemSemestral ? TIPO_PERIODO.SEMESTRE : TIPO_PERIODO.BIMESTRE));
     }, [])
 
     const ehPrimeiraOrdenacao = ordenacaoAtual === 0;
