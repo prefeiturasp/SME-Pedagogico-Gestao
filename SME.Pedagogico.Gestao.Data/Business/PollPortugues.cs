@@ -739,7 +739,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 AdicionarAlunosEOL(filtrarListagemDto, alunos, listagem, sondagem);
 
-                return listagem.OrderBy(x => x.NumeroChamada);
+                return listagem.OrderBy(x => x.NumeroChamada).ThenBy(x => x.NomeAluno);
             }
             catch (Exception ex)
             {
