@@ -103,9 +103,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 var turmApi = new TurmasAPI(endpointsAPI);
 
-                var listStudentsClassRoom = await turmApi.GetAlunosNaTurma(Convert.ToInt32(classRoom.classroomCodeEol), _token);
-
-                listStudentsClassRoom = listStudentsClassRoom.Where(x => x.CodigoSituacaoMatricula == 10 || x.CodigoSituacaoMatricula == 1 || x.CodigoSituacaoMatricula == 6 || x.CodigoSituacaoMatricula == 13 || x.CodigoSituacaoMatricula == 5).ToList(); // 1 ativo,10 rematriculado,6-pendente de rematricula
+                var listStudentsClassRoom_all_bimesters = await ObterAlunosAtivosTurmaTodosBimestres(classRoom.classroomCodeEol, int.Parse(classRoom.schoolYear));
+                var listStudentsClassRoom = FiltrarAlunosAtivosBimestre(listStudentsClassRoom_all_bimesters, 0);
 
                 foreach (var studentClassRoom in listStudentsClassRoom)
                 {
@@ -121,6 +120,10 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         studentDTO.dreCodeEol = classRoom.dreCodeEol;
                         studentDTO.schoolCodeEol = classRoom.schoolCodeEol;
                         studentDTO.yearClassroom = classRoom.yearClassroom;
+                        studentDTO.ativoB1 = FiltrarAlunosAtivosBimestre(listStudentsClassRoom_all_bimesters, 1).Any(aa => aa.CodigoAluno.Equals(studentClassRoom.CodigoAluno));
+                        studentDTO.ativoB2 = FiltrarAlunosAtivosBimestre(listStudentsClassRoom_all_bimesters, 2).Any(aa => aa.CodigoAluno.Equals(studentClassRoom.CodigoAluno));
+                        studentDTO.ativoB3 = FiltrarAlunosAtivosBimestre(listStudentsClassRoom_all_bimesters, 3).Any(aa => aa.CodigoAluno.Equals(studentClassRoom.CodigoAluno));
+                        studentDTO.ativoB4 = FiltrarAlunosAtivosBimestre(listStudentsClassRoom_all_bimesters, 4).Any(aa => aa.CodigoAluno.Equals(studentClassRoom.CodigoAluno));
 
                         if (studentPollPortuguese != null)
                         {
@@ -145,6 +148,39 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
 
             return liststudentPollPortuguese.OrderBy(x => Convert.ToInt32(x.sequenceNumber)).ToList();
+        }
+
+        private IEnumerable<AlunosNaTurmaDTO> FiltrarAlunosAtivosBimestre(List<(int bimestre, IEnumerable<AlunosNaTurmaDTO> alunos)> alunosBimestre, int bimestre)
+        => alunosBimestre.Where(std => std.bimestre == bimestre).FirstOrDefault().alunos ?? Enumerable.Empty<AlunosNaTurmaDTO>();
+        
+        private async Task<List<(int bimestre, IEnumerable<AlunosNaTurmaDTO> alunos)>> ObterAlunosAtivosTurmaTodosBimestres(string turmaCodigo, int anoLetivo)
+        {
+            var alunosBimestre = new List<(int bimestre, IEnumerable<AlunosNaTurmaDTO>)>();
+            var alunos = new List<AlunosNaTurmaDTO>();
+            for (int bimestre = 1; bimestre <= 4; bimestre++)
+            {
+                var periodo = await ObterPeriodoRelatorioPorDescricao($"{bimestre}° Bimestre");
+                if (periodo is null)
+                    continue;
+                var periodoFixoAnual = await ObterPeriodoFixoAnual(periodo, anoLetivo);
+                if (periodoFixoAnual is null)
+                    continue;
+
+                if (DateTime.Now.Date < periodoFixoAnual.DataFim
+                    && alunosBimestre.Any())
+                {
+                    var bimestreAnterior = bimestre - 1;
+                    alunosBimestre.Add((bimestre, FiltrarAlunosAtivosBimestre(alunosBimestre, bimestreAnterior)));
+                }
+                else
+                {
+                    var alunosAtivosPeriodo = await alunoAPI.ObterAlunosAtivosPorTurmaEPeriodo(turmaCodigo, periodoFixoAnual.DataFim, periodoFixoAnual.DataInicio);
+                    alunosBimestre.Add((bimestre, alunosAtivosPeriodo));
+                    alunos.AddRange(alunosAtivosPeriodo.Where(ap => !alunos.Any(aa => aa.CodigoAluno.Equals(ap.CodigoAluno))));
+                }
+            }
+            alunosBimestre.Add((0, alunos));
+            return alunosBimestre;
         }
 
         private static void AddStudentPollPortuguese(StudentPollPortuguese studentDTO)
@@ -267,6 +303,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
             using (var contexto = new SMEManagementContextData())
             {
                 return await contexto.Periodo.FirstOrDefaultAsync(p => p.Descricao.Equals(descricao));
+            }
+        }
+
+        private async Task<PeriodoFixoAnual> ObterPeriodoFixoAnual(Periodo periodo, int anoLetivo)
+        {
+            using (var contexto = new SMEManagementContextData())
+            {
+                return await contexto.PeriodoFixoAnual.FirstOrDefaultAsync(fixo => fixo.PeriodoId == periodo.Id && fixo.Ano == anoLetivo);
             }
         }
 
@@ -399,7 +443,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     {
                         if (proficiencia == "Escrita")
                         {
-                            var writing3B = query.DistinctBy(c=>c.studentCodeEol).GroupBy(fu => fu.writing3B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
+                            var writing3B = query.GroupBy(fu => fu.writing3B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
 
                             foreach (var item in writing3B)
                             {
@@ -659,11 +703,11 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        public IEnumerable<PeriodoDto> RetornaPeriodosBimestres()
+        public IEnumerable<PeriodoDto> RetornaPeriodos(Models.Enums.TipoPeriodoEnum tipoPeriodo)
         {
             using (var contexto = new SMEManagementContextData())
             {
-                var peridos = contexto.Periodo.Where(x => x.TipoPeriodo == Models.Enums.TipoPeriodoEnum.Bimestre).ToList();
+                var peridos = contexto.Periodo.Where(x => x.TipoPeriodo == tipoPeriodo).ToList();
                 var ListaPeriodos = new List<PeriodoDto>();
                 foreach (var periodo in peridos)
                 {
@@ -682,7 +726,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task<IEnumerable<AlunoSondagemPortuguesDTO2>> ListarAlunosPortugues(FiltrarListagemDto filtrarListagemDto)
         {
-            try
+            try 
             {
                 var sondagem = await ObterSondagemPortugues(filtrarListagemDto);
                 var endpointsAPI = new EndpointsAPI();
@@ -701,7 +745,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 AdicionarAlunosEOL(filtrarListagemDto, alunos, listagem, sondagem);
 
-                return listagem.OrderBy(x => x.NumeroChamada);
+                return listagem.OrderBy(x => x.NumeroChamada).ThenBy(x => x.NomeAluno);
             }
             catch (Exception ex)
             {

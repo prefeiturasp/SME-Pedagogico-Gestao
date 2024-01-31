@@ -107,13 +107,18 @@ class PollReport extends Component {
     );
 
     const anoLetivo = parseInt(SchoolYear);
-    const ehMatematica =
-      discipline === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao;
-    const ehTurmaMatematicaSemestral =
-      ehMatematica && ano >= 4 && anoLetivo >= 2023;
-    const ehSondagemSemestral = anoLetivo < 2022 || ehTurmaMatematicaSemestral;
-    const semestre = ehMatematica && ehSondagemSemestral ? SEMESTRES[term] : 0;
-    const bimestre = ehMatematica && ehSondagemSemestral ? 0 : BIMESTRES[term];
+    const ehMatematica = discipline === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao;
+    const ehPortugues = discipline === DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES.Descricao;
+
+    const ehTurmaMatematicaSemestral = ehMatematica && ano >= 4 && anoLetivo >= 2023; 
+    const ehTurmaPortuguesSemestral = ehPortugues && ano >= 4 && anoLetivo >= 2024;
+
+    const ehSondagemSemestralMatematica = anoLetivo < 2022 || ehTurmaMatematicaSemestral;
+    const ehSondagemSemestralPortugues = ehTurmaPortuguesSemestral;
+    const ehSondagemSemestral = (ehMatematica && ehSondagemSemestralMatematica) || (ehPortugues && ehSondagemSemestralPortugues);
+    const semestre = ehSondagemSemestral ? SEMESTRES[term] : 0;
+    const bimestre = ehSondagemSemestral ? 0 : BIMESTRES[term];
+
     const proficienciaId = proficiencia.length ? proficiencia[0].id : 0;
     const dreCodigo = parseInt(codigoDRE) || 0;
     const turmaCodigo = parseInt(CodigoTurmaEol) || 0;
