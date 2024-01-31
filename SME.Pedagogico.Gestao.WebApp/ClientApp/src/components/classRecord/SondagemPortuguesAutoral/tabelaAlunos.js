@@ -4,6 +4,7 @@ import Aluno from "./aluno";
 import { actionCreators as PortuguesStore } from "../../../store/SondagemPortuguesStore";
 import MensagemLimparSelecao from './mensagemLimparSelecao';
 import { TIPO_PERIODO } from "../../../Enums";
+import Loader from "../../loader/Loader";
 
 function TabelaAlunos({
   filtros,
