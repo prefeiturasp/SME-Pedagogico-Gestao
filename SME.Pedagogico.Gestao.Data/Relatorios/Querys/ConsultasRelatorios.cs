@@ -263,18 +263,11 @@ namespace SME.Pedagogico.Gestao.Data.Relatorios.Querys
                     o.""Id"" = s.""OrdemId""
 
                 where
-            		s.""Id"" in (
-            		select
-            			s.""Id""
-            		from
-            			""Sondagem"" s
-            		where
-            		        s.""GrupoId"" = @GrupoId
+            		    s.""GrupoId"" = @GrupoId
             		    and s.""ComponenteCurricularId"" = @ComponenteCurricularId
                      and s.""PeriodoId"" = @PeriodoId
             			and s.""AnoLetivo"" = @AnoLetivo
-            			and s.""CodigoTurma"" = @CodigoTurmaEol
-            		        )";
+            			and s.""CodigoTurma"" = @CodigoTurmaEol";
         }
 
         public static string QueryRelatorioMatematicaProficiencia(bool filtroPorDre, bool filtroPorUe, int bimestre,int anoEscolar)

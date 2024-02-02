@@ -4,19 +4,19 @@ import { actionCreators as PortuguesStore } from "../../../store/SondagemPortugu
 import { useDispatch, useSelector } from 'react-redux';
 import RadioButtonGroup from './radioButton';
 import CheckBox from './checkbox';
+import { TIPO_PERIODO } from "../../../Enums";
 
 function Aluno({ aluno, perguntas, periodo, idOrdemSelecionada, grupoSelecionado }) {
     const dispatch = useDispatch();
     const periodosAbertura = useSelector(store => store.filters.period);
-    
-    const verificarPeriodoAberto = (bimestre) => {
+
+    const verificarPeriodoAberto = (bimestre, tipoPeriodicidade = TIPO_PERIODO.BIMESTRE) => {
         var todayDate = new Date();
         todayDate.setHours(0, 0, 0, 0);
+        if (!periodosAbertura) return false;
+        const aberto = periodosAbertura.find(p => p.bimestre === bimestre && p.tipoPeriodicidade === tipoPeriodicidade);
 
-        const aberto = periodosAbertura.find(p => p.bimestre === bimestre);
-
-        if (!aberto)
-            return false;
+        if (!aberto) return false;
 
         return new Date(aberto.dataInicio) <= todayDate && new Date(aberto.dataFim) >= todayDate;
     }
@@ -31,6 +31,10 @@ function Aluno({ aluno, perguntas, periodo, idOrdemSelecionada, grupoSelecionado
                 return !verificarPeriodoAberto(3);
             case "aa7f39fc-3b50-4aea-bd05-4bbe7cba687c":
                 return !verificarPeriodoAberto(4);
+            case "c93c1c4a-abb9-43a4-a8cd-283e4df365d8":
+                return !verificarPeriodoAberto(1, TIPO_PERIODO.SEMESTRE);
+            case "8de86d08-b7a1-45df-b775-07550714756b":
+                return !verificarPeriodoAberto(2, TIPO_PERIODO.SEMESTRE);
             default:
                 return true;
         }

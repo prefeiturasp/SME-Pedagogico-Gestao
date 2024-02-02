@@ -7,6 +7,7 @@ using SME.Pedagogico.Gestao.Data.DTO.Portugues;
 using SME.Pedagogico.Gestao.WebApp.Models.ClassRoom;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EnumModels = SME.Pedagogico.Gestao.Models.Enums;
 
 namespace SME.Pedagogico.Gestao.WebApp.Controllers
 {
@@ -89,10 +90,10 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Bimestres()
+        public async Task<ActionResult> Periodos([FromQuery] EnumModels.TipoPeriodoEnum tipoPeriodo = EnumModels.TipoPeriodoEnum.Bimestre)
         {
             var sondagemAutoralBll = new PollPortuguese(_config);
-            return Ok(sondagemAutoralBll.RetornaPeriodosBimestres());
+            return Ok(sondagemAutoralBll.RetornaPeriodos(tipoPeriodo));
         }
 
         [HttpPost]

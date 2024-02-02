@@ -206,7 +206,7 @@ function* GetFiltersTeacher({ profileOccupatios }) {
 // Filter Sagas
 
 function getPeriodApi(schoolYear) {
-  var url = `/api/Filtros/ListarPeriodoDeAberturas/${schoolYear}?tipoPeriodicidade=${TIPO_PERIODO.BIMESTRE}`;
+  var url = `/api/Filtros/ListarPeriodoDeAberturas/${schoolYear}`;//?tipoPeriodicidade=${TIPO_PERIODO.BIMESTRE}
   return fetch(url, {
     method: "get",
     headers: { "Content-Type": "application/json" },

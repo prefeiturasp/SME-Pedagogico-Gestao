@@ -7,6 +7,7 @@ import TabelaAlunos from "./tabelaAlunos";
 import { actionCreators as dataStore } from "../../../store/Data";
 import { actionCreators as pollStore } from "../../../store/Poll";
 import MensagemConfirmacaoAutoral from "./mensagemConfirmacaoAutoral";
+import { TIPO_PERIODO } from "../../../Enums";
 
 function SondagemPortuguesAutoral() {
   const dispatch = useDispatch();
@@ -122,7 +123,8 @@ function SondagemPortuguesAutoral() {
     dispatch(PortuguesStore.setar_ordem_selecionada(null));
     dispatch(PortuguesStore.setar_perguntas(null));
     dispatch(PortuguesStore.limpar_todas_ordens_selecionadas());
-    dispatch(PortuguesStore.listarBimestres());
+    const ehSondagemSemestral = filtrosBusca && filtrosBusca.anoLetivo >= 2024 && filtrosBusca.anoEscolar >= 4;
+    dispatch(PortuguesStore.listarPeriodos(ehSondagemSemestral ? TIPO_PERIODO.SEMESTRE : TIPO_PERIODO.BIMESTRE));
     if (grupoSelecionado){
       dispatch(PortuguesStore.listarSequenciaOrdens({ ...filtrosBusca, grupoId: grupoSelecionado }));      
     }
