@@ -47,7 +47,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 var listaRetorno = new List<EscolasPorDREDTO>();
                 var listaUesSGP =  JsonConvert.DeserializeObject<List<UesPorDreSGPDto>>(json);
 
-                foreach (var item in listaUesSGP.Where(ue => EnumExtensao.EhUmDosValores(ue.TipoEscola, new Enum[] { TipoEscola.EMEF, TipoEscola.EMEFM, TipoEscola.EMEBS, TipoEscola.CEUEMEF })))
+                foreach (var item in listaUesSGP.Where(ue => EnumExtensao.EhUmDosValores(ue.TipoEscola, new Enum[] { TipoEscola.EMEF, TipoEscola.EMEFM, TipoEscola.EMEBS, TipoEscola.CEUEMEF, TipoEscola.EMEFPFOM })))
                 {
                     var tipoEscola = (int)item.TipoEscola;
                     listaRetorno.Add(new EscolasPorDREDTO()
