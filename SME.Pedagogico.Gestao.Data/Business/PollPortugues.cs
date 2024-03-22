@@ -314,6 +314,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
+        private async Task<PeriodoFixoAnual> ObterPeriodoFixoAnualPorIdEAnoLetivo(string Id, int anoLetivo)
+        {
+            using (var contexto = new SMEManagementContextData())
+            {
+                return await contexto.PeriodoFixoAnual.FirstOrDefaultAsync(fixo => fixo.PeriodoId == Id && fixo.Ano == anoLetivo);
+            }
+        }
+
         public async Task<PollReportPortugueseResult> BuscarDadosRelatorioPortugues(string proficiencia, string bimestre, string anoLetivo, string codigoDre, string codigoEscola, string codigoCurso, Periodo periodo)
         {
             var liststudentPollPortuguese = new List<StudentPollPortuguese>();
@@ -723,11 +731,15 @@ namespace SME.Pedagogico.Gestao.Data.Business
             try 
             {
                 var sondagem = await ObterSondagemPortugues(filtrarListagemDto);
+                var periodoSondagemSelecionado = await ObterPeriodoFixoAnualPorIdEAnoLetivo(filtrarListagemDto.PeriodoId, filtrarListagemDto.AnoLetivo);
                 var endpointsAPI = new EndpointsAPI();
 
                 var turmApi = new TurmasAPI(endpointsAPI);
                 var listaAlunos = await turmApi.GetAlunosNaTurma(Convert.ToInt32(filtrarListagemDto.CodigoTurma), _token);
-                var alunos = listaAlunos.Where(x => x.CodigoSituacaoMatricula == 10 || x.CodigoSituacaoMatricula == 1 || x.CodigoSituacaoMatricula == 6 || x.CodigoSituacaoMatricula == 13 || x.CodigoSituacaoMatricula == 5).ToList();
+                
+                var alunos = listaAlunos.Where(x => !x.AlunoInativo && (x.CodigoSituacaoMatricula == 10 || x.CodigoSituacaoMatricula == 1 || x.CodigoSituacaoMatricula == 6 || x.CodigoSituacaoMatricula == 13 || x.CodigoSituacaoMatricula == 5) || 
+                x.AlunoInativo && periodoSondagemSelecionado != null && ((x.DataSituacao > periodoSondagemSelecionado?.DataInicio.Date && x.DataSituacao <= periodoSondagemSelecionado?.DataFim.Date) || x.DataSituacao > periodoSondagemSelecionado?.DataFim.Date)).ToList();
+                
                 if (alunos == null || !alunos.Any())
                     throw new Exception($"Não encontrado alunos para a turma {filtrarListagemDto.CodigoTurma} do ano letivo {filtrarListagemDto.AnoLetivo}");
 
