@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Configuration;
+using SME.Pedagogico.Gestao.Aplicacao.Queries.Periodos;
 using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DTO.Matematica;
 using SME.Pedagogico.Gestao.Data.Functionalities;
@@ -45,13 +46,12 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 await ObterSondagemAutoralMatematicaBimestre(filtrarListagemDto) :
                 await ObterSondagemAutoralMatematica(filtrarListagemDto);
 
+            var periodoSondagemSelecionado = await mediator.Send(new ObterPeriodoFixoAnualPorTipoAnoLetivoEBimestreQuery(filtrarListagemDto.AnoLetivo, filtrarListagemDto.Bimestre.Value, filtrarListagemDto.AnoLetivo >= 2022 ? TipoPeriodoEnum.Semestre : TipoPeriodoEnum.Bimestre));
+
             var listaAlunos = await TurmaApi.GetAlunosNaTurma(Convert.ToInt32(filtrarListagemDto.CodigoTurma), _token);
 
-            var alunos = listaAlunos.Where(x => x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.Rematriculado
-            || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.Ativo
-            || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.PendenteRematricula
-            || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.SemContinuidade
-            || x.CodigoSituacaoMatricula == (int)SituacaoMatriculaAluno.Concluido).ToList();
+            var alunos = listaAlunos.Where(x => !x.AlunoInativo && (x.CodigoSituacaoMatricula == 10 || x.CodigoSituacaoMatricula == 1 || x.CodigoSituacaoMatricula == 6 || x.CodigoSituacaoMatricula == 13 || x.CodigoSituacaoMatricula == 5) ||
+                x.AlunoInativo && periodoSondagemSelecionado != null && ((x.DataSituacao > periodoSondagemSelecionado?.DataInicio.Date && x.DataSituacao <= periodoSondagemSelecionado?.DataFim.Date) || x.DataSituacao > periodoSondagemSelecionado?.DataFim.Date)).ToList();
 
             if (alunos == null || !alunos.Any())
                 throw new Exception($"Não encontrado alunos para a turma {filtrarListagemDto.CodigoTurma} do ano letivo {filtrarListagemDto.AnoLetivo}");
