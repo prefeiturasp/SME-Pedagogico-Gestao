@@ -5,8 +5,6 @@ import { montarCampoToolTipGrafico } from "../../utils/utils";
 const GraficoMatematicaCACM = (props) => {
   const { dados, index } = props;
 
-  useEffect(() => construirGrafico(), [construirGrafico, dados]);
-
   const format = (data) => {
     data = parseFloat(data);
     return data.toLocaleString("pt-BR");
@@ -72,6 +70,8 @@ const GraficoMatematicaCACM = (props) => {
         });
       });
   }, [dados, index]);
+
+  useEffect(() => construirGrafico(), [construirGrafico, dados]);
 
   const ChartTitle = (props) => {
     return (
