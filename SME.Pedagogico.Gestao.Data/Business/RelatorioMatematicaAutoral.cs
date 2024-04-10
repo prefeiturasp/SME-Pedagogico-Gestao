@@ -172,7 +172,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 await RetornaPerguntasDoRelatorio(filtro, relatorio);
 
                 var ListaAlunos = new List<AlunoPorTurmaRelatorioDTO>();
-                alunosEol.ForEach(alunoRetorno =>
+                alunosEol?.Where(a=> a.CodigoSituacaoMatricula != (int)SituacaoMatriculaAluno.VinculoIndevido)?.ForEach(alunoRetorno =>
                 {
                     var aluno = new AlunoPorTurmaRelatorioDTO();
                     aluno.CodigoAluno = alunoRetorno.CodigoAluno;
