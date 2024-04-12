@@ -20,6 +20,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
 
         private const string PERFIL_CJ = "41e1e074-37d6-e911-abd6-f81654fe895d";
         private const string PERFIL_PROFESSOR = "40E1E074-37D6-E911-ABD6-F81654FE895D";
+        private const string PERFIL_PAP = "3ee1e074-37d6-e911-abd6-f81654fe895d";
 
         public ObterTurmasPorUeCodigoQueryHandler(IHttpClientFactory httpClientFactory, IMediator mediator)
         {
@@ -39,13 +40,13 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 {
                     for (var i = 0; i < 2; i++)
                         listaRetornoTurmas.AddRange(await EnviarRequisicao(httpClient, i % 2 != 0, request.UeCodigo,
-                            request.AnoLetivo, request.ConsideraNovosAnosInfantil));
+                            request.AnoLetivo, request.ConsideraNovosAnosInfantil, perfilAtual));
                 }
                 else
                 {
                     listaRetornoTurmas.AddRange(await EnviarRequisicao(httpClient, false, request.UeCodigo,
                         request.AnoLetivo,
-                        request.ConsideraNovosAnosInfantil));
+                        request.ConsideraNovosAnosInfantil, perfilAtual));
                 }
 
                 var listaRetornoFinal = new List<SalasPorUEDTO>();
@@ -70,11 +71,16 @@ namespace SME.Pedagogico.Gestao.Aplicacao
             }
         }
 
+        private bool EhPerfilPAP(string perfilAtual) 
+        {
+            return perfilAtual.ToUpper() == PERFIL_PAP.ToUpper();
+        }
+
         private bool EhProfessor(string perfilAtual)
             => perfilAtual.ToUpper() == PERFIL_CJ.ToUpper() || perfilAtual.ToUpper() == PERFIL_PROFESSOR.ToUpper();
 
         private async Task<IEnumerable<TurmaSGPDto>> EnviarRequisicao(HttpClient httpClient, bool consideraHistorico, string ueCodigo, int anoLetivo,
-            bool consideraNovosAnosInfantil)
+            bool consideraNovosAnosInfantil, string perfilAtual)
         {
             const int modalidade = 5;
 
@@ -84,8 +90,12 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
             }
 
-            var resposta = await httpClient
-                .GetAsync($"v1/abrangencias/{consideraHistorico}/dres/ues/{ueCodigo}/turmas?modalidade={modalidade}&anoLetivo={anoLetivo}&consideraNovosAnosInfantil={consideraNovosAnosInfantil}");
+            var uri = $"v1/abrangencias/{consideraHistorico}/dres/ues/{ueCodigo}/turmas?modalidade={modalidade}&anoLetivo={anoLetivo}&consideraNovosAnosInfantil={consideraNovosAnosInfantil}";
+
+            if (EhPerfilPAP(perfilAtual))
+                uri = $"v1/turmas/ues/{ueCodigo}/sondagem?anoLetivo={anoLetivo}";
+
+            var resposta = await httpClient.GetAsync(uri);
 
             if (!resposta.IsSuccessStatusCode || resposta.StatusCode == HttpStatusCode.NoContent)
             {
