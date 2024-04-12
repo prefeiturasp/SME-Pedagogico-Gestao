@@ -874,7 +874,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     CodigoUe = filtrarListagemDto.CodigoUe,
                     NumeroChamada = aluno.NumeroAlunoChamada,
                     ComponenteCurricular = filtrarListagemDto.ComponenteCurricular.ToString(),
-                    NomeAluno = aluno.NomeAluno,
+                    NomeAluno = aluno.NomeSocialAluno ?? aluno.NomeAluno,
                 });
                 ;
 
