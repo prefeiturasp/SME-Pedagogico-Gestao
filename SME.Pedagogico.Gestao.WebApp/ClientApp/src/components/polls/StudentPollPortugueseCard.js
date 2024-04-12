@@ -76,7 +76,7 @@ class StudentPollPortugueseCard extends Component {
                     <StudentPollPortuguese3A key={student.sequenceNumber + student.studentCodeEol} student={student} updatePollStudent={this.props.updatePollStudent} editLock1b={this.props.editLock1b} editLock2b={this.props.editLock2b} editLock3b={this.props.editLock3b} editLock4b={this.props.editLock4b} />:
                     null
             ));
-        } else if (this.props.poll.pollYear === "3" && this.props.poll.selectedFilter.schoolYear <= anoLetivo && bimestre >= this.state.segundoBimestre){
+        } else if (this.props.poll.pollYear === "3" && ((this.props.poll.selectedFilter.schoolYear <= anoLetivo && bimestre >= this.state.segundoBimestre) || this.props.poll.selectedFilter.schoolYear > anoLetivo)) {
             componentLegendRender = <LegendsReadWrite />;
             rendererStudentPollPortuguese = this.props.students.map(student => (
                 ativoBimestre(student, bimestre) ?
