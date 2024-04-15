@@ -1,6 +1,4 @@
-﻿using Elastic.Apm.Api;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MoreLinq;
 using SME.Pedagogico.Gestao.Data.Contexts;
@@ -127,7 +125,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             var listaSondagem = await ObterSondagemAutoralMatematicaBimestre(filtrarListagemDto);
             PeriodoFixoAnual periodoFixo = null;
             using (var db = new SMEManagementContextData())
-                periodoFixo = db.PeriodoFixoAnual.FirstOrDefault(fixo => fixo.Ano == filtrarListagemDto.AnoLetivo &&  
+                periodoFixo = db.PeriodoFixoAnual.FirstOrDefault(fixo => fixo.Ano == filtrarListagemDto.AnoLetivo &&
                                                                          fixo.Descricao.StartsWith(filtrarListagemDto.Bimestre.ToString()) &&
                                                                          (int)fixo.TipoPeriodo == (int)(filtrarListagemDto.AnoLetivo >= 2022 ? TipoPeriodoEnum.Semestre : TipoPeriodoEnum.Bimestre));
 
