@@ -3,15 +3,11 @@ using Microsoft.Extensions.Configuration;
 using SME.Pedagogico.Gestao.Aplicacao.Queries.Periodos;
 using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DTO.Matematica;
-using SME.Pedagogico.Gestao.Data.Functionalities;
-using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
-using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using SME.Pedagogico.Gestao.Infra;
 using SME.Pedagogico.Gestao.Models.Autoral;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,21 +16,15 @@ namespace SME.Pedagogico.Gestao.Aplicacao
 {
     public class ObterListagemAutoralQueryHandler : IRequestHandler<ObterListagemAutoralQuery, IEnumerable<AlunoSondagemMatematicaDto>>
     {
-        private string _token;
-        private TurmasAPI TurmaApi;
         private readonly IMediator mediator;
         private readonly IServicoTelemetria servicoTelemetria;
         private SondagemAutoralBusiness sondagemAutoralBusiness;
 
         public ObterListagemAutoralQueryHandler(IConfiguration configuration, IMediator mediator, IServicoTelemetria servicoTelemetria)
         {
-            var createToken = new CreateToken(configuration);
-            _token = createToken.CreateTokenProvisorio();
-
             sondagemAutoralBusiness = new SondagemAutoralBusiness(servicoTelemetria);
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.servicoTelemetria = servicoTelemetria ?? throw new ArgumentNullException(nameof(servicoTelemetria));
-            TurmaApi = new TurmasAPI(new EndpointsAPI());
         }
 
         public async Task<IEnumerable<AlunoSondagemMatematicaDto>> Handle(ObterListagemAutoralQuery request, CancellationToken cancellationToken)
@@ -46,24 +36,22 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 await ObterSondagemAutoralMatematicaBimestre(filtrarListagemDto) :
                 await ObterSondagemAutoralMatematica(filtrarListagemDto);
 
-            var periodoSondagemSelecionado = await mediator.Send(new ObterPeriodoFixoAnualPorTipoAnoLetivoEBimestreQuery(filtrarListagemDto.AnoLetivo, filtrarListagemDto.Bimestre.Value, filtrarListagemDto.AnoLetivo >= 2022 ? TipoPeriodoEnum.Semestre : TipoPeriodoEnum.Bimestre));
+            var periodoSondagemSelecionado = await mediator
+                .Send(new ObterPeriodoFixoAnualPorTipoAnoLetivoEBimestreQuery(filtrarListagemDto.AnoLetivo, filtrarListagemDto.Bimestre.Value, filtrarListagemDto.AnoLetivo >= 2022 ? TipoPeriodoEnum.Semestre : TipoPeriodoEnum.Bimestre));
 
-            var listaAlunos = await TurmaApi.GetAlunosNaTurma(Convert.ToInt32(filtrarListagemDto.CodigoTurma), _token);
-
-            var alunos = listaAlunos.Where(x => !x.AlunoInativo && (x.CodigoSituacaoMatricula == 10 || x.CodigoSituacaoMatricula == 1 || x.CodigoSituacaoMatricula == 6 || x.CodigoSituacaoMatricula == 13 || x.CodigoSituacaoMatricula == 5) ||
-                x.AlunoInativo && periodoSondagemSelecionado != null && ((x.DataSituacao > periodoSondagemSelecionado?.DataInicio.Date && x.DataSituacao <= periodoSondagemSelecionado?.DataFim.Date) || x.DataSituacao > periodoSondagemSelecionado?.DataFim.Date)).ToList();
-
-            if (alunos == null || !alunos.Any())
-                throw new Exception($"Não encontrado alunos para a turma {filtrarListagemDto.CodigoTurma} do ano letivo {filtrarListagemDto.AnoLetivo}");
+            var listaAlunos = await mediator
+                .Send(new ObterAlunosAtivosDentroPeriodoQuery(filtrarListagemDto.CodigoTurma, filtrarListagemDto.AnoLetivo, (periodoSondagemSelecionado.DataInicio, periodoSondagemSelecionado.DataFim)));
 
             var listagem = new List<AlunoSondagemMatematicaDto>();
 
             if (listaSondagem.Count() > 0)
                 MapearAlunosListagemMatematica(listagem, listaSondagem, filtrarListagemDto.Bimestre);
 
-            AdicionarAlunosEOL(filtrarListagemDto, alunos, listagem);
+            AdicionarAlunosEOL(filtrarListagemDto, listaAlunos.ToList(), listagem);
 
-            return listagem.OrderBy(x => x.NumeroChamada).ThenBy(x => x.NomeAluno);
+            return listagem
+                .OrderBy(x => x.NumeroChamada)
+                .ThenBy(x => x.NomeAluno);
         }
 
         private Task RegistrarTempos(TimeSpan tempoQuery, TimeSpan tempoEOL, TimeSpan tempoFiltro, TimeSpan tempoMapeamento, TimeSpan tempoTotal)
@@ -88,7 +76,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
         {
             var listaAlunosDto = new List<AlunoSondagemMatematicaDto>();
             var listCodigoAlunoEol = new List<string>();
-            foreach(var sondagem in listaSondagem)
+            foreach (var sondagem in listaSondagem)
             {
                 sondagem.AlunosSondagem.ForEach(a =>
                 {
@@ -130,7 +118,6 @@ namespace SME.Pedagogico.Gestao.Aplicacao
             {
                 var listaResposta = new List<AlunoRespostaDto>();
                 var alunoDto = listaAlunosDto.Where(a => a.CodigoAluno == codigoAluno).FirstOrDefault();
-                //var listaAlunoResposta = listaAlunosDto.Where(a => a.CodigoAluno == codigoAluno && (a.Bimestre.HasValue ? a.Bimestre.Value : 0) == bimestre).ToList();
                 var listaAlunoResposta = listaAlunosDto.Where(a => a.CodigoAluno == codigoAluno && a.Bimestre == bimestre).ToList();
                 listaAlunoResposta.ForEach(lr =>
                 {

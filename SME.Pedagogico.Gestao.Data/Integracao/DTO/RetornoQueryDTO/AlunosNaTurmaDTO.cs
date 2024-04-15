@@ -18,6 +18,7 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO
         }
         public string DataNascimento { get; set; }
         public string NomeSocialAluno { get; set; }
+        public DateTime DataMatricula { get; set; }
         public int CodigoSituacaoMatricula { get; set; }
         public string SituacaoMatricula { get; set; }
         public DateTime DataSituacao { get; set; }
