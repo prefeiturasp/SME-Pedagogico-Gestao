@@ -20,6 +20,7 @@ using SME.Pedagogico.Gestao.Infra.Utilitarios;
 using SME.Pedagogico.Gestao.IoC;
 using SME.Pedagogico.Gestao.WebApp.Configuracoes;
 using SME.Pedagogico.Gestao.WebApp.Contexts;
+using SME.Pedagogico.Gestao.WebApp.Filtros;
 using SME.Pedagogico.Gestao.WebApp.Middlewares;
 using System;
 using System.IO;
@@ -113,6 +114,7 @@ namespace SME.Pedagogico.Gestao.WebApp
                 string xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 options.IncludeXmlComments(xmlPath);
+                options.OperationFilter<FiltroIntegracaoExterna>();
             });
 
             var config = new MapperConfiguration(cfg =>
