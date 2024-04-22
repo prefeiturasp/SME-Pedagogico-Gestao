@@ -1261,5 +1261,30 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 }
             }
         }
+
+        public async Task<ResultadoAlunoPortuguesDTO> ObterResultadosAluno(string turmaCodigo, string alunoCodigo)
+        {
+            using (var contexto = new SMEManagementContextData())
+            {
+                var resultado = await contexto.PortuguesePolls
+                    .FirstOrDefaultAsync(a => a.classroomCodeEol.Equals(turmaCodigo)
+                                           && a.studentCodeEol.Equals(alunoCodigo));
+
+                if (resultado == null)
+                    return new ResultadoAlunoPortuguesDTO();
+
+                return new ResultadoAlunoPortuguesDTO()
+                {
+                    Escrita1Bim = resultado.writing1B,
+                    Escrita2Bim = resultado.writing2B,
+                    Escrita3Bim = resultado.writing3B,
+                    Escrita4Bim = resultado.writing4B,
+                    Leitura1Bim = resultado.reading1B,
+                    Leitura2Bim = resultado.reading2B,
+                    Leitura3Bim = resultado.reading3B,
+                    Leitura4Bim = resultado.reading4B
+                };
+            }
+        }
     }
 }
