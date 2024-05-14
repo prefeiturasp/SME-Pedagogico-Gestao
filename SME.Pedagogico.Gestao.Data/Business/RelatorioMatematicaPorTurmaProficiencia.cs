@@ -1,5 +1,4 @@
-﻿using Dapper;
-using MoreLinq;
+﻿using MoreLinq;
 using Npgsql;
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.DTO.Matematica;
@@ -10,8 +9,6 @@ using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using SME.Pedagogico.Gestao.Data.Relatorios;
 using SME.Pedagogico.Gestao.Data.Relatorios.Querys;
-using SME.Pedagogico.Gestao.Infra;
-using SME.Pedagogico.Gestao.Models.Autoral;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +24,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         private List<AlunosNaTurmaDTO> _listaDeAlunosAtivos;
         private List<AlunoPerguntaRespostaProficienciaDTO> _listaAlunoPerguntaResposta;
         private const string TERCEIRO_SEMESTRE = "3° Bimestre";
-        private const int ANO_LETIVO_VINTE_QUATRO = 2024;
+        private const int ANO_LETIVO_DOIS_MIL_VINTE_QUATRO = 2024;
 
         private const string TITULO_BARRA_SEM_PREENCHIMENTO = "Sem Preenchimento";
 
@@ -214,7 +211,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private List<BarrasGraficoDTO> ObtenhaListaDeBarrasGrafico(List<AlunoPerguntaRespostaProficienciaDTO> listaPorSubPergunta)
         {
-            var terceiroSemestreVinteQuatro = this._filtro.DescricaoPeriodo == TERCEIRO_SEMESTRE && this._filtro.AnoLetivo == ANO_LETIVO_VINTE_QUATRO;
+            var terceiroSemestreVinteQuatro = this._filtro.DescricaoPeriodo == TERCEIRO_SEMESTRE && this._filtro.AnoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO;
             var listaRetorno = new List<BarrasGraficoDTO>();
             var grupoPorResposta = listaPorSubPergunta.GroupBy(dto => dto.RespostaId);
 

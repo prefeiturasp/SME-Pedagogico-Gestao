@@ -1,5 +1,4 @@
-﻿using Dapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MoreLinq;
 using Npgsql;
 using SME.Pedagogico.Gestao.Data.Contexts;
@@ -12,11 +11,9 @@ using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using SME.Pedagogico.Gestao.Data.Relatorios;
 using SME.Pedagogico.Gestao.Data.Relatorios.Querys;
 using SME.Pedagogico.Gestao.Infra;
-using SME.Pedagogico.Gestao.Models.Autoral;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.Data.Business
@@ -25,11 +22,11 @@ namespace SME.Pedagogico.Gestao.Data.Business
     {
         private const int TERCEIRO_ANO = 3;
         private const string SEGUNDO_SEMESTRE = "2° Semestre";
-        private const int ANO_LETIVO_VINTE_QUARTRO = 2024;
+        private const int ANO_LETIVO_DOIS_MIL_VINTE_QUATRO = 2024;
 
         public async Task<RelatorioConsolidadoDTO> ObterRelatorioMatematicaAutoral(filtrosRelatorioDTO filtro)
         {
-            var segundoSemestreVinteQuartro = filtro.DescricaoPeriodo == SEGUNDO_SEMESTRE && filtro.AnoLetivo >= ANO_LETIVO_VINTE_QUARTRO;
+            var segundoSemestreVinteQuartro = filtro.DescricaoPeriodo == SEGUNDO_SEMESTRE && filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_QUATRO;
             IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
             int totalDeAlunos = await ConsultaTotalDeAlunos.BuscaTotalDeAlunosEOl(filtro);
             var query = ObtenhaQueryRelatorioMatematica(filtro);
@@ -162,7 +159,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
 
                 var periodos = await ConsultaTotalDeAlunos.BuscaDatasPeriodoFixoAnual(filtro);
-                var segundoSemestreVinteQuartro = filtro.DescricaoPeriodo == SEGUNDO_SEMESTRE && filtro.AnoLetivo >= ANO_LETIVO_VINTE_QUARTRO;
+                var segundoSemestreVinteQuartro = filtro.DescricaoPeriodo == SEGUNDO_SEMESTRE && filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_QUATRO;
 
             if (periodos.Count() == 0)
                     throw new Exception("Periodo fixo anual nao encontrado");
