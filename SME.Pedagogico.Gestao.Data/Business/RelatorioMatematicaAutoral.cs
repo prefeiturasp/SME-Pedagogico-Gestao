@@ -23,10 +23,11 @@ namespace SME.Pedagogico.Gestao.Data.Business
         private const int TERCEIRO_ANO = 3;
         private const string SEGUNDO_SEMESTRE = "2° Semestre";
         private const int ANO_LETIVO_DOIS_MIL_VINTE_QUATRO = 2024;
+        private const int ANO_LETIVO_DOIS_MIL_VINTE_CINCO = 2025;
 
         public async Task<RelatorioConsolidadoDTO> ObterRelatorioMatematicaAutoral(filtrosRelatorioDTO filtro)
         {
-            var segundoSemestreVinteQuartro = filtro.DescricaoPeriodo == SEGUNDO_SEMESTRE && filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_QUATRO;
+            var segundoSemestreVinteQuatro = filtro.AnoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO && filtro.DescricaoPeriodo == SEGUNDO_SEMESTRE || filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
             IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
             int totalDeAlunos = await ConsultaTotalDeAlunos.BuscaTotalDeAlunosEOl(filtro);
             var query = ObtenhaQueryRelatorioMatematica(filtro);
@@ -34,7 +35,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
             {
-                relatorio.Perguntas = await RetornaRelatorioMatematica(filtro, conexao, query, totalDeAlunos, segundoSemestreVinteQuartro);
+                relatorio.Perguntas = await RetornaRelatorioMatematica(filtro, conexao, query, totalDeAlunos, segundoSemestreVinteQuatro);
             }
 
             relatorio.Graficos = ObtenhaListaDeGrafico(relatorio.Perguntas);
