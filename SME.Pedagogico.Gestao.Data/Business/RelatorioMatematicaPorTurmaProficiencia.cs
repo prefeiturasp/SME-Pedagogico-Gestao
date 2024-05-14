@@ -212,7 +212,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private List<BarrasGraficoDTO> ObtenhaListaDeBarrasGrafico(List<AlunoPerguntaRespostaProficienciaDTO> listaPorSubPergunta)
         {
-            var consideraNovaOpcaoResposta_SemPreenchimento = this._filtro.AnoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO  && this._filtro.DescricaoPeriodo == TERCEIRO_BIMESTRE || this._filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
+            var consideraNovaOpcaoResposta_SemPreenchimento = ConsideraNovaOpcaoRespostaSemPreenchimento();
             var listaRetorno = new List<BarrasGraficoDTO>();
             var grupoPorResposta = listaPorSubPergunta.GroupBy(dto => dto.RespostaId);
 
@@ -224,10 +224,15 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 listaRetorno.Add(ObtenhaBarraGraficoDto(resposta.RespostaDescricao, listaDeResposta.Count()));
             });
 
-            if(!consideraNovaOpcaoResposta_SemPreenchimento)
+            if (!consideraNovaOpcaoResposta_SemPreenchimento)
                 listaRetorno.Add(ObtenhaBarraSemPreenchimento(listaPorSubPergunta.Count()));
 
             return listaRetorno;
+        }
+
+        private bool ConsideraNovaOpcaoRespostaSemPreenchimento()
+        {
+            return this._filtro.AnoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO && this._filtro.DescricaoPeriodo == TERCEIRO_BIMESTRE || this._filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
         }
 
         private BarrasGraficoDTO ObtenhaBarraSemPreenchimento(int totalResposta)

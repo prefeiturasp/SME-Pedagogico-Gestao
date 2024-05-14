@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using SME.Pedagogico.Gestao.Data.DTO.Portugues.Relatorio;
@@ -8,25 +7,25 @@ using SME.Pedagogico.Gestao.Data.DTO.Matematica.Relatorio;
 using System.Threading.Tasks;
 using System.Linq;
 using MoreLinq;
-using SME.Pedagogico.Gestao.Data.Integracao.DTO;
 using Npgsql;
 using Dapper;
 using SME.Pedagogico.Gestao.Data.DTO.Portugues.Relatorio.CapacidadeLeitura;
-using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.Relatorios.Querys;
 using SME.Pedagogico.Gestao.Data.Relatorios;
 using SME.Pedagogico.Gestao.Data.DTO.RelatorioPorTurma;
 using SME.Pedagogico.Gestao.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using SME.Pedagogico.Gestao.Data.DTO.Relatorio;
-using System.Collections.Immutable;
-using SME.Pedagogico.Gestao.Data.DTO.Matematica;
 using SME.Pedagogico.Gestao.Data.DTO.Portugues.Graficos.Portugues;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
+using SME.Pedagogico.Gestao.Data.Business;
 
 public class RelatorioPortuguesCapacidadeLeitura
 {
     private AlunosAPI alunoAPI;
+    private const string SEGUNDO_SEMESTRE = "2° Semestre";
+    private const int ANO_LETIVO_DOIS_MIL_VINTE_QUATRO = 2024;
+    private const int ANO_LETIVO_DOIS_MIL_VINTE_CINCO = 2025;
 
     public RelatorioPortuguesCapacidadeLeitura()
     {
@@ -153,7 +152,7 @@ public class RelatorioPortuguesCapacidadeLeitura
 
     public async Task<RelatorioCapacidadeLeituraPorTurma> ObterRelatorioCapacidadeLeituraPorTurma(RelatorioPortuguesFiltroDto filtro)
     {
-
+        var consideraNovaOpcaoResposta_SemPreenchimento =  ConsideraNovaOpcaoRespostaSemPreenchimento(filtro);
         var filtrosRelatorio = CriaMapFiltroRelatorio(filtro);
         var periodos = await ConsultaTotalDeAlunos.BuscaDatasPeriodoFixoAnual(filtrosRelatorio);
 
@@ -166,7 +165,7 @@ public class RelatorioPortuguesCapacidadeLeitura
 
         using (var contexto = new SMEManagementContextData())
         {
-            await CriaGraficosRelatorio(relatorio, contexto);
+            await CriaGraficosRelatorio(relatorio, contexto, consideraNovaOpcaoResposta_SemPreenchimento);
         }
         relatorio.Alunos = relatorio.Alunos.OrderBy(x => x.NomeAluno).ToList();
 
@@ -174,7 +173,12 @@ public class RelatorioPortuguesCapacidadeLeitura
 
     }
 
-    private static async Task CriaGraficosRelatorio(RelatorioCapacidadeLeituraPorTurma relatorio, SMEManagementContextData contexto)
+    private static bool ConsideraNovaOpcaoRespostaSemPreenchimento(RelatorioPortuguesFiltroDto filtro)
+    {
+        return filtro.AnoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO && filtro.DescricaoPeriodo == SEGUNDO_SEMESTRE || filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
+    }
+
+    private static async Task CriaGraficosRelatorio(RelatorioCapacidadeLeituraPorTurma relatorio, SMEManagementContextData contexto, bool consideraNovaOpcaoResposta_SemPreenchimento)
     {
         var perguntasBanco = await contexto.PerguntaResposta.Include(x => x.Pergunta).Include(y => y.Resposta).Where(pr => relatorio.Perguntas.Any(p => p.Id == pr.Pergunta.Id)).ToListAsync();
         relatorio.Graficos = new List<GraficoOrdem>();
@@ -197,10 +201,13 @@ public class RelatorioPortuguesCapacidadeLeitura
                     barra.Value = relatorio.Alunos.Count(x => x.Ordens.Any(ordem => ordem.Id == o.Id && ordem.Perguntas.Any(pr => pr.Id == p.Id && pr.Valor == r.Resposta.Descricao)));
                     grafico.Barras.Add(barra);
                 });
-                var barraAlunosSemPreenchimento = new GraficoBarra();
-                barraAlunosSemPreenchimento.Label = "Sem Preenchimento";
-                barraAlunosSemPreenchimento.Value = relatorio.Alunos.Count() - grafico.Barras.Sum(x => x.Value);
-                grafico.Barras.Add(barraAlunosSemPreenchimento);
+                if (!consideraNovaOpcaoResposta_SemPreenchimento) 
+                {
+                    var barraAlunosSemPreenchimento = new GraficoBarra();
+                    barraAlunosSemPreenchimento.Label = "Sem Preenchimento";
+                    barraAlunosSemPreenchimento.Value = relatorio.Alunos.Count() - grafico.Barras.Sum(x => x.Value);
+                    grafico.Barras.Add(barraAlunosSemPreenchimento);
+                }
                 graficoOrdem.perguntasGrafico.Add(grafico);
             });
             relatorio.Graficos.Add(graficoOrdem);
