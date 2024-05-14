@@ -1,5 +1,4 @@
-﻿using Dapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MoreLinq;
 using Npgsql;
 using SME.Pedagogico.Gestao.Data.Contexts;
@@ -12,11 +11,9 @@ using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using SME.Pedagogico.Gestao.Data.Relatorios;
 using SME.Pedagogico.Gestao.Data.Relatorios.Querys;
 using SME.Pedagogico.Gestao.Infra;
-using SME.Pedagogico.Gestao.Models.Autoral;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SME.Pedagogico.Gestao.Data.Business
@@ -24,9 +21,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
     public class RelatorioMatematicaAutoral
     {
         private const int TERCEIRO_ANO = 3;
+        private const string SEGUNDO_SEMESTRE = "2° Semestre";
+        private const int ANO_LETIVO_DOIS_MIL_VINTE_QUATRO = 2024;
+        private const int ANO_LETIVO_DOIS_MIL_VINTE_CINCO = 2025;
 
         public async Task<RelatorioConsolidadoDTO> ObterRelatorioMatematicaAutoral(filtrosRelatorioDTO filtro)
         {
+            var consideraNovaOpcaoResposta_SemPreenchimento = filtro.AnoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO && filtro.DescricaoPeriodo == SEGUNDO_SEMESTRE || filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
             IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
             int totalDeAlunos = await ConsultaTotalDeAlunos.BuscaTotalDeAlunosEOl(filtro);
             var query = ObtenhaQueryRelatorioMatematica(filtro);
@@ -34,7 +35,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
             {
-                relatorio.Perguntas = await RetornaRelatorioMatematica(filtro, conexao, query, totalDeAlunos);
+                relatorio.Perguntas = await RetornaRelatorioMatematica(filtro, conexao, query, totalDeAlunos, consideraNovaOpcaoResposta_SemPreenchimento);
             }
 
             relatorio.Graficos = ObtenhaListaDeGrafico(relatorio.Perguntas);
@@ -61,7 +62,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             return await new RelatorioMatematicaPorTurmaProficiencia(filtro, ObtenhaProficiencia(filtro.Proficiencia)).ObtenhaDTO(filtro.Bimestre);
         }
 
-        private async Task<List<PerguntaDTO>> RetornaRelatorioMatematica(filtrosRelatorioDTO filtro, NpgsqlConnection conexao, string query, int totalDeAlunos)
+        private async Task<List<PerguntaDTO>> RetornaRelatorioMatematica(filtrosRelatorioDTO filtro, NpgsqlConnection conexao, string query, int totalDeAlunos, bool consideraNovaOpcaoResposta_SemPreenchimento)
         {
             var ListaPerguntaEhRespostasRelatorio = await conexao.QueryAsync<PerguntasRespostasDTO>(query.ToString(),
                 new
@@ -88,7 +89,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 CalculaPercentualTotalPergunta(totalDeAlunos, x.Where(y => y.PerguntaId == x.Key).First().PerguntaDescricao, pergunta);
 
                 var listaPr = x.Where(y => y.PerguntaId == x.Key).ToList();
-                CalculaPercentualRespostas(totalDeAlunos, pergunta, listaPr, totalRespostas);
+                CalculaPercentualRespostas(totalDeAlunos, pergunta, listaPr, totalRespostas, consideraNovaOpcaoResposta_SemPreenchimento);
 
                 lista.Add(pergunta);
             });
@@ -108,7 +109,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             pergunta.Respostas = new List<RespostaDTO>();
         }
 
-        private void CalculaPercentualRespostas(int totalDeAlunos, PerguntaDTO pergunta, List<PerguntasRespostasDTO> listaPr, int totalRespostas)
+        private void CalculaPercentualRespostas(int totalDeAlunos, PerguntaDTO pergunta, List<PerguntasRespostasDTO> listaPr, int totalRespostas, bool consideraNovaOpcaoResposta_SemPreenchimento = false)
         {
             foreach (var item in listaPr)
             {
@@ -119,8 +120,11 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 pergunta.Respostas.Add(resposta);
             }
 
-            var respostaSempreenchimento = CriaRespostaSemPreenchimento(totalDeAlunos, totalRespostas);
-            pergunta.Respostas.Add(respostaSempreenchimento);
+            if (!consideraNovaOpcaoResposta_SemPreenchimento)
+            {
+                var respostaSempreenchimento = CriaRespostaSemPreenchimento(totalDeAlunos, totalRespostas);
+                pergunta.Respostas.Add(respostaSempreenchimento);
+            }
         }
 
         private RespostaDTO CriaRespostaSemPreenchimento(int totalDeAlunos, int quantidadeTotalRespostasPergunta)
@@ -156,8 +160,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
 
                 var periodos = await ConsultaTotalDeAlunos.BuscaDatasPeriodoFixoAnual(filtro);
+                var consideraNovaOpcaoResposta_SemPreenchimento = filtro.AnoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO  && filtro.DescricaoPeriodo == SEGUNDO_SEMESTRE || filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
 
-                if (periodos.Count() == 0)
+            if (periodos.Count() == 0)
                     throw new Exception("Periodo fixo anual nao encontrado");
 
                 var endpoits = new EndpointsAPI();
@@ -203,31 +208,33 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 {
                     var perguntasBanco = await contexto.PerguntaResposta.Include(x => x.Pergunta).Include(y => y.Resposta).Where(pr => relatorio.Perguntas.Any(p => p.Id == pr.Pergunta.Id)).ToListAsync();
 
-                    foreach (var pergunta in relatorio.Perguntas)
+                foreach (var pergunta in relatorio.Perguntas)
+                {
+                    var grafico = new GraficosRelatorioDTO();
+                    grafico.nomeGrafico = pergunta.Nome;
+                    grafico.Barras = new List<BarrasGraficoDTO>();
+                    var listaRespostas = perguntasBanco.Where(x => x.Pergunta.Id == pergunta.Id).ToList();
+
+                    listaRespostas.ForEach(resposta =>
                     {
-                        var grafico = new GraficosRelatorioDTO();
-                        grafico.nomeGrafico = pergunta.Nome;
-                        grafico.Barras = new List<BarrasGraficoDTO>();
-                        var listaRespostas = perguntasBanco.Where(x => x.Pergunta.Id == pergunta.Id).ToList();
+                        var barra = new BarrasGraficoDTO();
+                        barra.label = resposta.Resposta.Descricao;
+                        barra.value = relatorio.Alunos.Count(x => x.Perguntas.Any(r => r.Id == pergunta.Id && r.Valor == resposta.Resposta.Descricao));
+                        grafico.Barras.Add(barra);
+                    });
 
-                        listaRespostas.ForEach(resposta =>
-                        {
-                            var barra = new BarrasGraficoDTO();
-                            barra.label = resposta.Resposta.Descricao;
-                            barra.value = relatorio.Alunos.Count(x => x.Perguntas.Any(r => r.Id == pergunta.Id && r.Valor == resposta.Resposta.Descricao));
-                            grafico.Barras.Add(barra);
-                        });
-
+                    if (!consideraNovaOpcaoResposta_SemPreenchimento) 
+                    { 
                         var barraAlunosSemPreenchimento = new BarrasGraficoDTO();
                         barraAlunosSemPreenchimento.label = "Sem Preenchimento";
                         barraAlunosSemPreenchimento.value = relatorio.Alunos.Count() - grafico.Barras.Sum(x => x.value);
                         grafico.Barras.Add(barraAlunosSemPreenchimento);
-                        relatorio.Graficos.Add(grafico);
                     }
+                    relatorio.Graficos.Add(grafico);
                 }
+            }
                 return relatorio;
         }
-        
         private bool ExibirNumeroDaQuestao(int anoEscolar, int bimestre)
         {
             return (anoEscolar >= Constantes.QUARTO_ANO && anoEscolar <= Constantes.NONO_ANO) && bimestre == Constantes.QUARTO_BIMESTRE;
