@@ -27,7 +27,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task<RelatorioConsolidadoDTO> ObterRelatorioMatematicaAutoral(filtrosRelatorioDTO filtro)
         {
-            var consideraNovaOpcaoResposta_SemPreenchimento = filtro.AnoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO && filtro.DescricaoPeriodo == SEGUNDO_SEMESTRE || filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
+            var consideraNovaOpcaoResposta_SemPreenchimento = ConsideraNovaOpcaoRespostaSemPreenchimento(filtro);
             IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
             int totalDeAlunos = await ConsultaTotalDeAlunos.BuscaTotalDeAlunosEOl(filtro);
             var query = ObtenhaQueryRelatorioMatematica(filtro);
@@ -41,6 +41,11 @@ namespace SME.Pedagogico.Gestao.Data.Business
             relatorio.Graficos = ObtenhaListaDeGrafico(relatorio.Perguntas);
 
             return relatorio;
+        }
+
+        private static bool ConsideraNovaOpcaoRespostaSemPreenchimento(filtrosRelatorioDTO filtro)
+        {
+            return filtro.AnoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO && filtro.DescricaoPeriodo == SEGUNDO_SEMESTRE || filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
         }
 
         public async Task<RelatorioConsolidadoProficienciaDTO> ObtenhaRelatorioMatematicaProficiencia(filtrosRelatorioDTO filtro)
@@ -160,7 +165,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
 
                 var periodos = await ConsultaTotalDeAlunos.BuscaDatasPeriodoFixoAnual(filtro);
-                var consideraNovaOpcaoResposta_SemPreenchimento = filtro.AnoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO  && filtro.DescricaoPeriodo == SEGUNDO_SEMESTRE || filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
+                var consideraNovaOpcaoResposta_SemPreenchimento = ConsideraNovaOpcaoRespostaSemPreenchimento(filtro);
 
             if (periodos.Count() == 0)
                     throw new Exception("Periodo fixo anual nao encontrado");

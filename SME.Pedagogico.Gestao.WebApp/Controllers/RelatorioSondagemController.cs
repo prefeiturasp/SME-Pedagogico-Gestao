@@ -26,6 +26,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         private const int TERCEIRO_ANO = 3;
         private const int ANO_ESCOLAR_2022 = 2022;
         private const string PROFICIENCIA_NUMERO = "Números";
+        private const string TERCEIRO_BIMESTRE = "3° Bimestre";
+        private const int ANO_LETIVO_DOIS_MIL_VINTE_QUATRO = 2024;
+        private const int ANO_LETIVO_DOIS_MIL_VINTE_CINCO = 2025;
 
         public RelatorioSondagemController(IConfiguration config)
         {
@@ -243,6 +246,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
         private async Task<PollReportPortugueseStudentResult> BuscarDadosPorTurmaAsync(ParametersModel parameters, Periodo periodo)
         {
+            var consideraNovaOpcaoRespostaSemPreenchimentoTerceiroBimestre = ConsideraNovaOpcaoRespostaSemPreenchimentoTerceiroBimestre(int.Parse(parameters.SchoolYear),parameters.Term);
             var BusinessPoll = new Data.Business.PollPortuguese(_config);
             var alunosBusiness = new AlunosBusiness(_config);
 
@@ -328,14 +332,17 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             retorno.ChartData = graficos.OrderBy(a => a.Name).ToList();
 
 
-            var semPreenchimento = listaGrafico.FirstOrDefault(a => string.IsNullOrWhiteSpace(a.Label));
-            if (semPreenchimento != null)
+            if (!consideraNovaOpcaoRespostaSemPreenchimentoTerceiroBimestre)
             {
-                retorno.ChartData.Add(new PortChartDataModel()
+                var semPreenchimento = listaGrafico.FirstOrDefault(a => string.IsNullOrWhiteSpace(a.Label));
+                if (semPreenchimento != null)
                 {
-                    Name = "Sem Preenchimento",
-                    Value = semPreenchimento.Value >= 0 ? semPreenchimento.Value :0
-                });
+                    retorno.ChartData.Add(new PortChartDataModel()
+                    {
+                        Name = "Sem Preenchimento",
+                        Value = semPreenchimento.Value >= 0 ? semPreenchimento.Value : 0
+                    });
+                } 
             }
 
             return retorno;
@@ -410,6 +417,10 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 default:
                     return proficiencia;
             }
+        }
+        private bool ConsideraNovaOpcaoRespostaSemPreenchimentoTerceiroBimestre(int anoLetivo,string descricaoPeriodo)
+        {
+            return anoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO && descricaoPeriodo == TERCEIRO_BIMESTRE || anoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
         }
         private bool EhRelatorioDeMatematicaAutoral(ParametersModel parameters)
         {
