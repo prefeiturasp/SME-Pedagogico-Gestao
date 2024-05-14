@@ -160,7 +160,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
 
                 var periodos = await ConsultaTotalDeAlunos.BuscaDatasPeriodoFixoAnual(filtro);
-                var segundoSemestreVinteQuartro = filtro.DescricaoPeriodo == SEGUNDO_SEMESTRE && filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_QUATRO;
+                var consideraNovaOpcaoResposta_SemPreenchimento = filtro.AnoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO  && filtro.DescricaoPeriodo == SEGUNDO_SEMESTRE || filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
 
             if (periodos.Count() == 0)
                     throw new Exception("Periodo fixo anual nao encontrado");
@@ -223,7 +223,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         grafico.Barras.Add(barra);
                     });
 
-                    if (!segundoSemestreVinteQuartro) 
+                    if (!consideraNovaOpcaoResposta_SemPreenchimento) 
                     { 
                         var barraAlunosSemPreenchimento = new BarrasGraficoDTO();
                         barraAlunosSemPreenchimento.label = "Sem Preenchimento";

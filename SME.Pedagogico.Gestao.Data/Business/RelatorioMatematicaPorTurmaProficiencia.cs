@@ -23,7 +23,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         private List<DatasPeriodoFixoAnualDTO> _listaDePeriodos;
         private List<AlunosNaTurmaDTO> _listaDeAlunosAtivos;
         private List<AlunoPerguntaRespostaProficienciaDTO> _listaAlunoPerguntaResposta;
-        private const string TERCEIRO_SEMESTRE = "3° Bimestre";
+        private const string TERCEIRO_BIMESTRE = "3° Bimestre";
         private const int ANO_LETIVO_DOIS_MIL_VINTE_QUATRO = 2024;
         private const int ANO_LETIVO_DOIS_MIL_VINTE_CINCO = 2025;
 
@@ -212,7 +212,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private List<BarrasGraficoDTO> ObtenhaListaDeBarrasGrafico(List<AlunoPerguntaRespostaProficienciaDTO> listaPorSubPergunta)
         {
-            var consideraNovaOpcaoResposta_SemPreenchimento = this._filtro.AnoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO  && this._filtro.DescricaoPeriodo == TERCEIRO_SEMESTRE || this._filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
+            var consideraNovaOpcaoResposta_SemPreenchimento = this._filtro.AnoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO  && this._filtro.DescricaoPeriodo == TERCEIRO_BIMESTRE || this._filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
             var listaRetorno = new List<BarrasGraficoDTO>();
             var grupoPorResposta = listaPorSubPergunta.GroupBy(dto => dto.RespostaId);
 
