@@ -212,7 +212,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private List<BarrasGraficoDTO> ObtenhaListaDeBarrasGrafico(List<AlunoPerguntaRespostaProficienciaDTO> listaPorSubPergunta)
         {
-            var terceiroSemestreVinteQuatro = this._filtro.AnoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO  && this._filtro.DescricaoPeriodo == TERCEIRO_SEMESTRE || this._filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
+            var consideraNovaOpcaoResposta_SemPreenchimento = this._filtro.AnoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO  && this._filtro.DescricaoPeriodo == TERCEIRO_SEMESTRE || this._filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
             var listaRetorno = new List<BarrasGraficoDTO>();
             var grupoPorResposta = listaPorSubPergunta.GroupBy(dto => dto.RespostaId);
 
@@ -224,7 +224,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 listaRetorno.Add(ObtenhaBarraGraficoDto(resposta.RespostaDescricao, listaDeResposta.Count()));
             });
 
-            if(!terceiroSemestreVinteQuatro)
+            if(!consideraNovaOpcaoResposta_SemPreenchimento)
                 listaRetorno.Add(ObtenhaBarraSemPreenchimento(listaPorSubPergunta.Count()));
 
             return listaRetorno;

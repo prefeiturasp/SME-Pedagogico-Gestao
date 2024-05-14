@@ -27,7 +27,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task<RelatorioConsolidadoDTO> ObterRelatorioMatematicaAutoral(filtrosRelatorioDTO filtro)
         {
-            var segundoSemestreVinteQuatro = filtro.AnoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO && filtro.DescricaoPeriodo == SEGUNDO_SEMESTRE || filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
+            var consideraNovaOpcaoResposta_SemPreenchimento = filtro.AnoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO && filtro.DescricaoPeriodo == SEGUNDO_SEMESTRE || filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
             IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
             int totalDeAlunos = await ConsultaTotalDeAlunos.BuscaTotalDeAlunosEOl(filtro);
             var query = ObtenhaQueryRelatorioMatematica(filtro);
@@ -35,7 +35,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
             {
-                relatorio.Perguntas = await RetornaRelatorioMatematica(filtro, conexao, query, totalDeAlunos, segundoSemestreVinteQuatro);
+                relatorio.Perguntas = await RetornaRelatorioMatematica(filtro, conexao, query, totalDeAlunos, consideraNovaOpcaoResposta_SemPreenchimento);
             }
 
             relatorio.Graficos = ObtenhaListaDeGrafico(relatorio.Perguntas);
@@ -62,7 +62,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             return await new RelatorioMatematicaPorTurmaProficiencia(filtro, ObtenhaProficiencia(filtro.Proficiencia)).ObtenhaDTO(filtro.Bimestre);
         }
 
-        private async Task<List<PerguntaDTO>> RetornaRelatorioMatematica(filtrosRelatorioDTO filtro, NpgsqlConnection conexao, string query, int totalDeAlunos, bool segundoSemestre)
+        private async Task<List<PerguntaDTO>> RetornaRelatorioMatematica(filtrosRelatorioDTO filtro, NpgsqlConnection conexao, string query, int totalDeAlunos, bool consideraNovaOpcaoResposta_SemPreenchimento)
         {
             var ListaPerguntaEhRespostasRelatorio = await conexao.QueryAsync<PerguntasRespostasDTO>(query.ToString(),
                 new
@@ -89,7 +89,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 CalculaPercentualTotalPergunta(totalDeAlunos, x.Where(y => y.PerguntaId == x.Key).First().PerguntaDescricao, pergunta);
 
                 var listaPr = x.Where(y => y.PerguntaId == x.Key).ToList();
-                CalculaPercentualRespostas(totalDeAlunos, pergunta, listaPr, totalRespostas, segundoSemestre);
+                CalculaPercentualRespostas(totalDeAlunos, pergunta, listaPr, totalRespostas, consideraNovaOpcaoResposta_SemPreenchimento);
 
                 lista.Add(pergunta);
             });
@@ -109,7 +109,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             pergunta.Respostas = new List<RespostaDTO>();
         }
 
-        private void CalculaPercentualRespostas(int totalDeAlunos, PerguntaDTO pergunta, List<PerguntasRespostasDTO> listaPr, int totalRespostas, bool segundoSemestre = false)
+        private void CalculaPercentualRespostas(int totalDeAlunos, PerguntaDTO pergunta, List<PerguntasRespostasDTO> listaPr, int totalRespostas, bool consideraNovaOpcaoResposta_SemPreenchimento = false)
         {
             foreach (var item in listaPr)
             {
@@ -120,7 +120,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 pergunta.Respostas.Add(resposta);
             }
 
-            if (!segundoSemestre)
+            if (!consideraNovaOpcaoResposta_SemPreenchimento)
             {
                 var respostaSempreenchimento = CriaRespostaSemPreenchimento(totalDeAlunos, totalRespostas);
                 pergunta.Respostas.Add(respostaSempreenchimento);
