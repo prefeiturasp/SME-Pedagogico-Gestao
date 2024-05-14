@@ -94,7 +94,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                             ComponenteCurricularId = "c65b2c0a-7a58-4d40-b474-23f0982f14b1",
                             GrupoId = "e27b99a3-789d-43fb-a962-7df8793622b1",
                             PeriodoId = periodo.Id,
-                            CodigoTurma = parameters.CodigoTurmaEol
+                            CodigoTurma = parameters.CodigoTurmaEol,
+                            DescricaoPeriodo = parameters.Term,
                         });
 
                         return Ok(relatorio);
@@ -181,6 +182,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 AnoLetivo = Convert.ToInt32(parameters.SchoolYear),
                 CodigoDre = parameters.CodigoDRE,
                 CodigoTurma = parameters.CodigoTurmaEol,
+                DescricaoPeriodo = parameters.Term,
                 CodigoUe = parameters.CodigoEscola,
                 ComponenteCurricularId = "c65b2c0a-7a58-4d40-b474-23f0982f14b1",
                 GrupoId = parameters.GrupoId,
