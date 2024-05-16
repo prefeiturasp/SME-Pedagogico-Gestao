@@ -23,6 +23,7 @@ import { componentRenderPoll } from "./funcoes/componenteRenderPoll";
 import { updatePollStudent } from "./funcoes/updatePollStudent";
 import SelectChangeColor from "../inputs/SelectChangeColor";
 import { ALERTA_DESEJA_SALVAR_AGORA, ALERTA_ESTUDANTE_SEM_RESPOSTA_SELECIONADA } from "../../utils/constants";
+import { SavePollPortugueseAsync } from '../../sagas/Poll';
 
 class Poll extends Component {
   constructor(props) {
@@ -412,12 +413,17 @@ class Poll extends Component {
         const continuar =
           this.validarEstudantesSemRespostasClassRoomEnumClassPT();
         if (continuar) {
-          this.props.pollMethods.save_poll_portuguese_student(
-            this.props.poll.students
-          );
-          return true;
-        }
-
+          try {
+            return SavePollPortugueseAsync(this.props.poll.students).then(
+              () => {
+                this.props.dataMethods.reset_new_data_state();
+                return true;
+              }
+            );
+          } catch (e) {
+            return false;
+          }
+        }      
         showModalError({
           content: ALERTA_ESTUDANTE_SEM_RESPOSTA_SELECIONADA,
         });
