@@ -1,6 +1,9 @@
 ﻿import { takeLatest, call, put, all } from "redux-saga/effects";
 import * as Autoral from "../store/SondagemPortuguesStore";
 import * as Poll from "../store/Poll";
+import { store } from "..";
+import { showModalError, showModalSuccess } from "../service/modal-service";
+import { SALVAR_DADOS_SONDAGEM_ERRO, SALVAR_DADOS_SONDAGEM_SUCESSO } from '../utils/constants';
 
 export default function* () {
   yield all([
@@ -8,7 +11,7 @@ export default function* () {
     takeLatest(
       Autoral.types.LISTAR_COMPONENTE_CURRICULAR,
       ListarComponenteCurricular
-      ),
+    ),
     takeLatest(Autoral.types.LISTAR_PERIODOS_PORTUGUES, ListarPeriodos),
     takeLatest(Autoral.types.LISTAR_PERGUNTAS_PORTUGUES, ListarPerguntas),
     takeLatest(
@@ -95,7 +98,7 @@ function* ListarPeriodos({ payload }) {
 }
 
 function listarPeriodosAPI({ tipoPeriodo }) {
-    var url = `/api/SondagemPortugues/Periodos?tipoPeriodo=${tipoPeriodo}`;
+  var url = `/api/SondagemPortugues/Periodos?tipoPeriodo=${tipoPeriodo}`;
   return fetch(url, {
     method: "get",
     headers: { "Content-Type": "application/json" },
@@ -165,6 +168,50 @@ function listarAlunosPortuguesApi(filtro) {
     method: "get",
     headers: { "Content-Type": "application/json" },
   }).then((response) => response.json());
+}
+
+export async function SalvaSondagemPortuguesAsync(payload) {
+  store.dispatch(Poll.actionCreators.setLoadingSalvar(true));
+
+  return fetch("/api/SondagemPortugues/SondagemPortuguesAutoral", {
+    method: "post",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload.alunos),
+  })
+    .then((response) => {
+      showModalSuccess({
+        content: SALVAR_DADOS_SONDAGEM_SUCESSO,
+      });
+
+      if (payload?.novaOrdem) {
+        store.dispatch(
+          Autoral.actionCreators.setar_ordem_selecionada(payload.novaOrdem)
+        );
+        payload.filtro.ordemId = payload.novaOrdem;
+      }
+
+      if (payload?.novoPeriodoId) {
+        store.dispatch(
+          Autoral.actionCreators.setar_periodo_selecionado(
+            payload.novoPeriodoId
+          )
+        );
+        payload.filtro.periodoId = payload.novoPeriodoId.id;
+      }
+
+      store.dispatch(
+        Autoral.actionCreators.listarAlunosPortugues(payload.filtro)
+      );
+      return response;
+    })
+    .catch(() => {
+      showModalError({
+        content: SALVAR_DADOS_SONDAGEM_ERRO,
+      });
+    })
+    .finally(() => {
+      store.dispatch(Poll.actionCreators.setLoadingSalvar(false));
+    });
 }
 
 function* SalvaSondagemPortugues({ payload }) {

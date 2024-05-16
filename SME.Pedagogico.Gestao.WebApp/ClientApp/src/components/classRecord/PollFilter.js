@@ -10,12 +10,13 @@ import { actionCreators as actionCreatorAutoral } from "../../store/SondagemAuto
 
 import SelectChangeColor from "../inputs/SelectChangeColor";
 import CircleButton from "../inputs/CircleButton";
-import MensagemConfirmacaoAutoral from "./SondagemPortuguesAutoral/mensagemConfirmacaoAutoral";
+import { showModalConfirm } from "../../service/modal-service";
 
 import { actionCreators as actionCreatorsPollRouter } from "../../store/PollRouter";
 
 import permissoes from "../../utils/permissoes";
 import { ROUTES_ENUM } from "../../Enums";
+import { ALERTA_DESEJA_SALVAR_AGORA } from "../../utils/constants";
 
 class PollFilter extends Component {
   constructor(props) {
@@ -23,7 +24,6 @@ class PollFilter extends Component {
     this.state = {
       selectedDre: "",
       selectedSchool: "",
-      showMessageBox: false,
       selectedClassRoom: "",
       yearClassroom: null,
       classroom: "",
@@ -290,17 +290,31 @@ class PollFilter extends Component {
     });
   }
 
-  toggleMessageBox() {
-    if (!this.props.data.newDataToSave) {
-      this.setSelectedFilter();
-      this.props.poll2.setBimestre("");
-      this.props.poll2.setNavegacaoSelecionada(null);
-    }
+  limparDadosToggleMessageBox() {
+    this.setSelectedFilter();
+    this.props.poll2.setBimestre("");
+    this.props.poll2.setNavegacaoSelecionada(null);
+  }
 
-    this.setState({
-      showMessageBox:
-        this.props.data.newDataToSave && !this.state.showMessageBox,
-    });
+  toggleMessageBox() {
+    if (this.props.data.newDataToSave) {
+      showModalConfirm({
+        content: ALERTA_DESEJA_SALVAR_AGORA,
+        onOk: () => {
+          this.props.savePollStudent().then((continuar = true) => {
+            if (continuar) {
+              setTimeout(() => this.limparDadosToggleMessageBox(), 1000);
+            }
+            return continuar;
+          });
+        },
+        onCancel: () => {
+          this.limparDadosToggleMessageBox();
+        },
+      });
+    } else {
+      this.limparDadosToggleMessageBox();
+    }
   }
 
   setSelectedFilter() {
@@ -365,7 +379,6 @@ class PollFilter extends Component {
       selectedSchool,
       schoolYear,
       classroom,
-      showMessageBox,
     } = this.state;
     let selectDre = null;
     let selectSchool = null;
@@ -543,18 +556,6 @@ class PollFilter extends Component {
           iconClass="fas fa-search"
           onClick={this.toggleMessageBox}
           disabled={!this.checkDisabledButton()}
-        />
-        <MensagemConfirmacaoAutoral
-          controleExibicao={this.toggleMessageBox}
-          acaoPrincipal={async () => {
-            this.props
-              .savePollStudent()
-              .then(() => setTimeout(() => this.setSelectedFilter(), 1000));
-          }}
-          acaoSecundaria={async () => {
-            this.setSelectedFilter();
-          }}
-          exibir={showMessageBox}
         />
       </div>
     );

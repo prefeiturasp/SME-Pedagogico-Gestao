@@ -15,14 +15,14 @@ import { actionCreators as actionCreatorAutoral } from "../../store/SondagemAuto
 
 import { bindActionCreators } from "redux";
 
-import TwoStepsSave from "../messaging/TwoStepsSave";
-import MensagemConfirmacaoAutoral from "./SondagemPortuguesAutoral/mensagemConfirmacaoAutoral";
+import { showModalConfirm, showModalError } from "../../service/modal-service";
 import Loader from "../loader/Loader";
 import { verificarDisciplina } from "../../utils";
 
 import { componentRenderPoll } from "./funcoes/componenteRenderPoll";
 import { updatePollStudent } from "./funcoes/updatePollStudent";
 import SelectChangeColor from "../inputs/SelectChangeColor";
+import { ALERTA_DESEJA_SALVAR_AGORA, ALERTA_ESTUDANTE_SEM_RESPOSTA_SELECIONADA } from "../../utils/constants";
 
 class Poll extends Component {
   constructor(props) {
@@ -30,9 +30,6 @@ class Poll extends Component {
     this.state = {
       didAnswerPoll: false, //usar para perguntar para salvar sondagem
       sondagemType: ClassRoomEnum.ClassEmpty,
-      showMessageBox: false, //para botao save
-      showMessagePortugueseBox: false, //para botao para abrir portugues
-      showMessageMathBox: false, //para botao para abrir matematica
       controleEdicaoBimestre: false,
       bimestreAtualControleEdicao: null,
       isMatematica: false,
@@ -101,20 +98,53 @@ class Poll extends Component {
   }
 
   toggleMessageBox() {
-    this.setState({
-      showMessageBox: !this.state.showMessageBox,
+    showModalConfirm({
+      content: "Deseja salvar as informações?",
+      onOk: () => {
+        this.savePollStudent();
+      },
     });
   }
 
   toggleMessagePortugueseBox() {
-    this.setState({
-      showMessagePortugueseBox: !this.state.showMessagePortugueseBox,
+    showModalConfirm({
+      content: ALERTA_DESEJA_SALVAR_AGORA,
+      onOk: () => {
+        this.savePollStudent().then((continuar = true) => {
+          if (continuar) {
+            this.limparDadosAposSalvarMatematicaAutoral();
+            this.openPortuguesePoll();
+          }
+        });
+      },
+      onCancel: () => {
+        this.limparDadosAposSalvarMatematicaAutoral();
+        this.openPortuguesePoll();
+      },
     });
   }
 
   toggleMessageMathBox() {
-    this.setState({
-      showMessageMathBox: !this.state.showMessageMathBox,
+    showModalConfirm({
+      content: ALERTA_DESEJA_SALVAR_AGORA,
+      onOk: () => {
+        this.savePollStudent().then((continuar = true) => {
+          if (continuar) {
+            if (!this.state.controleEdicaoBimestre) {
+              this.openMathPoll();
+              return;
+            }
+            this.atualizarBimestre();
+          }
+        });
+      },
+      onCancel: () => {
+        if (!this.state.controleEdicaoBimestre) {
+          this.openMathPoll();
+          return;
+        }
+        this.atualizarBimestre();
+      },
     });
   }
 
@@ -241,6 +271,64 @@ class Poll extends Component {
     updatePollStudent(this.props, sequence, subjectName, propertyName, value);
   }
 
+  temEstudanteSemRespostaClassRoomEnumClassPT(
+    bimestreDesabilitado,
+    nomeCampoLeitura,
+    nomeCampoEscrita
+  ) {
+    if (!bimestreDesabilitado) {
+      const semRespostaLeituraEscrita = this.props.poll.students.find(
+        (estudante) =>
+          !estudante?.[nomeCampoLeitura] || !estudante?.[nomeCampoEscrita]
+      );
+      if (semRespostaLeituraEscrita) return true;
+    }
+
+    return false;
+  }
+
+  validarEstudantesSemRespostasClassRoomEnumClassPT() {
+    if (this.props.pollOptionSelectLock) {
+      const bimestre_1_invalido =
+        this.temEstudanteSemRespostaClassRoomEnumClassPT(
+          this.props.pollOptionSelectLock?.poll_1b_lock,
+          "t1l",
+          "t1e"
+        );
+
+      if (bimestre_1_invalido) return false;
+
+      const bimestre_2_invalido =
+        this.temEstudanteSemRespostaClassRoomEnumClassPT(
+          this.props.pollOptionSelectLock?.poll_2b_lock,
+          "t2l",
+          "t2e"
+        );
+
+      if (bimestre_2_invalido) return false;
+
+      const bimestre_3_invalido =
+        this.temEstudanteSemRespostaClassRoomEnumClassPT(
+          this.props.pollOptionSelectLock?.poll_3b_lock,
+          "t3l",
+          "t3e"
+        );
+
+      if (bimestre_3_invalido) return false;
+
+      const bimestre_4_invalido =
+        this.temEstudanteSemRespostaClassRoomEnumClassPT(
+          this.props.pollOptionSelectLock?.poll_4b_lock,
+          "t4l",
+          "t4e"
+        );
+
+      if (bimestre_4_invalido) return false;
+    }
+
+    return true;
+  }
+
   async savePollStudent() {
     if (this.props.poll.onClickButtonSave) {
       this.setState({
@@ -257,15 +345,13 @@ class Poll extends Component {
         codigoTurma: filtros.classroomCodeEol,
         componenteCurricular: "9f3d8467-2f6e-4bcb-a8e9-12e840426aba",
         perguntaId: itemSelecionado && itemSelecionado.id,
-      };
-
-      this.props.poll.onClickButtonSave(
+      };      
+      return this.props.poll.onClickButtonSave(
         this.props.autoral.listaAlunosAutoralMatematica,
         this.props.autoral.listaPerguntas,
         this.props.autoral.listaPeriodos,
         filtroSalvar
       );
-      return;
     }
 
     if (this.props.sondagemPortugues.salvar) {
@@ -295,7 +381,7 @@ class Poll extends Component {
         : 0;
 
       try {
-        this.props.sondagemPortugues.salvar({
+        return this.props.sondagemPortugues.salvar({
           perguntasSalvar: this.props.sondagemPortugues.perguntas,
           alunosMutaveis,
           filtrosMutaveis,
@@ -306,14 +392,14 @@ class Poll extends Component {
         });
       } catch (e) {
         this.props.pollMethods.setLoadingSalvar(false);
+        return false;
       }
-      return;
     }
 
     if (
       this.props.pollStudents &&
       this.props.pollStudents.pollSelected === ClassRoomEnum.ClassMTAutoral
-    ) {
+    ) {      
       this.props.autoralMethods.salvaSondagemAutoralMatematica(
         this.props.autoral.listaAlunosAutoralMatematica
       );
@@ -323,11 +409,21 @@ class Poll extends Component {
     ) {
     } else if (this.props.poll.pollSelected !== null) {
       if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
-        this.props.pollMethods.save_poll_portuguese_student(
-          this.props.poll.students
-        );
+        const continuar =
+          this.validarEstudantesSemRespostasClassRoomEnumClassPT();
+        if (continuar) {
+          this.props.pollMethods.save_poll_portuguese_student(
+            this.props.poll.students
+          );
+          return true;
+        }
+
+        showModalError({
+          content: ALERTA_ESTUDANTE_SEM_RESPOSTA_SELECIONADA,
+        });
+        return false;
       } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMT) {
-        if (this.props.poll.pollTypeSelected === "Numeric") {
+        if (this.props.poll.pollTypeSelected === "Numeric") {          
           this.props.pollMethods.save_poll_math_numbers_students(
             this.props.poll.studentsPollMathNumbers
           );
@@ -560,19 +656,6 @@ class Poll extends Component {
             >
               Salvar
             </button>
-            <TwoStepsSave
-              isMatematica={this.state.isMatematica}
-              status={
-                this.props.autoral.statusDadosMatematica !== undefined &&
-                this.props.autoral.statusDadosMatematica > 0
-                  ? this.props.autoral.statusDadosMatematica
-                  : this.props.sondagemPortugues.statusDadosPortugues
-              }
-              show={this.state.showMessageBox}
-              loading={this.props.poll.loadingSalvar}
-              showControl={this.toggleMessageBox}
-              runMethod={this.savePollStudent}
-            />
           </div>
         </li>
       );
@@ -632,38 +715,6 @@ class Poll extends Component {
   render() {
     return (
       <>
-        <MensagemConfirmacaoAutoral
-          controleExibicao={this.toggleMessagePortugueseBox}
-          acaoPrincipal={this.savePollStudent}
-          acaoSecundaria={async () => {
-            this.limparDadosAposSalvarMatematicaAutoral();
-            this.openPortuguesePoll();
-          }}
-          exibir={this.state.showMessagePortugueseBox}
-          acaoFeedBack={async () => {
-            this.limparDadosAposSalvarMatematicaAutoral();
-            this.openPortuguesePoll();
-          }}
-        />
-        <MensagemConfirmacaoAutoral
-          controleExibicao={this.toggleMessageMathBox}
-          acaoPrincipal={this.savePollStudent}
-          acaoSecundaria={async () => {
-            if (!this.state.controleEdicaoBimestre) {
-              this.openMathPoll();
-              return;
-            }
-            this.atualizarBimestre();
-          }}
-          exibir={this.state.showMessageMathBox}
-          acaoFeedBack={async () => {
-            if (!this.state.controleEdicaoBimestre) {
-              this.openMathPoll();
-              return;
-            }
-            this.atualizarBimestre();
-          }}
-        />
         <Card className="mb-3 mt-5">
           <PollFilter reports={false} savePollStudent={this.savePollStudent} />
         </Card>
