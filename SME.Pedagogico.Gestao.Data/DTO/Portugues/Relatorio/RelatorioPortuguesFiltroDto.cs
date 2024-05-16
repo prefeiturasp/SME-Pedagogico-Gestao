@@ -14,5 +14,6 @@ namespace SME.Pedagogico.Gestao.Data.DTO.Portugues.Relatorio
         public string CodigoTurma { get; set; }
         public string CodigoUe { get; set; }
         public string CodigoDre { get; set; }
+        public string DescricaoPeriodo { get; set; }
     }
 }

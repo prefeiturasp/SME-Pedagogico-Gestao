@@ -17,6 +17,9 @@ import LinhaAluno from "./linha-aluno";
 import { Form } from "antd";
 import _ from "lodash";
 import { TIPO_PERIODO } from "../../../Enums";
+import { showModalError } from "../../../service/modal-service";
+import { SalvaSondagemAutoralMatAsync } from "../../../sagas/SondagemAutoral";
+import { ALERTA_ESTUDANTE_SEM_RESPOSTA_SELECIONADA } from "../../../utils/constants";
 
 const QuestoesMatematicaAutoral = () => {
   const dispatch = useDispatch();
@@ -61,7 +64,7 @@ const QuestoesMatematicaAutoral = () => {
 
       dispatch(
         pollStore.setFunctionButtonSave((alunosRedux) => {
-          persistencia(alunosRedux);
+          return persistencia(alunosRedux);
         })
       );
     }
@@ -109,6 +112,49 @@ const QuestoesMatematicaAutoral = () => {
     return alunosMutaveis;
   };
 
+  const temEstudantesSemResposta = useCallback(
+    (alunosSalvar) => {
+      const estudanteSemResposta = alunosSalvar.find((estudante) => {
+        const respostas = estudante?.respostas;
+        const semResposta = !respostas?.length;
+
+        if (semResposta) return true;
+        if (respostas?.length) {
+          const semRespostasEmTodasPerguntas =
+            respostas.length < perguntas?.length ||
+            respostas.find((item) => !item?.resposta);
+
+          return !!semRespostasEmTodasPerguntas;
+        }
+
+        return false;
+      });
+
+      if (estudanteSemResposta) return true;
+
+      return false;
+    },
+    [perguntas]
+  );
+
+  const validouEstudantesSemResposta = useCallback(
+    (alunosSalvar) => {
+      let continuar = true;
+
+      const exibirModalErro = temEstudantesSemResposta(alunosSalvar);
+
+      if (exibirModalErro) {
+        showModalError({
+          content: ALERTA_ESTUDANTE_SEM_RESPOSTA_SELECIONADA,
+        });
+        continuar = false;
+      }
+
+      return continuar;
+    },
+    [perguntas, temEstudantesSemResposta]
+  );
+
   const persistencia = useCallback(
     async (listaAlunosRedux) => {
       const alunosMutaveis = _.cloneDeep(listaAlunosRedux);
@@ -123,16 +169,30 @@ const QuestoesMatematicaAutoral = () => {
         form.getFieldsValue()
       );
 
+      const continuar = validouEstudantesSemResposta(alunosSalvar);
+
+      if (!continuar) return false;
+
       try {
-        await dispatch(
-          actionCreators.salvaSondagemAutoralMatematica(alunosSalvar)
+        return SalvaSondagemAutoralMatAsync({ alunos: alunosSalvar }).then(
+          () => {
+            sairModoEdicao();
+            return true;
+          }
         );
       } catch (e) {
         dispatch(pollStore.setLoadingSalvar(false));
+        return false;
       }
-      sairModoEdicao();
     },
-    [dispatch, sairModoEdicao, bimestre, form]
+    [
+      dispatch,
+      sairModoEdicao,
+      bimestre,
+      form,
+      perguntas,
+      validouEstudantesSemResposta,
+    ]
   );
 
   useEffect(() => {

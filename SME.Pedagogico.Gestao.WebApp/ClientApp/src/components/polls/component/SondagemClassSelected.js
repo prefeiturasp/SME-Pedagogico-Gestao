@@ -5,17 +5,12 @@ import { actionCreators as actionCreatorsPoll } from '../../../store/Poll';
 import { actionCreators as actionCreatorsData } from '../../../store/Data';
 import { bindActionCreators } from 'redux';
 
-import TwoSteps from '../../messaging/TwoSteps'
+import { showModalConfirm } from '../../../service/modal-service';
+import { ALERTA_DESEJA_CONTINUAR_SEM_SALVAR } from '../../../utils/constants';
 
 class SondagemClassSelected extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            showMessageMathNumericBox: false,
-            showMessageMathCaBox: false,
-            showMessageMathCmBox: false,
-        }
 
         this.btnSetPollType = this.btnSetPollType.bind(this);
 
@@ -101,19 +96,28 @@ class SondagemClassSelected extends Component {
         this.props.dataMethods.reset_new_data_state();
     }
     toggleMessageMathNumericBox() {
-        this.setState({
-            showMessageMathNumericBox: !this.state.showMessageMathNumericBox,
-        })
+        showModalConfirm({
+            content: ALERTA_DESEJA_CONTINUAR_SEM_SALVAR,
+            onOk: () => {
+                this.btnSetPollTypeNumeric();
+            },
+        });
     }
     toggleMessageMathCaBox() {
-        this.setState({
-            showMessageMathCaBox: !this.state.showMessageMathCaBox,
-        })
+        showModalConfirm({
+            content: ALERTA_DESEJA_CONTINUAR_SEM_SALVAR,
+            onOk: () => {
+                this.btnSetPollTypeCA();
+            },
+        });
     }
     toggleMessageMathCmBox() {
-        this.setState({
-            showMessageMathCmBox: !this.state.showMessageMathCmBox,
-        })
+        showModalConfirm({
+            content: ALERTA_DESEJA_CONTINUAR_SEM_SALVAR,
+            onOk: () => {
+                this.btnSetPollTypeCM();
+            },
+        });
     }
 
     render() {
@@ -213,11 +217,7 @@ class SondagemClassSelected extends Component {
         return (
             <div className="btn-planning">
                 <hr />
-                {buttonRender}
-
-                <TwoSteps show={this.state.showMessageMathNumericBox} showControl={this.toggleMessageMathNumericBox} runMethod={this.btnSetPollTypeNumeric} />
-                <TwoSteps show={this.state.showMessageMathCaBox} showControl={this.toggleMessageMathCaBox} runMethod={this.btnSetPollTypeCA} />
-                <TwoSteps show={this.state.showMessageMathCmBox} showControl={this.toggleMessageMathCmBox} runMethod={this.btnSetPollTypeCM} />
+                {buttonRender}               
             </div>
         );
     }

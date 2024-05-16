@@ -164,9 +164,9 @@ export const actionCreators = {
     payload,
   }),
 
-  setLoadingSalvar: (payload) => ({
+  setLoadingSalvar: (filters) => ({
     type: types.SET_LOADING_SALVAR,
-    payload,
+    filters,
   }),
 
   setBimestre: (payload) => ({

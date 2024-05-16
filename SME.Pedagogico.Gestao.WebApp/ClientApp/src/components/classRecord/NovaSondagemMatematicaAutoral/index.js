@@ -9,8 +9,11 @@ import { actionCreators as pollStore } from "../../../store/Poll";
 import Loader from "../../loader/Loader";
 import CabecalhoPerguntaAutoral from "./cabecalhoPerguntaAutoral";
 import { setasDireitaAutoral, setasEsquerdaAutoral } from "../../utils/utils";
-import { exibirMensagemInformacoesSalvas } from "../../utils/exibirMensagemInformacoesSalvas";
 import { GRUPO_SONDAGEM, ENUM_TIPO_SONDAGEM } from "../../../Enums";
+import { validouEstudantesSemRespostaUnicaMatematica } from "../../../utils/validacoes";
+import { SalvaSondagemAutoralMatAsync } from "../../../sagas/SondagemAutoral";
+import { showModalConfirm } from "../../../service/modal-service";
+import { ALERTA_DESEJA_SALVAR_AGORA } from '../../../utils/constants';
 
 function NovaSondagemMatematicaAutoral() {
   const dispatch = useDispatch();
@@ -100,10 +103,22 @@ function NovaSondagemMatematicaAutoral() {
       return;
     }
 
-    salvar().then((x) => {
-      setIndexSelecionado((oldState) => oldState + 1);
-      sairModoEdicao();
-      exibirMensagemInformacoesSalvas();
+    showModalConfirm({
+      content: ALERTA_DESEJA_SALVAR_AGORA,
+      onOk: () => {
+        salvar().then((continuar = true) => {
+          if (!continuar) return false;
+
+          setIndexSelecionado((oldState) => oldState + 1);
+          sairModoEdicao();
+
+          return true;
+        });
+      },
+      onCancel: () => {
+        setIndexSelecionado((oldState) => oldState + 1);
+        sairModoEdicao();
+      },
     });
   };
 
@@ -115,15 +130,27 @@ function NovaSondagemMatematicaAutoral() {
       return;
     }
 
-    salvar().then((x) => {
-      setIndexSelecionado((oldState) => oldState - 1);
-      sairModoEdicao();
-      exibirMensagemInformacoesSalvas();
+    showModalConfirm({
+      content: ALERTA_DESEJA_SALVAR_AGORA,
+      onOk: () => {
+        salvar().then((continuar = true) => {
+          if (!continuar) return false;
+
+          setIndexSelecionado((oldState) => oldState - 1);
+          sairModoEdicao();
+
+          return true;
+        });
+      },
+      onCancel: () => {
+        setIndexSelecionado((oldState) => oldState - 1);
+        sairModoEdicao();
+      },
     });
   };
 
   const salvar = async () => {
-    await persistencia(alunos, filtrosBusca);
+    return await persistencia(alunos, filtrosBusca);
   };
 
   const persistencia = useCallback(
@@ -135,17 +162,23 @@ function NovaSondagemMatematicaAutoral() {
         }
       });
 
+      const continuar =
+        validouEstudantesSemRespostaUnicaMatematica(alunosMutaveis);
+
+      if (!continuar) return false;
+
       try {
-        await dispatch(
-          actionCreators.salvaSondagemAutoralMatematica(
-            alunosMutaveis,
-            filtrosBuscaPersistencia
-          )
-        )
+        return SalvaSondagemAutoralMatAsync({
+          alunos: alunosMutaveis,
+          filtro: filtrosBuscaPersistencia,
+        }).then(() => {
+          sairModoEdicao();
+          return true;
+        });
       } catch (e) {
         dispatch(pollStore.setLoadingSalvar(false));
+        return false;
       }
-      sairModoEdicao();
     },
     [dispatch, sairModoEdicao, bimestre]
   );
@@ -217,7 +250,7 @@ function NovaSondagemMatematicaAutoral() {
   useEffect(() => {
     if (filtros.yearClassroom && bimestre) {
       dispatch(actionCreators.obterPeriodoAberto(filtros.schoolYear, bimestre));
-      
+
       if (ehTipoNumerico) {
         dispatch(
           pollStore.obterPerguntasAlfabetizacao({
@@ -238,7 +271,7 @@ function NovaSondagemMatematicaAutoral() {
             periodosRedux,
             filtrosSelecionadosSalvar
           ) => {
-            persistencia(
+            return persistencia(
               alunosRedux,
               perguntasRedux,
               periodosRedux,

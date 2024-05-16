@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import Select from "./select";
 import { actionCreators as PortuguesStore } from "../../../store/SondagemPortuguesStore";
 import { useSelector, useDispatch } from "react-redux";
@@ -6,8 +6,13 @@ import SeletorDeOrdem from "./seletorDeordem";
 import TabelaAlunos from "./tabelaAlunos";
 import { actionCreators as dataStore } from "../../../store/Data";
 import { actionCreators as pollStore } from "../../../store/Poll";
-import MensagemConfirmacaoAutoral from "./mensagemConfirmacaoAutoral";
 import { TIPO_PERIODO } from "../../../Enums";
+import {
+  showModalConfirm,
+  showModalError,
+} from "../../../service/modal-service";
+import { SalvaSondagemPortuguesAsync } from "../../../sagas/SondagemPortugues";
+import { ALERTA_DESEJA_SALVAR_AGORA, ALERTA_ESTUDANTE_SEM_RESPOSTA_SELECIONADA } from "../../../utils/constants";
 
 function SondagemPortuguesAutoral() {
   const dispatch = useDispatch();
@@ -34,10 +39,6 @@ function SondagemPortuguesAutoral() {
 
   const grupos = useSelector((store) => store.sondagemPortugues.grupos);
 
-  const [visibilidadeConfirmacao, setVisibilidadeConfirmacao] = useState();
-
-  const [grupoIdConfirmacao, setGrupoIdConfirmacao] = useState();
-
   const ordens = useMemo(() => {
     if (
       !grupoSelecionado ||
@@ -53,16 +54,6 @@ function SondagemPortuguesAutoral() {
     return grupo.ordem;
   }, [grupoSelecionado, grupos,]);
 
-  const onChangeGrupos = (grupoId) => {
-    if (!emEdicao) {
-      dispatch(PortuguesStore.selecionar_grupo(grupoId));
-      return;
-    }
-
-    setGrupoIdConfirmacao(grupoId);
-    mudarVisibilidadeConfirmacao();
-  };
-
   const setarModoEdicaoPoll = () => {
     dispatch(dataStore.set_new_data_state());
     dispatch(pollStore.setDataToSaveTrue());
@@ -74,13 +65,76 @@ function SondagemPortuguesAutoral() {
     dispatch(PortuguesStore.setar_emEdicao(false));
   };
 
-  const mudarVisibilidadeConfirmacao = () => {
-    setVisibilidadeConfirmacao(oldState => !oldState);
+  const onChangeGruposConfirmacao = (novoGrupoId) => {
+    showModalConfirm({
+      content: ALERTA_DESEJA_SALVAR_AGORA,
+      onOk: () => {
+        salvar({ novaOrdem: null, novoPeriodoId: null }).then(
+          (continuar = true) => {
+            if (!continuar) return false;
+
+            setTimeout(() => {
+              dispatch(PortuguesStore.selecionar_grupo(novoGrupoId));
+              dispatch(PortuguesStore.setar_emEdicao(false));
+            }, 1000);
+
+            return true;
+          }
+        );
+      },
+      onCancel: () => {
+        dispatch(PortuguesStore.selecionar_grupo(novoGrupoId));
+        dispatch(PortuguesStore.setar_emEdicao(false));
+      },
+    });
+  };
+
+  const onChangeGrupos = (grupoId) => {
+    if (!emEdicao) {
+      dispatch(PortuguesStore.selecionar_grupo(grupoId));
+      return;
+    }
+
+    onChangeGruposConfirmacao(grupoId);
+  };
+
+  const onClickOrdemConfirmacao = (novaOrdemId) => {
+    showModalConfirm({
+      content: ALERTA_DESEJA_SALVAR_AGORA,
+      onOk: () => {
+        salvar({ novaOrdem: novaOrdemId }).then((continuar = true) => {
+          if (!continuar) return false;
+
+          setTimeout(() => {
+            dispatch(PortuguesStore.setar_emEdicao(false));
+            dispatch(PortuguesStore.setar_ordem_selecionada(novaOrdemId));
+            dispatch(
+              PortuguesStore.listarAlunosPortugues({
+                ...filtrosBusca,
+                ordemId: novaOrdemId,
+              })
+            );
+          }, 1000);
+
+          return true;
+        });
+      },
+      onCancel: () => {
+        dispatch(PortuguesStore.setar_emEdicao(false));
+        dispatch(PortuguesStore.setar_ordem_selecionada(novaOrdemId));
+        dispatch(
+          PortuguesStore.listarAlunosPortugues({
+            ...filtrosBusca,
+            ordemId: novaOrdemId,
+          })
+        );
+      },
+    });
   };
 
   const onClickOrdem = (id) => {
     if (emEdicao) {
-      salvar({ novaOrdem: id });
+      onClickOrdemConfirmacao(id);
       return;
     }
 
@@ -93,23 +147,120 @@ function SondagemPortuguesAutoral() {
     let filtrosMutaveis = Object.assign({}, filtrosBusca);
 
     const sequenciaOrdemSelecionada = sequenciasOrdens ? sequenciasOrdens.findIndex(sequencia => sequencia.ordemId === idOrdemSelecionada) : 0;
-    
-    executarSalvamento({ perguntasSalvar: perguntas, alunosMutaveis, filtrosMutaveis, sequenciaOrdemSelecionada, novaOrdem, periodoSelecionadoSalvar: periodoSelecionado, novoPeriodoId, idOrdem: idOrdemSelecionada, grupo: grupoSelecionado });
-  }
 
-  const executarSalvamento = ({ perguntasSalvar, alunosMutaveis, filtrosMutaveis, sequenciaOrdemSelecionada, novaOrdem, novoPeriodoId, periodoSelecionadoSalvar, grupo, idOrdem }) => {
-    alunosMutaveis.forEach(aluno => {
+    return executarSalvamento({
+      perguntasSalvar: perguntas,
+      alunosMutaveis,
+      filtrosMutaveis,
+      sequenciaOrdemSelecionada,
+      novaOrdem,
+      periodoSelecionadoSalvar: periodoSelecionado,
+      novoPeriodoId,
+      idOrdem: idOrdemSelecionada,
+      grupo: grupoSelecionado,
+    });
+  };
+
+  const temEstudantesSemResposta = (grupo, alunosMutaveis, perguntasSalvar) => {
+    if (
+      grupo === "e27b99a3-789d-43fb-a962-7df8793622b1" || // IAD - Produção de texto
+      grupo === "263b55b8-efa2-480c-80ad-f4e8f0935e12" // IAD - Produção de texto
+    ) {
+      const estudanteSemResposta = alunosMutaveis.find((estudante) => {
+        const respostas = estudante?.respostas;
+        const semResposta = !respostas?.length;
+
+        if (semResposta) return true;
+
+        if (respostas?.length) {
+          const semRespostasEmTodasPerguntas =
+            respostas?.length < perguntasSalvar?.length;
+          return semRespostasEmTodasPerguntas;
+        }
+
+        return false;
+      });
+
+      if (estudanteSemResposta) return true;
+    }
+
+    if (
+      grupo === "6a3d323a-2c44-4052-ba68-13a8dead299a" // IAD - Leitura em voz alta
+    ) {
+      const estudanteSemResposta = alunosMutaveis.find((estudante) => {
+        const semResposta = !estudante?.respostas?.length;
+        return semResposta;
+      });
+
+      if (estudanteSemResposta) return true;
+    }
+
+    return false;
+  };
+
+  const validouEstudantesSemResposta = (
+    grupo,
+    alunosMutaveis,
+    perguntasSalvar
+  ) => {
+    let continuar = true;
+
+    const exibirModalErro = temEstudantesSemResposta(
+      grupo,
+      alunosMutaveis,
+      perguntasSalvar
+    );
+
+    if (exibirModalErro) {
+      showModalError({
+        content: ALERTA_ESTUDANTE_SEM_RESPOSTA_SELECIONADA,
+      });
+      continuar = false;
+    }
+
+    return continuar;
+  };
+
+  const executarSalvamento = ({
+    perguntasSalvar,
+    alunosMutaveis,
+    filtrosMutaveis,
+    sequenciaOrdemSelecionada,
+    novaOrdem,
+    novoPeriodoId,
+    periodoSelecionadoSalvar,
+    grupo,
+    idOrdem,
+  }) => {
+    alunosMutaveis.forEach((aluno) => {
       aluno.grupoId = grupo;
       aluno.ordemId = idOrdem;
       aluno.sequenciaOrdemSalva = sequenciaOrdemSelecionada;
     });
+    
+    const continuar = validouEstudantesSemResposta(
+      grupo,
+      alunosMutaveis,
+      perguntasSalvar
+    );
+
+    if (!continuar) return false;
+
     try {
-      dispatch(PortuguesStore.salvarSondagemPortugues({ alunos: alunosMutaveis, filtro: filtrosMutaveis, novaOrdem, novoPeriodoId }));
+      return SalvaSondagemPortuguesAsync({
+        alunos: alunosMutaveis,
+        filtro: filtrosMutaveis,
+        novaOrdem,
+        novoPeriodoId,
+      }).then(() => {
+        dispatch(PortuguesStore.setar_emEdicao(false));
+        return true;
+      });
     } catch (e) {
       dispatch(pollStore.setLoadingSalvar(false));
+      return false;
     }
-    dispatch(PortuguesStore.setar_emEdicao(false));
-  }
+  };
 
   useEffect(() => {
     if (emEdicao) {
@@ -133,7 +284,7 @@ function SondagemPortuguesAutoral() {
   useEffect(() => {
     const grupo = grupos && grupoSelecionado && grupos.find(g => g.id === grupoSelecionado);
 
-    if (grupo && !grupo.ordemVisivel) 
+    if (grupo && !grupo.ordemVisivel)
       dispatch(PortuguesStore.setar_ordem_selecionada(ordens[0].id));
 
     if (grupo)
@@ -182,11 +333,6 @@ function SondagemPortuguesAutoral() {
           className="col-md-2"
           onChangeSelect={onChangeGrupos}
         />
-        <MensagemConfirmacaoAutoral
-          controleExibicao={mudarVisibilidadeConfirmacao}
-          acaoPrincipal={async () => { salvar({ novaOrdem: null, novoPeriodoId: null }).then(() => setTimeout(() => { dispatch(PortuguesStore.selecionar_grupo(grupoIdConfirmacao)); setGrupoIdConfirmacao(""); dispatch(PortuguesStore.setar_emEdicao(false)); }, 1000)); }}
-          acaoSecundaria={async () => { dispatch(PortuguesStore.selecionar_grupo(grupoIdConfirmacao)); setGrupoIdConfirmacao(""); dispatch(PortuguesStore.setar_emEdicao(false)); }}
-          exibir={visibilidadeConfirmacao} />
         <div className="col-md-10 d-flex justify-content-center">
           <SeletorDeOrdem ordens={ordens} onClick={onClickOrdem} ordemSelecionada={idOrdemSelecionada} ordensSalvas={sequenciasOrdens} />
         </div>

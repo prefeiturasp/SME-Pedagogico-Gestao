@@ -25,7 +25,7 @@ function CheckBox({ lista, valor, codigoAluno, periodoId, bloqueado }) {
     if (!resposta || resposta.length === 0)
       return false;
 
-    const respostaDaPergunta = resposta.pergunta === perguntaId && resposta.periodoId === periodoId && resposta.resposta === respostaVerdadeira(perguntaId).id;
+    const respostaDaPergunta = resposta.pergunta === perguntaId && resposta.periodoId === periodoId && resposta.resposta === respostaVerdadeira(perguntaId)?.id;
 
     return respostaDaPergunta;
   }

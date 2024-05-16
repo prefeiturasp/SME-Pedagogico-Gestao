@@ -1,5 +1,4 @@
-﻿using Dapper;
-using MoreLinq;
+﻿using MoreLinq;
 using Npgsql;
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.DTO.Matematica;
@@ -10,8 +9,6 @@ using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using SME.Pedagogico.Gestao.Data.Relatorios;
 using SME.Pedagogico.Gestao.Data.Relatorios.Querys;
-using SME.Pedagogico.Gestao.Infra;
-using SME.Pedagogico.Gestao.Models.Autoral;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +23,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
         private List<DatasPeriodoFixoAnualDTO> _listaDePeriodos;
         private List<AlunosNaTurmaDTO> _listaDeAlunosAtivos;
         private List<AlunoPerguntaRespostaProficienciaDTO> _listaAlunoPerguntaResposta;
+        private const string TERCEIRO_BIMESTRE = "3° Bimestre";
+        private const int ANO_LETIVO_DOIS_MIL_VINTE_QUATRO = 2024;
+        private const int ANO_LETIVO_DOIS_MIL_VINTE_CINCO = 2025;
 
         private const string TITULO_BARRA_SEM_PREENCHIMENTO = "Sem Preenchimento";
 
@@ -212,6 +212,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private List<BarrasGraficoDTO> ObtenhaListaDeBarrasGrafico(List<AlunoPerguntaRespostaProficienciaDTO> listaPorSubPergunta)
         {
+            var consideraNovaOpcaoResposta_SemPreenchimento = ConsideraNovaOpcaoRespostaSemPreenchimento();
             var listaRetorno = new List<BarrasGraficoDTO>();
             var grupoPorResposta = listaPorSubPergunta.GroupBy(dto => dto.RespostaId);
 
@@ -223,9 +224,15 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 listaRetorno.Add(ObtenhaBarraGraficoDto(resposta.RespostaDescricao, listaDeResposta.Count()));
             });
 
-            listaRetorno.Add(ObtenhaBarraSemPreenchimento(listaPorSubPergunta.Count()));
+            if (!consideraNovaOpcaoResposta_SemPreenchimento)
+                listaRetorno.Add(ObtenhaBarraSemPreenchimento(listaPorSubPergunta.Count()));
 
             return listaRetorno;
+        }
+
+        private bool ConsideraNovaOpcaoRespostaSemPreenchimento()
+        {
+            return this._filtro.AnoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO && this._filtro.DescricaoPeriodo == TERCEIRO_BIMESTRE || this._filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
         }
 
         private BarrasGraficoDTO ObtenhaBarraSemPreenchimento(int totalResposta)
