@@ -294,6 +294,7 @@ class PollFilter extends Component {
     this.setSelectedFilter();
     this.props.poll2.setBimestre("");
     this.props.poll2.setNavegacaoSelecionada(null);
+    this.props.dataMethods.reset_new_data_state();
   }
 
   toggleMessageBox() {

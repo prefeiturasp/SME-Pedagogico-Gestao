@@ -163,8 +163,7 @@ function SondagemPortuguesAutoral() {
 
   const temEstudantesSemResposta = (grupo, alunosMutaveis, perguntasSalvar) => {
     if (
-      grupo === "e27b99a3-789d-43fb-a962-7df8793622b1" || // IAD - Produção de texto
-      grupo === "263b55b8-efa2-480c-80ad-f4e8f0935e12" // IAD - Produção de texto
+      grupo === "e27b99a3-789d-43fb-a962-7df8793622b1" // IAD - Capacidade de leitura
     ) {
       const estudanteSemResposta = alunosMutaveis.find((estudante) => {
         const respostas = estudante?.respostas;
@@ -175,7 +174,14 @@ function SondagemPortuguesAutoral() {
         if (respostas?.length) {
           const semRespostasEmTodasPerguntas =
             respostas?.length < perguntasSalvar?.length;
-          return semRespostasEmTodasPerguntas;
+
+          if (semRespostasEmTodasPerguntas) return true;
+          
+          const semRespostasEmAlgumaPergunta = respostas.find(
+            (item) => !item?.resposta || item?.resposta === "Selecione o grupo"
+          );
+
+          return !!semRespostasEmAlgumaPergunta;
         }
 
         return false;
@@ -185,11 +191,20 @@ function SondagemPortuguesAutoral() {
     }
 
     if (
-      grupo === "6a3d323a-2c44-4052-ba68-13a8dead299a" // IAD - Leitura em voz alta
+      grupo === "6a3d323a-2c44-4052-ba68-13a8dead299a" || // IAD - Leitura em voz alta
+      grupo === "263b55b8-efa2-480c-80ad-f4e8f0935e12" // IAD - Produção de texto
     ) {
       const estudanteSemResposta = alunosMutaveis.find((estudante) => {
-        const semResposta = !estudante?.respostas?.length;
-        return semResposta;
+        const respostas = estudante?.respostas;
+        const semRespostas = !respostas?.length;
+
+        if (semRespostas) return true;
+
+        const semRespostasEmAlgumaPergunta = respostas.find(
+          (item) => !item?.resposta
+        );
+
+        return !!semRespostasEmAlgumaPergunta;
       });
 
       if (estudanteSemResposta) return true;
