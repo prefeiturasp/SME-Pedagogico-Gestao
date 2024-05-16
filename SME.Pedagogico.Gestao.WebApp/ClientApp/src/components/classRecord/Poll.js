@@ -31,8 +31,6 @@ class Poll extends Component {
     this.state = {
       didAnswerPoll: false, //usar para perguntar para salvar sondagem
       sondagemType: ClassRoomEnum.ClassEmpty,
-      controleEdicaoBimestre: false,
-      bimestreAtualControleEdicao: null,
       isMatematica: false,
       bimestres: [
         {
@@ -112,10 +110,11 @@ class Poll extends Component {
       content: ALERTA_DESEJA_SALVAR_AGORA,
       onOk: () => {
         this.savePollStudent().then((continuar = true) => {
-          if (continuar) {
-            this.limparDadosAposSalvarMatematicaAutoral();
-            this.openPortuguesePoll();
-          }
+          if (!continuar) return false;          
+          
+          this.limparDadosAposSalvarMatematicaAutoral();
+          this.openPortuguesePoll();
+          return true;          
         });
       },
       onCancel: () => {
@@ -125,26 +124,28 @@ class Poll extends Component {
     });
   }
 
-  toggleMessageMathBox() {
+  toggleMessageMathBox(bimestre) {
     showModalConfirm({
       content: ALERTA_DESEJA_SALVAR_AGORA,
       onOk: () => {
         this.savePollStudent().then((continuar = true) => {
-          if (continuar) {
-            if (!this.state.controleEdicaoBimestre) {
-              this.openMathPoll();
-              return;
-            }
-            this.atualizarBimestre();
+          if (!continuar) return false;          
+
+          if (bimestre) {
+            this.atualizarBimestre(bimestre);          
+            return true;
           }
+          
+          this.openMathPoll();
+          return true;
         });
       },
       onCancel: () => {
-        if (!this.state.controleEdicaoBimestre) {
+        if (bimestre) {
+          this.atualizarBimestre(bimestre);
+        } else {
           this.openMathPoll();
-          return;
         }
-        this.atualizarBimestre();
       },
     });
   }
@@ -616,7 +617,7 @@ class Poll extends Component {
           <li className="nav-item">
             <button
               className="btn btn-outline-primary btn-sm btn-planning"
-              onClick={this.toggleMessageMathBox}
+              onClick={()=> this.toggleMessageMathBox()}
             >
               Matem&aacute;tica
             </button>
@@ -697,25 +698,16 @@ class Poll extends Component {
   onChangeBimestre(e) {
     const bimestre = e.target.value;
     if (this.props.data.newDataToSave) {
-      this.toggleMessageMathBox();
-      this.setState({
-        controleEdicaoBimestre: true,
-        bimestreAtualControleEdicao: bimestre,
-      });
-
+      this.toggleMessageMathBox(bimestre);
       return;
     }
     this.limparDadosAposSalvarMatematicaAutoral();
     this.props.pollMethods.setBimestre(bimestre);
   }
 
-  atualizarBimestre() {
+  atualizarBimestre(bimestre) {
     this.limparDadosAposSalvarMatematicaAutoral();
-    this.setState({
-      controleEdicaoBimestre: false,
-      bimestreAtualControleEdicao: null,
-    });
-    this.props.pollMethods.setBimestre(this.state.bimestreAtualControleEdicao);
+    this.props.pollMethods.setBimestre(bimestre);
   }
 
   render() {
