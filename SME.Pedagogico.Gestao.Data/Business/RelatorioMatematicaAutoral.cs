@@ -226,14 +226,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         barra.value = relatorio.Alunos.Count(x => x.Perguntas.Any(r => r.Id == pergunta.Id && r.Valor == resposta.Resposta.Descricao));
                         grafico.Barras.Add(barra);
                     });
-
-                    if (!consideraNovaOpcaoResposta_SemPreenchimento) 
-                    { 
-                        var barraAlunosSemPreenchimento = new BarrasGraficoDTO();
-                        barraAlunosSemPreenchimento.label = "Sem Preenchimento";
-                        barraAlunosSemPreenchimento.value = relatorio.Alunos.Count() - grafico.Barras.Sum(x => x.value);
-                        grafico.Barras.Add(barraAlunosSemPreenchimento);
-                    }
+                    
                     relatorio.Graficos.Add(grafico);
                 }
                 }

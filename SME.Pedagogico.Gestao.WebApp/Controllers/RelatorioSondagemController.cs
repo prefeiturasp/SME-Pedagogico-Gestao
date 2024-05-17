@@ -298,6 +298,12 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                             tipo = "Nível 4";
                             break;
                         }
+                    case "SemPreenchimento":
+                        {
+                            tipo = "Sem Preenchimento";
+                            break;
+                        }
+                        
                 }
 
                 result.Add(new PollReportPortugueseStudentItem()
@@ -416,6 +422,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     return "Silábico alfabético";
                 case "A":
                     return "Alfabético";
+                case "SemPreenchimento":
+                    return "Sem Preenchimento";
                 default:
                     return proficiencia;
             }
