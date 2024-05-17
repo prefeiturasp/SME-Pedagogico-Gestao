@@ -182,14 +182,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 await RetornaPerguntasDoRelatorio(filtro, relatorio);
 
                 var ListaAlunos = new List<AlunoPorTurmaRelatorioDTO>();
-                alunosEol.ForEach(alunoRetorno =>
+
+                foreach (var alunoRetorno in alunosEol)
                 {
                     var aluno = new AlunoPorTurmaRelatorioDTO();
                     aluno.CodigoAluno = alunoRetorno.CodigoAluno;
                     aluno.NomeAluno = string.IsNullOrEmpty(alunoRetorno.NomeSocialAluno) ? alunoRetorno.NomeAlunoRelatorio : alunoRetorno.NomeSocialAluno;
                     aluno.Perguntas = new List<PerguntaRespostaPorAluno>();
-
-                    var alunoRespostas = AlunosAgrupados.Where(x => x.Key == aluno.CodigoAluno.ToString()).ToList();
 
                     foreach (var perguntaBanco in relatorio.Perguntas)
                     {
@@ -205,7 +204,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         aluno.Perguntas.Add(pergunta);
                     }
                     ListaAlunos.Add(aluno);
-                });
+                }
                 relatorio.Alunos = ListaAlunos.OrderBy(aluno => aluno.NomeAluno);
                 relatorio.Graficos = new List<GraficosRelatorioDTO>();
 
@@ -237,7 +236,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     }
                     relatorio.Graficos.Add(grafico);
                 }
-            }
+                }
                 return relatorio;
         }
         private bool ExibirNumeroDaQuestao(int anoEscolar, int bimestre)
