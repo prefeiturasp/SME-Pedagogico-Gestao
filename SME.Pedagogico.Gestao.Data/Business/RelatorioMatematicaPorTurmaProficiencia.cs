@@ -24,6 +24,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         private List<AlunosNaTurmaDTO> _listaDeAlunosAtivos;
         private List<AlunoPerguntaRespostaProficienciaDTO> _listaAlunoPerguntaResposta;
         private const string TERCEIRO_BIMESTRE = "3° Bimestre";
+        private const string QUARTO_BIMESTRE = "4° Bimestre";
         private const int ANO_LETIVO_DOIS_MIL_VINTE_QUATRO = 2024;
         private const int ANO_LETIVO_DOIS_MIL_VINTE_CINCO = 2025;
 
@@ -232,7 +233,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private bool ConsideraNovaOpcaoRespostaSemPreenchimento()
         {
-            return this._filtro.AnoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO && this._filtro.DescricaoPeriodo == TERCEIRO_BIMESTRE || this._filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
+            return this._filtro.AnoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO && (this._filtro.DescricaoPeriodo == TERCEIRO_BIMESTRE || this._filtro.DescricaoPeriodo == QUARTO_BIMESTRE) || this._filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
         }
 
         private BarrasGraficoDTO ObtenhaBarraSemPreenchimento(int totalResposta)
