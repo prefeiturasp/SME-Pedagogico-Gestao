@@ -27,6 +27,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         private const int ANO_ESCOLAR_2022 = 2022;
         private const string PROFICIENCIA_NUMERO = "Números";
         private const string TERCEIRO_BIMESTRE = "3° Bimestre";
+        private const string QUARTO_BIMESTRE = "4° Bimestre";
         private const int ANO_LETIVO_DOIS_MIL_VINTE_QUATRO = 2024;
         private const int ANO_LETIVO_DOIS_MIL_VINTE_CINCO = 2025;
 
@@ -430,7 +431,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
         private bool ConsideraNovaOpcaoRespostaSemPreenchimentoTerceiroBimestre(int anoLetivo,string descricaoPeriodo)
         {
-            return anoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO && descricaoPeriodo == TERCEIRO_BIMESTRE || anoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
+            return anoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO && (descricaoPeriodo == TERCEIRO_BIMESTRE || descricaoPeriodo == QUARTO_BIMESTRE) || anoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
         }
         private bool EhRelatorioDeMatematicaAutoral(ParametersModel parameters)
         {
