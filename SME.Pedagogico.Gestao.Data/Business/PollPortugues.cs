@@ -327,6 +327,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
             var liststudentPollPortuguese = new List<StudentPollPortuguese>();
 
             PeriodoFixoAnual periodoAnual = null;
+            var consideraNovaOpcaoRespostaSemPreenchimento =
+                NovaOpcaoRespostaSemPreenchimento.ConsideraOpcaoRespostaSemPreenchimento(int.Parse(anoLetivo),bimestre);
 
             var listReturn = new List<PollReportPortugueseItem>();
 
@@ -536,24 +538,19 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         : 0;
 
 
-                foreach (var item in listReturn)
+                foreach (var item in listReturn.Where(item => !consideraNovaOpcaoRespostaSemPreenchimento))
                 {
                     item.StudentPercentage = ((double) item.studentQuantity / quantidadeTotalAlunos) * 100;
-                    if (string.IsNullOrWhiteSpace(item.OptionName))
-                    {
-                        item.OptionName = "Sem preenchimento";
-                        item.StudentPercentage = ((double) totalSemPreenchimento / quantidadeTotalAlunos) * 100;
-                        item.studentQuantity = totalSemPreenchimento;
-                    }
+                    if (!string.IsNullOrWhiteSpace(item.OptionName)) continue;
+                    item.OptionName = "Sem preenchimento";
+                    item.StudentPercentage = ((double) totalSemPreenchimento / quantidadeTotalAlunos) * 100;
+                    item.studentQuantity = totalSemPreenchimento;
                 }
 
-                PollReportPortugueseResult retorno = new PollReportPortugueseResult();
-
-                graficos = new List<PortChartDataModel>();
-
-                foreach (var item in listaGrafico)
-                {
-                    graficos.Add(new PortChartDataModel()
+                var retorno = new PollReportPortugueseResult();
+                graficos = (from item in listaGrafico
+                    where !consideraNovaOpcaoRespostaSemPreenchimento
+                    select new PortChartDataModel()
                     {
                         Name = string.IsNullOrWhiteSpace(item.Label)
                             ? "Sem preenchimento"
@@ -561,8 +558,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         Value = string.IsNullOrWhiteSpace(item.Label)
                             ? totalSemPreenchimento
                             : item.Value
-                    });
-                }
+                    }).ToList();
 
                 if (proficiencia == "Escrita")
                 {
