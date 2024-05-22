@@ -458,12 +458,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         {
             var relatorio = new RelatorioMatematicaAutoral();
 
-            if (ehPorTurma)
-            {
-                return Ok(await relatorio.ObterRelatorioPorTurmaProficiencia(filtro));
-            }
-
-            return Ok(await relatorio.ObtenhaRelatorioMatematicaProficiencia(filtro));
+            return ehPorTurma ? Ok(await relatorio.ObterRelatorioPorTurmaProficiencia(filtro)) : Ok(await relatorio.ObtenhaRelatorioMatematicaProficiencia(filtro));
         }
 
         private async Task<ActionResult<string>> ObtenhaRelatorioMatematica(filtrosRelatorioDTO filtro, bool ehPorTurma)
