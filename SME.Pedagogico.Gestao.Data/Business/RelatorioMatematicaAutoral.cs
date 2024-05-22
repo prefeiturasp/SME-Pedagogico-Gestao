@@ -21,14 +21,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
     public class RelatorioMatematicaAutoral
     {
         private const int TERCEIRO_ANO = 3;
-        private const int TERCEIRO_BIMESTRE = 3;
-        private const string SEGUNDO_SEMESTRE = "2° Semestre";
-        private const int ANO_LETIVO_DOIS_MIL_VINTE_QUATRO = 2024;
-        private const int ANO_LETIVO_DOIS_MIL_VINTE_CINCO = 2025;
-
         public async Task<RelatorioConsolidadoDTO> ObterRelatorioMatematicaAutoral(filtrosRelatorioDTO filtro)
         {
-            var consideraNovaOpcaoResposta_SemPreenchimento = ConsideraNovaOpcaoRespostaSemPreenchimento(filtro);
+            var consideraNovaOpcaoResposta_SemPreenchimento = NovaOpcaoRespostaSemPreenchimento.ConsideraOpcaoRespostaSemPreenchimento(filtro.AnoLetivo,filtro.DescricaoPeriodo);
             IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
             var totalDeAlunos = await ConsultaTotalDeAlunos.BuscaTotalDeAlunosEOl(filtro);
             var query = ObtenhaQueryRelatorioMatematica(filtro);
@@ -42,20 +37,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
             relatorio.Graficos = ObtenhaListaDeGrafico(relatorio.Perguntas);
 
             return relatorio;
-        }
-        private static bool ConsideraNovaOpcaoRespostaSemPreenchimento(filtrosRelatorioDTO filtro)
-        {
-            return filtro.DescricaoPeriodo.Contains("Semestre") ? ConsideraNovaOpcaoRespostaSemPreenchimentoPrimeiroAoTerceiroAno(filtro.AnoLetivo,filtro.DescricaoPeriodo) 
-                                                                : ConsideraNovaOpcaoRespostaSemPreenchimentoQuartoAoNonoAno(filtro.AnoLetivo,filtro.DescricaoPeriodo);
-        }
-        private static bool ConsideraNovaOpcaoRespostaSemPreenchimentoPrimeiroAoTerceiroAno(int anoLetivo, string descricaoPeriodo)
-        {
-            return anoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO && descricaoPeriodo == SEGUNDO_SEMESTRE || anoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
-        }
-        private static bool ConsideraNovaOpcaoRespostaSemPreenchimentoQuartoAoNonoAno(int anoLetivo, string descricaoPeriodo)
-        {
-            var bimestreSelecionado = !string.IsNullOrEmpty(descricaoPeriodo) ? int.Parse(descricaoPeriodo.FirstOrDefault().ToString()) : 0;
-            return anoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO && bimestreSelecionado >= TERCEIRO_BIMESTRE || anoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
         }
 
         public async Task<RelatorioConsolidadoProficienciaDTO> ObtenhaRelatorioMatematicaProficiencia(filtrosRelatorioDTO filtro)
@@ -365,7 +346,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         private async Task<List<PerguntaProficienciaDTO>> ObtenhaListaDeDtoPerguntaProficiencia(filtrosRelatorioDTO filtro)
         {
             var totalDeAlunos = await ConsultaTotalDeAlunos.BuscaTotalDeAlunosEOl(filtro);
-            var consideraNovaOpcaoResposta_SemPreenchimento = ConsideraNovaOpcaoRespostaSemPreenchimento(filtro);
+            var consideraNovaOpcaoResposta_SemPreenchimento = NovaOpcaoRespostaSemPreenchimento.ConsideraOpcaoRespostaSemPreenchimento(filtro.AnoLetivo,filtro.DescricaoPeriodo);
             var listaPerguntaResposta = await ObtenhaListaDtoPerguntasRespostasProficiencia(filtro);
             var listaAgrupada = listaPerguntaResposta.GroupBy(p => p.PerguntaId).ToList();
             var listaRetorno = new List<PerguntaProficienciaDTO>();

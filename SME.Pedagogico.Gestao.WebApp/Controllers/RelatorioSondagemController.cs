@@ -26,10 +26,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         private const int TERCEIRO_ANO = 3;
         private const int ANO_ESCOLAR_2022 = 2022;
         private const string PROFICIENCIA_NUMERO = "Números";
-        private const string TERCEIRO_BIMESTRE = "3° Bimestre";
-        private const string QUARTO_BIMESTRE = "4° Bimestre";
-        private const int ANO_LETIVO_DOIS_MIL_VINTE_QUATRO = 2024;
-        private const int ANO_LETIVO_DOIS_MIL_VINTE_CINCO = 2025;
+
 
         public RelatorioSondagemController(IConfiguration config)
         {
@@ -249,7 +246,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
         private async Task<PollReportPortugueseStudentResult> BuscarDadosPorTurmaAsync(ParametersModel parameters, Periodo periodo)
         {
-            var consideraNovaOpcaoRespostaSemPreenchimentoTerceiroBimestre = ConsideraNovaOpcaoRespostaSemPreenchimentoTerceiroBimestre(int.Parse(parameters.SchoolYear),parameters.Term);
+            var consideraNovaOpcaoRespostaSemPreenchimentoTerceiroBimestre = NovaOpcaoRespostaSemPreenchimento.ConsideraOpcaoRespostaSemPreenchimento(int.Parse(parameters.SchoolYear),parameters.Term);
             var BusinessPoll = new Data.Business.PollPortuguese(_config);
             var alunosBusiness = new AlunosBusiness(_config);
 
@@ -265,15 +262,15 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 parameters.CodigoEscola,
                 parameters.CodigoCurso);//ajustar para pegar a turma 
 
-            List<PollReportPortugueseStudentItem> result = new List<PollReportPortugueseStudentItem>();
+            var result = new List<PollReportPortugueseStudentItem>();
 
-            List<PortChartDataModel> graficos = new List<PortChartDataModel>();
+            var graficos = new List<PortChartDataModel>();
 
             foreach (var aluno in alunosEol)
             {
                 var sondagem = listaAlunosTurma.FirstOrDefault(s => s.studentCodeEol == aluno.CodigoAluno.ToString());
 
-                string tipo = sondagem != null
+                var tipo = sondagem != null
                     ? ConverterProficienciaAluno(parameters.Proficiency, parameters.Term, sondagem) ?? string.Empty
                     : string.Empty;
 
@@ -321,27 +318,15 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 });
             }
 
-            PollReportPortugueseStudentResult retorno = new PollReportPortugueseStudentResult();
+            var retorno = new PollReportPortugueseStudentResult();
             retorno.Results = result;
 
             var listaGrafico = graficos.GroupBy(fu => fu.Name).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
-            graficos = new List<PortChartDataModel>();
-            foreach (var item in listaGrafico)
-            {
-                if (!string.IsNullOrWhiteSpace(item.Label))
-                {
-                    graficos.Add(new PortChartDataModel()
-                    {
-                        Name =  item.Label,
-                        Value = item.Value
-                    });
-                }
-                
-            }
+            graficos = (from item in listaGrafico where !string.IsNullOrWhiteSpace(item.Label) select new PortChartDataModel() { Name = item.Label, Value = item.Value }).ToList();
             retorno.ChartData = graficos.OrderBy(a => a.Name).ToList();
 
 
-            if (!consideraNovaOpcaoRespostaSemPreenchimentoTerceiroBimestre)
+            if (consideraNovaOpcaoRespostaSemPreenchimentoTerceiroBimestre) return retorno;
             {
                 var semPreenchimento = listaGrafico.FirstOrDefault(a => string.IsNullOrWhiteSpace(a.Label));
                 if (semPreenchimento != null)
@@ -351,13 +336,13 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                         Name = "Sem Preenchimento",
                         Value = semPreenchimento.Value >= 0 ? semPreenchimento.Value : 0
                     });
-                } 
+                }
             }
 
             return retorno;
         }
 
-        private string ConverterProficienciaAluno(string proficiency, string term, PortuguesePoll aluno)
+        private static string ConverterProficienciaAluno(string proficiency, string term, PortuguesePoll aluno)
         {
             switch (term)
             {
@@ -409,7 +394,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             }
         }
 
-        private string MontarTextoProficiencia(string proficiencia)
+        private static string MontarTextoProficiencia(string proficiencia)
         {
             switch (proficiencia)
             {
@@ -429,17 +414,14 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     return proficiencia;
             }
         }
-        private bool ConsideraNovaOpcaoRespostaSemPreenchimentoTerceiroBimestre(int anoLetivo,string descricaoPeriodo)
-        {
-            return anoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO && (descricaoPeriodo == TERCEIRO_BIMESTRE || descricaoPeriodo == QUARTO_BIMESTRE) || anoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
-        }
-        private bool EhRelatorioDeMatematicaAutoral(ParametersModel parameters)
+
+        private static bool EhRelatorioDeMatematicaAutoral(ParametersModel parameters)
         {
             return parameters.Discipline == DISCIPLINA_MATEMATICA &&
                  (int.Parse(parameters.CodigoCurso) >= SETIMO_ANO || int.Parse(parameters.SchoolYear) >= ANO_ESCOLAR_2022);
         }
 
-        private bool ProficienciaEhNumero(string proficiencia)
+        private static bool ProficienciaEhNumero(string proficiencia)
         {
             return proficiencia.Equals(PROFICIENCIA_NUMERO, StringComparison.InvariantCultureIgnoreCase);
         }

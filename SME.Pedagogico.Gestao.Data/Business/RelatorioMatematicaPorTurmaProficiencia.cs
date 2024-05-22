@@ -23,10 +23,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
         private List<DatasPeriodoFixoAnualDTO> _listaDePeriodos;
         private List<AlunosNaTurmaDTO> _listaDeAlunosAtivos;
         private List<AlunoPerguntaRespostaProficienciaDTO> _listaAlunoPerguntaResposta;
-        private const string TERCEIRO_BIMESTRE = "3° Bimestre";
-        private const string QUARTO_BIMESTRE = "4° Bimestre";
-        private const int ANO_LETIVO_DOIS_MIL_VINTE_QUATRO = 2024;
-        private const int ANO_LETIVO_DOIS_MIL_VINTE_CINCO = 2025;
 
         private const string TITULO_BARRA_SEM_PREENCHIMENTO = "Sem Preenchimento";
 
@@ -213,7 +209,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         private List<BarrasGraficoDTO> ObtenhaListaDeBarrasGrafico(List<AlunoPerguntaRespostaProficienciaDTO> listaPorSubPergunta)
         {
-            var consideraNovaOpcaoResposta_SemPreenchimento = ConsideraNovaOpcaoRespostaSemPreenchimento();
+            var consideraNovaOpcaoResposta_SemPreenchimento = NovaOpcaoRespostaSemPreenchimento.ConsideraOpcaoRespostaSemPreenchimento(_filtro.AnoLetivo,_filtro.DescricaoPeriodo);
             var listaRetorno = new List<BarrasGraficoDTO>();
             var grupoPorResposta = listaPorSubPergunta.GroupBy(dto => dto.RespostaId);
 
@@ -229,11 +225,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 listaRetorno.Add(ObtenhaBarraSemPreenchimento(listaPorSubPergunta.Count()));
 
             return listaRetorno;
-        }
-
-        private bool ConsideraNovaOpcaoRespostaSemPreenchimento()
-        {
-            return this._filtro.AnoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO && (this._filtro.DescricaoPeriodo == TERCEIRO_BIMESTRE || this._filtro.DescricaoPeriodo == QUARTO_BIMESTRE) || this._filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
         }
 
         private BarrasGraficoDTO ObtenhaBarraSemPreenchimento(int totalResposta)
