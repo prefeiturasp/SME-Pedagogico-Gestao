@@ -23,10 +23,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
     public class RelatorioPortugues
     {
         private AlunosAPI alunoAPI;
-        private const string SEGUNDO_SEMESTRE = "2° Semestre";
-        private const int ANO_LETIVO_DOIS_MIL_VINTE_QUATRO = 2024;
-        private const int ANO_LETIVO_DOIS_MIL_VINTE_CINCO = 2025;
-
         public RelatorioPortugues()
         {
             alunoAPI = new AlunosAPI(new EndpointsAPI());
@@ -34,7 +30,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task<RelatorioPortuguesTurmaDto> ObterRelatorioPorTurmasPortugues(RelatorioPortuguesFiltroDto relatorioPortuguesFiltroDto)
         {
-            var consideraNovaOpcaoRespostaSemPreenchimento = ConsideraNovaOpcaoRespostaSemPreenchimento(relatorioPortuguesFiltroDto);
+            var consideraNovaOpcaoRespostaSemPreenchimento = NovaOpcaoRespostaSemPreenchimento.ConsideraOpcaoRespostaSemPreenchimento(relatorioPortuguesFiltroDto.AnoLetivo,relatorioPortuguesFiltroDto.DescricaoPeriodo);
             IEnumerable<SondagemAluno> dados = null;
             PeriodoFixoAnual periodo = null;
             IEnumerable<Pergunta> perguntas = null;
@@ -70,10 +66,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             return relatorio;
         }
-        private static bool ConsideraNovaOpcaoRespostaSemPreenchimento(RelatorioPortuguesFiltroDto filtro)
-        {
-            return filtro.AnoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO && filtro.DescricaoPeriodo == SEGUNDO_SEMESTRE || filtro.AnoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
-        }
+
         private static void MapearGraficoPorTurma(IEnumerable<SondagemAluno> dados, IEnumerable<Pergunta> perguntas, Grupo grupo, IEnumerable<AlunosNaTurmaDTO> alunos, RelatorioPortuguesTurmaDto relatorio, bool consideraNovaOpcaoRespostaSemPreenchimento)
         {
             var perguntasRespondidas = dados.SelectMany(x => x.ListaRespostas);
@@ -245,7 +238,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task<RelatorioAutoralLeituraProducaoDto> ObterRelatorioConsolidadoPortugues(RelatorioPortuguesFiltroDto filtroRelatorioSondagem)
         {
-            var consideraNovaOpcaoRespostaSemPreenchimento = ConsideraNovaOpcaoRespostaSemPreenchimento(filtroRelatorioSondagem);
+            var consideraNovaOpcaoRespostaSemPreenchimento = NovaOpcaoRespostaSemPreenchimento.ConsideraOpcaoRespostaSemPreenchimento(filtroRelatorioSondagem.AnoLetivo,filtroRelatorioSondagem.DescricaoPeriodo);
             var dados = new List<SondagemAlunoRespostas>();
             PeriodoFixoAnual periodo = null;
             Grupo grupo = null;

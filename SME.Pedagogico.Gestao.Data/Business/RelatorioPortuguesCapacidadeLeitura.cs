@@ -15,6 +15,7 @@ using SME.Pedagogico.Gestao.Data.Relatorios;
 using SME.Pedagogico.Gestao.Data.DTO.RelatorioPorTurma;
 using SME.Pedagogico.Gestao.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
+using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DTO.Relatorio;
 using SME.Pedagogico.Gestao.Data.DTO.Portugues.Graficos.Portugues;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
@@ -22,10 +23,6 @@ using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 public class RelatorioPortuguesCapacidadeLeitura
 {
     private AlunosAPI alunoAPI;
-    private const string SEGUNDO_SEMESTRE = "2° Semestre";
-    private const int ANO_LETIVO_DOIS_MIL_VINTE_QUATRO = 2024;
-    private const int ANO_LETIVO_DOIS_MIL_VINTE_CINCO = 2025;
-
     public RelatorioPortuguesCapacidadeLeitura()
     {
         alunoAPI = new AlunosAPI(new EndpointsAPI());
@@ -39,7 +36,7 @@ public class RelatorioPortuguesCapacidadeLeitura
         var query = ConsultasRelatorios.MontaQueryConsolidadoCapacidadeLeitura(filtro);
         var relatorio = new RelatorioConsolidadoCapacidadeLeituraDTO();
         var ListaPerguntaEhRespostasRelatorio = await RetornaListaDehPerguntasEhRespostas(filtro, query);
-        var consideraNovaOpcaoResposta_SemPreenchimento = ConsideraNovaOpcaoRespostaSemPreenchimento(filtro.AnoLetivo, filtro.DescricaoPeriodo);
+        var consideraNovaOpcaoResposta_SemPreenchimento = NovaOpcaoRespostaSemPreenchimento.ConsideraOpcaoRespostaSemPreenchimento(filtro.AnoLetivo,filtro.DescricaoPeriodo);
 
         var relatorioAgrupado = ListaPerguntaEhRespostasRelatorio.GroupBy(p => p.OrdermId).ToList();
         relatorio.RelatorioPorOrdem = RetornaRelatorioPorOrdens(totalDeAlunos, relatorioAgrupado, consideraNovaOpcaoResposta_SemPreenchimento);
@@ -156,7 +153,7 @@ public class RelatorioPortuguesCapacidadeLeitura
 
     public async Task<RelatorioCapacidadeLeituraPorTurma> ObterRelatorioCapacidadeLeituraPorTurma(RelatorioPortuguesFiltroDto filtro)
     {
-        var consideraNovaOpcaoResposta_SemPreenchimento =  ConsideraNovaOpcaoRespostaSemPreenchimento(filtro.AnoLetivo,filtro.DescricaoPeriodo);
+        var consideraNovaOpcaoResposta_SemPreenchimento =  NovaOpcaoRespostaSemPreenchimento.ConsideraOpcaoRespostaSemPreenchimento(filtro.AnoLetivo,filtro.DescricaoPeriodo);;
         var filtrosRelatorio = CriaMapFiltroRelatorio(filtro);
         var periodos = await ConsultaTotalDeAlunos.BuscaDatasPeriodoFixoAnual(filtrosRelatorio);
 
@@ -176,12 +173,7 @@ public class RelatorioPortuguesCapacidadeLeitura
         return relatorio;
 
     }
-
-    private static bool ConsideraNovaOpcaoRespostaSemPreenchimento(int anoLetivo, string descricaoPeriodo)
-    {
-        return anoLetivo == ANO_LETIVO_DOIS_MIL_VINTE_QUATRO && descricaoPeriodo == SEGUNDO_SEMESTRE || anoLetivo >= ANO_LETIVO_DOIS_MIL_VINTE_CINCO;
-    }
-
+    
     private static async Task CriaGraficosRelatorio(RelatorioCapacidadeLeituraPorTurma relatorio, SMEManagementContextData contexto, bool consideraNovaOpcaoResposta_SemPreenchimento)
     {
         var perguntasBanco = await contexto.PerguntaResposta.Include(x => x.Pergunta).Include(y => y.Resposta).Where(pr => relatorio.Perguntas.Any(p => p.Id == pr.Pergunta.Id)).ToListAsync();
