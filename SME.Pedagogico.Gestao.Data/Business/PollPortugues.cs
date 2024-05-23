@@ -538,28 +538,49 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         : 0;
 
 
-                foreach (var item in listReturn.Where(item => !consideraNovaOpcaoRespostaSemPreenchimento))
+
+                foreach (var item in listReturn)
                 {
                     item.StudentPercentage = ((double) item.studentQuantity / quantidadeTotalAlunos) * 100;
-                    if (!string.IsNullOrWhiteSpace(item.OptionName)) continue;
-                    item.OptionName = "Sem preenchimento";
-                    item.StudentPercentage = ((double) totalSemPreenchimento / quantidadeTotalAlunos) * 100;
-                    item.studentQuantity = totalSemPreenchimento;
-                }
-
-                var retorno = new PollReportPortugueseResult();
-                graficos = (from item in listaGrafico
-                    where !consideraNovaOpcaoRespostaSemPreenchimento
-                    select new PortChartDataModel()
+                    if (!consideraNovaOpcaoRespostaSemPreenchimento)
                     {
-                        Name = string.IsNullOrWhiteSpace(item.Label)
-                            ? "Sem preenchimento"
-                            : item.Label,
-                        Value = string.IsNullOrWhiteSpace(item.Label)
-                            ? totalSemPreenchimento
-                            : item.Value
-                    }).ToList();
+                        if (string.IsNullOrWhiteSpace(item.OptionName))
+                        {
+                            item.OptionName = "Sem preenchimento";
+                            item.StudentPercentage = ((double) totalSemPreenchimento / quantidadeTotalAlunos) * 100;
+                            item.studentQuantity = totalSemPreenchimento;
+                        }
+                    }
+                }
+                
+                PollReportPortugueseResult retorno = new PollReportPortugueseResult();
 
+                graficos = new List<PortChartDataModel>();
+
+                foreach (var item in listaGrafico)
+                {
+                    if (!consideraNovaOpcaoRespostaSemPreenchimento)
+                    {
+                        graficos.Add(new PortChartDataModel()                    {
+                            Name = string.IsNullOrWhiteSpace(item.Label)
+                                ? "Sem preenchimento"
+                                : item.Label,
+                            Value = string.IsNullOrWhiteSpace(item.Label)
+                                ? totalSemPreenchimento
+                                : item.Value
+                        });
+                    }
+                    else
+                    {
+                        graficos.Add(new PortChartDataModel()                    {
+                            Name = item.Label,
+                            Value = item.Value
+                        });
+                    }
+                }
+                
+                
+                
                 if (proficiencia == "Escrita")
                 {
                     //particularidade do 3 ano
