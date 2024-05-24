@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SME.Pedagogico.Gestao.Data.DTO.Matematica.Relatorio;
 
 namespace SME.Pedagogico.Gestao.Data.Business
 {
@@ -325,10 +326,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
         public async Task<PollReportPortugueseResult> BuscarDadosRelatorioPortugues(string proficiencia, string bimestre, string anoLetivo, string codigoDre, string codigoEscola, string codigoCurso, Periodo periodo)
         {
             var liststudentPollPortuguese = new List<StudentPollPortuguese>();
-
+            var existeRespostas = false;
             PeriodoFixoAnual periodoAnual = null;
-            var consideraNovaOpcaoRespostaSemPreenchimento =
-                NovaOpcaoRespostaSemPreenchimento.ConsideraOpcaoRespostaSemPreenchimento(int.Parse(anoLetivo),bimestre);
+            var consideraNovaOpcaoRespostaSemPreenchimento = NovaOpcaoRespostaSemPreenchimento.ConsideraOpcaoRespostaSemPreenchimento(int.Parse(anoLetivo),bimestre);
 
             var listReturn = new List<PollReportPortugueseItem>();
 
@@ -373,7 +373,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         if (proficiencia == "Escrita")
                         {
                             var writing1B = query.GroupBy(fu => fu.writing1B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
-
+                            
                             foreach (var item in writing1B)
                             {
                                 PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
@@ -453,11 +453,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     {
                         if (proficiencia == "Escrita")
                         {
-                            var writing3B = query.GroupBy(fu => fu.writing3B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
-
+                            var writing3B =  consideraNovaOpcaoRespostaSemPreenchimento ? query.GroupBy(fu => fu.writing3B).Where(x => x.Key.Length > 0).Select(g => new {Label = g.Key, Value = g.Count()}).ToList() 
+                                                    : query.GroupBy(fu => fu.writing3B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
+                            existeRespostas = writing3B.Any();
                             foreach (var item in writing3B)
                             {
-                                PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                var itemRetorno = new PollReportPortugueseItem();
                                 itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
                                 itemRetorno.studentQuantity = item.Value;
                                 listReturn.Add(itemRetorno);
@@ -471,11 +472,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         }
                         else //leitura
                         {
-                            var reading3B = query.GroupBy(fu => fu.reading3B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
-
+                            var reading3B = consideraNovaOpcaoRespostaSemPreenchimento ? query.GroupBy(fu => fu.reading3B).Where(x => x.Key.Length > 0).Select(g => new {Label = g.Key, Value = g.Count()}).ToList()
+                                                                                       : query.GroupBy(fu => fu.reading3B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
+                            existeRespostas = reading3B.Any();
                             foreach (var item in reading3B)
                             {
-                                PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                var itemRetorno = new PollReportPortugueseItem();
                                 itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
                                 itemRetorno.studentQuantity = item.Value;
                                 listReturn.Add(itemRetorno);
@@ -493,11 +495,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     {
                         if (proficiencia == "Escrita")
                         {
-                            var writing4B = query.GroupBy(fu => fu.writing4B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
-
+                            var writing4B = consideraNovaOpcaoRespostaSemPreenchimento ? query.GroupBy(fu => fu.writing4B).Where(x => x.Key.Length > 0).Select(g => new {Label = g.Key, Value = g.Count()}).ToList()
+                                                    : query.GroupBy(fu => fu.writing4B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
+                            existeRespostas = writing4B.Any();
                             foreach (var item in writing4B)
                             {
-                                PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                var itemRetorno = new PollReportPortugueseItem();
                                 itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
                                 itemRetorno.studentQuantity = item.Value;
                                 listReturn.Add(itemRetorno);
@@ -511,8 +514,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         }
                         else //leitura
                         {
-                            var reading4B = query.GroupBy(fu => fu.reading4B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
-
+                            var reading4B = consideraNovaOpcaoRespostaSemPreenchimento ? query.GroupBy(fu => fu.reading4B).Where(x => x.Key.Length > 0).Select(g => new {Label = g.Key, Value = g.Count()}).ToList()
+                                :query.GroupBy(fu => fu.reading4B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
+                            existeRespostas = reading4B.Any();
                             foreach (var item in reading4B)
                             {
                                 PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
@@ -552,8 +556,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         }
                     }
                 }
-                
-                PollReportPortugueseResult retorno = new PollReportPortugueseResult();
+
+                var percentualTotalRespostas = listReturn.Select(x => x.StudentPercentage).Sum();
+                var retorno = new PollReportPortugueseResult();
 
                 graficos = new List<PortChartDataModel>();
 
@@ -624,7 +629,17 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     retorno.ChartData = graficos.OrderBy(g => g.Name).ToList();
                 }
 
-
+                var novaOpcaoRespostaComTodasTurmas = (consideraNovaOpcaoRespostaSemPreenchimento &&
+                                                       string.IsNullOrWhiteSpace(codigoEscola));
+                if (novaOpcaoRespostaComTodasTurmas)
+                {
+                    retorno.Total = new TotalDTO()
+                    {
+                        Quantidade = existeRespostas ? quantidadeTotalAlunos : 0,
+                        Porcentagem = existeRespostas ? ((((double)totalSemPreenchimento / quantidadeTotalAlunos) * 100) + percentualTotalRespostas).ToString() : "0",
+                    };
+                }
+                retorno.ConsideraNovaOpcaoRespostaSemPreenchimento = novaOpcaoRespostaComTodasTurmas;
                 return retorno;
             }
         }

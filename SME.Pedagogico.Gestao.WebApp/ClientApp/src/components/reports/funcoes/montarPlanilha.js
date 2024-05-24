@@ -93,6 +93,8 @@ export const montarPlanilha = (props, reportData, classroomReport) => {
       <PollReportPortugueseGrid
         className="mt-3"
         classroomReport={classroomReport}
+        total={props.pollReport.data.total}
+        consideraNovaOpcao={props.pollReport.data.consideraNovaOpcaoRespostaSemPreenchimento}
         data={reportData}
       />
     );
