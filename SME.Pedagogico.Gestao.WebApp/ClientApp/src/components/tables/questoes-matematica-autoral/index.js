@@ -17,9 +17,7 @@ import LinhaAluno from "./linha-aluno";
 import { Form } from "antd";
 import _ from "lodash";
 import { TIPO_PERIODO } from "../../../Enums";
-import { showModalError } from "../../../service/modal-service";
 import { SalvaSondagemAutoralMatAsync } from "../../../sagas/SondagemAutoral";
-import { ALERTA_ESTUDANTE_SEM_RESPOSTA_SELECIONADA } from "../../../utils/constants";
 
 const QuestoesMatematicaAutoral = () => {
   const dispatch = useDispatch();
@@ -112,49 +110,6 @@ const QuestoesMatematicaAutoral = () => {
     return alunosMutaveis;
   };
 
-  const temEstudantesSemResposta = useCallback(
-    (alunosSalvar) => {
-      const estudanteSemResposta = alunosSalvar.find((estudante) => {
-        const respostas = estudante?.respostas;
-        const semResposta = !respostas?.length;
-
-        if (semResposta) return true;
-        if (respostas?.length) {
-          const semRespostasEmTodasPerguntas =
-            respostas.length < perguntas?.length ||
-            respostas.find((item) => !item?.resposta);
-
-          return !!semRespostasEmTodasPerguntas;
-        }
-
-        return false;
-      });
-
-      if (estudanteSemResposta) return true;
-
-      return false;
-    },
-    [perguntas]
-  );
-
-  const validouEstudantesSemResposta = useCallback(
-    (alunosSalvar) => {
-      let continuar = true;
-
-      const exibirModalErro = temEstudantesSemResposta(alunosSalvar);
-
-      if (exibirModalErro) {
-        showModalError({
-          content: ALERTA_ESTUDANTE_SEM_RESPOSTA_SELECIONADA,
-        });
-        continuar = false;
-      }
-
-      return continuar;
-    },
-    [perguntas, temEstudantesSemResposta]
-  );
-
   const persistencia = useCallback(
     async (listaAlunosRedux) => {
       const alunosMutaveis = _.cloneDeep(listaAlunosRedux);
@@ -168,8 +123,8 @@ const QuestoesMatematicaAutoral = () => {
         alunosMutaveis,
         form.getFieldsValue()
       );
-
-      const continuar = validouEstudantesSemResposta(alunosSalvar);
+      
+      const continuar = validouEstudantesSemRespostaMatAutoral(alunosSalvar);
 
       if (!continuar) return false;
 
@@ -185,14 +140,7 @@ const QuestoesMatematicaAutoral = () => {
         return false;
       }
     },
-    [
-      dispatch,
-      sairModoEdicao,
-      bimestre,
-      form,
-      perguntas,
-      validouEstudantesSemResposta,
-    ]
+    [dispatch, sairModoEdicao, bimestre, form]
   );
 
   useEffect(() => {
