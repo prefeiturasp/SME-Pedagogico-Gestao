@@ -392,7 +392,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 CalculaPercentualTotalPergunta(totalDeAlunos, descricao, pergunta);
 
-                var listaPr = subAgrupador.Where(y => y.SubPerguntaId == subAgrupador.Key).ToList();
+                var listaPr = subAgrupador.Where(y => y.SubPerguntaId == subAgrupador.Key).ToList().OrderBy(x => x.RespostaDescricao);
                 var totalRespostas = subAgrupador.Where(y => y.SubPerguntaId == subAgrupador.Key).Sum(q => q.QtdRespostas);
                 
                 CalculaPercentualRespostas(totalDeAlunos, pergunta, listaPr.Cast<PerguntasRespostasDTO>().ToList(), totalRespostas,consideraNovaOpcaoRespostaSemPreenchimento);
