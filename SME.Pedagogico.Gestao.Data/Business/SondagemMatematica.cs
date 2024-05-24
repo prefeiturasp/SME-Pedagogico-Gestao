@@ -123,10 +123,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
         public async Task<IEnumerable<AlunoSondagemMatematicaDto>> ObterAlunos(FiltrarListagemMatematicaDTO filtrarListagemDto)
         {
             var listaSondagem = await ObterSondagemAutoralMatematicaBimestre(filtrarListagemDto);
+            PeriodoFixoAnual periodoFixo = null;
+            using (var db = new SMEManagementContextData())
+                periodoFixo = db.PeriodoFixoAnual.FirstOrDefault(fixo => fixo.Ano == filtrarListagemDto.AnoLetivo &&
+                                                                         fixo.Descricao.StartsWith(filtrarListagemDto.Bimestre.ToString()) &&
+                                                                         (int)fixo.TipoPeriodo == (int)(filtrarListagemDto.AnoLetivo >= 2022 ? TipoPeriodoEnum.Semestre : TipoPeriodoEnum.Bimestre));
 
-            var alunos = (await TurmaApi.GetAlunosNaTurma(Convert.ToInt32(filtrarListagemDto.CodigoTurma), _token))
-                              .Where(x => x.CodigoSituacaoMatricula == 10 || x.CodigoSituacaoMatricula == 1 || x.CodigoSituacaoMatricula == 6 || x.CodigoSituacaoMatricula == 13 || x.CodigoSituacaoMatricula == 5)
-                              .ToList();
+            var alunos = (await TurmaApi.GetAlunosConsideraInativosNaTurma(Convert.ToInt32(filtrarListagemDto.CodigoTurma), _token))
+                              .Where(a => ((!a.AlunoInativo && a.DataMatricula.Date < (periodoFixo?.DataFim.Date ?? DateTime.Now.Date)) ||
+                                            (a.AlunoInativo && a.DataMatricula.Date < (periodoFixo?.DataFim.Date ?? DateTime.Now.Date) && a.DataSituacao.Date >= (periodoFixo?.DataInicio.Date ?? DateTime.Now.Date))) &&
+                                            (SituacaoMatriculaAluno)a.CodigoSituacaoMatricula != SituacaoMatriculaAluno.VinculoIndevido).ToList();
 
             if (alunos == null || !alunos.Any())
                 throw new Exception($"Não encontrado alunos para a turma {filtrarListagemDto.CodigoTurma} do ano letivo {filtrarListagemDto.AnoLetivo}");
@@ -137,7 +143,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             AdicionarAlunosEOL(filtrarListagemDto, alunos, listagem);
 
-            return listagem.OrderBy(x => x.NumeroChamada).ThenBy(x => x.NomeAluno); 
+            return listagem.OrderBy(x => x.NumeroChamada).ThenBy(x => x.NomeAluno);
         }
 
         private static async Task<List<Sondagem>> ObterSondagemAutoralMatematicaBimestre(FiltrarListagemMatematicaDTO filtrarListagemDto)
@@ -264,7 +270,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 using (SMEManagementContextData db = new SMEManagementContextData())
                 {
                     var perguntas = (ProficienciaEnum)grupo == ProficienciaEnum.Numeros
-                                    ? await ObterPerguntasGrupoNumeros(db, anoEscolar, anoLetivo, grupo,bimestre)
+                                    ? await ObterPerguntasGrupoNumeros(db, anoEscolar, anoLetivo, grupo, bimestre)
                                     : await ObterPerguntasGrupoCACM(db, anoEscolar, anoLetivo, grupo, bimestre);
 
                     if (perguntas == null || !perguntas.Any())
@@ -283,7 +289,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             try
             {
-                var perguntasAlfabetizacao = new List<PerguntaAlfabetizacaoDto>();              
+                var perguntasAlfabetizacao = new List<PerguntaAlfabetizacaoDto>();
                 var sql = $@"select p.""Id"" as ""PerguntaPrincipalId"",
                                     p.""Descricao"" as ""PerguntaPrincipalDescricao"",
                                     pae.""Ordenacao"" as ""PerguntaPrincipalOrdenacao"",
@@ -371,7 +377,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
         }
 
-        private async Task<List<PerguntaDto>> ObterPerguntasGrupoNumeros(SMEManagementContextData db, int anoEscolar, int anoLetivo, int grupo,int bimestre)
+        private async Task<List<PerguntaDto>> ObterPerguntasGrupoNumeros(SMEManagementContextData db, int anoEscolar, int anoLetivo, int grupo, int bimestre)
         {
             try
             {
