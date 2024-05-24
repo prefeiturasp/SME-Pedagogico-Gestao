@@ -161,7 +161,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 var endpoits = new EndpointsAPI();
                 var alunoApi = new AlunosAPI(endpoits);
-                var alunosEol = (await alunoApi.ObterAlunosAtivosPorTurmaEPeriodo(filtro.CodigoTurmaEol,periodos.First().DataInicio))
+                var alunosEol = (await alunoApi.ObterAlunosAtivosPorTurmaEPeriodo(filtro.CodigoTurmaEol,periodos.First().DataFim))
                     .OrderBy(aluno => aluno.NomeAluno)
                     .ToList();
                 var QueryAlunosRespostas = ObtenhaQueryRelatorioPorTurmaMatematica(filtro);

@@ -13,11 +13,12 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO
         {
             get
             {
-                return AlunoInativo ? string.Format("{0} ({1} em {2})", NomeAluno, SituacaoMatricula, DataSituacao.ToString("dd/MM/yyyy")) : NomeAluno;
+                return AlunoInativo ? string.Format("{0} ({1} em {2})", NomeSocialAluno ?? NomeAluno, SituacaoMatricula, DataSituacao.ToString("dd/MM/yyyy")) : NomeSocialAluno ?? NomeAluno;
             }
         }
         public string DataNascimento { get; set; }
         public string NomeSocialAluno { get; set; }
+        public DateTime DataMatricula { get; set; }
         public int CodigoSituacaoMatricula { get; set; }
         public string SituacaoMatricula { get; set; }
         public DateTime DataSituacao { get; set; }
