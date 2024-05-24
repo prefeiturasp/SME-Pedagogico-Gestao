@@ -102,8 +102,9 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
         [HttpGet("Matematica/Alunos")]
-        public async Task<IActionResult> ObterAlunos([FromQuery] FiltrarListagemMatematicaDTO filtrarListagemDto)
+        public async Task<IActionResult> ObterAlunos([FromQuery] FiltrarListagemMatematicaDTO filtrarListagemDto, [FromQuery]int bimestre)
         {
+            filtrarListagemDto.Bimestre = bimestre;
             var retorno = await sondagemAlfabetizacaoBusiness.ObterAlunos(filtrarListagemDto);
             return Ok(retorno);
         }
