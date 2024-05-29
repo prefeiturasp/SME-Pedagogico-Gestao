@@ -662,6 +662,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     return "Silábico alfabético";
                 case "A":
                     return "Alfabético";
+                case "SemPreenchimento":
+                    return "Sem preenchimento";
                 default:
                     return proficiencia;
             }
