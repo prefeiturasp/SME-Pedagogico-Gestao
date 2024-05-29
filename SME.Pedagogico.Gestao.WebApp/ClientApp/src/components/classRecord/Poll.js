@@ -110,11 +110,11 @@ class Poll extends Component {
       content: ALERTA_DESEJA_SALVAR_AGORA,
       onOk: () => {
         this.savePollStudent().then((continuar = true) => {
-          if (!continuar) return false;          
-          
+          if (!continuar) return false;
+
           this.limparDadosAposSalvarMatematicaAutoral();
           this.openPortuguesePoll();
-          return true;          
+          return true;
         });
       },
       onCancel: () => {
@@ -129,13 +129,13 @@ class Poll extends Component {
       content: ALERTA_DESEJA_SALVAR_AGORA,
       onOk: () => {
         this.savePollStudent().then((continuar = true) => {
-          if (!continuar) return false;          
+          if (!continuar) return false;
 
           if (bimestre) {
-            this.atualizarBimestre(bimestre);          
+            this.atualizarBimestre(bimestre);
             return true;
           }
-          
+
           this.openMathPoll();
           return true;
         });
@@ -273,15 +273,43 @@ class Poll extends Component {
     updatePollStudent(this.props, sequence, subjectName, propertyName, value);
   }
 
+  obterBimestreSelecionado() {
+    if (
+      document.getElementById("1bim_col_head")?.style?.display === "table-cell"
+    )
+      return "1";
+    if (
+      document.getElementById("2bim_col_head")?.style?.display === "table-cell"
+    )
+      return "2";
+    if (
+      document.getElementById("3bim_col_head")?.style?.display === "table-cell"
+    )
+      return "3";
+    if (
+      document.getElementById("4bim_col_head")?.style?.display === "table-cell"
+    )
+      return "4";
+  }
+
   temEstudanteSemRespostaClassRoomEnumClassPT(
     bimestreDesabilitado,
     nomeCampoLeitura,
     nomeCampoEscrita
   ) {
     if (!bimestreDesabilitado) {
+      const bimestre = this.obterBimestreSelecionado();
+
       const semRespostaLeituraEscrita = this.props.poll.students.find(
-        (estudante) =>
-          !estudante?.[nomeCampoLeitura] || !estudante?.[nomeCampoEscrita]
+        (estudante) => {    
+          const bimestreAtivo = estudante?.[`ativoB${bimestre}`];
+
+          if (!bimestreAtivo) return false;
+
+          return (
+            !estudante?.[nomeCampoLeitura] || !estudante?.[nomeCampoEscrita]
+          );
+        }
       );
       if (semRespostaLeituraEscrita) return true;
     }
@@ -289,7 +317,7 @@ class Poll extends Component {
     return false;
   }
 
-  validarEstudantesSemRespostasClassRoomEnumClassPT() {
+  validarEstudantesSemRespostasClassRoomEnumClassPT() { 
     if (this.props.pollOptionSelectLock) {
       const bimestre_1_invalido =
         this.temEstudanteSemRespostaClassRoomEnumClassPT(
@@ -347,7 +375,7 @@ class Poll extends Component {
         codigoTurma: filtros.classroomCodeEol,
         componenteCurricular: "9f3d8467-2f6e-4bcb-a8e9-12e840426aba",
         perguntaId: itemSelecionado && itemSelecionado.id,
-      };      
+      };
       return this.props.poll.onClickButtonSave(
         this.props.autoral.listaAlunosAutoralMatematica,
         this.props.autoral.listaPerguntas,
@@ -401,7 +429,7 @@ class Poll extends Component {
     if (
       this.props.pollStudents &&
       this.props.pollStudents.pollSelected === ClassRoomEnum.ClassMTAutoral
-    ) {      
+    ) {
       this.props.autoralMethods.salvaSondagemAutoralMatematica(
         this.props.autoral.listaAlunosAutoralMatematica
       );
@@ -424,13 +452,13 @@ class Poll extends Component {
           } catch (e) {
             return false;
           }
-        }      
+        }
         showModalError({
           content: ALERTA_ESTUDANTE_SEM_RESPOSTA_SELECIONADA,
         });
         return false;
       } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMT) {
-        if (this.props.poll.pollTypeSelected === "Numeric") {          
+        if (this.props.poll.pollTypeSelected === "Numeric") {
           this.props.pollMethods.save_poll_math_numbers_students(
             this.props.poll.studentsPollMathNumbers
           );
