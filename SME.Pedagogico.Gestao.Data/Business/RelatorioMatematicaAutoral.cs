@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using MoreLinq;
 using Npgsql;
 using SME.Pedagogico.Gestao.Data.Contexts;
@@ -21,6 +22,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
     public class RelatorioMatematicaAutoral
     {
         private const int TERCEIRO_ANO = 3;
+        private readonly IConfiguration _config;
+
+        public RelatorioMatematicaAutoral(IConfiguration config)
+        {
+            this._config = config;
+        }
+
         public async Task<RelatorioConsolidadoDTO> ObterRelatorioMatematicaAutoral(filtrosRelatorioDTO filtro)
         {
             var consideraNovaOpcaoResposta_SemPreenchimento = NovaOpcaoRespostaSemPreenchimento.ConsideraOpcaoRespostaSemPreenchimento(filtro.AnoLetivo,filtro.DescricaoPeriodo);
@@ -55,7 +63,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtro);
 
-            return await new RelatorioMatematicaPorTurmaProficiencia(filtro, ObtenhaProficiencia(filtro.Proficiencia)).ObtenhaDTO(filtro.Bimestre);
+            return await new RelatorioMatematicaPorTurmaProficiencia(filtro, ObtenhaProficiencia(filtro.Proficiencia), this._config).ObtenhaDTO(filtro.Bimestre);
         }
 
         private static async Task<List<PerguntaDTO>> RetornaRelatorioMatematica(filtrosRelatorioDTO filtro, NpgsqlConnection conexao, string query, int totalDeAlunos, bool consideraNovaOpcaoResposta_SemPreenchimento)

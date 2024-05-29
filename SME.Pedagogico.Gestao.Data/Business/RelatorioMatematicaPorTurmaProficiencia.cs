@@ -1,14 +1,19 @@
-﻿using MoreLinq;
+﻿using Microsoft.Extensions.Configuration;
+using MoreLinq;
 using Npgsql;
+using SME.Pedagogico.Gestao.Data.Contexts;
 using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.DTO.Matematica;
 using SME.Pedagogico.Gestao.Data.DTO.Matematica.Relatorio;
 using SME.Pedagogico.Gestao.Data.DTO.RelatorioPorTurma;
+using SME.Pedagogico.Gestao.Data.Functionalities;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using SME.Pedagogico.Gestao.Data.Relatorios;
 using SME.Pedagogico.Gestao.Data.Relatorios.Querys;
+using SME.Pedagogico.Gestao.Infra;
+using SME.Pedagogico.Gestao.Models.Autoral;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,13 +28,15 @@ namespace SME.Pedagogico.Gestao.Data.Business
         private List<DatasPeriodoFixoAnualDTO> _listaDePeriodos;
         private List<AlunosNaTurmaDTO> _listaDeAlunosAtivos;
         private List<AlunoPerguntaRespostaProficienciaDTO> _listaAlunoPerguntaResposta;
+        private readonly IConfiguration _config;
 
         private const string TITULO_BARRA_SEM_PREENCHIMENTO = "Sem Preenchimento";
 
-        public RelatorioMatematicaPorTurmaProficiencia(filtrosRelatorioDTO filtro, int grupo)
+        public RelatorioMatematicaPorTurmaProficiencia(filtrosRelatorioDTO filtro, int grupo, IConfiguration config)
         {
             this._filtro = filtro;
             this._grupo = grupo;
+            this._config = config;
         }
 
         public async Task<RelatorioMatematicaPorTurmaProficienciaDTO> ObtenhaDTO(int bimestre)
@@ -56,13 +63,20 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             await this.CarregaPeriodos();
 
-            var alunoApi = new AlunosAPI(new EndpointsAPI());
+            var createToken = new CreateToken(_config);
+            var token = createToken.CreateTokenProvisorio();
+            var turmaApi = new TurmasAPI(new EndpointsAPI());
 
-            this._listaDeAlunosAtivos = (await alunoApi.ObterAlunosAtivosPorTurmaEPeriodo(
-                                                            this._filtro.CodigoTurmaEol,
-                                                            this._listaDePeriodos.First().DataFim))
-                                                            .OrderBy(aluno => aluno.NomeAluno)
-                                                            .ToList();
+            PeriodoFixoAnual periodoFixo = null;
+            using (var db = new SMEManagementContextData())
+                periodoFixo = db.PeriodoFixoAnual.FirstOrDefault(fixo => fixo.Ano == _filtro.AnoLetivo &&
+                                                         fixo.Descricao.StartsWith(_filtro.Bimestre.ToString()) &&
+                                                         (int)fixo.TipoPeriodo == (int)(_filtro.AnoLetivo >= 2022 ? TipoPeriodoEnum.Semestre : TipoPeriodoEnum.Bimestre));
+
+            this._listaDeAlunosAtivos = (await turmaApi.GetAlunosConsideraInativosNaTurma(Convert.ToInt32(_filtro.CodigoTurmaEol), token))
+                              .Where(a => ((!a.AlunoInativo && a.DataMatricula.Date < (periodoFixo?.DataFim.Date ?? DateTime.Now.Date)) ||
+                                            (a.AlunoInativo && a.DataMatricula.Date < (periodoFixo?.DataFim.Date ?? DateTime.Now.Date) && a.DataSituacao.Date >= (periodoFixo?.DataInicio.Date ?? DateTime.Now.Date))) &&
+                                            (SituacaoMatriculaAluno)a.CodigoSituacaoMatricula != SituacaoMatriculaAluno.VinculoIndevido).ToList();
 
             if (this._listaDeAlunosAtivos is null || this._listaDeAlunosAtivos.Count() == 0)
                 throw new Exception("Não possui alunos ativos para turma e período");
