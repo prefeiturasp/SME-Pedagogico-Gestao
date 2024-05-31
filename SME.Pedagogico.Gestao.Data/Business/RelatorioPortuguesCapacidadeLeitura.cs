@@ -134,15 +134,18 @@ public class RelatorioPortuguesCapacidadeLeitura
                     pergunta.Respostas.Add(resposta);
                 }
 
-
-
                 if (!consideraNovaOpcaoResposta_SemPreenchimento)
                 {
-                    var respostaSempreenchimento = CriaRespostaSemPreenchimento(totalDeAlunos, totalRespostas);
-                    pergunta.Respostas.Add(respostaSempreenchimento); 
+                    var respostaSemPreenchimento = pergunta.Respostas.Find(resp => resp.Nome == "Sem preenchimento");
+
+                    if (respostaSemPreenchimento == null)
+                    {
+                        respostaSemPreenchimento = new RespostaDTO();
+                        pergunta.Respostas.Add(respostaSemPreenchimento);
+                    }
+
+                    CarregarRespostaSemPreenchimento(totalDeAlunos, totalRespostas, respostaSemPreenchimento);
                 }
-
-
 
                 ordem.Perguntas.Add(pergunta);
             });
@@ -295,16 +298,12 @@ public class RelatorioPortuguesCapacidadeLeitura
         }
     }
 
-
-
-    private RespostaDTO CriaRespostaSemPreenchimento(int totalDeAlunos, int quantidadeTotalRespostasPergunta)
+    private void  CarregarRespostaSemPreenchimento(int totalDeAlunos, int quantidadeTotalRespostasPergunta, RespostaDTO respostaSemPreenchimento)
     {
-        var respostaSemPreenchimento = new RespostaDTO();
         respostaSemPreenchimento.Nome = "Sem preenchimento";
         respostaSemPreenchimento.quantidade = totalDeAlunos - quantidadeTotalRespostasPergunta;
         respostaSemPreenchimento.porcentagem = (respostaSemPreenchimento.quantidade > 0 ? (respostaSemPreenchimento.quantidade * 100) / (Double)totalDeAlunos : 0).ToString("0.00");
         respostaSemPreenchimento.porcentagem = respostaSemPreenchimento.porcentagem;
-        return respostaSemPreenchimento;
     }
 
     private filtrosRelatorioDTO CriaMapFiltroRelatorio(RelatorioPortuguesFiltroDto filtro)
