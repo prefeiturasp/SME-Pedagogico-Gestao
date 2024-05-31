@@ -125,19 +125,25 @@ namespace SME.Pedagogico.Gestao.Data.Business
             }
 
             if (consideraNovaOpcaoResposta_SemPreenchimento) return;
-            var respostaSempreenchimento = CriaRespostaSemPreenchimento(totalDeAlunos, totalRespostas);
-            pergunta.Respostas.Add(respostaSempreenchimento);
+
+            var respostaSempreenchimento = pergunta.Respostas.Find(resp => resp.Nome == "Sem preenchimento");
+
+            if (respostaSempreenchimento == null)
+            {
+                respostaSempreenchimento = new RespostaDTO();
+                pergunta.Respostas.Add(respostaSempreenchimento);
+            }
+
+            CarregarRespostaSemPreenchimento(totalDeAlunos, totalRespostas, respostaSempreenchimento);
         }
 
-        private static RespostaDTO CriaRespostaSemPreenchimento(int totalDeAlunos, int quantidadeTotalRespostasPergunta)
+        private static void CarregarRespostaSemPreenchimento(int totalDeAlunos, int quantidadeTotalRespostasPergunta, RespostaDTO respostaSemPreenchimento)
         {
-            var respostaSemPreenchimento = new RespostaDTO();
             var quantidade = totalDeAlunos - quantidadeTotalRespostasPergunta;
             respostaSemPreenchimento.Nome = "Sem preenchimento";
             respostaSemPreenchimento.quantidade = quantidade >= 0 ? quantidade : 0;
             respostaSemPreenchimento.porcentagem = (respostaSemPreenchimento.quantidade > 0 ? (respostaSemPreenchimento.quantidade * 100) / (Double)totalDeAlunos : 0).ToString("0.00");
             respostaSemPreenchimento.porcentagem = respostaSemPreenchimento.porcentagem;
-            return respostaSemPreenchimento;
         }
 
         private static void IncluiIdDoComponenteCurricularEhDoPeriodoNoFiltro(filtrosRelatorioDTO filtro)
