@@ -291,6 +291,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             relatorio.Perguntas = listaRetorno;
 
+            if (consideraNovaOpcaoRespostaSemPreenchimento)
+                relatorio.Totais.Quantidade = dados.Count;
+
             MapearGrafico(grupo, relatorio);
 
             return relatorio;
