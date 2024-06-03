@@ -40,7 +40,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
                 .Send(new ObterPeriodoFixoAnualPorTipoAnoLetivoEBimestreQuery(filtrarListagemDto.AnoLetivo, filtrarListagemDto.Bimestre.Value, filtrarListagemDto.AnoLetivo >= 2022 ? TipoPeriodoEnum.Semestre : TipoPeriodoEnum.Bimestre));
 
             var listaAlunos = await mediator
-                .Send(new ObterAlunosAtivosDentroPeriodoQuery(filtrarListagemDto.CodigoTurma, filtrarListagemDto.AnoLetivo, (periodoSondagemSelecionado.DataInicio, periodoSondagemSelecionado.DataFim)));
+                .Send(new ObterAlunosAtivosDentroPeriodoQuery(filtrarListagemDto.CodigoTurma, filtrarListagemDto.AnoLetivo, (periodoSondagemSelecionado?.DataInicio ?? DateTime.Today.Date, periodoSondagemSelecionado?.DataFim ?? DateTime.Today.Date)));
 
             var listagem = new List<AlunoSondagemMatematicaDto>();
 
