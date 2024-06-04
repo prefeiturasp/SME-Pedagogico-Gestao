@@ -318,7 +318,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
         public async Task<PollReportPortugueseResult> BuscarDadosRelatorioPortugues(string proficiencia, string bimestre, string anoLetivo, string codigoDre, string codigoEscola, string codigoCurso, Periodo periodo)
         {
             var liststudentPollPortuguese = new List<StudentPollPortuguese>();
-            var existeRespostas = false;
             PeriodoFixoAnual periodoAnual = null;
             var consideraNovaOpcaoRespostaSemPreenchimento = NovaOpcaoRespostaSemPreenchimento.ConsideraOpcaoRespostaSemPreenchimento(int.Parse(anoLetivo),bimestre);
 
@@ -447,7 +446,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         {
                             var writing3B =  consideraNovaOpcaoRespostaSemPreenchimento ? query.GroupBy(fu => fu.writing3B).Where(x => x.Key.Length > 0).Select(g => new {Label = g.Key, Value = g.Count()}).ToList() 
                                                     : query.GroupBy(fu => fu.writing3B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
-                            existeRespostas = writing3B.Any();
+
                             foreach (var item in writing3B)
                             {
                                 var itemRetorno = new PollReportPortugueseItem();
@@ -466,7 +465,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         {
                             var reading3B = consideraNovaOpcaoRespostaSemPreenchimento ? query.GroupBy(fu => fu.reading3B).Where(x => x.Key.Length > 0).Select(g => new {Label = g.Key, Value = g.Count()}).ToList()
                                                                                        : query.GroupBy(fu => fu.reading3B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
-                            existeRespostas = reading3B.Any();
+     
                             foreach (var item in reading3B)
                             {
                                 var itemRetorno = new PollReportPortugueseItem();
@@ -489,7 +488,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         {
                             var writing4B = consideraNovaOpcaoRespostaSemPreenchimento ? query.GroupBy(fu => fu.writing4B).Where(x => x.Key.Length > 0).Select(g => new {Label = g.Key, Value = g.Count()}).ToList()
                                                     : query.GroupBy(fu => fu.writing4B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
-                            existeRespostas = writing4B.Any();
+        
                             foreach (var item in writing4B)
                             {
                                 var itemRetorno = new PollReportPortugueseItem();
@@ -508,7 +507,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         {
                             var reading4B = consideraNovaOpcaoRespostaSemPreenchimento ? query.GroupBy(fu => fu.reading4B).Where(x => x.Key.Length > 0).Select(g => new {Label = g.Key, Value = g.Count()}).ToList()
                                 :query.GroupBy(fu => fu.reading4B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
-                            existeRespostas = reading4B.Any();
+              
                             foreach (var item in reading4B)
                             {
                                 PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
@@ -532,8 +531,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 int totalSemPreenchimento = quantidadeTotalAlunos - listaGrafico.Where(l => !string.IsNullOrWhiteSpace(l.Label)).Sum(l => l.Value) >= 0
                         ? quantidadeTotalAlunos - listaGrafico.Where(l => !string.IsNullOrWhiteSpace(l.Label)).Sum(l => l.Value)
                         : 0;
-
-
 
                 foreach (var item in listReturn)
                 {
@@ -623,8 +620,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 retorno.Total = new TotalDTO()
                 {
-                    Quantidade = existeRespostas ? quantidadeTotalAlunos : 0,
-                    Porcentagem = existeRespostas ? ((((double)totalSemPreenchimento / quantidadeTotalAlunos) * 100) + percentualTotalRespostas).ToString() : "0",
+                    Quantidade = quantidadeTotalAlunos,
+                    Porcentagem = ((((double)totalSemPreenchimento / quantidadeTotalAlunos) * 100) + percentualTotalRespostas).ToString()
                 };
 
                 return retorno;
