@@ -621,17 +621,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     retorno.ChartData = graficos.OrderBy(g => g.Name).ToList();
                 }
 
-                var novaOpcaoRespostaComTodasTurmas = (consideraNovaOpcaoRespostaSemPreenchimento &&
-                                                       string.IsNullOrWhiteSpace(codigoEscola));
-                if (novaOpcaoRespostaComTodasTurmas)
+                retorno.Total = new TotalDTO()
                 {
-                    retorno.Total = new TotalDTO()
-                    {
-                        Quantidade = existeRespostas ? quantidadeTotalAlunos : 0,
-                        Porcentagem = existeRespostas ? ((((double)totalSemPreenchimento / quantidadeTotalAlunos) * 100) + percentualTotalRespostas).ToString() : "0",
-                    };
-                }
-                retorno.ConsideraNovaOpcaoRespostaSemPreenchimento = novaOpcaoRespostaComTodasTurmas;
+                    Quantidade = existeRespostas ? quantidadeTotalAlunos : 0,
+                    Porcentagem = existeRespostas ? ((((double)totalSemPreenchimento / quantidadeTotalAlunos) * 100) + percentualTotalRespostas).ToString() : "0",
+                };
+
                 return retorno;
             }
         }
