@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SME.Pedagogico.Gestao.Infra
+﻿namespace SME.Pedagogico.Gestao.Infra
 {
     public enum AlunoInativoEnum
     {
@@ -14,6 +10,7 @@ namespace SME.Pedagogico.Gestao.Infra
         Deslocamento = 11,
         Cessado = 12,
         Remanejado_Saida = 14,
-        Reclassificado_Saida = 15
+        Reclassificado_Saida = 15,
+        Transferido_SED = 16,
     }
 }
