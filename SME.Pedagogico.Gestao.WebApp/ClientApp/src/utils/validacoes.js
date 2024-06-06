@@ -1,6 +1,6 @@
 import { store } from "..";
-import { showModalError } from "../service/modal-service";
-import { ALERTA_ESTUDANTE_SEM_RESPOSTA_SELECIONADA } from "./constants";
+import { showModalConfirmAsync } from "../service/modal-service";
+import { CONFIRMACAO_ESTUDANTE_SEM_RESPOSTA_SELECIONADA } from "./constants";
 
 const temEstudantesSemRespostaUnicaMatematica = (estudantes) => {
   const estudanteSemResposta = estudantes.find((estudante) => {
@@ -22,24 +22,20 @@ const temEstudantesSemRespostaUnicaMatematica = (estudantes) => {
   return !!estudanteSemResposta;
 };
 
-export const validouEstudantesSemRespostaUnicaMatematica = (estudantes) => {
-  let continuar = true;
+export const validouEstudantesSemRespostaUnicaMatematica = async (estudantes) => {
+    const exibirModalConfirmacao = temEstudantesSemRespostaUnicaMatematica(estudantes);
 
-  const exibirModalErro = temEstudantesSemRespostaUnicaMatematica(estudantes);
-
-  if (exibirModalErro) {
-    showModalError({
-      content: ALERTA_ESTUDANTE_SEM_RESPOSTA_SELECIONADA,
-    });
-    continuar = false;
-  }
-
-  return continuar;
+    if (exibirModalConfirmacao) {
+        return await showModalConfirmAsync({
+            content: CONFIRMACAO_ESTUDANTE_SEM_RESPOSTA_SELECIONADA,
+            onOk: null,
+            onCancel: null,
+        });
+    }
+  return true;
 };
 
-export const validouEstudantesSemRespostaMatematicaCACM = (estudantes) => {
-  let continuar = true;
-
+export const validouEstudantesSemRespostaMatematicaCACM = async (estudantes) => {
   const state = store.getState();
   const perguntaSelecionada = state?.autoral?.perguntaSelecionada;
 
@@ -65,12 +61,13 @@ export const validouEstudantesSemRespostaMatematicaCACM = (estudantes) => {
     });
 
     if (semResposta) {
-      showModalError({
-        content: ALERTA_ESTUDANTE_SEM_RESPOSTA_SELECIONADA,
+      return await showModalConfirmAsync({
+              content: CONFIRMACAO_ESTUDANTE_SEM_RESPOSTA_SELECIONADA,
+              onOk: null,
+          onCancel: null,
       });
-      continuar = false;
     }
   }
 
-  return continuar;
+  return true;
 };

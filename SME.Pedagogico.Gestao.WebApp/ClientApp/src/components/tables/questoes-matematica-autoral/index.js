@@ -125,8 +125,7 @@ const QuestoesMatematicaAutoral = () => {
         form.getFieldsValue()
       );
       
-      const continuar = validouEstudantesSemRespostaMatAutoral(alunosSalvar);
-
+      const continuar = await validouEstudantesSemRespostaMatAutoral(alunosSalvar);
       if (!continuar) return false;
 
       try {
