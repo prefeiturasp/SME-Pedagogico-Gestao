@@ -30,14 +30,15 @@ namespace SME.Pedagogico.Gestao.Aplicacao
         public async Task<IEnumerable<AlunoSondagemMatematicaDto>> Handle(ObterListagemAutoralQuery request, CancellationToken cancellationToken)
         {
             var filtrarListagemDto = request.FiltrarListagemDto;
-
             var listaSondagem = Enumerable.Empty<Sondagem>();
-            listaSondagem = filtrarListagemDto.AnoLetivo >= 2022 ?
-                await ObterSondagemAutoralMatematicaBimestre(filtrarListagemDto) :
-                await ObterSondagemAutoralMatematica(filtrarListagemDto);
+            var tipoPeriodoSemestral = filtrarListagemDto.AnoLetivo >= 2022 && filtrarListagemDto.AnoEscolar > 3;
+
+            listaSondagem = tipoPeriodoSemestral ?
+                await ObterSondagemAutoralMatematica(filtrarListagemDto) :
+                await ObterSondagemAutoralMatematicaBimestre(filtrarListagemDto);
 
             var periodoSondagemSelecionado = await mediator
-                .Send(new ObterPeriodoFixoAnualPorTipoAnoLetivoEBimestreQuery(filtrarListagemDto.AnoLetivo, filtrarListagemDto.Bimestre.Value, filtrarListagemDto.AnoLetivo >= 2022 ? TipoPeriodoEnum.Semestre : TipoPeriodoEnum.Bimestre));
+                .Send(new ObterPeriodoFixoAnualPorTipoAnoLetivoEBimestreQuery(filtrarListagemDto.AnoLetivo, filtrarListagemDto.Bimestre.Value, tipoPeriodoSemestral ? TipoPeriodoEnum.Semestre : TipoPeriodoEnum.Bimestre));
 
             var listaAlunos = await mediator
                 .Send(new ObterAlunosAtivosDentroPeriodoQuery(filtrarListagemDto.CodigoTurma, filtrarListagemDto.AnoLetivo, (periodoSondagemSelecionado?.DataInicio ?? DateTime.Today.Date, periodoSondagemSelecionado?.DataFim ?? DateTime.Today.Date)));
