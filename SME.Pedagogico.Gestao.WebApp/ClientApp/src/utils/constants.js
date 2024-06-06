@@ -1,5 +1,5 @@
-export const ALERTA_ESTUDANTE_SEM_RESPOSTA_SELECIONADA =
-  "Existem estudantes sem resposta selecionada. Para salvar é necessário que todos estejam preenchidos.";
+export const CONFIRMACAO_ESTUDANTE_SEM_RESPOSTA_SELECIONADA =
+    "Existem estudantes sem resposta selecionada! Deseja realmente salvar agora?";
 export const SALVAR_DADOS_SONDAGEM_SUCESSO =
   "Seus dados de sondagem foram salvos com sucesso.";
 export const SALVAR_DADOS_SONDAGEM_ERRO =

@@ -15,14 +15,14 @@ import { actionCreators as actionCreatorAutoral } from "../../store/SondagemAuto
 
 import { bindActionCreators } from "redux";
 
-import { showModalConfirm, showModalError } from "../../service/modal-service";
+import { showModalConfirm, showModalConfirmAsync } from "../../service/modal-service";
 import Loader from "../loader/Loader";
 import { verificarDisciplina } from "../../utils";
 
 import { componentRenderPoll } from "./funcoes/componenteRenderPoll";
 import { updatePollStudent } from "./funcoes/updatePollStudent";
 import SelectChangeColor from "../inputs/SelectChangeColor";
-import { ALERTA_DESEJA_SALVAR_AGORA, ALERTA_ESTUDANTE_SEM_RESPOSTA_SELECIONADA } from "../../utils/constants";
+import { ALERTA_DESEJA_SALVAR_AGORA, CONFIRMACAO_ESTUDANTE_SEM_RESPOSTA_SELECIONADA } from "../../utils/constants";
 import { SavePollPortugueseAsync } from '../../sagas/Poll';
 
 class Poll extends Component {
@@ -317,7 +317,7 @@ class Poll extends Component {
     return false;
   }
 
-  validarEstudantesSemRespostasClassRoomEnumClassPT() { 
+  async validarEstudantesSemRespostasClassRoomEnumClassPT() { 
     if (this.props.pollOptionSelectLock) {
       const bimestre_1_invalido =
         this.temEstudanteSemRespostaClassRoomEnumClassPT(
@@ -326,16 +326,12 @@ class Poll extends Component {
           "t1e"
         );
 
-      if (bimestre_1_invalido) return false;
-
       const bimestre_2_invalido =
         this.temEstudanteSemRespostaClassRoomEnumClassPT(
           this.props.pollOptionSelectLock?.poll_2b_lock,
           "t2l",
           "t2e"
         );
-
-      if (bimestre_2_invalido) return false;
 
       const bimestre_3_invalido =
         this.temEstudanteSemRespostaClassRoomEnumClassPT(
@@ -344,8 +340,6 @@ class Poll extends Component {
           "t3e"
         );
 
-      if (bimestre_3_invalido) return false;
-
       const bimestre_4_invalido =
         this.temEstudanteSemRespostaClassRoomEnumClassPT(
           this.props.pollOptionSelectLock?.poll_4b_lock,
@@ -353,7 +347,15 @@ class Poll extends Component {
           "t4e"
         );
 
-      if (bimestre_4_invalido) return false;
+        if (bimestre_1_invalido ||
+            bimestre_2_invalido ||
+            bimestre_3_invalido ||
+            bimestre_4_invalido) 
+            return await showModalConfirmAsync({
+                content: CONFIRMACAO_ESTUDANTE_SEM_RESPOSTA_SELECIONADA,
+                onOk: null,
+                onCancel: null,
+            });
     }
 
     return true;
@@ -439,8 +441,7 @@ class Poll extends Component {
     ) {
     } else if (this.props.poll.pollSelected !== null) {
       if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
-        const continuar =
-          this.validarEstudantesSemRespostasClassRoomEnumClassPT();
+        const continuar = await this.validarEstudantesSemRespostasClassRoomEnumClassPT();
         if (continuar) {
           try {
             return SavePollPortugueseAsync(this.props.poll.students).then(
@@ -453,9 +454,6 @@ class Poll extends Component {
             return false;
           }
         }
-        showModalError({
-          content: ALERTA_ESTUDANTE_SEM_RESPOSTA_SELECIONADA,
-        });
         return false;
       } else if (this.props.poll.pollSelected === ClassRoomEnum.ClassMT) {
         if (this.props.poll.pollTypeSelected === "Numeric") {

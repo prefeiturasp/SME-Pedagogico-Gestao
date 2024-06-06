@@ -44,3 +44,34 @@ export const showModalConfirm = ({
     onCancel,
   });
 };
+
+export const showModalConfirmAsync = ({
+    title = "Atenção",
+    okText = "Sim",
+    cancelText = "Não",
+    content = "",
+    onOk,
+    onCancel,
+}) => {
+    return new Promise((resolve, reject) => {
+        Modal.confirm({
+            centered: true,
+            title,
+            okText,
+            cancelText,
+            content,
+            onOk: () => {
+                if (onOk) {
+                    onOk();
+                }
+                resolve(true); 
+            },
+            onCancel: () => {
+                if (onCancel) {
+                    onCancel();
+                }
+                resolve(false);
+            },
+        });
+    });
+};

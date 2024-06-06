@@ -162,8 +162,7 @@ function NovaSondagemMatematicaAutoral() {
         }
       });
 
-      const continuar =
-        validouEstudantesSemRespostaUnicaMatematica(alunosMutaveis);
+      const continuar = await validouEstudantesSemRespostaUnicaMatematica(alunosMutaveis);
 
       if (!continuar) return false;
 

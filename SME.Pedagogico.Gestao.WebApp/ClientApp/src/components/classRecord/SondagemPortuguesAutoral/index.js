@@ -9,10 +9,10 @@ import { actionCreators as pollStore } from "../../../store/Poll";
 import { TIPO_PERIODO } from "../../../Enums";
 import {
   showModalConfirm,
-  showModalError,
+    showModalConfirmAsync
 } from "../../../service/modal-service";
 import { SalvaSondagemPortuguesAsync } from "../../../sagas/SondagemPortugues";
-import { ALERTA_DESEJA_SALVAR_AGORA, ALERTA_ESTUDANTE_SEM_RESPOSTA_SELECIONADA } from "../../../utils/constants";
+import { ALERTA_DESEJA_SALVAR_AGORA, CONFIRMACAO_ESTUDANTE_SEM_RESPOSTA_SELECIONADA } from "../../../utils/constants";
 
 function SondagemPortuguesAutoral() {
   const dispatch = useDispatch();
@@ -213,30 +213,28 @@ function SondagemPortuguesAutoral() {
     return false;
   };
 
-  const validouEstudantesSemResposta = (
+  const validouEstudantesSemResposta = async(
     grupo,
     alunosMutaveis,
     perguntasSalvar
   ) => {
-    let continuar = true;
-
-    const exibirModalErro = temEstudantesSemResposta(
+    const exibirModalConfirmacao = temEstudantesSemResposta(
       grupo,
       alunosMutaveis,
       perguntasSalvar
     );
 
-    if (exibirModalErro) {
-      showModalError({
-        content: ALERTA_ESTUDANTE_SEM_RESPOSTA_SELECIONADA,
-      });
-      continuar = false;
+    if (exibirModalConfirmacao) {
+        return await showModalConfirmAsync({
+            content: CONFIRMACAO_ESTUDANTE_SEM_RESPOSTA_SELECIONADA,
+            onOk: null,
+            onCancel: null,
+        });
     }
-
-    return continuar;
+    return true;
   };
 
-  const executarSalvamento = ({
+  const executarSalvamento = async ({
     perguntasSalvar,
     alunosMutaveis,
     filtrosMutaveis,
@@ -252,29 +250,29 @@ function SondagemPortuguesAutoral() {
       aluno.ordemId = idOrdem;
       aluno.sequenciaOrdemSalva = sequenciaOrdemSelecionada;
     });
-    
-    const continuar = validouEstudantesSemResposta(
-      grupo,
-      alunosMutaveis,
-      perguntasSalvar
+          
+    const continuar = await validouEstudantesSemResposta(
+        grupo,
+        alunosMutaveis,
+        perguntasSalvar
     );
 
     if (!continuar) return false;
 
-    try {
-      return SalvaSondagemPortuguesAsync({
-        alunos: alunosMutaveis,
-        filtro: filtrosMutaveis,
-        novaOrdem,
-        novoPeriodoId,
-      }).then(() => {
-        dispatch(PortuguesStore.setar_emEdicao(false));
-        return true;
-      });
-    } catch (e) {
-      dispatch(pollStore.setLoadingSalvar(false));
-      return false;
-    }
+      try {
+          return SalvaSondagemPortuguesAsync({
+              alunos: alunosMutaveis,
+              filtro: filtrosMutaveis,
+              novaOrdem,
+              novoPeriodoId,
+          }).then(() => {
+              dispatch(PortuguesStore.setar_emEdicao(false));
+              return true;
+          });
+      } catch (e) {
+          dispatch(pollStore.setLoadingSalvar(false));
+          return false;
+      }
   };
 
   useEffect(() => {

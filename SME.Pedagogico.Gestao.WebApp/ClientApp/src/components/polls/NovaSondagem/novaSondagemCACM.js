@@ -170,8 +170,7 @@ function NovaSondagemCACM() {
         }
       });
 
-      const continuar =
-        validouEstudantesSemRespostaMatematicaCACM(alunosMutaveis);
+      const continuar = await validouEstudantesSemRespostaMatematicaCACM(alunosMutaveis);
 
       if (!continuar) return false;
 

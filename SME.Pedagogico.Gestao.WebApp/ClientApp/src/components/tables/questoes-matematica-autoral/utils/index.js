@@ -1,6 +1,6 @@
 import { store } from "../../../..";
-import { showModalError } from "../../../../service/modal-service";
-import { ALERTA_ESTUDANTE_SEM_RESPOSTA_SELECIONADA } from "../../../../utils/constants";
+import { showModalConfirmAsync } from "../../../../service/modal-service";
+import { CONFIRMACAO_ESTUDANTE_SEM_RESPOSTA_SELECIONADA } from "../../../../utils/constants";
 
 const temEstudantesSemResposta = (alunosSalvar) => {
   const state = store.getState();
@@ -28,17 +28,15 @@ const temEstudantesSemResposta = (alunosSalvar) => {
   return false;
 };
 
-export const validouEstudantesSemRespostaMatAutoral = (alunosSalvar) => {
-  let continuar = true;
-
-  const exibirModalErro = temEstudantesSemResposta(alunosSalvar);
-
-  if (exibirModalErro) {
-    showModalError({
-      content: ALERTA_ESTUDANTE_SEM_RESPOSTA_SELECIONADA,
+export const validouEstudantesSemRespostaMatAutoral = async (alunosSalvar) => {
+  const exibirModalConfirmacao = temEstudantesSemResposta(alunosSalvar);
+  if (exibirModalConfirmacao) {
+    return await showModalConfirmAsync({
+        content: CONFIRMACAO_ESTUDANTE_SEM_RESPOSTA_SELECIONADA,
+        onOk: null,
+        onCancel: null,
     });
-    continuar = false;
   }
 
-  return continuar;
+  return true;
 };
