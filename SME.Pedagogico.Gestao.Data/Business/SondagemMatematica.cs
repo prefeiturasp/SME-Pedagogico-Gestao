@@ -20,10 +20,10 @@ namespace SME.Pedagogico.Gestao.Data.Business
 {
     public class SondagemMatematica
     {
-        private string _token;
-        private AlunosAPI alunoAPI;
+        private readonly string _token;
+        private readonly AlunosAPI alunoAPI;
         public IConfiguration _config;
-        private TurmasAPI TurmaApi;
+        private readonly TurmasAPI TurmaApi;
 
         public SondagemMatematica(IConfiguration config)
         {
@@ -35,7 +35,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task InsertPoolCMAsync(List<SondagemMatematicaOrdemDTO> dadosSondagem)
         {
-            using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
+            using (SMEManagementContextData db = new SMEManagementContextData())
             {
                 foreach (var student in dadosSondagem)
                 {
@@ -127,12 +127,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
             using (var db = new SMEManagementContextData())
                 periodoFixo = db.PeriodoFixoAnual.FirstOrDefault(fixo => fixo.Ano == filtrarListagemDto.AnoLetivo &&
                                                                          fixo.Descricao.StartsWith(filtrarListagemDto.Bimestre.ToString()) &&
-                                                                         (int)fixo.TipoPeriodo == (int)(filtrarListagemDto.AnoLetivo >= 2022 ? TipoPeriodoEnum.Semestre : TipoPeriodoEnum.Bimestre));
+                                                                         (int)fixo.TipoPeriodo == (int)(filtrarListagemDto.AnoLetivo >= 2022 && filtrarListagemDto.AnoEscolar > 3 ? TipoPeriodoEnum.Semestre : TipoPeriodoEnum.Bimestre));
 
-            var alunos = (await TurmaApi.GetAlunosConsideraInativosNaTurma(Convert.ToInt32(filtrarListagemDto.CodigoTurma), _token))
-                              .Where(a => ((!a.AlunoInativo && a.DataMatricula.Date < (periodoFixo?.DataFim.Date ?? DateTime.Now.Date)) ||
-                                            (a.AlunoInativo && a.DataMatricula.Date < (periodoFixo?.DataFim.Date ?? DateTime.Now.Date) && a.DataSituacao.Date >= (periodoFixo?.DataInicio.Date ?? DateTime.Now.Date))) &&
-                                            (SituacaoMatriculaAluno)a.CodigoSituacaoMatricula != SituacaoMatriculaAluno.VinculoIndevido).ToList();
+            var alunos = await ObterAlunosDentroPeriodo(filtrarListagemDto.CodigoTurma, periodoFixo?.DataInicio.Date ?? DateTime.Today.Date, periodoFixo?.DataFim.Date ?? DateTime.Today.Date);
 
             if (alunos == null || !alunos.Any())
                 throw new Exception($"Não encontrado alunos para a turma {filtrarListagemDto.CodigoTurma} do ano letivo {filtrarListagemDto.AnoLetivo}");
@@ -144,6 +141,15 @@ namespace SME.Pedagogico.Gestao.Data.Business
             AdicionarAlunosEOL(filtrarListagemDto, alunos, listagem);
 
             return listagem.OrderBy(x => x.NumeroChamada).ThenBy(x => x.NomeAluno);
+        }
+
+        private async Task<List<AlunosNaTurmaDTO>> ObterAlunosDentroPeriodo(string codigoTurma, DateTime dataInicioPeriodo, DateTime dataFimPeriodo)
+        {
+            var todosAlunos = await TurmaApi.GetAlunosConsideraInativosNaTurma(Convert.ToInt32(codigoTurma), _token);
+            return todosAlunos
+                .Where(a => ((!a.AlunoInativo && a.DataMatricula.Date < dataFimPeriodo) ||
+                             (a.AlunoInativo && a.DataMatricula.Date < dataFimPeriodo && a.DataSituacao.Date >= dataInicioPeriodo)) &&
+                             (SituacaoMatriculaAluno)a.CodigoSituacaoMatricula != SituacaoMatriculaAluno.VinculoIndevido).ToList();
         }
 
         private static async Task<List<Sondagem>> ObterSondagemAutoralMatematicaBimestre(FiltrarListagemMatematicaDTO filtrarListagemDto)
@@ -369,7 +375,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     }).OrderBy(o => o.Ordenacao)
                 }).ToList();
 
-                return perguntasRespostas;
+                return await Task.FromResult(perguntasRespostas);
             }
             catch (Exception ex)
             {
@@ -446,7 +452,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     }).OrderBy(o => o.Ordenacao).DistinctBy(x => x.Id)
                 }).ToList();
 
-                return perguntasRespostas;
+                return await Task.FromResult(perguntasRespostas);
             }
             catch (Exception ex)
             {
@@ -460,7 +466,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 var retornoSondagem = new List<SondagemMatematicaOrdemDTO>();
 
-                using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
+                using (SMEManagementContextData db = new SMEManagementContextData())
                 {
                     var sondagemDaTurma = db.MathPoolCMs
                                                         .Where(x => x.TurmaEolCode.Equals(filtroSondagem.TurmaEolCode))
@@ -666,7 +672,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             int quantidadeAlunoTotal = 0;
 
-            using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
+            using (SMEManagementContextData db = new SMEManagementContextData())
             {
                 quantidadeAlunoTotal = await ObterQuantidadeAlunoTotal(anoLetivo, codigoDre, codigoEscola, anoTurmaParam, periodo, quantidadeAlunoTotal, db);
 
@@ -1398,7 +1404,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 var retornoSondagem = new List<SondagemMatematicaOrdemDTO>();
 
-                using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
+                using (SMEManagementContextData db = new SMEManagementContextData())
                 {
                     var sondagemDaTurma = db.MathPoolCAs
                                             .Where(x => x.TurmaEolCode.Equals(filtroSondagem.TurmaEolCode))
@@ -1721,7 +1727,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task InsertPoolCAAsync(List<SondagemMatematicaOrdemDTO> dadosSondagem)
         {
-            using (Contexts.SMEManagementContextData db = new Contexts.SMEManagementContextData())
+            using (SMEManagementContextData db = new SMEManagementContextData())
             {
                 foreach (var student in dadosSondagem)
                 {
