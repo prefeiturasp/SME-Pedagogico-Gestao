@@ -169,7 +169,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 var alunosAtivosPeriodo = await alunoAPI.ObterAlunosAtivosPorTurmaEPeriodo(turmaCodigo, periodoFixoAnual.DataFim, periodoFixoAnual.DataInicio);
                 alunosBimestre.Add((bimestre, alunosAtivosPeriodo));
-                alunos.AddRange(alunosAtivosPeriodo.Where(ap => !alunos.Any(aa => aa.CodigoAluno.Equals(ap.CodigoAluno))));
+                alunos.AddRange(alunosAtivosPeriodo.Where(ap => ap.CodigoSituacaoMatricula != (int)SituacaoMatriculaAluno.VinculoIndevido && !alunos.Any(aa => aa.CodigoAluno.Equals(ap.CodigoAluno))));
             }
             alunosBimestre.Add((0, alunos));
             return alunosBimestre;
