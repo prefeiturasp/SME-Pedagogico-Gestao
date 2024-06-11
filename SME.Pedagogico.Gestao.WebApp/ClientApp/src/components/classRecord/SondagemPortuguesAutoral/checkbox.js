@@ -14,7 +14,7 @@ function CheckBox({ lista, valor, codigoAluno, periodoId, bloqueado }) {
     return pergunta.respostas.find(x => x.verdadeiro);
   }
 
-  const perguntaUnica = ['3173bff2-a148-4634-b029-b50c949ae2d6', 'cfec69be-16fb-453d-8c47-fd5ebc4161ef', '98940cdb-d229-4282-a2e1-60e4a17dab64']
+  const perguntaUnica = ['3173bff2-a148-4634-b029-b50c949ae2d6', 'cfec69be-16fb-453d-8c47-fd5ebc4161ef', '98940cdb-d229-4282-a2e1-60e4a17dab64', '0882766a-9375-4e0a-bd39-8d96d75f7a22']
 
   const verificaSeChecado = perguntaId => {
     if (!valor || valor.length === 0)
