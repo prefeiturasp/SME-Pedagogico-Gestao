@@ -76,7 +76,7 @@ const PollReportGridTotal = (props) => {
     );
 }
 
-export default class PollReportPortugueseGrid extends Component {    
+export default class PollReportPortugueseGrid extends Component {
     render() {
         var { className } = this.props;
 
@@ -85,15 +85,8 @@ export default class PollReportPortugueseGrid extends Component {
         else
             className += " d-flex flex-column";
 
-        var totalStudents = 0;
-        var totalPercentage = 0;
-
-        if (this.props.classroomReport === false)
-            for (var key in this.props.data) {
-                totalStudents += this.props.data[key].studentQuantity;
-                totalPercentage += this.props.data[key].studentPercentage;
-            }
-
+        var totalStudents = this.props.total.quantidade;;
+        var totalPercentage = Number(this.props.total.porcentagem);
 
         return (
             <div className={className}>

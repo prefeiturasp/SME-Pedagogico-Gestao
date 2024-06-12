@@ -2,6 +2,12 @@
 import * as Poll from "../store/Poll";
 import * as Autoral from "../store/SondagemAutoral";
 import { parametrosParaUrl } from "../utils";
+import { showModalError, showModalSuccess } from "../service/modal-service";
+import {
+  SALVAR_DADOS_SONDAGEM_ERRO,
+  SALVAR_DADOS_SONDAGEM_SUCESSO,
+} from "../utils/constants";
+import { store } from '..';
 
 export default function* () {
   yield all([
@@ -45,16 +51,70 @@ function getStudentsPollPortugueseRequestApi(classRoom) {
   }).then((response) => response.json());
 }
 
+export async function SavePollPortugueseAsync(students) {
+  store.dispatch(Poll.actionCreators.set_poll_data_saved_state());
+
+  store.dispatch(Poll.actionCreators.setLoadingSalvar(true));
+
+  return fetch("/api/sondagemPortugues/IncluirSondagemPortugues", {
+    method: "post",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(students),
+  })
+    .then(() => {
+      showModalSuccess({
+        content: SALVAR_DADOS_SONDAGEM_SUCESSO,
+      });
+    })
+    .catch((e) => {
+      showModalError({
+        content: SALVAR_DADOS_SONDAGEM_ERRO,
+      });
+      return e;
+    })
+    .finally(() => {
+      store.dispatch(Poll.actionCreators.setLoadingSalvar(false));
+    });
+}
+
 function* SavePollPortuguese(students) {
   try {
     yield put({ type: Poll.types.SET_POLL_DATA_SAVED_STATE });
-    var data = yield fetch("/api/sondagemPortugues/IncluirSondagemPortugues", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(students.pollstudents),
-    }).then((response) => response.json());
-    return data.status;
-  } catch (error) {}
+
+    yield put({
+      type: Poll.types.SET_LOADING_SALVAR,
+      filters: true,
+    });
+
+    const resposta = yield fetch(
+      "/api/sondagemPortugues/IncluirSondagemPortugues",
+      {
+        method: "post",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(students.pollstudents),
+      }
+    );
+
+    if (resposta?.status === 200) {
+      showModalSuccess({
+        content: SALVAR_DADOS_SONDAGEM_SUCESSO,
+      });
+    }
+  } catch (error) {
+    showModalError({
+      content: SALVAR_DADOS_SONDAGEM_ERRO,
+    });
+
+    yield put({
+      type: Poll.types.SET_LOADING_SALVAR,
+      filters: false,
+    });
+  }
+
+  yield put({
+    type: Poll.types.SET_LOADING_SALVAR,
+    filters: false,
+  });
 }
 
 function* GetStudentsMathNumbers({ classRoom }) {

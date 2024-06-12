@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SME.Pedagogico.Gestao.Data.DTO.Matematica.Relatorio;
 
 namespace SME.Pedagogico.Gestao.Data.Business
 {
@@ -317,8 +318,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
         public async Task<PollReportPortugueseResult> BuscarDadosRelatorioPortugues(string proficiencia, string bimestre, string anoLetivo, string codigoDre, string codigoEscola, string codigoCurso, Periodo periodo)
         {
             var liststudentPollPortuguese = new List<StudentPollPortuguese>();
-
             PeriodoFixoAnual periodoAnual = null;
+            var consideraNovaOpcaoRespostaSemPreenchimento = NovaOpcaoRespostaSemPreenchimento.ConsideraOpcaoRespostaSemPreenchimento(int.Parse(anoLetivo),bimestre);
 
             var listReturn = new List<PollReportPortugueseItem>();
 
@@ -359,17 +360,17 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 switch (bimestre)
                 {
                     case "1° Bimestre":
+                    {
+                        if (proficiencia == "Escrita")
                         {
-                            if (proficiencia == "Escrita")
+                            var writing1B = query.GroupBy(fu => fu.writing1B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
+                            
+                            foreach (var item in writing1B)
                             {
-                                var writing1B = query.GroupBy(fu => fu.writing1B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
-
-                                foreach (var item in writing1B)
-                                {
-                                    PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
-                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                    itemRetorno.studentQuantity = item.Value;
-                                    listReturn.Add(itemRetorno);
+                                PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                itemRetorno.studentQuantity = item.Value;
+                                listReturn.Add(itemRetorno);
 
                                     graficos.Add(new PortChartDataModel()
                                     {
@@ -440,35 +441,37 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         }
                         break;
                     case "3° Bimestre":
+                    {
+                        if (proficiencia == "Escrita")
                         {
-                            if (proficiencia == "Escrita")
+                            var writing3B =  consideraNovaOpcaoRespostaSemPreenchimento ? query.GroupBy(fu => fu.writing3B).Where(x => x.Key.Length > 0).Select(g => new {Label = g.Key, Value = g.Count()}).ToList() 
+                                                    : query.GroupBy(fu => fu.writing3B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
+
+                            foreach (var item in writing3B)
                             {
-                                var writing3B = query.GroupBy(fu => fu.writing3B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
+                                var itemRetorno = new PollReportPortugueseItem();
+                                itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                itemRetorno.studentQuantity = item.Value;
+                                listReturn.Add(itemRetorno);
 
-                                foreach (var item in writing3B)
+                                graficos.Add(new PortChartDataModel()
                                 {
-                                    PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
-                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                    itemRetorno.studentQuantity = item.Value;
-                                    listReturn.Add(itemRetorno);
-
-                                    graficos.Add(new PortChartDataModel()
-                                    {
-                                        Name = MontarTextoProficiencia(item.Label),
-                                        Value = item.Value
-                                    });
-                                }
+                                    Name = MontarTextoProficiencia(item.Label),
+                                    Value = item.Value
+                                });
                             }
-                            else //leitura
+                        }
+                        else //leitura
+                        {
+                            var reading3B = consideraNovaOpcaoRespostaSemPreenchimento ? query.GroupBy(fu => fu.reading3B).Where(x => x.Key.Length > 0).Select(g => new {Label = g.Key, Value = g.Count()}).ToList()
+                                                                                       : query.GroupBy(fu => fu.reading3B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
+     
+                            foreach (var item in reading3B)
                             {
-                                var reading3B = query.GroupBy(fu => fu.reading3B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
-
-                                foreach (var item in reading3B)
-                                {
-                                    PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
-                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                    itemRetorno.studentQuantity = item.Value;
-                                    listReturn.Add(itemRetorno);
+                                var itemRetorno = new PollReportPortugueseItem();
+                                itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                itemRetorno.studentQuantity = item.Value;
+                                listReturn.Add(itemRetorno);
 
                                     graficos.Add(new PortChartDataModel()
                                     {
@@ -480,35 +483,37 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         }
                         break;
                     case "4° Bimestre":
+                    {
+                        if (proficiencia == "Escrita")
                         {
-                            if (proficiencia == "Escrita")
+                            var writing4B = consideraNovaOpcaoRespostaSemPreenchimento ? query.GroupBy(fu => fu.writing4B).Where(x => x.Key.Length > 0).Select(g => new {Label = g.Key, Value = g.Count()}).ToList()
+                                                    : query.GroupBy(fu => fu.writing4B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
+        
+                            foreach (var item in writing4B)
                             {
-                                var writing4B = query.GroupBy(fu => fu.writing4B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
+                                var itemRetorno = new PollReportPortugueseItem();
+                                itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                itemRetorno.studentQuantity = item.Value;
+                                listReturn.Add(itemRetorno);
 
-                                foreach (var item in writing4B)
+                                graficos.Add(new PortChartDataModel()
                                 {
-                                    PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
-                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                    itemRetorno.studentQuantity = item.Value;
-                                    listReturn.Add(itemRetorno);
-
-                                    graficos.Add(new PortChartDataModel()
-                                    {
-                                        Name = MontarTextoProficiencia(item.Label),
-                                        Value = item.Value
-                                    });
-                                }
+                                    Name = MontarTextoProficiencia(item.Label),
+                                    Value = item.Value
+                                });
                             }
-                            else //leitura
+                        }
+                        else //leitura
+                        {
+                            var reading4B = consideraNovaOpcaoRespostaSemPreenchimento ? query.GroupBy(fu => fu.reading4B).Where(x => x.Key.Length > 0).Select(g => new {Label = g.Key, Value = g.Count()}).ToList()
+                                :query.GroupBy(fu => fu.reading4B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
+              
+                            foreach (var item in reading4B)
                             {
-                                var reading4B = query.GroupBy(fu => fu.reading4B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
-
-                                foreach (var item in reading4B)
-                                {
-                                    PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
-                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                    itemRetorno.studentQuantity = item.Value;
-                                    listReturn.Add(itemRetorno);
+                                PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                itemRetorno.studentQuantity = item.Value;
+                                listReturn.Add(itemRetorno);
 
                                     graficos.Add(new PortChartDataModel()
                                     {
@@ -527,35 +532,49 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         ? quantidadeTotalAlunos - listaGrafico.Where(l => !string.IsNullOrWhiteSpace(l.Label)).Sum(l => l.Value)
                         : 0;
 
-
                 foreach (var item in listReturn)
                 {
-                    item.StudentPercentage = ((double)item.studentQuantity / quantidadeTotalAlunos) * 100;
-                    if (string.IsNullOrWhiteSpace(item.OptionName))
+                    item.StudentPercentage = ((double) item.studentQuantity / quantidadeTotalAlunos) * 100;
+                    if (!consideraNovaOpcaoRespostaSemPreenchimento)
                     {
-                        item.OptionName = "Sem preenchimento";
-                        item.StudentPercentage = ((double)totalSemPreenchimento / quantidadeTotalAlunos) * 100;
-                        item.studentQuantity = totalSemPreenchimento;
+                        if (string.IsNullOrWhiteSpace(item.OptionName))
+                        {
+                            item.OptionName = "Sem preenchimento";
+                            item.StudentPercentage = ((double) totalSemPreenchimento / quantidadeTotalAlunos) * 100;
+                            item.studentQuantity = totalSemPreenchimento;
+                        }
                     }
                 }
 
-                PollReportPortugueseResult retorno = new PollReportPortugueseResult();
+                var percentualTotalRespostas = listReturn.Select(x => x.StudentPercentage).Sum();
+                var retorno = new PollReportPortugueseResult();
 
                 graficos = new List<PortChartDataModel>();
 
                 foreach (var item in listaGrafico)
                 {
-                    graficos.Add(new PortChartDataModel()
+                    if (!consideraNovaOpcaoRespostaSemPreenchimento)
                     {
-                        Name = string.IsNullOrWhiteSpace(item.Label)
-                            ? "Sem preenchimento"
-                            : item.Label,
-                        Value = string.IsNullOrWhiteSpace(item.Label)
-                            ? totalSemPreenchimento
-                            : item.Value
-                    });
+                        graficos.Add(new PortChartDataModel()                    {
+                            Name = string.IsNullOrWhiteSpace(item.Label)
+                                ? "Sem preenchimento"
+                                : item.Label,
+                            Value = string.IsNullOrWhiteSpace(item.Label)
+                                ? totalSemPreenchimento
+                                : item.Value
+                        });
+                    }
+                    else
+                    {
+                        graficos.Add(new PortChartDataModel()                    {
+                            Name = item.Label,
+                            Value = item.Value
+                        });
+                    }
                 }
-
+                
+                
+                
                 if (proficiencia == "Escrita")
                 {
                     //particularidade do 3 ano
@@ -599,6 +618,11 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     retorno.ChartData = graficos.OrderBy(g => g.Name).ToList();
                 }
 
+                retorno.Total = new TotalDTO()
+                {
+                    Quantidade = quantidadeTotalAlunos,
+                    Porcentagem = ((((double)totalSemPreenchimento / quantidadeTotalAlunos) * 100) + percentualTotalRespostas).ToString()
+                };
 
                 return retorno;
             }
@@ -630,6 +654,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     return "Silábico alfabético";
                 case "A":
                     return "Alfabético";
+                case "SemPreenchimento":
+                    return "Sem preenchimento";
                 default:
                     return proficiencia;
             }
@@ -1251,6 +1277,31 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 {
                     throw ex;
                 }
+            }
+        }
+
+        public async Task<ResultadoAlunoPortuguesDTO> ObterResultadosAluno(string turmaCodigo, string alunoCodigo)
+        {
+            using (var contexto = new SMEManagementContextData())
+            {
+                var resultado = await contexto.PortuguesePolls
+                    .FirstOrDefaultAsync(a => a.classroomCodeEol.Equals(turmaCodigo)
+                                           && a.studentCodeEol.Equals(alunoCodigo));
+
+                if (resultado == null)
+                    return new ResultadoAlunoPortuguesDTO();
+
+                return new ResultadoAlunoPortuguesDTO()
+                {
+                    Escrita1Bim = resultado.writing1B,
+                    Escrita2Bim = resultado.writing2B,
+                    Escrita3Bim = resultado.writing3B,
+                    Escrita4Bim = resultado.writing4B,
+                    Leitura1Bim = resultado.reading1B,
+                    Leitura2Bim = resultado.reading2B,
+                    Leitura3Bim = resultado.reading3B,
+                    Leitura4Bim = resultado.reading4B
+                };
             }
         }
     }

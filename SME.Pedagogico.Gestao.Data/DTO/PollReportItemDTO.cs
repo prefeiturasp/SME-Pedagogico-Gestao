@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using SME.Pedagogico.Gestao.Data.DTO.Matematica.Relatorio;
 
 namespace SME.Pedagogico.Gestao.Data.DTO
 {
@@ -8,6 +9,8 @@ namespace SME.Pedagogico.Gestao.Data.DTO
     {
         public List<PollReportPortugueseItem> Results { get; set; } = new List<PollReportPortugueseItem>();
         public List<PortChartDataModel> ChartData { get; set; } = new List<PortChartDataModel>();
+        public TotalDTO Total { get; set; }
+        public bool ConsideraNovaOpcaoRespostaSemPreenchimento { get; set; }
     }
 
     public class PortChartDataModel

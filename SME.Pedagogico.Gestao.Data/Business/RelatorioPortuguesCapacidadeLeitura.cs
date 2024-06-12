@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using SME.Pedagogico.Gestao.Data.Integracao;
 using SME.Pedagogico.Gestao.Data.Integracao.Endpoints;
 using SME.Pedagogico.Gestao.Data.DTO.Portugues.Relatorio;
@@ -8,26 +7,22 @@ using SME.Pedagogico.Gestao.Data.DTO.Matematica.Relatorio;
 using System.Threading.Tasks;
 using System.Linq;
 using MoreLinq;
-using SME.Pedagogico.Gestao.Data.Integracao.DTO;
 using Npgsql;
 using Dapper;
 using SME.Pedagogico.Gestao.Data.DTO.Portugues.Relatorio.CapacidadeLeitura;
-using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.Relatorios.Querys;
 using SME.Pedagogico.Gestao.Data.Relatorios;
 using SME.Pedagogico.Gestao.Data.DTO.RelatorioPorTurma;
 using SME.Pedagogico.Gestao.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
+using SME.Pedagogico.Gestao.Data.Business;
 using SME.Pedagogico.Gestao.Data.DTO.Relatorio;
-using System.Collections.Immutable;
-using SME.Pedagogico.Gestao.Data.DTO.Matematica;
 using SME.Pedagogico.Gestao.Data.DTO.Portugues.Graficos.Portugues;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 
 public class RelatorioPortuguesCapacidadeLeitura
 {
     private AlunosAPI alunoAPI;
-
     public RelatorioPortuguesCapacidadeLeitura()
     {
         alunoAPI = new AlunosAPI(new EndpointsAPI());
@@ -41,9 +36,10 @@ public class RelatorioPortuguesCapacidadeLeitura
         var query = ConsultasRelatorios.MontaQueryConsolidadoCapacidadeLeitura(filtro);
         var relatorio = new RelatorioConsolidadoCapacidadeLeituraDTO();
         var ListaPerguntaEhRespostasRelatorio = await RetornaListaDehPerguntasEhRespostas(filtro, query);
+        var consideraNovaOpcaoResposta_SemPreenchimento = NovaOpcaoRespostaSemPreenchimento.ConsideraOpcaoRespostaSemPreenchimento(filtro.AnoLetivo,filtro.DescricaoPeriodo);
 
         var relatorioAgrupado = ListaPerguntaEhRespostasRelatorio.GroupBy(p => p.OrdermId).ToList();
-        relatorio.RelatorioPorOrdem = RetornaRelatorioPorOrdens(totalDeAlunos, relatorioAgrupado);
+        relatorio.RelatorioPorOrdem = RetornaRelatorioPorOrdens(totalDeAlunos, relatorioAgrupado, consideraNovaOpcaoResposta_SemPreenchimento);
         relatorio.Graficos = CriaGraficosConsolidados(relatorio);
         return relatorio;
 
@@ -99,7 +95,7 @@ public class RelatorioPortuguesCapacidadeLeitura
         }
     }
 
-    private List<OrdemDTO> RetornaRelatorioPorOrdens(int totalDeAlunos, List<IGrouping<string, OrdemPerguntaRespostaDTO>> relatorioAgrupado)
+    private List<OrdemDTO> RetornaRelatorioPorOrdens(int totalDeAlunos, List<IGrouping<string, OrdemPerguntaRespostaDTO>> relatorioAgrupado, bool consideraNovaOpcaoResposta_SemPreenchimento)
     {
         var ListaOrdens = new List<OrdemDTO>();
         relatorioAgrupado.ForEach(ordemItem =>
@@ -138,11 +134,18 @@ public class RelatorioPortuguesCapacidadeLeitura
                     pergunta.Respostas.Add(resposta);
                 }
 
+                if (!consideraNovaOpcaoResposta_SemPreenchimento)
+                {
+                    var respostaSemPreenchimento = pergunta.Respostas.Find(resp => resp.Nome == "Sem preenchimento");
 
-                var respostaSempreenchimento = CriaRespostaSemPreenchimento(totalDeAlunos, totalRespostas);
-                pergunta.Respostas.Add(respostaSempreenchimento);
+                    if (respostaSemPreenchimento == null)
+                    {
+                        respostaSemPreenchimento = new RespostaDTO();
+                        pergunta.Respostas.Add(respostaSemPreenchimento);
+                    }
 
-
+                    CarregarRespostaSemPreenchimento(totalDeAlunos, totalRespostas, respostaSemPreenchimento);
+                }
 
                 ordem.Perguntas.Add(pergunta);
             });
@@ -153,7 +156,7 @@ public class RelatorioPortuguesCapacidadeLeitura
 
     public async Task<RelatorioCapacidadeLeituraPorTurma> ObterRelatorioCapacidadeLeituraPorTurma(RelatorioPortuguesFiltroDto filtro)
     {
-
+        var consideraNovaOpcaoResposta_SemPreenchimento =  NovaOpcaoRespostaSemPreenchimento.ConsideraOpcaoRespostaSemPreenchimento(filtro.AnoLetivo,filtro.DescricaoPeriodo);;
         var filtrosRelatorio = CriaMapFiltroRelatorio(filtro);
         var periodos = await ConsultaTotalDeAlunos.BuscaDatasPeriodoFixoAnual(filtrosRelatorio);
 
@@ -166,15 +169,15 @@ public class RelatorioPortuguesCapacidadeLeitura
 
         using (var contexto = new SMEManagementContextData())
         {
-            await CriaGraficosRelatorio(relatorio, contexto);
+            await CriaGraficosRelatorio(relatorio, contexto, consideraNovaOpcaoResposta_SemPreenchimento);
         }
         relatorio.Alunos = relatorio.Alunos.OrderBy(x => x.NomeAluno).ToList();
 
         return relatorio;
 
     }
-
-    private static async Task CriaGraficosRelatorio(RelatorioCapacidadeLeituraPorTurma relatorio, SMEManagementContextData contexto)
+    
+    private static async Task CriaGraficosRelatorio(RelatorioCapacidadeLeituraPorTurma relatorio, SMEManagementContextData contexto, bool consideraNovaOpcaoResposta_SemPreenchimento)
     {
         var perguntasBanco = await contexto.PerguntaResposta.Include(x => x.Pergunta).Include(y => y.Resposta).Where(pr => relatorio.Perguntas.Any(p => p.Id == pr.Pergunta.Id)).ToListAsync();
         relatorio.Graficos = new List<GraficoOrdem>();
@@ -197,10 +200,13 @@ public class RelatorioPortuguesCapacidadeLeitura
                     barra.Value = relatorio.Alunos.Count(x => x.Ordens.Any(ordem => ordem.Id == o.Id && ordem.Perguntas.Any(pr => pr.Id == p.Id && pr.Valor == r.Resposta.Descricao)));
                     grafico.Barras.Add(barra);
                 });
-                var barraAlunosSemPreenchimento = new GraficoBarra();
-                barraAlunosSemPreenchimento.Label = "Sem Preenchimento";
-                barraAlunosSemPreenchimento.Value = relatorio.Alunos.Count() - grafico.Barras.Sum(x => x.Value);
-                grafico.Barras.Add(barraAlunosSemPreenchimento);
+                if (!consideraNovaOpcaoResposta_SemPreenchimento) 
+                {
+                    var barraAlunosSemPreenchimento = new GraficoBarra();
+                    barraAlunosSemPreenchimento.Label = "Sem Preenchimento";
+                    barraAlunosSemPreenchimento.Value = relatorio.Alunos.Count() - grafico.Barras.Sum(x => x.Value);
+                    grafico.Barras.Add(barraAlunosSemPreenchimento);
+                }
                 graficoOrdem.perguntasGrafico.Add(grafico);
             });
             relatorio.Graficos.Add(graficoOrdem);
@@ -292,16 +298,12 @@ public class RelatorioPortuguesCapacidadeLeitura
         }
     }
 
-
-
-    private RespostaDTO CriaRespostaSemPreenchimento(int totalDeAlunos, int quantidadeTotalRespostasPergunta)
+    private void  CarregarRespostaSemPreenchimento(int totalDeAlunos, int quantidadeTotalRespostasPergunta, RespostaDTO respostaSemPreenchimento)
     {
-        var respostaSemPreenchimento = new RespostaDTO();
         respostaSemPreenchimento.Nome = "Sem preenchimento";
         respostaSemPreenchimento.quantidade = totalDeAlunos - quantidadeTotalRespostasPergunta;
         respostaSemPreenchimento.porcentagem = (respostaSemPreenchimento.quantidade > 0 ? (respostaSemPreenchimento.quantidade * 100) / (Double)totalDeAlunos : 0).ToString("0.00");
         respostaSemPreenchimento.porcentagem = respostaSemPreenchimento.porcentagem;
-        return respostaSemPreenchimento;
     }
 
     private filtrosRelatorioDTO CriaMapFiltroRelatorio(RelatorioPortuguesFiltroDto filtro)
