@@ -27,6 +27,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         private const int ANO_ESCOLAR_2022 = 2022;
         private const string PROFICIENCIA_NUMERO = "Números";
 
+
         public RelatorioSondagemController(IConfiguration config)
         {
 
@@ -94,7 +95,8 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                             ComponenteCurricularId = "c65b2c0a-7a58-4d40-b474-23f0982f14b1",
                             GrupoId = "e27b99a3-789d-43fb-a962-7df8793622b1",
                             PeriodoId = periodo.Id,
-                            CodigoTurma = parameters.CodigoTurmaEol
+                            CodigoTurma = parameters.CodigoTurmaEol,
+                            DescricaoPeriodo = parameters.Term,
                         });
 
                         return Ok(relatorio);
@@ -125,6 +127,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                             AnoLetivo = Convert.ToInt32(parameters.SchoolYear),
                             CodigoDre = parameters.CodigoDRE,
                             CodigoUe = parameters.CodigoEscola,
+                            DescricaoPeriodo = parameters.Term,
                             ComponenteCurricularId = "c65b2c0a-7a58-4d40-b474-23f0982f14b1",
                             GrupoId = "e27b99a3-789d-43fb-a962-7df8793622b1",
                             PeriodoId = periodo.Id
@@ -181,6 +184,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 AnoLetivo = Convert.ToInt32(parameters.SchoolYear),
                 CodigoDre = parameters.CodigoDRE,
                 CodigoTurma = parameters.CodigoTurmaEol,
+                DescricaoPeriodo = parameters.Term,
                 CodigoUe = parameters.CodigoEscola,
                 ComponenteCurricularId = "c65b2c0a-7a58-4d40-b474-23f0982f14b1",
                 GrupoId = parameters.GrupoId,
@@ -229,6 +233,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 CodigoDre = parametersModel.CodigoDRE,
                 CodigoUe = parametersModel.CodigoEscola,
                 ComponenteCurricularId = "c65b2c0a-7a58-4d40-b474-23f0982f14b1",
+                DescricaoPeriodo = parametersModel.Term,
                 GrupoId = parametersModel.GrupoId,
                 PeriodoId = periodoId
             });
@@ -241,6 +246,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
         private async Task<PollReportPortugueseStudentResult> BuscarDadosPorTurmaAsync(ParametersModel parameters, Periodo periodo)
         {
+            var consideraNovaOpcaoRespostaSemPreenchimentoTerceiroBimestre = NovaOpcaoRespostaSemPreenchimento.ConsideraOpcaoRespostaSemPreenchimento(int.Parse(parameters.SchoolYear),parameters.Term);
             var BusinessPoll = new Data.Business.PollPortuguese(_config);
             var alunosBusiness = new AlunosBusiness(_config);
 
@@ -256,15 +262,15 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 parameters.CodigoEscola,
                 parameters.CodigoCurso);//ajustar para pegar a turma 
 
-            List<PollReportPortugueseStudentItem> result = new List<PollReportPortugueseStudentItem>();
+            var result = new List<PollReportPortugueseStudentItem>();
 
-            List<PortChartDataModel> graficos = new List<PortChartDataModel>();
+            var graficos = new List<PortChartDataModel>();
 
             foreach (var aluno in alunosEol)
             {
                 var sondagem = listaAlunosTurma.FirstOrDefault(s => s.studentCodeEol == aluno.CodigoAluno.ToString());
 
-                string tipo = sondagem != null
+                var tipo = sondagem != null
                     ? ConverterProficienciaAluno(parameters.Proficiency, parameters.Term, sondagem) ?? string.Empty
                     : string.Empty;
 
@@ -290,6 +296,12 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                             tipo = "Nível 4";
                             break;
                         }
+                    case "SemPreenchimento":
+                        {
+                            tipo = "Sem Preenchimento";
+                            break;
+                        }
+                        
                 }
 
                 result.Add(new PollReportPortugueseStudentItem()
@@ -306,40 +318,31 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                 });
             }
 
-            PollReportPortugueseStudentResult retorno = new PollReportPortugueseStudentResult();
+            var retorno = new PollReportPortugueseStudentResult();
             retorno.Results = result;
 
             var listaGrafico = graficos.GroupBy(fu => fu.Name).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
-            graficos = new List<PortChartDataModel>();
-            foreach (var item in listaGrafico)
-            {
-                if (!string.IsNullOrWhiteSpace(item.Label))
-                {
-                    graficos.Add(new PortChartDataModel()
-                    {
-                        Name =  item.Label,
-                        Value = item.Value
-                    });
-                }
-                
-            }
+            graficos = (from item in listaGrafico where !string.IsNullOrWhiteSpace(item.Label) select new PortChartDataModel() { Name = item.Label, Value = item.Value }).ToList();
             retorno.ChartData = graficos.OrderBy(a => a.Name).ToList();
 
 
-            var semPreenchimento = listaGrafico.FirstOrDefault(a => string.IsNullOrWhiteSpace(a.Label));
-            if (semPreenchimento != null)
+            if (consideraNovaOpcaoRespostaSemPreenchimentoTerceiroBimestre) return retorno;
             {
-                retorno.ChartData.Add(new PortChartDataModel()
+                var semPreenchimento = listaGrafico.FirstOrDefault(a => string.IsNullOrWhiteSpace(a.Label));
+                if (semPreenchimento != null)
                 {
-                    Name = "Sem Preenchimento",
-                    Value = semPreenchimento.Value >= 0 ? semPreenchimento.Value :0
-                });
+                    retorno.ChartData.Add(new PortChartDataModel()
+                    {
+                        Name = "Sem Preenchimento",
+                        Value = semPreenchimento.Value >= 0 ? semPreenchimento.Value : 0
+                    });
+                }
             }
 
             return retorno;
         }
 
-        private string ConverterProficienciaAluno(string proficiency, string term, PortuguesePoll aluno)
+        private static string ConverterProficienciaAluno(string proficiency, string term, PortuguesePoll aluno)
         {
             switch (term)
             {
@@ -391,7 +394,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             }
         }
 
-        private string MontarTextoProficiencia(string proficiencia)
+        private static string MontarTextoProficiencia(string proficiencia)
         {
             switch (proficiencia)
             {
@@ -405,17 +408,20 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     return "Silábico alfabético";
                 case "A":
                     return "Alfabético";
+                case "SemPreenchimento":
+                    return "Sem Preenchimento";
                 default:
                     return proficiencia;
             }
         }
-        private bool EhRelatorioDeMatematicaAutoral(ParametersModel parameters)
+
+        private static bool EhRelatorioDeMatematicaAutoral(ParametersModel parameters)
         {
             return parameters.Discipline == DISCIPLINA_MATEMATICA &&
                  (int.Parse(parameters.CodigoCurso) >= SETIMO_ANO || int.Parse(parameters.SchoolYear) >= ANO_ESCOLAR_2022);
         }
 
-        private bool ProficienciaEhNumero(string proficiencia)
+        private static bool ProficienciaEhNumero(string proficiencia)
         {
             return proficiencia.Equals(PROFICIENCIA_NUMERO, StringComparison.InvariantCultureIgnoreCase);
         }
@@ -432,19 +438,14 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
         private async Task<ActionResult<string>> ObtenhaRelatorioMatematicaProficiencia(filtrosRelatorioDTO filtro, bool ehPorTurma)
         {
-            var relatorio = new RelatorioMatematicaAutoral();
+            var relatorio = new RelatorioMatematicaAutoral(_config);
 
-            if (ehPorTurma)
-            {
-                return Ok(await relatorio.ObterRelatorioPorTurmaProficiencia(filtro));
-            }
-
-            return Ok(await relatorio.ObtenhaRelatorioMatematicaProficiencia(filtro));
+            return ehPorTurma ? Ok(await relatorio.ObterRelatorioPorTurmaProficiencia(filtro)) : Ok(await relatorio.ObtenhaRelatorioMatematicaProficiencia(filtro));
         }
 
         private async Task<ActionResult<string>> ObtenhaRelatorioMatematica(filtrosRelatorioDTO filtro, bool ehPorTurma)
         {
-            var relatorio = new RelatorioMatematicaAutoral();
+            var relatorio = new RelatorioMatematicaAutoral(_config);
 
             if (ehPorTurma)
             {

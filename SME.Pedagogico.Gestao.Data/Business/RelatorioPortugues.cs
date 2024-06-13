@@ -23,7 +23,6 @@ namespace SME.Pedagogico.Gestao.Data.Business
     public class RelatorioPortugues
     {
         private AlunosAPI alunoAPI;
-
         public RelatorioPortugues()
         {
             alunoAPI = new AlunosAPI(new EndpointsAPI());
@@ -31,6 +30,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task<RelatorioPortuguesTurmaDto> ObterRelatorioPorTurmasPortugues(RelatorioPortuguesFiltroDto relatorioPortuguesFiltroDto)
         {
+            var consideraNovaOpcaoRespostaSemPreenchimento = NovaOpcaoRespostaSemPreenchimento.ConsideraOpcaoRespostaSemPreenchimento(relatorioPortuguesFiltroDto.AnoLetivo,relatorioPortuguesFiltroDto.DescricaoPeriodo);
             IEnumerable<SondagemAluno> dados = null;
             PeriodoFixoAnual periodo = null;
             IEnumerable<Pergunta> perguntas = null;
@@ -54,12 +54,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
             if (dados == null)
             {
                 PreencherAlunosSemRespostas(relatorio, alunos);
-                PreencherGraficoSemRespostas(perguntas, grupo, relatorio, alunos);
+                PreencherGraficoSemRespostas(perguntas, grupo, relatorio, alunos, consideraNovaOpcaoRespostaSemPreenchimento);
             }
             else
             {
                 MapearRelatorioPorTurma(dados, perguntas, relatorio, alunos);
-                MapearGraficoPorTurma(dados, perguntas, grupo, alunos, relatorio);
+                MapearGraficoPorTurma(dados, perguntas, grupo, alunos, relatorio, consideraNovaOpcaoRespostaSemPreenchimento);
             }
 
             relatorio.Alunos = relatorio.Alunos.OrderBy(x => x.NomeAluno).ToList();
@@ -67,7 +67,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             return relatorio;
         }
 
-        private static void MapearGraficoPorTurma(IEnumerable<SondagemAluno> dados, IEnumerable<Pergunta> perguntas, Grupo grupo, IEnumerable<AlunosNaTurmaDTO> alunos, RelatorioPortuguesTurmaDto relatorio)
+        private static void MapearGraficoPorTurma(IEnumerable<SondagemAluno> dados, IEnumerable<Pergunta> perguntas, Grupo grupo, IEnumerable<AlunosNaTurmaDTO> alunos, RelatorioPortuguesTurmaDto relatorio, bool consideraNovaOpcaoRespostaSemPreenchimento)
         {
             var perguntasRespondidas = dados.SelectMany(x => x.ListaRespostas);
 
@@ -87,12 +87,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 grafico.Barras.Add(barra);
 
             });
-
-            grafico.Barras.Add(new GraficoBarra
-            {
-                Label = "Sem Preenchimento",
-                Value = ObterTotalSemPreenchimento(dados, alunos)
-            });
+            if (!consideraNovaOpcaoRespostaSemPreenchimento) 
+            { 
+                grafico.Barras.Add(new GraficoBarra
+                {
+                    Label = "Sem Preenchimento",
+                    Value = ObterTotalSemPreenchimento(dados, alunos)
+                });
+            }
 
             relatorio.Graficos.Add(grafico);
         }
@@ -104,7 +106,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             return resultado.Count();
         }
 
-        private static void PreencherGraficoSemRespostas(IEnumerable<Pergunta> perguntas, Grupo grupo, RelatorioPortuguesTurmaDto relatorio, IEnumerable<AlunosNaTurmaDTO> alunos)
+        private static void PreencherGraficoSemRespostas(IEnumerable<Pergunta> perguntas, Grupo grupo, RelatorioPortuguesTurmaDto relatorio, IEnumerable<AlunosNaTurmaDTO> alunos, bool consideraNovaOpcaoRespostaSemPreenchimento)
         {
             var grafico = new Grafico
             {
@@ -116,11 +118,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 }).ToList()
             };
 
-            grafico.Barras.Add(new GraficoBarra
+            if (!consideraNovaOpcaoRespostaSemPreenchimento)
             {
-                Label = "Sem preenchimento",
-                Value = alunos.Count()
-            });
+                grafico.Barras.Add(new GraficoBarra
+                {
+                    Label = "Sem preenchimento",
+                    Value = alunos.Count()
+                });
+            }
 
             relatorio.Graficos.Add(grafico);
         }
@@ -233,6 +238,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
         public async Task<RelatorioAutoralLeituraProducaoDto> ObterRelatorioConsolidadoPortugues(RelatorioPortuguesFiltroDto filtroRelatorioSondagem)
         {
+            var consideraNovaOpcaoRespostaSemPreenchimento = NovaOpcaoRespostaSemPreenchimento.ConsideraOpcaoRespostaSemPreenchimento(filtroRelatorioSondagem.AnoLetivo,filtroRelatorioSondagem.DescricaoPeriodo);
             var dados = new List<SondagemAlunoRespostas>();
             PeriodoFixoAnual periodo = null;
             Grupo grupo = null;
@@ -272,7 +278,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             {
                 PreencherPerguntasForaLista(listaRetorno, perguntas);
 
-                ObterSemPreenchimento(dados, quantidade, listaRetorno);
+                ObterSemPreenchimento(dados, quantidade, listaRetorno, consideraNovaOpcaoRespostaSemPreenchimento);
 
                 relatorio.Perguntas = listaRetorno;
 
@@ -281,9 +287,12 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 return relatorio;
             }
 
-            PopularListaRetorno(dados, quantidade, perguntas, listaRetorno);
+            PopularListaRetorno(dados, quantidade, perguntas, listaRetorno, consideraNovaOpcaoRespostaSemPreenchimento);
 
             relatorio.Perguntas = listaRetorno;
+
+            if (consideraNovaOpcaoRespostaSemPreenchimento)
+                relatorio.Totais.Quantidade = dados.Count;
 
             MapearGrafico(grupo, relatorio);
 
@@ -320,14 +329,14 @@ namespace SME.Pedagogico.Gestao.Data.Business
             return await alunoAPI.ObterTotalAlunosAtivosPorPeriodo(filtro);
         }
 
-        private void PopularListaRetorno(List<SondagemAlunoRespostas> dados, int alunosAtivos, IEnumerable<Pergunta> perguntas, List<RelatorioPortuguesPerguntasDto> listaRetorno)
+        private void PopularListaRetorno(List<SondagemAlunoRespostas> dados, int alunosAtivos, IEnumerable<Pergunta> perguntas, List<RelatorioPortuguesPerguntasDto> listaRetorno, bool consideraNovaOpcaoRespostaSemPreenchimento)
         {
             foreach (var pergunta in perguntas)
             {
                 AdicionarPerguntaSeNaoExistir(listaRetorno, pergunta, dados, alunosAtivos);
             }
 
-            ObterSemPreenchimento(dados, alunosAtivos, listaRetorno);
+            ObterSemPreenchimento(dados, alunosAtivos, listaRetorno, consideraNovaOpcaoRespostaSemPreenchimento);
             PreencherPerguntasForaLista(listaRetorno, perguntas);
         }
 
@@ -351,7 +360,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
             });
         }
 
-        private static void ObterSemPreenchimento(List<SondagemAlunoRespostas> dados, int alunosAtivos, List<RelatorioPortuguesPerguntasDto> listaRetorno)
+        private static void ObterSemPreenchimento(List<SondagemAlunoRespostas> dados, int alunosAtivos, List<RelatorioPortuguesPerguntasDto> listaRetorno, bool consideraNovaOpcaoRespostaSemPreenchimento)
         {
             var alunosUnicos = dados.GroupBy(X => X.SondagemAluno.CodigoAluno);
 
@@ -361,15 +370,18 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
             if (diferenca <= 0) return;
 
-            listaRetorno.Add(new RelatorioPortuguesPerguntasDto
+            if (!consideraNovaOpcaoRespostaSemPreenchimento)
             {
-                Nome = "Sem preenchimento",
-                Total = new RelatorioPortuguesTotalizadores
+                listaRetorno.Add(new RelatorioPortuguesPerguntasDto
                 {
-                    Quantidade = diferenca,
-                    Porcentagem = Math.Round(((double)diferenca / (double)alunosAtivos) * 100, 2)
-                }
-            });
+                    Nome = "Sem preenchimento",
+                    Total = new RelatorioPortuguesTotalizadores
+                    {
+                        Quantidade = diferenca,
+                        Porcentagem = Math.Round(((double)diferenca / (double)alunosAtivos) * 100, 2)
+                    }
+                });
+            }
         }
 
         private void AdicionarPerguntaSeNaoExistir(List<RelatorioPortuguesPerguntasDto> retorno, Pergunta pergunta, List<SondagemAlunoRespostas> dados, int alunosAtivos)
