@@ -24,12 +24,14 @@ namespace SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO
         public DateTime DataSituacao { get; set; }
         public int NumeroAlunoChamada { get; set; }
         public bool PossuiDeficiencia { get; set; }
-        public bool AlunoInativo
-        {
-            get
-            {
-                return Enum.GetValues(typeof(AlunoInativoEnum)).OfType<AlunoInativoEnum>().Any(x => Convert.ToInt32(x) == CodigoSituacaoMatricula);
-            }
-        }
+
+        private string[] SituacoesAtivas => new string[]{
+                                                           SituacaoMatriculaAluno.Ativo.Name(),
+                                                           SituacaoMatriculaAluno.Concluido.Name(),
+                                                           SituacaoMatriculaAluno.PendenteRematricula.Name(),
+                                                           SituacaoMatriculaAluno.Rematriculado.Name(),
+                                                           SituacaoMatriculaAluno.SemContinuidade.Name()};
+
+        public bool AlunoInativo => !SituacoesAtivas.Contains(SituacaoMatricula);
     }
 }

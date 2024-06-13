@@ -3,7 +3,13 @@ import * as Autoral from "../store/SondagemAutoral";
 import * as Filters from "../store/Filters";
 import * as Poll from "../store/Poll";
 import { parametrosParaUrl } from "../utils";
-import { TIPO_PERIODO } from '../Enums'; 
+import { TIPO_PERIODO } from "../Enums";
+import { showModalError, showModalSuccess } from "../service/modal-service";
+import { store } from "..";
+import {
+  SALVAR_DADOS_SONDAGEM_ERRO,
+  SALVAR_DADOS_SONDAGEM_SUCESSO,
+} from "../utils/constants";
 
 export default function* () {
   yield all([
@@ -100,7 +106,39 @@ function listarAlunosMatApi({ filtro, bimestre }) {
   }).then((response) => response.json());
 }
 
-function* SalvaSondagemAutoralMat({ payload }) {
+export async function SalvaSondagemAutoralMatAsync({ alunos, filtro }) {
+  store.dispatch(Poll.actionCreators.setLoadingSalvar(true));
+
+  return fetch("/api/SondagemAutoral/Matematica", {
+    method: "post",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(alunos),
+  })
+    .then((response) => {
+      showModalSuccess({
+        content: SALVAR_DADOS_SONDAGEM_SUCESSO,
+      });
+      
+      if (filtro?.yearClassroom < 2022) {
+        store.dispatch(
+          Autoral.actionCreators.listaAlunosAutoralMatematica(filtro)
+        );
+      }
+
+      return response;
+    })
+    .catch((e) => {
+      showModalError({
+        content: SALVAR_DADOS_SONDAGEM_ERRO,
+      });
+      return e;
+    })
+    .finally(() => {
+      store.dispatch(Poll.actionCreators.setLoadingSalvar(false));
+    });
+}
+
+function* SalvaSondagemAutoralMat({ payload }) {  
   yield put({
     type: Poll.types.SET_LOADING_SALVAR,
     filters: true,

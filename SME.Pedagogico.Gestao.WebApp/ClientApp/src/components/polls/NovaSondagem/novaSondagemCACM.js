@@ -12,7 +12,10 @@ import {
 } from "../../utils/utils";
 import NovoAlunoSondagemMatematicaAutoral from "../../classRecord/NovaSondagemMatematicaAutoral/novoAluno";
 import { GRUPO_SONDAGEM } from "../../../Enums";
-import { exibirMensagemInformacoesSalvas } from "../../utils/exibirMensagemInformacoesSalvas";
+import { SalvaSondagemAutoralMatAsync } from "../../../sagas/SondagemAutoral";
+import { validouEstudantesSemRespostaMatematicaCACM } from "../../../utils/validacoes";
+import { showModalConfirm } from "../../../service/modal-service";
+import { ALERTA_DESEJA_SALVAR_AGORA } from "../../../utils/constants";
 
 function NovaSondagemCACM() {
   const dispatch = useDispatch();
@@ -108,10 +111,22 @@ function NovaSondagemCACM() {
       return;
     }
 
-    salvar().then((x) => {
-      setIndexSelecionado((oldState) => oldState + 1);
-      sairModoEdicao();
-      exibirMensagemInformacoesSalvas();
+    showModalConfirm({
+      content: ALERTA_DESEJA_SALVAR_AGORA,
+      onOk: () => {
+        salvar().then((continuar = true) => {
+          if (!continuar) return false;
+
+          setIndexSelecionado((oldState) => oldState + 1);
+          sairModoEdicao();
+
+          return true;
+        });
+      },
+      onCancel: () => {
+        setIndexSelecionado((oldState) => oldState + 1);
+        sairModoEdicao();
+      },
     });
   };
 
@@ -123,15 +138,27 @@ function NovaSondagemCACM() {
       return;
     }
 
-    salvar().then((x) => {
-      setIndexSelecionado((oldState) => oldState - 1);
-      sairModoEdicao();
-      exibirMensagemInformacoesSalvas();
+    showModalConfirm({
+      content: ALERTA_DESEJA_SALVAR_AGORA,
+      onOk: () => {
+        salvar().then((continuar = true) => {
+          if (!continuar) return false;
+
+          setIndexSelecionado((oldState) => oldState - 1);
+          sairModoEdicao();
+
+          return true;
+        });
+      },
+      onCancel: () => {
+        setIndexSelecionado((oldState) => oldState - 1);
+        sairModoEdicao();
+      },
     });
   };
 
   const salvar = async () => {
-    await persistencia(alunos, filtrosBusca);
+    return await persistencia(alunos, filtrosBusca);
   };
 
   const persistencia = useCallback(
@@ -143,18 +170,22 @@ function NovaSondagemCACM() {
         }
       });
 
+      const continuar = await validouEstudantesSemRespostaMatematicaCACM(alunosMutaveis);
+
+      if (!continuar) return false;
+
       try {
-        await dispatch(
-          actionCreators.salvaSondagemAutoralMatematica(
-            alunosMutaveis,
-            filtrosBuscaPersistencia
-          )
-        );
+        return SalvaSondagemAutoralMatAsync({
+          alunos: alunosMutaveis,
+          filtro: filtrosBuscaPersistencia,
+        }).then(() => {
+          sairModoEdicao();
+          return true;
+        });
       } catch (e) {
         dispatch(pollStore.setLoadingSalvar(false));
+        return false;
       }
-
-      sairModoEdicao();
     },
     [dispatch, sairModoEdicao, bimestre]
   );
@@ -258,7 +289,7 @@ function NovaSondagemCACM() {
             periodosRedux,
             filtrosSelecionadosSalvar
           ) => {
-            persistencia(
+            return persistencia(
               alunosRedux,
               perguntasRedux,
               periodosRedux,

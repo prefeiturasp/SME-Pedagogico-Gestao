@@ -17,6 +17,8 @@ import LinhaAluno from "./linha-aluno";
 import { Form } from "antd";
 import _ from "lodash";
 import { TIPO_PERIODO } from "../../../Enums";
+import { SalvaSondagemAutoralMatAsync } from "../../../sagas/SondagemAutoral"; 
+import { validouEstudantesSemRespostaMatAutoral } from './utils';
 
 const QuestoesMatematicaAutoral = () => {
   const dispatch = useDispatch();
@@ -61,7 +63,7 @@ const QuestoesMatematicaAutoral = () => {
 
       dispatch(
         pollStore.setFunctionButtonSave((alunosRedux) => {
-          persistencia(alunosRedux);
+          return persistencia(alunosRedux);
         })
       );
     }
@@ -122,15 +124,21 @@ const QuestoesMatematicaAutoral = () => {
         alunosMutaveis,
         form.getFieldsValue()
       );
+      
+      const continuar = await validouEstudantesSemRespostaMatAutoral(alunosSalvar);
+      if (!continuar) return false;
 
       try {
-        await dispatch(
-          actionCreators.salvaSondagemAutoralMatematica(alunosSalvar)
+        return SalvaSondagemAutoralMatAsync({ alunos: alunosSalvar }).then(
+          () => {
+            sairModoEdicao();
+            return true;
+          }
         );
       } catch (e) {
         dispatch(pollStore.setLoadingSalvar(false));
+        return false;
       }
-      sairModoEdicao();
     },
     [dispatch, sairModoEdicao, bimestre, form]
   );
