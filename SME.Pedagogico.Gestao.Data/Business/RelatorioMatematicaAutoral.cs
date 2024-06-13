@@ -184,28 +184,28 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 await RetornaPerguntasDoRelatorio(filtro, relatorio);
 
                 var ListaAlunos = new List<AlunoPorTurmaRelatorioDTO>();
-                alunosEol?.Where(a=> a.CodigoSituacaoMatricula != (int)SituacaoMatriculaAluno.VinculoIndevido)?.ForEach(alunoRetorno =>
+            alunosEol?.Where(a => a.CodigoSituacaoMatricula != (int)SituacaoMatriculaAluno.VinculoIndevido)?.ForEach(alunoRetorno =>
+            {
+                var aluno = new AlunoPorTurmaRelatorioDTO();
+                aluno.CodigoAluno = alunoRetorno.CodigoAluno;
+                aluno.NomeAluno = string.IsNullOrEmpty(alunoRetorno.NomeSocialAluno) ? alunoRetorno.NomeAlunoRelatorio : alunoRetorno.NomeSocialAluno;
+                aluno.Perguntas = new List<PerguntaRespostaPorAluno>();
+
+                foreach (var perguntaBanco in relatorio.Perguntas)
                 {
-                    var aluno = new AlunoPorTurmaRelatorioDTO();
-                    aluno.CodigoAluno = alunoRetorno.CodigoAluno;
-                    aluno.NomeAluno = string.IsNullOrEmpty(alunoRetorno.NomeSocialAluno) ? alunoRetorno.NomeAlunoRelatorio : alunoRetorno.NomeSocialAluno;
-                    aluno.Perguntas = new List<PerguntaRespostaPorAluno>();
-
-                    foreach (var perguntaBanco in relatorio.Perguntas)
+                    var pergunta = new PerguntaRespostaPorAluno()
                     {
-                        var pergunta = new PerguntaRespostaPorAluno()
-                        {
-                            Id = perguntaBanco.Id,
-                            Valor = string.Empty
-                        };
+                        Id = perguntaBanco.Id,
+                        Valor = string.Empty
+                    };
 
-                        var respostaAluno = listaAlunoRespostas.FirstOrDefault(x => x.PerguntaId == perguntaBanco.Id && x.CodigoAluno == aluno.CodigoAluno.ToString());
-                        if (respostaAluno != null)
-                            pergunta.Valor = respostaAluno.RespostaDescricao;
-                        aluno.Perguntas.Add(pergunta);
-                    }
-                    ListaAlunos.Add(aluno);
+                    var respostaAluno = listaAlunoRespostas.FirstOrDefault(x => x.PerguntaId == perguntaBanco.Id && x.CodigoAluno == aluno.CodigoAluno.ToString());
+                    if (respostaAluno != null)
+                        pergunta.Valor = respostaAluno.RespostaDescricao;
+                    aluno.Perguntas.Add(pergunta);
                 }
+                ListaAlunos.Add(aluno);
+            });
                 relatorio.Alunos = ListaAlunos.OrderBy(aluno => aluno.NomeAluno);
                 relatorio.Graficos = new List<GraficosRelatorioDTO>();
 
