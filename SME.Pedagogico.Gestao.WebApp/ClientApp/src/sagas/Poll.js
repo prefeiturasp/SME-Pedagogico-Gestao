@@ -34,16 +34,27 @@ export default function* () {
 }
 
 function* GetStudents({ classRoom }) {
+  const tipoCarregandoAlunos = Poll.types.SET_CARREGANDO_ALUNOS;
   try {
-    const data = yield call(getStudentsPollPortugueseRequestApi, classRoom);
+    yield put({ type: tipoCarregandoAlunos, carregandoAlunos: true });
 
-    yield put({ type: Poll.types.SET_POLL_PORTUGUESE_STUDENTS, data });
+    const data = yield call(
+      getStudentsPollPortugueseRequestApi,
+      classRoom
+    );
+
+    yield put({
+      type: Poll.types.SET_POLL_PORTUGUESE_STUDENTS,
+      data
+    });
   } catch (error) {
     yield put({ type: "API_CALL_ERROR" });
+  } finally {
+    yield put({ type: tipoCarregandoAlunos, carregandoAlunos: false });
   }
 }
 
-function getStudentsPollPortugueseRequestApi(classRoom) {
+async function getStudentsPollPortugueseRequestApi(classRoom) {
   return fetch("/api/sondagemPortugues/ListarSondagemPortugues", {
     method: "post",
     headers: { "content-type": "application/json" },

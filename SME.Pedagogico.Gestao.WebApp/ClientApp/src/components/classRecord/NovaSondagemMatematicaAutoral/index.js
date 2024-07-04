@@ -301,14 +301,7 @@ function NovaSondagemMatematicaAutoral() {
     setIndexSelecionado(primeiraOrdenacao);
   }, [perguntas, primeiraOrdenacao]);
 
-  const montarDados = () => {
-    if (carregandoAlunos) {
-      return (
-        <div style={{ paddingBottom: 170 }}>
-          <Loader loading={carregandoAlunos}> </Loader>
-        </div>
-      );
-    }
+    const montarDados = () => {
     return (
       <>
         {alunos &&
