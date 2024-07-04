@@ -778,7 +778,7 @@ class Poll extends Component {
             </ul>
             <ul className="nav navbar-nav ml-auto">{this.checkButtonSave()}</ul>
           </nav>
-          <Loader loading={this.props.poll.loadingSalvar}>
+          <Loader loading={this.props.poll.loadingSalvar || this.props.poll.carregandoAlunos }>
             {this.componentRender()}
           </Loader>
         </Card>
