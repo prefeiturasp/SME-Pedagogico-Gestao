@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Newtonsoft.Json;
+using SME.Pedagogico.Gestao.Aplicacao.Queries.ListarTurmas;
 using SME.Pedagogico.Gestao.Data.Integracao.DTO.RetornoQueryDTO;
 using SME.Pedagogico.Gestao.Dominio;
 using SME.Pedagogico.Gestao.Infra;
@@ -51,7 +52,15 @@ namespace SME.Pedagogico.Gestao.Aplicacao
 
                 var listaRetornoFinal = new List<SalasPorUEDTO>();
 
-                foreach (var item in listaRetornoTurmas.Where(a => a.Ano != "0").OrderBy(a => a.Nome))
+                var codigosTurmas = listaRetornoTurmas?.Select(t => t.Codigo.ToString())?.ToList();
+                var listaTurmaEOL = await mediator.Send(new ListarTurmasQuery(codigosTurmas));
+
+                var turmasFiltradas = (from turma in listaRetornoTurmas
+                                       join turmas in listaTurmaEOL.Where(ct => ct.Extinta == false)
+                                       on turma.Codigo equals turmas.Codigo
+                                       select turma).ToList();
+
+                foreach (var item in turmasFiltradas.Where(a => a.Ano != "0").OrderBy(a => a.Nome))
                 {
                     if (!listaRetornoFinal.Any(l => l.CodigoTurma.Equals(item.Codigo)))
                     {
