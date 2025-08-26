@@ -74,7 +74,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 if (parameters.ClassroomReport)
                 {
-                    if (Convert.ToInt32(parameters.CodigoCurso) < 4)
+                    if (Convert.ToInt32(parameters.CodigoCurso) < 4 || Convert.ToInt32(parameters.SchoolYear) > 2024)
                     {
 
                         PollReportPortugueseStudentResult result = new PollReportPortugueseStudentResult();
