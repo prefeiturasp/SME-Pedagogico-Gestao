@@ -76,43 +76,57 @@ class PollReportFilter extends Component {
       this.limparDadosFiltro();
     }
 
-    const { yearClassroom, schoolYear } = this.props.poll.selectedFilter;
+    const { yearClassroom: originalYearClassroom, schoolYear } =
+      this.props.poll.selectedFilter;
     const { yearClassroom: prevYearClassroom, schoolYear: prevSchoolYear } =
       prevProps.poll.selectedFilter;
 
-    if (prevYearClassroom !== yearClassroom) {
+    // Ajuste para tratamento especial no ano 2025 turmas 4-9 serem 3
+    let yearClassroom = originalYearClassroom;
+    if (
+      (schoolYear === "2025" || schoolYear === 2025) &&
+      parseInt(originalYearClassroom, 10) >= 4 &&
+      parseInt(originalYearClassroom, 10) <= 9
+    ) {
+      yearClassroom = "3";
+    }
+
+    if (prevYearClassroom !== originalYearClassroom) {
       this.carregarProficiencia(this.state.campoDisciplina);
     }
 
     if (
-      (prevYearClassroom !== yearClassroom || schoolYear !== prevSchoolYear) &&
+      (prevYearClassroom !== originalYearClassroom ||
+        schoolYear !== prevSchoolYear) &&
       this.state.campoDisciplina
     ) {
       const filters = this.props.pollReport.filters;
       const campoDisciplina = this.state.campoDisciplina;
       const disciplina = this.state.selectedFilter.discipline;
-      
+
       const ehMatematica =
         disciplina === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao;
-
       const ehPortugues =
-          disciplina === DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES.Descricao;
+        disciplina === DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES.Descricao;
+
+      const ano = parseInt(yearClassroom, 10);
 
       const ehTurmaMatematicaSemestral =
-        ehMatematica && yearClassroom >= 4 && schoolYear >= 2023;
-      
+        ehMatematica && ano >= 4 && schoolYear >= 2023;
       const ehTurmaPortuguesSemestral =
-        ehPortugues && yearClassroom >= 4 && schoolYear >= 2024;
+        ehPortugues && ano >= 4 && schoolYear >= 2024;
 
       const ehSondagemSemestralMatematica =
         schoolYear < 2022 || ehTurmaMatematicaSemestral;
+      const ehSondagemSemestralPortugues = ehTurmaPortuguesSemestral;
 
-     const ehSondagemSemestralPortugues = ehTurmaPortuguesSemestral;    
-
-     let parametroPeriodo = ehSondagemSemestralMatematica ? "terms" : "newTerms";
-     if (ehPortugues)
+      let parametroPeriodo = ehSondagemSemestralMatematica
+        ? "terms"
+        : "newTerms";
+      if (ehPortugues) {
         parametroPeriodo = ehSondagemSemestralPortugues ? "newTerms" : "terms";
-        
+      }
+
       this.setState((state) => ({
         ...state,
         selectedProficiency: "",
@@ -167,42 +181,48 @@ class PollReportFilter extends Component {
     let { selectedProficiency, selectedFilter } = this.state;
     const { pollReport, poll } = this.props;
     const { filters } = pollReport;
-    const { yearClassroom } = poll.selectedFilter;
+    const { yearClassroom, schoolYear } = poll.selectedFilter;
     let { proficiency, discipline: prevDiscipline } = selectedFilter;
     let term = selectedFilter.term;
 
     const ano = Number(yearClassroom);
+    const anoLetivo = Number(schoolYear);
     let proficiencies = disciplina && filters[disciplina].proficiencies;
     const discipline = disciplina && filters[disciplina].name;
     const ehMath = disciplina === SHORT_DISCIPLINES_ENUM.MATH;
     const proficienciaId = ehMath && this.excluirProficienciaId(ano);
 
-    if (proficienciaId) {
-      const proficienciaSelecionada = proficiencies.filter(
-        (item) => item.id === proficienciaId
-      );
-
-      proficiencies = proficiencies.filter(
-        (item) => item.id !== proficienciaId
-      );
-
-      if (proficienciaSelecionada.length) {
-        proficiency =
-          proficiency === proficienciaSelecionada[0].label ? null : proficiency;
-
-        selectedProficiency =
-          selectedProficiency === proficienciaSelecionada[0].value
-            ? null
-            : selectedProficiency;
+    // **NOVA REGRA: NÃO FILTRA PROFICIÊNCIAS** para anos >= 2025 e turma 4~9
+    if (anoLetivo >= 2025 && ano >= 4 && ano <= 9) {
+      // Não faz nenhum filtro de proficiência, mostra todas
+      // Não seta selectedProficiency para null (exceto se disciplina trocou)
+    } else {
+      // Regra original filtrando proficiências para matemática
+      if (proficienciaId) {
+        const proficienciaSelecionada = proficiencies.filter(
+          (item) => item.id === proficienciaId
+        );
+        proficiencies = proficiencies.filter(
+          (item) => item.id !== proficienciaId
+        );
+        if (proficienciaSelecionada.length) {
+          proficiency =
+            proficiency === proficienciaSelecionada[0].label
+              ? null
+              : proficiency;
+          selectedProficiency =
+            selectedProficiency === proficienciaSelecionada[0].value
+              ? null
+              : selectedProficiency;
+        }
+        if (proficienciaId === 9 || !proficienciaSelecionada.length) {
+          selectedProficiency = null;
+        }
       }
-
-      if (proficienciaId === 9 || !proficienciaSelecionada.length) {
+      // Reaplica filtro antigo para português, anos >=4 (exceto regra especial acima)
+      if (!ehMath && ano >= 4) {
         selectedProficiency = null;
       }
-    }
-
-    if (!ehMath && ano >= 4) {
-      selectedProficiency = null;
     }
 
     if (prevDiscipline !== discipline) {
@@ -239,28 +259,42 @@ class PollReportFilter extends Component {
         })
       : [];
 
-    const { yearClassroom, schoolYear } = this.props.poll.selectedFilter;
-    
+    const { yearClassroom: originalYearClassroom, schoolYear } =
+      this.props.poll.selectedFilter;
+
+    // Ajuste para tratamento especial no ano 2025 turmas 4-9 serem 3
+    let yearClassroom = originalYearClassroom;
+    if (
+      (schoolYear === "2025" || schoolYear === 2025) &&
+      parseInt(originalYearClassroom, 10) >= 4 &&
+      parseInt(originalYearClassroom, 10) <= 9
+    ) {
+      yearClassroom = "3";
+    }
+
     const ehMatematica =
-          label === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao;
+      label === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao;
 
     const ehPortugues =
-          label === DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES.Descricao;
+      label === DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES.Descricao;
+
+    const ano = parseInt(yearClassroom, 10);
 
     const ehTurmaMatematicaSemestral =
-      ehMatematica && yearClassroom >= 4 && schoolYear >= 2023;
-    
+      ehMatematica && ano >= 4 && schoolYear >= 2023;
+
     const ehTurmaPortuguesSemestral =
-        ehPortugues && yearClassroom >= 4 && schoolYear >= 2024;
+      ehPortugues && ano >= 4 && schoolYear >= 2024;
 
-      const ehSondagemSemestralMatematica =
-        schoolYear < 2022 || ehTurmaMatematicaSemestral;
+    const ehSondagemSemestralMatematica =
+      schoolYear < 2022 || ehTurmaMatematicaSemestral;
 
-     const ehSondagemSemestralPortugues = ehTurmaPortuguesSemestral;    
+    const ehSondagemSemestralPortugues = ehTurmaPortuguesSemestral;
 
-     let parametroPeriodo = ehSondagemSemestralMatematica ? "terms" : "newTerms";;
-     if (ehPortugues)
-        parametroPeriodo = ehSondagemSemestralPortugues ? "newTerms" : "terms";
+    let parametroPeriodo = ehSondagemSemestralMatematica ? "terms" : "newTerms";
+    if (ehPortugues) {
+      parametroPeriodo = ehSondagemSemestralPortugues ? "newTerms" : "terms";
+    }
 
     this.setState({
       selectedFilter: {
@@ -390,9 +424,22 @@ class PollReportFilter extends Component {
   }
 
   ehPortuguesAcimaDoQuartoAnoConsolidado() {
+    const { yearClassroom, schoolYear } = this.props.poll.selectedFilter;
+    // Converte valores para número
+    const ano = Number(yearClassroom);
+    const anoLetivo = Number(schoolYear);
+
+    // Ajuste para 2025: turmas 4-9 devem ser tratadas como "não acima do quarto ano"
+    if (
+      anoLetivo === 2025 &&
+      this.state.selectedFilter.discipline === "Língua Portuguesa" &&
+      ano >= 4 &&
+      ano <= 9
+    ) {
+      return false;
+    }
     return (
-      Number(this.props.poll.selectedFilter.yearClassroom) >= 4 &&
-      this.state.selectedFilter.discipline === "Língua Portuguesa"
+      ano >= 4 && this.state.selectedFilter.discipline === "Língua Portuguesa"
     );
   }
 
@@ -422,15 +469,37 @@ class PollReportFilter extends Component {
   };
 
   mostrarProficiencia = () => {
-    const anoEscolhido = Number(this.props.poll.selectedFilter.yearClassroom);
-    const anoMatematica =
-      this.props.poll.selectedFilter.schoolYear >= 2022 ? 4 : 7;
+    const { yearClassroom, schoolYear } = this.props.poll.selectedFilter;
+    const ano = Number(yearClassroom);
+    const anoLetivo = Number(schoolYear);
+    const disciplina = this.state.selectedFilter.discipline;
+    const anoMatematica = anoLetivo >= 2022 ? 4 : 7;
 
-    switch (this.state.selectedFilter.discipline) {
+    // Se for Português - 2025 - turmas 4 a 9: mostrar proficiência igual aos anos 1-3
+    if (
+      disciplina === DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES.Descricao &&
+      anoLetivo === 2025 &&
+      ano >= 4 &&
+      ano <= 9
+    ) {
+      return true; // mostrar campo Proficiência
+    }
+
+    // Se for Matemática - 2025 - turmas 4 a 9: mostrar proficiência igual aos anos 1-3
+    if (
+      disciplina === DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao &&
+      anoLetivo === 2025 &&
+      ano >= 4 &&
+      ano <= 9
+    ) {
+      return true; // mostrar campo Proficiência
+    }
+
+    switch (disciplina) {
       case DISCIPLINES_ENUM.DISCIPLINA_MATEMATICA.Descricao:
-        return !this.verificaAno(anoEscolhido, anoMatematica);
+        return !this.verificaAno(ano, anoMatematica);
       case DISCIPLINES_ENUM.DISCIPLINA_PORTUGUES.Descricao:
-        return !this.verificaAno(anoEscolhido, 4);
+        return !this.verificaAno(ano, 4);
       default:
         return true;
     }
