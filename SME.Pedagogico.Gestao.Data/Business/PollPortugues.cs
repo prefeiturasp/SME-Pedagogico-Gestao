@@ -621,7 +621,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 retorno.Total = new TotalDTO()
                 {
                     Quantidade = quantidadeTotalAlunos,
-                    Porcentagem = ((((double)totalSemPreenchimento / quantidadeTotalAlunos) * 100) + percentualTotalRespostas).ToString()
+                    Porcentagem = (percentualTotalRespostas).ToString()
                 };
 
                 return retorno;

@@ -87,8 +87,15 @@ export const montarGraficos = (
   };
 
   const montarPortugues = () => {
-    const codigoCursoMaiorIgualQuatro =
-      Number(props.pollReport.selectedFilter.CodigoCurso) >= 4;
+    // Ajusta codigoCurso para turma 4-9 no ano 2025 ser tratado como 3
+    let codigoCurso = Number(props.pollReport.selectedFilter.CodigoCurso);
+    const schoolYear = Number(props.pollReport.selectedFilter.SchoolYear);
+
+    if (schoolYear === 2025 && codigoCurso >= 4 && codigoCurso <= 9) {
+      codigoCurso = 3;
+    }
+
+    const codigoCursoMaiorIgualQuatro = codigoCurso >= 4;
 
     if (codigoCursoMaiorIgualQuatro) {
       if (classroomReport) {

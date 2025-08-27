@@ -85,8 +85,8 @@ export default class PollReportPortugueseGrid extends Component {
         else
             className += " d-flex flex-column";
 
-        var totalStudents = this.props.total.quantidade;;
-        var totalPercentage = Number(this.props.total.porcentagem);
+        var totalStudents = this.props.total?.quantidade;;
+        var totalPercentage = Number(this.props.total?.porcentagem);
 
         return (
             <div className={className}>

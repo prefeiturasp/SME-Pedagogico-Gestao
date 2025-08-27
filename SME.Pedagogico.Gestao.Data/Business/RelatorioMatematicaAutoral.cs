@@ -81,7 +81,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 });
 
             var relatorioAgrupado = ListaPerguntaEhRespostasRelatorio.GroupBy(p => p.PerguntaId).ToList();
-
+            
             var lista = new List<PerguntaDTO>();
 
             relatorioAgrupado.ForEach(x =>
@@ -184,29 +184,28 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 await RetornaPerguntasDoRelatorio(filtro, relatorio);
 
                 var ListaAlunos = new List<AlunoPorTurmaRelatorioDTO>();
+            alunosEol?.Where(a => a.CodigoSituacaoMatricula != (int)SituacaoMatriculaAluno.VinculoIndevido)?.ForEach(alunoRetorno =>
+            {
+                var aluno = new AlunoPorTurmaRelatorioDTO();
+                aluno.CodigoAluno = alunoRetorno.CodigoAluno;
+                aluno.NomeAluno = string.IsNullOrEmpty(alunoRetorno.NomeSocialAluno) ? alunoRetorno.NomeAlunoRelatorio : alunoRetorno.NomeSocialAluno;
+                aluno.Perguntas = new List<PerguntaRespostaPorAluno>();
 
-                foreach (var alunoRetorno in alunosEol)
+                foreach (var perguntaBanco in relatorio.Perguntas)
                 {
-                    var aluno = new AlunoPorTurmaRelatorioDTO();
-                    aluno.CodigoAluno = alunoRetorno.CodigoAluno;
-                    aluno.NomeAluno = string.IsNullOrEmpty(alunoRetorno.NomeSocialAluno) ? alunoRetorno.NomeAlunoRelatorio : alunoRetorno.NomeSocialAluno;
-                    aluno.Perguntas = new List<PerguntaRespostaPorAluno>();
-
-                    foreach (var perguntaBanco in relatorio.Perguntas)
+                    var pergunta = new PerguntaRespostaPorAluno()
                     {
-                        var pergunta = new PerguntaRespostaPorAluno()
-                        {
-                            Id = perguntaBanco.Id,
-                            Valor = string.Empty
-                        };
+                        Id = perguntaBanco.Id,
+                        Valor = string.Empty
+                    };
 
-                        var respostaAluno = listaAlunoRespostas.FirstOrDefault(x => x.PerguntaId == perguntaBanco.Id && x.CodigoAluno == aluno.CodigoAluno.ToString());
-                        if (respostaAluno != null)
-                            pergunta.Valor = respostaAluno.RespostaDescricao;
-                        aluno.Perguntas.Add(pergunta);
-                    }
-                    ListaAlunos.Add(aluno);
+                    var respostaAluno = listaAlunoRespostas.FirstOrDefault(x => x.PerguntaId == perguntaBanco.Id && x.CodigoAluno == aluno.CodigoAluno.ToString());
+                    if (respostaAluno != null)
+                        pergunta.Valor = respostaAluno.RespostaDescricao;
+                    aluno.Perguntas.Add(pergunta);
                 }
+                ListaAlunos.Add(aluno);
+            });
                 relatorio.Alunos = ListaAlunos.OrderBy(aluno => aluno.NomeAluno);
                 relatorio.Graficos = new List<GraficosRelatorioDTO>();
 
@@ -243,8 +242,9 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             var numeracaoNaDescricaoDaQuestao = ExibirNumeroDaQuestao(filtro.AnoEscolar, filtro.Bimestre) ? $@" 'Questão '|| pae.""Ordenacao""|| ': ' || p.""Descricao"" as ""Nome""  " : $@" p.""Descricao"" as ""Nome"" ";
             var sql = $@"select p.""Id"" as ""Id"",
-							    {numeracaoNaDescricaoDaQuestao}
-					from ""PerguntaAnoEscolar"" pae
+							    {numeracaoNaDescricaoDaQuestao},
+                                pae.""Ordenacao"" as ""Ordenacao""    
+                    from ""PerguntaAnoEscolar"" pae
                     inner join ""Pergunta"" p on p.""Id"" = pae.""PerguntaId""
                     left join  ""PerguntaAnoEscolarBimestre"" paeb ON paeb.""PerguntaAnoEscolarId"" = pae.""Id"" 
 					where pae.""AnoEscolar"" = @anoEscolar ";

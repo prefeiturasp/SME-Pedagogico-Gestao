@@ -18,6 +18,7 @@ namespace SME.Pedagogico.Gestao.Aplicacao
     {
         private readonly IHttpClientFactory httpClientFactory;
         private readonly IMediator mediator;
+        private const string TIPO_ESCOLA_CEU_EXCLUSIVO_ATIVIDADE_COMPLEMENTAR = "27";
 
         public ObterUesPorDreQueryHandler(IHttpClientFactory httpClientFactory, IMediator mediator)
         {
@@ -48,15 +49,18 @@ namespace SME.Pedagogico.Gestao.Aplicacao
 
                 foreach (var item in listaUesSGP.Where(ue => EnumExtensao.EhUmDosValores(ue.TipoEscola, new Enum[] { TipoEscola.EMEF, TipoEscola.EMEFM, TipoEscola.EMEBS, TipoEscola.CEUEMEF, TipoEscola.EMEFPFOM })))
                 {
+                    var tipoEscola = (int)item.TipoEscola;
                     listaRetorno.Add(new EscolasPorDREDTO()
                     {
                          NomeEscola = item.NomeSimples,
-                          CodigoEscola = item.Codigo
+                          CodigoEscola = item.Codigo,
+                          TipoEscola = tipoEscola > 0 ? tipoEscola.ToString() : string.Empty
                     });
                 }
 
 
                 return listaRetorno
+                    .Where(l=> l.TipoEscola != TIPO_ESCOLA_CEU_EXCLUSIVO_ATIVIDADE_COMPLEMENTAR)
                     .OrderBy(a => a.NomeEscola)
                     .ToList();
 
