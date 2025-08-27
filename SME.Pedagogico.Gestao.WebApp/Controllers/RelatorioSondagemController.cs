@@ -428,7 +428,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
         private async Task<ActionResult<string>> ObtenhaRelatorioMatematicaAutoral(filtrosRelatorioDTO filtro, bool ehPorTurma)
         {
-            if (filtro.AnoEscolar <= TERCEIRO_ANO && !ProficienciaEhNumero(filtro.Proficiencia))
+            if ((filtro.AnoEscolar <= TERCEIRO_ANO && !ProficienciaEhNumero(filtro.Proficiencia)) || filtro.AnoLetivo > 2024)
             {
                 return await ObtenhaRelatorioMatematicaProficiencia(filtro, ehPorTurma);
             }
