@@ -110,7 +110,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     if (periodo == null)
                         return StatusCode(500, $"Não foi possivel encontrar o périodo com descrição {parameters.Term}");
 
-                    if (Convert.ToInt32(parameters.CodigoCurso) < 4)
+                    if (Convert.ToInt32(parameters.CodigoCurso) < 4 || Convert.ToInt32(parameters.SchoolYear) > 2024)
                     {
                         PollReportPortugueseResult result = new PollReportPortugueseResult();
                         result = await BuscarDadosSyncAsync(parameters, parameters.SchoolYear, parameters.CodigoDRE, parameters.CodigoEscola, parameters.CodigoCurso, businessPoll, periodo);
@@ -118,7 +118,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                         return (Ok(result));
                     }
 
-                    if (parameters.GrupoId.Equals("e27b99a3-789d-43fb-a962-7df8793622b1"))
+                    if (parameters.GrupoId != null && parameters.GrupoId.Equals("e27b99a3-789d-43fb-a962-7df8793622b1"))
                     {
                         var relatorioCapacidadeLeitura = new RelatorioPortuguesCapacidadeLeitura();
                         var relatorioCapacidade = await relatorioCapacidadeLeitura.ObterRelatorioCapacidadeLeitura(new RelatorioPortuguesFiltroDto
