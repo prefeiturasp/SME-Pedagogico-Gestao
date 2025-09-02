@@ -6,6 +6,7 @@ using SME.Pedagogico.Gestao.Data.DTO;
 using SME.Pedagogico.Gestao.Data.DTO.Portugues;
 using SME.Pedagogico.Gestao.WebApp.Models.ClassRoom;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using EnumModels = SME.Pedagogico.Gestao.Models.Enums;
 
@@ -148,6 +149,14 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             var sondagemAutoralBll = new PollPortuguese(_config);
 
             return Ok(await sondagemAutoralBll.ListaSequenciaOrdensSalva(filtrarListagemDto));
+        }
+
+        [HttpGet("consolidado-nivel-escrita")]
+        public async Task<IActionResult> ObterConsolidadoNivelEscrita()
+        {
+            var sondagemAutoralBll = new PollPortuguese(_config);
+            var consolidado = await sondagemAutoralBll.ObterConsolidadoNivelEscritaPorAlunoEmPortugues();
+            return consolidado == null || consolidado.Count() == 0 ? NoContent() : (IActionResult)Ok(consolidado);
         }
     }
 }
