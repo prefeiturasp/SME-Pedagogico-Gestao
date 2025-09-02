@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SME.Pedagogico.Gestao.Data.DTO.Matematica.Relatorio;
+using Npgsql;
 
 namespace SME.Pedagogico.Gestao.Data.Business
 {
@@ -1302,6 +1303,42 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     Leitura3Bim = resultado.reading3B,
                     Leitura4Bim = resultado.reading4B
                 };
+            }
+        }
+
+        public async Task<IEnumerable<ResultadoNivelEscritaPorAlunoEmPortuguesDTO>> ObterConsolidadoNivelEscritaPorAlunoEmPortugues()
+        {
+            const string sql = @"
+                SELECT
+                    pp.""dreCodeEol"" as dreCodigo,
+                    pp.""schoolCodeEol"" as ueCodigo,
+                    pp.""schoolYear"" as anoLetivo,
+                    unpivoted.nivelEscrita,
+                    unpivoted.periodo,
+                    COUNT(*) AS quantidade
+                FROM
+                    ""PortuguesePolls"" pp
+                CROSS JOIN LATERAL (
+                    VALUES
+                        (1, pp.""writing1B""),
+                        (2, pp.""writing2B""),
+                        (3, pp.""writing3B""),
+                        (4, pp.""writing4B"")
+                ) AS unpivoted(periodo, nivelEscrita)
+                WHERE
+                    unpivoted.nivelEscrita in ('A', 'PS', 'SA', 'SCV', 'SSV')  -- Parâmetro para segurança
+                GROUP BY
+                    pp.""dreCodeEol"",
+                    pp.""schoolCodeEol"",
+                    pp.""schoolYear"",
+                    unpivoted.nivelEscrita,
+                    unpivoted.periodo
+                HAVING 
+                    unpivoted.nivelEscrita IS NOT NULL; -- Garante que apenas períodos preenchidos sejam contados";
+
+            using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
+            {
+                return await conexao.QueryAsync<ResultadoNivelEscritaPorAlunoEmPortuguesDTO>(sql);
             }
         }
     }
