@@ -1315,7 +1315,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     pp.""schoolYear"" as anoLetivo,
                     unpivoted.nivelEscrita,
                     unpivoted.periodo,
-                    COUNT(*) AS quantidade
+                    COUNT(*) AS quantidadeAlunos
                 FROM
                     ""PortuguesePolls"" pp
                 CROSS JOIN LATERAL (
