@@ -158,5 +158,13 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             var consolidado = await sondagemAutoralBll.ObterConsolidadoNivelEscritaPorAlunoEmPortugues();
             return consolidado == null || consolidado.Count() == 0 ? NoContent() : (IActionResult)Ok(consolidado);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ObterConsoliadadoNivelEscritaCriticos()
+        {
+            var sondagemAutoralBll = new PollPortuguese(_config);
+            var consolidado = await sondagemAutoralBll.ObterIndicadoresCriticosAlfabetizacaoEscritaPorUe();
+            return consolidado == null || consolidado.Count() == 0 ? NoContent() : (IActionResult)Ok(consolidado);
+        }
     }
 }
