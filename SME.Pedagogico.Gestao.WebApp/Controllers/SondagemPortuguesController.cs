@@ -151,7 +151,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             return Ok(await sondagemAutoralBll.ListaSequenciaOrdensSalva(filtrarListagemDto));
         }
 
-        [HttpGet("consolidado-nivel-escrita")]
+        [HttpGet()]
         public async Task<IActionResult> ObterConsolidadoNivelEscrita()
         {
             var sondagemAutoralBll = new PollPortuguese(_config);
