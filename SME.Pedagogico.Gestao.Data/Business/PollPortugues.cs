@@ -320,7 +320,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             var liststudentPollPortuguese = new List<StudentPollPortuguese>();
             PeriodoFixoAnual periodoAnual = null;
-            var consideraNovaOpcaoRespostaSemPreenchimento = NovaOpcaoRespostaSemPreenchimento.ConsideraOpcaoRespostaSemPreenchimento(int.Parse(anoLetivo),bimestre);
+            var consideraNovaOpcaoRespostaSemPreenchimento = NovaOpcaoRespostaSemPreenchimento.ConsideraOpcaoRespostaSemPreenchimento(int.Parse(anoLetivo), bimestre);
 
             var listReturn = new List<PollReportPortugueseItem>();
 
@@ -361,17 +361,17 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 switch (bimestre)
                 {
                     case "1° Bimestre":
-                    {
-                        if (proficiencia == "Escrita")
                         {
-                            var writing1B = query.GroupBy(fu => fu.writing1B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
-                            
-                            foreach (var item in writing1B)
+                            if (proficiencia == "Escrita")
                             {
-                                PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
-                                itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                itemRetorno.studentQuantity = item.Value;
-                                listReturn.Add(itemRetorno);
+                                var writing1B = query.GroupBy(fu => fu.writing1B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
+
+                                foreach (var item in writing1B)
+                                {
+                                    PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                    itemRetorno.studentQuantity = item.Value;
+                                    listReturn.Add(itemRetorno);
 
                                     graficos.Add(new PortChartDataModel()
                                     {
@@ -442,37 +442,37 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         }
                         break;
                     case "3° Bimestre":
-                    {
-                        if (proficiencia == "Escrita")
                         {
-                            var writing3B =  consideraNovaOpcaoRespostaSemPreenchimento ? query.GroupBy(fu => fu.writing3B).Where(x => x.Key.Length > 0).Select(g => new {Label = g.Key, Value = g.Count()}).ToList() 
-                                                    : query.GroupBy(fu => fu.writing3B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
-
-                            foreach (var item in writing3B)
+                            if (proficiencia == "Escrita")
                             {
-                                var itemRetorno = new PollReportPortugueseItem();
-                                itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                itemRetorno.studentQuantity = item.Value;
-                                listReturn.Add(itemRetorno);
+                                var writing3B = consideraNovaOpcaoRespostaSemPreenchimento ? query.GroupBy(fu => fu.writing3B).Where(x => x.Key.Length > 0).Select(g => new { Label = g.Key, Value = g.Count() }).ToList()
+                                                        : query.GroupBy(fu => fu.writing3B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
 
-                                graficos.Add(new PortChartDataModel()
+                                foreach (var item in writing3B)
                                 {
-                                    Name = MontarTextoProficiencia(item.Label),
-                                    Value = item.Value
-                                });
+                                    var itemRetorno = new PollReportPortugueseItem();
+                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                    itemRetorno.studentQuantity = item.Value;
+                                    listReturn.Add(itemRetorno);
+
+                                    graficos.Add(new PortChartDataModel()
+                                    {
+                                        Name = MontarTextoProficiencia(item.Label),
+                                        Value = item.Value
+                                    });
+                                }
                             }
-                        }
-                        else //leitura
-                        {
-                            var reading3B = consideraNovaOpcaoRespostaSemPreenchimento ? query.GroupBy(fu => fu.reading3B).Where(x => x.Key.Length > 0).Select(g => new {Label = g.Key, Value = g.Count()}).ToList()
-                                                                                       : query.GroupBy(fu => fu.reading3B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
-     
-                            foreach (var item in reading3B)
+                            else //leitura
                             {
-                                var itemRetorno = new PollReportPortugueseItem();
-                                itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                itemRetorno.studentQuantity = item.Value;
-                                listReturn.Add(itemRetorno);
+                                var reading3B = consideraNovaOpcaoRespostaSemPreenchimento ? query.GroupBy(fu => fu.reading3B).Where(x => x.Key.Length > 0).Select(g => new { Label = g.Key, Value = g.Count() }).ToList()
+                                                                                           : query.GroupBy(fu => fu.reading3B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
+
+                                foreach (var item in reading3B)
+                                {
+                                    var itemRetorno = new PollReportPortugueseItem();
+                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                    itemRetorno.studentQuantity = item.Value;
+                                    listReturn.Add(itemRetorno);
 
                                     graficos.Add(new PortChartDataModel()
                                     {
@@ -484,37 +484,37 @@ namespace SME.Pedagogico.Gestao.Data.Business
                         }
                         break;
                     case "4° Bimestre":
-                    {
-                        if (proficiencia == "Escrita")
                         {
-                            var writing4B = consideraNovaOpcaoRespostaSemPreenchimento ? query.GroupBy(fu => fu.writing4B).Where(x => x.Key.Length > 0).Select(g => new {Label = g.Key, Value = g.Count()}).ToList()
-                                                    : query.GroupBy(fu => fu.writing4B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
-        
-                            foreach (var item in writing4B)
+                            if (proficiencia == "Escrita")
                             {
-                                var itemRetorno = new PollReportPortugueseItem();
-                                itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                itemRetorno.studentQuantity = item.Value;
-                                listReturn.Add(itemRetorno);
+                                var writing4B = consideraNovaOpcaoRespostaSemPreenchimento ? query.GroupBy(fu => fu.writing4B).Where(x => x.Key.Length > 0).Select(g => new { Label = g.Key, Value = g.Count() }).ToList()
+                                                        : query.GroupBy(fu => fu.writing4B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
 
-                                graficos.Add(new PortChartDataModel()
+                                foreach (var item in writing4B)
                                 {
-                                    Name = MontarTextoProficiencia(item.Label),
-                                    Value = item.Value
-                                });
+                                    var itemRetorno = new PollReportPortugueseItem();
+                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                    itemRetorno.studentQuantity = item.Value;
+                                    listReturn.Add(itemRetorno);
+
+                                    graficos.Add(new PortChartDataModel()
+                                    {
+                                        Name = MontarTextoProficiencia(item.Label),
+                                        Value = item.Value
+                                    });
+                                }
                             }
-                        }
-                        else //leitura
-                        {
-                            var reading4B = consideraNovaOpcaoRespostaSemPreenchimento ? query.GroupBy(fu => fu.reading4B).Where(x => x.Key.Length > 0).Select(g => new {Label = g.Key, Value = g.Count()}).ToList()
-                                :query.GroupBy(fu => fu.reading4B).Select(g => new {Label = g.Key, Value = g.Count()}).ToList();
-              
-                            foreach (var item in reading4B)
+                            else //leitura
                             {
-                                PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
-                                itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
-                                itemRetorno.studentQuantity = item.Value;
-                                listReturn.Add(itemRetorno);
+                                var reading4B = consideraNovaOpcaoRespostaSemPreenchimento ? query.GroupBy(fu => fu.reading4B).Where(x => x.Key.Length > 0).Select(g => new { Label = g.Key, Value = g.Count() }).ToList()
+                                    : query.GroupBy(fu => fu.reading4B).Select(g => new { Label = g.Key, Value = g.Count() }).ToList();
+
+                                foreach (var item in reading4B)
+                                {
+                                    PollReportPortugueseItem itemRetorno = new PollReportPortugueseItem();
+                                    itemRetorno.OptionName = MontarTextoProficiencia(item.Label);
+                                    itemRetorno.studentQuantity = item.Value;
+                                    listReturn.Add(itemRetorno);
 
                                     graficos.Add(new PortChartDataModel()
                                     {
@@ -535,13 +535,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
 
                 foreach (var item in listReturn)
                 {
-                    item.StudentPercentage = ((double) item.studentQuantity / quantidadeTotalAlunos) * 100;
+                    item.StudentPercentage = ((double)item.studentQuantity / quantidadeTotalAlunos) * 100;
                     if (!consideraNovaOpcaoRespostaSemPreenchimento)
                     {
                         if (string.IsNullOrWhiteSpace(item.OptionName))
                         {
                             item.OptionName = "Sem preenchimento";
-                            item.StudentPercentage = ((double) totalSemPreenchimento / quantidadeTotalAlunos) * 100;
+                            item.StudentPercentage = ((double)totalSemPreenchimento / quantidadeTotalAlunos) * 100;
                             item.studentQuantity = totalSemPreenchimento;
                         }
                     }
@@ -556,7 +556,8 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 {
                     if (!consideraNovaOpcaoRespostaSemPreenchimento)
                     {
-                        graficos.Add(new PortChartDataModel()                    {
+                        graficos.Add(new PortChartDataModel()
+                        {
                             Name = string.IsNullOrWhiteSpace(item.Label)
                                 ? "Sem preenchimento"
                                 : item.Label,
@@ -567,15 +568,16 @@ namespace SME.Pedagogico.Gestao.Data.Business
                     }
                     else
                     {
-                        graficos.Add(new PortChartDataModel()                    {
+                        graficos.Add(new PortChartDataModel()
+                        {
                             Name = item.Label,
                             Value = item.Value
                         });
                     }
                 }
-                
-                
-                
+
+
+
                 if (proficiencia == "Escrita")
                 {
                     //particularidade do 3 ano
@@ -1339,6 +1341,75 @@ namespace SME.Pedagogico.Gestao.Data.Business
             using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
             {
                 return await conexao.QueryAsync<ResultadoNivelEscritaPorAlunoEmPortuguesDTO>(sql);
+            }
+        }
+
+        public async Task<IEnumerable<IndicadorAlfabetizacaoCriticaEscritaPorUeDto>> ObterIndicadoresCriticosAlfabetizacaoEscritaPorUe()
+        {
+            const string sql = @"
+                WITH -- Etapa 1: Transformar (UNPIVOT) os dados das colunas de período em linhas
+                DadosBrutos AS (
+                    SELECT
+                        pp.""schoolYear"" AS AnoLetivo,
+                        pp.""dreCodeEol"" AS DreCodigo,
+                        pp.""schoolCodeEol"" AS UeCodigo,
+                        unpivoted.periodo,
+                        unpivoted.nivelEscrita
+                    FROM
+                        ""PortuguesePolls"" pp
+                    CROSS JOIN LATERAL (
+                        VALUES
+                            (1, pp.""writing1B""),
+                            (2, pp.""writing2B""),
+                            (3, pp.""writing3B""),
+                            (4, pp.""writing4B"")
+                    ) AS unpivoted(periodo, nivelEscrita)
+                    WHERE unpivoted.nivelEscrita IS NOT NULL
+                ), -- Etapa 2: Descobrir qual o último período com dados para cada UE no ano
+                UltimoPeriodoPorUE AS (
+                    SELECT
+                        db.UeCodigo,
+                        MAX(db.periodo) AS UltimoPeriodo
+                    FROM
+                        DadosBrutos db
+                    GROUP BY
+                        db.UeCodigo
+                ), -- Etapa 3: Filtrar os dados brutos para manter apenas os do último período de cada UE
+                DadosUltimoPeriodo AS (
+                    SELECT
+                        db.*
+                    FROM
+                        DadosBrutos db
+                    INNER JOIN UltimoPeriodoPorUE up ON db.UeCodigo = up.UeCodigo AND db.periodo = up.UltimoPeriodo
+                ), -- Etapa 4: Agregar os dados por UE, contando o total e os não alfabetizados
+                AgregadoPorUE AS (
+                    SELECT
+                        dup.DreCodigo,
+                        dup.UeCodigo,
+                        -- Conta quantos alunos têm o nível de escrita diferente de 'A' (Alfabético)
+                        COUNT(*) FILTER (WHERE dup.nivelEscrita <> 'A') AS TotalNaoAlfabetizados,
+                        -- Conta o total de alunos com sondagem preenchida no período
+                        COUNT(*) AS TotalAlunosSondagem
+                    FROM
+                        DadosUltimoPeriodo dup
+                    GROUP BY
+                        dup.DreCodigo,
+                        dup.UeCodigo
+                ) -- Etapa Final: Montar o resultado, juntando com nomes, calculando o percentual e ordenando
+                SELECT
+                    apu.DreCodigo,
+                    apu.UeCodigo,
+                    apu.TotalNaoAlfabetizados AS QuantidadeNaoAlfabetizados,
+                    -- Casting para decimal para garantir a precisão no cálculo do percentual
+                    ROUND((apu.TotalNaoAlfabetizados::DECIMAL * 100.0 / apu.TotalAlunosSondagem), 2) AS PercentualNaoAlfabetizados
+                FROM
+                    AgregadoPorUE apu
+                ORDER BY
+                    QuantidadeNaoAlfabetizados DESC
+                LIMIT 10;";
+            using (var conexao = new NpgsqlConnection(Environment.GetEnvironmentVariable("sondagemConnection")))
+            {
+                return await conexao.QueryAsync<IndicadorAlfabetizacaoCriticaEscritaPorUeDto>(sql);
             }
         }
     }
