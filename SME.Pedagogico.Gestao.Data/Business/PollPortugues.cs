@@ -48,7 +48,7 @@ namespace SME.Pedagogico.Gestao.Data.Business
                 foreach (var student in ListStudentsModel)
                 {
                     var studentPollPortuguese = db.PortuguesePolls.FirstOrDefault(x => x.classroomCodeEol == student.classroomCodeEol &&
-                                                                                       x.studentCodeEol == student.studentCodeEol);
+                                                                                       x.studentCodeEol == student.studentCodeEol && x.yearClassroom == student.yearClassroom);
 
                     if (studentPollPortuguese == null)
                     {
