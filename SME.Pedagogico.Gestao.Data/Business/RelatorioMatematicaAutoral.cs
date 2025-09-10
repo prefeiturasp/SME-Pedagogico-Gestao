@@ -442,10 +442,13 @@ namespace SME.Pedagogico.Gestao.Data.Business
         {
             if (filtro.ConsiderarBimestre)
             {
+                var proficiencia = ObtenhaProficiencia(filtro.Proficiencia);
                 return ConsultasRelatorios.QueryRelatorioMatematicaAutoralBimestre(
                                                 !string.IsNullOrEmpty(filtro.CodigoDre), 
                                                 !string.IsNullOrEmpty(filtro.CodigoUe),
-                                                filtro.AnoEscolar <= TERCEIRO_ANO,filtro.Bimestre,filtro.AnoEscolar);
+                                                ((filtro.AnoEscolar <= TERCEIRO_ANO) || proficiencia == 3 && filtro.AnoLetivo > 2024),
+                                                filtro.Bimestre,
+                                                filtro.AnoEscolar);
             }
 
             return ConsultasRelatorios.QueryRelatorioMatematicaAutoral(filtro);
