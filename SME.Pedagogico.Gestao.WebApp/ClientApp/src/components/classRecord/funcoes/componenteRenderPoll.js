@@ -93,6 +93,8 @@ const escolherComponentesPortugues = (props, updatePollStudent) => {
     return <SondagemPortuguesAutoral />;
   }
 
+  console.log(props.pollOptionSelectLock.poll_2b_lock);
+  console.log(props.pollOptionSelectLock.poll_3b_lock);
   // Se for turma ajustada para render: 1-3 ou 4-9 em 2025 (como "3")
   if (
     Number(pollYearRender) === 1 ||
