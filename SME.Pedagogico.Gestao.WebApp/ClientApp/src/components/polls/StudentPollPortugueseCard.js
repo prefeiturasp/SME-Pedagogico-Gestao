@@ -79,7 +79,7 @@ class StudentPollPortugueseCard extends Component {
     };
 
     if (
-      this.props.poll.pollYear === "3" &&
+      this.props.poll.pollYear === 3 &&
       this.props.poll.selectedFilter.schoolYear <= anoLetivo &&
       this.state.bimestreSelecionado === "1bim_col"
     ) {
@@ -98,7 +98,7 @@ class StudentPollPortugueseCard extends Component {
         ) : null
       );
     } else if (
-      this.props.poll.pollYear === "3" &&
+      this.props.poll.pollYear === 3 &&
       ((this.props.poll.selectedFilter.schoolYear <= anoLetivo &&
         bimestre >= this.state.segundoBimestre) ||
         this.props.poll.selectedFilter.schoolYear > anoLetivo)
