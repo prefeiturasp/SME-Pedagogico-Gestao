@@ -71,10 +71,23 @@ export const montarPlanilha = (props, reportData, classroomReport) => {
     const CodigoCurso =
       props.pollReport.selectedFilter &&
       props.pollReport.selectedFilter.CodigoCurso;
+    const SchoolYear =
+      props.pollReport.selectedFilter &&
+      props.pollReport.selectedFilter.SchoolYear;
     const ehCapacidadeLeitura =
       props.pollReport.selectedFilter.grupoId === GrupoDto.CAPACIDADE_LEITURA;
 
-    if (Number(CodigoCurso) >= 4) {
+    // AJUSTE: se for 2025 e turma 4 a 9, tratar como 3
+    let codigoCursoAjustado = CodigoCurso;
+    if (
+      Number(SchoolYear) === 2025 &&
+      Number(CodigoCurso) >= 4 &&
+      Number(CodigoCurso) <= 9
+    ) {
+      codigoCursoAjustado = 3;
+    }
+
+    if (Number(codigoCursoAjustado) >= 4) {
       if (classroomReport) {
         return montarRelatorioPorTurmaPortuguesAcimaDoQuartoAno(reportData);
       }
@@ -89,12 +102,15 @@ export const montarPlanilha = (props, reportData, classroomReport) => {
 
       return montarRelatorioConsolidadosAcimaDoQuartoAno(reportData);
     }
+    // (Ou seja, para anos 1-3 e também 2025/4-9…)
     return (
       <PollReportPortugueseGrid
         className="mt-3"
         classroomReport={classroomReport}
         total={props.pollReport.data.total}
-        consideraNovaOpcao={props.pollReport.data.consideraNovaOpcaoRespostaSemPreenchimento}
+        consideraNovaOpcao={
+          props.pollReport.data.consideraNovaOpcaoRespostaSemPreenchimento
+        }
         data={reportData}
       />
     );

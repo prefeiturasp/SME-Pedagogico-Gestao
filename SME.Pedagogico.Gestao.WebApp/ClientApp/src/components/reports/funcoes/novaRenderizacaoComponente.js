@@ -10,7 +10,13 @@ import RelatorioMatematicaPorTurmaCACM from "../RelatorioMatematicaPorTurma/Rela
 
 export const novaRenderizacaoComponente = (props) => {
   const { data, selectedFilter } = props.pollReport;
-  const { CodigoCurso, proficiency } = selectedFilter;
+  let { CodigoCurso, proficiency } = selectedFilter;
+  const { classroomReport, SchoolYear } = selectedFilter;
+
+  // Ajuste para estados especiais: se ano >= 2025 e turma 4-9 => tratar como 3
+  if (SchoolYear >= 2025 && CodigoCurso >= 4 && CodigoCurso <= 9) {
+    CodigoCurso = 3;
+  }
 
   const ehAlfabetizacaoCACM = CodigoCurso < 4 && proficiency !== "Números";
   const ehAlfabetizacaoNumero = CodigoCurso < 4 && proficiency === "Números";
