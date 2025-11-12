@@ -35,7 +35,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> ObterDadosTeste([FromBody]RelatorioPortuguesFiltroDto filtro)
+        public async Task<ActionResult> ObterDadosTeste([FromBody] RelatorioPortuguesFiltroDto filtro)
         {
             var relatorio = new RelatorioPortugues();
 
@@ -44,7 +44,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
         #region ==================== METHODS ====================
         [HttpPost]
-        public async Task<ActionResult<string>> ObterDados([FromBody]ParametersModel parameters)
+        public async Task<ActionResult<string>> ObterDados([FromBody] ParametersModel parameters)
         {
             var businessPoll = new Data.Business.PollPortuguese(_config);
 
@@ -74,7 +74,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
             {
                 if (parameters.ClassroomReport)
                 {
-                    if (Convert.ToInt32(parameters.CodigoCurso) < 4)
+                    if (Convert.ToInt32(parameters.CodigoCurso) < 4 || Convert.ToInt32(parameters.SchoolYear) > 2024)
                     {
 
                         PollReportPortugueseStudentResult result = new PollReportPortugueseStudentResult();
@@ -110,7 +110,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                     if (periodo == null)
                         return StatusCode(500, $"Não foi possivel encontrar o périodo com descrição {parameters.Term}");
 
-                    if (Convert.ToInt32(parameters.CodigoCurso) < 4)
+                    if (Convert.ToInt32(parameters.CodigoCurso) < 4 || Convert.ToInt32(parameters.SchoolYear) > 2024)
                     {
                         PollReportPortugueseResult result = new PollReportPortugueseResult();
                         result = await BuscarDadosSyncAsync(parameters, parameters.SchoolYear, parameters.CodigoDRE, parameters.CodigoEscola, parameters.CodigoCurso, businessPoll, periodo);
@@ -118,7 +118,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                         return (Ok(result));
                     }
 
-                    if (parameters.GrupoId.Equals("e27b99a3-789d-43fb-a962-7df8793622b1"))
+                    if (parameters.GrupoId != null && parameters.GrupoId.Equals("e27b99a3-789d-43fb-a962-7df8793622b1"))
                     {
                         var relatorioCapacidadeLeitura = new RelatorioPortuguesCapacidadeLeitura();
                         var relatorioCapacidade = await relatorioCapacidadeLeitura.ObterRelatorioCapacidadeLeitura(new RelatorioPortuguesFiltroDto
@@ -246,7 +246,7 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
         private async Task<PollReportPortugueseStudentResult> BuscarDadosPorTurmaAsync(ParametersModel parameters, Periodo periodo)
         {
-            var consideraNovaOpcaoRespostaSemPreenchimentoTerceiroBimestre = NovaOpcaoRespostaSemPreenchimento.ConsideraOpcaoRespostaSemPreenchimento(int.Parse(parameters.SchoolYear),parameters.Term);
+            var consideraNovaOpcaoRespostaSemPreenchimentoTerceiroBimestre = NovaOpcaoRespostaSemPreenchimento.ConsideraOpcaoRespostaSemPreenchimento(int.Parse(parameters.SchoolYear), parameters.Term);
             var BusinessPoll = new Data.Business.PollPortuguese(_config);
             var alunosBusiness = new AlunosBusiness(_config);
 
@@ -301,14 +301,14 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
                             tipo = "Sem Preenchimento";
                             break;
                         }
-                        
+
                 }
 
                 result.Add(new PollReportPortugueseStudentItem()
                 {
-                   Code = aluno.CodigoAluno.ToString(),
-                   StudentName = aluno.NomeAlunoRelatorio,
-                   StudentValue = tipo
+                    Code = aluno.CodigoAluno.ToString(),
+                    StudentName = aluno.NomeAlunoRelatorio,
+                    StudentValue = tipo
                 });
 
                 graficos.Add(new PortChartDataModel()
@@ -428,9 +428,12 @@ namespace SME.Pedagogico.Gestao.WebApp.Controllers
 
         private async Task<ActionResult<string>> ObtenhaRelatorioMatematicaAutoral(filtrosRelatorioDTO filtro, bool ehPorTurma)
         {
-            if (filtro.AnoEscolar <= TERCEIRO_ANO && !ProficienciaEhNumero(filtro.Proficiencia))
+            if (!ProficienciaEhNumero(filtro.Proficiencia))
             {
-                return await ObtenhaRelatorioMatematicaProficiencia(filtro, ehPorTurma);
+                if ((filtro.AnoEscolar <= TERCEIRO_ANO) || filtro.AnoLetivo > 2024)
+                {
+                    return await ObtenhaRelatorioMatematicaProficiencia(filtro, ehPorTurma);
+                }
             }
 
             return await ObtenhaRelatorioMatematica(filtro, ehPorTurma);

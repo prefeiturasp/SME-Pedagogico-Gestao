@@ -15,15 +15,21 @@ import { actionCreators as actionCreatorAutoral } from "../../store/SondagemAuto
 
 import { bindActionCreators } from "redux";
 
-import { showModalConfirm, showModalConfirmAsync } from "../../service/modal-service";
+import {
+  showModalConfirm,
+  showModalConfirmAsync,
+} from "../../service/modal-service";
 import Loader from "../loader/Loader";
 import { verificarDisciplina } from "../../utils";
 
 import { componentRenderPoll } from "./funcoes/componenteRenderPoll";
 import { updatePollStudent } from "./funcoes/updatePollStudent";
 import SelectChangeColor from "../inputs/SelectChangeColor";
-import { ALERTA_DESEJA_SALVAR_AGORA, CONFIRMACAO_ESTUDANTE_SEM_RESPOSTA_SELECIONADA } from "../../utils/constants";
-import { SavePollPortugueseAsync } from '../../sagas/Poll';
+import {
+  ALERTA_DESEJA_SALVAR_AGORA,
+  CONFIRMACAO_ESTUDANTE_SEM_RESPOSTA_SELECIONADA,
+} from "../../utils/constants";
+import { SavePollPortugueseAsync } from "../../sagas/Poll";
 
 class Poll extends Component {
   constructor(props) {
@@ -197,69 +203,93 @@ class Poll extends Component {
         var period = this.props.filters.period;
 
         period.forEach((item) => {
-            if (item.tipoPeriodicidade === TIPO_PERIODO.BIMESTRE) {
-                if (item.bimestre === 1) {
-                    if (todayDate >= new Date(item.dataInicio) &&
-                        todayDate <= new Date(item.dataFim)) {
-                      if (this.props.pollOptionSelectLock.poll_1b_lock !== false)
-                        this.props.pollOptionSelectLockMethods.set_poll_1b_lock(false);
-                    } else {
-                        if (this.props.pollOptionSelectLock.poll_1b_lock !== true)
-                            this.props.pollOptionSelectLockMethods.set_poll_1b_lock(true);
-                    }
-                }
-                if (item.bimestre === 2) {
-                    if (todayDate >= new Date(item.dataInicio) &&
-                        todayDate <= new Date(item.dataFim)) {
-                      if (this.props.pollOptionSelectLock.poll_2b_lock !== false) 
-                            this.props.pollOptionSelectLockMethods.set_poll_2b_lock(false);
-                    } else {
-                        if (this.props.pollOptionSelectLock.poll_2b_lock !== true) 
-                            this.props.pollOptionSelectLockMethods.set_poll_2b_lock(true);
-                    }
-                }
-                if (item.bimestre === 3) {
-                    if (todayDate >= new Date(item.dataInicio) &&
-                        todayDate <= new Date(item.dataFim)) {
-                      if (this.props.pollOptionSelectLock.poll_3b_lock !== false) 
-                            this.props.pollOptionSelectLockMethods.set_poll_3b_lock(false);
-                    } else {
-                        if (this.props.pollOptionSelectLock.poll_3b_lock !== true) 
-                            this.props.pollOptionSelectLockMethods.set_poll_3b_lock(true);
-                    }
-                }
-                if (item.bimestre === 4) {
-                    if (todayDate >= new Date(item.dataInicio) &&
-                        todayDate <= new Date(item.dataFim)) {
-                      if (this.props.pollOptionSelectLock.poll_4b_lock !== false) 
-                            this.props.pollOptionSelectLockMethods.set_poll_4b_lock(false);
-                    } else {
-                        if (this.props.pollOptionSelectLock.poll_4b_lock !== true) 
-                            this.props.pollOptionSelectLockMethods.set_poll_4b_lock(true);
-                    }
-                }
-            } else if (item.tipoPeriodicidade === TIPO_PERIODO.SEMESTRE) {
-                if (item.bimestre === 1) {
-                    if (todayDate >= new Date(item.dataInicio) &&
-                        todayDate <= new Date(item.dataFim)) {
-                        if (this.props.pollOptionSelectLock.poll_1s_lock !== false) 
-                            this.props.pollOptionSelectLockMethods.set_poll_1s_lock(false);
-                    } else {
-                        if (this.props.pollOptionSelectLock.poll_1s_lock !== true)
-                            this.props.pollOptionSelectLockMethods.set_poll_1s_lock(true);
-                    }
-                }
-                if (item.bimestre === 2) {
-                    if (todayDate >= new Date(item.dataInicio) &&
-                        todayDate <= new Date(item.dataFim)) {
-                      if (this.props.pollOptionSelectLock.poll_2s_lock !== false) 
-                            this.props.pollOptionSelectLockMethods.set_poll_2s_lock(false);
-                    } else {
-                        if (this.props.pollOptionSelectLock.poll_2s_lock !== true) 
-                            this.props.pollOptionSelectLockMethods.set_poll_2s_lock(true);
-                    }
-                }
+          if (item.tipoPeriodicidade === TIPO_PERIODO.BIMESTRE) {
+            if (item.bimestre === 1) {
+              if (
+                todayDate >= new Date(item.dataInicio) &&
+                todayDate <= new Date(item.dataFim)
+              ) {
+                if (this.props.pollOptionSelectLock.poll_1b_lock !== false)
+                  this.props.pollOptionSelectLockMethods.set_poll_1b_lock(
+                    false
+                  );
+              } else {
+                if (this.props.pollOptionSelectLock.poll_1b_lock !== true)
+                  this.props.pollOptionSelectLockMethods.set_poll_1b_lock(true);
+              }
             }
+            if (item.bimestre === 2) {
+              if (
+                todayDate >= new Date(item.dataInicio) &&
+                todayDate <= new Date(item.dataFim)
+              ) {
+                if (this.props.pollOptionSelectLock.poll_2b_lock !== false)
+                  this.props.pollOptionSelectLockMethods.set_poll_2b_lock(
+                    false
+                  );
+              } else {
+                if (this.props.pollOptionSelectLock.poll_2b_lock !== true)
+                  this.props.pollOptionSelectLockMethods.set_poll_2b_lock(true);
+              }
+            }
+            if (item.bimestre === 3) {
+              if (
+                todayDate >= new Date(item.dataInicio) &&
+                todayDate <= new Date(item.dataFim)
+              ) {
+                if (this.props.pollOptionSelectLock.poll_3b_lock !== false)
+                  this.props.pollOptionSelectLockMethods.set_poll_3b_lock(
+                    false
+                  );
+              } else {
+                if (this.props.pollOptionSelectLock.poll_3b_lock !== true)
+                  this.props.pollOptionSelectLockMethods.set_poll_3b_lock(true);
+              }
+            }
+            if (item.bimestre === 4) {
+              if (
+                todayDate >= new Date(item.dataInicio) &&
+                todayDate <= new Date(item.dataFim)
+              ) {
+                if (this.props.pollOptionSelectLock.poll_4b_lock !== false)
+                  this.props.pollOptionSelectLockMethods.set_poll_4b_lock(
+                    false
+                  );
+              } else {
+                if (this.props.pollOptionSelectLock.poll_4b_lock !== true)
+                  this.props.pollOptionSelectLockMethods.set_poll_4b_lock(true);
+              }
+            }
+          } else if (item.tipoPeriodicidade === TIPO_PERIODO.SEMESTRE) {
+            if (item.bimestre === 1) {
+              if (
+                todayDate >= new Date(item.dataInicio) &&
+                todayDate <= new Date(item.dataFim)
+              ) {
+                if (this.props.pollOptionSelectLock.poll_1s_lock !== false)
+                  this.props.pollOptionSelectLockMethods.set_poll_1s_lock(
+                    false
+                  );
+              } else {
+                if (this.props.pollOptionSelectLock.poll_1s_lock !== true)
+                  this.props.pollOptionSelectLockMethods.set_poll_1s_lock(true);
+              }
+            }
+            if (item.bimestre === 2) {
+              if (
+                todayDate >= new Date(item.dataInicio) &&
+                todayDate <= new Date(item.dataFim)
+              ) {
+                if (this.props.pollOptionSelectLock.poll_2s_lock !== false)
+                  this.props.pollOptionSelectLockMethods.set_poll_2s_lock(
+                    false
+                  );
+              } else {
+                if (this.props.pollOptionSelectLock.poll_2s_lock !== true)
+                  this.props.pollOptionSelectLockMethods.set_poll_2s_lock(true);
+              }
+            }
+          }
         });
       }
     }
@@ -301,7 +331,7 @@ class Poll extends Component {
       const bimestre = this.obterBimestreSelecionado();
 
       const semRespostaLeituraEscrita = this.props.poll.students.find(
-        (estudante) => {    
+        (estudante) => {
           const bimestreAtivo = estudante?.[`ativoB${bimestre}`];
 
           if (!bimestreAtivo) return false;
@@ -317,7 +347,7 @@ class Poll extends Component {
     return false;
   }
 
-  async validarEstudantesSemRespostasClassRoomEnumClassPT() { 
+  async validarEstudantesSemRespostasClassRoomEnumClassPT() {
     if (this.props.pollOptionSelectLock) {
       const bimestre_1_invalido =
         this.temEstudanteSemRespostaClassRoomEnumClassPT(
@@ -347,15 +377,17 @@ class Poll extends Component {
           "t4e"
         );
 
-        if (bimestre_1_invalido ||
-            bimestre_2_invalido ||
-            bimestre_3_invalido ||
-            bimestre_4_invalido) 
-            return await showModalConfirmAsync({
-                content: CONFIRMACAO_ESTUDANTE_SEM_RESPOSTA_SELECIONADA,
-                onOk: null,
-                onCancel: null,
-            });
+      if (
+        bimestre_1_invalido ||
+        bimestre_2_invalido ||
+        bimestre_3_invalido ||
+        bimestre_4_invalido
+      )
+        return await showModalConfirmAsync({
+          content: CONFIRMACAO_ESTUDANTE_SEM_RESPOSTA_SELECIONADA,
+          onOk: null,
+          onCancel: null,
+        });
     }
 
     return true;
@@ -441,7 +473,8 @@ class Poll extends Component {
     ) {
     } else if (this.props.poll.pollSelected !== null) {
       if (this.props.poll.pollSelected === ClassRoomEnum.ClassPT) {
-        const continuar = await this.validarEstudantesSemRespostasClassRoomEnumClassPT();
+        const continuar =
+          await this.validarEstudantesSemRespostasClassRoomEnumClassPT();
         if (continuar) {
           try {
             return SavePollPortugueseAsync(this.props.poll.students).then(
@@ -478,24 +511,33 @@ class Poll extends Component {
     this.props.pollMethods.setNavegacaoSelecionada(elementSeleted);
     this.props.pollMethods.setBimestre("");
   }
-
   openPortuguesePoll() {
     this.props.dataMethods.reset_new_data_state();
     this.toggleButton("portugues-tab");
     var classRoomMock = this.props.poll.selectedFilter;
     this.props.pollMethods.set_poll_list_initial_state();
 
-    if (classRoomMock.yearClassroom < 4) {
+    // Ajuste para tratamento especial no ano de 2025 turmas 4-9 serem 3 na renderização
+    let turmaParaSondagem = classRoomMock.yearClassroom;
+    if (
+      classRoomMock.schoolYear === 2025 &&
+      turmaParaSondagem >= 4 &&
+      turmaParaSondagem <= 9
+    ) {
+      turmaParaSondagem = 3;
+    }
+
+    if (turmaParaSondagem < 4) {
       this.props.pollMethods.set_poll_info(
         ClassRoomEnum.ClassPT,
         "",
-        classRoomMock.yearClassroom
-      ); //passar pollSelected, pollTypeSelected, pollYear
+        turmaParaSondagem
+      ); // passar pollSelected, pollTypeSelected, pollYear
     } else {
       this.props.pollMethods.set_poll_info(
         ClassRoomEnum.ClassPTAutoral,
         "",
-        classRoomMock.yearClassroom
+        turmaParaSondagem
       );
     }
 
@@ -513,39 +555,49 @@ class Poll extends Component {
     this.toggleButton("matematica-tab");
     var classRoomMock = this.props.poll.selectedFilter;
     this.msnNaoExisteSondagem = "";
+
+    let turmaParaSondagem = parseInt(classRoomMock.yearClassroom);
+    const schoolYear = parseInt(classRoomMock.schoolYear);
+    if (
+      schoolYear === 2025 &&
+      turmaParaSondagem >= 4 &&
+      turmaParaSondagem <= 9
+    ) {
+      turmaParaSondagem = 3;
+    }
+
     var naoExibeBotao =
-      parseInt(this.props.poll.selectedFilter.schoolYear) === 2019 &&
-      parseInt(this.props.poll.selectedFilter.yearClassroom) >= 7 &&
-      parseInt(this.props.poll.selectedFilter.yearClassroom) <= 9;
+      schoolYear === 2019 && turmaParaSondagem >= 7 && turmaParaSondagem <= 9;
     if (naoExibeBotao) {
       this.PreencherSpanInfro();
     } else {
       this.props.pollMethods.set_poll_list_initial_state();
-      if (classRoomMock.yearClassroom > 6) {
+
+      if (turmaParaSondagem > 6) {
         this.props.pollMethods.set_poll_info(
           ClassRoomEnum.ClassMTAutoral,
           "",
-          classRoomMock.yearClassroom
+          turmaParaSondagem
         );
       } else if (
-        classRoomMock.yearClassroom === "1" ||
-        classRoomMock.yearClassroom === "2" ||
-        classRoomMock.yearClassroom === "3"
+        turmaParaSondagem === 1 ||
+        turmaParaSondagem === 2 ||
+        turmaParaSondagem === 3
       ) {
         this.props.pollMethods.set_poll_info(
           ClassRoomEnum.ClassMT,
           "Numeric",
-          classRoomMock.yearClassroom
+          turmaParaSondagem
         );
       } else {
         this.props.pollMethods.set_poll_info(
           ClassRoomEnum.ClassMT,
           "CA",
-          classRoomMock.yearClassroom
+          turmaParaSondagem
         );
       }
 
-      if (classRoomMock.schoolYear >= 2022) return;
+      if (schoolYear >= 2022) return;
 
       if (this.props.poll.pollTypeSelected === "Numeric") {
         this.props.pollMethods.get_poll_math_numbers_students(classRoomMock);
@@ -643,7 +695,7 @@ class Poll extends Component {
           <li className="nav-item">
             <button
               className="btn btn-outline-primary btn-sm btn-planning"
-              onClick={()=> this.toggleMessageMathBox()}
+              onClick={() => this.toggleMessageMathBox()}
             >
               Matem&aacute;tica
             </button>
@@ -778,7 +830,11 @@ class Poll extends Component {
             </ul>
             <ul className="nav navbar-nav ml-auto">{this.checkButtonSave()}</ul>
           </nav>
-          <Loader loading={this.props.poll.loadingSalvar || this.props.poll.carregandoAlunos }>
+          <Loader
+            loading={
+              this.props.poll.loadingSalvar || this.props.poll.carregandoAlunos
+            }
+          >
             {this.componentRender()}
           </Loader>
         </Card>

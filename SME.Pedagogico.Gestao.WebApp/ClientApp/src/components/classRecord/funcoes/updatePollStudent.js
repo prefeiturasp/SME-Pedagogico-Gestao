@@ -1,6 +1,12 @@
 import { ClassRoomEnum } from "../../polls/component/ClassRoomHelper";
 
-export const updatePollStudent = ( props, sequence, subjectName, propertyName, value) => {
+export const updatePollStudent = (
+  props,
+  sequence,
+  subjectName,
+  propertyName,
+  value
+) => {
   if (props.poll.pollSelected === ClassRoomEnum.ClassPT) {
     const pollStudents = props.poll.students;
     for (let i = 0; i < pollStudents.length; i++) {
